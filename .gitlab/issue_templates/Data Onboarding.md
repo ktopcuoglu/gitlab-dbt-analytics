@@ -16,18 +16,15 @@ Welcome to the GitLab Data Program -- we're excited to have you! The goal of thi
 ## Getting Started <!-- The purpose of this section is to give the new team member a foundation upon which the subsequent sections build. -->
 
 - [ ] Read (skim) through this full issue, just so you have a sense of what's coming.
-- [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process.
+- [ ] Create a new issue in the Analytics project (this project). As you proceed and things are unclear, document it in the issue. Don't worry about organizing it; just brain dump it into the issue! This will help us iterate on the onboarding process. Please tag your manager and the Director of the team.
 - [ ] Read the following pages of the handbook in their entirety. Bookmark them as you should soon be making MR's to improve our documentation!
    - [ ] [Data Team](https://about.gitlab.com/handbook/business-ops/data-team/)
    - [ ] [Data Direction page](https://about.gitlab.com/handbook/business-technology/data-team/direction/) to get a sense of what our short and longer-term roadmap.
    - [ ] [Data Catalog](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/)
 - [ ] Watch @tlapiana's [talk at DataEngConf](https://www.youtube.com/watch?v=eu623QBwakc) that gives a phenomenal overview of how the team works.
-- [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is
-- [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+- [ ] Watch [this great talk](https://www.youtube.com/watch?v=prcz0ubTAAg) on what Analytics is.
 - [ ] Browse a few of the [Data Team videos in GitLab Unfiltered](https://www.youtube.com/playlist?list=PL05JrBw4t0KrRVTZY33WEHv8SjlA_-keI)
 - [ ] Watch [Data Team quick architecture overview](https://www.youtube.com/watch?v=0vlJdzYShpU)
-
-
 
 ### Take a Deep Breath
 
@@ -78,10 +75,9 @@ You will need access to several groups, applications, tools, and data sources fo
     - [ ] Marketo - Access Request   
     - [ ] Netsuite - Access Request    
     - [ ] Zendesk - [Licence Request](https://about.gitlab.com/handbook/support/internal-support/#regarding-licensing-and-subscriptions) 
+    - [ ] Lucid Chart - Access Request   
 
 </details>
-
-
 
 ## Team Introductions <!-- This section is to reenforce the formal informality found within GitLab, directing the team member to meet the rest of the team. -->
 
@@ -91,12 +87,11 @@ Getting to know the team will require purposeful steps on your part in our all-r
 
 <summary>Team Member Steps</summary>
 
-- [ ] Review the [org chart](https://about.gitlab.com/company/team/org-chart/) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
-- [ ] Schedule a Quarterly 1:1 meeting with the Sr. Director of Data and Analytics
+- [ ] Review the [org chart](https://comp-calculator.gitlab.net/org_chart) to find your immediate team and the greater Data Team. Using your browser search to find your self on the page can be a quick way to find your team.
 - [ ] Schedule coffee chats with members of the Data Team starting with those in your immediate team. These should be in addition to the ones you do with other GitLab team members. Consider making these recurring meetings for every 3-4 weeks with everyone you will work closely with. In addition, you should also consider scheduling chats with Business Technology (IT, Enterprise Apps, Procurement) people as well.
+- [ ] Schedule a cofee chat with the Sr. Director of Data and Analytics
 
 </details>
-
 
 ## Slack Channels <!-- This section is for a list of all slack channels that the team member should join as part of there regular work. -->
 
@@ -147,6 +142,7 @@ Your computer set up is critical to working efficiently.  This section will help
 
 
 ### Core Steps
+
 - [ ] Check that you have create your SSH keys by typing `ssh -T git@gitlab.com` into your terminal which should return "Welcome to GitLab, " + your_username.  :red_circle: This set up is required for subsequent steps
   - [ ] If your SSH keys have not been created follow [these steps](https://docs.gitlab.com/ee/gitlab-basics/create-your-ssh-keys.html).  Make the SSH key with no password.
 
@@ -206,6 +202,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
     - [ ] Refresh this file by sourcing it back, by running command in terminal: `source ~/.zshrc`.
 
 ### Airflow
+
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
 - [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda. In case you have an issue with the Airflow setup, read this instruction [Troubleshooting local Airflow config](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#troubleshooting-local-airflow-config)
 ### Jupyter
@@ -216,6 +213,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] See the readme provided in the [handbook jupyter guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/jupyter-guide/) for further install instructions 
 
 ### Optional Steps
+
 - Set up environment to build the handbook locally. [Instructions](https://about.gitlab.com/handbook/git-page-update/) 
 - Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
 - Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
@@ -235,6 +233,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - Consider installing [tldr](https://tldr.sh/) for easy reference to common CLI commands
 
 #### Terminal Improvements 
+
 - [Improved terminal navigation](https://stackoverflow.com/a/23963086) with arrow keys.
 - Disabling [autocorrect in zsh](https://coderwall.com/p/jaoypq/disabling-autocorrect-in-zsh) if it annoys you.
 - Terminal theming - In the onboarding script the terminal has been configured to use the [bira OhMyZsh theme](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#bira). However if you would like an improved and configurable theme install [PowerLevel10K](https://github.com/romkatv/powerlevel10k) by running the below command from your terminal: 
@@ -267,6 +266,7 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 - [ ] Test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
 
 We STRONGLY recommend using the UI, but if you must download a SQL development tool, you will need one that is compatible with Snowflake, such as [SQLWorkbench/J](http://sql-workbench.net) or [DataGrip](https://www.jetbrains.com/datagrip/). If you're interested in DataGrip, follow the instructions [optional steps](#optional-steps) section of the [Computer Set Up](#computer-set-up) sections of this issue.   
+
 #### Snowflake SQL
 
 Snowflake SQL is probably not that different from the dialects of SQL you're already familiar with, but here are a couple of resources to point you in the right direction:
@@ -317,9 +317,6 @@ _Ensure you've set up your SSH configuration in the previous step as this is req
    - [dbt Labs Blog](https://blog.getdbt.com/)
    - [dbt Discourse](http://discourse.getdbt.com)
 
-
-
-
 ### Sisense 
 
 Sisense is our enterprise standard data visualization application and is the only application approved for connecting to our Enterprise Data Warehouse.
@@ -357,7 +354,6 @@ If you ever want to know what queries are going on in the background while you'r
 - [ ] Familiarize yourself with the GitLab Metrics Sheet (search in Google Drive, it should come up) which contains most of the key metrics we use at GitLab and the [definitions of these metrics](https://about.gitlab.com/handbook/business-ops/data-team/kpi-index/).
 - [ ] Optional, for more information on Finance KPIs, you can watch this working session between the Manager, Financial Planning and Analysis and Data Analyst, Finance: [Finance KPIs](https://www.youtube.com/watch?v=dmdilBQb9PY&feature=youtu.be)
 
-
 ### Triage
 
 Data triagers are the first responders to requests and problems for the Data team.
@@ -376,9 +372,14 @@ There are many data sets brought into the Enterprise Data Warehouse, the followi
 <summary>Team Member Steps</summary>
 
 
-### Usage/Version Ping (Product)
+### GitLab Product Data - SaaS and Self-Managed
 
-Service Data aka Usage Ping is generated from individual installations of GitLab hosted by our customers. These are also called Self-Managed instances, as opposed to our GitLab.com SaaS instance.
+- [ ] Review the [Product Data Training](https://docs.google.com/presentation/d/1ySP9sndhF9BdRhaZhMK6kGbc8txO_UkAu48HmoxLtfI/edit#slide=id.g29a70c6c35_0_68) deck and make sure to click through the links
+- [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+
+#### Service Ping Deep Dive
+
+Service Ping is generated from individual installations of GitLab hosted by our customers. These are also called Self-Managed instances, as opposed to our GitLab.com SaaS instance.
 
 <details>
 
@@ -461,8 +462,6 @@ Marketo is used for ...
 `Under Construction`
 
 </details>
-
-
 
 ### Netsuite (Accounting)
 
