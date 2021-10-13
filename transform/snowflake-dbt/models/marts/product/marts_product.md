@@ -2,7 +2,7 @@
 
 Mart table containing quantitative data related to CI runner activity on GitLab.com.
 
-These metrics are aggregated at a monthly grain per `dim_project_id` || `dim_ci_runner_id` || `dim_ci_pipeline_id` || `dim_ci_stage_id`. Only activity since 2020-01-01 is being processed due to volume of data.
+These metrics are aggregated at a monthly grain per `dim_namespace_id` || `dim_ci_runner_id` || `dim_ci_pipeline_id` || `dim_ci_stage_id`. Only activity since 2020-01-01 is being processed due to volume of data.
 
 {% enddocs %}
 
