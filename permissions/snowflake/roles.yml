@@ -1752,6 +1752,18 @@ roles:
                     - prep.sfdc.*
                     - raw.salesforce_stitch.*
 
+    - share:
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.share
+            tables:
+                read:
+                    - prod.share.* 
+
     - sheetload:
         warehouses:
             - analyst_xs

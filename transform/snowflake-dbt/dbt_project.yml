@@ -525,6 +525,10 @@ models:
       +schema: data_quality
       +tags: ["product"]
       +materialized: table
+    
+    share:
+      +schema: share
+      +materialized: table 
 
     # ------------------
     # Trusted Data Framework
