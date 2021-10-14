@@ -192,7 +192,7 @@
       NULL AS dim_ticket_id,
       IFNULL(request_priority, 1)::NUMBER AS request_priority
     FROM gitlab_epic_notes_sfdc_links_with_account
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, sfdc_id_18char ORDER BY note_created_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, sfdc_id_18char ORDER BY note_updated_at DESC) = 1
 
     UNION
 
@@ -204,7 +204,7 @@
       dim_ticket_id,
       IFNULL(request_priority, 1)::NUMBER AS request_priority
     FROM gitlab_epic_notes_zendesk_with_sfdc_account
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, dim_ticket_id ORDER BY note_created_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, dim_ticket_id ORDER BY note_updated_at DESC) = 1
 
     UNION
 

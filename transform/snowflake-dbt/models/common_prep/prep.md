@@ -28,7 +28,7 @@ Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description 
 
 For Opportunity and Zendesk tickets links found, the associated SFDC Account id is filled into the record.
 
-If the same link is found twice in the description and the notes of the same epic, then the link that will be taken, together with its priority, will be the one in the note. If the same link is found in two different notes in the same epic, then the link that will be taken, together with its priority, will be the one in the latest note.
+If the same link is found twice in the description and the notes of the same epic, then the link that will be taken, together with its priority, will be the one in the note. If the same link is found in two different notes in the same epic, then the link that will be taken, together with its priority, will be the one in the latest updated note.
 
 This model assumes that only one priority is placed in a given description or note.
 
@@ -48,7 +48,7 @@ Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description 
 
 For Opportunity and Zendesk tickets links found, the associated SFDC Account id is filled into the record.
 
-If the same link is found twice in the description and the notes of the same issue, then the link that will be taken, together with its priority, will be the one in the note. If the same link is found in two different notes in the same issue, then the link that will be taken, together with its priority, will be the one in the latest note.
+If the same link is found twice in the description and the notes of the same issue, then the link that will be taken, together with its priority, will be the one in the note. If the same link is found in two different notes in the same issue, then the link that will be taken, together with its priority, will be the one in the latest updated note.
 
 This model assumes that only one priority is placed in a given description or note.
 
