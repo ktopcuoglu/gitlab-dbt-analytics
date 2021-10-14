@@ -5,7 +5,7 @@
     ('project', 'gitlab_dotcom_projects_source'),
     ('zendesk_ticket', 'zendesk_tickets_source'),
     ('zendesk_organization', 'zendesk_organizations_source'),
-    ('map_moved_issue', 'map_moved_issue'),
+    ('map_moved_duplicated_issue', 'map_moved_duplicated_issue'),
     ('sfdc_opportunity_source', 'sfdc_opportunity_source')
 ]) }}
 
@@ -243,15 +243,15 @@
 ), final AS (
 
     SELECT DISTINCT
-      map_moved_issue.dim_issue_id,
+      map_moved_duplicated_issue.dim_issue_id,
       union_links.link_type,
       {{ get_keyed_nulls('union_links.dim_crm_opportunity_id')  }}     AS dim_crm_opportunity_id,
       union_links.dim_crm_account_id,
       IFNULL(union_links.dim_ticket_id, -1)::NUMBER                    AS dim_ticket_id,
       union_links.request_priority
     FROM union_links
-    INNER JOIN map_moved_issue
-      ON map_moved_issue.issue_id = union_links.dim_issue_id
+    INNER JOIN map_moved_duplicated_issue
+      ON map_moved_duplicated_issue.issue_id = union_links.dim_issue_id
 
 )
 

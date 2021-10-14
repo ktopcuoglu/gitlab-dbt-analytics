@@ -3,10 +3,10 @@ WITH gitlab_dotcom_projects AS (
     SELECT *
     FROM {{ ref('gitlab_dotcom_projects_source') }}
   
-), map_moved_issue AS (
+), map_moved_duplicated_issue AS (
 
     SELECT *
-    FROM {{ ref('map_moved_issue') }}
+    FROM {{ ref('map_moved_duplicated_issue') }}
 
 ), issue_links AS (
 
@@ -165,15 +165,15 @@ WITH gitlab_dotcom_projects AS (
 ), final AS (
 
     SELECT
-      map_moved_issue.dim_issue_id,
+      map_moved_duplicated_issue.dim_issue_id,
       unioned_with_issue_links.dim_crm_account_id,
       unioned_with_issue_links.dim_collaboration_project_id,
       unioned_with_issue_links.dim_project_id                 AS dim_original_issue_project_id,
       unioned_with_issue_links.gitlab_customer_success_project,
       unioned_with_issue_links.issue_internal_id              AS original_issue_internal_id
     FROM unioned_with_issue_links
-    INNER JOIN map_moved_issue
-      ON map_moved_issue.issue_id = unioned_with_issue_links.dim_issue_id
+    INNER JOIN map_moved_duplicated_issue
+      ON map_moved_duplicated_issue.issue_id = unioned_with_issue_links.dim_issue_id
 
 )
 

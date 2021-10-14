@@ -28,9 +28,22 @@ Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}
 
-{% docs map_moved_issue %}
+{% docs map_moved_duplicated_issue %}
 
-Table mapping current issues to issues moved in the past.
+Table mapping issues to the latest issue they were moved and / or duplicated to.
+
+Example:
+
+`Issue A` is moved to `Issue B`, `Issue B` is closed as duplicate of `Issue C`, `Issue C` is moved to `Issue D`
+
+Then in our mapping table we would have:
+
+| issue_id | dim_issue_id |
+| -- | -- |
+| Issue A | Issue D |
+| Issue B | Issue D |
+| Issue C | Issue D |
+| Issue D | Issue D |
 
 {% enddocs %}
 

@@ -27,8 +27,8 @@ models:
           - not_null
       - name: location_id
 
-  - name: map_moved_issue
-    description: '{{ doc("map_moved_issue") }}'
+  - name: map_moved_duplicated_issue
+    description: '{{ doc("map_moved_duplicated_issue") }}'
     columns:
       - name: issue_id
         tests:
