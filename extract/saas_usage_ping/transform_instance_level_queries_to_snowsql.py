@@ -64,7 +64,7 @@ def optimize_token_size(input_token: str) -> str:
     return "".join(optimized_token)
 
 
-def translate_postgres_snowflake_count(input_token_list: list) -> list:
+def translate_postgres_snowflake_count(input_token_list: list) -> List[List[str]]:
     """
     Function to support translation of COUNT syntax from Postgres to Snowflake.
     Example:
