@@ -20,7 +20,10 @@ from os import environ as env
 import requests
 
 
-def get_sql_query_map(private_token=None) -> str:
+def get_sql_query_map(private_token: str = None) -> Dict[Any, Any]:
+    """
+    Routine to get data from RestFUL API and return as a dict
+    """
     headers = {
         "PRIVATE-TOKEN": private_token,
     }
@@ -64,7 +67,7 @@ def optimize_token_size(input_token: str) -> str:
     return "".join(optimized_token)
 
 
-def translate_postgres_snowflake_count(input_token_list: list) -> List[List[str]]:
+def translate_postgres_snowflake_count(input_token_list: list) -> List[str]:
     """
     Function to support translation of COUNT syntax from Postgres to Snowflake.
     Example:
@@ -131,7 +134,7 @@ def find_keyword_index(input_token_list: list, defined_keyword: str) -> int:
     return 0
 
 
-def sql_queries_dict(input_json_data: str) -> Dict[Any, Any]:
+def sql_queries_dict(input_json_data: Dict[Any, Any]) -> Dict[Any, Any]:
     """
     function that transforms the given json file into a Python dict with only SQL batch counters
     """
@@ -202,7 +205,9 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
     )
 
     token_list_with_counter_name.insert(
-        select_index + 1, f" '{sql_metrics_name}' AS counter_name, "
+        # select_index + 1, f" '{sql_metrics_name}' AS counter_name, "
+        select_index + 1,
+        " '" + sql_metrics_name + "' AS counter_name, ",
     )
 
     return prepare_sql_statement(input_token_list=token_list_with_counter_name)
@@ -269,7 +274,7 @@ def rename_query_tables(sql_query: str) -> str:
     return "".join(token_string_list)
 
 
-def main(json_query_list: dict) -> dict:
+def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
     """
     Main input point to transform queries
     """
