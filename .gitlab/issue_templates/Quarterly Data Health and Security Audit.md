@@ -41,6 +41,9 @@ SNOWFLAKE
 2. [ ] De-activate any account that has not logged-in within the past 60 days from the moment of performing audit from Snowflake.
     <details>
 
+   * [ ] Run below SQL script to perform the check.
+
+
     ```sql
      SELECT										
        employee.employee_id,										
@@ -65,13 +68,24 @@ SNOWFLAKE
 3. [ ] Validate all user accounts do not have password set.
     <details>
 
-    * [ ] Check HAS_PASSWRD is set to ‘false’ in users table. If set to ‘false’ then there is not password set. 
+   * [ ] Check HAS_PASSWRD is set to ‘false’ in users table. If set to ‘false’ then there is not password set. Run below SQL script to perform the check.
+   ```sql
+     SELECT * 
+     FROM "SNOWFLAKE"."ACCOUNT_USAGE"."USERS"
+     WHERE has_password = 'true'
+     AND disabled = 'false'
+     AND deleted_on IS NULL
+     AND name NOT IN ('PERMISSION_BOT','FIVETRAN','GITLAB_CI','AIRFLOW','STITCH','SISENSE_RESTRICTED_SAFE','PERISCOPE','MELTANO',   'TARGET_SNOWFLAKE','GRAFANA','SECURITYBOTSNOWFLAKEAPI', 'GAINSIGHT');
+ 
+    ```
 
 SISENSE
 1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
-     ```sql
+   * [ ] Run below SQL script to perform the check.
+
+   ```sql
 
      WITH final AS (
         
@@ -107,8 +121,9 @@ SISENSE
 
     <details>
 
-     ```sql
+   * [ ] Run below SQL script to perform the check.
 
+   ```sql
 
     WITH final AS (
        SELECT
@@ -134,6 +149,8 @@ TRUSTED DATA
 
     <details>
 
+    * [ ] Run below SQL script to perform the check.
+
      ```sql
 
     SELECT *  
@@ -147,6 +164,8 @@ TRUSTED DATA
 2.  [ ] Review Data Siren to confirm known existence of RED data.
 
     <details>
+    
+    * [ ] Run below SQL script to perform the check.
 
      ```sql
 

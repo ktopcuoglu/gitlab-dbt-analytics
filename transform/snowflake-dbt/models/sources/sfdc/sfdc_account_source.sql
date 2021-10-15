@@ -155,7 +155,8 @@ WITH source AS (
       -- Partner Account fields
       partner_track__c                              AS partner_track,
       partners_partner_type__c                      AS partners_partner_type,
-
+      gitlab_partner_programs__c                    AS gitlab_partner_program,
+      
       -- metadata
       createdbyid                                   AS created_by_id,
       createddate                                   AS created_date,

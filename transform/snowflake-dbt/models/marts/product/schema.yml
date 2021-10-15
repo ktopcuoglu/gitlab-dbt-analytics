@@ -16,6 +16,15 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+      - name: dim_ci_runner_id
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        tests:
+          - not_null
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
       - name: ci_build_duration_in_s
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
@@ -39,6 +48,15 @@ models:
         tests:
           - not_null
       - name: dim_plan_id
+        tests:
+          - not_null
+      - name: dim_ci_runner_id
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        tests:
+          - not_null
+      - name: dim_ci_stage_id
         tests:
           - not_null
       - name: ci_build_duration_in_s
