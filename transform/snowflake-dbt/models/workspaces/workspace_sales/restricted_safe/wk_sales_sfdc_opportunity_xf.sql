@@ -197,12 +197,14 @@ WITH sfdc_opportunity AS (
 
       CASE
         WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-          THEN REPLACE(sfdc_opportunity_xf.partner_track,'select','Select')
+          THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track),'select','Select')
         ELSE 'Direct' 
-      END                                                         AS calculated_partner_track,
+      END                                                                                           AS calculated_partner_track,
 
       
-      COALESCE(sfdc_opportunity_xf.partner_track,'N/A')           AS partner_track,
+      COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track)                     AS partner_track,
+      partner_account.gitlab_partner_program                                                        AS partner_gitlab_program,
+
       sfdc_opportunity_xf.is_public_sector_opp,
       sfdc_opportunity_xf.is_registration_from_portal,
       sfdc_opportunity_xf.calculated_discount,
@@ -464,6 +466,9 @@ WITH sfdc_opportunity AS (
       -- pipeline creation date
     LEFT JOIN date_details stage_3_date 
       ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
+    -- partner account details
+    LEFT JOIN sfdc_accounts_xf partner_account
+      ON partner_account.account_id = sfdc_opportunity_xf.partner_account
    -- NF 20210906 remove JiHu opties from the models
     WHERE sfdc_opportunity_xf.is_jihu_account = 0
 
@@ -554,7 +559,7 @@ WITH sfdc_opportunity AS (
       sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.ultimate_parent_account_id,
       sfdc_accounts_xf.is_jihu_account,
-  
+
       -- medium level grouping of the order type field
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 

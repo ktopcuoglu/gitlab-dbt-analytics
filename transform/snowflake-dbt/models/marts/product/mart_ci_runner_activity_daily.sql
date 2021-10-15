@@ -43,6 +43,9 @@
      multi_day_ci_builds.date_day                                      AS report_date,
      ci_runner_activity.dim_project_id,
      ci_runner_activity.dim_namespace_id,
+     ci_runner_activity.dim_ci_runner_id,
+     ci_runner_activity.dim_ci_pipeline_id,
+     ci_runner_activity.dim_ci_stage_id,
      ci_runner_activity.is_paid_by_gitlab,
      ci_runner_activity.public_projects_minutes_cost_factor,
      ci_runner_activity.private_projects_minutes_cost_factor,
@@ -50,7 +53,7 @@
    FROM ci_runner_activity
    INNER JOIN multi_day_ci_builds
      ON ci_runner_activity.dim_ci_build_id = multi_day_ci_builds.dim_ci_build_id
-   {{ dbt_utils.group_by(n=6) }}
+   {{ dbt_utils.group_by(n=9) }}
  
 ), joined AS (
  
@@ -60,6 +63,9 @@
      dim_namespace.dim_namespace_id,
      dim_namespace.ultimate_parent_namespace_id,
      dim_namespace.gitlab_plan_id                                      AS dim_plan_id,
+     ci_runner_activity_daily.dim_ci_runner_id,
+     ci_runner_activity_daily.dim_ci_pipeline_id,
+     ci_runner_activity_daily.dim_ci_stage_id,
     
  
      -- CI RUNNER METRICS
@@ -87,5 +93,5 @@
    created_by="@ischweickartDD",
    updated_by="@chrissharp",
    created_date="2021-07-30",
-   updated_date="2021-08-24"
+   updated_date="2021-10-11"
 ) }}
