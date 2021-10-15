@@ -170,7 +170,7 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
 
     # removing extra " to have an easier query to parse
     sql_query = sql_query.replace('"', "")
-    sql_query_optimized = optimize_token_size(sql_query)
+    sql_query_optimized = optimize_token_size(input_token=sql_query)
 
     sql_query_parsed = sqlparse.parse(sql_query_optimized)
 
@@ -179,10 +179,14 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
     token_list = sql_query_parsed[0].tokens
 
     # optimize token_list size
-    select_index = find_keyword_index(token_list, "SELECT")
-    from_index = find_keyword_index(token_list, "FROM")
+    select_index = find_keyword_index(
+        input_token_list=token_list, defined_keyword="SELECT"
+    )
+    from_index = find_keyword_index(input_token_list=token_list, defined_keyword="FROM")
 
-    token_list_with_counter_name = translate_postgres_snowflake_count(token_list)
+    token_list_with_counter_name = translate_postgres_snowflake_count(
+        input_token_list=token_list
+    )
 
     """
     Determinate if we have subquery (without FROM clause in the main query),
@@ -201,7 +205,7 @@ def add_counter_name_as_column(sql_metrics_name: str, sql_query: str) -> str:
         select_index + 1, f" '{sql_metrics_name}' AS counter_name, "
     )
 
-    return prepare_sql_statement(token_list_with_counter_name)
+    return prepare_sql_statement(input_token_list=token_list_with_counter_name)
 
 
 def rename_table_name(
@@ -255,7 +259,13 @@ def rename_query_tables(sql_query: str) -> str:
     # go through the tokens to find the tables that should be renamed
     for index in range(len(tokens)):
         token = tokens[index]
-        rename_table_name(keywords_to_look_at, token, tokens, index, token_string_list)
+        rename_table_name(
+            keywords_to_look_at=keywords_to_look_at,
+            token=token,
+            tokens=tokens,
+            index=index,
+            token_string_list=token_string_list,
+        )
     return "".join(token_string_list)
 
 
@@ -283,7 +293,9 @@ def main(json_query_list: dict) -> dict:
 
 if __name__ == "__main__":
     config_dict = env.copy()
-    json_data = get_sql_query_map(private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"])
+    json_data = get_sql_query_map(
+        private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
+    )
 
     info("Processed sql queries")
     final_sql_query_dict = main(json_query_list=json_data)
