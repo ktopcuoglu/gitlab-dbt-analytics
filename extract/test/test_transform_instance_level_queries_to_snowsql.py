@@ -4,6 +4,10 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
     sql_queries_dict,
     add_counter_name_as_column,
     rename_query_tables,
+    optimize_token_size,
+    find_keyword_index,
+    prepare_sql_statement,
+    translate_postgres_snowflake_count,
 )
 
 input_raw_sql = {
@@ -19,7 +23,7 @@ input_raw_sql = {
 
 output_translated_sql = {
     "counts.boards": "SELECT 'counts.boards' AS counter_name,  COUNT(boards.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_boards_dedupe_source AS boards",
-    "counts.clusters_applications_cert_managers": "SELECT 'counts.clusters_applications_cert_managers' AS counter_name,  COUNT(DISTINCT clusters_applications_cert_managers.clusters.user_id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_applications_cert_managers_dedupe_source AS clusters_applications_cert_managers INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters ON clusters.id = clusters_applications_cert_managers.cluster_id WHERE clusters_applications_cert_managers.status IN (11, 3, 5)",
+    "counts.clusters_applications_cert_managers": "SELECT 'counts.clusters_applications_cert_managers' AS counter_name,  COUNT(DISTINCT clusters.user_id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_applications_cert_managers_dedupe_source AS clusters_applications_cert_managers INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters ON clusters.id = clusters_applications_cert_managers.cluster_id WHERE clusters_applications_cert_managers.status IN (11, 3, 5)",
     "counts.clusters_platforms_eks": "SELECT 'counts.clusters_platforms_eks' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_aws_dedupe_source AS cluster_providers_aws ON cluster_providers_aws.cluster_id = clusters.id WHERE clusters.provider_type = 2 AND (cluster_providers_aws.status IN (3)) AND clusters.enabled = TRUE",
     "counts.clusters_platforms_gke": "SELECT 'counts.clusters_platforms_gke' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_gcp_dedupe_source AS cluster_providers_gcp ON cluster_providers_gcp.cluster_id = clusters.id WHERE clusters.provider_type = 1 AND (cluster_providers_gcp.status IN (3)) AND clusters.enabled = TRUE",
     "counts.clusters_platforms_user": "SELECT 'counts.clusters_platforms_user' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters WHERE clusters.provider_type = 0 AND clusters.enabled = TRUE",
@@ -56,19 +60,56 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == output_translated_sql[sql_metric]
 
-
-# TODO: rbacovic - Cover 3 new changes in test cases
+#######################
 # TODO: rbacovic Scalar subquery
-# TODO: rbacovic COUNT from PG to Snowflake
-# test_cases = ['COUNT(DISTINCT aa.bb.cc)',
-#               'COUNT(xx.yy.zz)',
-#               'COUNT( DISTINCT oo.pp.rr)',
-#               'COUNT( xx.yy.zz)',
-#               'COUNT(users.users.id)']
-# results = ['COUNT(DISTINCT bb.cc)',
-#               'COUNT(yy.zz)',
-#               'COUNT( DISTINCT pp.rr)',
-#               'COUNT(yy.zz)',
-#               'COUNT(users.id)']
+
+
+# optimize_token_size
+test_cases = [
+    "  SELECT  aa.bb  FROM   (SELECT   1 as aa) FROM BB ",
+    "   SELECT 1",
+    "   SELECT\n a from   bb   ",
+    "",
+    None,
+]
+
+results = [
+    "SELECT aa.bb FROM (SELECT 1 as aa) FROM BB",
+    "SELECT 1",
+    "SELECT a from bb",
+    "",
+    "",
+]
+#
+for i, test_case in enumerate(test_cases):
+    assert optimize_token_size(test_case) == results[i]
+
+
+# COUNT from PG to Snowflake: translate_postgres_snowflake_count
+test_cases = [
+    ["COUNT(DISTINCT aa.bb.cc)"],
+    ["COUNT(xx.yy.zz)"],
+    ["COUNT( DISTINCT oo.pp.rr)"],
+    ["COUNT( xx.yy.zz)"],
+    ["COUNT(users.users.id)"],
+    [],
+    None,
+]
+
+results = [
+    ["COUNT(DISTINCT bb.cc)"],
+    ["COUNT(yy.zz)"],
+    ["COUNT(DISTINCT pp.rr)"],
+    ["COUNT(yy.zz)"],
+    ["COUNT(users.id)"],
+    [],
+    [],
+]
+
+for i, test_case in enumerate(test_cases):
+    assert translate_postgres_snowflake_count(test_case) == results[i]
 
 # TODO: rbacovic regular subquery
+
+# TODO: rbacovic find_keyword_index
+# TODO: rbacovic prepare_sql_statement
