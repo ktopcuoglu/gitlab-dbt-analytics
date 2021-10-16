@@ -13,11 +13,9 @@ from airflow_utils import (
 
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE,
     GCP_SERVICE_CREDS,
 )
 
@@ -54,10 +52,8 @@ pmg_operator = KubernetesPodOperator(
     name="pmg-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
         GCP_SERVICE_CREDS,
     ],
