@@ -45,7 +45,7 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(env.copy(), "LOADER")
     snowflake_stage_load_copy_remove(
         "flaky_tests.json",
-        "raw.gitlab_data_yaml.gitlab_data_yaml_load",
-        "raw.gitlab_data_yaml.flaky_tests",
+        "gitlab_data_yaml.gitlab_data_yaml_load",
+        "gitlab_data_yaml.flaky_tests",
         snowflake_engine,
     )

@@ -85,8 +85,8 @@ if __name__ == "__main__":
 
         snowflake_stage_load_copy_remove(
             f"{json_file_name}.json",
-            "raw.gitlab_data_yaml.gitlab_data_yaml_load",
-            f"raw.gitlab_data_yaml.{table_name}",
+            "gitlab_data_yaml.gitlab_data_yaml_load",
+            f"gitlab_data_yaml.{table_name}",
             snowflake_engine,
         )
 
