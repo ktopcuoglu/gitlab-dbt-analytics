@@ -35,9 +35,8 @@ default_args = {
     "dagrun_timeout": timedelta(hours=2),
 }
 
-# Set the command for the container
-container_cmd = f"""
-    {clone_and_setup_extraction_cmd} &&
+
+clone_and_parse_handbook_command = f"""
     cd /usr/local/ && 
     mkdir -p gitlab && 
     cd gitlab && 
@@ -51,8 +50,13 @@ container_cmd = f"""
     echo "      Running git log command.";
     echo "sha,name,email,date,message" > /analytics/extract/sheetload/values.csv ;
     git log --pretty='format:%H,"%aN","%aE",%ci,"%s"' sites/handbook/source/handbook/values/index.html.md >> /analytics/extract/sheetload/values.csv ;
+"""
+
+# Set the command for the container
+container_cmd = f"""
+    {clone_and_setup_extraction_cmd} &&
+    {clone_and_parse_handbook_command} && 
     cd /analytics/extract/sheetload/ &&
-    export SNOWFLAKE_LOAD_DATABASE="RAW";
     python sheetload.py csv --filename values.csv --schema handbook --tablename values_page_git_log
  """
 

@@ -8,12 +8,12 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    gitlab_pod_env_vars
 )
 
 from kube_secrets import (
     GCP_SERVICE_CREDS,
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -22,7 +22,7 @@ from kube_secrets import (
 from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
-pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
+pod_env_vars = gitlab_pod_env_vars
 
 default_args = {
     "catchup": True,
@@ -51,7 +51,6 @@ prometheus_operator = KubernetesPodOperator(
     name="prometheus-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,

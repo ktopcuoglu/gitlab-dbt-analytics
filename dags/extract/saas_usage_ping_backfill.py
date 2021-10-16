@@ -27,7 +27,7 @@ from kube_secrets import (
 # Load the env vars into a dict and set env vars
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-
+pod_env_vars = gitlab_pod_env_vars
 secrets = [
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_ROLE,

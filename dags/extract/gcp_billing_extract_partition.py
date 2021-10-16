@@ -8,12 +8,12 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    gitlab_pod_env_vars,
 )
 
 from kube_secrets import (
     GCP_BILLING_ACCOUNT_CREDENTIALS,
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -25,10 +25,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 
 GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {
-    "CI_PROJECT_DIR": "/analytics",
-    "SNOWFLAKE_LOAD_DATABASE": "RAW" if GIT_BRANCH == "master" else f"{GIT_BRANCH}_RAW",
-}
+pod_env_vars = gitlab_pod_env_vars
 
 default_args = {
     "catchup": True,
@@ -64,7 +61,6 @@ billing_operator = KubernetesPodOperator(
     secrets=[
         GCP_BILLING_ACCOUNT_CREDENTIALS,
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,

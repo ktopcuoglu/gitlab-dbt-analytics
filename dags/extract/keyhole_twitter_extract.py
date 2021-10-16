@@ -13,13 +13,11 @@ from airflow_utils import (
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
-
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -50,7 +48,7 @@ keyhole_twitter_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python3 keyhole_twitter/src/execute.py && 
     python3 sheetload/sheetload.py csv --filename social_twitter_impressions.csv --schema keyhole_twitter --tablename impressions
-"""
+    """
 
 keyhole_twitter_extract_cmd = KubernetesPodOperator(
     **gitlab_defaults,
@@ -59,7 +57,6 @@ keyhole_twitter_extract_cmd = KubernetesPodOperator(
     name="twitter-impressions-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
