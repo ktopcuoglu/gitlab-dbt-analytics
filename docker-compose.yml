@@ -10,7 +10,7 @@ services:
           - airflow_scheduler
         environment:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
-          NAMESPACE: testing
+          NAMESPACE: default
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
@@ -42,7 +42,7 @@ services:
           - airflow_db
         environment:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
-          NAMESPACE: testing
+          NAMESPACE: default
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
