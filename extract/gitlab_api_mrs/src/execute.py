@@ -36,7 +36,7 @@ def verify_mr_information(
     """
     count_query = f"""
         SELECT count(distinct id) 
-        FROM RAW.TAP_POSTGRES.GITLAB_DB_MERGE_REQUESTS 
+        FROM TAP_POSTGRES.GITLAB_DB_MERGE_REQUESTS 
         WHERE updated_at BETWEEN '{start}' AND '{end}'
         AND target_project_id = {project_id}
     """
@@ -110,7 +110,7 @@ if __name__ == "__main__":
         if wrote_to_file:
             snowflake_stage_load_copy_remove(
                 file_name,
-                f"raw.{schema}.{stage}",
+                f"{schema}.{stage}",
                 f"{schema}.{extract_name}_merge_requests",
                 snowflake_engine,
             )
