@@ -98,6 +98,11 @@ include:
   script:
     - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME
 
+🥩clone_raw_empty:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --force --database raw --empty
+
 👥force_clone_both:
   <<: *snowflake_start_clone
   script:
