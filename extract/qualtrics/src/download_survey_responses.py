@@ -25,8 +25,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
 
         snowflake_stage_load_copy_remove(
             "questions.json",
-            "raw.qualtrics.qualtrics_nps_load",
-            "raw.qualtrics.questions",
+            "qualtrics.qualtrics_nps_load",
+            "qualtrics.questions",
             snowflake_engine,
         )
 
@@ -34,8 +34,8 @@ def extract_survey_information(qualtrics_client, survey_id, survey_table_name):
     for local_file_name in local_file_names:
         snowflake_stage_load_copy_remove(
             local_file_name,
-            "raw.qualtrics.qualtrics_nps_load",
-            f"raw.qualtrics.{survey_table_name}",
+            "qualtrics.qualtrics_nps_load",
+            f"qualtrics.{survey_table_name}",
             snowflake_engine,
         )
 
