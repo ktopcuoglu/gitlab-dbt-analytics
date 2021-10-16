@@ -4,7 +4,7 @@ from os import environ as env
 from yaml import load, safe_load, YAMLError
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     DBT_IMAGE,

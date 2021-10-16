@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
@@ -56,7 +56,7 @@ clone_and_parse_handbook_command = f"""
 container_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     {clone_and_parse_handbook_command} && 
-    cd /analytics/extract/sheetload/ &&
+    cd /analytics/extract/sheetload/;
     python sheetload.py csv --filename values.csv --schema handbook --tablename values_page_git_log
  """
 
