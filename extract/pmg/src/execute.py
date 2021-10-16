@@ -8,7 +8,7 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
     dataframe_uploader,
 )
-
+from logging import info
 config_dict = env.copy()
 
 
@@ -51,11 +51,11 @@ def get_pmg_reporting_data_query(start_date: str, end_date: str) -> str:
 def write_date_json(date: str, df: DataFrame) -> str:
     """Just here so we can log in the list comprehension"""
     file_name = f"pmg_reporting_data_{date}.json"
-    print(f"Writing file {file_name}")
+    info(f"Writing file {file_name}")
 
     df.to_json(file_name, orient="records", date_format="iso")
 
-    print(f"{file_name} written")
+    info(f"{file_name} written")
 
     return file_name
 
@@ -67,6 +67,9 @@ if __name__ == "__main__":
     # Substringing cause their only needed for string operations in the next function
     start_time = config_dict["START_TIME"][0:10]
     end_time = config_dict["END_TIME"][0:10]
+
+    info(config_dict)
+    info(env["SNOWFLAKE_LOAD_DATABASE"])
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
