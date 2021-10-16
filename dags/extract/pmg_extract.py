@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
@@ -47,7 +47,9 @@ default_args = {
 
 dag = DAG("pmg_extract", default_args=default_args, schedule_interval="0 23 * * *")
 
+test_tolerations = {
 
+}
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 pmg_extract_command = f"{clone_and_setup_extraction_cmd} && python pmg/src/execute.py"
 
