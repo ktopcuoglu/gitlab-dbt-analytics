@@ -68,11 +68,6 @@ if __name__ == "__main__":
     start_time = config_dict["START_TIME"][0:10]
     end_time = config_dict["END_TIME"][0:10]
 
-    print(config_dict)
-    print(env["SNOWFLAKE_LOAD_DATABASE"])
-    print(env["SNOWFLAKE_LOAD_USER"])
-    print(env["SNOWFLAKE_LOAD_ROLE"])
-
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     sql_statement = get_pmg_reporting_data_query(start_time, end_time)
