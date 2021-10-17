@@ -1,7 +1,7 @@
 import json
 import logging
 import pandas as pd
-from pandas.io.json import json_normalize
+from pandas import json_normalize
 
 
 def check_safe_models(file):
