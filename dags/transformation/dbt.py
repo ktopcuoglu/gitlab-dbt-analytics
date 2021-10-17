@@ -174,7 +174,7 @@ dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target prod --full-refresh --exclude tag:datasiren common.dim_ip_to_geo; ret=$?;
+    dbt run --profiles-dir profile --target prod --full-refresh --exclude tag:datasiren; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
