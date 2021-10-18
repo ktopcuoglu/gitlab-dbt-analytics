@@ -129,7 +129,7 @@ test_cases_list_count: List[Any] = [
     ["COUNT( xx.yy.zz)"],
     ["COUNT(users.users.id)"],
     None,
-    []
+    [],
 ]
 
 results_list_count: List[Any] = [
@@ -139,7 +139,7 @@ results_list_count: List[Any] = [
     ["COUNT(yy.zz)"],
     ["COUNT(users.id)"],
     [],
-    []
+    [],
 ]
 
 for i, test_case_list_count in enumerate(test_cases_list_count):
