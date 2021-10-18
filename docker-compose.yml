@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     airflow_webserver:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:102-2021-10-11-airflow-intermittent-503-errors-degraded-performance
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:remove_all_old_dependencies
         restart: always
         ports:
           - "8080:8080"
@@ -10,7 +10,7 @@ services:
           - airflow_scheduler
         environment:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
-          NAMESPACE: testing
+          NAMESPACE: default
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
@@ -34,7 +34,7 @@ services:
             read_only: True
 
     airflow_scheduler:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:102-2021-10-11-airflow-intermittent-503-errors-degraded-performance
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:remove_all_old_dependencies
         restart: always
         ports:
           - "8793:8793"
@@ -42,7 +42,7 @@ services:
           - airflow_db
         environment:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
-          NAMESPACE: testing
+          NAMESPACE: default
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
