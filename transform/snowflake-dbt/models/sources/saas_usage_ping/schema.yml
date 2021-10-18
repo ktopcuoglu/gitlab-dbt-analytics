@@ -18,7 +18,7 @@ models:
           tests:
             - not_null
         - name: ping_date
-          description: Date when ping is executed
+          description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
           tests:
             - not_null
         - name: run_id
@@ -42,7 +42,7 @@ models:
           tests:
             - not_null
         - name: ping_date
-          description: Date when ping is executed
+          description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
           tests:
             - not_null
         - name: run_id
