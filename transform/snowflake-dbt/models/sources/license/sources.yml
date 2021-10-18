@@ -33,6 +33,7 @@ sources:
 
       - name: granted_add_ons
         identifier: granted_add_ons
+        freshness: null
         columns:
           - name: id
             tests:
