@@ -33,7 +33,7 @@ WITH RECURSIVE issues AS (
 
     SELECT
       issue_id                                                             AS issue_id,
-      issue_lineage,
+      issue_lineage                                                        AS issue_lineage,
       issue_lineage[ARRAY_SIZE(issue_lineage) - 1]::NUMBER                 AS last_moved_duplicated_issue_id,
       IFF(last_moved_duplicated_issue_id != issue_id, TRUE, FALSE)         AS is_issue_moved_duplicated,
       --return final common dimension mapping,
