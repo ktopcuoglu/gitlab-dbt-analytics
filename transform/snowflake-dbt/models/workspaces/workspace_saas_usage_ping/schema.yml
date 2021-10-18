@@ -30,7 +30,7 @@ models:
         tests:
           - not_null
       - name: ping_date
-        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
+        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed. 
         tests:
           - not_null
       - name: metric_path
