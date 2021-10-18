@@ -14,8 +14,10 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
     translate_postgres_snowflake_count,
 )
 
+########################################################################################################################
 # Test case: for transforming queries from Postgres to Snowflake
-test_cases_dict: Dict[str, Dict[str, str]] = {
+########################################################################################################################
+test_cases_dict: Dict[Any, Any] = {
     "counts": {
         "boards": 'SELECT COUNT("boards"."id") FROM "boards"',
         "clusters_applications_cert_managers": 'SELECT COUNT(DISTINCT "clusters_applications_cert_managers"."clusters.user_id") FROM "clusters_applications_cert_managers" INNER JOIN "clusters" ON "clusters"."id" = "clusters_applications_cert_managers"."cluster_id" WHERE "clusters_applications_cert_managers"."status" IN (11, 3, 5)',
@@ -26,7 +28,7 @@ test_cases_dict: Dict[str, Dict[str, str]] = {
     }
 }
 
-results_dict: Dict[str, str] = {
+results_dict: Dict[Any, Any] = {
     "counts.boards": "SELECT 'counts.boards' AS counter_name,  COUNT(boards.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_boards_dedupe_source AS boards",
     "counts.clusters_applications_cert_managers": "SELECT 'counts.clusters_applications_cert_managers' AS counter_name,  COUNT(DISTINCT clusters.user_id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_applications_cert_managers_dedupe_source AS clusters_applications_cert_managers INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters ON clusters.id = clusters_applications_cert_managers.cluster_id WHERE clusters_applications_cert_managers.status IN (11, 3, 5)",
     "counts.clusters_platforms_eks": "SELECT 'counts.clusters_platforms_eks' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_aws_dedupe_source AS cluster_providers_aws ON cluster_providers_aws.cluster_id = clusters.id WHERE clusters.provider_type = 2 AND (cluster_providers_aws.status IN (3)) AND clusters.enabled = TRUE",
@@ -48,8 +50,9 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == results_dict[sql_metric]
 
-
+########################################################################################################################
 # Test case: Scalar subquery :: test SELECT (SELECT 1) -> SELECT (SELECT 1) as counter_value
+########################################################################################################################
 test_cases_dict = {
     "counts": {
         "snippets": 'SELECT (SELECT COUNT("snippets"."id") FROM "snippets" WHERE "snippets"."type" = \'PersonalSnippet\') + (SELECT COUNT("snippets"."id") FROM "snippets" WHERE "snippets"."type" = \'ProjectSnippet\')'
@@ -66,6 +69,7 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == results_dict[sql_metric]
 
+########################################################################################################################
 # Test case: regular subquery transform:
 # SELECT a
 #   FROM (SELECT 1 as a
@@ -73,8 +77,8 @@ for sql_metric, sql_query in final_sql_query_dict.items():
 # SELECT 'metric_name', a metric_value
 #   FROM (SELECT 1 AS a
 #           FROM b)
-
-test_cases_dict_subquery: Dict[str, Dict[str, Dict[str, str]]] = {
+########################################################################################################################
+test_cases_dict_subquery: Dict[Any, Any] = {
     "usage_activity_by_stage_monthly": {
         "create": {
             "merge_requests_with_overridden_project_rules": 'SELECT COUNT(DISTINCT "approval_merge_request_rules"."merge_request_id") FROM "approval_merge_request_rules" WHERE "approval_merge_request_rules"."created_at" BETWEEN \'2021-08-14 12:44:36.596707\' AND \'2021-09-11 12:44:36.596773\' AND ((EXISTS (\n  SELECT\n    1\n  FROM\n    approval_merge_request_rule_sources\n  WHERE\n    approval_merge_request_rule_sources.approval_merge_request_rule_id = approval_merge_request_rules.id\n    AND NOT EXISTS (\n      SELECT\n        1\n      FROM\n        approval_project_rules\n      WHERE\n        approval_project_rules.id = approval_merge_request_rule_sources.approval_project_rule_id\n        AND EXISTS (\n          SELECT\n            1\n          FROM\n            projects\n          WHERE\n            projects.id = approval_project_rules.project_id\n            AND projects.disable_overriding_approvers_per_merge_request = FALSE))))\n    OR("approval_merge_request_rules"."modified_from_project_rule" = TRUE)\n)'
@@ -82,7 +86,7 @@ test_cases_dict_subquery: Dict[str, Dict[str, Dict[str, str]]] = {
     }
 }
 
-results_dict_subquery: Dict[str, str] = {
+results_dict_subquery: Dict[Any, Any] = {
     "usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules": "SELECT 'usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules' AS counter_name,  COUNT(DISTINCT approval_merge_request_rules.merge_request_id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rules_dedupe_source AS approval_merge_request_rules WHERE approval_merge_request_rules.created_at BETWEEN '2021-08-14 12:44:36.596707' AND '2021-09-11 12:44:36.596773' AND ((EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rule_sources_dedupe_source AS approval_merge_request_rule_sources WHERE approval_merge_request_rule_sources.approval_merge_request_rule_id = approval_merge_request_rules.id AND NOT EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_approval_project_rules_dedupe_source AS approval_project_rules WHERE approval_project_rules.id = approval_merge_request_rule_sources.approval_project_rule_id AND EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects WHERE projects.id = approval_project_rules.project_id AND projects.disable_overriding_approvers_per_merge_request = FALSE)))) OR(approval_merge_request_rules.modified_from_project_rule = TRUE))"
 }
 
@@ -92,9 +96,10 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == results_dict_subquery[sql_metric]
 
+########################################################################################################################
 # Test case: optimize_token_size
-
-test_cases_list = [
+########################################################################################################################
+test_cases_list: List[Any] = [
     "  SELECT  aa.bb  FROM   (SELECT   1 as aa) FROM BB ",
     "   SELECT 1",
     "   SELECT\n a from   bb   ",
@@ -102,7 +107,7 @@ test_cases_list = [
     None,
 ]
 
-results_list = [
+results_list: List[Any] = [
     "SELECT aa.bb FROM (SELECT 1 as aa) FROM BB",
     "SELECT 1",
     "SELECT a from bb",
@@ -110,33 +115,43 @@ results_list = [
     "",
 ]
 #
-test_case: Optional[str]
-for i, test_case in enumerate(test_cases_list):
-    assert optimize_token_size(test_case) == results_list[i]
 
+for i, test_case_list in enumerate(test_cases_list):
+    assert optimize_token_size(test_case_list) == results_list[i]
 
+########################################################################################################################
 # Test case: COUNT from PG to Snowflake: translate_postgres_snowflake_count
-test_cases_list_count: List[List[str]] = [
+########################################################################################################################
+test_cases_list_count: List[Any] = [
     ["COUNT(DISTINCT aa.bb.cc)"],
     ["COUNT(xx.yy.zz)"],
     ["COUNT( DISTINCT oo.pp.rr)"],
     ["COUNT( xx.yy.zz)"],
     ["COUNT(users.users.id)"],
+    None,
+    []
 ]
 
-results_list_count: List[List[str]] = [
+results_list_count: List[Any] = [
     ["COUNT(DISTINCT bb.cc)"],
     ["COUNT(yy.zz)"],
     ["COUNT(DISTINCT pp.rr)"],
     ["COUNT(yy.zz)"],
     ["COUNT(users.id)"],
+    [],
+    []
 ]
 
-for i, test_case_count in enumerate(test_cases_list_count):
-    assert translate_postgres_snowflake_count(test_case_count) == results_list_count[i]
+for i, test_case_list_count in enumerate(test_cases_list_count):
+    assert (
+        translate_postgres_snowflake_count(test_case_list_count)
+        == results_list_count[i]
+    )
 
+########################################################################################################################
 # Test case: find_keyword_index
-test_cases_parse: List[List[str]] = [
+########################################################################################################################
+test_cases_parse: List[Any] = [
     sqlparse.parse("SELECT FROM")[0].tokens,
     sqlparse.parse("THERE IS NO MY WORD")[0].tokens,
     sqlparse.parse("THIS IS FROM SELECT")[0].tokens,
@@ -154,7 +169,9 @@ results_parse = [2, 0, 4, 10]
 for i, test_case_parse in enumerate(test_cases_parse):
     assert find_keyword_index(test_case_parse, "FROM") == results_parse[i]
 
+########################################################################################################################
 # Test case: prepare_sql_statement
+########################################################################################################################
 test_cases_prepare = [
     sqlparse.parse("SELECT 1")[0].tokens,
     sqlparse.parse("SELECT abc from def")[0].tokens,
