@@ -799,7 +799,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
         tests:
