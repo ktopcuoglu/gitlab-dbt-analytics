@@ -39,7 +39,8 @@
       issue_id,
       "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
       "{{this.database}}".{{target.schema}}.regexp_to_array(issue_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array,
-      SPLIT_PART(REGEXP_SUBSTR(issue_description, '~"customer priority::[0-9]{1,2}'), '::', -1)::NUMBER                                     AS request_priority
+      SPLIT_PART(REGEXP_SUBSTR(issue_description, '~"customer priority::[0-9]{1,2}'), '::', -1)::NUMBER                                     AS request_priority,
+      issue_last_edited_at
     FROM issue_extended
     WHERE issue_description IS NOT NULL
       AND NOT (ARRAY_SIZE(sfdc_link_array) = 0 AND ARRAY_SIZE(zendesk_link_array) = 0)
@@ -119,7 +120,8 @@
       END                                                              AS link_type,
       IFF(link_type = 'Account', sfdc_id_18char, NULL)                 AS dim_crm_account_id,
       IFF(link_type = 'Opportunity', sfdc_id_18char, NULL)             AS dim_crm_opportunity_id,
-      request_priority
+      request_priority,
+      issue_last_edited_at
     FROM gitlab_issue_description_parsing, 
       TABLE(FLATTEN(sfdc_link_array)) f
     WHERE link_type IN ('Account', 'Opportunity')
@@ -133,7 +135,8 @@
       gitlab_issue_description_sfdc_links.link_type,
       IFNULL(gitlab_issue_description_sfdc_links.dim_crm_account_id, sfdc_opportunity_source.account_id) AS dim_crm_account_id,
       gitlab_issue_description_sfdc_links.dim_crm_opportunity_id,
-      gitlab_issue_description_sfdc_links.request_priority
+      gitlab_issue_description_sfdc_links.request_priority,
+      gitlab_issue_description_sfdc_links.issue_last_edited_at
     FROM gitlab_issue_description_sfdc_links
     LEFT JOIN sfdc_opportunity_source
       ON sfdc_opportunity_source.opportunity_id = gitlab_issue_description_sfdc_links.dim_crm_opportunity_id
@@ -170,7 +173,8 @@
       issue_id,
       REPLACE(f.value, '"', '')                      AS dim_ticket_id,
       'Zendesk Ticket'                               AS link_type,
-      request_priority
+      request_priority,
+      issue_last_edited_at
     FROM gitlab_issue_description_parsing, 
       TABLE(FLATTEN(zendesk_link_array)) f
 
@@ -194,7 +198,8 @@
       dim_crm_opportunity_id,
       dim_crm_account_id,
       NULL AS dim_ticket_id,
-      IFNULL(request_priority, 1)::NUMBER AS request_priority
+      IFNULL(request_priority, 1)::NUMBER AS request_priority,
+      note_updated_at                     AS last_update_at
     FROM gitlab_issue_notes_sfdc_links_with_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY issue_id, sfdc_id_18char ORDER BY note_updated_at DESC) = 1
 
@@ -206,7 +211,8 @@
       NULL dim_crm_opportunity_id,
       dim_crm_account_id,
       dim_ticket_id,
-      IFNULL(request_priority, 1)::NUMBER AS request_priority
+      IFNULL(request_priority, 1)::NUMBER AS request_priority,
+      note_updated_at
     FROM gitlab_issue_notes_zendesk_with_sfdc_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY issue_id, dim_ticket_id ORDER BY note_updated_at DESC) = 1
 
@@ -218,7 +224,8 @@
       gitlab_issue_description_sfdc_links_with_account.dim_crm_opportunity_id,
       gitlab_issue_description_sfdc_links_with_account.dim_crm_account_id,
       NULL AS dim_ticket_id,
-      IFNULL(gitlab_issue_description_sfdc_links_with_account.request_priority, 1)::NUMBER AS request_priority
+      IFNULL(gitlab_issue_description_sfdc_links_with_account.request_priority, 1)::NUMBER AS request_priority,
+      gitlab_issue_description_sfdc_links_with_account.issue_last_edited_at
     FROM gitlab_issue_description_sfdc_links_with_account
     LEFT JOIN gitlab_issue_notes_sfdc_links
       ON gitlab_issue_description_sfdc_links_with_account.issue_id = gitlab_issue_notes_sfdc_links.issue_id
@@ -233,25 +240,44 @@
       NULL dim_crm_opportunity_id,
       gitlab_issue_description_zendesk_with_sfdc_account.dim_crm_account_id,
       gitlab_issue_description_zendesk_with_sfdc_account.dim_ticket_id,
-      IFNULL(gitlab_issue_description_zendesk_with_sfdc_account.request_priority, 1)::NUMBER AS request_priority
+      IFNULL(gitlab_issue_description_zendesk_with_sfdc_account.request_priority, 1)::NUMBER AS request_priority,
+      gitlab_issue_description_zendesk_with_sfdc_account.issue_last_edited_at
     FROM gitlab_issue_description_zendesk_with_sfdc_account
     LEFT JOIN gitlab_issue_notes_zendesk_link
       ON gitlab_issue_description_zendesk_with_sfdc_account.issue_id = gitlab_issue_notes_zendesk_link.issue_id
       AND gitlab_issue_description_zendesk_with_sfdc_account.dim_ticket_id = gitlab_issue_notes_zendesk_link.dim_ticket_id
     WHERE gitlab_issue_notes_zendesk_link.issue_id IS NULL
 
-), final AS (
+), union_links_mapped_issues AS (
 
-    SELECT DISTINCT
+    SELECT
       map_moved_duplicated_issue.dim_issue_id,
       union_links.link_type,
       {{ get_keyed_nulls('union_links.dim_crm_opportunity_id')  }}     AS dim_crm_opportunity_id,
       union_links.dim_crm_account_id,
       IFNULL(union_links.dim_ticket_id, -1)::NUMBER                    AS dim_ticket_id,
-      union_links.request_priority
+      union_links.request_priority,
+      last_update_at
     FROM union_links
     INNER JOIN map_moved_duplicated_issue
       ON map_moved_duplicated_issue.issue_id = union_links.dim_issue_id
+
+), final AS (
+
+    -- Take the latest update of the issue||SFDC/Zendesk link combination.
+    -- This could happen if a issue link combination appears in an issue that was moved/duplicated
+    -- to other and in that other issue the same link is also posted.
+    -- And those links could have different priorities 
+
+    SELECT
+      dim_issue_id,
+      link_type,
+      dim_crm_opportunity_id,
+      dim_crm_account_id,
+      dim_ticket_id,
+      request_priority
+    FROM union_links
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id, dim_crm_opportunity_id, dim_crm_account_id, dim_ticket_id ORDER BY last_update_at DESC) = 1
 
 )
 
