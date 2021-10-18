@@ -149,6 +149,11 @@ databases:
     - snalamaru_prep:
         shared: no
 
+    - tpoole_prod:
+        shared: no
+    - tpoole_prep:
+        shared: no
+
     - trevorromero_prod:
         shared: no
     - trevorromero_prep:
@@ -3722,6 +3727,50 @@ roles:
         member_of: []
         warehouses: []
 
+    - tpoole:
+        member_of:
+         - analyst_finance
+         - analyst_growth
+         - analyst_marketing
+         - customer_db
+         - data_team_analyst
+         - gainsight
+         - restricted_safe
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - tpoole_prep
+                - tpoole_prod
+            schemas:
+                - tpoole_prep.*
+                - tpoole_prod.*
+            tables:
+                - tpoole_prep.*.*
+                - tpoole_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tpoole_prep
+                    - tpoole_prod
+                write:
+                    - tpoole_prep
+                    - tpoole_prod
+            schemas:
+                read:
+                    - tpoole_prep.*
+                    - tpoole_prod.*
+                write:
+                    - tpoole_prep.*
+                    - tpoole_prod.*
+            tables:
+                read:
+                    - tpoole_prep.*.*
+                    - tpoole_prod.*.*
+                write:
+                    - tpoole_prep.*.*
+                    - tpoole_prod.*.*      
+
     - trevorromero:
         member_of:
             - decisive_data
@@ -4608,6 +4657,11 @@ users:
     - tmurphy:
         can_login: no
         member_of: []
+
+    - tpoole:
+        can_login: yes
+        member_of:
+            - tpoole
 
     - trevorromero:
         can_login: yes
