@@ -38,6 +38,7 @@ sales_funnel, related to Lead to Cash funnel
 sales_territory, Related to sales territory mappings
 subscription_snapshot,For Subscription Snapshots
 schema,dbt built-in
+service_ping,Relates to service_ping (SQL and Redis metrics) data
 sfdc,Relates to Salesforce dotcom
 sources,Related to sources
 social,Related to social media data
