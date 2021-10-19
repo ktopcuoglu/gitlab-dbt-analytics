@@ -3732,7 +3732,7 @@ roles:
          - analyst_finance
          - analyst_growth
          - analyst_marketing
-         - customer_db
+         - customers_db
          - data_team_analyst
          - gainsight
          - restricted_safe
