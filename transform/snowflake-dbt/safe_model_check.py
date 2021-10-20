@@ -13,7 +13,7 @@ def check_safe_models(file):
         else:
             df = json_normalize(pd.Series(open(file).readlines()).apply(json.loads))
             df = df[["name", "tags", "config.schema"]]
-            error_message = "⚠️ The following models are not SAFE ⚠️:\r\n" + df.to_csv(
+            error_message = "⚠️ The following models are not SAFE ⚠️:\r\n" + df.to_markdown(
                 index=False
             )
             raise ValueError(error_message)

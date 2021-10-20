@@ -223,7 +223,7 @@
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.21
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
