@@ -131,6 +131,8 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker
 
 /transform/snowflake-dbt/models/workspaces/workspace_finance  @statimatla @fkurniadi @james.shen @cmestel @cmachado1 @iweeks @michellecooper @jeanpeguero @dvanrooijen2 @vedprakash2021
 
+/transform/snowflake-dbt/models/workspaces/workspace_engineering  @ken_aguilar @pempey @jjstark @paul_armstrong @iweeks @snalamaru @dvanrooijen2 @vedprakash2021
+
 # ======
 # dbt data file Overwrites
 # ======
