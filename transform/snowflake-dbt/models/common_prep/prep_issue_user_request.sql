@@ -22,7 +22,7 @@
 
     SELECT
       map_namespace_lineage.dim_namespace_ultimate_parent_id,
-      issue.*å
+      issue.*
     FROM issue
     INNER JOIN project
       ON project.project_id = issue.project_id
