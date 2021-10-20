@@ -258,7 +258,20 @@ safe_model_script:
   <<: *safe_models_check
   script:
     - dbt deps $CI_PROFILE_TARGET
-    - dbt --partial-parse ls $CI_PROFILE_TARGET --models tag:safe+ --output json > safe_models.json
+    - dbt --partial-parse ls \
+    --models\
+     tag:mnpi+ \
+    --exclude\
+     tag:mnpi_exception+\
+     config.database:PREP\
+     config.schema:restricted_safe_common\
+     config.schema:restricted_safe_common_mapping\
+     config.schema:restricted_safe_common_mart_sales\
+     config.schema:restricted_safe_common_prep\
+     config.schema:restricted_safe_legacy\
+     config.schema:restricted_safe_workspace_finance\
+     config.schema:restricted_safe_workspace_sales \
+    --output json > safe_models.json
     - python3 safe_model_check.py
 
 # ======
