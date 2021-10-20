@@ -3,6 +3,11 @@
     })
 }}
 
+{{ config(
+    tags=["mnpi"]
+) }}
+
+
 {{ create_snapshot_base(
     source=source('snapshots', 'sfdc_opportunity_snapshots'),
     primary_key='id',

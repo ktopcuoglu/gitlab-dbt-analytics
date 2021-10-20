@@ -151,3 +151,36 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker
 /transform/snowflake-dbt/data/zuora_asc_606_conversion_factors.csv                      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @vedprakash2021
 /transform/snowflake-dbt/data/zuora_country_geographic_region.csv                       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @vedprakash2021
 /transform/snowflake-dbt/data/zuora_excluded_accounts.csv                               @gitlab-data @vedprakash2021
+
+
+# ======
+# MNPI models
+# ======
+
+[MNPI]
+
+/transform/snowflake-dbt/models/legacy/sfdc/restricted_safe/sfdc_opportunity_snapshot_history.sql                         @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/legacy/snapshots/base/sfdc_opportunity_snapshots_base.sql                                 @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/legacy/snapshots/restricted_safe/zuora_rate_plan_charge_snapshots_source.sql              @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/netsuite/netsuite_transaction_lines_source.sql                                    @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/netsuite/netsuite_transactions_source.sql                                         @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_account_source.sql                                                      @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_opportunity_field_history_source.sql                                    @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_opportunity_history_source.sql                                          @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_opportunity_source.sql                                                  @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_opportunity_stage_source.sql                                            @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_zqu_quote_amendment_source.sql                                          @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_zqu_quote_rate_plan_charge_source.sql                                   @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_zqu_quote_rate_plan_source.sql                                          @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sfdc/sfdc_zqu_quote_source.sql                                                    @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sheetload/sheetload_manual_arr_true_up_allocation_source.sql                      @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sheetload/sheetload_net_arr_net_iacv_conversion_factors_source.sql                @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/sheetload/sheetload_sales_funnel_targets_matrix_source.sql                        @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_manual_journal_entry_source.sql                       @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_hold_source.sql                      @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_line_source.sql                      @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_performance_obligation_source.sql    @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora_revenue/zuora_revenue_revenue_contract_schedule_source.sql                  @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora/zuora_invoice_item_source.sql                                               @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora/zuora_invoice_source.sql                                                    @iweeks  @dvanrooijen2  @jjstark
+/transform/snowflake-dbt/models/sources/zuora/zuora_rate_plan_charge_source.sql                                           @iweeks  @dvanrooijen2  @jjstark
