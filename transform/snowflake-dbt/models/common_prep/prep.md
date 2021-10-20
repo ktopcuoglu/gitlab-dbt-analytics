@@ -24,7 +24,7 @@ Parses epic links to the `Gitlab-org` group in the description and notes of epic
 
 {% docs prep_epic_user_request %}
 
-Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description and notes of epics inside the `Gitlab-org` group, toghether with its priority represented by the label `~"customer priority::[0-10]"` . These epics are related to user feature requests from the product.
+Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description and notes of epics inside the `Gitlab-org` group, together with its priority represented by the label `~"customer priority::[0-10]"` . These epics are related to user feature requests from the product.
 
 For Opportunity and Zendesk tickets links found, the associated SFDC Account id is filled into the record.
 
@@ -44,7 +44,7 @@ It also looks for the issue links to the `Gitlab-org` group in the related issue
 
 {% docs prep_issue_user_request %}
 
-Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description and notes of issues inside the `Gitlab-org` group, toghether with its priority represented by the label `~"customer priority::[0-10]"` . These issues are related to user feature requests from the product.
+Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description and notes of issues inside the `Gitlab-org` group, together with its priority represented by the label `~"customer priority::[0-10]"` . These issues are related to user feature requests from the product.
 
 For Opportunity and Zendesk tickets links found, the associated SFDC Account id is filled into the record.
 
