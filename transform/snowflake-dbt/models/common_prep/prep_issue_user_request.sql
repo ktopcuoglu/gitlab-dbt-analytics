@@ -276,7 +276,7 @@
       dim_crm_account_id,
       dim_ticket_id,
       request_priority
-    FROM union_links
+    FROM union_links_mapped_issues
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id, dim_crm_opportunity_id, dim_crm_account_id, dim_ticket_id ORDER BY last_update_at DESC) = 1
 
 )
