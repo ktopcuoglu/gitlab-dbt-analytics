@@ -70,7 +70,7 @@
       usage_ping.dim_location_country_id,
       -- Wave 1
       DIV0(
-          IFNULL(usage_ping.license_billable_users, usage_ping.instance_user_count),
+          usage_ping.license_billable_users,
           IFNULL(usage_ping.license_user_count, seat_link.license_user_count)
           )                                                                                   AS license_utilization,
       usage_ping.license_billable_users                                                       AS billable_user_count,
