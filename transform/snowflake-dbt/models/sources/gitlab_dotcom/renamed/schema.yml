@@ -1607,6 +1607,15 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_routes_source
+    description: Base model for Gitlab.com paths for namespaces and projects which can be used to link to the actual URLs.
+    columns:
+      - name: route_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_saml_providers_source
     description: Base model for Gitlab.com gitlab_dotcom_saml_providers
     columns:
