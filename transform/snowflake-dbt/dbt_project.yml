@@ -471,7 +471,6 @@ models:
 
       workspace_engineering:
         +schema: workspace_engineering
-        +tags: ["engineering"]
 
 
     # ------------------
