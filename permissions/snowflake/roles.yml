@@ -1077,6 +1077,7 @@ roles:
                     - prod.legacy
                     - prod.pumps
                     - prod.workspace_data
+                    - prod.workspace_datascience
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
