@@ -1080,6 +1080,7 @@ roles:
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
+                    - prod.workspace_engineering
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -1097,7 +1098,8 @@ roles:
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
-                    - prod.workspace_sales.*                    
+                    - prod.workspace_sales.*
+                    - prod.workspace_engineering.*                    
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
