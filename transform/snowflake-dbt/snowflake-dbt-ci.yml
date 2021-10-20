@@ -270,7 +270,7 @@ safe_model_script:
       config.schema:restricted_safe_legacy
       config.schema:restricted_safe_workspace_finance
       config.schema:restricted_safe_workspace_sales 
-    --output json > safe_models.json
+      --output json > safe_models.json
     - python3 safe_model_check.py
 
 # ======
