@@ -17,7 +17,7 @@ models:
             - not_null
             - unique
 
-    - name: zengrc_controls_source
+    - name: zengrc_control_source
       description: '{{ doc("zengrc_controls_desc") }}'
       columns: 
         - name: control_id
@@ -25,7 +25,7 @@ models:
             - not_null
             - unique
 
-    - name: zengrc_objectives_source
+    - name: zengrc_objective_source
       description: '{{ doc("zengrc_objectives_desc") }}'
       columns: 
         - name: objective_id
