@@ -21,16 +21,13 @@
 ), issue_extended AS (
 
     SELECT
-      IFF(map_namespace_internal.ultimate_parent_namespace_id IS NULL, FALSE, TRUE) AS is_namespace_internal,
       map_namespace_lineage.dim_namespace_ultimate_parent_id,
-      issue.*
+      issue.*å
     FROM issue
     INNER JOIN project
       ON project.project_id = issue.project_id
     INNER JOIN map_namespace_lineage
       ON project.namespace_id = map_namespace_lineage.dim_namespace_id
-    INNER JOIN map_namespace_internal
-      ON map_namespace_lineage.dim_namespace_ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
     WHERE map_namespace_lineage.dim_namespace_ultimate_parent_id = 9970 -- Gitlab-org group namespace id
 
 ),  gitlab_issue_description_parsing AS (
