@@ -2714,6 +2714,12 @@ roles:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
 
+    - jpetr:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
+
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
@@ -4262,6 +4268,11 @@ users:
         can_login: yes
         member_of:
             - jpeguero
+
+    - jpetr:
+        can_login: yes
+        member_of:
+            - jpetr
 
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         can_login: no
