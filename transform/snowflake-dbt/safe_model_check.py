@@ -4,7 +4,6 @@ import pandas as pd
 from pandas.io.json import json_normalize
 
 
-
 def check_safe_models(file):
 
     with open(file) as json_file:
@@ -14,8 +13,7 @@ def check_safe_models(file):
         else:
             df = json_normalize(pd.Series(open(file).readlines()).apply(json.loads))
             df = df[["name", "tags", "config.schema"]]
-						print(pd.__version__)
-            error_message = "⚠️ The following models are not SAFE ⚠️:\r\n" + df.to_markdown(
+            error_message = "⚠️ The following models are not SAFE ⚠️:\r\n" + df.to_csv(
                 index=False
             )
             raise ValueError(error_message)
