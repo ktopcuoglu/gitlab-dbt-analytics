@@ -1,5 +1,5 @@
 {{ config(
-    tags=["product"]
+    tags=["product", "mnpi_exception"]
 ) }}
 
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}

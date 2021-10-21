@@ -1,5 +1,5 @@
 {{ config({
-        "tags": ["arr_snapshots"],
+        "tags": ["arr_snapshots", "mnpi_exception"],
         "schema": "common"
     })
 }}

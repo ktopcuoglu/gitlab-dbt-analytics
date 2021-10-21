@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {%- set smau_metrics = dbt_utils.get_query_results_as_dict(
     "SELECT
        stage_name || '_' || sql_friendly_name   AS name,

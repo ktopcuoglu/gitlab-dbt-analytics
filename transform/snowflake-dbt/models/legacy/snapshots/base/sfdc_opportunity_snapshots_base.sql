@@ -1,12 +1,13 @@
+{{ config(
+    tags=["mnpi","mnpi_exception"]
+) }}
+
+-- NEEDS TO BE MOVED TO RESTRICTED SCHEMA FOR MNPI
+
 {{ config({
     "alias": "sfdc_opportunity_snapshots",
     })
 }}
-
-{{ config(
-    tags=["mnpi"]
-) }}
-
 
 {{ create_snapshot_base(
     source=source('snapshots', 'sfdc_opportunity_snapshots'),
