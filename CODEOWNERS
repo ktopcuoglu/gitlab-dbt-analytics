@@ -270,3 +270,7 @@ transform/snowflake-dbt/safe_model_check.py                                     
 /transform/snowflake-dbt/models/workspaces/workspace_product/wk_self_managed_spo.sql                                            @iweeks @dvanrooijen2 @jjstark
 /transform/snowflake-dbt/models/workspaces/workspace_product/wk_spo.sql                                                         @iweeks @dvanrooijen2 @jjstark
 /transform/snowflake-dbt/models/workspaces/workspace_product/wk_usage_ping_monthly_events_distribution_by_version.sql           @iweeks @dvanrooijen2 @jjstark
+transform/snowflake-dbt/models/legacy/customers/xf/customers_db_trials.sql                                                      @iweeks @dvanrooijen2 @jjstark
+/transform/snowflake-dbt/models/common/dim_accounting_event.sql                                                                 @iweeks @dvanrooijen2 @jjstark
+/transform/snowflake-dbt/models/common/dim_billing_account.sql                                                                  @iweeks @dvanrooijen2 @jjstark
+/transform/snowflake-dbt/models/workspaces/workspace_finance/dim_billing_account_api_sandbox.sql                                @iweeks @dvanrooijen2 @jjstark
