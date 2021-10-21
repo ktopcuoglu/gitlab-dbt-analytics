@@ -2,7 +2,7 @@ version: 2
 
 models:
     - name: saas_usage_ping_instance
-      description: Source table for the RAW saas_usage_ping.instance_sql_metrics table representing instance level usage ping
+      description: '{{ doc("saas_usage_ping_instance") }}'
       columns:
         - name: saas_usage_ping_gitlab_dotcom_id
           description: unique identifier (combine `ping_date` + `run_results` columns)
@@ -30,7 +30,7 @@ models:
           tests:
             - not_null
     - name: instance_redis_metrics
-      description: Source table for the RAW saas_usage_ping.instance_redis_metrics table representing instance level usage ping
+      description: '{{ doc("instance_redis_metrics") }}'
       columns:
         - name: saas_usage_ping_redis_id
           description: Primary key for instance redis metrics reprsent as unique combination from ping_date + run_id columns
@@ -54,7 +54,7 @@ models:
           tests:
             - not_null
     - name: saas_usage_ping_namespace
-      description: Source table for the RAW saas_usage_ping.gitlab_dotcom_namespaces table representing namespace level usage ping
+      description: '{{ doc("saas_usage_ping_namespace") }}'
       columns:
         - name: saas_usage_ping_gitlab_dotcom_namespace_id
           tests:
