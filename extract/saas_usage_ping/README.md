@@ -22,16 +22,16 @@ Data in `Snowflake` schema `RAW.TAP_POSTGRES` are nothing but a mimic from `Post
 
 
 `SQL` queries we executed on `RAW.TAP_POSTGRES` the schema are translated from `Postgres` to `Snowflake` SQL syntax.
-The results of the queries are then uploaded into the `RAW.SAAS_USAGE_PING` schema in Snowflake database.  
+The results of the queries are then uploaded into the `RAW.SAAS_USAGE_PING` schema in Snowflake database _(data is stored in `.json` file format)_.  
 
-`SQL data` is originally saved in `Postgres Sql` syntax format, downloaded via 'RESTful API' technology: The queries are version controlled in the very large `.json` files present within this extract. The queries are split out into two categories: 
+`SQL data` is originally saved in `Postgres Sql` syntax format, downloaded using `RESTful API` technology: The queries are version controlled in the very large `.json` files present within this extract. The queries are split out into two categories: 
 - `instance queries` and 
 - `namespace queries`. 
     
 The `instance queries` generate data about GitLab.com as a whole, while the `namespace queries` generate data about each namespace on GitLab.com.
 Data is stored in the table: 
 - `RAW.SAAS_USAGE_PING.INSTANCE_SQL_METRICS` - this data is generated results of `SQL` queries
-- `RAW.SAAS_USAGE_PING.INSTANCE_SQL_ERROR` - this table contains `SQL` commands where error pops-up with the error description. If there is any record in this table, means some `SQL` query failed to execute and the `Data team` will be alerted - via logs in `Airflow` and in [Trusted data framework (`TDF`)](https://about.gitlab.com/handbook/business-technology/data-team/platform/#tdf). 
+- `RAW.SAAS_USAGE_PING.INSTANCE_SQL_ERROR` - this table contains `SQL` commands where error pops-up with the error description. If there is any record in this table, means some `SQL` query failed with an execution and the `Data team` will be alerted - via logs in `Airflow` and in [Trusted data framework (`TDF`)](https://about.gitlab.com/handbook/business-technology/data-team/platform/#tdf). 
 - `RAW.SAAS_USAGE_PING.GITLAB_DOTCOM_NAMESPACE` - namespace data is stored in this table 
 
 ##### Graphical representation of the pipeline for `INSTANCE_SQL_METRICS`:
@@ -39,7 +39,7 @@ Data is stored in the table:
 graph TD;
   PGREP[Postgres replica]--Store data from Postgres-->SF_TP[Snowflake RAW.TAP_POSTGRES];
   SP_API[[Service ping API]]--Call API-->DNLD(Download data);
-  DNLD--Translate syntax-->TR_SQL[Translate SQL Postgres -> Snowflake];
+  DNLD--Translate syntax-->TR_SQL[Translate SQL from Postgres -> Snowflake syntax];
   TR_SQL--Execute queries-->SF_TP;
   SF_TP-->ERROR_CHECK{Metrics generated?}--Yes-->FIN_RAW(Store data RAW.SAAS_USAGE_PING.INSTANCE_SQL_METRICS);
   ERROR_CHECK--No-->ERR(Generate error record in RAW.SAAS_USAGE_PING.INSTANCE_SQL_ERROR);
@@ -48,7 +48,7 @@ graph TD;
 #### Redis data
 
 One more kind of data is uploaded for the `service_ping` - data from `Redis` instance are also uploaded using `RESTful API` technology . 
-`Redis data` is picked up and stored in a `.json` format, with an approximate size is around 2k lines, usually one file per load _(at the moment, it is a weekly load)_.
+`Redis data` is picked up and stored in a `.json` format, with an approximate size is around `2k` lines, usually one file per load _(at the moment, it is a weekly load)_.
 
 The main purpose of loading data from Redis is to ensure fine granulation of metrics.
 
