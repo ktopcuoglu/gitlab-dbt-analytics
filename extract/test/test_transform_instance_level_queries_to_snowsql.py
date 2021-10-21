@@ -1,22 +1,18 @@
-from typing import Dict, List, Union, Any, Optional
-from typing import Optional
+from typing import Dict, List, Any
 import pytest
 import sqlparse.sql
 
 from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import (
     main,
-    sql_queries_dict,
-    add_counter_name_as_column,
-    rename_query_tables,
     optimize_token_size,
     find_keyword_index,
     prepare_sql_statement,
     translate_postgres_snowflake_count,
 )
 
-########################################################################################################################
+##################################################################
 # Test case: for transforming queries from Postgres to Snowflake
-########################################################################################################################
+##################################################################
 test_cases_dict: Dict[Any, Any] = {
     "counts": {
         "boards": 'SELECT COUNT("boards"."id") FROM "boards"',
@@ -50,9 +46,9 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == results_dict[sql_metric]
 
-########################################################################################################################
+##################################################################
 # Test case: Scalar subquery :: test SELECT (SELECT 1) -> SELECT (SELECT 1) as counter_value
-########################################################################################################################
+##################################################################
 test_cases_dict = {
     "counts": {
         "snippets": 'SELECT (SELECT COUNT("snippets"."id") FROM "snippets" WHERE "snippets"."type" = \'PersonalSnippet\') + (SELECT COUNT("snippets"."id") FROM "snippets" WHERE "snippets"."type" = \'ProjectSnippet\')'
@@ -69,7 +65,7 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == results_dict[sql_metric]
 
-########################################################################################################################
+##################################################################
 # Test case: regular subquery transform:
 # SELECT a
 #   FROM (SELECT 1 as a
@@ -77,7 +73,7 @@ for sql_metric, sql_query in final_sql_query_dict.items():
 # SELECT 'metric_name', a metric_value
 #   FROM (SELECT 1 AS a
 #           FROM b)
-########################################################################################################################
+##################################################################
 test_cases_dict_subquery: Dict[Any, Any] = {
     "usage_activity_by_stage_monthly": {
         "create": {
@@ -96,9 +92,9 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     # compare translated query with working SQL
     assert sql_query == results_dict_subquery[sql_metric]
 
-########################################################################################################################
+##################################################################
 # Test case: optimize_token_size
-########################################################################################################################
+##################################################################
 test_cases_list: List[Any] = [
     "  SELECT  aa.bb  FROM   (SELECT   1 as aa) FROM BB ",
     "   SELECT 1",
@@ -119,9 +115,9 @@ results_list: List[Any] = [
 for i, test_case_list in enumerate(test_cases_list):
     assert optimize_token_size(test_case_list) == results_list[i]
 
-########################################################################################################################
+##################################################################
 # Test case: COUNT from PG to Snowflake: translate_postgres_snowflake_count
-########################################################################################################################
+##################################################################
 test_cases_list_count: List[Any] = [
     ["COUNT(DISTINCT aa.bb.cc)"],
     ["COUNT(xx.yy.zz)"],
@@ -148,9 +144,9 @@ for i, test_case_list_count in enumerate(test_cases_list_count):
         == results_list_count[i]
     )
 
-########################################################################################################################
+##################################################################
 # Test case: find_keyword_index
-########################################################################################################################
+##################################################################
 test_cases_parse: List[Any] = [
     sqlparse.parse("SELECT FROM")[0].tokens,
     sqlparse.parse("THERE IS NO MY WORD")[0].tokens,
@@ -169,9 +165,9 @@ results_parse = [2, 0, 4, 10]
 for i, test_case_parse in enumerate(test_cases_parse):
     assert find_keyword_index(test_case_parse, "FROM") == results_parse[i]
 
-########################################################################################################################
+##################################################################
 # Test case: prepare_sql_statement
-########################################################################################################################
+##################################################################
 test_cases_prepare = [
     sqlparse.parse("SELECT 1")[0].tokens,
     sqlparse.parse("SELECT abc from def")[0].tokens,

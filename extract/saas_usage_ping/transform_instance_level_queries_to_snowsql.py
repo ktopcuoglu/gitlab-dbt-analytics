@@ -1,21 +1,12 @@
 import json
 from typing import Any, Dict, List
-from logging import error, info, basicConfig, getLogger, warning
+from logging import info
 
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
 import sqlparse
-from sqlparse.sql import (
-    Identifier,
-    IdentifierList,
-    remove_quotes,
-    Token,
-    TokenList,
-    Where,
-    Parenthesis,
-    Comparison,
-)
-from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
+from sqlparse.sql import Token, TokenList
+from sqlparse.tokens import Whitespace
 from os import environ as env
 import requests
 
