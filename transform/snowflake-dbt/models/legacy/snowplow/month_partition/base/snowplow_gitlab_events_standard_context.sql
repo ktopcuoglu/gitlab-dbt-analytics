@@ -76,12 +76,16 @@ Then we extract the id from the context_data column
 */
 SELECT
     events_with_context_flattened.event_id,
-    context_data['environment']::TEXT         AS environment,
-    TRY_PARSE_JSON(context_data['extra'])     AS extra,
-    context_data['namespace_id']::NUMBER      AS namespace_id,
-    context_data['plan']::TEXT                AS plan,
-    context_data['google_analytics_id']::TEXT AS google_analytics_id,
-    context_data['project_id']::NUMBER        AS project_id,
-    context_data['source']::TEXT              AS source
+    context_data_schema,
+    context_data['environment']::TEXT                      AS environment,
+    TRY_PARSE_JSON(context_data['extra'])                  AS extra,
+    context_data['namespace_id']::NUMBER                   AS namespace_id,
+    context_data['plan']::TEXT                             AS plan,
+    context_data['google_analytics_id']::TEXT              AS google_analytics_id,
+    IFF(google_analytics_id = '', NULL,
+        SPLIT_PART(google_analytics_id, '.', 3) || '.' ||
+        SPLIT_PART(google_analytics_id, '.', 4))           AS google_analytics_client_id,
+    context_data['project_id']::NUMBER                     AS project_id,
+    context_data['source']::TEXT                           AS source
 FROM events_with_context_flattened
-WHERE context_data_schema = 'iglu:com.gitlab/gitlab_standard/jsonschema/1-0-7'
+WHERE context_data_schema like 'iglu:com.gitlab/gitlab_standard/jsonschema/%'
