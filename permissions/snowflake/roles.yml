@@ -1077,7 +1077,6 @@ roles:
                     - prod.legacy
                     - prod.pumps
                     - prod.workspace_data
-                    - prod.workspace_datascience
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
@@ -1130,6 +1129,19 @@ roles:
             tables:
                 read:
                     - prep.sensitive.*
+
+    - dbt_datascience:
+          warehouses:
+              - analyst_xs
+          privileges:
+              databases:
+                  read:
+                      - prod
+                      - prep
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_datascience
 
     - demandbase:
         warehouses:
@@ -2856,6 +2868,7 @@ roles:
             - data_team_analyst
             - salesforce
             - restricted_safe
+            - dbt_datascience
         warehouses:
             - analyst_xs
         owns:
@@ -2901,6 +2914,7 @@ roles:
             - analyst_core
             - data_team_analyst
             - restricted_safe
+            - dbt_datascience
         warehouses:
             - analyst_xs
         owns:
