@@ -149,6 +149,11 @@ databases:
     - snalamaru_prep:
         shared: no
 
+    - tpoole_prod:
+        shared: no
+    - tpoole_prep:
+        shared: no
+
     - trevorromero_prod:
         shared: no
     - trevorromero_prep:
@@ -1752,6 +1757,18 @@ roles:
                     - prep.sfdc.*
                     - raw.salesforce_stitch.*
 
+    - share:
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.share
+            tables:
+                read:
+                    - prod.share.* 
+
     - sheetload:
         warehouses:
             - analyst_xs
@@ -2696,6 +2713,12 @@ roles:
                 write:
                     - jpeguero_prep.*.*
                     - jpeguero_prod.*.*
+
+    - jpetr:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs 
 
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
@@ -3710,6 +3733,50 @@ roles:
         member_of: []
         warehouses: []
 
+    - tpoole:
+        member_of:
+         - analyst_finance
+         - analyst_growth
+         - analyst_marketing
+         - customers_db
+         - data_team_analyst
+         - gainsight
+         - restricted_safe
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - tpoole_prep
+                - tpoole_prod
+            schemas:
+                - tpoole_prep.*
+                - tpoole_prod.*
+            tables:
+                - tpoole_prep.*.*
+                - tpoole_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tpoole_prep
+                    - tpoole_prod
+                write:
+                    - tpoole_prep
+                    - tpoole_prod
+            schemas:
+                read:
+                    - tpoole_prep.*
+                    - tpoole_prod.*
+                write:
+                    - tpoole_prep.*
+                    - tpoole_prod.*
+            tables:
+                read:
+                    - tpoole_prep.*.*
+                    - tpoole_prod.*.*
+                write:
+                    - tpoole_prep.*.*
+                    - tpoole_prod.*.*      
+
     - trevorromero:
         member_of:
             - decisive_data
@@ -3786,6 +3853,13 @@ roles:
                 write:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
+
+    - vboya: # External user - Protivitiy
+        member_of:
+            - analyst_finance
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
     - vbrew:
         member_of:
@@ -4195,6 +4269,11 @@ users:
         member_of:
             - jpeguero
 
+    - jpetr:
+        can_login: yes
+        member_of:
+            - jpetr
+
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
@@ -4590,6 +4669,11 @@ users:
         can_login: no
         member_of: []
 
+    - tpoole:
+        can_login: yes
+        member_of:
+            - tpoole
+
     - trevorromero:
         can_login: yes
         member_of:
@@ -4598,6 +4682,11 @@ users:
     - valexieva:
         can_login: no
         member_of: []
+
+    - vboya: # External user - Protivitiy
+        can_login: yes
+        member_of:
+            - vboya     
 
     - vbrew:
         can_login: yes

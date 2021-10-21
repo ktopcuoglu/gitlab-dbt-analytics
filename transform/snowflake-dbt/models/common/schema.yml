@@ -9,6 +9,38 @@ models:
         tests:
           - unique
           - not_null
+      - name: is_user_request_only_in_collaboration_project
+        description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: bdg_epic_user_request
+    description: ' {{ doc("bdg_epic_user_request") }}'
+    columns:
+      - name: dim_epic_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: is_user_request_only_in_collaboration_project
+        description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
+      - name: CONCAT(dim_epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: bdg_issue_user_request
+    description: ' {{ doc("bdg_issue_user_request") }}'
+    columns:
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
 
   - name: bdg_namespace_order_subscription_monthly
     description: '{{ doc("bdg_namespace_order_subscription_monthly") }}'
@@ -799,7 +831,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
         tests:
@@ -968,7 +1000,7 @@ models:
       - name: dim_crm_account_id
         description: ID of the CRM account associated with the free trial.
       - name: ping_date
-        description: Actual date that the usage ping was created.
+        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
       - name: umau_28_days_user
         description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1414,6 +1446,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
       - name: subscription_seats
       - name: billable_user_count
       - name: license_utilization
@@ -2524,6 +2558,7 @@ models:
       - name: event_count
         tests:
           - not_null
+
   - name: dim_issue_links
     description: '{{ doc("dim_issue_links") }}'
     columns:
