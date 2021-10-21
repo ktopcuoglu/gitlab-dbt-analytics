@@ -15,6 +15,8 @@ DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
+DATASCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
+DATASCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 def split_date_parts(day: date, partition: str) -> Dict:
 
@@ -305,6 +307,23 @@ dbt_install_deps_nosha_cmd = f"""
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
+
+clone_datascience_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATASCIENCE_HTTP_REPO}";
+        else
+        export REPO="{DATASCIENCE_SSH_REPO}";
+    fi &&
+    echo "git clone -b {GIT_BRANCH} --single-branch --depth 1 $REPO" &&
+    git clone -b {GIT_BRANCH} --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd analytics &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
 
 
 def number_of_dbt_threads_argument(number_of_threads):
