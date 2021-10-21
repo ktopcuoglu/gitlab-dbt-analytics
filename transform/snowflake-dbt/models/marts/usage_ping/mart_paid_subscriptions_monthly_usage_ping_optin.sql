@@ -2,6 +2,8 @@
     tags=["mnpi_exception"]
 ) }}
 
+-- NEEDS TO BE MOVED TO RESTRICTED SCHEMA FOR MNPI
+
 WITH fct_mrr AS (
 
     SELECT *
