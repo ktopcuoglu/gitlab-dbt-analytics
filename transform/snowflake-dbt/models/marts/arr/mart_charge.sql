@@ -77,6 +77,8 @@
       dim_billing_account.sold_to_country                                             AS sold_to_country,
       dim_billing_account.billing_account_name                                        AS billing_account_name,
       dim_billing_account.billing_account_number                                      AS billing_account_number,
+      dim_billing_account.ssp_channel                                                 AS ssp_channel,
+      dim_billing_account.po_required                                                 AS po_required,
 
       -- crm account info
       dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
@@ -183,5 +185,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-08-04"
+    updated_date="2021-10-21"
 ) }}
