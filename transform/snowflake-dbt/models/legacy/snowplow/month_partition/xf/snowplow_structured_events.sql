@@ -1,10 +1,3 @@
-{{
-  config(
-    cluster_by=['derived_tstamp']
-  )
-}}
-
-
 WITH events AS (
 
     SELECT *
