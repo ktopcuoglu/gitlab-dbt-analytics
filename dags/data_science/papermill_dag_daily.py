@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
-    DATA_IMAGE,
+    ANALYST_IMAGE,
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
@@ -45,11 +45,11 @@ dag = DAG("snowflake_cleanup", default_args=default_args, schedule_interval="0 5
 # Task 1
 drop_clones_cmd = f"""
     {clone_datascience_repo_cmd} &&
-    analytics/orchestration/drop_snowflake_objects.py drop_databases
+    cd deployments/daily
 """
 purge_clones = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DATA_IMAGE,
+    image=ANALYST_IMAGE,
     task_id="papermill-daily",
     name="papermill-daily",
     secrets=[
