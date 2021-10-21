@@ -2,6 +2,7 @@ version: 2
 
 models:
     - name: saas_usage_ping_instance
+      tags: ["product", "service_ping"]
       description: Source table for the RAW saas_usage_ping.instance_sql_metrics table representing instance level usage ping
       columns:
         - name: saas_usage_ping_gitlab_dotcom_id
@@ -12,6 +13,7 @@ models:
           tests:
             - not_null
     - name: instance_redis_metrics
+      tags: ["product", "service_ping"]
       description: Source table for the RAW saas_usage_ping.instance_redis_metrics table representing instance level usage ping
       columns:
         - name: saas_usage_ping_redis_id
@@ -36,6 +38,7 @@ models:
           tests:
             - not_null
     - name: saas_usage_ping_namespace
+      tags: ["product", "service_ping"]
       description: Source table for the RAW saas_usage_ping.gitlab_dotcom_namespaces table representing namespace level usage ping
       columns:
         - name: saas_usage_ping_gitlab_dotcom_namespace_id
