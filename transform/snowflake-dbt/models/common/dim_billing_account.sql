@@ -23,6 +23,8 @@
       zuora_account.sfdc_account_code,
       zuora_account.currency                                AS account_currency,
       zuora_contact.country                                 AS sold_to_country,
+      zuora_account.ssp_channel,
+      zuora_account.po_required,
       zuora_account.is_deleted,
       zuora_account.batch
     FROM zuora_account
@@ -36,7 +38,7 @@
 {{ dbt_audit(
     cte_ref="filtered",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-07-20",
-    updated_date="2021-07-29"
+    updated_date="2021-10-21"
 ) }}
