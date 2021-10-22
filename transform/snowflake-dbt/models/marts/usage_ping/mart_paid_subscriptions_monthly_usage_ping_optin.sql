@@ -2,7 +2,7 @@
     tags=["mnpi_exception"]
 ) }}
 
--- NEEDS TO BE MOVED TO RESTRICTED SCHEMA FOR MNPI
+-- PENDING SCHEMA MIGRATION
 
 WITH fct_mrr AS (
 
