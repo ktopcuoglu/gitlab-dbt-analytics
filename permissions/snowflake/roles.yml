@@ -2541,6 +2541,7 @@ roles:
 
     - iweeks:
         member_of:
+            - adaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
@@ -3650,6 +3651,7 @@ roles:
 
     - statimatla:
         member_of:
+            - adaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
