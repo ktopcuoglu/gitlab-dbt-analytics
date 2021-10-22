@@ -2,7 +2,7 @@
     tags=["mnpi","mnpi_exception"]
 ) }}
 
--- NEEDS TO BE MOVED TO RESTRICTED SCHEMA FOR MNPI
+-- PENDING SCHEMA MIGRATION
 
 {{ config({
     "alias": "sfdc_opportunity_snapshots",
