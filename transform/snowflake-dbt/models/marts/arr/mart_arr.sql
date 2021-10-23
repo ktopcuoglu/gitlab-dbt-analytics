@@ -92,7 +92,7 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
-      
+
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
       dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,
@@ -150,6 +150,7 @@ WITH dim_billing_account AS (
       ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
 
 ), cohort_diffs AS (
 
@@ -200,7 +201,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-09-04",
-    updated_date="2021-10-21"
+    updated_date="2021-10-25"
 ) }}
