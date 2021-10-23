@@ -164,7 +164,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
+    updated_by="@iweeks",
     created_date="2021-06-02",
-    updated_date="2021-06-02"
+    updated_date="2021-10-25"
 ) }}

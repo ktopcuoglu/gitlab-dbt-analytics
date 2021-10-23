@@ -185,7 +185,7 @@
 {{ dbt_audit(
     cte_ref="mart_charge",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-06-07",
-    updated_date="2021-10-21"
+    updated_date="2021-10-25"
 ) }}
