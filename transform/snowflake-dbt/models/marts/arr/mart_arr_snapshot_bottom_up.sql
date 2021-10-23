@@ -178,6 +178,7 @@ WITH dim_billing_account AS (
       ON snapshot_dates.date_id = fct_mrr_snapshot_bottom_up.snapshot_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
 
 ), cohort_diffs AS (
 
