@@ -107,34 +107,35 @@
 ), user_request AS (
 
     SELECT
-      bdg_issue_user_request.dim_issue_id,
-      dim_issue.dim_epic_id,
-      'Issue' AS user_request_in,
+      bdg_issue_user_request.dim_issue_id                                       AS dim_issue_id,
+      dim_issue.dim_epic_id                                                     AS dim_epic_id,
+      'Issue'                                                                   AS user_request_in,
 
-      bdg_issue_user_request.link_type,
-      bdg_issue_user_request.dim_crm_opportunity_id,
-      bdg_issue_user_request.dim_crm_account_id,
-      bdg_issue_user_request.dim_ticket_id,
-      bdg_issue_user_request.request_priority,
-      bdg_issue_user_request.is_user_request_only_in_collaboration_project,
+      bdg_issue_user_request.link_type                                          AS link_type,
+      bdg_issue_user_request.dim_crm_opportunity_id                             AS dim_crm_opportunity_id,
+      bdg_issue_user_request.dim_crm_account_id                                 AS dim_crm_account_id,
+      bdg_issue_user_request.dim_ticket_id                                      AS dim_ticket_id,
+      bdg_issue_user_request.request_priority                                   AS request_priority,
+      bdg_issue_user_request.is_user_request_only_in_collaboration_project      AS is_user_request_only_in_collaboration_project,
 
-      dim_issue.issue_title AS issue_epic_title,
-      dim_issue.issue_url AS issue_epic_url,
+      -- Epic / Issue attributes
+      dim_issue.issue_title                                                     AS issue_epic_title,
+      dim_issue.issue_url                                                       AS issue_epic_url,
+      dim_issue.milestone_title                                                 AS milestone_title,
+      dim_issue.milestone_due_date                                              AS milestone_due_date,
+      dim_issue.labels                                                          AS issue_epic_labels,
+      IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_issue.labels), FALSE)   AS has_deliverable_label,
+      IFNULL(issue_group_label.product_group, 'Unknown')                        AS product_group,
+      issue_status.workflow_label                                               AS issue_status,
+      NULL                                                                      AS epic_status,
+      dim_epic.epic_url                                                         AS parent_epic_path,
+      dim_epic.epic_title                                                       AS parent_epic_title,
+      dim_issue.upvote_count                                                    AS upvote_count,
+      dim_issue.weight                                                          AS issue_epic_weight,
 
-      dim_issue.milestone_title,
-      dim_issue.milestone_due_date,
-      dim_issue.labels,
-      IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_issue.labels), FALSE) AS has_deliverable_label,
-      IFNULL(issue_group_label.product_group, 'Unknown')                      AS product_group,
-
-      issue_status.workflow_label                                             AS issue_status,
-      NULL AS epic_status,
-      dim_epic.epic_url AS parent_path,
-      dim_epic.epic_title AS parent_title,
-
-      dim_issue.weight    AS issue_epic_weight,
-
-      arr_metrics_current_month.quantity AS customer_reach
+      -- CRM Account attributes
+      arr_metrics_current_month.quantity                                        AS customer_reach,
+      arr_metrics_current_month.arr                                             AS customer_arr
 
     FROM bdg_issue_user_request
     LEFT JOIN dim_issue
@@ -151,34 +152,35 @@
     UNION
 
     SELECT
-      NULL AS dim_issue_id,
-      bdg_epic_user_request.dim_epic_id,
-      'Epic' AS user_request_in,
+      NULL                                                                        AS dim_issue_id,
+      bdg_epic_user_request.dim_epic_id                                           AS dim_epic_id,
+      'Epic'                                                                      AS user_request_in,
       
-      bdg_epic_user_request.link_type,
-      bdg_epic_user_request.dim_crm_opportunity_id,
-      bdg_epic_user_request.dim_crm_account_id,
-      bdg_epic_user_request.dim_ticket_id,
-      bdg_epic_user_request.request_priority,
-      bdg_epic_user_request.is_user_request_only_in_collaboration_project,
+      bdg_epic_user_request.link_type                                             AS link_type,
+      bdg_epic_user_request.dim_crm_opportunity_id                                AS dim_crm_opportunity_id,
+      bdg_epic_user_request.dim_crm_account_id                                    AS dim_crm_account_id,
+      bdg_epic_user_request.dim_ticket_id                                         AS dim_ticket_id,
+      bdg_epic_user_request.request_priority                                      AS request_priority,
+      bdg_epic_user_request.is_user_request_only_in_collaboration_project         AS is_user_request_only_in_collaboration_project,
 
-      dim_epic.epic_title,
-      dim_epic.epic_url,
-      
-      epic_last_milestone.milestone_title,
-      epic_last_milestone.milestone_due_date,
-      dim_epic.labels,
-      IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_epic.labels), 'FALSE') AS has_deliverable_label,
-      IFNULL(epic_group_label.product_group, 'Unknown') AS product_group,
+      -- Epic / Issue attributes
+      dim_epic.epic_title                                                         AS epic_title,
+      dim_epic.epic_url                                                           AS epic_url,
+      epic_last_milestone.milestone_title                                         AS milestone_title,
+      epic_last_milestone.milestone_due_date                                      AS milestone_due_date,
+      dim_epic.labels                                                             AS issue_epic_labels,
+      IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_epic.labels), 'FALSE')    AS has_deliverable_label,
+      IFNULL(epic_group_label.product_group, 'Unknown')                           AS product_group,
+      'Not Applicable'                                                            AS issue_status,
+      epic_weight.epic_status                                                     AS epic_status,
+      parent_epic.epic_url                                                        AS parent_epic_path,
+      parent_epic.epic_title                                                      AS parent_epic_title,
+      dim_epic.upvote_count                                                       AS upvote_count,
+      epic_weight.epic_weight                                                     AS issue_epic_weight,
 
-      NULL AS issue_status,
-      epic_weight.epic_status,
-      parent_epic.epic_url,
-      parent_epic.epic_title,
-
-      epic_weight.epic_weight AS issue_epic_weight,
-
-      arr_metrics_current_month.quantity AS customer_reach
+      -- CRM Account attributes
+      arr_metrics_current_month.quantity                                          AS customer_reach,
+      arr_metrics_current_month.arr                                               AS customer_arr
 
     FROM bdg_epic_user_request
     LEFT JOIN dim_issue
