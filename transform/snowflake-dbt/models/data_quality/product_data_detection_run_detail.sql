@@ -86,11 +86,11 @@ WITH rule_run_date AS (
 
 ), processed_passed_failed_record_count AS (
 
---Missing instance types for UUID
+--Missing instance types for UUID or Namespaces
     SELECT 
       1                                                                    AS rule_id,
-      count(DISTINCT(instance_uuid))                                       AS processed_record_count,
-      (SELECT count(DISTINCT(instance_uuid)) FROM dim_host_instance_type
+       (count(DISTINCT(instance_uuid))+count(DISTINCT(namespace_id)))      AS processed_record_count,
+      (SELECT count(DISTINCT(CASE WHEN instance_uuid IS NOT NULL THEN instance_uuid ELSE NAMESPACE_ID END )) FROM dim_host_instance_type
          WHERE INSTANCE_TYPE NOT IN ('Unknown'))                           AS passed_record_count,
       (processed_record_count - passed_record_count)                       AS failed_record_count,
       dbt_updated_at                                                       AS run_date    
@@ -197,5 +197,5 @@ WITH rule_run_date AS (
     created_by="@snalamaru",
     updated_by="@snalamaru",
     created_date="2021-06-16",
-    updated_date="2021-07-20"
+    updated_date="2021-10-25"
 ) }}
