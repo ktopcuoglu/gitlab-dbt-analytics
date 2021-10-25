@@ -15,7 +15,8 @@
     ('dim_namespace', 'dim_namespace'),
     ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
     ('prep_label_links', 'prep_label_links'),
-    ('prep_labels', 'prep_labels')
+    ('prep_labels', 'prep_labels'),
+    ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source')
 ]) }}
 
 , gitlab_dotcom_epics_dedupe_source AS (
@@ -33,6 +34,17 @@
     SELECT *
     FROM {{ ref('prep_user') }} users
     WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
+
+), upvote_count AS (
+
+    SELECT
+      awardable_id                                        AS dim_epic_id,
+      SUM(IFF(award_emoji_name LIKE 'thumbsup%', 1, 0))   AS thumbsups_count,
+      SUM(IFF(award_emoji_name LIKE 'thumbsdown%', 1, 0)) AS thumbsdowns_count,
+      thumbsups_count - thumbsdowns_count                 AS upvote_count
+    FROM gitlab_dotcom_award_emoji_source
+    WHERE awardable_type = 'Epic'
+    GROUP BY 1
 
 ), agg_labels AS (
 
@@ -84,7 +96,8 @@
                                                                                              AS epic_url,
       IFF(dim_namespace.visibility_level = 'private',
         ARRAY_CONSTRUCT('private - masked'),
-        agg_labels.labels)                                                                   AS labels
+        agg_labels.labels)                                                                   AS labels,
+      upvote_count.upvote_count
     FROM gitlab_dotcom_epics_dedupe_source
     LEFT JOIN dim_namespace 
         ON gitlab_dotcom_epics_dedupe_source.group_id = dim_namespace.dim_namespace_id
@@ -101,6 +114,8 @@
         AND gitlab_dotcom_routes_source.source_type = 'Namespace'
     LEFT JOIN agg_labels
         ON agg_labels.dim_epic_id = gitlab_dotcom_epics_dedupe_source.id
+    LEFT JOIN upvote_count
+        ON upvote_count.dim_epic_id = gitlab_dotcom_epics_dedupe_source.id
 
 )
 

@@ -35,7 +35,8 @@ WITH prep_epic AS (
       epic_title_length,
       epic_description_length,
       epic_url,
-      labels
+      labels,
+      upvote_count
     FROM {{ ref('prep_epic') }}
 
 )

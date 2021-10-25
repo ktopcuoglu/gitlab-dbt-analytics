@@ -43,7 +43,8 @@ WITH prep_issue AS (
       issue_url,
       milestone_title,
       milestone_due_date,
-      labels
+      labels,
+      upvote_count
     FROM {{ ref('prep_issue') }}
 
 )
