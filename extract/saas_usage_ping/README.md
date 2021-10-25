@@ -3,7 +3,7 @@
 SaaS `Service Ping` (formerly known as `usage ping`) is collected from self-installed instances of GitLab for those instances that have the feature enabled. This feature allows GitLab to understand usage data for self-installed instances broken down on an instance and namespace level.
 
 `GitLab.com`, which is essentially a GitLab-hosted version of `GitLab`, has sent usage ping data in the past, but this process had problems:
-* The service ping process from `GitLab.com` took too long to run _(6-8 hours in average)_
+* The service ping process from `GitLab.com` took too long to run _(6-8 hours on average)_
 * Running the same queries in the SaaS instance as other instances resulted in data that was not granular enough. Data was needed from the namespace grain for better analytics.
 
 This extract addresses these issues:  
@@ -62,7 +62,7 @@ graph TD;
   DNLD--Store data-->FIN_RAW(Store data RAW.SAAS_USAGE_PING.INSTANCE_REDIS_METRICS);
 ```
         
-### Back filling SaaS Service Ping
+### Backfilling SaaS Service Ping
 
 There is also a process in place to recreate SaaS service pings from the past.
 There is a separate backfill `DAG` that allows back filling service pings for the last `12` months.
