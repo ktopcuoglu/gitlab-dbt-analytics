@@ -20,7 +20,7 @@
                 LISTAGG(column_name,',') AS email_column_names
             FROM "RAW"."INFORMATION_SCHEMA"."COLUMNS"
             WHERE LOWER(column_name) LIKE '%email%'
-                AND table_schema NOT IN ('SNAPSHOTS','SHEETLOAD')
+                AND table_schema IN ('TAP_POSTGRES','LICENSE_DB')
                 AND data_type NOT IN {{data_types}}
             GROUP BY 1
         
@@ -76,6 +76,7 @@
                 AND table_schema IN ('SNAPSHOTS')
                 AND data_type NOT IN {{data_types}}
                 AND LOWER(column_name) NOT IN {{exclude_columns}}
+                AND (lower(table_name) like ('gitlab_dotcom_%') or lower(table_name) like ('customers_db_%') or lower(table_name) like ('license_db_%'))
             GROUP BY 1
         
         ), non_email_columns AS (
@@ -90,6 +91,7 @@
               AND LOWER(column_name) NOT IN {{exclude_columns}}
               AND LOWER(column_name) NOT LIKE '%id%'
               AND LOWER(column_name) NOT IN {{exclude_columns}}
+              AND (lower(table_name) like ('gitlab_dotcom_%') or lower(table_name) like ('customers_db_%') or lower(table_name) like ('license_db_%'))
             GROUP BY 1
 
         )
