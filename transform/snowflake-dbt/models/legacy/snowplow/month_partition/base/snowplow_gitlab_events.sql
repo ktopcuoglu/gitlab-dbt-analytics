@@ -265,6 +265,7 @@ WITH filtered_source as (
       events_with_standard_context.plan AS gsc_plan,
       events_with_standard_context.google_analytics_client_id AS gsc_google_analytics_client_id,
       events_with_standard_context.project_id AS gsc_project_id,
+      events_with_standard_context.pseudonymized_user_id AS gsc_pseudonymized_user_id,
       events_with_standard_context.source AS gsc_source,
       base.event_name,
       base.event_vendor,

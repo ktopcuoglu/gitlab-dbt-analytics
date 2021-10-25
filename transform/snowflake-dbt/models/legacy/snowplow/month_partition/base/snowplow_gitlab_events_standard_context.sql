@@ -86,6 +86,7 @@ SELECT
         SPLIT_PART(google_analytics_id, '.', 3) || '.' ||
         SPLIT_PART(google_analytics_id, '.', 4))           AS google_analytics_client_id,
     context_data['project_id']::NUMBER                     AS project_id,
+    context_data['user_id']::TEXT                          AS pseudonymized_user_id,
     context_data['source']::TEXT                           AS source
 FROM events_with_context_flattened
 WHERE context_data_schema like 'iglu:com.gitlab/gitlab_standard/jsonschema/%'
