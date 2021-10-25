@@ -1,4 +1,4 @@
-{% macro gdpr_delete(email_sha, run_queries=False) %}
+{% macro gdpr_delete_gitlab_dotcom(email_sha, run_queries=False) %}
 
 
         {% set data_types = ('BOOLEAN', 'TIMESTAMP_TZ', 'TIMESTAMP_NTZ', 'FLOAT', 'DATE', 'NUMBER') %}
