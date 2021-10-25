@@ -107,6 +107,23 @@ Example: You might be looking at the count of opportunities before and after, if
   - [ ] After merging, ensure the old model is dropped from snowflake. This can be done by creating an issue specifying the tables/models to be dropped and assiging to a snowflake admin. 
 </details>
 
+
+
+
+#### Snapshot model
+<details>
+<summary><i>Click to toggle Snapshot model</i></summary>
+
+- [ ] Is this MR creating or renaming a snapshot model?
+- [ ] Does it concern Gitlab.com data?
+  - [ ] Make sure its captured into the selection criteria of the [GDPR deletion](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/warehouse/gdpr_delete_gitlab_dotcom.sql) macro for GitLab.com data.
+</details>
+
+
+
+
+
+
 ## All MRs Checklist
 - [ ] This MR follows the coding conventions laid out in the [SQL style guide](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/), including the [dbt guidelines](https://about.gitlab.com/handbook/business-ops/data-team/platform/sql-style-guide/#dbt-guidelines).
 - [ ] [Label hygiene](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling) on issue.
