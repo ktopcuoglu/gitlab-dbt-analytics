@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
     SELECT
       reporting_month,
       dim_namespace_id,

@@ -1,5 +1,9 @@
 -- depends_on: {{ ref('zuora_excluded_accounts') }}
 
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH source AS (
 
     SELECT *

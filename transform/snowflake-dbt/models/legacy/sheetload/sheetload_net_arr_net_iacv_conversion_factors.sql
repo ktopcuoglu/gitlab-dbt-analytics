@@ -1,3 +1,9 @@
+{{ config(
+    tags=["mnpi","mnpi_exception"]
+) }}
+
+-- PENDING SCHEMA MIGRATION
+
 WITH source AS (
 
     SELECT *

@@ -1,3 +1,9 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
+-- NEEDS TO BE MOVED TO RESTRICTED SCHEMA FOR MNPI
+
 WITH source AS (
 
     SELECT *

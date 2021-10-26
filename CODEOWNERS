@@ -151,3 +151,6 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker
 /transform/snowflake-dbt/data/zuora_asc_606_conversion_factors.csv                      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @vedprakash2021
 /transform/snowflake-dbt/data/zuora_country_geographic_region.csv                       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @vedprakash2021
 /transform/snowflake-dbt/data/zuora_excluded_accounts.csv                               @gitlab-data @vedprakash2021
+
+[MNPI]
+transform/snowflake-dbt/safe_model_check.py    @dvanrooijen2 @jjstark

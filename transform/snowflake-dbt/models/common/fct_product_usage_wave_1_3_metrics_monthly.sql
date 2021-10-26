@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('subscriptions', 'bdg_subscription_product_rate_plan'),
     ('dates', 'dim_date'),
