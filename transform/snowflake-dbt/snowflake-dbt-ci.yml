@@ -260,7 +260,7 @@ safe_model_script:
     - dbt deps $CI_PROFILE_TARGET
     - dbt --partial-parse ls $CI_PROFILE_TARGET --models tag:mnpi+
       --exclude
-        tag:mnpi_exception+
+        tag:mnpi_exception
         config.database:$SNOWFLAKE_PREP_DATABASE
         config.schema:restricted_safe_common
         config.schema:restricted_safe_common_mapping
