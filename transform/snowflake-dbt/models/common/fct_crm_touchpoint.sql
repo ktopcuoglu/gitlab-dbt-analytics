@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH account_dimensions AS (
 
     SELECT *

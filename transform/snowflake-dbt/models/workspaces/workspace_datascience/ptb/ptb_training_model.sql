@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {% set period_type = 'MONTH'%}
 {% set delta_value = 3 %}
 -- Prediction date offset by -1 to ensure its only predicting with complete days.

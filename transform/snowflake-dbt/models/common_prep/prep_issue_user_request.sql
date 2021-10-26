@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('issue', 'gitlab_dotcom_issues_source'),
     ('map_namespace_internal', 'map_namespace_internal'),
