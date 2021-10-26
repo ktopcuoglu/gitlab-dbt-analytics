@@ -69,7 +69,10 @@
       usage_ping.cleaned_version,
       usage_ping.dim_location_country_id,
       -- Wave 1
-      DIV0(usage_ping.license_billable_users, seat_link.license_user_count)                   AS license_utilization,
+      DIV0(
+          usage_ping.license_billable_users,
+          IFNULL(usage_ping.license_user_count, seat_link.license_user_count)
+          )                                                                                   AS license_utilization,
       usage_ping.license_billable_users                                                       AS billable_user_count,
       usage_ping.instance_user_count                                                          AS active_user_count,
       IFNULL(usage_ping.historical_max_users, seat_link.max_historical_user_count)            AS max_historical_user_count,
