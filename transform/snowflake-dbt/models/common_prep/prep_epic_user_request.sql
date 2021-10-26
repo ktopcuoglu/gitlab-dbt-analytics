@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('epic', 'gitlab_dotcom_epics_source'),
     ('map_namespace_internal', 'map_namespace_internal'),

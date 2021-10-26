@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH gitlab_dotcom_namespaces AS (
 
     SELECT *
