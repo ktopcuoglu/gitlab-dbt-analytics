@@ -581,3 +581,6 @@ snapshots:
 
     zuora:
       +tags: ["daily", "zuora"]
+
+    zuora_revenue:
+      +tags: [ "daily", "zuora_revenue" ]
