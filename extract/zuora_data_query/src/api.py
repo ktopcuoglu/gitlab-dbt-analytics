@@ -133,9 +133,12 @@ class ZuoraQueriesAPI:
 
 
 
-    def main(self, file_path: str, load_type: str, load_only_table: str = None) -> None:
+    def main(self ) -> None:
         """
         Read data from a postgres DB and upload it directly to Snowflake.
         """
         self.process_scd()
 
+if __name__=='__main__':
+    zq = ZuoraQueriesAPI()
+    zq.main()

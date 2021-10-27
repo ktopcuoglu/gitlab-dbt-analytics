@@ -1,14 +1,13 @@
 import os
 from datetime import datetime, timedelta
-from yaml import safe_load, YAMLError
 from airflow import DAG
-from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    gitlab_pod_env_vars
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -19,16 +18,9 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
-
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
-GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {
-    "SNOWFLAKE_LOAD_DATABASE": "RAW"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH.upper()}_RAW",
-    "CI_PROJECT_DIR": "/analytics",
-}
+pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG
 default_args = {
@@ -45,60 +37,36 @@ default_args = {
 }
 
 airflow_home = env["AIRFLOW_HOME"]
-task_name = "zuora-revenue"
-
-# Get all the table name for which tasks for loading needs to be created
-with open(
-    f"{airflow_home}/analytics/extract/zuora_revenue/zuora_revenue_table_name.yml", "r"
-) as file:
-    try:
-        stream = safe_load(file)
-    except YAMLError as exc:
-        print(exc)
-
-    table_name_list = [
-        "{table_name}".format(table_name=str(tab))
-        for sheet in stream["table_info"]
-        for tab in sheet["table_name"]
-    ]
 
 
-# Create the DAG  with one load happening at once
+# Create the DAG
 dag = DAG(
-    "zuora_revenue_load_snow",
-    default_args=default_args,
-    schedule_interval="0 6 * * *",
-    concurrency=1,
+    "zuora_data_query_extract_and_load", default_args=default_args, schedule_interval="0 */2 * * *"
 )
 
-start = DummyOperator(task_id="Start", dag=dag)
+# BambooHR Extract
+bamboohr_extract_cmd = f"""
+    {clone_and_setup_extraction_cmd} &&
+    python zuora_data_query/src/api.py
+"""
 
-for table_name in table_name_list:
-    # Set the command for the container for loading the data
-    container_cmd_load = f"""
-        {clone_and_setup_extraction_cmd} &&
-        python3 zuora_revenue/load_zuora_revenue.py zuora_load --bucket zuora_revpro_gitlab --schema zuora_revenue --table_name {table_name}
-        """
-    task_identifier = f"{task_name}-{table_name.replace('_','-').lower()}-load"
-    # Task 2
-    zuora_revenue_load_run = KubernetesPodOperator(
-        **gitlab_defaults,
-        image=DATA_IMAGE,
-        task_id=task_identifier,
-        name=task_identifier,
-        pool="default_pool",
-        secrets=[
-            GCP_SERVICE_CREDS,
-            SNOWFLAKE_ACCOUNT,
-            SNOWFLAKE_LOAD_ROLE,
-            SNOWFLAKE_LOAD_USER,
-            SNOWFLAKE_LOAD_WAREHOUSE,
-            SNOWFLAKE_LOAD_PASSWORD,
-        ],
-        env_vars=pod_env_vars,
-        affinity=get_affinity(False),
-        tolerations=get_toleration(False),
-        arguments=[container_cmd_load],
-        dag=dag,
-    )
-    start >> zuora_revenue_load_run
+# having both xcom flag flavors since we're in an airflow version where one is being deprecated
+bamboohr_extract = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id="bamboohr-extract",
+    name="bamboohr-extract",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+    ],
+    env_vars=pod_env_vars,
+    affinity=get_affinity(False),
+    tolerations=get_toleration(False),
+    arguments=[bamboohr_extract_cmd],
+    do_xcom_push=True,
+    dag=dag,
+)
