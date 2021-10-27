@@ -847,6 +847,7 @@ roles:
         member_of:
             - covid19
             - snowflake_db
+            - zoominfo
         owns:
             schemas:
                 - prod.common
@@ -1984,6 +1985,22 @@ roles:
             tables:
                 read:
                     - raw.tap_zoom.*
+
+    - zoominfo:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - zoominfo
+            schemas:
+                read:
+                    - prep.zoominfo
+                    - zoominfo.gitlab
+            tables:
+                read:
+                    - prep.zoominfo.*
+                    - zoominfo.gitlab.reference_techs
+                    - zoominfo.gitlab.zi_comp_with_linkages_20211001_global
 
     - zuora:
         warehouses:
