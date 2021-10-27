@@ -1,12 +1,11 @@
 import time
-import datetime
-import argparse
 import json
 from io import StringIO
 
 import requests
 import pandas as pd
 
+import yaml
 from logging import info, error, warning
 from os import environ as env
 
@@ -123,13 +122,15 @@ class ZuoraQueriesAPI:
 
     def process_scd(self, scd_file: str = './scd_queries.yml'):
 
-        query_specifications = []
+        with open(scd_file) as file:
+            query_specs = yaml.load(file, Loader=yaml.FullLoader)
 
-        for file_spec in self.query_specifications():
-            info(f"Working on: {file_spec['query_type']}")
-            job_id = self.request_query_data(query_string=file_spec["query_string"],
-                                             query_type=file_spec["query_type"])
+        tables = query_specs.get('tables')
+        for table_spec in tables:
+            job_id = self.request_query_data(query_string=tables.get(table_spec).get('query'),
+                                             query_type=table_spec)
             df = self.get_file_from_zuora(job_id)
+
 
 
     def main(self, file_path: str, load_type: str, load_only_table: str = None) -> None:
