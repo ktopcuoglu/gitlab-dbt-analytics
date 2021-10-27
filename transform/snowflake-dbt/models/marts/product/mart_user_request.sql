@@ -11,10 +11,37 @@
     ('prep_labels', 'prep_labels'),
     ('fct_mrr', 'fct_mrr'),
     ('dim_date', 'dim_date'),
-    ('dim_product_detail', 'dim_product_detail')
+    ('dim_product_detail', 'dim_product_detail'),
+    ('dim_crm_account', 'dim_crm_account'),
+    ('dim_subscription', 'dim_subscription'),
+    ('fct_crm_opportunity', 'fct_crm_opportunity'),
+    ('dim_crm_user', 'dim_crm_user')
 ])}}
 
-, arr_metrics_current_month AS (
+, strategic_account_leader AS (
+
+    SELECT
+      dim_crm_account.dim_crm_account_id,
+      dim_crm_user.user_name                AS strategic_account_leader
+    FROM dim_crm_account
+    INNER JOIN dim_crm_user
+      ON dim_crm_user.dim_crm_user_id = dim_crm_account.dim_crm_user_id
+
+), account_next_renewal_month AS (
+
+    SELECT DISTINCT
+      fct_mrr.dim_crm_account_id,
+      MIN(subscription_end_month) AS next_renewal_month
+    FROM fct_mrr
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.dim_date_id
+    LEFT JOIN dim_subscription
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
+      AND dim_subscription.subscription_end_month <= DATEADD('year', 1, dim_date.date_actual)
+    WHERE dim_subscription.subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
+    GROUP BY 1
+
+), arr_metrics_current_month AS (
 
     SELECT
       fct_mrr.dim_crm_account_id,
@@ -52,14 +79,17 @@
     LEFT JOIN prep_labels
       ON prep_label_links.dim_label_id = prep_labels.dim_label_id
 
-), issue_group_label AS (
+), issue_labels AS (
 
-    SELECT
+    SELECT 
       label_links_joined.dim_issue_id,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'group::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS group_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'devops::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)  AS devops_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'section::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL) AS section_label,
-      COALESCE(group_label, devops_label, section_label)                                                        AS product_group,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'group::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)    AS group_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'devops::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS devops_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'section::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)  AS section_label,
+      COALESCE(group_label, devops_label, section_label)                                                                       AS product_group,
+
+      IFF(LOWER(label_links_joined.label_title) LIKE 'category::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL) AS category_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
         WHEN devops_label IS NOT NULL THEN 2
@@ -67,8 +97,34 @@
         ELSE 0
       END product_group_level
     FROM label_links_joined
+
+), epic_labels AS (
+
+    SELECT 
+      label_links_joined.dim_epic_id,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'group::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)    AS group_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'devops::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS devops_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'section::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)  AS section_label,
+      COALESCE(group_label, devops_label, section_label)                                                                       AS product_group,
+
+      IFF(LOWER(label_links_joined.label_title) LIKE 'category::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL) AS category_label,
+      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
+      CASE
+        WHEN group_label IS NOT NULL THEN 3
+        WHEN devops_label IS NOT NULL THEN 2
+        WHEN section_label IS NOT NULL THEN 1
+        ELSE 0
+      END product_group_level
+    FROM label_links_joined
+
+), issue_group_label AS (
+
+    SELECT
+      dim_issue_id,
+      product_group
+    FROM issue_labels
     WHERE product_group IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY label_links_joined.dim_issue_id ORDER BY product_group_level DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY product_group_level DESC) = 1
 
 ), issue_status AS (
 
@@ -76,24 +132,17 @@
       label_links_joined.dim_issue_id,
       IFF(LOWER(label_links_joined.label_title) LIKE 'workflow::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS workflow_label
     FROM label_links_joined
+    WHERE workflow_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY workflow_label DESC) = 1 
 
 ), epic_group_label AS (
 
     SELECT
-      label_links_joined.dim_epic_id,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'group::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)   AS group_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'devops::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)  AS devops_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'section::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL) AS section_label,
-      COALESCE(group_label, devops_label, section_label)                                                    AS product_group,
-      CASE
-        WHEN group_label IS NOT NULL THEN 3
-        WHEN devops_label IS NOT NULL THEN 2
-        WHEN section_label IS NOT NULL THEN 1
-        ELSE 0
-      END product_group_level
-    FROM label_links_joined
+      dim_epic_id,
+      product_group
+    FROM epic_labels
     WHERE product_group IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY label_links_joined.dim_epic_id ORDER BY product_group_level DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY product_group_level DESC) = 1
 
 ), epic_last_milestone AS ( -- Get issue milestone with the latest due dates for epics
     
@@ -107,35 +156,47 @@
 ), user_request AS (
 
     SELECT
-      bdg_issue_user_request.dim_issue_id                                       AS dim_issue_id,
-      dim_issue.dim_epic_id                                                     AS dim_epic_id,
-      'Issue'                                                                   AS user_request_in,
+      bdg_issue_user_request.dim_issue_id                                         AS dim_issue_id,
+      IFNULL(dim_issue.dim_epic_id, -1)                                           AS dim_epic_id,
+      'Issue'                                                                     AS user_request_in,
 
-      bdg_issue_user_request.link_type                                          AS link_type,
-      bdg_issue_user_request.dim_crm_opportunity_id                             AS dim_crm_opportunity_id,
-      bdg_issue_user_request.dim_crm_account_id                                 AS dim_crm_account_id,
-      bdg_issue_user_request.dim_ticket_id                                      AS dim_ticket_id,
-      bdg_issue_user_request.request_priority                                   AS request_priority,
-      bdg_issue_user_request.is_user_request_only_in_collaboration_project      AS is_user_request_only_in_collaboration_project,
+      bdg_issue_user_request.link_type                                            AS link_type,
+      bdg_issue_user_request.dim_crm_opportunity_id                               AS dim_crm_opportunity_id,
+      bdg_issue_user_request.dim_crm_account_id                                   AS dim_crm_account_id,
+      bdg_issue_user_request.dim_ticket_id                                        AS dim_ticket_id,
+      bdg_issue_user_request.request_priority                                     AS request_priority,
+      bdg_issue_user_request.is_user_request_only_in_collaboration_project        AS is_user_request_only_in_collaboration_project,
 
       -- Epic / Issue attributes
-      dim_issue.issue_title                                                     AS issue_epic_title,
-      dim_issue.issue_url                                                       AS issue_epic_url,
-      dim_issue.milestone_title                                                 AS milestone_title,
-      dim_issue.milestone_due_date                                              AS milestone_due_date,
-      dim_issue.labels                                                          AS issue_epic_labels,
-      IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_issue.labels), FALSE)   AS has_deliverable_label,
-      IFNULL(issue_group_label.product_group, 'Unknown')                        AS product_group,
-      issue_status.workflow_label                                               AS issue_status,
-      NULL                                                                      AS epic_status,
-      dim_epic.epic_url                                                         AS parent_epic_path,
-      dim_epic.epic_title                                                       AS parent_epic_title,
-      dim_issue.upvote_count                                                    AS upvote_count,
-      dim_issue.weight                                                          AS issue_epic_weight,
+      dim_issue.issue_title                                                       AS issue_epic_title,
+      dim_issue.issue_url                                                         AS issue_epic_url,
+      dim_issue.milestone_title                                                   AS milestone_title,
+      dim_issue.milestone_due_date                                                AS milestone_due_date,
+      dim_issue.labels                                                            AS issue_epic_labels,
+      IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_issue.labels), FALSE)     AS has_deliverable_label,
+      IFNULL(issue_group_label.product_group, 'Unknown')                          AS product_group,
+      category_label.category_label                                               AS product_category,
+      dev_label.dev_label                                                         AS product_section,
+      issue_status.workflow_label                                                 AS issue_status,
+      NULL                                                                        AS epic_status,
+      dim_epic.epic_url                                                           AS parent_epic_path,
+      dim_epic.epic_title                                                         AS parent_epic_title,
+      dim_issue.upvote_count                                                      AS upvote_count,
+      dim_issue.weight                                                            AS issue_epic_weight,
 
       -- CRM Account attributes
-      arr_metrics_current_month.quantity                                        AS customer_reach,
-      arr_metrics_current_month.arr                                             AS customer_arr
+      dim_crm_account.crm_account_name                                            AS crm_account_name,
+      account_next_renewal_month.next_renewal_month                               AS crm_account_next_renewal_month,
+      dim_crm_account.health_score_color                                          AS crm_account_health_score_color,
+      dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
+      dim_crm_account.technical_account_manager                                   AS technical_account_manager,
+      dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
+      strategic_account_leader.strategic_account_leader                           AS strategic_account_leader,
+      arr_metrics_current_month.quantity                                          AS customer_reach,
+      arr_metrics_current_month.arr                                               AS customer_arr,
+
+      -- CRM Opportunity attributes
+      DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date)              AS crm_opp_next_renewal_month
 
     FROM bdg_issue_user_request
     LEFT JOIN dim_issue
@@ -148,11 +209,25 @@
       ON dim_epic.dim_epic_id = dim_issue.dim_epic_id
     LEFT JOIN arr_metrics_current_month
       ON arr_metrics_current_month.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
+    LEFT JOIN dim_crm_account
+      ON dim_crm_account.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
+    LEFT JOIN account_next_renewal_month
+      ON account_next_renewal_month.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
+    LEFT JOIN fct_crm_opportunity
+      ON fct_crm_opportunity.dim_crm_opportunity_id = bdg_issue_user_request.dim_crm_opportunity_id
+    LEFT JOIN issue_labels AS category_label
+      ON category_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      AND category_label.category_label IS NOT NULL
+    LEFT JOIN issue_labels AS dev_label
+      ON dev_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
+      AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN strategic_account_leader
+      ON strategic_account_leader.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
 
     UNION
 
     SELECT
-      NULL                                                                        AS dim_issue_id,
+      -1                                                                          AS dim_issue_id,
       bdg_epic_user_request.dim_epic_id                                           AS dim_epic_id,
       'Epic'                                                                      AS user_request_in,
       
@@ -171,6 +246,8 @@
       dim_epic.labels                                                             AS issue_epic_labels,
       IFNULL(ARRAY_CONTAINS('deliverable'::VARIANT, dim_epic.labels), 'FALSE')    AS has_deliverable_label,
       IFNULL(epic_group_label.product_group, 'Unknown')                           AS product_group,
+      category_label.category_label                                               AS product_category,
+      dev_label.dev_label                                                         AS product_section,
       'Not Applicable'                                                            AS issue_status,
       epic_weight.epic_status                                                     AS epic_status,
       parent_epic.epic_url                                                        AS parent_epic_path,
@@ -179,8 +256,18 @@
       epic_weight.epic_weight                                                     AS issue_epic_weight,
 
       -- CRM Account attributes
+      dim_crm_account.crm_account_name                                            AS crm_account_name,
+      account_next_renewal_month.next_renewal_month                               AS crm_account_next_renewal_month,
+      dim_crm_account.health_score_color                                          AS customer_health_score_color,
+      dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
+      dim_crm_account.technical_account_manager                                   AS technical_account_manager,
+      dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
+      strategic_account_leader.strategic_account_leader                           AS strategic_account_leader,
       arr_metrics_current_month.quantity                                          AS customer_reach,
-      arr_metrics_current_month.arr                                               AS customer_arr
+      arr_metrics_current_month.arr                                               AS customer_arr,
+
+      -- CRM Opportunity attributes
+      DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date)              AS crm_opp_next_renewal_month
 
     FROM bdg_epic_user_request
     LEFT JOIN dim_issue
@@ -197,6 +284,21 @@
       ON parent_epic.dim_epic_id = dim_epic.parent_id
     LEFT JOIN arr_metrics_current_month
       ON arr_metrics_current_month.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
+    LEFT JOIN dim_crm_account
+      ON dim_crm_account.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
+    LEFT JOIN account_next_renewal_month
+      ON account_next_renewal_month.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
+    LEFT JOIN fct_crm_opportunity
+      ON fct_crm_opportunity.dim_crm_opportunity_id = bdg_epic_user_request.dim_crm_opportunity_id
+    LEFT JOIN epic_labels AS category_label
+      ON category_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
+      AND category_label.category_label IS NOT NULL
+    LEFT JOIN epic_labels AS dev_label
+      ON dev_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
+      AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN strategic_account_leader
+      ON strategic_account_leader.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
+
 
 )
 
