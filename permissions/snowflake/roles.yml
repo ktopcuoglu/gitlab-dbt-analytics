@@ -1712,6 +1712,21 @@ roles:
             tables:
                 read:
                     - prep.pmg.*
+      
+    - prometheus:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.prometheus
+            tables:
+                read:
+                    - raw.prometheus.*
+
 
     - restricted_safe:
         warehouses:
@@ -2337,6 +2352,7 @@ roles:
         member_of:
             - analyst_engineering
             - restricted_safe
+            - prometheus
         owns:
             databases:
                 - dtownsend_prep
