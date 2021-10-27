@@ -1,0 +1,14 @@
+connection_info:
+  pass: ZUORA_API_PASS
+  user: ZUORA_API_USER
+tables:
+  users:
+    query: |-
+      SELECT
+        Id
+        , Email
+        , FirstName
+        , LastName
+        , Username
+        , CreatedDate
+      FROM User
