@@ -187,7 +187,8 @@
       dim_crm_opportunity_id,
       dim_crm_account_id,
       NULL AS dim_ticket_id,
-      IFNULL(request_priority, 1)::NUMBER AS request_priority
+      IFF(request_priority IS NULL, TRUE, FALSE) AS is_request_priority_empty,
+      IFNULL(request_priority, 1)::NUMBER        AS request_priority
     FROM gitlab_epic_notes_sfdc_links_with_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, sfdc_id_18char ORDER BY note_updated_at DESC) = 1
 
@@ -199,7 +200,8 @@
       NULL dim_crm_opportunity_id,
       dim_crm_account_id,
       dim_ticket_id,
-      IFNULL(request_priority, 1)::NUMBER AS request_priority
+      IFF(request_priority IS NULL, TRUE, FALSE) AS is_request_priority_empty,
+      IFNULL(request_priority, 1)::NUMBER        AS request_priority
     FROM gitlab_epic_notes_zendesk_with_sfdc_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY epic_id, dim_ticket_id ORDER BY note_updated_at DESC) = 1
 
@@ -211,7 +213,8 @@
       gitlab_epic_description_sfdc_links_with_account.dim_crm_opportunity_id,
       gitlab_epic_description_sfdc_links_with_account.dim_crm_account_id,
       NULL AS dim_ticket_id,
-      IFNULL(gitlab_epic_description_sfdc_links_with_account.request_priority, 1)::NUMBER AS request_priority
+      IFF(gitlab_epic_description_sfdc_links_with_account.request_priority IS NULL, TRUE, FALSE) AS is_request_priority_empty,
+      IFNULL(gitlab_epic_description_sfdc_links_with_account.request_priority, 1)::NUMBER        AS request_priority
     FROM gitlab_epic_description_sfdc_links_with_account
     LEFT JOIN gitlab_epic_notes_sfdc_links_with_account
       ON gitlab_epic_description_sfdc_links_with_account.epic_id = gitlab_epic_notes_sfdc_links_with_account.epic_id
@@ -226,7 +229,8 @@
       NULL dim_crm_opportunity_id,
       dim_crm_account_id,
       gitlab_epic_description_zendesk_with_sfdc_account.dim_ticket_id,
-      IFNULL(gitlab_epic_description_zendesk_with_sfdc_account.request_priority, 1)::NUMBER AS request_priority
+      IFF(gitlab_epic_description_zendesk_with_sfdc_account.request_priority IS NULL, TRUE, FALSE) AS is_request_priority_empty,
+      IFNULL(gitlab_epic_description_zendesk_with_sfdc_account.request_priority, 1)::NUMBER        AS request_priority
     FROM gitlab_epic_description_zendesk_with_sfdc_account
     LEFT JOIN gitlab_epic_notes_zendesk_link
       ON gitlab_epic_description_zendesk_with_sfdc_account.epic_id = gitlab_epic_notes_zendesk_link.epic_id
@@ -241,7 +245,8 @@
       {{ get_keyed_nulls('dim_crm_opportunity_id') }}    AS dim_crm_opportunity_id,
       dim_crm_account_id,
       IFNULL(dim_ticket_id, -1)::NUMBER                  AS dim_ticket_id,
-      request_priority
+      request_priority,
+      is_request_priority_empty
     FROM union_links
 
 )
@@ -251,5 +256,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-10-12",
+    updated_date="2021-10-27",
 ) }}

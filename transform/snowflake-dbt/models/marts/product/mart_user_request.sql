@@ -29,7 +29,7 @@
 
 ), account_next_renewal_month AS (
 
-    SELECT DISTINCT
+    SELECT
       fct_mrr.dim_crm_account_id,
       MIN(subscription_end_month) AS next_renewal_month
     FROM fct_mrr
@@ -37,8 +37,21 @@
       ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_subscription
       ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
-      AND dim_subscription.subscription_end_month <= DATEADD('year', 1, dim_date.date_actual)
     WHERE dim_subscription.subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
+      AND fct_mrr.subscription_status IN ('Active', 'Cancelled')
+    GROUP BY 1
+
+), account_last_renewal_month AS (
+
+    SELECT
+      fct_mrr.dim_crm_account_id,
+      MAX(subscription_end_month) AS next_renewal_month
+    FROM fct_mrr
+    INNER JOIN dim_date
+      ON dim_date.date_id = fct_mrr.dim_date_id
+    LEFT JOIN dim_subscription
+      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
+    WHERE dim_subscription.subscription_end_month < DATE_TRUNC('month',CURRENT_DATE)
     GROUP BY 1
 
 ), arr_metrics_current_month AS (
@@ -165,6 +178,7 @@
       bdg_issue_user_request.dim_crm_account_id                                   AS dim_crm_account_id,
       bdg_issue_user_request.dim_ticket_id                                        AS dim_ticket_id,
       bdg_issue_user_request.request_priority                                     AS request_priority,
+      bdg_issue_user_request.is_request_priority_empty                            AS is_request_priority_empty,
       bdg_issue_user_request.is_user_request_only_in_collaboration_project        AS is_user_request_only_in_collaboration_project,
 
       -- Epic / Issue attributes
@@ -236,6 +250,7 @@
       bdg_epic_user_request.dim_crm_account_id                                    AS dim_crm_account_id,
       bdg_epic_user_request.dim_ticket_id                                         AS dim_ticket_id,
       bdg_epic_user_request.request_priority                                      AS request_priority,
+      bdg_epic_user_request.is_request_priority_empty                             AS is_request_priority_empty,
       bdg_epic_user_request.is_user_request_only_in_collaboration_project         AS is_user_request_only_in_collaboration_project,
 
       -- Epic / Issue attributes
