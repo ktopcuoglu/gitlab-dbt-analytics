@@ -3,12 +3,12 @@
  })}}
 
 {{ simple_cte([
+    ('prep_label_links', 'prep_label_links'),
+    ('prep_labels', 'prep_labels'),
     ('bdg_epic_user_request', 'bdg_epic_user_request'),
     ('bdg_issue_user_request', 'bdg_issue_user_request'),
     ('dim_epic', 'dim_epic'),
     ('dim_issue', 'dim_issue'),
-    ('prep_label_links', 'prep_label_links'),
-    ('prep_labels', 'prep_labels'),
     ('fct_mrr', 'fct_mrr'),
     ('dim_date', 'dim_date'),
     ('dim_product_detail', 'dim_product_detail'),
@@ -18,16 +18,7 @@
     ('dim_crm_user', 'dim_crm_user')
 ])}}
 
-, strategic_account_leader AS (
-
-    SELECT
-      dim_crm_account.dim_crm_account_id,
-      dim_crm_user.user_name                AS strategic_account_leader
-    FROM dim_crm_account
-    INNER JOIN dim_crm_user
-      ON dim_crm_user.dim_crm_user_id = dim_crm_account.dim_crm_user_id
-
-), account_next_renewal_month AS (
+, account_next_renewal_month AS (
 
     SELECT
       fct_mrr.dim_crm_account_id,
@@ -39,19 +30,6 @@
       ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
     WHERE dim_subscription.subscription_end_month >= DATE_TRUNC('month',CURRENT_DATE)
       AND fct_mrr.subscription_status IN ('Active', 'Cancelled')
-    GROUP BY 1
-
-), account_last_renewal_month AS (
-
-    SELECT
-      fct_mrr.dim_crm_account_id,
-      MAX(subscription_end_month) AS next_renewal_month
-    FROM fct_mrr
-    INNER JOIN dim_date
-      ON dim_date.date_id = fct_mrr.dim_date_id
-    LEFT JOIN dim_subscription
-      ON dim_subscription.dim_subscription_id = fct_mrr.dim_subscription_id
-    WHERE dim_subscription.subscription_end_month < DATE_TRUNC('month',CURRENT_DATE)
     GROUP BY 1
 
 ), arr_metrics_current_month AS (
@@ -205,8 +183,8 @@
       dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
       dim_crm_account.technical_account_manager                                   AS technical_account_manager,
       dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
-      strategic_account_leader.strategic_account_leader                           AS strategic_account_leader,
-      arr_metrics_current_month.quantity                                          AS customer_reach,
+      dim_crm_account.account_owner                                               AS strategic_account_leader,
+      arr_metrics_current_month.quantity                                          AS customer_seats,
       arr_metrics_current_month.arr                                               AS customer_arr,
 
       -- CRM Opportunity attributes
@@ -277,8 +255,8 @@
       dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
       dim_crm_account.technical_account_manager                                   AS technical_account_manager,
       dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
-      strategic_account_leader.strategic_account_leader                           AS strategic_account_leader,
-      arr_metrics_current_month.quantity                                          AS customer_reach,
+      dim_crm_account.account_owner                                               AS strategic_account_leader,
+      arr_metrics_current_month.quantity                                          AS customer_seats,
       arr_metrics_current_month.arr                                               AS customer_arr,
 
       -- CRM Opportunity attributes

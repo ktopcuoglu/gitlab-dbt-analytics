@@ -104,6 +104,7 @@ WITH map_merged_crm_account AS (
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
+    account_owner.name                                      AS account_owner,
     sfdc_users.name                                         AS technical_account_manager,
     sfdc_account.is_deleted                                 AS is_deleted,
     map_merged_crm_account.dim_crm_account_id               AS merged_to_account_id,
@@ -150,6 +151,8 @@ WITH map_merged_crm_account AS (
     ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
   LEFT OUTER JOIN sfdc_users
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+  LEFT JOIN sfdc_users AS account_owner
+    ON account_owner.user_id = sfdc_account.owner_id
   LEFT JOIN sfdc_record_type
     ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
 
@@ -160,5 +163,5 @@ WITH map_merged_crm_account AS (
     created_by="@msendal",
     updated_by="@jpeguero",
     created_date="2020-06-01",
-    updated_date="2021-09-17"
+    updated_date="2021-10-27"
 ) }}
