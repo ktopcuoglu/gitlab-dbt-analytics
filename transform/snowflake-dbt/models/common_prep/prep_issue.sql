@@ -119,7 +119,7 @@
         gitlab_dotcom_milestones_source.milestone_title)    AS milestone_title,
       gitlab_dotcom_milestones_source.due_date              AS milestone_due_date,
       agg_labels.labels,
-      upvote_count.upvote_count
+      IFNULL(upvote_count.upvote_count, 0)                  AS upvote_count
     FROM gitlab_dotcom_issues_source
     LEFT JOIN agg_labels
         ON gitlab_dotcom_issues_source.issue_id = agg_labels.dim_issue_id

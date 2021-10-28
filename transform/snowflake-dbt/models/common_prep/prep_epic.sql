@@ -97,7 +97,7 @@
       IFF(dim_namespace.visibility_level = 'private',
         ARRAY_CONSTRUCT('private - masked'),
         agg_labels.labels)                                                                   AS labels,
-      upvote_count.upvote_count
+      IFNULL(upvote_count.upvote_count, 0)                                                   AS upvote_count
     FROM gitlab_dotcom_epics_dedupe_source
     LEFT JOIN dim_namespace 
         ON gitlab_dotcom_epics_dedupe_source.group_id = dim_namespace.dim_namespace_id
