@@ -1,7 +1,3 @@
-{{config({
-   "schema": "restricted_safe_common_mart_product"
- })}}
-
 {{ simple_cte([
     ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels'),
