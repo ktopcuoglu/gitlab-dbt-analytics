@@ -8,6 +8,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
+    gitlab_pod_env_vars,
 )
 from kube_secrets import (
     GITLAB_COM_API_TOKEN,
@@ -23,12 +24,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {
-    "SNOWFLAKE_LOAD_DATABASE": "RAW"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH.upper()}_RAW",
-    "CI_PROJECT_DIR": "/analytics",
-}
+pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG
 default_args = {

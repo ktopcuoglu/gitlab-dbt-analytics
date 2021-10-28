@@ -18,13 +18,11 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    SNOWFLAKE_LOAD_DATABASE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
-GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG
@@ -83,7 +81,6 @@ for folder in folders:
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
-            SNOWFLAKE_LOAD_DATABASE,
         ],
         env_vars=pod_env_vars,
         affinity=get_affinity(False),
