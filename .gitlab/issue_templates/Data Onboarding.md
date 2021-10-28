@@ -515,6 +515,9 @@ SheetLoad is the process by which a Google Sheets and CSVs from GCS or S3 can be
 
 ### Resources to help you get started with your first issue
 
+- [How to complete a dbt Data Model MR, Part 1](https://www.youtube.com/watch?v=OyMw_JIVezk)
+- [How to complete a dbt Data Model MR, Part 2](https://www.youtube.com/watch?v=zx6x5QE7raQ)
+- [How to complete a dbt Data Model MR, Part 3](https://www.youtube.com/watch?v=Jcfdr4SlVWY)
 - Pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation](https://www.youtube.com/watch?v=WuIcnpuS2Mg)
 - Second part of pairing session between a new Data Analyst and a Staff Data Engineer working on the new analyst's first issue: [Pair on Lost MRR Dashboard Creation Part 2](https://www.youtube.com/watch?v=HIlDH5gaL3M)
 - Setting up visual studio and git terminals to use for testing locally. [Visual Studio Setup - Data Team](https://youtu.be/t5eoNLUl3x0)

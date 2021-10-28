@@ -9,12 +9,6 @@ models:
         tests:
           - unique
           - not_null
-      - name: is_user_request_only_in_collaboration_project
-        description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
-      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
-        tests:
-          - not_null
-          - unique
 
   - name: bdg_epic_user_request
     description: ' {{ doc("bdg_epic_user_request") }}'
@@ -41,6 +35,12 @@ models:
       - name: dim_crm_account_id
         tests:
           - not_null
+      - name: is_user_request_only_in_collaboration_project
+        description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
 
   - name: bdg_namespace_order_subscription_monthly
     description: '{{ doc("bdg_namespace_order_subscription_monthly") }}'

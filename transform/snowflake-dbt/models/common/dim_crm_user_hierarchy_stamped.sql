@@ -1,3 +1,8 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
+
 WITH crm_user_hierarchy_stamped AS (
 
     SELECT

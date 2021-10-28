@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 /*
   Each dict must have ALL of the following:
     * event_name

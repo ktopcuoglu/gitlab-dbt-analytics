@@ -178,6 +178,7 @@ WITH dim_billing_account AS (
       ON snapshot_dates.date_id = fct_mrr_snapshot_bottom_up.snapshot_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
 
 ), cohort_diffs AS (
 
@@ -231,7 +232,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-07-29",
-    updated_date="2021-10-21"
+    updated_date="2021-10-25"
 ) }}
