@@ -140,7 +140,7 @@
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
       ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND monthly_sm_metrics.ping_created_at::DATE
+      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 ), saas_paid_user_metrics AS (
@@ -269,7 +269,7 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
       ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND monthly_saas_metrics.ping_created_at::DATE
+      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
