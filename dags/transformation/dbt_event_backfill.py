@@ -3,7 +3,9 @@ import os
 from datetime import date, datetime
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+    KubernetesPodOperator,
+)
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
