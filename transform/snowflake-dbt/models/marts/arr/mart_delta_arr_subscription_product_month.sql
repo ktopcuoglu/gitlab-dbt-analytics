@@ -35,6 +35,7 @@
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     WHERE fct_mrr.subscription_status IN ('Active', 'Cancelled')
+      AND dim_crm_account.is_jihu_account != 'TRUE'
 
 ), max_min_month AS (
 

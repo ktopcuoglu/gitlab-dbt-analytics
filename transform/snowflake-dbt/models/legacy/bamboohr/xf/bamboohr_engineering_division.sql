@@ -12,7 +12,7 @@ WITH employees AS (
 ), bamboohr_engineering_division_mapping AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_engineering_division_mapping') }}
+    FROM {{ ref('sheetload_product_group_mappings') }}
 
 ), engineering_employees AS (
 
@@ -38,7 +38,10 @@ WITH employees AS (
       engineering_employees.employee_id,
       engineering_employees.full_name,
       engineering_employees.job_title,
-      bamboohr_engineering_division_mapping.sub_department,
+      CASE
+        WHEN bamboohr_engineering_division_mapping.section_name = 'sec'
+          THEN 'secure' 
+        ELSE bamboohr_engineering_division_mapping.section_name END as sub_department,
       engineering_employees.job_title_speciality,
       CASE 
         WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954,46) 
@@ -54,7 +57,7 @@ WITH employees AS (
       engineering_employees.reports_to
     FROM engineering_employees
     LEFT JOIN bamboohr_engineering_division_mapping
-      ON bamboohr_engineering_division_mapping.job_title_speciality = engineering_employees.job_title_speciality 
+      ON bamboohr_engineering_division_mapping.group_name = engineering_employees.job_title_speciality 
 
 )
 

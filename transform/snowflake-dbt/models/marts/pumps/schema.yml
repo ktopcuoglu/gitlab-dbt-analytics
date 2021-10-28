@@ -699,6 +699,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
       - name: subscription_seats
       - name: billable_user_count
       - name: license_utilization

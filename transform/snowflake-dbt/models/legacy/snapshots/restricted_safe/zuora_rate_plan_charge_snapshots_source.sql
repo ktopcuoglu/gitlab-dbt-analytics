@@ -7,6 +7,9 @@
 -- tcv
 -- uom
 
+{{ config(
+    tags=["mnpi"]
+) }}
 
 WITH source AS (
 
