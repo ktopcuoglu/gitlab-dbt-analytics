@@ -254,7 +254,7 @@
       dim_epic.epic_url                                                           AS parent_epic_path,
       dim_epic.epic_title                                                         AS parent_epic_title,
       dim_issue.upvote_count                                                      AS upvote_count,
-      dim_issue.weight                                                            AS issue_epic_weight
+      IFNULL(dim_issue.weight, 0)                                                 AS issue_epic_weight
 
     FROM bdg_issue_user_request
     LEFT JOIN dim_issue
@@ -302,7 +302,7 @@
       parent_epic.epic_url                                                        AS parent_epic_path,
       parent_epic.epic_title                                                      AS parent_epic_title,
       dim_epic.upvote_count                                                       AS upvote_count,
-      epic_weight.epic_weight                                                     AS issue_epic_weight
+      IFNULL(epic_weight.epic_weight, 0)                                          AS issue_epic_weight
 
     FROM bdg_epic_user_request
     LEFT JOIN dim_issue
@@ -343,11 +343,11 @@
       dim_crm_account.technical_account_manager                                   AS technical_account_manager,
       dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
       dim_crm_account.account_owner                                               AS strategic_account_leader,
-      arr_metrics_current_month.quantity                                          AS customer_reach,
-      arr_metrics_current_month.arr                                               AS crm_account_arr,
-      account_open_fo_opp_seats.seats                                             AS opportunity_reach,
-      account_lost_opp_arr.net_arr                                                AS crm_account_lost_opp_arr,
-      account_lost_customer_arr.arr_basis                                         AS crm_account_lost_customer_arr,
+      IFNULL(arr_metrics_current_month.quantity, 0)                               AS customer_reach,
+      IFNULL(arr_metrics_current_month.arr, 0)                                    AS crm_account_arr,
+      IFNULL(account_open_fo_opp_seats.seats, 0)                                  AS opportunity_reach,
+      IFNULL(account_lost_opp_arr.net_arr, 0)                                     AS crm_account_lost_opp_arr,
+      IFNULL(account_lost_customer_arr.arr_basis, 0)                              AS crm_account_lost_customer_arr,
       crm_account_lost_opp_arr + crm_account_lost_customer_arr                    AS lost_arr,
 
       -- CRM Opportunity attributes
@@ -358,8 +358,8 @@
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
-      fct_crm_opportunity.net_arr                                                 AS crm_opp_net_arr,
-      opportunity_seats.quantity                                                  AS crm_opp_seats
+      IFNULL(fct_crm_opportunity.net_arr, 0)                                      AS crm_opp_net_arr,
+      IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats
 
     FROM user_request
 
