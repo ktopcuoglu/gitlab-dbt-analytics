@@ -2,12 +2,13 @@ import json
 from typing import Any, Dict, List
 from logging import info
 
+from os import environ as env
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
 import sqlparse
 from sqlparse.sql import Token, TokenList
 from sqlparse.tokens import Whitespace
-from os import environ as env
+
 import requests
 
 
@@ -31,8 +32,11 @@ def optimize_token_size(input_token: str) -> str:
     """
     Function reduce and optimize the size of the token length
     Primary goal is to:
-    - reduce multiple whitespaces: from ' ',' ',' ' to ' ' and decrease the size (which will speed up the process)
-    - remove '\n' (new line) characters as they have no any value for a query execution
+    - reduce multiple whitespaces:
+      from ' ',' ',' ' to ' ' and decrease the size
+      (which will speed up the process)
+    - remove '\n' (new line) characters as
+      they have no any value for a query execution
     """
     if not input_token:
         return ""
@@ -51,10 +55,10 @@ def optimize_token_size(input_token: str) -> str:
 
     # Remove empty spaces from the end
     for reverse_optimized in optimized_token[::-1]:
-        if reverse_optimized != " ":
-            break
-        else:
+        if reverse_optimized == " ":
             optimized_token.pop()
+        else:
+            break
     return "".join(optimized_token)
 
 
@@ -212,10 +216,11 @@ def rename_table_name(
     token_string_list: List[str],
 ) -> None:
     """
-    Replaces the table name in the query -- represented as the list of tokens -- to make it able to run in Snowflake
+    Replaces the table name in the query --
+    represented as the list of tokens -- to make it able to run in Snowflake
 
-    Does this by prepending `prep.gitlab_dotcom.gitlab_dotcom_` to the table name in the query and then
-    appending `_dedupe_source`
+    Does this by prepending `prep.gitlab_dotcom.gitlab_dotcom_`
+    to the table name in the query and then appending `_dedupe_source`
     """
 
     if any(token_word in keywords_to_look_at for token_word in str(token).split(" ")):
@@ -233,7 +238,10 @@ def rename_table_name(
             # there is FOR sure a better way to do that
             token_string_list[
                 index + i
-            ] = f"prep.gitlab_dotcom.gitlab_dotcom_{str(next_token)}_dedupe_source AS {str(next_token)}"
+            ] = f"prep.gitlab_dotcom.gitlab_dotcom_" \
+                f"{str(next_token)}" \
+                f"_dedupe_source AS " \
+                f"{str(next_token)}"
 
 
 def rename_query_tables(sql_query: str) -> str:
@@ -253,8 +261,8 @@ def rename_query_tables(sql_query: str) -> str:
     token_string_list = list(map(str, tokens))
 
     # go through the tokens to find the tables that should be renamed
-    for index in range(len(tokens)):
-        token = tokens[index]
+    # for index in range(len(tokens)):
+    for index, token in enumerate(tokens, start=0):
         rename_table_name(
             keywords_to_look_at=keywords_to_look_at,
             token=token,
@@ -297,5 +305,5 @@ if __name__ == "__main__":
     final_sql_query_dict = main(json_query_list=json_data)
     info("Processed final sql queries")
 
-    with open("transformed_instance_queries.json", "w") as f:
+    with open(file="transformed_instance_queries.json", mode="w") as f:
         json.dump(final_sql_query_dict, f)

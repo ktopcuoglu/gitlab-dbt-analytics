@@ -16,21 +16,89 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
 test_cases_dict: Dict[Any, Any] = {
     "counts": {
         "boards": 'SELECT COUNT("boards"."id") FROM "boards"',
-        "clusters_applications_cert_managers": 'SELECT COUNT(DISTINCT "clusters_applications_cert_managers"."clusters.user_id") FROM "clusters_applications_cert_managers" INNER JOIN "clusters" ON "clusters"."id" = "clusters_applications_cert_managers"."cluster_id" WHERE "clusters_applications_cert_managers"."status" IN (11, 3, 5)',
-        "clusters_platforms_eks": 'SELECT COUNT("clusters"."id") FROM "clusters" INNER JOIN "cluster_providers_aws" ON "cluster_providers_aws"."cluster_id" = "clusters"."id" WHERE "clusters"."provider_type" = 2 AND ("cluster_providers_aws"."status" IN (3)) AND "clusters"."enabled" = TRUE',
-        "clusters_platforms_gke": 'SELECT COUNT("clusters"."id") FROM "clusters" INNER JOIN "cluster_providers_gcp" ON "cluster_providers_gcp"."cluster_id" = "clusters"."id" WHERE "clusters"."provider_type" = 1 AND ("cluster_providers_gcp"."status" IN (3)) AND "clusters"."enabled" = TRUE',
-        "clusters_platforms_user": 'SELECT COUNT("clusters"."id") FROM "clusters" WHERE "clusters"."provider_type" = 0 AND "clusters"."enabled" = TRUE',
-        "incident_labeled_issues": 'SELECT COUNT("issues"."id") FROM "issues" INNER JOIN "label_links" ON "label_links"."target_type" = \'Issue\' AND "label_links"."target_id" = "issues"."id" INNER JOIN "labels" ON "labels"."id" = "label_links"."label_id" WHERE "labels"."title" = \'incident\' AND "labels"."color" = \'#CC0033\' AND "labels"."description" = \'Denotes a disruption to IT services and the associated issues require immediate attention\'',
+        "clusters_applications_cert_managers": 'SELECT COUNT(DISTINCT "clusters_applications_cert_managers"."clusters.user_id") '
+        'FROM "clusters_applications_cert_managers" '
+        'INNER JOIN "clusters" '
+        'ON "clusters"."id" = "clusters_applications_cert_managers"."cluster_id" '
+        'WHERE "clusters_applications_cert_managers"."status" IN (11, 3, 5)',
+        "clusters_platforms_eks": 'SELECT COUNT("clusters"."id") '
+        'FROM "clusters" '
+        'INNER JOIN "cluster_providers_aws" '
+        'ON "cluster_providers_aws"."cluster_id" = "clusters"."id" '
+        'WHERE "clusters"."provider_type" = 2 '
+        'AND ("cluster_providers_aws"."status" IN (3)) '
+        'AND "clusters"."enabled" = TRUE',
+        "clusters_platforms_gke": 'SELECT COUNT("clusters"."id") '
+        'FROM "clusters" '
+        'INNER JOIN "cluster_providers_gcp" '
+        'ON "cluster_providers_gcp"."cluster_id" = "clusters"."id" '
+        'WHERE "clusters"."provider_type" = 1 '
+        'AND ("cluster_providers_gcp"."status" IN (3)) '
+        'AND "clusters"."enabled" = TRUE',
+        "clusters_platforms_user": 'SELECT COUNT("clusters"."id") '
+        'FROM "clusters" '
+        'WHERE "clusters"."provider_type" = 0 '
+        'AND "clusters"."enabled" = TRUE',
+        "incident_labeled_issues": 'SELECT COUNT("issues"."id") '
+        'FROM "issues" '
+        'INNER JOIN "label_links" '
+        'ON "label_links"."target_type" = \'Issue\' '
+        'AND "label_links"."target_id" = "issues"."id" '
+        'INNER JOIN "labels" ON "labels"."id" = "label_links"."label_id" '
+        'WHERE "labels"."title" = \'incident\' '
+        'AND "labels"."color" = \'#CC0033\' '
+        'AND "labels"."description" = \'Denotes a disruption'
+        " to IT services and the associated"
+        " issues require immediate attention'",
     }
 }
 
 results_dict: Dict[Any, Any] = {
-    "counts.boards": "SELECT 'counts.boards' AS counter_name,  COUNT(boards.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_boards_dedupe_source AS boards",
-    "counts.clusters_applications_cert_managers": "SELECT 'counts.clusters_applications_cert_managers' AS counter_name,  COUNT(DISTINCT clusters.user_id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_applications_cert_managers_dedupe_source AS clusters_applications_cert_managers INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters ON clusters.id = clusters_applications_cert_managers.cluster_id WHERE clusters_applications_cert_managers.status IN (11, 3, 5)",
-    "counts.clusters_platforms_eks": "SELECT 'counts.clusters_platforms_eks' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_aws_dedupe_source AS cluster_providers_aws ON cluster_providers_aws.cluster_id = clusters.id WHERE clusters.provider_type = 2 AND (cluster_providers_aws.status IN (3)) AND clusters.enabled = TRUE",
-    "counts.clusters_platforms_gke": "SELECT 'counts.clusters_platforms_gke' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_gcp_dedupe_source AS cluster_providers_gcp ON cluster_providers_gcp.cluster_id = clusters.id WHERE clusters.provider_type = 1 AND (cluster_providers_gcp.status IN (3)) AND clusters.enabled = TRUE",
-    "counts.clusters_platforms_user": "SELECT 'counts.clusters_platforms_user' AS counter_name,  COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters WHERE clusters.provider_type = 0 AND clusters.enabled = TRUE",
-    "counts.incident_labeled_issues": "SELECT 'counts.incident_labeled_issues' AS counter_name,  COUNT(issues.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_issues_dedupe_source AS issues INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_label_links_dedupe_source AS label_links ON label_links.target_type = 'Issue' AND label_links.target_id = issues.id INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_labels_dedupe_source AS labels ON labels.id = label_links.label_id WHERE labels.title = 'incident' AND labels.color = '#CC0033' AND labels.description = 'Denotes a disruption to IT services and the associated issues require immediate attention'",
+    "counts.boards": "SELECT 'counts.boards' AS counter_name,  "
+    "COUNT(boards.id) AS counter_value, "
+    "TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_boards_dedupe_source AS boards",
+    "counts.clusters_applications_cert_managers": "SELECT 'counts.clusters_applications_cert_managers' AS counter_name,  "
+    "COUNT(DISTINCT clusters.user_id) AS counter_value, "
+    "TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_applications_cert_managers_dedupe_source AS clusters_applications_cert_managers "
+    "INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters "
+    "ON clusters.id = clusters_applications_cert_managers.cluster_id "
+    "WHERE clusters_applications_cert_managers.status IN (11, 3, 5)",
+    "counts.clusters_platforms_eks": "SELECT 'counts.clusters_platforms_eks' AS counter_name,  "
+    "COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters "
+    "INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_aws_dedupe_source AS cluster_providers_aws "
+    "ON cluster_providers_aws.cluster_id = clusters.id "
+    "WHERE clusters.provider_type = 2 "
+    "AND (cluster_providers_aws.status IN (3)) "
+    "AND clusters.enabled = TRUE",
+    "counts.clusters_platforms_gke": "SELECT 'counts.clusters_platforms_gke' AS counter_name,  "
+    "COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters "
+    "INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_cluster_providers_gcp_dedupe_source AS cluster_providers_gcp "
+    "ON cluster_providers_gcp.cluster_id = clusters.id "
+    "WHERE clusters.provider_type = 1 "
+    "AND (cluster_providers_gcp.status IN (3)) "
+    "AND clusters.enabled = TRUE",
+    "counts.clusters_platforms_user": "SELECT 'counts.clusters_platforms_user' AS counter_name,  "
+    "COUNT(clusters.id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_clusters_dedupe_source AS clusters "
+    "WHERE clusters.provider_type = 0 "
+    "AND clusters.enabled = TRUE",
+    "counts.incident_labeled_issues": "SELECT 'counts.incident_labeled_issues' AS counter_name,  "
+    "COUNT(issues.id) AS counter_value, "
+    "TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_issues_dedupe_source AS issues "
+    "INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_label_links_dedupe_source AS label_links "
+    "ON label_links.target_type = 'Issue' "
+    "AND label_links.target_id = issues.id "
+    "INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_labels_dedupe_source AS labels "
+    "ON labels.id = label_links.label_id "
+    "WHERE labels.title = 'incident' "
+    "AND labels.color = '#CC0033' "
+    "AND labels.description = 'Denotes a disruption "
+    "to IT services and the associated issues require immediate attention'",
 }
 
 final_sql_query_dict = main(test_cases_dict)
@@ -77,13 +145,33 @@ for sql_metric, sql_query in final_sql_query_dict.items():
 test_cases_dict_subquery: Dict[Any, Any] = {
     "usage_activity_by_stage_monthly": {
         "create": {
-            "merge_requests_with_overridden_project_rules": 'SELECT COUNT(DISTINCT "approval_merge_request_rules"."merge_request_id") FROM "approval_merge_request_rules" WHERE "approval_merge_request_rules"."created_at" BETWEEN \'2021-08-14 12:44:36.596707\' AND \'2021-09-11 12:44:36.596773\' AND ((EXISTS (\n  SELECT\n    1\n  FROM\n    approval_merge_request_rule_sources\n  WHERE\n    approval_merge_request_rule_sources.approval_merge_request_rule_id = approval_merge_request_rules.id\n    AND NOT EXISTS (\n      SELECT\n        1\n      FROM\n        approval_project_rules\n      WHERE\n        approval_project_rules.id = approval_merge_request_rule_sources.approval_project_rule_id\n        AND EXISTS (\n          SELECT\n            1\n          FROM\n            projects\n          WHERE\n            projects.id = approval_project_rules.project_id\n            AND projects.disable_overriding_approvers_per_merge_request = FALSE))))\n    OR("approval_merge_request_rules"."modified_from_project_rule" = TRUE)\n)'
+            "merge_requests_with_overridden_project_rules": 'SELECT COUNT(DISTINCT "approval_merge_request_rules"."merge_request_id") '
+            'FROM "approval_merge_request_rules" '
+            'WHERE "approval_merge_request_rules"."created_at" '
+            "BETWEEN '2021-08-14 12:44:36.596707' AND '2021-09-11 12:44:36.596773' "
+            "AND ((EXISTS (\n  SELECT\n    1\n  "
+            "FROM\n    approval_merge_request_rule_sources\n  "
+            "WHERE\n    approval_merge_request_rule_sources.approval_merge_request_rule_id = approval_merge_request_rules.id\n    "
+            "AND NOT EXISTS (\n      "
+            "SELECT\n        1\n      "
+            "FROM\n        approval_project_rules\n      "
+            "WHERE\n        approval_project_rules.id = approval_merge_request_rule_sources.approval_project_rule_id\n        "
+            'AND EXISTS (\n          SELECT\n            1\n          FROM\n            projects\n          WHERE\n            projects.id = approval_project_rules.project_id\n            AND projects.disable_overriding_approvers_per_merge_request = FALSE))))\n    OR("approval_merge_request_rules"."modified_from_project_rule" = TRUE)\n)'
         }
     }
 }
 
 results_dict_subquery: Dict[Any, Any] = {
-    "usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules": "SELECT 'usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules' AS counter_name,  COUNT(DISTINCT approval_merge_request_rules.merge_request_id) AS counter_value, TO_DATE(CURRENT_DATE) AS run_day   FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rules_dedupe_source AS approval_merge_request_rules WHERE approval_merge_request_rules.created_at BETWEEN '2021-08-14 12:44:36.596707' AND '2021-09-11 12:44:36.596773' AND ((EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rule_sources_dedupe_source AS approval_merge_request_rule_sources WHERE approval_merge_request_rule_sources.approval_merge_request_rule_id = approval_merge_request_rules.id AND NOT EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_approval_project_rules_dedupe_source AS approval_project_rules WHERE approval_project_rules.id = approval_merge_request_rule_sources.approval_project_rule_id AND EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects WHERE projects.id = approval_project_rules.project_id AND projects.disable_overriding_approvers_per_merge_request = FALSE)))) OR(approval_merge_request_rules.modified_from_project_rule = TRUE))"
+    "usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules":
+        "SELECT 'usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules' "
+        "AS counter_name,  "
+    "COUNT(DISTINCT approval_merge_request_rules.merge_request_id) AS counter_value, "
+    "TO_DATE(CURRENT_DATE) AS run_day   "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rules_dedupe_source AS approval_merge_request_rules "
+    "WHERE approval_merge_request_rules.created_at "
+    "BETWEEN '2021-08-14 12:44:36.596707' AND '2021-09-11 12:44:36.596773' "
+    "AND ((EXISTS ( SELECT 1 "
+    "FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rule_sources_dedupe_source AS approval_merge_request_rule_sources WHERE approval_merge_request_rule_sources.approval_merge_request_rule_id = approval_merge_request_rules.id AND NOT EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_approval_project_rules_dedupe_source AS approval_project_rules WHERE approval_project_rules.id = approval_merge_request_rule_sources.approval_project_rule_id AND EXISTS ( SELECT 1 FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects WHERE projects.id = approval_project_rules.project_id AND projects.disable_overriding_approvers_per_merge_request = FALSE)))) OR(approval_merge_request_rules.modified_from_project_rule = TRUE))"
 }
 
 final_sql_query_dict = main(test_cases_dict_subquery)
