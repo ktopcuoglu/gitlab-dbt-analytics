@@ -109,6 +109,8 @@ tables:
       , name
       , rule_type
       , report_type
+      , section
+      , modified_from_project_rule
       FROM approval_merge_request_rules
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
