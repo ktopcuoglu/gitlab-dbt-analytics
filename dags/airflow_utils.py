@@ -4,7 +4,6 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator

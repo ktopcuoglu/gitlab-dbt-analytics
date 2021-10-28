@@ -1,4 +1,4 @@
-from airflow.contrib.kubernetes.secret import Secret
+from airflow.kubernetes.secret import Secret
 
 # BambooHR
 BAMBOOHR_API_TOKEN = Secret(
