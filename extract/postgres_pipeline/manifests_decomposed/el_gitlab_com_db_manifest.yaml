@@ -1015,7 +1015,6 @@ tables:
       FROM lists
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-
   merge_request_blocks:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1031,7 +1030,6 @@ tables:
       FROM merge_request_blocks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-
   merge_request_diffs:
     dbt_source_model: true
     export_schema: 'gitlab_com'
