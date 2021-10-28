@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 SELECT
 
   -- MAPPED COLUMNS: ANY ADDITIONAL COLUMNS SHOULD BE ADDED TO THE END OF THIS LIST

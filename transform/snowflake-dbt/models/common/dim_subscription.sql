@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH prep_amendment AS (
 
   SELECT *
@@ -32,7 +36,7 @@ WITH prep_amendment AS (
     --Common Dimension Keys
     subscription.dim_crm_account_id,
     subscription.dim_billing_account_id,
-    subscription.dim_crm_person_id_invoice_owner,
+    subscription.dim_billing_account_id_invoice_owner,
     subscription.dim_crm_opportunity_id,
     {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}       AS dim_amendment_id_subscription,
 

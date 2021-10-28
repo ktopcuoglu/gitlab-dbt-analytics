@@ -1,3 +1,9 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
+-- PENDING SCHEMA MIGRATION
+
 WITH fct_mrr AS (
 
     SELECT *

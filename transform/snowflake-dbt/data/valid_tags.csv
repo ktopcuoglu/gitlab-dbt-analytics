@@ -23,6 +23,8 @@ industry, Related to companies industry data
 invoice,Related to zuora invoice data
 keyhole_twitter,Relates to Twitter data provided by Keyhole
 mart,For data marts
+mnpi, source models with MNPI data
+mnpi_exception, models that reference mnpi models but do not contain MNPI data
 mrr,Monthly Recurring revenue
 order_type, For identifying types or order data
 on-run-end,dbt built-in

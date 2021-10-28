@@ -1,5 +1,5 @@
 {{ config({
-        "tags": ["arr_snapshots"],
+        "tags": ["arr_snapshots", "mnpi_exception"],
         "schema": "common"
     })
 }}
@@ -83,7 +83,7 @@ WITH snapshot_dates AS (
     --Common Dimension Keys
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
       zuora_account_spined.account_id                                           AS dim_billing_account_id,
-      zuora_subscription_spined.invoice_owner_id                                AS dim_crm_person_id_invoice_owner,
+      zuora_subscription_spined.invoice_owner_id                                AS dim_billing_account_id_invoice_owner,
       zuora_subscription_spined.sfdc_opportunity_id                             AS dim_crm_opportunity_id,
       {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}                  AS dim_amendment_id_subscription,
 

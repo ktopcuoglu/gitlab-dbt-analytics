@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{
     config({
         "materialized": "incremental",
@@ -86,12 +90,16 @@ WITH rule_run_date AS (
 
 ), processed_passed_failed_record_count AS (
 
---Missing instance types for UUID
+--Missing instance types for UUID or Namespaces
     SELECT 
       1                                                                    AS rule_id,
-      count(DISTINCT(instance_uuid))                                       AS processed_record_count,
-      (SELECT count(DISTINCT(instance_uuid)) FROM dim_host_instance_type
-         WHERE INSTANCE_TYPE NOT IN ('Unknown'))                           AS passed_record_count,
+      (COUNT(DISTINCT(instance_uuid)) + COUNT(DISTINCT(namespace_id)))     AS processed_record_count,
+      (SELECT COUNT(DISTINCT(
+        CASE WHEN instance_uuid IS NOT NULL 
+        THEN instance_uuid 
+        ELSE NAMESPACE_ID END )) 
+        FROM dim_host_instance_type
+        WHERE INSTANCE_TYPE NOT IN ('Unknown'))                            AS passed_record_count,
       (processed_record_count - passed_record_count)                       AS failed_record_count,
       dbt_updated_at                                                       AS run_date    
     FROM dim_host_instance_type
@@ -102,7 +110,7 @@ WITH rule_run_date AS (
 --Licenses with missing Subscriptions
     SELECT 
       2                                                                                                AS rule_id,
-      count(DISTINCT(dim_license_id))                                                                  AS processed_record_count,
+      COUNT(DISTINCT(dim_license_id))                                                                  AS processed_record_count,
       (SELECT COUNT(DISTINCT(dim_license_id)) FROM dim_license WHERE dim_subscription_id IS NOT NULL)  AS passed_record_count,
       (SELECT COUNT(DISTINCT(dim_license_id)) FROM dim_license WHERE dim_subscription_id IS NULL)      AS failed_record_count,
       dbt_updated_at                                                                                   AS run_date
@@ -114,7 +122,7 @@ WITH rule_run_date AS (
 --Subscriptions with missing Licenses
     SELECT 
       3                                                                                                                AS rule_id,
-      count(DISTINCT(dim_subscription_id))                                                                             AS processed_record_count,
+      COUNT(DISTINCT(dim_subscription_id))                                                                             AS processed_record_count,
       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id IS NOT NULL) AS passed_record_count,
       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_subscription_license_all WHERE dim_license_id is null)     AS failed_record_count,
       dbt_updated_at                                                                                                   AS run_date
@@ -126,7 +134,7 @@ WITH rule_run_date AS (
 --Subscriptions with Self-Managed Plans having License Start dates in the future
     SELECT 
       4                                                                                                            AS rule_id,
-      count(DISTINCT(dim_subscription_id))                                                                         AS processed_record_count,
+      COUNT(DISTINCT(dim_subscription_id))                                                                         AS processed_record_count,
       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= CURRENT_DATE 
          AND license_start_date IS NOT NULL)                                                                       AS passed_record_count,
       (processed_record_count - passed_record_count)                                                               AS failed_record_count,
@@ -140,7 +148,7 @@ WITH rule_run_date AS (
 --Subscriptions with Self-Managed Plans having License Start Date greater than License Expire date
     SELECT 
       5                                                                                                                   AS rule_id,
-      count(DISTINCT(dim_subscription_id))                                                                                AS processed_record_count,
+      COUNT(DISTINCT(dim_subscription_id))                                                                                AS processed_record_count,
       (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM map_license_all WHERE license_start_date <= License_expire_date)  AS passed_record_count,
       (processed_record_count - passed_record_count)                                                                      AS failed_record_count,
       dbt_updated_at                                                                                                      AS run_date
@@ -152,7 +160,7 @@ WITH rule_run_date AS (
 --Expired License IDs with Subscription End Dates in the Past
     SELECT 
         6                                                                                                                    AS rule_id,
-        count(DISTINCT(dim_license_id))                                                                                      AS processed_record_count,
+        COUNT(DISTINCT(dim_license_id))                                                                                      AS processed_record_count,
         (SELECT COUNT(DISTINCT(dim_license_id)) FROM map_subscription_all WHERE subscription_end_date <= CURRENT_DATE 
         AND License_expire_date <= CURRENT_DATE )                                                                            AS passed_record_count,
         (processed_record_count - passed_record_count)                                                                       AS failed_record_count,
@@ -165,7 +173,7 @@ WITH rule_run_date AS (
 --SaaS Subscriptions Not Mapped to Namespaces
     SELECT 
        7                                                                                                    AS rule_id,
-       count(DISTINCT(dim_subscription_id))                                                                 AS processed_record_count,
+       COUNT(DISTINCT(dim_subscription_id))                                                                 AS processed_record_count,
        (SELECT COUNT(DISTINCT(dim_subscription_id)) FROM bdg_namespace_order_subscription 
        WHERE namespace_order_subscription_match_status = 'Paid All Matching')                               AS passed_record_count,
        (processed_record_count - passed_record_count)                                                       AS failed_record_count,
@@ -197,5 +205,5 @@ WITH rule_run_date AS (
     created_by="@snalamaru",
     updated_by="@snalamaru",
     created_date="2021-06-16",
-    updated_date="2021-07-20"
+    updated_date="2021-10-25"
 ) }}

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ generate_single_field_dimension(model_name="sfdc_opportunity_source",
                                    id_column="dr_partner_engagement",
                                    id_column_name="dim_dr_partner_engagement_id",

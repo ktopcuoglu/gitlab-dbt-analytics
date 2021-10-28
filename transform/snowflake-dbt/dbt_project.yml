@@ -445,6 +445,11 @@ models:
         dbt:
           +tags: ["dbt"]
 
+      workspace_datascience:
+        +schema: workspace_datascience
+        ptb:
+          +materialized: table
+
       workspace_marketing:
         +schema: workspace_marketing
 
@@ -576,3 +581,6 @@ snapshots:
 
     zuora:
       +tags: ["daily", "zuora"]
+
+    zuora_revenue:
+      +tags: [ "daily", "zuora_revenue" ]

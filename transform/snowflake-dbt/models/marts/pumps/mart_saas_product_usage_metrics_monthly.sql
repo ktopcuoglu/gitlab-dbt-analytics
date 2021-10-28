@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_product"
   })
@@ -24,6 +28,7 @@
       monthly_metrics.snapshot_date_id,
       monthly_metrics.ping_created_at,
       monthly_metrics.ping_created_date_id,
+      monthly_metrics.instance_type,
     --   location_country.country_name,
     --   location_country.iso_2_country_code,
     --   location_country.iso_3_country_code,
@@ -143,7 +148,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@snalamaru",
     created_date="2021-05-26",
-    updated_date="2021-09-10"
+    updated_date="2021-10-12"
 ) }}

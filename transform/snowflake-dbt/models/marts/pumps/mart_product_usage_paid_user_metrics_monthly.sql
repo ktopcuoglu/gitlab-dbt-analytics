@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_product"
   })
@@ -158,7 +162,7 @@
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
-      NULL                                                                          AS instance_type,
+      monthly_saas_metrics.instance_type                                            AS instance_type,
       NULL                                                                          AS cleaned_version,
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
@@ -289,7 +293,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@snalamaru",
     created_date="2021-06-11",
-    updated_date="2021-09-09"
+    updated_date="2021-10-12"
 ) }}

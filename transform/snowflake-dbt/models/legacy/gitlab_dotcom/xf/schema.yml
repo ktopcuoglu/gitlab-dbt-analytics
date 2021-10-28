@@ -503,6 +503,18 @@ models:
       - name: namespace_id
         tests:
           - not_null
+
+  - name: gitlab_dotcom_project_statistic_snapshots_monthly
+    columns:
+      - name: snapshot_month
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
+      - name: namespace_id
+        tests:
+          - not_null
           
   - name: gitlab_dotcom_projects_xf
     description: '{{ doc("gitlab_dotcom_projects_xf") }}'
