@@ -15,10 +15,90 @@
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_subscription', 'dim_subscription'),
     ('fct_crm_opportunity', 'fct_crm_opportunity'),
-    ('dim_crm_user', 'dim_crm_user')
+    ('dim_crm_user', 'dim_crm_user'),
+    ('fct_quote_item', 'fct_quote_item'),
+    ('dim_quote', 'dim_quote'),
+    ('dim_crm_opportunity', 'dim_crm_opportunity'),
+    ('dim_order_type', 'dim_order_type')
 ])}}
 
-, account_next_renewal_month AS (
+, opportunity_seats AS (
+
+    SELECT
+      dim_crm_opportunity.dim_crm_opportunity_id,
+      dim_crm_opportunity.dim_crm_account_id,
+      dim_crm_opportunity.stage_name,
+      dim_crm_opportunity.stage_is_closed,
+      dim_crm_opportunity.order_type,
+      SUM(fct_quote_item.quantity)              AS quantity
+    FROM fct_quote_item
+    INNER JOIN dim_crm_opportunity
+      ON dim_crm_opportunity.dim_crm_opportunity_id = fct_quote_item.dim_crm_opportunity_id
+    INNER JOIN dim_quote
+      ON dim_quote.dim_quote_id = fct_quote_item.dim_quote_id
+    INNER JOIN dim_product_detail
+      ON dim_product_detail.dim_product_detail_id = fct_quote_item.dim_product_detail_id
+    WHERE dim_quote.is_primary_quote = TRUE
+      AND dim_product_detail.product_tier_name IN ('Plus', 'GitHost', 'Standard', 'Self-Managed - Starter', 'Self-Managed - Premium',
+        'SaaS - Premium', 'SaaS - Bronze', 'Basic', 'Self-Managed - Ultimate', 'SaaS - Ultimate')
+    {{ dbt_utils.group_by(5) }}
+
+), account_open_fo_opp_seats AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(quantity) AS seats
+    FROM opportunity_seats
+    WHERE order_type = '1. New - First Order'
+      AND stage_is_closed = FALSE
+    GROUP BY 1
+
+), lost_opp_arr AS (
+
+    SELECT
+      fct_crm_opportunity.dim_crm_opportunity_id,
+      fct_crm_opportunity.dim_crm_account_id,
+      fct_crm_opportunity.net_arr
+    FROM fct_crm_opportunity
+    INNER JOIN dim_order_type
+      ON dim_order_type.dim_order_type_id = fct_crm_opportunity.dim_order_type_id
+    INNER JOIN dim_crm_opportunity
+      ON dim_crm_opportunity.dim_crm_opportunity_id = fct_crm_opportunity.dim_crm_opportunity_id
+    WHERE dim_order_type.order_type_name IN ('1. New - First Order')
+      AND dim_crm_opportunity.stage_name IN ('8-Closed Lost')
+  
+), account_lost_opp_arr AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr)  AS net_arr
+    FROM lost_opp_arr
+    GROUP BY 1 
+
+), lost_customer_arr AS (
+
+    SELECT
+      fct_crm_opportunity.dim_crm_opportunity_id,
+      fct_crm_opportunity.dim_crm_account_id,
+      fct_crm_opportunity.arr_basis,
+      fct_crm_opportunity.net_arr
+    FROM fct_crm_opportunity
+    INNER JOIN dim_order_type
+      ON dim_order_type.dim_order_type_id = fct_crm_opportunity.dim_order_type_id
+    INNER JOIN dim_crm_opportunity
+      ON dim_crm_opportunity.dim_crm_opportunity_id = fct_crm_opportunity.dim_crm_opportunity_id
+    WHERE dim_order_type.order_type_name IN ('6. Churn - Final')
+      AND dim_crm_opportunity.stage_name IN ('8-Closed Lost')
+
+), account_lost_customer_arr AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(arr_basis)  AS arr_basis
+    FROM lost_customer_arr
+    GROUP BY 1
+
+), account_next_renewal_month AS (
 
     SELECT
       fct_mrr.dim_crm_account_id,
@@ -174,21 +254,7 @@
       dim_epic.epic_url                                                           AS parent_epic_path,
       dim_epic.epic_title                                                         AS parent_epic_title,
       dim_issue.upvote_count                                                      AS upvote_count,
-      dim_issue.weight                                                            AS issue_epic_weight,
-
-      -- CRM Account attributes
-      dim_crm_account.crm_account_name                                            AS crm_account_name,
-      account_next_renewal_month.next_renewal_month                               AS crm_account_next_renewal_month,
-      dim_crm_account.health_score_color                                          AS crm_account_health_score_color,
-      dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
-      dim_crm_account.technical_account_manager                                   AS technical_account_manager,
-      dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
-      dim_crm_account.account_owner                                               AS strategic_account_leader,
-      arr_metrics_current_month.quantity                                          AS customer_seats,
-      arr_metrics_current_month.arr                                               AS customer_arr,
-
-      -- CRM Opportunity attributes
-      DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date)              AS crm_opp_next_renewal_month
+      dim_issue.weight                                                            AS issue_epic_weight
 
     FROM bdg_issue_user_request
     LEFT JOIN dim_issue
@@ -199,22 +265,12 @@
       ON issue_status.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN dim_epic
       ON dim_epic.dim_epic_id = dim_issue.dim_epic_id
-    LEFT JOIN arr_metrics_current_month
-      ON arr_metrics_current_month.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
-    LEFT JOIN dim_crm_account
-      ON dim_crm_account.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
-    LEFT JOIN account_next_renewal_month
-      ON account_next_renewal_month.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
-    LEFT JOIN fct_crm_opportunity
-      ON fct_crm_opportunity.dim_crm_opportunity_id = bdg_issue_user_request.dim_crm_opportunity_id
     LEFT JOIN issue_labels AS category_label
       ON category_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
       AND category_label.category_label IS NOT NULL
     LEFT JOIN issue_labels AS dev_label
       ON dev_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
       AND dev_label.dev_label IS NOT NULL
-    LEFT JOIN strategic_account_leader
-      ON strategic_account_leader.dim_crm_account_id = bdg_issue_user_request.dim_crm_account_id
 
     UNION
 
@@ -246,21 +302,7 @@
       parent_epic.epic_url                                                        AS parent_epic_path,
       parent_epic.epic_title                                                      AS parent_epic_title,
       dim_epic.upvote_count                                                       AS upvote_count,
-      epic_weight.epic_weight                                                     AS issue_epic_weight,
-
-      -- CRM Account attributes
-      dim_crm_account.crm_account_name                                            AS crm_account_name,
-      account_next_renewal_month.next_renewal_month                               AS crm_account_next_renewal_month,
-      dim_crm_account.health_score_color                                          AS customer_health_score_color,
-      dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
-      dim_crm_account.technical_account_manager                                   AS technical_account_manager,
-      dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
-      dim_crm_account.account_owner                                               AS strategic_account_leader,
-      arr_metrics_current_month.quantity                                          AS customer_seats,
-      arr_metrics_current_month.arr                                               AS customer_arr,
-
-      -- CRM Opportunity attributes
-      DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date)              AS crm_opp_next_renewal_month
+      epic_weight.epic_weight                                                     AS issue_epic_weight
 
     FROM bdg_epic_user_request
     LEFT JOIN dim_issue
@@ -275,29 +317,79 @@
       ON epic_weight.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN dim_epic AS parent_epic
       ON parent_epic.dim_epic_id = dim_epic.parent_id
-    LEFT JOIN arr_metrics_current_month
-      ON arr_metrics_current_month.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
-    LEFT JOIN dim_crm_account
-      ON dim_crm_account.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
-    LEFT JOIN account_next_renewal_month
-      ON account_next_renewal_month.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
-    LEFT JOIN fct_crm_opportunity
-      ON fct_crm_opportunity.dim_crm_opportunity_id = bdg_epic_user_request.dim_crm_opportunity_id
     LEFT JOIN epic_labels AS category_label
       ON category_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
       AND category_label.category_label IS NOT NULL
     LEFT JOIN epic_labels AS dev_label
       ON dev_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
       AND dev_label.dev_label IS NOT NULL
-    LEFT JOIN strategic_account_leader
-      ON strategic_account_leader.dim_crm_account_id = bdg_epic_user_request.dim_crm_account_id
 
+), user_request_with_account_opp_attributes AS (
+
+    SELECT
+      {{ dbt_utils.surrogate_key(['user_request.dim_issue_id',
+                                  'user_request.dim_epic_id',
+                                  'user_request.dim_crm_account_id',
+                                  'user_request.dim_crm_opportunity_id',
+                                  'user_request.dim_ticket_id']
+                                ) }}                                              AS primary_key,
+      user_request.*,
+
+      -- CRM Account attributes
+      dim_crm_account.crm_account_name                                            AS crm_account_name,
+      account_next_renewal_month.next_renewal_month                               AS crm_account_next_renewal_month,
+      dim_crm_account.health_score_color                                          AS crm_account_health_score_color,
+      dim_crm_account.parent_crm_account_sales_segment                            AS parent_crm_account_sales_segment,
+      dim_crm_account.technical_account_manager                                   AS technical_account_manager,
+      dim_crm_account.crm_account_owner_team                                      AS crm_account_owner_team,
+      dim_crm_account.account_owner                                               AS strategic_account_leader,
+      arr_metrics_current_month.quantity                                          AS customer_reach,
+      arr_metrics_current_month.arr                                               AS crm_account_arr,
+      account_open_fo_opp_seats.seats                                             AS opportunity_reach,
+      account_lost_opp_arr.net_arr                                                AS crm_account_lost_opp_arr,
+      account_lost_customer_arr.arr_basis                                         AS crm_account_lost_customer_arr,
+      crm_account_lost_opp_arr + crm_account_lost_customer_arr                    AS lost_arr,
+
+      -- CRM Opportunity attributes
+      dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
+      dim_crm_opportunity.stage_is_closed                                         AS crm_opp_is_closed,
+      dim_crm_opportunity.order_type                                              AS crm_opp_order_type,
+      IFF(DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
+        DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
+        NULL
+      )                                                                           AS crm_opp_next_renewal_month,
+      fct_crm_opportunity.net_arr                                                 AS crm_opp_net_arr,
+      opportunity_seats.quantity                                                  AS crm_opp_seats
+
+    FROM user_request
+
+    -- Account Joins
+    LEFT JOIN arr_metrics_current_month
+      ON arr_metrics_current_month.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN dim_crm_account
+      ON dim_crm_account.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_next_renewal_month
+      ON account_next_renewal_month.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_fo_opp_seats
+      ON account_open_fo_opp_seats.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_lost_opp_arr
+      ON account_lost_opp_arr.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_lost_customer_arr
+      ON account_lost_customer_arr.dim_crm_account_id = user_request.dim_crm_account_id
+
+    -- Opportunity Joins
+    LEFT JOIN fct_crm_opportunity
+      ON fct_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN dim_crm_opportunity
+      ON dim_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN opportunity_seats
+      ON opportunity_seats.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
 
 )
 
 
 {{ dbt_audit(
-    cte_ref="user_request",
+    cte_ref="user_request_with_account_opp_attributes",
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-22",

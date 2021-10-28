@@ -345,3 +345,29 @@ models:
           - not_null
       - name: active_stage_count
         description: number of active stages for a given organization in a given month
+
+  - name: mart_user_request
+    description: '{{ doc("mart_user_request") }}'
+    columns:
+      - name: primary_key
+        description: "Primary key of mart_user_request. It is at the grain of the user request
+        (combination of the issue_id or epic_id depending on where the request was done) and
+        the links in those requests (combination of opp_id, account_id and zendesk ticket_id)"
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: crm_account_next_renewal_month
+        description: CRM Account next renewal month based on Zuora subscription and charge information. If NULL it means that either the renewal month has passed or the account didn't have one.
+      - name: customer_reach
+        description: CRM Account amount of seats in the current month based on Zuora subscription and charge information.
+      - name: opportunity_reach
+        description: Count of aggregate prospect licenses from open SFDC opportunities, where prospect means New First Order opportunities. The amount of seats in the opportunity are fetched from the primary quote linked to the opportunity.
+      - name: crm_account_lost_opp_arr
+        description: For the CRM Account, sum of all ARR where the prospect was lost. Where prospect means New First Order opportunities.
+      - name: crm_account_lost_customer_arr
+        description: For the CRM Account, sum of all ARR lost when the customer left GitLab.
+      - name: lost_arr
+        description: Sum of crm_account_lost_opp_arr and crm_account_lost_customer_arr
