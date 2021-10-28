@@ -54,7 +54,7 @@ WITH events AS (
       gsc_google_analytics_client_id AS gsc_google_analytics_client_id,
       gsc_project_id                 AS gsc_project_id,
       gsc_pseudonymized_user_id      AS gsc_pseudonymized_user_id,
-      gsc_source                     AS gsc_source,
+      gsc_source                     AS gsc_source
       
     FROM events
     WHERE event = 'struct'
