@@ -1,27 +1,30 @@
+from os import environ as env
+from typing import Dict, List
+from hashlib import md5
+
+from logging import info
 import datetime
 import json
 import logging
 import os
 import sys
 import requests
-from os import environ as env
-from typing import Dict, List
-from hashlib import md5
-
 import pandas as pd
 
 from fire import Fire
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
-    dataframe_enricher,
     snowflake_engine_factory,
-    snowflake_stage_load_copy_remove,
 )
 from sqlalchemy.exc import SQLAlchemyError
-from logging import error, info, basicConfig, getLogger, warning
 
 
 class UsagePing(object):
+    """
+    Usage ping class represent as an umbrella
+    to sort out service ping data import
+    """
+
     def __init__(self, ping_date=None):
         self.config_vars = env.copy()
         self.loader_engine = snowflake_engine_factory(self.config_vars, "LOADER")
@@ -185,8 +188,8 @@ class UsagePing(object):
         """
         with open(
             os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
-        ) as f:
-            saas_queries = json.load(f)
+        ) as namespace_file:
+            saas_queries = json.load(namespace_file)
 
         return saas_queries
 
@@ -256,6 +259,9 @@ class UsagePing(object):
         self.loader_engine.dispose()
 
     def backfill(self):
+        """
+        Routine to backfilling data for namespace ping
+        """
         filter = lambda query_dict: query_dict.get("time_window_query", False)
         self.saas_namespace_ping(filter)
 
