@@ -75,7 +75,7 @@ the gitlab standard context, which has this context schema: iglu:com.gitlab/gitl
 Then we extract the id from the context_data column
 */
 SELECT
-    events_with_context_flattened.event_id::VARCHAR,
+    events_with_context_flattened.event_id::VARCHAR        AS event_id,
     context_data_schema,
     context_data['environment']::VARCHAR                   AS environment,
     TRY_PARSE_JSON(context_data['extra'])::VARIANT         AS extra,
