@@ -1015,6 +1015,21 @@ tables:
       FROM lists
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  merge_request_blocks:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_blocks'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , blocking_merge_request_id
+      , blocked_merge_request_id
+      , created_at
+      , updated_at
+      FROM merge_request_blocks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_request_diffs:
     dbt_source_model: true
     export_schema: 'gitlab_com'
