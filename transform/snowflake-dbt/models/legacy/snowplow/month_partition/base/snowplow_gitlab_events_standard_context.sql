@@ -62,7 +62,7 @@ WITH filtered_source as (
     */
     SELECT 
       base.*,
-      f.value['schema']::TEXT     AS context_data_schema,
+      f.value['schema']::VARCHAR  AS context_data_schema,
       f.value['data']             AS context_data
     FROM base,
     lateral flatten(input => TRY_PARSE_JSON(contexts), path => 'data') f
@@ -75,18 +75,18 @@ the gitlab standard context, which has this context schema: iglu:com.gitlab/gitl
 Then we extract the id from the context_data column
 */
 SELECT
-    events_with_context_flattened.event_id,
+    events_with_context_flattened.event_id::VARCHAR,
     context_data_schema,
-    context_data['environment']::TEXT                      AS environment,
-    TRY_PARSE_JSON(context_data['extra'])                  AS extra,
+    context_data['environment']::VARCHAR                   AS environment,
+    TRY_PARSE_JSON(context_data['extra'])::VARIANT         AS extra,
     context_data['namespace_id']::NUMBER                   AS namespace_id,
-    context_data['plan']::TEXT                             AS plan,
-    context_data['google_analytics_id']::TEXT              AS google_analytics_id,
+    context_data['plan']::VARCHAR                          AS plan,
+    context_data['google_analytics_id']::VARCHAR           AS google_analytics_id,
     IFF(google_analytics_id = '', NULL,
         SPLIT_PART(google_analytics_id, '.', 3) || '.' ||
-        SPLIT_PART(google_analytics_id, '.', 4))           AS google_analytics_client_id,
+        SPLIT_PART(google_analytics_id, '.', 4))::VARCHAR  AS google_analytics_client_id,
     context_data['project_id']::NUMBER                     AS project_id,
-    context_data['user_id']::TEXT                          AS pseudonymized_user_id,
-    context_data['source']::TEXT                           AS source
+    context_data['user_id']::VARCHAR                       AS pseudonymized_user_id,
+    context_data['source']::VARCHAR                        AS source
 FROM events_with_context_flattened
 WHERE context_data_schema like 'iglu:com.gitlab/gitlab_standard/jsonschema/%'
