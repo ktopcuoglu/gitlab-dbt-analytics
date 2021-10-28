@@ -3084,7 +3084,9 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - analyst_xs 
+            - analyst_xs
+            - analyst_l
+            - analyst_xl 
 
     - mcooper:
         member_of:
