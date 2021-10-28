@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
         snowflake_stage_load_copy_remove(
             f"{key}.json",
-            "raw.engineering_extracts.engineering_extracts",
-            f"raw.engineering_extracts.{key}",
+            "engineering_extracts.engineering_extracts",
+            f"engineering_extracts.{key}",
             snowflake_engine,
         )
