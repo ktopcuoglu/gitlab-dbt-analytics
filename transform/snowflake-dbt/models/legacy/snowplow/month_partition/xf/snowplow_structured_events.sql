@@ -46,7 +46,7 @@ WITH events AS (
       os_timezone,
       br_renderengine                AS browser_engine,
       dvce_type                      AS device_type,
-      dvce_ismobile                  AS device_is_mobile
+      dvce_ismobile                  AS device_is_mobile,
       gsc_environment                AS gsc_environment,
       gsc_extra                      AS gsc_extra,
       gsc_namespace_id               AS gsc_namespace_id,
