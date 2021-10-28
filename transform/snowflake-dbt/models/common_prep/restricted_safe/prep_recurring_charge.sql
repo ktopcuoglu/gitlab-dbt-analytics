@@ -82,6 +82,7 @@ WITH dim_date AS (
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     WHERE revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
+      AND recognized_amount > 0
   
 ), mje_summed AS (
   
@@ -123,12 +124,12 @@ WITH dim_date AS (
       subscription_name,
       subscription_status,
       product_product_details_id,
-      adjustment/MONTHS_BETWEEN(revenue_start_date::date, revenue_end_date::date)   AS mrr,
-      NULL                                                                          AS delta_tcv,
-      'Seats'                                                                       AS unit_of_measure,
-      0                                                                             AS quantity,
-      DATE_TRUNC('month',revenue_start_date::date)                                  AS effective_start_month,
-      DATE_TRUNC('month',revenue_end_date::date)                                    AS effective_end_month
+      adjustment/ROUND(MONTHS_BETWEEN(revenue_start_date::date, revenue_end_date::date),0)  AS mrr,
+      NULL                                                                                  AS delta_tcv,
+      'Seats'                                                                               AS unit_of_measure,
+      0                                                                                     AS quantity,
+      DATE_TRUNC('month',revenue_start_date::date)                                          AS effective_start_month,
+      DATE_TRUNC('month',revenue_end_date::date)                                            AS effective_end_month
     FROM true_up_lines_subcription_grain
 
 ), rate_plan_charge_filtered AS (
@@ -212,7 +213,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooper",
+    updated_by="@michellecooper",
     created_date="2021-01-04",
-    updated_date="2021-08-19",
+    updated_date="2021-10-28",
 ) }}
