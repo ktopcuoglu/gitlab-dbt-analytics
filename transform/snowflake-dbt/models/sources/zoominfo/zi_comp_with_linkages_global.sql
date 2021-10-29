@@ -189,8 +189,7 @@ WITH source AS (
       zi_c_franchisor_state::VARCHAR						AS 	zi_c_franchisor_state,     	           	              
       zi_c_franchisor_country::VARCHAR						AS 	zi_c_franchisor_country,     	           	              
       zi_c_last_updated_date::VARCHAR						AS 	zi_c_last_updated_date,     	           	              
-      zi_c_release_date::VARCHAR							AS 	zi_c_release_date,
-      CURRENT_TIMESTAMP()                                   AS uploaded_at 
+      zi_c_release_date::VARCHAR							AS 	zi_c_release_date
     FROM source
 
 )
