@@ -12,8 +12,7 @@ WITH source AS (
       zi_c_category_parent ::VARCHAR  	     AS zi_c_category_parent,       	              
       zi_c_vendor ::VARCHAR  	           	 AS zi_c_vendor,            
       zi_c_tech_domain ::VARCHAR  	         AS zi_c_tech_domain,   	              
-      zi_c_description ::VARCHAR             AS zi_c_description,
-      CURRENT_TIMESTAMP()                    AS uploaded_at
+      zi_c_description ::VARCHAR             AS zi_c_description
     FROM source
 
 )
