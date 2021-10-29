@@ -1215,6 +1215,7 @@ tables:
       , auto_devops_enabled
       , push_rule_id
       , shared_runners_enabled
+      , custom_project_templates_group_id
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1805,6 +1806,10 @@ tables:
       , updated_at
       , build_id
       , scan_type
+      , project_id
+      , pipeline_id
+      , latest
+      , status
       FROM security_scans
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
