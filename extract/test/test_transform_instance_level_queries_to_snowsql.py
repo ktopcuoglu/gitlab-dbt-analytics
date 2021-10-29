@@ -162,9 +162,8 @@ test_cases_dict_subquery: Dict[Any, Any] = {
 }
 
 results_dict_subquery: Dict[Any, Any] = {
-    "usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules":
-        "SELECT 'usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules' "
-        "AS counter_name,  "
+    "usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules": "SELECT 'usage_activity_by_stage_monthly.create.merge_requests_with_overridden_project_rules' "
+    "AS counter_name,  "
     "COUNT(DISTINCT approval_merge_request_rules.merge_request_id) AS counter_value, "
     "TO_DATE(CURRENT_DATE) AS run_day   "
     "FROM prep.gitlab_dotcom.gitlab_dotcom_approval_merge_request_rules_dedupe_source AS approval_merge_request_rules "
