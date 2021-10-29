@@ -42,6 +42,9 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 30, period: day}
+      - name: banned_users
+        identifier: gitlab_db_banned_users
+        freshness: null
       - name: board_assignees
         identifier: gitlab_db_board_assignees
         freshness: null
@@ -94,6 +97,10 @@ sources:
         freshness: null
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
+      - name: clusters_integration_elasticstack
+        identifier: gitlab_dotcom_clusters_integration_elasticstack_dedupe_source
+      - name: clusters_integration_prometheus
+        identifier: gitlab_dotcom_clusters_integration_prometheus_dedupe_source
       - name: cluster_projects
         identifier: gitlab_db_cluster_projects
       - name: clusters
@@ -214,6 +221,8 @@ sources:
         identifier: gitlab_db_merge_requests_closing_issues
       - name: merge_request_reviewers
         identifier: gitlab_db_merge_request_reviewers
+     - name: milestone_releases
+        identifier: gitlab_dotcom_milestone_releases_dedupe_source
       - name: milestones
         identifier: gitlab_db_milestones
       - name: namespace_root_storage_statistics

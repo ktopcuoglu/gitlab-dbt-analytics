@@ -29,6 +29,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_authentication_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_banned_users_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_board_assignees_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_board_labels_dedupe_source
@@ -76,6 +78,10 @@ models:
   - name: gitlab_dotcom_cluster_agents_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_cluster_groups_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_clusters_integration_elasticstack_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_clusters_integration_prometheus_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_cluster_projects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -194,6 +200,8 @@ models:
   - name: gitlab_dotcom_merge_requests_closing_issues_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_merge_requests_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_milestone_releases_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_milestones_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
