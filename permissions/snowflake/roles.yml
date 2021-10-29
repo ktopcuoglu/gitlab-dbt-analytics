@@ -1991,16 +1991,15 @@ roles:
             databases:
                 read:
                     - prep
-                    - zoominfo
+                    - zoominfo_inbound
             schemas:
                 read:
                     - prep.zoominfo
-                    - zoominfo.gitlab
+                    - zoominfo_inbound.gitlab
             tables:
                 read:
                     - prep.zoominfo.*
-                    - zoominfo.gitlab.reference_techs
-                    - zoominfo.gitlab.zi_comp_with_linkages_20211001_global
+                    - zoominfo_inbound.gitlab.*
 
     - zuora:
         warehouses:
