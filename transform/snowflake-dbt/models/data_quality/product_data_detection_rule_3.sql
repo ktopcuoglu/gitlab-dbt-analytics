@@ -68,7 +68,8 @@
       dim_subscription.last_subscription_start_date,
       dim_subscription.last_subscription_end_date,
       subscription_renewal_mapping.zuora_renewal_subscription_name,
-      subscription_amendments_issue_license_mapping.does_subscription_name_contains_amendments_issue_license
+      subscription_amendments_issue_license_mapping.does_subscription_name_contains_amendments_issue_license,
+      dim_subscription.dbt_updated_at
       
     FROM dim_subscription
     LEFT JOIN dim_amendment
@@ -106,7 +107,8 @@
       dim_subscription.last_subscription_start_date,
       dim_subscription.last_subscription_end_date,
       subscription_renewal_mapping.zuora_renewal_subscription_name,
-      subscription_amendments_issue_license_mapping.does_subscription_name_contains_amendments_issue_license
+      subscription_amendments_issue_license_mapping.does_subscription_name_contains_amendments_issue_license,
+      dim_subscription.dbt_updated_at
     FROM dim_subscription
     LEFT JOIN dim_amendment
       ON dim_amendment.dim_amendment_id = dim_subscription.DIM_AMENDMENT_ID_SUBSCRIPTION
@@ -179,7 +181,9 @@
 
 ), final AS (
 
-    SELECT licenses_missing_subscriptions.*
+    SELECT
+      'Missing license' AS license_status,
+      licenses_missing_subscriptions.*
     FROM licenses_missing_subscriptions
     LEFT JOIN licenses_with_subscriptions
       ON licenses_missing_subscriptions.does_subscription_name_contains_amendments_issue_license = FALSE
@@ -187,6 +191,49 @@
       AND licenses_missing_subscriptions.subscription_name = licenses_with_subscriptions.zuora_renewal_subscription_name
       AND licenses_missing_subscriptions.dim_billing_account_id_invoice_owner != licenses_with_subscriptions.dim_billing_account_id_invoice_owner
     WHERE licenses_with_subscriptions.dim_subscription_id IS NULL
+
+    UNION
+
+    SELECT
+      'Has license' AS license_status,
+      licenses_missing_subscriptions.dim_subscription_id,
+      licenses_missing_subscriptions.dim_crm_account_id,
+      licenses_missing_subscriptions.dim_amendment_id,
+      licenses_missing_subscriptions.amendment_name,
+      licenses_missing_subscriptions.subscription_version,
+      licenses_missing_subscriptions.subscription_status,
+      licenses_missing_subscriptions.subscription_start_date,
+      licenses_missing_subscriptions.subscription_end_date,
+      licenses_missing_subscriptions.amendment_type,
+      licenses_missing_subscriptions.subscription_name,
+      licenses_missing_subscriptions.dim_billing_account_id_invoice_owner,
+      licenses_missing_subscriptions.last_subscription_start_date,
+      licenses_missing_subscriptions.last_subscription_end_date,
+      licenses_missing_subscriptions.zuora_renewal_subscription_name,
+      licenses_missing_subscriptions.does_subscription_name_contains_amendments_issue_license,
+      licenses_missing_subscriptions.dbt_updated_at,
+
+      licenses_with_subscriptions.dim_license_id,
+      licenses_with_subscriptions.license_md5,
+      licenses_with_subscriptions.dim_environment_id,
+      licenses_with_subscriptions.environment,
+      licenses_with_subscriptions.license_plan,
+      licenses_with_subscriptions.license_start_date,
+      licenses_with_subscriptions.license_expire_date
+    FROM licenses_missing_subscriptions
+    LEFT JOIN licenses_with_subscriptions
+      ON licenses_missing_subscriptions.does_subscription_name_contains_amendments_issue_license = FALSE
+      AND licenses_missing_subscriptions.last_subscription_start_date = licenses_with_subscriptions.last_subscription_end_date 
+      AND licenses_missing_subscriptions.subscription_name = licenses_with_subscriptions.zuora_renewal_subscription_name
+      AND licenses_missing_subscriptions.dim_billing_account_id_invoice_owner != licenses_with_subscriptions.dim_billing_account_id_invoice_owner
+    WHERE licenses_with_subscriptions.dim_subscription_id IS NOT NULL
+
+    UNION
+
+    SELECT
+      'Has license' AS license_status,
+      *
+    FROM licenses_with_subscriptions
   
 )
 
