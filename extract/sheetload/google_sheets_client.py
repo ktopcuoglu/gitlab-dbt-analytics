@@ -3,7 +3,7 @@ import random
 from logging import error, info, basicConfig, getLogger
 from os import environ as env
 from typing import List
-from yaml import load, FullLoader
+from yaml import load
 
 import gspread
 import pandas as pd
@@ -52,7 +52,7 @@ class GoogleSheetsClient:
             "https://spreadsheets.google.com/feeds",
             "https://www.googleapis.com/auth/drive",
         ]
-        keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+        keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
         return gspread.authorize(
             ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
         )
