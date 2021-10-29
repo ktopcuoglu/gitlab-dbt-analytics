@@ -4,7 +4,7 @@ import logging
 from os import environ as env
 from fire import Fire
 from typing import Dict
-from yaml import load, FullLoader
+from yaml import load
 from datetime import datetime
 from google.cloud import storage
 from google.oauth2 import service_account
@@ -21,7 +21,7 @@ def get_gcs_bucket(bucket_name: str) -> Bucket:
     """Do the auth and return a usable gcs bucket object."""
 
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = load(env["GCP_SERVICE_CREDS"], Loader=FullLoader)
+    keyfile = load(env["GCP_SERVICE_CREDS"])
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
