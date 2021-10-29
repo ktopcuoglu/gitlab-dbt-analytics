@@ -437,9 +437,7 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_LOADED": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
-                            task_identifier + "-pgp-extract"
-                        ),
+                        "LAST_LOADED": "2021-10-28 12:00:00",
                     },
                     affinity=get_affinity(False),
                     tolerations=get_toleration(False),
