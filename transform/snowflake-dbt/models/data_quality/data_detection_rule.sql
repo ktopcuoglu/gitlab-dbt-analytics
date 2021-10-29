@@ -55,11 +55,11 @@ WITH detection_rule AS (
     UNION 
 
       SELECT 
-        7                                                                     AS rule_id,
-        'SaaS Subscriptions IDs Not Mapped to Namespaces'                     AS rule_name,
-        'SaaS Subscription IDs that do not have any associated Namespace IDs' AS rule_description,
-        'Product'                                                             AS type_of_data,
-        50                                                                    AS threshold
+        7                                                                                      AS rule_id,
+        'Active/Paid SaaS Subscriptions IDs Not Mapped to Namespaces'                          AS rule_name,
+        'Currently paying SaaS Subscription IDs that do not have any associated Namespace IDs' AS rule_description,
+        'Product'                                                                              AS type_of_data,
+        50                                                                                     AS threshold
               
 )
 

@@ -80,12 +80,9 @@
     SELECT 
       1                                                                    AS rule_id,
       (COUNT(DISTINCT(instance_uuid)) + COUNT(DISTINCT(namespace_id)))     AS processed_record_count,
-      (SELECT COUNT(DISTINCT(
-        CASE WHEN instance_uuid IS NOT NULL 
-        THEN instance_uuid 
-        ELSE NAMESPACE_ID END )) 
+      (SELECT COUNT(DISTINCT(IFNULL(instance_uuid, namespace_id ))) 
         FROM dim_host_instance_type
-        WHERE INSTANCE_TYPE NOT IN ('Unknown'))                            AS passed_record_count,
+        WHERE instance_type NOT IN ('Unknown'))                            AS passed_record_count,
       (processed_record_count - passed_record_count)                       AS failed_record_count,
       dbt_updated_at                                                       AS run_date    
     FROM dim_host_instance_type
