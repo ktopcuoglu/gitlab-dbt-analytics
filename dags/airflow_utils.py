@@ -4,7 +4,6 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
@@ -79,7 +78,7 @@ def slack_defaults(context, task_type):
     """
     Function to handle switching between a task failure and success.
     """
-    #base_url = "https://airflow.gitlabdata.com"
+    # base_url = "https://airflow.gitlabdata.com"
     base_url = "http://35.230.59.166:8080"
     execution_date = context["ts"]
     dag_context = context["dag"]

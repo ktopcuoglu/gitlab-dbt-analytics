@@ -3,7 +3,9 @@ from datetime import datetime, timedelta
 from yaml import load, safe_load, YAMLError
 
 from airflow import DAG
-from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+    KubernetesPodOperator,
+)
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
