@@ -1024,7 +1024,7 @@ models:
       - name: merge_request_blocks_id
         tags: ["tdf", "gitlab_dotcom"]
         tests:
-          - not null
+          - not_null
           - unique
 
   - name: gitlab_dotcom_merge_request_diffs_source
