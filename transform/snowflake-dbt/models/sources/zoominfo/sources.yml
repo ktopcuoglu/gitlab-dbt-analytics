@@ -15,15 +15,11 @@ sources:
       - name: global
         identifier: zi_comp_with_linkages_20211001_global         
         description: International table, data ingested from Zoominfo inbound share.
-        loaded_at_field: uploaded_at
 
       - name: techs
         identifier: reference_techs         
         description: Technograph table,  data ingested from Zoominfo inbound share.
-        loaded_at_field: uploaded_at
            
-      - name: user
-        identifier: udb_sample_09012021         
+      - name: contact_enhance
+        identifier: gitlab_contact_enhance_10_25_21         
         description: User company matched table which appends company information to the user list Gitlab sends to zoominfo. Data ingested from Zoominfo inbound share.
-        loaded_at_field: uploaded_at
-
