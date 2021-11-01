@@ -40,7 +40,11 @@ WITH prep_issue AS (
       promoted_to_epic_id,
       issue_type,
       severity,
-      labels
+      issue_url,
+      milestone_title,
+      milestone_due_date,
+      labels,
+      upvote_count
     FROM {{ ref('prep_issue') }}
 
 )
@@ -50,6 +54,6 @@ WITH prep_issue AS (
     created_by="@mpeychet_",
     updated_by="@jpeguero",
     created_date="2021-06-17",
-    updated_date="2021-09-07"
+    updated_date="2021-10-24"
 ) }}
 
