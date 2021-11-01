@@ -98,9 +98,9 @@ sources:
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
       - name: clusters_integration_elasticstack
-        identifier: gitlab_dotcom_clusters_integration_elasticstack_dedupe_source
+        identifier: gitlab_db_clusters_integration_elasticstack
       - name: clusters_integration_prometheus
-        identifier: gitlab_dotcom_clusters_integration_prometheus_dedupe_source
+        identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects
         identifier: gitlab_db_cluster_projects
       - name: clusters
@@ -221,8 +221,8 @@ sources:
         identifier: gitlab_db_merge_requests_closing_issues
       - name: merge_request_reviewers
         identifier: gitlab_db_merge_request_reviewers
-     - name: milestone_releases
-        identifier: gitlab_dotcom_milestone_releases_dedupe_source
+      - name: milestone_releases
+        identifier: gitlab_db_milestone_releases
       - name: milestones
         identifier: gitlab_db_milestones
       - name: namespace_root_storage_statistics
