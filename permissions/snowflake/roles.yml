@@ -1756,6 +1756,7 @@ roles:
                     - prod.restricted_safe_common_prep
                     - prod.restricted_safe_workspace_finance
                     - prod.restricted_safe_workspace_sales
+                    - prod.restricted_safe_common_mart_product
 
             tables:
                 read:
@@ -1766,6 +1767,7 @@ roles:
                     - prod.restricted_safe_common_prep.*
                     - prod.restricted_safe_workspace_finance.*
                     - prod.restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_common_mart_product.*
 
     - salesforce:
         warehouses:
