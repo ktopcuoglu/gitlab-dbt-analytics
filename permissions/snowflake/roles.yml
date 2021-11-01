@@ -3883,7 +3883,6 @@ roles:
                     - tnguyen_prep.*.*
                     - tnguyen_prod.*.*      
 
-
     - trevorromero:
         member_of:
             - decisive_data
