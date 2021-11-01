@@ -274,9 +274,9 @@ models:
       - name: reports_to_id
         description: The Salesforce id (dim_crm_person_id) for the person the contact reports too, null when the person is a lead.
       - name: dim_crm_user_id
-        description: Duplicate of owner_id.
+        description: A dbt generated ID for the owner.
       - name: crm_partner_id
-        description: The Salesforce 18 digit id of the account for the person. Joinable to "PROD"."COMMON"."DIM_CRM_ACCOUNT"."DIM_CRM_ACCOUNT_ID".
+        description: The Salesforce 18 digit id of the account for the person. Joinable to "PROD"."RESTRICTED_SAFE_COMMON"."DIM_CRM_ACCOUNT"."DIM_CRM_ACCOUNT_ID".
       - name: person_score
         description: The score when moving the person through the lead flow to become a MQL. The [MQL definition in the Marketo](https://about.gitlab.com/handbook/marketing/marketing-operations/marketo/#mql-definition) page has more information.
       - name: title
