@@ -1,4 +1,3 @@
-/* grain: one record per subscription per month */
 WITH dim_date AS (
 
     SELECT *
@@ -117,13 +116,14 @@ WITH dim_date AS (
 ), manual_charges AS (
   
     SELECT 
-      billing_account_id,
-      crm_account_id,
-      rate_plan_charge_id,
-      subscription_id,
+      billing_account_id                                                                    AS dim_billing_account_id,
+      crm_account_id                                                                        AS dim_crm_account_id,
+      rate_plan_charge_id                                                                   AS dim_charge_id,
+      subscription_id                                                                       AS dim_subscription_id,
       subscription_name,
       subscription_status,
-      product_product_details_id,
+      product_product_details_id                                                            AS dim_product_detail_id,
+      adjustment,
       adjustment/ROUND(MONTHS_BETWEEN(revenue_end_date::date, revenue_start_date::date),0)  AS mrr,
       NULL                                                                                  AS delta_tcv,
       'Seats'                                                                               AS unit_of_measure,
@@ -132,88 +132,12 @@ WITH dim_date AS (
       DATE_TRUNC('month',revenue_end_date::date)                                            AS effective_end_month
     FROM true_up_lines_subcription_grain
 
-), rate_plan_charge_filtered AS (
-
-    SELECT
-      zuora_account.account_id                            AS billing_account_id,
-      map_merged_crm_account.dim_crm_account_id           AS crm_account_id,
-      zuora_rate_plan_charge.rate_plan_charge_id,
-      zuora_subscription.subscription_id,
-      zuora_subscription.subscription_name,
-      zuora_subscription.subscription_status,
-      zuora_rate_plan_charge.product_rate_plan_charge_id  AS product_details_id,
-      zuora_rate_plan_charge.mrr,
-      zuora_rate_plan_charge.delta_tcv,
-      zuora_rate_plan_charge.unit_of_measure,
-      zuora_rate_plan_charge.quantity,
-      zuora_rate_plan_charge.effective_start_month,
-      zuora_rate_plan_charge.effective_end_month
-    FROM zuora_rate_plan_charge
-    INNER JOIN zuora_rate_plan
-      ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
-    INNER JOIN zuora_subscription
-      ON zuora_rate_plan.subscription_id = zuora_subscription.subscription_id
-    INNER JOIN zuora_account
-      ON zuora_account.account_id = zuora_subscription.account_id
-    LEFT JOIN map_merged_crm_account
-      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
-
-), combined_rate_plans AS (
-
-    SELECT *
-    FROM rate_plan_charge_filtered
-
-    UNION
-
-    SELECT *
-    FROM manual_charges
-
-), mrr_month_by_month AS (
-
-    SELECT
-      dim_date.date_id,
-      billing_account_id,
-      crm_account_id,
-      subscription_id,
-      subscription_name,
-      subscription_status,
-      product_details_id,
-      rate_plan_charge_id,
-      SUM(mrr)                                             AS mrr,
-      SUM(mrr)* 12                                         AS arr,
-      SUM(quantity)                                        AS quantity,
-      ARRAY_AGG(combined_rate_plans.unit_of_measure)       AS unit_of_measure
-    FROM combined_rate_plans
-    INNER JOIN dim_date
-      ON combined_rate_plans.effective_start_month <= dim_date.date_actual
-      AND (combined_rate_plans.effective_end_month > dim_date.date_actual
-        OR combined_rate_plans.effective_end_month IS NULL)
-      AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=8) }}
-
-), final AS (
-
-  SELECT
-    {{ dbt_utils.surrogate_key(['date_id','rate_plan_charge_id']) }}                        AS mrr_id,
-    date_id                                                                                 AS dim_date_id,
-    billing_account_id                                                                      AS dim_billing_account_id,
-    crm_account_id                                                                          AS dim_crm_account_id,
-    subscription_id                                                                         AS dim_subscription_id,
-    product_details_id                                                                      AS dim_product_detail_id,
-    rate_plan_charge_id                                                                     AS dim_charge_id,
-    subscription_status,
-    mrr,
-    arr,
-    quantity,
-    unit_of_measure
-  FROM mrr_month_by_month
-
 )
 
 {{ dbt_audit(
-    cte_ref="final",
-    created_by="@mcooperDD",
+    cte_ref="manual_charges",
+    created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2021-01-04",
+    created_date="2021-10-28",
     updated_date="2021-10-28",
 ) }}
