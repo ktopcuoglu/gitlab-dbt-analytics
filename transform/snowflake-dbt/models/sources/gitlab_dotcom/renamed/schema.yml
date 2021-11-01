@@ -1027,6 +1027,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_merge_request_blocks_source
+    description: Base model for GitLab.com merge request blocks table
+    columns: 
+      - name: merge_request_blocks_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_merge_request_diffs_source
     description: Base model for Gitlab.com request diffs
     columns:
