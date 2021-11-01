@@ -77,7 +77,8 @@ tables:
     export_table_primary_key: id
     import_db: CUSTOMERS_DB
     import_query: |-
-      SELECT created_at
+      SELECT id
+      , created_at
       , updated_at
       , trial_start_date
       , namespace_id
