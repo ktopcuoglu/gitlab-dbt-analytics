@@ -336,7 +336,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['Group','Individual']
+              values: ['Group','Individual','User']
       - name: product_tier
         tests:
           - not_null
