@@ -200,7 +200,7 @@ models:
       - name: zi_c_tech_domain
       - name: zi_c_description
   
-  - name: gitlab_contact_enhance
+  - name: gitlab_contact_enhance_source
     description: User company matched table which appends company information to the user list Gitlab sends to zoominfo. Data ingested from Zoominfo inbound share.
     columns: 
      - name:	record_id 
