@@ -3,9 +3,7 @@ import yaml
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
-    KubernetesPodOperator,
-)
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.operators.python_operator import ShortCircuitOperator
 
 from airflow_utils import (
@@ -437,7 +435,9 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_LOADED":  "2021-10-27T12:00:00Z",
+                        "LAST_LOADED": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
+                            task_identifier + "-pgp-extract"
+                        ),
                     },
                     affinity=get_affinity(False),
                     tolerations=get_toleration(False),
