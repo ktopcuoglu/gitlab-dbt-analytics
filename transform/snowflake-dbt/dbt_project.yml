@@ -474,6 +474,10 @@ models:
           +tags: ["safe"]
           secure: true
 
+      workspace_engineering:
+        +schema: workspace_engineering
+
+
     # ------------------
     # Marts
     # ------------------
