@@ -95,6 +95,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_award_emoji_source
+    description: Base model for Gitlab.com award emojis.
+    columns:
+      - name: award_emoji_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_board_assignees_source
     description: Base model for Gitlab.com Board Assignees
     columns:
@@ -1017,6 +1026,15 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_merge_request_blocks_source
+    description: Base model for GitLab.com merge request blocks table
+    columns: 
+      - name: merge_request_blocks_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_merge_request_diffs_source
     description: Base model for Gitlab.com request diffs

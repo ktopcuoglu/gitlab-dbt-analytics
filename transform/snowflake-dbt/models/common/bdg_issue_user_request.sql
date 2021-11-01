@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH prep_issue_user_request AS (
 
     SELECT *
@@ -29,6 +33,7 @@ WITH prep_issue_user_request AS (
       dim_crm_account_id,
       dim_ticket_id,
       request_priority,
+      is_request_priority_empty,
       FALSE                 AS is_user_request_only_in_collaboration_project 
     FROM prep_issue_user_request
 
@@ -41,6 +46,7 @@ WITH prep_issue_user_request AS (
       dim_crm_account_id,
       -1                    AS dim_ticket_id,
       1::NUMBER             AS request_priority,
+      TRUE                  AS is_request_priority_empty,
       TRUE                  AS is_user_request_only_in_collaboration_project
     FROM issue_request_collaboration_projects_filtered
 
@@ -51,6 +57,6 @@ WITH prep_issue_user_request AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-10-12",
+    updated_date="2021-10-27",
 ) }}
 
