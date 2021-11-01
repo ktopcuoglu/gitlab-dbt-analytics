@@ -159,6 +159,11 @@ databases:
     - tpoole_prep:
         shared: no
 
+    - tnguyen_prod:
+        shared: no
+    - tnguyen_prep:
+        shared: no        
+
     - trevorromero_prod:
         shared: no
     - trevorromero_prep:
@@ -3839,6 +3844,45 @@ roles:
                     - tpoole_prep.*.*
                     - tpoole_prod.*.*      
 
+    - tnguyen:
+        member_of:
+         - data_team_analyst
+         - analyst_core
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - tnguyen_prep
+                - tnguyen_prod
+            schemas:
+                - tnguyen_prep.*
+                - tnguyen_prod.*
+            tables:
+                - tnguyen_prep.*.*
+                - tnguyen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tnguyen_prep
+                    - tnguyen_prod
+                write:
+                    - tnguyen_prep
+                    - tnguyen_prod
+            schemas:
+                read:
+                    - tnguyen_prep.*
+                    - tnguyen_prod.*
+                write:
+                    - tnguyen_prep.*
+                    - tnguyen_prod.*
+            tables:
+                read:
+                    - tnguyen_prep.*.*
+                    - tnguyen_prod.*.*
+                write:
+                    - tnguyen_prep.*.*
+                    - tnguyen_prod.*.*      
+
     - trevorromero:
         member_of:
             - decisive_data
@@ -4737,6 +4781,11 @@ users:
         can_login: yes
         member_of:
             - tpoole
+
+    - tnguyen:
+        can_login: yes
+        member_of:
+            - tnguyen
 
     - trevorromero:
         can_login: yes
