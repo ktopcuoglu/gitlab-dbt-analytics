@@ -20,7 +20,7 @@ WITH detection_rule AS (
 
       SELECT 
         3                                                                               AS rule_id,
-        'Subscription Names with paying Self-Managed Plans with missing Licenses'       AS rule_name,
+        'Subscription with paying Self-Managed Plans with missing Licenses'             AS rule_name,
         'Subscription Names that currently do not have an associated License ID'        AS rule_description,
         'Product'                                                                       AS type_of_data,
         50                                                                              AS threshold
@@ -29,7 +29,7 @@ WITH detection_rule AS (
 
       SELECT 
         4                                                                                      AS rule_id,
-        'Subscriptions IDs with Self-Managed Plans having License Start dates in the future'   AS rule_name,
+        'Subscriptions with Self-Managed Plans having License Start dates in the future'       AS rule_name,
         'Subscription IDs with Self-Managed Plans having license_start_date in the future'     AS rule_description,
         'Product'                                                                              AS type_of_data,
         50                                                                                     AS threshold
@@ -38,7 +38,7 @@ WITH detection_rule AS (
 
       SELECT 
         5                                                                                                       AS rule_id,
-        'Subscriptions IDs with Self-Managed Plans having License Start Date greater than License Expire date'  AS rule_name,
+        'Subscriptions with Self-Managed Plans having License Start Date greater than License Expire date'      AS rule_name,
         'Subscriptions IDs with Self-Managed Plans having license_start_date greater than license_expire_date'  AS rule_description,
         'Product'                                                                                               AS type_of_data,
         50                                                                                                      AS threshold
@@ -56,7 +56,7 @@ WITH detection_rule AS (
 
       SELECT 
         7                                                                                      AS rule_id,
-        'Active/Paid SaaS Subscriptions IDs Not Mapped to Namespaces'                          AS rule_name,
+        'Active/Paid SaaS Subscriptions Not Mapped to Namespaces'                              AS rule_name,
         'Currently paying SaaS Subscription IDs that do not have any associated Namespace IDs' AS rule_description,
         'Product'                                                                              AS type_of_data,
         50                                                                                     AS threshold
