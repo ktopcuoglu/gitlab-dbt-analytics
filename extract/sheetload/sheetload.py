@@ -5,7 +5,7 @@ import json
 from logging import error, info, basicConfig, getLogger, warning
 from os import environ as env
 from typing import Dict, Tuple, List
-from yaml import load, safe_load, YAMLError
+from yaml import load, safe_load, YAMLError, FullLoader
 
 import boto3
 import pandas as pd
@@ -125,7 +125,7 @@ def gcs_loader(
 
     # Get the gcloud storage client and authenticate
     scope = ["https://www.googleapis.com/auth/cloud-platform"]
-    keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
+    keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
     credentials = service_account.Credentials.from_service_account_info(keyfile)
     scoped_credentials = credentials.with_scopes(scope)
     storage_client = storage.Client(credentials=scoped_credentials)
