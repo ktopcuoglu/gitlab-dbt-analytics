@@ -857,6 +857,7 @@ roles:
         member_of:
             - covid19
             - snowflake_db
+            - zoominfo
         owns:
             schemas:
                 - prod.common
@@ -1090,6 +1091,7 @@ roles:
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
+                    - prod.workspace_engineering
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -1107,7 +1109,8 @@ roles:
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
-                    - prod.workspace_sales.*                    
+                    - prod.workspace_sales.*
+                    - prod.workspace_engineering.*                    
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
@@ -1754,6 +1757,7 @@ roles:
                     - prod.restricted_safe_common_prep
                     - prod.restricted_safe_workspace_finance
                     - prod.restricted_safe_workspace_sales
+                    - prod.restricted_safe_common_mart_product
 
             tables:
                 read:
@@ -1764,6 +1768,7 @@ roles:
                     - prod.restricted_safe_common_prep.*
                     - prod.restricted_safe_workspace_finance.*
                     - prod.restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_common_mart_product.*
 
     - salesforce:
         warehouses:
@@ -2009,6 +2014,18 @@ roles:
             tables:
                 read:
                     - raw.tap_zoom.*
+
+    - zoominfo:
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.zoominfo
+            tables:
+                read:
+                    - prep.zoominfo.*
 
     - zuora:
         warehouses:
@@ -3204,6 +3221,7 @@ roles:
     - mramirez:
         member_of:
             - analyst_sales
+            - restricted_safe            
         warehouses:
             - analyst_xs
         owns:
@@ -3959,14 +3977,6 @@ roles:
                 write:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
-
-    - vboya: # External user - Protivitiy
-        member_of:
-            - analyst_finance
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - analyst_xs
 
     - vbrew:
         member_of:
@@ -4794,12 +4804,7 @@ users:
 
     - valexieva:
         can_login: no
-        member_of: []
-
-    - vboya: # External user - Protivitiy
-        can_login: yes
-        member_of:
-            - vboya     
+        member_of: []   
 
     - vbrew:
         can_login: yes
