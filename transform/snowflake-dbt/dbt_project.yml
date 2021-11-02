@@ -272,6 +272,10 @@ models:
       zendesk_community_relations:
         +schema: zendesk_community_relations
 
+      zoominfo:
+        +schema: zoominfo
+        +materialized: table 
+
       zuora:
         +schema: zuora
         +tags: ["zuora"]
