@@ -3208,6 +3208,7 @@ roles:
     - mramirez:
         member_of:
             - analyst_sales
+            - restricted_safe            
         warehouses:
             - analyst_xs
         owns:
