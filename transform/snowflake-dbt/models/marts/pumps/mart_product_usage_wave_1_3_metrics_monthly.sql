@@ -154,7 +154,8 @@
       ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
       ON monthly_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND DATEADD('day', -1, monthly_metrics.snapshot_month) = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
@@ -163,5 +164,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-02-11",
-    updated_date="2021-09-10"
+    updated_date="2021-10-21"
 ) }}

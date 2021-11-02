@@ -76,6 +76,7 @@
       snapshot_month,
       uuid,
       hostname,
+      ping_created_at,
       ping_created_at::DATE - LAG(ping_created_at::DATE)
         IGNORE NULLS OVER (
           PARTITION BY
@@ -134,6 +135,7 @@
       snapshot_month,
       uuid,
       hostname,
+      ping_created_at,
       days_since_last_ping,
       months.days_in_month_count,
       {{ usage_ping_over_ping_smoothed('commit_comment_all_time_event') }},
@@ -233,9 +235,10 @@
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
       AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
-        LEFT JOIN subscriptions
+    LEFT JOIN subscriptions
       ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND DATEADD('day', -1, smoothed_diffs.snapshot_month) = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
@@ -244,5 +247,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-03-04",
-    updated_date="2021-09-09"
+    updated_date="2021-10-21"
 ) }}

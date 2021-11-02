@@ -474,6 +474,10 @@ models:
           +tags: ["safe"]
           secure: true
 
+      workspace_engineering:
+        +schema: workspace_engineering
+
+
     # ------------------
     # Marts
     # ------------------
@@ -497,6 +501,10 @@ models:
         +tags: ["product"]
         mart_ci_runner_activity_monthly:
           +enabled: true
+        restricted_safe:
+          +schema: restricted_safe_common_mart_product
+          +tags: ["safe"]
+          secure: true
         
       pumps: 
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD

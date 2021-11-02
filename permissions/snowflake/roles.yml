@@ -159,6 +159,11 @@ databases:
     - tpoole_prep:
         shared: no
 
+    - tnguyen_prod:
+        shared: no
+    - tnguyen_prep:
+        shared: no        
+
     - trevorromero_prod:
         shared: no
     - trevorromero_prep:
@@ -1085,6 +1090,7 @@ roles:
                     - prod.workspace_finance
                     - prod.workspace_marketing
                     - prod.workspace_sales
+                    - prod.workspace_engineering
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -1102,7 +1108,8 @@ roles:
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
-                    - prod.workspace_sales.*                    
+                    - prod.workspace_sales.*
+                    - prod.workspace_engineering.*                    
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
@@ -1749,6 +1756,7 @@ roles:
                     - prod.restricted_safe_common_prep
                     - prod.restricted_safe_workspace_finance
                     - prod.restricted_safe_workspace_sales
+                    - prod.restricted_safe_common_mart_product
 
             tables:
                 read:
@@ -1759,6 +1767,7 @@ roles:
                     - prod.restricted_safe_common_prep.*
                     - prod.restricted_safe_workspace_finance.*
                     - prod.restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_common_mart_product.*
 
     - salesforce:
         warehouses:
@@ -3084,7 +3093,9 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - analyst_xs 
+            - analyst_xs
+            - analyst_l
+            - analyst_xl 
 
     - mcooper:
         member_of:
@@ -3197,6 +3208,7 @@ roles:
     - mramirez:
         member_of:
             - analyst_sales
+            - restricted_safe            
         warehouses:
             - analyst_xs
         owns:
@@ -3837,6 +3849,45 @@ roles:
                     - tpoole_prep.*.*
                     - tpoole_prod.*.*      
 
+    - tnguyen:
+        member_of:
+         - data_team_analyst
+         - analyst_core
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - tnguyen_prep
+                - tnguyen_prod
+            schemas:
+                - tnguyen_prep.*
+                - tnguyen_prod.*
+            tables:
+                - tnguyen_prep.*.*
+                - tnguyen_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tnguyen_prep
+                    - tnguyen_prod
+                write:
+                    - tnguyen_prep
+                    - tnguyen_prod
+            schemas:
+                read:
+                    - tnguyen_prep.*
+                    - tnguyen_prod.*
+                write:
+                    - tnguyen_prep.*
+                    - tnguyen_prod.*
+            tables:
+                read:
+                    - tnguyen_prep.*.*
+                    - tnguyen_prod.*.*
+                write:
+                    - tnguyen_prep.*.*
+                    - tnguyen_prod.*.*      
+
     - trevorromero:
         member_of:
             - decisive_data
@@ -3913,14 +3964,6 @@ roles:
                 write:
                     - tullylanterdd_prep.*.*
                     - tullylanterdd_prod.*.*
-
-    - vboya: # External user - Protivitiy
-        member_of:
-            - analyst_finance
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - analyst_xs
 
     - vbrew:
         member_of:
@@ -4736,6 +4779,11 @@ users:
         member_of:
             - tpoole
 
+    - tnguyen:
+        can_login: yes
+        member_of:
+            - tnguyen
+
     - trevorromero:
         can_login: yes
         member_of:
@@ -4743,12 +4791,7 @@ users:
 
     - valexieva:
         can_login: no
-        member_of: []
-
-    - vboya: # External user - Protivitiy
-        can_login: yes
-        member_of:
-            - vboya     
+        member_of: []   
 
     - vbrew:
         can_login: yes
