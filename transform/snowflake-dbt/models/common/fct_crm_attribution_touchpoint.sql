@@ -72,5 +72,5 @@ WITH bizible_attribution_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2021-01-21",
-    updated_date="2021-10-26"
+    updated_date="2021-11-02"
 ) }}
