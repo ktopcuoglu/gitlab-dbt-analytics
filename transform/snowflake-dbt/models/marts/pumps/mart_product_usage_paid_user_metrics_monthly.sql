@@ -27,7 +27,10 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
-      subscriptions.subscription_status,
+      CASE WHEN subscriptions.subscription_status IS NULL 
+        THEN 'Expired'
+      ELSE subscriptions.subscription_status
+        END                                                                         AS subscription_status,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -143,7 +146,7 @@
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
-      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions.dim_subscription_id_original 
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
@@ -158,7 +161,10 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
-      subscriptions.subscription_status,
+      CASE WHEN subscriptions.subscription_status IS NULL 
+        THEN 'Expired'
+      ELSE subscriptions.subscription_status
+        END                                                                         AS subscription_status,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
