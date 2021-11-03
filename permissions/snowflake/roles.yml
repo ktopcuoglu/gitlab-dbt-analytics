@@ -2023,9 +2023,11 @@ roles:
             schemas:
                 read:
                     - prep.zoominfo
+                    - prep.sensitive
             tables:
                 read:
                     - prep.zoominfo.*
+                    - prep.sensitive.gitlab_contact_enhance_pii
 
     - zuora:
         warehouses:
