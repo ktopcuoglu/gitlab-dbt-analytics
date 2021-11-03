@@ -69,11 +69,13 @@ engineering_extract = KubernetesPodOperator(
 
 advisory_database_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
+    echo $GEMNASIUM_DB_DATA_TOKEN &&
     curl --header "PRIVATE-TOKEN: {GEMNASIUM_DB_DATA_TOKEN}" -L "https://gitlab.com/api/v4/projects/30445635/jobs/artifacts/main/raw/data/data.tar.gz?job=pages" | gunzip -c | tar xvf -
     curl --header "PRIVATE-TOKEN: {GEMNASIUM_DB_DATA_TOKEN}" -L "https://gitlab.com/api/v4/projects/30445635/jobs/artifacts/main/raw/data/nvd.tar.gz?job=pages" | gunzip -c | tar xvf -
     python3 sheetload/sheetload.py csv --filename data/data.csv --schema engineering_extracts --tablename advisory_data
     python3 sheetload/sheetload.py csv --filename data/nvd.csv --schema engineering_extracts --tablename nvd_data --header None
 """
+
 advisory_database_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
@@ -86,6 +88,7 @@ advisory_database_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
+        GEMNASIUM_DB_DATA_TOKEN
     ],
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
