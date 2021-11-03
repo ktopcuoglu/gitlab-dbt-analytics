@@ -15,7 +15,7 @@ WITH events AS (
       se_category::VARCHAR                      AS event_category,
       se_label::VARCHAR                         AS event_label,
       se_property::VARCHAR                      AS event_property,
-      se_value::NUMBER                          AS event_value,
+      se_value::VARCHAR                          AS event_value,
       TRY_PARSE_JSON(contexts)::VARIANT         AS contexts,
       dvce_created_tstamp::TIMESTAMP            AS dvce_created_tstamp,
       derived_tstamp::TIMESTAMP                 AS derived_tstamp,
