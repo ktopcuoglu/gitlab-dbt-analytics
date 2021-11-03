@@ -68,7 +68,9 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt_snowplow_backfill_only", default_args=default_args, schedule_interval=None)
+dag = DAG(
+    "dbt_snowplow_backfill_only", default_args=default_args, schedule_interval=None
+)
 
 
 def generate_dbt_command(vars_dict):
