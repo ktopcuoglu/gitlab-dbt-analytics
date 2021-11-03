@@ -74,7 +74,7 @@ dag = DAG("dbt_snowplow_backfill_only", default_args=default_args, schedule_inte
 def generate_dbt_command(vars_dict):
     json_dict = json.dumps(vars_dict)
 
-    dbt_generate_command = f"""
+    dbt_generate_command = f""" 
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
         dbt run --profiles-dir profile --target prod --models +snowplow --full-refresh --vars '{json_dict}'; ret=$?;
