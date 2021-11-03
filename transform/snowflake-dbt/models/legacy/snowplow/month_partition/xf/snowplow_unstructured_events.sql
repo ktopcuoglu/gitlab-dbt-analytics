@@ -47,6 +47,15 @@ WITH events AS (
       dvce_type::VARCHAR                      AS device_type,
       dvce_ismobile::BOOLEAN                  AS device_is_mobile,
 
+      -- standard context
+      gsc_environment                AS gsc_environment,
+      gsc_extra                      AS gsc_extra,
+      gsc_namespace_id               AS gsc_namespace_id,
+      gsc_plan                       AS gsc_plan,
+      gsc_google_analytics_client_id AS gsc_google_analytics_client_id,
+      gsc_project_id                 AS gsc_project_id,
+      gsc_pseudonymized_user_id      AS gsc_pseudonymized_user_id,
+
       --change_form
       cf_formid::VARCHAR,
       cf_elementid::VARCHAR,

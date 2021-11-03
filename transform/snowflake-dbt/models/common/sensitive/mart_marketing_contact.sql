@@ -482,6 +482,7 @@ WITH marketing_contact AS (
       marketing_contact.job_title,
       marketing_contact.it_job_title_hierarchy,
       marketing_contact.country,
+      marketing_contact.mobile_phone,
       marketing_contact.sfdc_parent_sales_segment,
       marketing_contact.sfdc_parent_crm_account_tsp_region,
       marketing_contact.is_sfdc_lead_contact,
@@ -671,7 +672,7 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2021-05-07"
+    updated_date="2021-10-14"
 ) }}
 
 

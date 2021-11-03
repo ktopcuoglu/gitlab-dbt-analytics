@@ -1,0 +1,34 @@
+version: 2
+
+models:
+    - name: zengrc_assessment_source
+      description: '{{ doc("zengrc_assessments_desc") }}'
+      columns: 
+        - name: assessment_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_audit_source
+      description: '{{ doc("zengrc_audits_desc") }}'
+      columns: 
+        - name: audit_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_control_source
+      description: '{{ doc("zengrc_controls_desc") }}'
+      columns: 
+        - name: control_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_objective_source
+      description: '{{ doc("zengrc_objectives_desc") }}'
+      columns: 
+        - name: objective_id
+          tests:
+            - not_null
+            - unique

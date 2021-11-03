@@ -1,11 +1,11 @@
 WITH detection_rule AS (
 
     SELECT 
-      1                                 AS rule_id,
-      'Missing instance types'          AS rule_name,
-      'Missing instance types for UUID' AS rule_description,
-      'Product'                         AS type_of_data,
-      50 AS threshold
+      1                                                 AS rule_id,
+      'Missing instance types'                          AS rule_name,
+      'Missing instance types for UUID or Namespaces'   AS rule_description,
+      'Product'                                         AS type_of_data,
+      50                                                AS threshold
 
    UNION
 
@@ -14,7 +14,7 @@ WITH detection_rule AS (
       'Licenses with missing Subscriptions'                        AS rule_name,
       'License IDs that do not have an associated Subscription ID' AS rule_description,
       'Product'                                                    AS type_of_data,
-      50 AS threshold
+      50                                                           AS threshold
 
     UNION
 
@@ -68,5 +68,5 @@ WITH detection_rule AS (
     created_by="@snalamaru",
     updated_by="@snalamaru",
     created_date="2021-06-16",
-    updated_date="2021-07-07"
+    updated_date="2021-10-25"
 ) }}

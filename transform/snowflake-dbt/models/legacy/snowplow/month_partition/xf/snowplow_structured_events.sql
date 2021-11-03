@@ -46,8 +46,16 @@ WITH events AS (
       os_timezone::VARCHAR                      AS os_timezone,
       br_renderengine::VARCHAR                  AS browser_engine,
       dvce_type::VARCHAR                        AS device_type,
-      dvce_ismobile::BOOLEAN                    AS device_is_mobile
-      
+      dvce_ismobile::BOOLEAN                    AS device_is_mobile,
+      gsc_environment                           AS gsc_environment,
+      gsc_extra                                 AS gsc_extra,
+      gsc_namespace_id                          AS gsc_namespace_id,
+      gsc_plan                                  AS gsc_plan,
+      gsc_google_analytics_client_id            AS gsc_google_analytics_client_id,
+      gsc_project_id                            AS gsc_project_id,
+      gsc_pseudonymized_user_id                 AS gsc_pseudonymized_user_id,
+      gsc_source                                AS gsc_source
+
     FROM events
     WHERE event = 'struct'
 
