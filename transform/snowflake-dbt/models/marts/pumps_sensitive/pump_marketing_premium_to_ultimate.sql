@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 SELECT *
 FROM  {{ ref('pump_marketing_contact') }}
 WHERE (

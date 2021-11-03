@@ -1,12 +1,14 @@
 WITH sfdc_opportunity AS (
 
     SELECT *
-    FROM {{ref('sfdc_opportunity')}}
+    FROM {{ref('sfdc_opportunity_source')}}
+    WHERE account_id IS NOT NULL
+      AND is_deleted = FALSE
 
 ), sfdc_opportunity_stage AS (
 
     SELECT *
-    FROM {{ref('sfdc_opportunity_stage')}}
+    FROM {{ref('sfdc_opportunity_stage_source')}}
 
 ), layered AS (
 
@@ -83,6 +85,14 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.tam_notes,
       sfdc_opportunity.payment_schedule,
       sfdc_opportunity.comp_y2_iacv,
+      sfdc_opportunity.opportunity_term,
+
+      -- Command Plan fields
+      sfdc_opportunity.cp_partner,
+      sfdc_opportunity.cp_paper_process,
+      sfdc_opportunity.cp_help,
+      sfdc_opportunity.cp_review_notes,
+
 
       -- stamped fields
       sfdc_opportunity.crm_opp_owner_stamped_name,
@@ -114,5 +124,5 @@ WITH sfdc_opportunity AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-11-20",
-    updated_date="2021-09-23"
+    updated_date="2021-10-07"
 ) }}

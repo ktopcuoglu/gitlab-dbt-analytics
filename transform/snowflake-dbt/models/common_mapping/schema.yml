@@ -27,6 +27,17 @@ models:
           - not_null
       - name: location_id
 
+  - name: map_moved_duplicated_issue
+    description: '{{ doc("map_moved_duplicated_issue") }}'
+    columns:
+      - name: issue_id
+        tests:
+          - unique
+          - not_null
+      - name: dim_issue_id
+        tests:
+          - not_null
+
   - name: map_license_subscription_account
     description: '{{ doc("map_license_subscription_account") }}'
     columns:
@@ -35,6 +46,28 @@ models:
       - name: dim_subscription_id
       - name: dim_crm_account_id
       - name: ultimate_parent_account_id
+
+  - name: map_namespace_lineage
+    description: '{{ doc("map_namespace_lineage") }}'
+    columns:
+      - name: dim_namespace_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_namespace_ultimate_parent_id
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_id
+        tests:
+          - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
+      - name: ultimate_parent_plan_title
+        tests:
+          - not_null
+      - name: ultimate_parent_plan_is_paid
+        tests:
+          - not_null
 
   - name: map_product_tier
     description: '{{ doc("map_product_tier") }}'

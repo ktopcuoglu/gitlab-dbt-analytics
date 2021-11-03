@@ -89,6 +89,7 @@ WITH sfdc_lead AS (
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.mailing_country
         ELSE sfdc_lead.country
       END                                                                                                                   AS country,
+      sfdc_contact.mobile_phone,
       CASE
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.created_date
         ELSE sfdc_lead.created_date
@@ -112,7 +113,7 @@ WITH sfdc_lead AS (
 ), gitlab_dotcom AS (
 
     SELECT
-      notification_email                                                                                                    AS email_address,
+      COALESCE(notification_email, email)                                                                                   AS email_address,
       user_id                                                                                                               AS user_id,
       SPLIT_PART(users_name,' ',1)                                                                                          AS first_name,
       SPLIT_PART(users_name,' ',2)                                                                                          AS last_name,
@@ -220,6 +221,7 @@ WITH sfdc_lead AS (
       sfdc.sfdc_record_id,
       sfdc.dim_crm_account_id,
       sfdc.sfdc_lead_contact,
+      sfdc.mobile_phone,
       sfdc.sfdc_created_date                                                                                             AS sfdc_created_date,
       sfdc.opted_out_salesforce                                                                                          AS is_sfdc_opted_out,
       CASE
@@ -249,7 +251,7 @@ WITH sfdc_lead AS (
       zuora.created_date                                                                                                 AS zuora_created_date,
       zuora.active_state                                                                                                 AS zuora_active_state,
       dnc_list.result                                                                                                    AS dnc_list_result,
-      CASE 
+      CASE
         WHEN dnc_list.result IN ('undeliverable', 'do_not_send')
           THEN FALSE
         ELSE TRUE
@@ -278,5 +280,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2021-05-07"
+    updated_date="2021-10-14"
 ) }}

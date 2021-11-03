@@ -1,3 +1,8 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
+
 {{config({
     "materialized": "table",
   })

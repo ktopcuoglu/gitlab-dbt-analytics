@@ -90,6 +90,7 @@ WITH dim_crm_account AS (
     LEFT JOIN last_renewal_month
       ON last_renewal_month.dim_parent_crm_account_id = dim_crm_account.dim_parent_crm_account_id
       AND last_renewal_month.product_category = dim_product_detail.product_tier_name
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
     {{ dbt_utils.group_by(n=7) }}
 
 ), retention_subs AS (

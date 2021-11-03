@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{
   config({
     "materialized": "table"
@@ -10,7 +14,20 @@
     ('smau', 'fct_usage_ping_subscription_mapped_smau')
 ]) }}
 
-, sm_free_user_metrics AS (
+, smau_convert AS (
+
+    SELECT distinct
+      uuid,
+      hostname,
+      snapshot_month,
+      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,                   
+      {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
+      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user, 
+      {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
+      {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
+    FROM smau
+
+), sm_free_user_metrics AS (
 
     SELECT
       sm_free_users.ping_created_at_month::DATE                                                 AS reporting_month,
@@ -81,11 +98,11 @@
       sm_free_users.remote_mirrors_all_time_event,
       sm_free_users.projects_enforcing_code_owner_approval_28_days_user,
       sm_free_users.project_clusters_enabled_28_days_user,
-      smau.manage_analytics_total_unique_counts_monthly                                         AS analytics_28_days_user,
-      smau.plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly          AS issues_edit_28_days_user,
-      smau.package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly   AS user_packages_28_days_user,
-      smau.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly    AS terraform_state_api_28_days_user,
-      smau.monitor_incident_management_activer_user_28_days                                     AS incident_management_28_days_user,
+      {{ null_negative_numbers('smau_convert.analytics_28_days_user') }}                     AS analytics_28_days_user,
+      {{ null_negative_numbers('smau_convert.issues_edit_28_days_user') }}                   AS issues_edit_28_days_user,
+      {{ null_negative_numbers('smau_convert.user_packages_28_days_user') }}                 AS user_packages_28_days_user,
+      {{ null_negative_numbers('smau_convert.terraform_state_api_28_days_user') }}           AS terraform_state_api_28_days_user,
+      {{ null_negative_numbers('smau_convert.incident_management_28_days_user') }}           AS incident_management_28_days_user,
       -- Wave 3.2
       sm_free_users.auto_devops_enabled,
       sm_free_users.gitaly_clusters_instance,
@@ -116,10 +133,10 @@
                             ) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
     FROM sm_free_users
-    LEFT JOIN smau
-      ON sm_free_users.uuid = smau.uuid
-      AND sm_free_users.hostname = smau.hostname
-      AND sm_free_users.ping_created_at_month = smau.snapshot_month
+    LEFT JOIN smau_convert
+      ON sm_free_users.uuid = smau_convert.uuid
+      AND sm_free_users.hostname = smau_convert.hostname
+      AND sm_free_users.ping_created_at_month = smau_convert.snapshot_month
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         sm_free_users.uuid,
@@ -249,7 +266,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@snalamaru",
     created_date="2021-06-08",
-    updated_date="2021-07-23"
+    updated_date="2021-09-28"
 ) }}

@@ -4,6 +4,22 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
+{% docs bdg_epic_user_request %}
+
+A bridge table that connects epics user requests, these epics being in the `Gitlab-org` group, with SFDC Opportunities / Accounts and Zendesk tickets links. It also picks the priorities that have been assigned to the epic request.
+
+This table combines the requests that were done directly in the `Gitlab-org` group by pasting the SFDC / Zendesk links directly in the epic description / notes (`prep_epic_user_request`), with the requests that were done by pasting the epic links in the customer collaboration projects (`prep_epic_user_request_collaboration_project`). If the combination of epic and link is found in both the `Gitlab-org` group and the customer collaboration project, the `Gitlab-org` will take precedence. If the request is only in the customer collaboration project then the flag `is_user_request_only_in_collaboration_project` will be equal to `True`.
+
+{% enddocs %}
+
+{% docs bdg_issue_user_request %}
+
+A bridge table that connects issues user requests, these issues being in the `Gitlab-org` group, with SFDC Opportunities / Accounts and Zendesk tickets links. It also picks the priorities that have been assigned to the issue request.
+
+This table combines the requests that were done directly in the `Gitlab-org` group by pasting the SFDC / Zendesk links directly in the issue description / notes (`prep_issue_user_request`), with the requests that were done by pasting the issue links in the customer collaboration projects (`prep_issue_user_request_collaboration_project`). If the combination of issue and link is found in both the `Gitlab-org` group and the customer collaboration project, the `Gitlab-org` will take precedence. If the request is only in the customer collaboration project then the flag `is_user_request_only_in_collaboration_project` will be equal to `True`.
+
+{% enddocs %}
+
 {% docs bdg_namespace_order_subscription_monthly %}
 
 The purpose of this table is three-fold:
@@ -547,7 +563,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_host_instance_type %}
 
-Dimension table providing instance type for a given UUID/Host Name pair.
+Dimension table providing instance type for a given UUID/HostName pair or Namespace Id for Self-Managed and SaaS data respectively.
 
 {% enddocs %}
 

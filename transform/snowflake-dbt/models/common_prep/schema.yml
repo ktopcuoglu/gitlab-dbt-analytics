@@ -35,6 +35,16 @@ models:
         tests:
           - not_null
 
+  - name: prep_dim_subscription_snapshot_base
+    description: Base model for the dim_subscription snapshot data
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: prep_dr_partner_engagement
     description: '{{ doc("prep_dr_partner_engagement") }}'
     columns:
@@ -52,6 +62,62 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common"]
+
+  - name: prep_epic_user_request_collaboration_project
+    description: ' {{ doc("prep_epic_user_request_collaboration_project") }} '
+    columns:
+      - name: dim_epic_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_epic_id, dim_crm_account_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_epic_user_request
+    description: ' {{ doc("prep_epic_user_request") }} '
+    columns:
+      - name: dim_epic_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_issue_user_request_collaboration_project
+    description: ' {{ doc("prep_issue_user_request_collaboration_project") }} '
+    columns:
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_original_issue_project_id, original_issue_internal_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_issue_user_request
+    description: ' {{ doc("prep_issue_user_request") }} '
+    columns:
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
 
   - name: prep_campaign
     description: '{{ doc("prep_campaign") }}'
@@ -381,7 +447,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
       - name: dim_subscription_id_previous
@@ -1414,6 +1480,8 @@ models:
       - name: dim_namespace_id
       - name: dim_subscription_id
       - name: reporting_month
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
 
   - name: prep_saas_usage_ping_namespace
     description: '{{ doc("prep_saas_usage_ping_namespace") }}'

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_api_sandbox_contact','zuora_api_sandbox_contact_source')
