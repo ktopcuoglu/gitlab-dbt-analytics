@@ -68,8 +68,8 @@ engineering_extract = KubernetesPodOperator(
 
 advisory_database_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    curl -L https://gitlab.com/gitlab-org/secure/vulnerability-research/advisories/gemnasium-db-data/-/jobs/artifacts/main/raw/data/data.tar.gz\?job\=pages | gunzip -c | tar xvf -
-    curl -L https://gitlab.com/gitlab-org/secure/vulnerability-research/advisories/gemnasium-db-data/-/jobs/artifacts/main/raw/data/nvd.tar.gz\?job\=pages | gunzip -c | tar xvf -
+    curl -L https://gitlab.com/gitlab-org/secure/vulnerability-research/advisories/gemnasium-db-data/-/jobs/artifacts/main/raw/data/data.tar.gz?job=pages | gunzip -c | tar xvf -
+    curl -L https://gitlab.com/gitlab-org/secure/vulnerability-research/advisories/gemnasium-db-data/-/jobs/artifacts/main/raw/data/nvd.tar.gz?job=pages | gunzip -c | tar xvf -
     python3 sheetload/sheetload.py csv --filename data/data.csv --schema engineering_extracts --tablename advisory_data
     python3 sheetload/sheetload.py csv --filename data/nvd.csv --schema engineering_extracts --tablename nvd_data --header None
 """
