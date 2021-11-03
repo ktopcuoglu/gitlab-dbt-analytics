@@ -27,10 +27,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
-      CASE WHEN subscriptions.subscription_status IS NULL 
-        THEN 'Expired'
-      ELSE subscriptions.subscription_status
-        END                                                                         AS subscription_status,
+      subscriptions.subscription_status,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -161,10 +158,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
-      CASE WHEN subscriptions.subscription_status IS NULL 
-        THEN 'Expired'
-      ELSE subscriptions.subscription_status
-        END                                                                         AS subscription_status,
+      subscriptions.subscription_status,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
