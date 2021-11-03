@@ -164,7 +164,7 @@
 ), subscription_to_licenses_final AS ( -- If the latest subscription version or the amendment from the amendment list has a valid license 
 
     SELECT *
-    from subscription_to_licenses
+    FROM subscription_to_licenses
     QUALIFY ROW_NUMBER() OVER(PARTITION BY subscription_name ORDER BY dim_license_id DESC NULLS LAST, subscription_version DESC) = 1
   
 ), licenses_missing_subscriptions AS (
