@@ -2213,6 +2213,7 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - data_team_analyst
         warehouses:
             - analyst_xs          
 
