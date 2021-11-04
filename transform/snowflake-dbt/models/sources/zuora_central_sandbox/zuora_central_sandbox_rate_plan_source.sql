@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('zuora_api_sandbox', 'rate_plan') }}
+    FROM {{ source('zuora_central_sandbox', 'rate_plan') }}
 
 ), renamed AS(
 

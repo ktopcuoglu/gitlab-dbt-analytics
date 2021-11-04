@@ -9,7 +9,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('zuora_api_sandbox', 'rate_plan_charge') }}
+    FROM {{ source('zuora_central_sandbox', 'rate_plan_charge') }}
 
 ), renamed AS(
 

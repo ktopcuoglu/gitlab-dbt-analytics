@@ -1,10 +1,10 @@
 version: 2
 
 sources:
-  - name: zuora_api_sandbox
+  - name: zuora_central_sandbox
     tags: ["tdf","zuora"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
-    schema: zuora_api_sandbox_stitch
+    schema: zuora_central_sandbox_fivetran
     loader: Stitch
     loaded_at_field: _sdc_batched_at
 
