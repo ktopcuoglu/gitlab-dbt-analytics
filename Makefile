@@ -95,7 +95,7 @@ init-airflow:
 	@"$(DOCKER_UP)" -d airflow_db
 	@sleep 5
 	@"$(DOCKER_RUN)" airflow_scheduler airflow db init
-	@"$(DOCKER_RUN)" airflow_scheduler airflow create_user --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
+	@"$(DOCKER_RUN)" airflow_scheduler airflow users create --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
 	@"$(DOCKER_DOWN)"
 
 lint:
