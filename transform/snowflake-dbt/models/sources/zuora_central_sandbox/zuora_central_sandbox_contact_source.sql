@@ -8,38 +8,38 @@ WITH source AS (
     SELECT 
       id                  AS contact_id,
       -- keys
-      accountid           AS account_id,
+      account_id          AS account_id,
 
 
       -- contact info
-      firstname           AS first_name,
-      lastname            AS last_name,
-      nickname,
-      address1            AS street_address,
-      address2            AS street_address2,
-      county,
-      state,
-      postalcode          AS postal_code,
-      city,
-      country,
-      taxregion           AS tax_region,
-      workemail           AS work_email,
-      workphone           AS work_phone,
-      otherphone          AS other_phone,
-      otherphonetype      AS other_phone_type,
-      fax,
-      homephone           AS home_phone,
-      mobilephone         AS mobile_phone,
-      personalemail       AS personal_email,
-      description,
+      first_name          AS first_name,
+      last_name           AS last_name,
+      nick_name           AS nick_name,
+      address_1           AS street_address,
+      address_2           AS street_address2,
+      county              AS county,
+      state               AS state,
+      postal_code         AS postal_code,
+      city                AS city,
+      country             AS country ,
+      tax_region          AS tax_region,
+      work_email          AS work_email,
+      work_phone          AS work_phone,
+      other_phone         AS other_phone,
+      other_phone_type    AS other_phone_type,
+      fax                 AS fax,
+      home_phone          AS home_phone,
+      mobile_phone        AS mobile_phone,
+      personal_email      AS personal_email,
+      description         AS description,
 
 
       -- metadata
-      createdbyid         AS created_by_id,
-      createddate         AS created_date,
-      updatedbyid         AS updated_by_id,
-      updateddate         AS updated_date,
-      deleted             AS is_deleted
+      created_by_id       AS created_by_id,
+      created_date        AS created_date,
+      updated_by_id       AS updated_by_id,
+      updated_date        AS updated_date,
+      _FIVETRAN_DELETED   AS is_deleted
 
     FROM source
 

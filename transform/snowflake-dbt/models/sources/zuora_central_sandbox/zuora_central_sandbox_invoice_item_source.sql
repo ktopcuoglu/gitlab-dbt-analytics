@@ -7,43 +7,41 @@ WITH source AS (
 
     SELECT
       -- keys
-      id                      AS invoice_item_id,
-      invoiceid               AS invoice_id,
-      appliedtoinvoiceitemid  AS applied_to_invoice_item_id,
-      rateplanchargeid        AS rate_plan_charge_id,
-      subscriptionid          AS subscription_id,
+      id                            AS invoice_item_id,
+      invoice_id                    AS invoice_id,
+      applied_to_invoice_item_id    AS applied_to_invoice_item_id,
+      rate_plan_charge_id           AS rate_plan_charge_id,
+      subscription_id               AS subscription_id,
 
 
       -- invoice item metadata
-      accountingcode          AS accounting_code,
-      productid               AS product_id,
-      productrateplanchargeid AS product_rate_plan_charge_id,
-
-      --revrecstartdate        AS revenue_recognition_start_date,
-      serviceenddate          AS service_end_date,
-      servicestartdate        AS service_start_date,
+      accounting_code               AS accounting_code,
+      product_id                    AS product_id,
+      product_rate_plan_charge_id   AS product_rate_plan_charge_id,
+      service_end_date              AS service_end_date,
+      service_start_date            AS service_start_date,
 
 
       -- financial info
-      chargeamount            AS charge_amount,
-      chargedate              AS charge_date,
-      chargename              AS charge_name,
-      processingtype          AS processing_type,
-      quantity                AS quantity,
-      sku                     AS sku,
-      taxamount               AS tax_amount,
-      taxcode                 AS tax_code,
-      taxexemptamount         AS tax_exempt_amount,
-      taxmode                 AS tax_mode,
-      uom                     AS unit_of_measure,
-      unitprice               AS unit_price,
+      charge_amount                 AS charge_amount,
+      charge_date                   AS charge_date,
+      charge_name                   AS charge_name,
+      processing_type               AS processing_type,
+      quantity                      AS quantity,
+      sku                           AS sku,
+      tax_amount                    AS tax_amount,
+      tax_code                      AS tax_code,
+      tax_exempt_amount             AS tax_exempt_amount,
+      tax_mode                      AS tax_mode,
+      uom                           AS unit_of_measure,
+      unit_price                    AS unit_price,
 
       -- metadata
-      createdbyid             AS created_by_id,
-      createddate             AS created_date,
-      updatedbyid             AS updated_by_id,
-      updateddate             AS updated_date,
-      deleted                 AS is_deleted
+      created_by_id                 AS created_by_id,
+      created_date                  AS created_date,
+      updated_by_id                 AS updated_by_id,
+      updated_date                  AS updated_date,
+      _FIVETRAN_DELETED             AS is_deleted
 
 
     FROM source
