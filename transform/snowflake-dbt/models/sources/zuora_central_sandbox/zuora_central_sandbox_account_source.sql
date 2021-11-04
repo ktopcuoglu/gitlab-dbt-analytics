@@ -9,8 +9,8 @@ WITH source AS (
       id                                                     AS account_id,
       -- keys
       communication_profile_id                               AS communication_profile_id,
-      nullif("{{this.database}}".{{target.schema}}.id15to18(crm_id), '')
-                                                             AS crm_id,
+      --nullif("{{this.database}}".{{target.schema}}.id15to18(crm_id), '')
+      crm_id                                                 AS crm_id,
       default_payment_method_id                              AS default_payment_method_id,
       invoice_template_id                                    AS invoice_template_id,
       parent_id                                              AS parent_id,
@@ -24,7 +24,7 @@ WITH source AS (
       name                                                   AS account_name,
       notes                                                  AS account_notes,
       purchase_order_number                                  AS purchase_order_number,
-      account_code_c                                          AS sfdc_account_code,
+      account_code_c                                         AS sfdc_account_code,
       status                                                 AS status,
       entity_c                                               AS sfdc_entity,
 
