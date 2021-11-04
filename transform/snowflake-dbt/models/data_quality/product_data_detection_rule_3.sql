@@ -179,7 +179,7 @@
     FROM subscription_to_licenses_final
     WHERE dim_license_id IS NOT NULL
 
-), final AS (
+), report AS (
 
     SELECT
       'Missing license' AS license_status,
@@ -235,6 +235,13 @@
       *
     FROM licenses_with_subscriptions
   
+), final AS (
+
+    SELECT report.*
+    FROM report
+    INNER JOIN subscriptions_with_arr_in_current_month
+      ON subscriptions_with_arr_in_current_month.subscription_name = report.subscription_name
+
 )
 
 SELECT *
