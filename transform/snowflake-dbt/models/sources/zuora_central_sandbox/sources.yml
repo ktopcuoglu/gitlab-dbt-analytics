@@ -5,8 +5,8 @@ sources:
     tags: ["tdf","zuora_central_sandbox"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: zuora_central_sandbox_fivetran
-    loader: Stitch
-    loaded_at_field: _sdc_batched_at
+    loader: fivetran
+    loaded_at_field: _FIVETRAN_SYNCED
 
     quoting:
       database: true
