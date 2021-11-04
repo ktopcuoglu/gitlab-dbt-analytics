@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: zuora_central_sandbox
-    tags: ["tdf","zuora"]
+    tags: ["tdf","zuora_central_sandbox"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: zuora_central_sandbox_fivetran
     loader: Stitch
