@@ -1,4 +1,7 @@
 /* grain: one record per host per metric per month */
+{{ config(
+    tags=["mnpi_exception"]
+) }}
 
 {{ simple_cte([('flattened_usage_data', 'prep_usage_data_flattened'),
                 ('fct_usage_ping_payload', 'fct_usage_ping_payload'),

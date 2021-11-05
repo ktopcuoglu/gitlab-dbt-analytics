@@ -17,7 +17,11 @@
     ('prep_issue_severity', 'prep_issue_severity'),
     ('prep_label_links', 'prep_label_links'),
     ('prep_labels', 'prep_labels'),
-    ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source')
+    ('gitlab_dotcom_epic_issues_source', 'gitlab_dotcom_epic_issues_source'),
+    ('gitlab_dotcom_routes_source', 'gitlab_dotcom_routes_source'),
+    ('gitlab_dotcom_projects_source', 'gitlab_dotcom_projects_source'),
+    ('gitlab_dotcom_milestones_source', 'gitlab_dotcom_milestones_source'),
+    ('gitlab_dotcom_award_emoji_source', 'gitlab_dotcom_award_emoji_source')
 ]) }}
 
 , gitlab_dotcom_issues_source AS (
@@ -29,6 +33,17 @@
       WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
+
+), upvote_count AS (
+
+    SELECT
+      awardable_id                                        AS dim_issue_id,
+      SUM(IFF(award_emoji_name LIKE 'thumbsup%', 1, 0))   AS thumbsups_count,
+      SUM(IFF(award_emoji_name LIKE 'thumbsdown%', 1, 0)) AS thumbsdowns_count,
+      thumbsups_count - thumbsdowns_count                 AS upvote_count
+    FROM gitlab_dotcom_award_emoji_source
+    WHERE awardable_type = 'Issue'
+    GROUP BY 1
 
 ), agg_labels AS (
 
@@ -96,7 +111,16 @@
         WHEN ARRAY_CONTAINS('severity::4'::variant, agg_labels.labels) OR ARRAY_CONTAINS('s4'::variant, agg_labels.labels) THEN 'S4'
         ELSE NULL
       END AS severity,
-      agg_labels.labels
+      IFF(gitlab_dotcom_projects_source.visibility_level = 'private',
+        'private - masked',
+        'https://gitlab.com/' || gitlab_dotcom_routes_source.path || '/issues/' || gitlab_dotcom_issues_source.issue_iid)
+         AS issue_url,
+      IFF(gitlab_dotcom_projects_source.visibility_level = 'private',
+        'private - masked',
+        gitlab_dotcom_milestones_source.milestone_title)    AS milestone_title,
+      gitlab_dotcom_milestones_source.due_date              AS milestone_due_date,
+      agg_labels.labels,
+      IFNULL(upvote_count.upvote_count, 0)                  AS upvote_count
     FROM gitlab_dotcom_issues_source
     LEFT JOIN agg_labels
         ON gitlab_dotcom_issues_source.issue_id = agg_labels.dim_issue_id
@@ -112,6 +136,15 @@
       ON gitlab_dotcom_issues_source.issue_id = prep_issue_severity.dim_issue_id
     LEFT JOIN gitlab_dotcom_epic_issues_source
       ON gitlab_dotcom_issues_source.issue_id = gitlab_dotcom_epic_issues_source.issue_id
+    LEFT JOIN gitlab_dotcom_projects_source
+      ON gitlab_dotcom_projects_source.project_id = gitlab_dotcom_issues_source.project_id
+    LEFT JOIN gitlab_dotcom_routes_source
+      ON gitlab_dotcom_routes_source.source_id = gitlab_dotcom_issues_source.project_id
+      AND gitlab_dotcom_routes_source.source_type = 'Project'
+    LEFT JOIN gitlab_dotcom_milestones_source
+      ON gitlab_dotcom_milestones_source.milestone_id = gitlab_dotcom_issues_source.milestone_id
+    LEFT JOIN upvote_count
+      ON upvote_count.dim_issue_id = gitlab_dotcom_issues_source.issue_id
     WHERE gitlab_dotcom_issues_source.project_id IS NOT NULL
 )
 
@@ -120,5 +153,5 @@
     created_by="@mpeychet_",
     updated_by="@jpeguero",
     created_date="2021-06-17",
-    updated_date="2021-09-07"
+    updated_date="2021-10-24"
 ) }}

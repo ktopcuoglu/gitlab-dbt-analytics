@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ generate_single_field_dimension(model_name="prep_sfdc_account",
                                    id_column="dim_account_industry_name_source",
                                    id_column_name="dim_industry_id",

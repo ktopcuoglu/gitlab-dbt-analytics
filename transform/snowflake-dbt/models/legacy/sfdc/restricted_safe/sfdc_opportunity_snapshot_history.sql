@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH sfdc_opportunity_snapshots AS (
 
     SELECT *

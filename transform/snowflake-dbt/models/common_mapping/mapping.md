@@ -28,6 +28,33 @@ Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}
 
+{% docs map_moved_duplicated_issue %}
+
+Table mapping issues to the latest issue they were moved and / or duplicated to.
+
+Example:
+
+`Issue A` is moved to `Issue B`, `Issue B` is closed as duplicate of `Issue C`, `Issue C` is moved to `Issue D`
+
+Then in our mapping table we would have:
+
+| issue_id | dim_issue_id |
+| -- | -- |
+| Issue A | Issue D |
+| Issue B | Issue D |
+| Issue C | Issue D |
+| Issue D | Issue D |
+
+{% enddocs %}
+
+{% docs map_namespace_lineage %}
+
+Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
+
+The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs map_product_tier %}
 
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.

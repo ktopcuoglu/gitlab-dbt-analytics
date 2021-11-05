@@ -194,7 +194,17 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.influence_partner,
       sfdc_opportunity_xf.fulfillment_partner,
       sfdc_opportunity_xf.platform_partner,
-      COALESCE(sfdc_opportunity_xf.partner_track,'N/A')          AS partner_track,
+
+      CASE
+        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
+          THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track),'select','Select')
+        ELSE 'Direct' 
+      END                                                                                           AS calculated_partner_track,
+
+      
+      COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track)                     AS partner_track,
+      partner_account.gitlab_partner_program                                                        AS partner_gitlab_program,
+
       sfdc_opportunity_xf.is_public_sector_opp,
       sfdc_opportunity_xf.is_registration_from_portal,
       sfdc_opportunity_xf.calculated_discount,
@@ -215,14 +225,6 @@ WITH sfdc_opportunity AS (
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 
-
-      -- NF: 20220906 Got confirmation from Colleen that DR Partner Track only makes sense when 
-      -- deal_path is direct
-      CASE 
-        WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-          THEN COALESCE(sfdc_opportunity_xf.partner_track,'N/A')
-        ELSE sfdc_opportunity_xf.deal_path
-      END                                                         AS calculated_partner_track,
 
       sfdc_opportunity_xf.stage_name_3plus,
       sfdc_opportunity_xf.stage_name_4plus,
@@ -464,6 +466,9 @@ WITH sfdc_opportunity AS (
       -- pipeline creation date
     LEFT JOIN date_details stage_3_date 
       ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
+    -- partner account details
+    LEFT JOIN sfdc_accounts_xf partner_account
+      ON partner_account.account_id = sfdc_opportunity_xf.partner_account
    -- NF 20210906 remove JiHu opties from the models
     WHERE sfdc_opportunity_xf.is_jihu_account = 0
 
@@ -551,9 +556,10 @@ WITH sfdc_opportunity AS (
       END                                                                   AS is_stage_4_plus,
 
       -- account driven fields 
+      sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.ultimate_parent_account_id,
       sfdc_accounts_xf.is_jihu_account,
-  
+
       -- medium level grouping of the order type field
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
@@ -776,7 +782,6 @@ WITH sfdc_opportunity AS (
           AND ((oppty_final.is_web_portal_purchase = 1 
                 AND net_arr > 0)
                 OR oppty_final.is_web_portal_purchase = 0)
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis_flag,
@@ -792,7 +797,6 @@ WITH sfdc_opportunity AS (
           AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
           -- Web Purchase have a different dynamic and should not be included
           AND oppty_final.is_web_portal_purchase = 0
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_age_analysis_flag,
@@ -803,7 +807,6 @@ WITH sfdc_opportunity AS (
           AND (oppty_final.is_won = 1 
               OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1))
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_net_arr_flag,
@@ -812,7 +815,6 @@ WITH sfdc_opportunity AS (
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
           AND oppty_final.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
-          -- Not JiHu
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_churn_contraction_flag,

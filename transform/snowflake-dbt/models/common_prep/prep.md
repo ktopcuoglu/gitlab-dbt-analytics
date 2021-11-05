@@ -16,6 +16,44 @@ Creates a base view with generated keys for the dr partner engagement shared dim
 
 {% enddocs %}
 
+{% docs prep_epic_user_request_collaboration_project %}
+
+Parses epic links to the `Gitlab-org` group in the description and notes of epics inside the customer collaboration projects. These epics links are related to user feature requests from the product.
+
+{% enddocs %}
+
+{% docs prep_epic_user_request %}
+
+Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description and notes of epics inside the `Gitlab-org` group, together with its priority represented by the label `~"customer priority::[0-10]"` . These epics are related to user feature requests from the product.
+
+For Opportunity and Zendesk tickets links found, the associated SFDC Account id is filled into the record.
+
+If the same link is found twice in the description and the notes of the same epic, then the link that will be taken, together with its priority, will be the one in the note. If the same link is found in two different notes in the same epic, then the link that will be taken, together with its priority, will be the one in the latest updated note.
+
+This model assumes that only one priority is placed in a given description or note.
+
+{% enddocs %}
+
+{% docs prep_issue_user_request_collaboration_project %}
+
+Parses issue links to the `Gitlab-org` group in the description and notes of issues inside the customer collaboration projects. These issues links are related to user feature requests from the product.
+
+It also looks for the issue links to the `Gitlab-org` group in the related issue links.
+
+{% enddocs %}
+
+{% docs prep_issue_user_request %}
+
+Parses SFDC Opportunity / Accounts and Zendesk tickets links in the description and notes of issues inside the `Gitlab-org` group, together with its priority represented by the label `~"customer priority::[0-10]"` . These issues are related to user feature requests from the product.
+
+For Opportunity and Zendesk tickets links found, the associated SFDC Account id is filled into the record.
+
+If the same link is found twice in the description and the notes of the same issue, then the link that will be taken, together with its priority, will be the one in the note. If the same link is found in two different notes in the same issue, then the link that will be taken, together with its priority, will be the one in the latest updated note.
+
+This model assumes that only one priority is placed in a given description or note.
+
+{% enddocs %}
+
 {% docs prep_sfdc_account %}
 
 SFDC Account Prep table, used to clean and dedupe fields from a common source for use in further downstream dimensions.

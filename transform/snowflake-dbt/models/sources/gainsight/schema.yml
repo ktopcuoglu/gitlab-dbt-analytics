@@ -11,4 +11,5 @@ models:
         - name: instance_hostname
         - name: instance_uuid
         - name: instance_type
+        - name: namespace_id
         - name: _updated_at

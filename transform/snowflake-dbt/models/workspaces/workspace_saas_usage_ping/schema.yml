@@ -2,8 +2,46 @@ version: 2
 
 models:
   - name: fct_usage_ping_metrics_status
-    description: fct table that gets statistics for the metrics. to understand if the metrics succeeded and failed and how many rows we have per metrics
+    description: '{{ doc("fct_usage_ping_metrics_status") }}'
   - name: wk_saas_usage_ping_instance_flattened
-    description: workspace table flattening JSON results contained in saas_usage_ping_instance's column run_results
+    description: '{{ doc("wk_saas_usage_ping_instance_flattened") }}'
+    columns:
+      - name: saas_usage_ping_gitlab_dotcom_id
+        description: unique identifier (combine `ping_date` + `run_results` columns)
+        tests:
+          - not_null
+      - name: ping_date
+        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
+        tests:
+          - not_null
+      - name: metric_path
+        description: Metric description / metric name
+        tests:
+          - not_null
+      - name: metric_value
+        description: Metric value
+        tests:
+          - not_null
   - name: wk_saas_usage_ping_instance_redis_metrics
-    description: workspace table flattening JSON results contained in instance_redis_metrics    's column run_results
+    description: '{{ doc("wk_saas_usage_ping_instance_redis_metrics") }}'
+    columns:
+      - name: saas_usage_ping_redis_id
+        description: Primary key for instance redis metrics reprsent as unique combination from ping_date + run_id columns
+        tests:
+          - not_null
+      - name: ping_date
+        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed. 
+        tests:
+          - not_null
+      - name: metric_path
+        description: Metric description / metric name
+        tests:
+          - not_null
+      - name: metric_value
+        description: Metric value
+        tests:
+          - not_null
+      - name: recorded_at
+        description: Value for the metric `recording_ce_finished_at` in DATE format
+        tests:
+          - not_null

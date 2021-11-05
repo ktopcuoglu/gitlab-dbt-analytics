@@ -78,6 +78,16 @@ include:
     - manage_snowflake.py manage_clones --force --database prod
     - manage_snowflake.py manage_clones --force --database prep
 
+📈⚙clone_prep_specific_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database prep--schema $SCHEMA_NAME
+
+📈⚙clone_prod_specific_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database prod --schema $SCHEMA_NAME
+
 🥩clone_raw_full:
   <<: *snowflake_start_clone
   script:

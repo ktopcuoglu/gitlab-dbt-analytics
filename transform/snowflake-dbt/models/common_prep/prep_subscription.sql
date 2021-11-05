@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH date_details AS (
 
     SELECT *
@@ -28,7 +32,7 @@ WITH date_details AS (
       zuora_subscription.subscription_id                                        AS dim_subscription_id,
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
       zuora_account.account_id                                                  AS dim_billing_account_id,
-      zuora_subscription.invoice_owner_id                                       AS dim_crm_person_id_invoice_owner,
+      zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner,
       zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
       zuora_subscription.original_id                                            AS dim_subscription_id_original,
       zuora_subscription.previous_subscription_id                               AS dim_subscription_id_previous,

@@ -14,6 +14,9 @@
     SELECT
       dim_date.first_day_of_month                                                       AS report_month,
       ci_runner_activity.dim_namespace_id,
+      ci_runner_activity.dim_ci_runner_id,
+      ci_runner_activity.dim_ci_pipeline_id,
+      ci_runner_activity.dim_ci_stage_id,
       ci_runner_activity.is_paid_by_gitlab,
       ci_runner_activity.public_projects_minutes_cost_factor,
       ci_runner_activity.private_projects_minutes_cost_factor,
@@ -22,7 +25,7 @@
     INNER JOIN dim_date
       ON TO_DATE(ci_runner_activity.ci_build_started_at) = dim_date.date_day
     WHERE ci_runner_activity.ci_build_finished_at IS NOT NULL
-    {{ dbt_utils.group_by(n=5) }}
+    {{ dbt_utils.group_by(n=8) }}
 
 ), joined AS (
 
@@ -31,6 +34,9 @@
       dim_namespace.dim_namespace_id,
       dim_namespace.ultimate_parent_namespace_id,
       dim_namespace.gitlab_plan_id                                                      AS dim_plan_id,
+      ci_runner_activity_monthly.dim_ci_runner_id,
+      ci_runner_activity_monthly.dim_ci_pipeline_id,
+      ci_runner_activity_monthly.dim_ci_stage_id,
       
 
       -- CI RUNNER METRICS
@@ -54,5 +60,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-07-30",
-    updated_date="2021-09-14"
+    updated_date="2021-10-11"
 ) }}

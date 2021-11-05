@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH customers AS (
 
     SELECT *
@@ -16,8 +20,8 @@ WITH customers AS (
 
     SELECT
       {{ dbt_utils.star(from=ref('gitlab_dotcom_users'), except=["created_at", "first_name", "last_name", "notification_email", "public_email", "updated_at", "users_name"]) }},
-      created_at AS user_created_at,
-      updated_at AS user_updated_at
+      created_at        AS user_created_at,
+      updated_at        AS user_updated_at
     FROM {{ ref('gitlab_dotcom_users') }}
 
 )

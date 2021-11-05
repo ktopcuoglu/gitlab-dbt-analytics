@@ -51,7 +51,7 @@ for sql_metric, sql_query in final_sql_query_dict.items():
     assert not "JOINPREP" in final_sql
 
     if "JOIN" in final_sql:
-        assert "JOIN PREP"
+        assert "JOIN PREP" in final_sql
 
     # compare translated query with working SQL
     assert sql_query == output_translated_sql[sql_metric]

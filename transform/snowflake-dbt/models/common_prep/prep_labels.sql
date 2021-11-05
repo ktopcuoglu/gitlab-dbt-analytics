@@ -3,15 +3,10 @@
 ) }}
 
 {{ simple_cte([
-    ('prep_project', 'prep_project')
+    ('gitlab_dotcom_labels_source', 'gitlab_dotcom_labels_source')
 ]) }}
 
-, gitlab_dotcom_labels_source AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_labels_source')}}
-
-), renamed AS (
+, renamed AS (
   
     SELECT
       gitlab_dotcom_labels_source.label_id       AS dim_label_id,
@@ -29,7 +24,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@dtownsend",
-    updated_by="@dtownsend",
+    updated_by="@jpeguero",
     created_date="2021-08-04",
-    updated_date="2021-08-04"
+    updated_date="2021-10-24"
 ) }}
