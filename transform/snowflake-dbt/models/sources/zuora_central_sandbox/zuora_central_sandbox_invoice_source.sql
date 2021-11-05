@@ -8,7 +8,7 @@ WITH source AS (
     SELECT 
       id                                    AS invoice_id,
       -- keys
-      accountid                             AS account_id,
+      account_id                            AS account_id,
 
       -- invoice metadata
       due_date                              AS due_date,
@@ -22,7 +22,7 @@ WITH source AS (
 
 
       includes_one_time                     AS includes_one_time,
-      includesrecurring                     AS includesrecurring,
+      includes_recurring                    AS includes_recurring,
       includes_usage                        AS includes_usage,
       transferred_to_accounting             AS transferred_to_accounting,
 
@@ -39,13 +39,13 @@ WITH source AS (
       comments                              AS comments,
 
       -- metadata
-      createdbyid                           AS created_by_id,
-      createddate                           AS created_date,
-      postedby                              AS posted_by,
+      created_by_id                         AS created_by_id,
+      created_date                          AS created_date,
+      posted_by                             AS posted_by,
       source                                AS source,
       source                                AS source_id,
-      updatedbyid                           AS updated_by_id,
-      updateddate                           AS updated_date,
+      updated_by_id                         AS updated_by_id,
+      updated_date                          AS updated_date,
       _FIVETRAN_DELETED                     AS is_deleted
 
     FROM source

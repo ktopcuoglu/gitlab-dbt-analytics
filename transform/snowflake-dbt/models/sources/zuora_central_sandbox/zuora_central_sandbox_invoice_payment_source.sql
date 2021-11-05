@@ -18,7 +18,7 @@ WITH source AS (
       default_payment_method_id::VARCHAR       AS default_payment_method_id,
       journal_entry_id::VARCHAR                AS journal_entry_id,
       journal_run_id::VARCHAR                  AS journal_run_id,
-      parent_account_id::VARCHAR               AS parent_account_id,
+      -- parent_account_id::VARCHAR               AS parent_account_id,
       payment_id::VARCHAR                      AS payment_id,
       payment_method_id::VARCHAR               AS payment_method_id,
       payment_method_snapshot_id::VARCHAR      AS payment_method_snapshot_id,
