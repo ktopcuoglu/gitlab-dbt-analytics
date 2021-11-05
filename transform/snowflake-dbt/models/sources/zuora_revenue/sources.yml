@@ -56,3 +56,5 @@ sources:
       - name: zuora_revenue_waterfall_summary
         identifier: bi3_wf_summ
         description: '{{ doc("zuora_revenue_waterfall_source") }}'
+      - name: zuora_revenue_invoice_accounting_summary
+        identifier: bi3_ri_acct_summ

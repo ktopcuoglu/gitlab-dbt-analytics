@@ -39,7 +39,7 @@ models:
               field: add_on_id
 
   - name: license_db_licenses_source
-    description: '{{ doc("license_db_licenses_source") }}'
+    description: This table pipeline is deprecated and won't be refreshed, Ref issue https://gitlab.com/gitlab-data/analytics/-/issues/10686.
     columns:
       - name: license_id
         tags:

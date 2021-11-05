@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH zuora_revenue_manual_journal_entry AS (
 
     SELECT *

@@ -1,6 +1,10 @@
 -- grain: one record per host per metric per month
 -- curently missing host_id 
 
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
         "materialized": "table",
         "schema": "common_mart_product"

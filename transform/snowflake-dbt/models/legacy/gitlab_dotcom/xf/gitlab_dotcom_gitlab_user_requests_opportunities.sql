@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH issues_and_epics AS (
 
     SELECT *

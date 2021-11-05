@@ -29,6 +29,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_authentication_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_award_emoji_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_board_assignees_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_board_labels_dedupe_source
@@ -186,6 +188,8 @@ models:
   - name: gitlab_dotcom_licenses_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_lists_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_merge_request_blocks
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_merge_request_diffs_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

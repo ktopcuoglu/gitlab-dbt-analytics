@@ -144,12 +144,29 @@ WITH biz_person AS (
       ON sfdc_leads.lead_id = biz_person_with_touchpoints.bizible_lead_id
     WHERE is_converted = 'FALSE'
 
+), duplicates AS (
+
+    SELECT 
+      dim_crm_person_id
+    FROM crm_person_final
+    GROUP BY 1
+    HAVING COUNT(*) > 1
+
+), final AS (
+
+    SELECT *
+    FROM crm_person_final
+    WHERE dim_crm_person_id NOT IN (
+                                    SELECT *
+                                    FROM duplicates
+                                      )
+
 )
 
 {{ dbt_audit(
-    cte_ref="crm_person_final",
+    cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@michellecooper",
     created_date="2020-12-08",
-    updated_date="2021-09-29"
+    updated_date="2021-10-27"
 ) }}

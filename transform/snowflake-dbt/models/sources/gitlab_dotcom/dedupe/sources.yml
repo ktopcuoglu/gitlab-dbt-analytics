@@ -42,6 +42,8 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 30, period: day}
+      - name: award_emoji
+        identifier: gitlab_db_award_emoji
       - name: board_assignees
         identifier: gitlab_db_board_assignees
         freshness: null
@@ -204,6 +206,8 @@ sources:
         identifier: gitlab_db_lists
       - name: members
         identifier: gitlab_db_members
+      - name: merge_request_blocks 
+        identifier: gitlab_db_merge_request_blocks  
       - name: merge_request_diffs
         identifier: gitlab_db_merge_request_diffs
       - name: merge_request_metrics
@@ -356,6 +360,9 @@ sources:
           error_after: { count: 30, period: day }
       - name: bulk_import_entities
         identifier: gitlab_db_bulk_import_entities
+        freshness:
+          warn_after: { count: 10, period: day }
+          error_after: { count: 15, period: day }
       - name: cluster_agent_tokens
         identifier: gitlab_db_cluster_agent_tokens
         freshness: null

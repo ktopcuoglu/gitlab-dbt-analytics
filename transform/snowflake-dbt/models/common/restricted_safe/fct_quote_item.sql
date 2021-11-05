@@ -92,7 +92,8 @@ WITH crm_account AS (
       quote_amendment.zqu__delta_tcv                                                                AS delta_tcv,
       rate_plan_charge.zqu_mrr                                                                      AS mrr,
       rate_plan_charge.zqu_mrr * 12                                                                 AS arr,
-      rate_plan_charge.zqu_tcv                                                                      AS tcv
+      rate_plan_charge.zqu_tcv                                                                      AS tcv,
+      rate_plan_charge.zqu_quantity                                                                 AS quantity
 
     FROM quote_amendment
     INNER JOIN quote
@@ -115,7 +116,7 @@ WITH crm_account AS (
 {{ dbt_audit(
     cte_ref="quote_items",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2021-01-12",
-    updated_date="2021-03-04"
+    updated_date="2021-10-28"
 ) }}

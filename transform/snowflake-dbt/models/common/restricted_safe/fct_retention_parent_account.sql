@@ -7,7 +7,6 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('prep_crm_account') }}
-    WHERE is_jihu_account = FALSE
 
 ), prep_product_detail AS (
 
@@ -87,6 +86,7 @@ WITH dim_date AS (
       ON next_renewal_month.dim_parent_crm_account_id = prep_crm_account.dim_parent_crm_account_id
     LEFT JOIN last_renewal_month
       ON last_renewal_month.dim_parent_crm_account_id = prep_crm_account.dim_parent_crm_account_id
+    WHERE prep_crm_account.is_jihu_account != 'TRUE'
     {{ dbt_utils.group_by(n=5) }}
 
 ), retention_subs AS (
@@ -164,7 +164,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@paul_armstrong",
-    updated_by="@paul_armstrong",
+    updated_by="@iweeks",
     created_date="2021-06-02",
-    updated_date="2021-06-02"
+    updated_date="2021-10-25"
 ) }}
