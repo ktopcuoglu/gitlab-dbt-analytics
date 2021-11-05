@@ -323,8 +323,8 @@ clone_datascience_repo_cmd = f"""
         else
         export REPO="{PROPENSITY_TO_BUY_HTTP_REPO}";
     fi &&
-    echo "git clone -b add_deployments_folder --single-branch --depth 1 $REPO" &&
-    git clone -b add_deployments_folder --single-branch --depth 1 $REPO &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
     cd propensity-to-buy &&
     git checkout $GIT_COMMIT &&
