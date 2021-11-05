@@ -45,7 +45,7 @@ WITH source AS (
       type::VARCHAR                          AS refund_type,
       updatedbyid::VARCHAR                   AS updated_by_id,
       updateddate::TIMESTAMP_TZ              AS updated_date,
-      deleted::BOOLEAN                       AS is_deleted
+      _FIVETRAN_DELETED::BOOLEAN                       AS is_deleted
 
     FROM source
 

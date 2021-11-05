@@ -88,7 +88,7 @@ WITH source AS (
       updateddate                                 AS updated_date,
       createdbyid                                 AS created_by_id,
       createddate                                 AS created_date,
-      deleted                                     AS is_deleted,
+      _FIVETRAN_DELETED                                     AS is_deleted,
       excludefromanalysis__c                      AS exclude_from_analysis
 
     FROM source

@@ -27,7 +27,7 @@ WITH source AS (
       createdbyid::VARCHAR                  AS created_by_id,
       createddate::TIMESTAMP_TZ             AS created_date,
       defaultpaymentmethodid::VARCHAR       AS default_payment_method_id,
-      deleted::BOOLEAN                      AS is_deleted,
+      _FIVETRAN_DELETED::BOOLEAN                      AS is_deleted,
       updatedbyid::VARCHAR                  AS updated_by_id,
       updateddate::TIMESTAMP_TZ             AS updated_date
 

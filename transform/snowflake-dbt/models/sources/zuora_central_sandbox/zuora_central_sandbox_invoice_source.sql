@@ -11,34 +11,32 @@ WITH source AS (
       accountid                             AS account_id,
 
       -- invoice metadata
-      duedate                               AS due_date,
-      invoicenumber                         AS invoice_number,
-      invoicedate                           AS invoice_date,
-      status,
+      due_date                              AS due_date,
+      invoice_number                        AS invoice_number,
+      invoice_date                          AS invoice_date,
+      status                                AS status,
 
-      lastemailsentdate                     AS last_email_sent_date,
-      posteddate                            AS posted_date,
-      targetdate                            AS target_date,
+      last_email_sent_date                  AS last_email_sent_date,
+      posted_date                           AS posted_date,
+      target_date                           AS target_date,
 
 
-      includesonetime                       AS includes_one_time,
+      includes_one_time                     AS includes_one_time,
       includesrecurring                     AS includesrecurring,
-      includesusage                         AS includes_usage,
-      transferredtoaccounting               AS transferred_to_accounting,
+      includes_usage                        AS includes_usage,
+      transferred_to_accounting             AS transferred_to_accounting,
 
       -- financial info
-      adjustmentamount                      AS adjustment_amount,
-      amount,
-      amountwithouttax                      AS amount_without_tax, 
-      balance,
-      creditbalanceadjustmentamount         AS credit_balance_adjustment_amount,
-      paymentamount                         AS payment_amount,
-      refundamount                          AS refund_amount,
-      taxamount                             AS tax_amount,
-      taxexemptamount                       AS tax_exempt_amount,
-      comments,
-
-      -- ext1, ext2, ext3, ... ext9
+      adjustment_amount                     AS adjustment_amount,
+      amount                                AS amount,
+      amount_without_tax                    AS amount_without_tax,
+      balance                               AS balance,
+      credit_balance_adjustment_amount      AS credit_balance_adjustment_amount,
+      payment_amount                        AS payment_amount,
+      refund_amount                         AS refund_amount,
+      tax_amount                            AS tax_amount,
+      tax_exempt_amount                     AS tax_exempt_amount,
+      comments                              AS comments,
 
       -- metadata
       createdbyid                           AS created_by_id,
@@ -48,7 +46,7 @@ WITH source AS (
       source                                AS source_id,
       updatedbyid                           AS updated_by_id,
       updateddate                           AS updated_date,
-      deleted                               AS is_deleted
+      _FIVETRAN_DELETED                     AS is_deleted
 
     FROM source
 
