@@ -97,6 +97,7 @@ WITH merge_requests AS (
         merge_request_metrics.merged_at)                                                    AS hours_to_merged_status,
       regexp_count(merge_requests.merge_request_description,'[-+*] [\[]( |[xX])[\]]',1,'m') AS total_checkboxes,
       regexp_count(merge_requests.merge_request_description,'[-+*] [\[][xX][\]]',1,'m')     AS completed_checkboxes,
+      -- Original regex, (?:(?:>\s{0,4})*)(?:\s*(?:[-+*]|(?:\d+\.)))+\s+(\[\s\]|\[[xX]\])(\s.+), found in https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/taskable.rb
 
     CASE
       WHEN gitlab_subscriptions.is_trial
