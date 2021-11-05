@@ -1,28 +1,31 @@
-## Request for new data source in Snowflake/Periscope Checklist
-
-<!--
-Please complete all items. Ask questions in the #data slack channel
---->
-
-**Original Issue Link**:
-<!--
-If none, please include a description
---->
-
-**Submitter Slack Handle**: @`handle`
-
-**Business Use Case (Please explain what this data will be used for):** 
 
 
-## DRI/Prioritization Owner Checklist
+Please take notice of the new data source request [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/) before submitting this new data source request. If you have any questions, please ask in the #data slack channel. 
+
+## Business Use Case (Please explain what this data will be used for):
+
+
+## Request checklist
 * [ ] Prefix the issue name with 'New Data Source: ', e.g. 'New Data Source: NetSuite AP data'
-* [ ] Review the [current data available in the EDW](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) and confirm the data does no already exist: `YES the data does exist / NO the data does not exist` 
+* [ ] Review the [current data available in the EDW](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) and confirm the data does no already exist
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
+
+
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
   - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not: 
     * [ ] How often does the data need to be refreshed?
-* [ ] Make sure to have completed all instructions [here](https://about.gitlab.com/handbook/business-technology/data-team/platform/#adding-new-data-sources-and-fields), including creating a new issue in the security project and linking it to this issue.
+
+## People matrix
+| Role | Name | Gitlab Handle |
+| ---- | ---- | ------------- |
+| System owner | `Please provide` | `Please provide` | `Please provide` |
+| Technical contact for data related questions | `Please provide` | `Please provide` |
+| Technical contact for infrastructural related questions | `Please provide` | `Please provide` |
+| Data access approval* | `Please provide` | `Please provide` | 
+| Business users who need to be informed in case of data outage | `Please provide` | `Please provide` | 
+
+* Data access approval will be involved in the Access Request proces and need to give approval if a GitLab team members applies for raw data access.
 
 ## Integration Preparation 
 
