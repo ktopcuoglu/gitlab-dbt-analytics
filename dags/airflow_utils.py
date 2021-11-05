@@ -319,6 +319,23 @@ clone_datascience_repo_cmd = f"""
         export GIT_COMMIT="HEAD"
     fi
     if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATASCIENCE_HTTP_REPO}";
+        else
+        export REPO="{DATASCIENCE_SSH_REPO}";
+    fi &&
+    echo "git clone -b add_deployments_folder --single-branch --depth 1 $REPO" &&
+    git clone -b add_deployments_folder --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd data-science &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
+
+clone_propensity_to_buy_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
         export REPO="{PROPENSITY_TO_BUY_SSH_REPO}";
         else
         export REPO="{PROPENSITY_TO_BUY_HTTP_REPO}";
