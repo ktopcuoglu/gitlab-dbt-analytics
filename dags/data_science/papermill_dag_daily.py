@@ -40,28 +40,26 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("snowflake_cleanup", default_args=default_args, schedule_interval="0 5 * * 0")
+dag = DAG("papermill_daily", default_args=default_args, schedule_interval="0 5 * * 0")
 
 # Task 1
 drop_clones_cmd = f"""
     {clone_datascience_repo_cmd} &&
     cd deployments/daily
 """
-purge_clones = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=ANALYST_IMAGE,
-    task_id="papermill-daily",
-    name="papermill-daily",
-    secrets=[
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ],
-    env_vars=pod_env_vars,
-    arguments=[drop_clones_cmd],
-    affinity=get_affinity(True),
-    toleration=get_toleration(True),
-    dag=dag,
+KubernetesPodOperator(
+        **gitlab_defaults,
+        image=ANALYST_IMAGE,
+        task_id="papermill-daily",
+        name="papermill-daily",
+        secrets=[
+            SNOWFLAKE_LOAD_USER,
+            SNOWFLAKE_LOAD_PASSWORD,
+            SNOWFLAKE_ACCOUNT,
+            SNOWFLAKE_LOAD_DATABASE,
+            SNOWFLAKE_LOAD_WAREHOUSE,
+        ],
+        env_vars=pod_env_vars,
+        arguments=[drop_clones_cmd],
+        dag=dag,
 )
