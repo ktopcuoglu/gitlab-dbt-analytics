@@ -12,6 +12,22 @@ models:
         - name: run_id
           tests:
             - not_null
+    - name: instance_sql_errors
+      tags: ["product", "service_ping"]
+      description: Source table for handling errors during the generating SQL metrics for the service ping
+      columns:
+        - name: run_id
+          tests:
+            - not_null
+        - name: sql_errors
+          tests:
+            - not_null
+        - name: ping_date
+          tests:
+            - not_null
+        - name: _uploaded_at
+          tests:
+            - not_null
     - name: instance_redis_metrics
       tags: ["product", "service_ping"]
       description: Source table for the RAW saas_usage_ping.instance_redis_metrics table representing instance level usage ping
