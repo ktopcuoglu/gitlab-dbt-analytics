@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH sfdc_opportunity_source AS (
 
     SELECT *

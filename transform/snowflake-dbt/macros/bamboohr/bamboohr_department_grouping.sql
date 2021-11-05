@@ -14,6 +14,8 @@
           THEN 'People Success, CEO'
          WHEN {{department}} IN ('Product Management', 'Product Strategy')
            THEN 'Product Management, Product Strategy'
+         WHEN {{department}} in ('Field Ops - Child','Field Operations')
+             THEN 'Field Ops - Child, Field Operations'
          ELSE {{department}} 
          END 
 

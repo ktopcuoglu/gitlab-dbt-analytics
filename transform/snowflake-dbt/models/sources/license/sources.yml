@@ -53,9 +53,7 @@ sources:
 
       - name: licenses
         identifier: licenses
-        freshness:
-          warn_after: {count: 36, period: hour}
-          error_after: {count: 48, period: hour}
+        freshness: null
         columns:
           - name: id
             tests:

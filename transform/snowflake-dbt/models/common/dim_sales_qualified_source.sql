@@ -1,3 +1,6 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
 
 WITH sales_qualified_source AS (
 

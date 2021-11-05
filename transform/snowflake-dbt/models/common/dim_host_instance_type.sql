@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('crm_accounts', 'dim_crm_account'),
     ('gainsight_instance_info', 'gainsight_instance_info_source')

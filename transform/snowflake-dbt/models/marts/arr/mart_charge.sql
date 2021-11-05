@@ -77,6 +77,8 @@
       dim_billing_account.sold_to_country                                             AS sold_to_country,
       dim_billing_account.billing_account_name                                        AS billing_account_name,
       dim_billing_account.billing_account_number                                      AS billing_account_number,
+      dim_billing_account.ssp_channel                                                 AS ssp_channel,
+      dim_billing_account.po_required                                                 AS po_required,
 
       -- crm account info
       dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
@@ -99,6 +101,7 @@
       dim_crm_account.health_score                                                    AS health_score,
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
+      dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
 
       --Cohort Information
       dim_subscription.subscription_cohort_month                                      AS subscription_cohort_month,
@@ -172,6 +175,7 @@
       ON dim_subscription.dim_amendment_id_subscription = dim_amendment_subscription.dim_amendment_id
     LEFT JOIN dim_amendment AS dim_amendment_charge
       ON fct_charge.dim_amendment_id_charge = dim_amendment_charge.dim_amendment_id
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
     ORDER BY dim_crm_account.dim_parent_crm_account_id, dim_crm_account.dim_crm_account_id, fct_charge.subscription_name,
       fct_charge.subscription_version, fct_charge.rate_plan_charge_number, fct_charge.rate_plan_charge_version,
       fct_charge.rate_plan_charge_segment
@@ -181,7 +185,7 @@
 {{ dbt_audit(
     cte_ref="mart_charge",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-06-07",
-    updated_date="2021-08-04"
+    updated_date="2021-10-25"
 ) }}

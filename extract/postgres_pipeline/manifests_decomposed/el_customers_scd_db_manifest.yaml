@@ -69,6 +69,38 @@ tables:
       , created_at
       , updated_at
       FROM eulas
+  leads:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'leads'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , trial_start_date
+      , namespace_id
+      , user_id
+      , trial_users_count
+      , opt_in
+      , currently_in_trial
+      , is_for_business_use
+      , first_name
+      , last_name
+      , email
+      , phone
+      , company_name
+      , employees_bucket
+      , country
+      , state
+      , product_interaction
+      , provider
+      , comment_capture
+      , glm_content
+      , glm_source
+      FROM leads
   license_seat_links:
     advanced_metadata: true
     export_db: EXPORT_DB

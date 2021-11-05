@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_product"
   })
@@ -139,8 +143,8 @@
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
-      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND DATEADD('day', -1, monthly_sm_metrics.snapshot_month) 
+      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
+      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 ), saas_paid_user_metrics AS (
@@ -158,7 +162,7 @@
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
-      NULL                                                                          AS instance_type,
+      monthly_saas_metrics.instance_type                                            AS instance_type,
       NULL                                                                          AS cleaned_version,
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
@@ -269,7 +273,7 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
       ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND DATEADD('day', -1, monthly_saas_metrics.snapshot_month) 
+      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
@@ -291,5 +295,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-06-11",
-    updated_date="2021-09-09"
+    updated_date="2021-10-21"
 ) }}
