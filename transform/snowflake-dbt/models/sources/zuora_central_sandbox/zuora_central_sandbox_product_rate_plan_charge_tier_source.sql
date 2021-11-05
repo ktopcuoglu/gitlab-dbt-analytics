@@ -6,9 +6,9 @@ WITH source AS (
 ), renamed AS (
 
     SELECT 
-      productrateplanchargeid AS product_rate_plan_charge_id,
-      currency                AS currency,
-      price                   AS price
+      product_rate_plan_charge_id           AS product_rate_plan_charge_id,
+      currency                              AS currency,
+      price                                 AS price
     FROM source
     
 )
