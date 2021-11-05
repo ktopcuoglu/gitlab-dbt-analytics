@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('saas_usage_ping', 'prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics'),
     ('zuora_subscriptions', 'bdg_subscription_product_rate_plan'),
@@ -28,7 +32,7 @@
       dates.first_day_of_month                                                          AS snapshot_month
     FROM gitlab_subscriptions
     INNER JOIN dates
-      ON dates.date_actual BETWEEN gitlab_subscriptions.valid_from
+      ON dates.date_actual BETWEEN TO_DATE(gitlab_subscriptions.valid_from)
                             AND IFNULL(gitlab_subscriptions.valid_to, CURRENT_DATE)
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
@@ -48,6 +52,7 @@
       {{ get_date_id('saas_subscriptions.snapshot_month') }}                            AS snapshot_date_id,
       saas_usage_ping.ping_date                                                         AS ping_created_at,
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
+      saas_usage_ping.instance_type,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
       gitlab_seats.seats_in_use                                                         AS billable_user_count,
@@ -172,7 +177,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@snalamaru",
     created_date="2021-06-02",
-    updated_date="2021-06-10"
+    updated_date="2021-10-12"
 ) }}

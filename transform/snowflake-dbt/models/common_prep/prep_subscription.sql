@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH date_details AS (
 
     SELECT *
@@ -28,7 +32,7 @@ WITH date_details AS (
       zuora_subscription.subscription_id                                        AS dim_subscription_id,
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
       zuora_account.account_id                                                  AS dim_billing_account_id,
-      zuora_subscription.invoice_owner_id                                       AS dim_crm_person_id_invoice_owner,
+      zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner,
       zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
       zuora_subscription.original_id                                            AS dim_subscription_id_original,
       zuora_subscription.previous_subscription_id                               AS dim_subscription_id_previous,
@@ -47,6 +51,8 @@ WITH date_details AS (
       zuora_subscription.eoa_starter_bronze_offer_accepted,
       IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
+      zuora_subscription.namespace_name,
+      zuora_subscription.namespace_id,
 
       --Date Information
       zuora_subscription.subscription_start_date                                AS subscription_start_date,
@@ -69,7 +75,8 @@ WITH date_details AS (
       zuora_subscription.turn_on_cloud_licensing,
       zuora_subscription.turn_on_operational_metrics,
       zuora_subscription.contract_operational_metrics,
-      zuora_subscription.turn_on_usage_ping_required_metrics,
+      -- zuora_subscription.turn_on_usage_ping_required_metrics,
+      NULL                                                                      AS turn_on_usage_ping_required_metrics, -- https://gitlab.com/gitlab-data/analytics/-/issues/10172
       zuora_subscription.contract_auto_renewal,
       zuora_subscription.turn_on_auto_renewal,
       zuora_subscription.contract_seat_reconciliation,
@@ -89,7 +96,7 @@ WITH date_details AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-01-07",
-    updated_date="2021-08-04"
+    updated_date="2021-09-06"
 ) }}

@@ -87,7 +87,7 @@ WITH campaign_details AS (
       bizible_landing_page,
       bizible_landing_page_raw,
       bizible_marketing_channel,
-      marketing_channel_path        AS bizible_marketing_channel_path,
+      bizible_marketing_channel_path,
       bizible_medium,
       bizible_referrer_page,
       bizible_referrer_page_raw,
@@ -122,25 +122,50 @@ WITH campaign_details AS (
       combined_touchpoints.is_attribution_touchpoint,
       bizible_campaign_grouping.integrated_campaign_grouping,
       bizible_campaign_grouping.bizible_integrated_campaign_grouping,
-      bizible_campaign_grouping.gtm_motion ,
-      bizible_campaign_grouping.touchpoint_segment                         
-
+      bizible_campaign_grouping.gtm_motion,
+      bizible_campaign_grouping.touchpoint_segment,
+      CASE
+        WHEN combined_touchpoints.dim_crm_touchpoint_id ILIKE 'a6061000000CeS0%' -- Specific touchpoint overrides
+          THEN 'Field Event'
+        WHEN combined_touchpoints.bizible_marketing_channel_path = 'CPC.AdWords'
+          THEN 'Google AdWords'
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Email.Other', 'Email.Newsletter','Email.Outreach')
+          THEN 'Email'
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Field Event','Partners.Google','Brand.Corporate Event','Conference','Speaking Session')
+                  OR (combined_touchpoints.bizible_medium = 'Field Event (old)' AND combined_touchpoints.bizible_marketing_channel_path = 'Other')
+          THEN 'Field Event'
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Paid Social.Facebook','Paid Social.LinkedIn','Paid Social.Twitter','Paid Social.YouTube')
+          THEN 'Paid Social'
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Social.Facebook','Social.LinkedIn','Social.Twitter','Social.YouTube')
+          THEN 'Social'
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Marketing Site.Web Referral','Web Referral')
+          THEN 'Web Referral'
+        WHEN combined_touchpoints.bizible_marketing_channel_path in ('Marketing Site.Web Direct', 'Web Direct')
+              -- Added to Web Direct
+              OR combined_touchpoints.dim_campaign_id in (
+                                '701610000008ciRAAQ', -- Trial - GitLab.com
+                                '70161000000VwZbAAK', -- Trial - Self-Managed
+                                '70161000000VwZgAAK', -- Trial - SaaS
+                                '70161000000CnSLAA0', -- 20181218_DevOpsVirtual
+                                '701610000008cDYAAY'  -- 2018_MovingToGitLab
+                                )
+          THEN 'Web Direct'
+        WHEN combined_touchpoints.bizible_marketing_channel_path LIKE 'Organic Search.%'
+              OR combined_touchpoints.bizible_marketing_channel_path = 'Marketing Site.Organic'
+          THEN 'Organic Search'
+        WHEN combined_touchpoints.bizible_marketing_channel_path IN ('Sponsorship')
+          THEN 'Paid Sponsorship'
+        ELSE 'Unknown'
+      END AS pipe_name
     FROM combined_touchpoints
     LEFT JOIN bizible_campaign_grouping
-      ON combined_touchpoints.dim_campaign_id = bizible_campaign_grouping.dim_campaign_id
-        AND combined_touchpoints.dim_parent_campaign_id = bizible_campaign_grouping.dim_parent_campaign_id
-        AND combined_touchpoints.bizible_touchpoint_type = bizible_campaign_grouping.bizible_touchpoint_type
-        AND combined_touchpoints.bizible_landing_page = bizible_campaign_grouping.bizible_landing_page
-        AND combined_touchpoints.bizible_referrer_page = bizible_campaign_grouping.bizible_referrer_page
-        AND combined_touchpoints.bizible_form_url = bizible_campaign_grouping.bizible_form_url
-        AND combined_touchpoints.bizible_ad_campaign_name = bizible_campaign_grouping.bizible_ad_campaign_name
-        AND combined_touchpoints.bizible_marketing_channel_path = bizible_campaign_grouping.bizible_marketing_channel_path
+      ON combined_touchpoints.dim_crm_touchpoint_id = bizible_campaign_grouping.dim_crm_touchpoint_id
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2021-01-21",
-    updated_date="2021-08-09"
+    updated_date="2021-09-29"
 ) }}

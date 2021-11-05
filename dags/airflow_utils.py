@@ -2,7 +2,7 @@
 import os
 import urllib.parse
 from datetime import date, timedelta
-from typing import List
+from typing import List, Dict
 
 from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
@@ -11,12 +11,12 @@ from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperato
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.15"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 
 
-def split_date_parts(day: date, partition: str) -> List[dict]:
+def split_date_parts(day: date, partition: str) -> Dict:
 
     if partition == "month":
         split_dict = {
@@ -79,7 +79,8 @@ def slack_defaults(context, task_type):
     """
     Function to handle switching between a task failure and success.
     """
-    base_url = "https://airflow.gitlabdata.com"
+    # base_url = "https://airflow.gitlabdata.com"
+    base_url = "http://35.230.59.166:8080"
     execution_date = context["ts"]
     dag_context = context["dag"]
     dag_name = dag_context.dag_id
@@ -87,12 +88,10 @@ def slack_defaults(context, task_type):
     task_name = context["task"].task_id
     task_id = context["task_instance"].task_id
     execution_date_value = context["execution_date"]
-    execution_date_str = str(execution_date_value)
     execution_date_epoch = execution_date_value.strftime("%s")
     execution_date_pretty = execution_date_value.strftime(
         "%a, %b %d, %Y at %-I:%M %p UTC"
     )
-    task_instance = str(context["task_instance_key_str"])
 
     # Generate the link to the logs
     log_params = urllib.parse.urlencode(
@@ -158,14 +157,7 @@ def slack_snapshot_failed_task(context):
 
 
 def slack_webhook_conn(slack_channel):
-    if slack_channel == "#analytics-pipelines":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-    elif slack_channel == "#dbt-runs":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-    elif slack_channel == "#data-lounge":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-    else:
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+    slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
 
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
     return airflow_http_con_id, slack_webhook

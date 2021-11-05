@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 SELECT
 
   -- MAPPED COLUMNS: ANY ADDITIONAL COLUMNS SHOULD BE ADDED TO THE END OF THIS LIST
@@ -15,7 +19,7 @@ SELECT
   gitlab_dotcom_active_state,
   gitlab_dotcom_confirmed_date,
   gitlab_dotcom_created_date,
-  gitlab_dotcom_email_opted_in,
+  IFNULL(gitlab_dotcom_email_opted_in, FALSE) AS gitlab_dotcom_email_opted_in,
   gitlab_dotcom_last_login_date,
   gitlab_dotcom_user_id,
   gitlab_user_name,

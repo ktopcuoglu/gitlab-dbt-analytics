@@ -47,7 +47,11 @@ WITH source AS (
         country                                                 AS country,
         countrycode                                             AS country_code,
         postalcode                                              AS postal_code,
-
+        zi_company_country__c                                   AS zoominfo_company_country,
+        zi_contact_country__c                                   AS zoominfo_contact_country,
+        zi_company_state__c                                     AS zoominfo_company_state,
+        zi_contact_state__c                                     AS zoominfo_contact_state,
+  
         -- info
         requested_contact__c                                    AS requested_contact,
         company                                                 AS company,
@@ -71,13 +75,14 @@ WITH source AS (
         unqualified_datetime__c                                 AS unqualified_datetime,
         nurture_datetime__c                                     AS nurture_datetime,
         bad_data_datetime__c                                    AS bad_data_datetime,
+        worked_date__c                                          AS worked_datetime,
         web_portal_purchase_datetime__c                         AS web_portal_purchase_datetime,
         {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,
         status                                                  AS lead_status,
         last_utm_campaign__c                                    AS last_utm_campaign, 
         last_utm_content__c                                     AS last_utm_content,
-        crm_partner_id__c                                       AS crm_partner_id,
+        crm_partner_id_lookup__c                                AS crm_partner_id,
         name_of_active_sequence__c                              AS name_of_active_sequence,
         sequence_task_due_date__c::DATE                         AS sequence_task_due_date,
         sequence_status__c                                      AS sequence_status,

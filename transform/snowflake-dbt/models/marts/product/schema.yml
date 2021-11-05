@@ -16,10 +16,55 @@ models:
       - name: dim_plan_id
         tests:
           - not_null
+      - name: dim_ci_runner_id
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        tests:
+          - not_null
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
       - name: ci_build_duration_in_s
       - name: public_projects_minutes_cost_factor
       - name: private_projects_minutes_cost_factor
       - name: is_paid_by_gitlab
+      - name: namespace_is_internal
+      - name: ultimate_parent_plan_title
+
+  - name: mart_ci_runner_activity_daily
+    description: '{{ doc("mart_ci_runner_activity_daily") }}'
+    columns:
+      - name: report_date
+        tests:
+          - not_null
+      - name: dim_project_id
+        tests:
+          - not_null
+      - name: dim_namespace_id
+        tests:
+          - not_null
+      - name: ultimate_parent_namespace_id
+        tests:
+          - not_null
+      - name: dim_plan_id
+        tests:
+          - not_null
+      - name: dim_ci_runner_id
+        tests:
+          - not_null
+      - name: dim_ci_pipeline_id
+        tests:
+          - not_null
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
+      - name: ci_build_duration_in_s
+      - name: public_projects_minutes_cost_factor
+      - name: private_projects_minutes_cost_factor
+      - name: is_paid_by_gitlab
+      - name: project_visibility_level
+      - name: project_path
       - name: namespace_is_internal
       - name: ultimate_parent_plan_title
 
@@ -50,7 +95,7 @@ models:
       - name: crm_account_name
       - name: parent_crm_account_name
       - name: ping_date
-        description: Actual date that the usage ping was created.
+        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
       - name: umau_28_days_user
         description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -273,3 +318,30 @@ models:
       - name: event_count
         tests:
           - not_null
+
+  - name: mart_saas_spo_400
+    description: Workspace model that shows monthly Stages per Organization data on a namespace-level for SaaS.
+    columns:
+      - name: reporting_month
+        tests:
+          - not_null
+      - name: organization_id
+        description: Top-level namespace id.
+        tests:
+          - not_null
+      - name: delivery
+        tests:
+          - not_null
+      - name: organization_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group','Individual','User']
+      - name: product_tier
+        tests:
+          - not_null
+      - name: is_paid_product_tier
+        tests:
+          - not_null
+      - name: active_stage_count
+        description: number of active stages for a given organization in a given month

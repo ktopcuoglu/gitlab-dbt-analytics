@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH schedule_source AS (
 
     SELECT *

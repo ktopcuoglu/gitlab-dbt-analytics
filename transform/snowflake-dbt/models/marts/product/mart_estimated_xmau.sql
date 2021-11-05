@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
         "materialized": "table",
         "schema": "common_mart_product",
@@ -86,7 +90,7 @@
       COALESCE(estimated_value.pct_subscriptions_with_counters, 1)        AS pct_subscriptions_with_counters
     FROM umau
     LEFT JOIN estimated_value
-      ON estimated_value.is_smau
+      ON estimated_value.is_umau
         AND umau.usage_ping_delivery_type = 'Self-Managed'
         AND umau.ping_created_month  = estimated_value.reporting_month
         AND umau.edition = estimated_value.edition
@@ -144,7 +148,7 @@
       usage_ping_delivery_type                                                         AS delivery,
       'GMAU'                                                              AS xmau_level,
       product_tier NOT IN ('Core', 'CE') AND usage_ping_delivery_type = 'Self-Managed' AS is_paid,
-      COALESCE(estimated_value.pct_subscriptions_with_counters, 1)        AS pct_subscriptions_with_counters
+      COALESCE(MAX(estimated_value.pct_subscriptions_with_counters), 1)        AS pct_subscriptions_with_counters
     FROM gmau
     LEFT JOIN estimated_value
       ON estimated_value.is_gmau
@@ -154,7 +158,8 @@
         AND gmau.group_name = estimated_value.group_name 
         AND gmau.section_name = estimated_value.section_name
         AND gmau.edition = estimated_value.edition
-  
+    {{ dbt_utils.group_by(n=15) }}
+
 ), xmau AS (
 
     SELECT *

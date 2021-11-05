@@ -12,6 +12,7 @@ WITH source AS (
       subscriptionversionamendmentid              AS amendment_id,
       name                                        AS subscription_name,
         {{zuora_slugify("name")}}                 AS subscription_name_slugify,
+      nullif(gitlabnamespacename__c, '')          AS namespace_name,
       --keys
       accountid                                   AS account_id,
       creatoraccountid                            AS creator_account_id,
@@ -23,6 +24,7 @@ WITH source AS (
       nullif(previoussubscriptionid, '')          AS previous_subscription_id,
       nullif(recurlyid__c, '')                    AS sfdc_recurly_id,
       cpqbundlejsonid__qt                         AS cpq_bundle_json_id,
+      nullif(gitlabnamespaceid__c, '')            AS namespace_id,
 
       -- info
       status                                      AS subscription_status,
@@ -36,13 +38,10 @@ WITH source AS (
       currenttermperiodtype                       AS current_term_period_type,
       endcustomerdetails__c                       AS sfdc_end_customer_details,
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
-      IFF(LENGTH(TRIM(turnoncloudlicensing__c)) > 0, turnoncloudlicensing__c, NULL)
-                                                  AS turn_on_cloud_licensing,
-      turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
-      IFF(LENGTH(TRIM(turnonoperationalmetrics__c)) > 0, turnonoperationalmetrics__c, NULL)
-                                                  AS turn_on_operational_metrics,
-      IFF(LENGTH(TRIM(contractoperationalmetrics__c)) > 0, contractoperationalmetrics__c, NULL)
-                                                  AS contract_operational_metrics,
+      turnoncloudlicensing__c                     AS turn_on_cloud_licensing,
+      -- turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
+      turnonoperationalmetrics__c                 AS turn_on_operational_metrics,
+      contractoperationalmetrics__c               AS contract_operational_metrics,
 
       --key_dates
       cancelleddate                               AS cancelled_date,
@@ -75,14 +74,10 @@ WITH source AS (
       renewalterm                                 AS renewal_term,
       renewaltermperiodtype                       AS renewal_term_period_type,
       exclude_from_renewal_report__c__c           AS exclude_from_renewal_report,
-      IFF(LENGTH(TRIM(contractautorenew__c)) > 0, contractautorenew__c, NULL)
-                                                  AS contract_auto_renewal,
-      IFF(LENGTH(TRIM(turnonautorenew__c)) > 0, turnonautorenew__c, NULL)
-                                                  AS turn_on_auto_renewal,
-      IFF(LENGTH(TRIM(contractseatreconciliation__c)) > 0, contractseatreconciliation__c, NULL)
-                                                  AS contract_seat_reconciliation,
-      IFF(LENGTH(TRIM(turnonseatreconciliation__c)) > 0, turnonseatreconciliation__c, NULL)
-                                                  AS turn_on_seat_reconciliation,
+      contractautorenew__c                        AS contract_auto_renewal,
+      turnonautorenew__c                          AS turn_on_auto_renewal,
+      contractseatreconciliation__c               AS contract_seat_reconciliation,
+      turnonseatreconciliation__c                 AS turn_on_seat_reconciliation,
 
 
       --metadata

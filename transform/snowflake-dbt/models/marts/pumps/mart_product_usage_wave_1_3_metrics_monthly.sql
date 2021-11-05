@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_product"
   })
@@ -7,7 +11,8 @@
     ('monthly_metrics', 'fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts', 'dim_billing_account'),
     ('crm_accounts', 'dim_crm_account'),
-    ('location_country', 'dim_location_country')
+    ('location_country', 'dim_location_country'),
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , joined AS (
@@ -15,6 +20,7 @@
     SELECT
       monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
+      subscriptions.subscription_status,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.snapshot_month,
@@ -146,13 +152,17 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN location_country
       ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
+    LEFT JOIN subscriptions
+      ON monthly_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2021-02-11",
-    updated_date="2021-07-21"
+    updated_date="2021-10-21"
 ) }}

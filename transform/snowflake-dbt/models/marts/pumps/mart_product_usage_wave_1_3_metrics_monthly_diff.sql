@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_product"
   })
@@ -5,7 +9,8 @@
 
 {{ simple_cte([
     ('monthly_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
-    ('dim_date','dim_date')
+    ('dim_date','dim_date'),
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , months AS (
@@ -71,6 +76,7 @@
       snapshot_month,
       uuid,
       hostname,
+      ping_created_at,
       ping_created_at::DATE - LAG(ping_created_at::DATE)
         IGNORE NULLS OVER (
           PARTITION BY
@@ -129,6 +135,7 @@
       snapshot_month,
       uuid,
       hostname,
+      ping_created_at,
       days_since_last_ping,
       months.days_in_month_count,
       {{ usage_ping_over_ping_smoothed('commit_comment_all_time_event') }},
@@ -180,6 +187,7 @@
       smoothed_diffs.dim_subscription_id,
       smoothed_diffs.dim_subscription_id_original,
       smoothed_diffs.dim_billing_account_id,
+      subscriptions.subscription_status,
       smoothed_diffs.snapshot_month,
       smoothed_diffs.uuid,
       smoothed_diffs.hostname,
@@ -227,13 +235,17 @@
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
       AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
+    LEFT JOIN subscriptions
+      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@chrissharp",
     created_date="2021-03-04",
-    updated_date="2021-06-10"
+    updated_date="2021-10-21"
 ) }}

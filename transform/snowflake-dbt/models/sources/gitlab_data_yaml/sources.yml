@@ -24,6 +24,8 @@ sources:
       - name: development_department_pi
       - name: feature_flags
       - name: flaky_tests
+        freshness:
+          error_after: {count: 24, period: hour}
       - name: infrastructure_department_pi
       - name: enablement_section_pi
       - name: engineering_function_pi

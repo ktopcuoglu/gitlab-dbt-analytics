@@ -10,6 +10,38 @@ models:
           - unique
           - not_null
 
+  - name: bdg_epic_user_request
+    description: ' {{ doc("bdg_epic_user_request") }}'
+    columns:
+      - name: dim_epic_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: is_user_request_only_in_collaboration_project
+        description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
+      - name: CONCAT(dim_epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: bdg_issue_user_request
+    description: ' {{ doc("bdg_issue_user_request") }}'
+    columns:
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: is_user_request_only_in_collaboration_project
+        description: Boolean flag that if TRUE indicates whether the user request was only done in a customer collaboration project.
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
+
   - name: bdg_namespace_order_subscription_monthly
     description: '{{ doc("bdg_namespace_order_subscription_monthly") }}'
     columns:
@@ -244,136 +276,71 @@ models:
       - name: bizible_touchpoint_enabled_setting
       - name: strategic_marketing_contribution
 
-  - name: dim_charge
-    description: Dimension table for unique transactions in Zuora Billing. The table only includes recurring charges at this time. Non-recurring charges will be added in a future iteration.
-    columns:
-      - name: dim_charge_id
-        description: Unique identifier for a rate plan charge in Zuora. These are transactions in Zuora Billing.
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "arr"]
-
-  - name: dim_crm_account
-    description: '{{ doc("dim_crm_account") }}'
-    columns:
-      - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
-        tests:
-          - unique
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: crm_account_name
-        description: account name from SFDC
-      - name: crm_account_country
-        description: billing country of SFDC account
-      - name: dim_parent_crm_account_id
-        description: ultimate parent account id
-      - name: ultimate_parent_account_name
-        description: parent account name
-      - name: ultimate_parent_account_segment
-        description: Sales segment of the parent account
-      - name: ultimate_parent_billing_country
-        description: billing country of parent account
-      - name: partners_signed_contract_date
-      - name: record_type_id
-      - name: federal_account
-      - name: gitlab_com_user
-      - name: is_jihu_account
-      - name: account_owner
-      - name: account_owner_team
-      - name: account_type
-      - name: gtm_strategy
-      - name: technical_account_manager
-      - name: is_deleted
-        description: flag indicating if account has been deleted
-      - name: is_reseller
-        description: Identify whether a crm_account is a reseller.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: merged_to_account_id
-        description: for deleted accounts this is the SFDC account they were merged to
-      - name: crm_account_created_date
-        description: The date on which the CRM account was created in SFDC
-
-  - name: dim_crm_opportunity
-    description: '{{ doc("dim_crm_opportunity") }}'
-    columns:
-      - name: dim_crm_opportunity_id
-        description: primary key for Salesforce Opportunities
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: dim_crm_account_id
-        description: Key for joining on dim_crm_account, which is the primary key for Salesforce Accounts
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
-        tags: ["tdf", "opportunity", "common", "sales_funnel"]
-      - name: opportunity_name
-      - name: dim_crm_sales_rep_id
-        description: Sourced from the opportunity owner_id this key is for joining to dim_crm_user
-        tests:
-          - relationships:
-              to: ref('dim_crm_user')
-              field: dim_crm_user_id
-        tags: ["tdf", "opportunity", "common", "sales_funnel"]
-      - name: lead_source
-      - name: merged_crm_opportunity_id
-        description: If the closed lost reason is that the Opp was merged into another opportunity than this field will be the id for that opportunity record.
-      - name: net_new_source_categories
-      - name: account_owner_team_stamped
-      - name: primary_campaign_source_id
-      - name: sales_accepted_date
-      - name: sales_path
-      - name: sales_type
-      - name: source_buckets
-      - name: stage_name
-      - name: stage_is_active
-      - name: stage_is_closed
-      - name: technical_evaluation_date
-      - name: deal_path
-      - name: competitors
-      - name: critical_deal_flag
-      - name: forecast_category_name
-      - name: invoice_number
-      - name: is_refund
-      - name: is_downgrade
-      - name: is_risky
-        description: risk assessment based on a case statement (See SQL)
-      - name: is_swing_deal
-      - name: is_edu_oss
-      - name: is_won
-        description: Salesforce standard field which will be true if an opportunity is in any 'won' stage_is_active
-      - name: probability
-      - name: reason_for_loss
-      - name: reason_for_loss_details
-      - name: sales_qualified_source
-        description: sourced from salesforce with 'BDR' being replaced by 'SDR' for this table
-      - name: solutions_to_be_replaced
-      - name: is_web_portal_purchase
-      - name: partner_initiated_opportunity
-      - name: user_segment
-      - name: order_type
-        description: from order_type_stamped
-      - name: opportunity_health
-      - name: risk_type
-      - name: risk_reasons
-      - name: tam_notes
-
   - name: dim_crm_person
     description: '{{ doc("dim_crm_person") }}'
     columns:
       - name: dim_crm_person_id
+        description: A dbt generated ID for the record.
         tests:
           - not_null
           - unique
       - name: sfdc_record_id
+        description: The 18 digit Salesforce id for the contact or lead.
         tests:
           - not_null
           - unique
+      - name: email_hash
+        description: A salted SHA2 hash of the person's email address. 
+      - name: email_domain
+        description: The domain name of the person's email address (@example.com or @sub.example.com).
+      - name: email_domain_type
+        description: A [dbt function](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/common/email_domain_type.sql) returning a description of the email address (personal, business, etc...).
+      - name: master_record_id
+        description: A internal Salesforce generated field. [From the Salesforce doc](https://help.salesforce.com/s/articleView?id=000320023&type=1) "When performing a query or export a record from an API tool, a field called MasterRecordId appear [...]."
+      - name: owner_id
+        description: The Salesforce id ([dim_crm_user_id](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_crm_user)) of the user who owns the person record. 
+      - name: record_type_id
+        description: The sub-type of the [contact](https://gitlab.my.salesforce.com/ui/setup/rectype/RecordTypes?type=Contact&setupid=ContactRecords&retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DContact) or [lead](https://gitlab.my.salesforce.com/ui/setup/rectype/RecordTypes?type=Lead&setupid=LeadRecords&) defined in Salesforce, joinable to PROD.LEGACY.SFDC_RECORD_TYPE.
+      - name: dim_crm_account_id
+        description: The account id ([dim_crm_account_id](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_crm_account)) the person record belongs too.
+      - name: reports_to_id
+        description: The Salesforce id (dim_crm_person_id) for the person the contact reports too, null when the person is a lead.
+      - name: dim_crm_user_id
+        description: A dbt generated ID for the owner.
+      - name: crm_partner_id
+        description: The Salesforce 18 digit id of the account for the person. Joinable to "PROD"."RESTRICTED_SAFE_COMMON"."DIM_CRM_ACCOUNT"."DIM_CRM_ACCOUNT_ID".
+      - name: person_score
+        description: The score when moving the person through the lead flow to become a MQL. The [MQL definition in the Marketo](https://about.gitlab.com/handbook/marketing/marketing-operations/marketo/#mql-definition) page has more information.
+      - name: title
+        description: The person's title, can be self reported or null.
+      - name: has_opted_out_email
+        description: A built in Salesforce field on the [lead](https://gitlab.my.salesforce.com/_ui/common/config/field/StandardFieldAttributes/d?id=HasOptedOutOfEmail&type=Lead&retURL=%2Fp%2Fsetup%2Flayout%2FLayoutFieldList%3Ftype%3DLead%26setupid%3DLeadFields&_CONFIRMATIONTOKEN=VmpFPSxNakF5TVMwd09TMHhNMVF4T1Rvd056b3hNeTR3T0RKYSxwMVlkUEdVTWhCVUhVcDRZV0ZPOExYLFl6UTNNekF5&setupid=LeadFields) and [contact](https://gitlab.my.salesforce.com/_ui/common/config/field/StandardFieldAttributes/d?id=HasOptedOutOfEmail&type=Contact&retURL=%2Fp%2Fsetup%2Flayout%2FLayoutFieldList%3Ftype%3DContact%26setupid%3DContactFields&_CONFIRMATIONTOKEN=VmpFPSxNakF5TVMwd09TMHhNMVF4T1Rvd056b3lNUzQwTWpCYSwyYkgwVkZROFdwVk5qMXdNTlJmcnJHLFl6UTNNekF5&setupid=ContactFields) object tracking if the person has opted out of emails.
+      - name: email_bounced_date
+        description: A hidden Salesforce field recording when the email first bounced through SFDC, [not Marketo.](https://nation.marketo.com/t5/marketo-whisperer-blogs/special-salesforce-fields-tokens-in-marketo-deep-dive/ba-p/247573)
+      - name: email_bounced_reason
+        description: A hidden Salesforce field recording why the email first bounced through SFDC, [not Marketo.](https://nation.marketo.com/t5/marketo-whisperer-blogs/special-salesforce-fields-tokens-in-marketo-deep-dive/ba-p/247573)
+      - name: status
+        description: A [Salesforce picklist field](https://gitlab.my.salesforce.com/00N6100000HymiA) as [defined in the handbook.](https://about.gitlab.com/handbook/marketing/marketing-operations/#lead-and-contact-statuses) 
+      - name: lead_source
+        description: A built-in salesforce picklist shown as initial Source in SFDC.
+      - name: lead_source_type
+        description: A custom salesforce picklist on the [contact](https://gitlab.my.salesforce.com/00N6100000HmXh9?) and [lead](https://gitlab.my.salesforce.com/00N6100000HHDZJ) objects controlled by the built-in field.
+      - name: source_buckets
+        description: A [case statement](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/sfdc/sfdc_source_buckets.sql`) that categorizes lead sources into pre-defined buckets.
+      - name: net_new_source_categories
+        description: A [case statement](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/sfdc/sfdc_source_buckets.sql) that categorizes lead sources into pre-defined buckets.
+      - name: bizible_touchpoint_position
+        description: The actions done when the person took their First Touch (FT) through Bizible. This will also contain other actions in a comma-separated, [Bizible has their meaning documented](https://experienceleague.adobe.com/docs/bizible/using/introduction-to-bizible/overview-resources/bizible-attribution-models.html?lang=en).
+      - name: bizible_marketing_channel_path
+        description: The channel the person's first Bizible touchpoint.
+      - name: bizible_touchpoint_date
+        description: The date of the person Bizible touchpoint.
+      - name: sequence_step_type
+        description: A Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib5yL) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib5yG) object updated by Outreach, denoting the last step a person went through. Its possible for a person to not be in a sequence but have a value here.
+      - name: is_actively_being_sequenced
+        description: A boolean Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib1VK) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib1VP) denoting if the contact is going through an [Outreach](https://about.gitlab.com/handbook/marketing/marketing-operations/outreach/) sequence.
+      - name: region
+        description: A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of `AMER, APAC, EMEA, LATAM.`
 
   - name: dim_crm_user_hierarchy_live
     description: '{{ doc("dim_crm_user_hierarchy_live") }}'
@@ -423,6 +390,9 @@ models:
           - unique
           - not_null
         tags: ["tdf", "common", "sales_funnel"]
+
+  - name: dim_environment
+    description: Table with the source data of the data being exposed in dimensional tables where various sources are combined.
 
   - name: dim_gitlab_ops_gitlab_emails
     description: '{{ doc("gitlab_dotcom_gitlab_emails") }}'
@@ -591,10 +561,13 @@ models:
     description: '{{ doc("dim_host_instance_type") }}'
     columns:
       - name: instance_uuid
-        description: Unique identifier for the instance
+        description: Unique identifier for the instance(Self-Managed)
         tags: ["gainsight"]
       - name: instance_hostname
-        description: Name of the host of the instance
+        description: Name of the host of the instance(Self-Managed)
+        tags: ["gainsight"]
+      - name: namespace_id
+        description: Unique Identifier for SaaS data
         tags: ["gainsight"]
       - name: instance_type
         description: Type of the instance
@@ -912,7 +885,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
         tests:
@@ -929,6 +902,10 @@ models:
           - accepted_values:
               values: ['Active', 'Cancelled', 'Draft', 'Expired']
         tags: ["tdf", "common", "gainsight"]
+      - name: namespace_name
+        description: The namespace related to the subscription.
+      - name: namespace_id
+        description: The id of the namespace related to the subscription.
       - name: subscription_version
         description: The version number of the subscription
       - name: is_auto_renew
@@ -966,16 +943,6 @@ models:
       - name: is_myb_with_multi_subs
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
 
-  - name: dim_subscriptions_snapshots
-    description: Daily snapshot of subscriptions starting from 2020-03-01. Fiel
-    columns:
-      - name: subscription_snapshot_id
-        description: Unique identifier of a subscription snapshot
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "arr"]
-
   - name: dim_subscription_snapshot_bottom_up
     description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
     columns:
@@ -995,35 +962,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common"]
-
-  - name: fct_charge
-    description: '{{ doc("fct_charge") }}'
-    columns:
-      - name: dim_subscription_id
-        description: Unique identifier of a version of a subscription
-        tests:
-          - not_null
-      - name: dim_charge_id
-        description: The unique identifier of a verion of a rate plan charge
-        tests:
-          - not_null
-          - unique
-      - name: dim_product_detail_id
-        description: The unique ID of a product rate plan charge
-      - name: rate_plan_charge_number
-        description: A unique number that identifies the charge
-      - name: effective_start_date_id
-        description: Id of the date when the segmented charge starts or started. Use this field to join to dim_date on id.
-      - name: effective_end_date_id
-        description: Id of the date when the segmented charge ends or ended. Use this field to join to dim_date on id.
-      - name: quantity
-        description: The default quantity of units
-      - name: mrr
-        description: Monthly recurring revenue (MRR) is the amount of recurring charges in a given month. The MRR calculation doesn't include one-time charges nor usage charges.
-      - name: rate_plan_charge_segment
-        description: The identifying number of the subscription rate plan segment. Segments are numbered sequentially, starting with 1.
-      - name: rate_plan_charge_version
-        description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
 
   - name: fct_crm_attribution_touchpoint
     description: '{{ doc("fct_crm_attribution_touchpoint") }}'
@@ -1072,207 +1010,6 @@ models:
       - name: is_staging
         descrition: DRAFT - need to better identify instances used for staging environments
 
-  - name: fct_invoice
-    description: '{{ doc("fct_invoice") }}'
-    columns:
-      - name: dim_invoice_id
-        description: The unique identifier of an invoice
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "invoice"]
-
-  - name: fct_invoice_item
-    description: '{{ doc("fct_invoice_item") }}'
-    columns:
-      - name: charge_id
-        description: The unique identifier of a verion of a rate plan charge associated with the invoice item
-        tests:
-          - not_null
-        tags: ["tdf", "common", "invoice"]
-      - name: invoice_item_id
-        description: unique invoice item id that identifies a line item on the invoice
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "invoice"]
-      - name: dim_invoice_id
-        description: The ID of the invoice that's associated with the invoice item
-        tests:
-          - not_null
-        tags: ["tdf", "common", "invoice"]
-      - name: invoice_number
-        description: The unique identification number of the invoice
-        tests:
-          - not_null
-        tags: ["tdf", "common", "invoice"]
-      - name: dim_crm_account_id_invoice
-        description: The ID of the customer account associated with the invoice
-      - name: invoice_date
-        description: The date the invoice was generated
-      - name: service_start_date
-        description: The start date of the service period associated with this invoice item. If the associated charge is a one-time fee, then this date is the date of that charge.
-      - name: service_end_date
-        description: The end date of the service period associated with this invoice item. Service ends one second before the date in this value.
-      - name: invoice_amount_without_tax
-        description: The invoice amount excluding tax
-      - name: invoice_item_charge_amount
-        description: The amount being charged for the invoice item. This amount doesn't include taxes regardless if the charge's tax mode is inclusive or exclusive.
-      - name: invoice_item_unit_price
-        description: The per-unit price of the invoice item. Calculated from multiple fields in Product Rate Plan Charge and Product Rate Plan Charge Tier objects.
-
-  - name: fct_invoice_items_agg
-    description: Aggregate fact table with invoice items summarized on charge level
-    columns:
-      - name: charge_id
-        tests:
-          - not_null
-          - unique
-
-  - name: fct_crm_opportunity
-    description: '{{ doc("fct_crm_opportunity") }}'
-    columns:
-      - name: dim_crm_opportunity_id
-        description: A dbt generated surrogate key combining the sfdc_record_id and the sales_accepted_date.
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: dim_crm_account_id
-        description: join key for dim_crm_account from the accountid field in Salesforce
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: dim_alliance_type_id
-        description: join key for dim_alliance_type
-        tests:
-          - relationships:
-              to: ref('dim_alliance_type')
-              field: dim_alliance_type_id
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: dim_dr_partner_engagement_id
-        description: join key for dim_dr_partner_engagement
-        tests:
-          - relationships:
-              to: ref('dim_dr_partner_engagement')
-              field: dim_dr_partner_engagement_id
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: dim_channel_type_id
-        description: join key for dim_channel_type
-        tests:
-          - relationships:
-              to: ref('dim_channel_type')
-              field: dim_channel_type_id
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: dim_crm_person_id
-        description: A surrogate key for use when joining to `dim_crm_person`. Created from the contact_id where there is a contact and a lead_id where there isn't.
-      - name: sfdc_contact_id
-        description: the contact id from the fist contact by opportunity contact role created date for the given opportunity record
-      - name: created_date
-        description: timestamp for the opportunity record creation in Salesforce
-      - name: created_date_id
-        description: a foreign key generated from `get_date_id` macro with created_date the for use with dim_date
-      - name: sales_accepted_date
-        description: The sales_accepted_date from the sfdc_opportunity. Note that there can be opportunities with sales accepted dates that aren't sales accepted opportunities. This is indicated with the is_sao and is_sdr_sao booleans
-      - name: sales_accepted_date_id
-        description: a foreign key generated from `get_date_id` macro with sales_accepted_date the for use with dim_date
-      - name: close_date
-        description: a date entered by the sales team that is the expected close date for open opportunities and the actual close date for closed opportunities.
-      - name: close_date_id
-        description: a foreign key generated from `get_date_id` macro with close_date the for use with dim_date
-      - name: stage_0_pending_acceptance_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/04Y4M000000g0GE) date
-      - name: stage_0_pending_acceptance_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_0_pending_acceptance_date the for use with dim_date
-      - name: stage_1_discovery_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb5) date
-      - name: stage_1_discovery_date_id
-        description: a foreign key generated from `get_date_id` macro with D the for use with dim_date
-      - name: stage_2_scoping_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb6) date
-      - name: stage_2_scoping_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_1_discovery_date the for use with dim_date
-      - name: stage_3_technical_evaluation_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb7) date
-      - name: stage_3_technical_evaluation_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_3_technical_evaluation_date the for use with dim_date
-      - name: stage_4_proposal_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb8) date
-      - name: stage_4_proposal_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_4_proposal_date the for use with dim_date
-      - name: stage_5_negotiating_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSb9) date
-      - name: stage_5_negotiating_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_5_negotiating_date the for use with dim_date
-      - name: stage_6_closed_won_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbE) date
-      - name: stage_6_closed_won_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_6_closed_won_date the for use with dim_date
-      - name: stage_6_closed_lost_date
-        description: a Salesforce [workflow generated](https://gitlab.my.salesforce.com/01Q4M000000kSbD) date
-      - name: stage_6_closed_lost_date_id
-        description: a foreign key generated from `get_date_id` macro with stage_6_closed_lost_date the for use with dim_date
-      - name: days_in_0_pending_acceptance
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEI)
-      - name: days_in_1_discovery
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNES)
-      - name: days_in_2_scoping
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEX)
-      - name: days_in_3_technical_evaluation
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEc)
-      - name: days_in_4_proposal
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEh)
-      - name: days_in_5_negotiating
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HlNEm)
-      - name: days_in_sao
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib8xV)
-      - name: closed_buckets
-        description: a case generated column that uses the days_in_sao column. See SQL for this model.
-      - name: subscription_start_date
-        description: The Start Date from the Zuora quote that is either Primary or was Sent to Zuora.
-      - name: subscription_end_date
-        description: The End Date from the Zuora quote that is either Primary or was Sent to Zuora.
-      - name: is_closed
-        description: a Salesforce boolean field which is true when the Opportunity stage is a closed stage
-      - name: is_won
-        description: a Salesforce boolean field which is true when the Opportunity stage is a won stage
-      - name: is_refund
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5u)
-      - name: is_downgrade
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu5y)
-      - name: is_swing_deal
-        description: a checkbox used in salesforce with the help text "A swing deal is an opportunity with a Close Date in a future period that has the potential to be pulled into the current period."
-      - name: is_edu_oss
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000IOu68)
-      - name: is_web_portal_purchase
-      - name: is_sao
-        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities. This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
-      - name: is_net_arr_closed_deal
-        description: a boolean field created in the warehouse to flag Closed Deals and will help determine the Net ARR.
-      - name: is_new_logo_first_order
-        description: a boolean field created in the warehouse to flag New Logos.
-      - name: is_net_arr_pipeline_created
-        description: a boolean field created in the warehouse to flag Net ARR Pipeline Created.
-      - name: is_win_rate_calc
-        description: a boolean field created in the warehouse to flag Win Rate. This field determines opportunities that will be included in calculating Win Rate.
-      - name: is_sdr_sao
-        description: a boolean field created in the warehouse to flag Sales Accepted Opportunities from [Sales Development Reps](https://about.gitlab.com/handbook/marketing/revenue-marketing/sdr/). This field should be deprecated once sales accepted is in a more stable and consistent state in salesforce.
-      - name: iacv
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N6100000HJpyB) with the help text "For New Business or Add On, takes all first year recurring revenue + true ups. If Renewal, the recurring revenue + true ups minus the Renewal ACV. If the Renewal ACV is null, then the Incremental ACV is null"
-      - name: net_arr
-        description: a Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000Ib5n8) which is marked as [WIP]
-      - name: amount
-        description: from salesforce "This is the same as Total Contract Value. It takes the value of the entire agreement"
-      - name: recurring_amount
-      - name: true_up_amount
-      - name: proserv_amount
-      - name: other_non_recurring_amount
-      - name: arr_basis
-      - name: arr
-        description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
-
   - name: fct_crm_person
     description: '{{ doc("fct_crm_person") }}'
     columns:
@@ -1302,118 +1039,6 @@ models:
       - name: is_mql
         description: a boolean field created in the warehouse to flag Marketing Qualified Leads.
 
-  - name: fct_manual_journal_entry_line
-    description: '{{ doc("fct_manual_journal_entry_line") }}'
-    columns:
-      - name: dim_manual_journal_entry_line_id
-        description: Unique identifier for a manual journal entry line.
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "zuora_revenue"]
-
-  - name: fct_mrr
-    description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
-    columns:
-      - name: mrr_id
-        description: The unique identifier of the MRR.
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "mrr"]
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-      - name: dim_charge_id
-        description: join key for dim_charge
-        tests:
-          - not_null
-      - name: dim_billing_account_id
-        description: join key for dim_billing_account
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_billing_account')
-              field: dim_billing_account_id
-        tags: ["tdf", "common", "mrr"]
-      - name: dim_crm_account_id
-        description: join key for dim_crm_account
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
-        tags: ["tdf", "common", "mrr"]
-      - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscription table
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_subscription')
-              field: dim_subscription_id
-        tags: ["tdf", "common", "mrr"]
-      - name: dim_product_detail_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null
-      - name: dim_billing_account_id
-        description: Zuora account id
-      - name:  dim_crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
-
-  - name: fct_mrr_snapshots
-    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_details_id. Snapshot dates start from 2020-0
-    columns:
-      - name: mrr_snapshot_id
-        description: The unique identifier of the given snapshot MRR.
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "arr"]
-      - name: mrr_id
-        description: The unique identifier of the MRR.
-        tests:
-          - not_null
-        tags: ["tdf", "arr"]
-      - name: snapshot_id
-        description: The identifier of snapshot day in dim_date
-      - name: date_id
-        description: The identifier of date month in dim_date
-      - name: subscription_id
-        description: The identifier of subscription in dim_subscriptions_snapshots table
-        tests:
-          - not_null
-        tags: ["tdf", "arr"]
-      - name: product_details_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null
-        tags: ["tdf", "arr"]
-      - name: billing_account_id
-        description: Zuora account id
-      - name:  crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
-
-  - name: fct_mrr_snapshot_bottom_up
-    description: One row represents Monthly Recurring Revenue per one month, subscription_id, product_detail_id, and mrr. Snapshot dates start from 2020-03. This model is built bottom-up using snapshotted source tables.
-    columns:
-      - name: mrr_snapshot_id
-        description: The unique identifier of the given snapshot MRR.
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "arr"]
-
   - name: fct_product_usage_free_user_metrics_monthly
     description: '{{ doc("fct_product_usage_free_user_metrics_monthly") }}'
     columns:
@@ -1429,7 +1054,7 @@ models:
       - name: dim_crm_account_id
         description: ID of the CRM account associated with the free trial.
       - name: ping_date
-        description: Actual date that the usage ping was created.
+        description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
       - name: umau_28_days_user
         description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
       - name: action_monthly_active_users_project_repo_28_days_user
@@ -1850,33 +1475,6 @@ models:
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping and/or Seat Link
 
-  - name: fct_quote_item
-    description: '{{ doc("fct_quote_item") }}'
-    columns:
-      - name: quote_item_id
-        description: A unique identifier of a product included in a quote amendment which is associated with a quote
-        tests:
-          - not_null
-          - unique
-
-  - name: fct_retention_parent_account
-    description: '{{ doc("fct_retention_parent_account") }}'
-    columns:
-    - name: fct_retention_id
-      description: A unique identifier of the retention record.
-      tests:
-        - not_null
-        - unique
-      tags: ["tdf", "mart", "arr", "retention"]
-
-  - name: fct_quote
-    description: '{{ doc("fct_quote") }}'
-    columns:
-      - name: dim_quote_id
-        tests:
-          - not_null
-          - unique
-
   - name: fct_saas_product_usage_metrics_monthly
     description: '{{ doc("fct_saas_product_usage_metrics_monthly") }}'
     columns:
@@ -1902,6 +1500,8 @@ models:
         tests:
           - not_null
         tags: ["tdf", "common", "gainsight"]
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
       - name: subscription_seats
       - name: billable_user_count
       - name: license_utilization
@@ -2088,61 +1688,6 @@ models:
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-
-  - name: fct_revenue_contract_hold
-    description: '{{ doc("fct_revenue_contract_hold") }}'
-    columns:
-      - name: dim_revenue_contract_hold_id
-        description: Unique identifier for a hold applied to a revenue contract or revenue contract line.
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "zuora_revenue"]
-
-  - name: fct_revenue_contract_line
-    description: '{{ doc("fct_revenue_contract_line") }}'
-    columns:
-      - name: dim_revenue_contract_line_id
-        description: Unique identifier for a revenue contract line.
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "zuora_revenue"]
-
-  - name: fct_revenue_contract_schedule
-    description: '{{ doc("fct_revenue_contract_schedule") }}'
-    columns:
-      - name: dim_revenue_contract_schedule_id
-        description: Unique identifier for a schedule applied to a revenue contract line.
-        tests:
-          - not_null
-        tags: ["tdf", "common", "zuora_revenue"]
-
-  - name: fct_sales_funnel_partner_alliance_target
-    description: '{{ doc("fct_sales_funnel_partner_alliance_target") }}'
-    columns:
-      - name: kpi_name
-        tests:
-          - not_null
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: sales_funnel_partner_alliance_target_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "sales_funnel"]
-
-  - name: fct_sales_funnel_target
-    description: '{{ doc("fct_sales_funnel_target") }}'
-    columns:
-      - name: kpi_name
-        tests:
-          - not_null
-        tags: ["tdf", "common", "sales_funnel"]
-      - name: sales_funnel_target_id
-        tests:
-          - not_null
-          - unique
-        tags: ["tdf", "common", "sales_funnel"]
 
   - name: fct_usage_ci_minutes
     description: '{{ doc("fct_usage_ci_minutes") }}'
@@ -2498,16 +2043,6 @@ models:
         description: Total size of wikis across all repositories under the top level namespace.
       - name: storage_bytes
         description: Sum of reposity, LFS objects, build artifacts, packages, and wiki storage sizes.
-
-  - name: fct_waterfall_summary
-    description: '{{ doc("fct_waterfall_summary") }}'
-    columns:
-      - name: dim_waterfall_summary_id
-        description: Unique identifier for a revenue contract line schedule period.
-        tests:
-          - unique
-          - not_null
-        tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_bizible_marketing_channel_path
     description: '{{ doc("dim_bizible_marketing_channel_path") }}'
@@ -3077,6 +2612,7 @@ models:
       - name: event_count
         tests:
           - not_null
+
   - name: dim_issue_links
     description: '{{ doc("dim_issue_links") }}'
     columns:

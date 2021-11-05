@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_contact','zuora_contact_source')
@@ -14,7 +18,7 @@
     SELECT *
     FROM {{ ref('zuora_account_snapshots_source') }}
     WHERE is_deleted = FALSE
-      AND LOWER(batch) != 'batch20'
+      AND LOWER(live_batch) != 'batch20'
 
 ), zuora_account_spined AS (
 
@@ -39,6 +43,8 @@
       zuora_account_spined.sfdc_account_code,
       zuora_account_spined.currency                                AS account_currency,
       zuora_contact.country                                        AS sold_to_country,
+      zuora_account_spined.ssp_channel,
+      zuora_account_spined.po_required,
       zuora_account_spined.is_deleted,
       zuora_account_spined.batch
     FROM zuora_account_spined
@@ -59,7 +65,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-08-09",
-    updated_date="2021-08-09"
+    updated_date="2021-10-21"
 ) }}

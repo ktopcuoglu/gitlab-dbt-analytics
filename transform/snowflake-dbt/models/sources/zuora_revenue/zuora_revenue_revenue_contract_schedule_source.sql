@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH zuora_revenue_revenue_contract_schedule AS (
 
     SELECT *

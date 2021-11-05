@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "mart_retention_parent_account_snapshot_id",
         "tags": ["edm_snapshot", "arr_snapshots"],
-        "schema": "common_mart_sales"
+        "schema": "restricted_safe_common_mart_sales"
     })
 }}
 
@@ -23,7 +23,7 @@ WITH snapshot_dates AS (
 
     SELECT
       *
-    FROM {{ ref('mart_retention_parent_account_snapshot_base') }}
+    FROM {{ ref('prep_mart_retention_parent_account_snapshot_base') }}
 
 ), mart_retention_parent_account_spined AS (
 

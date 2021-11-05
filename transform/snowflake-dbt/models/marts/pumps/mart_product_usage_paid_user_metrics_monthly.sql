@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_product"
   })
@@ -8,7 +12,8 @@
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
     ('crm_accounts','dim_crm_account'),
-    ('location_country', 'dim_location_country')
+    ('location_country', 'dim_location_country'),
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , sm_paid_user_metrics AS (
@@ -22,6 +27,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
+      subscriptions.subscription_status,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -136,6 +142,10 @@
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
+    LEFT JOIN subscriptions
+      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
+      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
 ), saas_paid_user_metrics AS (
 
@@ -148,21 +158,22 @@
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
+      subscriptions.subscription_status,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
-      NULL                                                                          AS instance_type,
+      monthly_saas_metrics.instance_type                                            AS instance_type,
       NULL                                                                          AS cleaned_version,
       NULL                                                                          AS country_name,
       NULL                                                                          AS iso_2_country_code,
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
       -- Wave 1
-      monthly_saas_metrics.subscription_seats,
+      monthly_saas_metrics.license_utilization,
       monthly_saas_metrics.billable_user_count,
       NULL                                                                          AS active_user_count,
-      monthly_saas_metrics.license_utilization,
       monthly_saas_metrics.max_historical_user_count,
+      monthly_saas_metrics.subscription_seats,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       monthly_saas_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -260,6 +271,10 @@
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
+    LEFT JOIN subscriptions
+      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
 
@@ -278,7 +293,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@chrissharp",
     created_date="2021-06-11",
-    updated_date="2021-07-21"
+    updated_date="2021-10-21"
 ) }}

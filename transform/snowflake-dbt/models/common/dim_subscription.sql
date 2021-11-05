@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH prep_amendment AS (
 
   SELECT *
@@ -32,7 +36,7 @@ WITH prep_amendment AS (
     --Common Dimension Keys
     subscription.dim_crm_account_id,
     subscription.dim_billing_account_id,
-    subscription.dim_crm_person_id_invoice_owner,
+    subscription.dim_billing_account_id_invoice_owner,
     subscription.dim_crm_opportunity_id,
     {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}       AS dim_amendment_id_subscription,
 
@@ -43,6 +47,8 @@ WITH prep_amendment AS (
     subscription.dim_subscription_id_previous,
     subscription.subscription_name_slugify,
     subscription.subscription_status,
+    subscription.namespace_id,
+    subscription.namespace_name,
     subscription.zuora_renewal_subscription_name,
     subscription.zuora_renewal_subscription_name_slugify,
     subscription.current_term,
@@ -92,7 +98,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2020-12-16",
-    updated_date="2021-08-04"
+    updated_date="2021-09-06"
 ) }}

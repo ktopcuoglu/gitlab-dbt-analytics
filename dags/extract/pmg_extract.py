@@ -23,7 +23,14 @@ from kube_secrets import (
 from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
-pod_env_vars = {"CI_PROJECT_DIR": "/analytics"}
+GIT_BRANCH = env["GIT_BRANCH"]
+pod_env_vars = {
+    "SNOWFLAKE_LOAD_DATABASE": "RAW"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}_RAW",
+    "CI_PROJECT_DIR": "/analytics",
+}
+
 
 default_args = {
     "catchup": True,

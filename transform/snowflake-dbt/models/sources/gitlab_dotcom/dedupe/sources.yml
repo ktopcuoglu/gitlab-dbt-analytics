@@ -42,6 +42,8 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 30, period: day}
+      - name: award_emoji
+        identifier: gitlab_db_award_emoji
       - name: board_assignees
         identifier: gitlab_db_board_assignees
         freshness: null
@@ -204,6 +206,8 @@ sources:
         identifier: gitlab_db_lists
       - name: members
         identifier: gitlab_db_members
+      - name: merge_request_blocks 
+        identifier: gitlab_db_merge_request_blocks  
       - name: merge_request_diffs
         identifier: gitlab_db_merge_request_diffs
       - name: merge_request_metrics
@@ -218,6 +222,8 @@ sources:
         identifier: gitlab_db_milestones
       - name: namespace_root_storage_statistics
         identifier: gitlab_db_namespace_root_storage_statistics
+      - name: namespace_settings
+        identifier:  gitlab_db_namespace_settings     
       - name: namespace_statistics
         identifier: gitlab_db_namespace_statistics
       - name: namespaces
@@ -292,6 +298,8 @@ sources:
         identifier: gitlab_db_resource_milestone_events
       - name: resource_weight_events
         identifier: gitlab_db_resource_weight_events
+      - name: routes
+        identifier: gitlab_db_routes
       - name: saml_providers
         identifier: gitlab_db_saml_providers
       - name: services
@@ -350,6 +358,11 @@ sources:
         freshness:
           warn_after: { count: 14, period: day }
           error_after: { count: 30, period: day }
+      - name: bulk_import_entities
+        identifier: gitlab_db_bulk_import_entities
+        freshness:
+          warn_after: { count: 10, period: day }
+          error_after: { count: 15, period: day }
       - name: cluster_agent_tokens
         identifier: gitlab_db_cluster_agent_tokens
         freshness: null
@@ -366,6 +379,8 @@ sources:
         freshness: null
       - name: container_expiration_policies
         identifier: gitlab_db_container_expiration_policies
+      - name: compliance_management_frameworks
+        identifier: gitlab_db_compliance_management_frameworks
       - name: csv_issue_imports
         identifier: gitlab_db_csv_issue_imports
       - name: geo_nodes
@@ -381,6 +396,9 @@ sources:
           error_after: {count: 14, period: day}
       - name: group_import_states
         identifier: gitlab_db_group_import_states
+      - name: integrations
+        identifier: gitlab_db_integrations
+        freshness: null
       - name: issues_prometheus_alert_events
         identifier: gitlab_db_issues_prometheus_alert_events
         freshness: null
@@ -446,6 +464,9 @@ sources:
         identifier: gitlab_db_uploads
       - name: users_ops_dashboard_projects
         identifier: gitlab_db_users_ops_dashboard_projects
+      - name: web_hooks
+        identifier: gitlab_db_web_hooks
+        freshness: null
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
         freshness:

@@ -7,6 +7,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - crm_accounts_pricing_eoa
+  - name: ecommerce_expanded
+    owner: '@jeanpeguero'
+    tabs:
+      - ecommerce_expanded
   - name: frontend_interview_metrics
     owner: '@andr3'
     tabs:
@@ -32,6 +36,11 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - pricing_list
+  - name: pte_scores
+    owner: '@Kevin Dietz'
+    tabs:
+      - pte_scores_20211013
+      - pte_scores_20211101
   - name: q4fy2021_system_usability_scale_results
     owner: '@rbacovic'
     tabs:

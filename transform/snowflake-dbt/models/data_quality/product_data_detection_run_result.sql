@@ -1,11 +1,7 @@
-{{config({
-   "schema": "data_quality",
-   "materialized": "table",
-   "tags": ["product"]
- })
-}}
- 
- 
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH detection_rule AS (
  
     SELECT *

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {%- set gmau_metrics = dbt_utils.get_query_results_as_dict(
     "SELECT DISTINCT
        group_name || '_' || sql_friendly_name   AS name,

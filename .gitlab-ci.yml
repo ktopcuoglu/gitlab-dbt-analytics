@@ -78,6 +78,16 @@ include:
     - manage_snowflake.py manage_clones --force --database prod
     - manage_snowflake.py manage_clones --force --database prep
 
+📈⚙clone_prep_specific_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database prep--schema $SCHEMA_NAME
+
+📈⚙clone_prod_specific_schema:
+  <<: *snowflake_start_clone
+  script:
+    - manage_snowflake.py manage_clones --database prod --schema $SCHEMA_NAME
+
 🥩clone_raw_full:
   <<: *snowflake_start_clone
   script:
@@ -124,7 +134,7 @@ clone_stop:
 
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.13
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20
   tags:
     - analytics
   only:
@@ -184,7 +194,7 @@ python_pytest:
     - analytics
   only:
     changes:
-      - "load/snowflake/roles.yml"
+      - "permissions/snowflake/roles.yml"
     refs:
       - merge_request
   allow_failure: true
@@ -192,7 +202,7 @@ python_pytest:
 yaml_validation:
   <<: *yaml_validate
   script:
-    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < load/snowflake/roles.yml
+    - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml
 
 .permifrost: &permifrost
   stage: 🐍 Python
@@ -207,7 +217,7 @@ yaml_validation:
 permifrost_manual:
   <<: *permifrost
   script:
-    - permifrost grant load/snowflake/roles.yml --diff --dry
+    - permifrost grant permissions/snowflake/roles.yml --diff --dry
   when: manual
 
 # ======

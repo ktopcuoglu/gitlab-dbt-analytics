@@ -72,12 +72,16 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      last_utm_content,
+      last_utm_campaign,
       sequence_step_type,
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
       region,
+      NULL                                          AS country,
+      mailing_country,
       last_activity_date,
 
       NULL                                          AS crm_partner_id
@@ -121,12 +125,16 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      last_utm_content,
+      last_utm_campaign,
       sequence_step_type,
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
       region,
+      country,
+      NULL                                      AS mailing_country,
       last_activity_date,
 
       crm_partner_id
@@ -136,12 +144,29 @@ WITH biz_person AS (
       ON sfdc_leads.lead_id = biz_person_with_touchpoints.bizible_lead_id
     WHERE is_converted = 'FALSE'
 
+), duplicates AS (
+
+    SELECT 
+      dim_crm_person_id
+    FROM crm_person_final
+    GROUP BY 1
+    HAVING COUNT(*) > 1
+
+), final AS (
+
+    SELECT *
+    FROM crm_person_final
+    WHERE dim_crm_person_id NOT IN (
+                                    SELECT *
+                                    FROM duplicates
+                                      )
+
 )
 
 {{ dbt_audit(
-    cte_ref="crm_person_final",
+    cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2020-12-08",
-    updated_date="2021-06-23"
+    updated_date="2021-10-27"
 ) }}
