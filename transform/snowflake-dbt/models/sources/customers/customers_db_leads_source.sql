@@ -17,7 +17,7 @@ WITH source AS (
       trial_users_count::NUMBER       AS trial_users_count,
       opt_in::BOOLEAN                 AS opt_in,
       currently_in_trial::BOOLEAN     AS currently_in_trial,
-      is_for_business_use::BOOLEAN    AS is_for_business_use
+      is_for_business_use::BOOLEAN    AS is_for_business_use,
       first_name::VARCHAR             AS first_name,
       last_name::VARCHAR              AS last_name,
       email::VARCHAR                  AS email,

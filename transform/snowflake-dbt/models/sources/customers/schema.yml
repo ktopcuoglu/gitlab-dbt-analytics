@@ -76,10 +76,10 @@ models:
       - name: last_name
         meta:
           sensitive: true
-      - name: email_name
+      - name: email
         meta:
           sensitive: true
-      - name: phone_name
+      - name: phone
         meta:
           sensitive: true
       - name: company_name
