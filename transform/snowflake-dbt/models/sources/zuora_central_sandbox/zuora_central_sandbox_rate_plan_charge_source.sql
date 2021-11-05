@@ -31,8 +31,8 @@ WITH source AS (
       -- info
       effective_start_date                                  AS effective_start_date,
       effective_end_date                                    AS effective_end_date,
-      date_trunc('month', effective_start_month)::DATE      AS effective_start_month,
-      date_trunc('month', effective_end_month)::DATE        AS effective_end_month,
+      date_trunc('month', effective_start_date)::DATE       AS effective_start_month,
+      date_trunc('month', effective_end_date)::DATE         AS effective_end_month,
       end_date_condition                                    AS end_date_condition,
 
       mrr                                                   AS mrr,
@@ -49,7 +49,7 @@ WITH source AS (
       billing_period_alignment                              AS billing_period_alignment,
       charged_through_date                                  AS charged_through_date,
       charge_model                                          AS charge_model,
-      rate_plan_charge_number                               AS rate_plan_charge_number,
+      charge_number                                         AS rate_plan_charge_number,
       charge_type                                           AS charge_type,
       description                                           AS description,
       discount_level                                        AS discount_level,
@@ -67,7 +67,7 @@ WITH source AS (
       specific_end_date                                     AS specific_end_date,
       trigger_date                                          AS trigger_date,
       trigger_event                                         AS trigger_event,
-      up_to_period                                          AS up_to_period,
+      up_to_periods                                         AS up_to_period,
       up_to_periods_type                                    AS up_to_periods_type,
       version                                               AS version,
 

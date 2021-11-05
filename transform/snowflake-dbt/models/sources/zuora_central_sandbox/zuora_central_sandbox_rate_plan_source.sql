@@ -13,8 +13,8 @@ WITH source AS (
       product_id                    AS product_id,
       product_rate_plan_id          AS product_rate_plan_id,
       -- info
-      amendement_id                 AS amendement_id,
-      amendement_type               AS amendement_type,
+      amendment_id                  AS amendment_id,
+      amendment_type                AS amendment_type,
 
       --metadata
       updated_by_id                 AS updated_by_id,

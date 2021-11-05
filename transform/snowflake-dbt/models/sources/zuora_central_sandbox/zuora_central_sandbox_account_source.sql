@@ -33,7 +33,7 @@ WITH source AS (
       credit_balance                                         AS credit_balance,
       bill_cycle_day                                         AS bill_cycle_day,
       currency                                               AS currency,
-      conversionrate_c                                       AS sfdc_conversion_rate,
+      conversion_rate_c                                      AS sfdc_conversion_rate,
       payment_term                                           AS payment_term,
 
       allow_invoice_edit                                     AS allow_invoice_edit,
