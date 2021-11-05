@@ -19,6 +19,9 @@ ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.2
 DATASCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
 DATASCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
+PROPENSITY_TO_BUY_SSH_REPO = "git@gitlab.com:gitlab-data/propensity-to-buy.git"
+PROPENSITY_TO_BUY_HTTP_REPO = "https://gitlab.com/gitlab-data/propensity-to-buy.git"
+
 def split_date_parts(day: date, partition: str) -> Dict:
 
     if partition == "month":
@@ -316,16 +319,16 @@ clone_datascience_repo_cmd = f"""
         export GIT_COMMIT="HEAD"
     fi
     if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
-        export REPO="{DATASCIENCE_HTTP_REPO}";
+        export REPO="{PROPENSITY_TO_BUY_SSH_REPO}";
         else
-        export REPO="{DATASCIENCE_SSH_REPO}";
+        export REPO="{PROPENSITY_TO_BUY_HTTP_REPO}";
     fi &&
     echo "git clone -b add_deployments_folder --single-branch --depth 1 $REPO" &&
     git clone -b add_deployments_folder --single-branch --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
-    cd data-science &&
+    cd propensity-to-buy &&
     git checkout $GIT_COMMIT &&
-    cd .."""
+    cd prod"""
 
 
 def number_of_dbt_threads_argument(number_of_threads):
