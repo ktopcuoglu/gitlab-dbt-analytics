@@ -14,11 +14,11 @@ WITH source AS (
       sku::VARCHAR                      AS sku,
       description::VARCHAR              AS product_description,
       category::VARCHAR                 AS category,
-      updatedbyid::VARCHAR              AS updated_by_id,
-      updateddate::TIMESTAMP_TZ         AS updated_date,
-      deleted                           AS is_deleted,
-      effectivestartdate                AS effective_start_date,
-      effectiveenddate                  AS effective_end_date
+      updated_by_id::VARCHAR            AS updated_by_id,
+      updated_date::TIMESTAMP_TZ        AS updated_date,
+      _FIVETRAN_DELETED                 AS is_deleted,
+      effective_start_date              AS effective_start_date,
+      effective_end_date                AS effective_end_date
 
     FROM source
 

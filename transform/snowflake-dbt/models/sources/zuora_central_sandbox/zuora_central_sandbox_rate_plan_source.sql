@@ -6,22 +6,22 @@ WITH source AS (
 ), renamed AS(
 
     SELECT
-      id                  AS rate_plan_id,
-      name                AS rate_plan_name,
+      id                            AS rate_plan_id,
+      name                          AS rate_plan_name,
       --keys
-      subscriptionid      AS subscription_id,
-      productid           AS product_id,
-      productrateplanid   AS product_rate_plan_id,
+      subscription_id               AS subscription_id,
+      product_id                    AS product_id,
+      product_rate_plan_id          AS product_rate_plan_id,
       -- info
-      amendmentid         AS amendement_id,
-      amendmenttype       AS amendement_type,
+      amendement_id                 AS amendement_id,
+      amendement_type               AS amendement_type,
 
       --metadata
-      updatedbyid         AS updated_by_id,
-      updateddate         AS updated_date,
-      createdbyid         AS created_by_id,
-      createddate         AS created_date,
-      deleted             AS is_deleted
+      updated_by_id                 AS updated_by_id,
+      updated_date                  AS updated_date,
+      created_by_id                 AS created_by_id,
+      created_date                  AS created_date,
+      _FIVETRAN_DELETED             AS is_deleted
 
     FROM source
 
