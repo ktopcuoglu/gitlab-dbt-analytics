@@ -364,6 +364,16 @@ tables:
       , created_at
       , state
       FROM merge_request_reviewers
+  milestone_releases:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'milestone_releases'
+    export_table_primary_key: milestone_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT milestone_id
+      , release_id
+      FROM milestone_releases
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true

@@ -177,6 +177,19 @@ tables:
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  banned_users:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'banned_users'
+    export_table_primary_key: user_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , created_at
+      , updated_at
+      FROM banned_users
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   boards:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -410,6 +423,36 @@ tables:
       , namespace
       , service_account_name
       FROM clusters_kubernetes_namespaces
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  clusters_integration_elasticstack:
+    export_schema: 'gitlab_com'
+    export_table: 'clusters_integration_elasticstack'
+    export_table_primary_key: cluster_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT cluster_id
+      , enabled
+      , chart_version
+      , created_at
+      , updated_at
+      FROM clusters_integration_elasticstack
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  clusters_integration_prometheus:
+    export_schema: 'gitlab_com'
+    export_table: 'clusters_integration_prometheus'
+    export_table_primary_key: cluster_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT cluster_id
+      , enabled
+      , encrypted_alert_manager_token
+      , encrypted_alert_manager_token_iv
+      , health_status
+      , created_at
+      , updated_at
+      FROM clusters_integration_prometheus
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   container_expiration_policies:
@@ -1215,6 +1258,7 @@ tables:
       , auto_devops_enabled
       , push_rule_id
       , shared_runners_enabled
+      , custom_project_templates_group_id
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1805,6 +1849,10 @@ tables:
       , updated_at
       , build_id
       , scan_type
+      , project_id
+      , pipeline_id
+      , latest
+      , status
       FROM security_scans
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
