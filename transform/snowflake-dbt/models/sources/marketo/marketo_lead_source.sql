@@ -15,6 +15,7 @@ WITH source AS (
       last_name::VARCHAR                        AS last_name,
       company::VARCHAR                          AS company_name,
       title::VARCHAR                            AS job_title,
+      {{it_job_title_hierarchy('job_title')}},
       country::VARCHAR                          AS country,
       inactive_lead_c::BOOLEAN                  AS is_lead_inactive,
       inactive_contact_c::BOOLEAN               AS is_contact_inactive,
@@ -22,9 +23,11 @@ WITH source AS (
       is_email_bounced::BOOLEAN                 AS is_email_bounced,
       email_bounced_date::DATE                  AS email_bounced_date,
       unsubscribed::BOOLEAN                     AS is_unsubscribed,
-      compliance_segment_value::VARCHAR         AS compliance_segment_value
+      compliance_segment_value::VARCHAR         AS compliance_segment_value,
+      updated_at::TIMESTAMP                     AS updated_at
 
     FROM source
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY id ORDER BY updated_at DESC) = 1
 
 )
 
