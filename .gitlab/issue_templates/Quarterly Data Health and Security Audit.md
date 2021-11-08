@@ -124,23 +124,32 @@ SISENSE
    * [ ] Run below SQL script to perform the check.
 
    ```sql
+      WITH final as (
+         SELECT users.id, 
+            first_name, 
+            last_name, 
+            email_address, 
+            MAX(DATE(time_on_site_logs.created_at)) AS last_login_date  
+         FROM time_on_site_logs
+         JOIN users
+         --inner join between time_on_site_logs and users. This means if a user never performed a login, it will not show up in the results
+         --improvement point for next iteration check for users that were created over 90 days ago and that didn't perform a login.
+         ON time_on_site_logs.USER_ID = users.ID
+         LEFT OUTER JOIN user_roles
+         ON users.id = user_roles.user_id
+         LEFT OUTER JOIN roles
+         ON user_roles.role_id = roles.id
+         LEFT OUTER JOIN spaces
+         ON roles.space_id = spaces.id
+         --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+         WHERE roles.name = 'Everyone'
+         GROUP BY 1,2,3,4
+      )
 
-    WITH final AS (
-       SELECT
-          time_on_site_logs.user_id,
-          users.first_name,
-          users.last_name,
-          MAX(date(time_on_site_logs.created_at)) AS last_login_date
-       FROM time_on_site_logs
-       INNER JOIN users
-       ON time_on_site_logs.USER_ID = users.ID
-       GROUP BY 1,2,3
-    )
-
-       SELECT * 
-       FROM final
-       WHERE last_login_date < CURRENT_DATE-90 ;
-
+      SELECT * 
+      FROM final
+      WHERE last_login_date < CURRENT_DATE-90
+      ORDER BY last_name;
    ```
 
 
