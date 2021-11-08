@@ -1,5 +1,4 @@
 
-
 Please take notice of the new data source request [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/) before submitting this new data source request. If you have any questions, please ask in the #data slack channel. 
 
 ## Business Use Case (Please explain what this data will be used for):
@@ -9,7 +8,11 @@ Please take notice of the new data source request [handbook page](https://about.
 * [ ] Prefix the issue name with 'New Data Source: ', e.g. 'New Data Source: NetSuite AP data'
 * [ ] Review the [current data available in the EDW](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) and confirm the data does no already exist
 * [ ] Do any objects in this data source need to be snapshotted? If yes, please open separate issues to have the objects snapshotted.
-
+* [ ] Does it contain MNPI data?
+* [ ] Does it contain PII data?
+* [ ] Severity in case of an incident
+   - [ ]
+   - 
 
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
   - _`{data fields, columns, or objects}`_
@@ -26,6 +29,8 @@ Please take notice of the new data source request [handbook page](https://about.
 | Business users who need to be informed in case of data outage | `Please provide` | `Please provide` | 
 
 * Data access approval will be involved in the Access Request proces and need to give approval if a GitLab team members applies for raw data access.
+
+
 
 ## Integration Preparation 
 
@@ -50,6 +55,8 @@ use contact the Data Engineer assigned below for confirmation.
   * [ ] If using one of our third party API handlers (Stitch/FiveTran) the integration should be confirmed to be up and running
   * [ ] If writing a custom API integration the API endpoints should be confirmed to be active and returning expected data. 
  
+
+
 
 **Admin**
   * [ ] Create issue for creation of extract process (not needed if using Stitch/FiveTran)
