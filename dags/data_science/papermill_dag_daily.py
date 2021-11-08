@@ -45,7 +45,7 @@ dag = DAG("papermill_daily", default_args=default_args, schedule_interval="0 5 *
 drop_clones_cmd = f"""
     {clone_datascience_repo_cmd} &&
     cd data-science/deployments/daily && 
-    papermill scoring_code.ipynb && 
+    papermill scoring_code.ipynb
 """
 KubernetesPodOperator(
         **gitlab_defaults,
