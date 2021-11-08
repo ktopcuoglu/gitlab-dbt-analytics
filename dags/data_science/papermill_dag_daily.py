@@ -17,7 +17,6 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    SNOWFLAKE_LOAD_DATABASE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -45,8 +44,8 @@ dag = DAG("papermill_daily", default_args=default_args, schedule_interval="0 5 *
 # Task 1
 drop_clones_cmd = f"""
     {clone_datascience_repo_cmd} &&
-    cd data-science/deployments/daily
-    papermill scoring_code.ipynb
+    cd data-science/deployments/daily && 
+    papermill scoring_code.ipynb && 
 """
 KubernetesPodOperator(
         **gitlab_defaults,
@@ -54,11 +53,11 @@ KubernetesPodOperator(
         task_id="papermill-daily",
         name="papermill-daily",
         secrets=[
-            SNOWFLAKE_LOAD_USER,
-            SNOWFLAKE_LOAD_PASSWORD,
             SNOWFLAKE_ACCOUNT,
-            SNOWFLAKE_LOAD_DATABASE,
+            SNOWFLAKE_LOAD_ROLE,
+            SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
+            SNOWFLAKE_LOAD_PASSWORD,
         ],
         env_vars=pod_env_vars,
         arguments=[drop_clones_cmd],
