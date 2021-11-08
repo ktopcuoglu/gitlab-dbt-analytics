@@ -50,7 +50,7 @@ rspec_profiler_extract_cmd = f"""
     curl https://gitlab-org.gitlab.io/rspec_profiling_stats/overall_time.csv > overall_time.csv
     python3 sheetload/sheetload.py csv --filename overall_time.csv --schema rspec --tablename overall_time
 """
-pte_scores
+
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
 rspec_profiler_extract = KubernetesPodOperator(
     **gitlab_defaults,
