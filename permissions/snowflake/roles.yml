@@ -2215,7 +2215,15 @@ roles:
             - restricted_safe
             - data_team_analyst
         warehouses:
-            - analyst_xs          
+            - analyst_xs  
+
+    - chauenstein:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - analyst_xs        
 
     - cli: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -4181,6 +4189,11 @@ users:
         can_login: yes
         member_of:
             - cbraza
+
+    - chauenstein:
+        can_login: yes
+        member_of:
+            - chauenstein
 
     - cli: # De provisioned as part of Quarterly audit and security check.
         can_login: no
