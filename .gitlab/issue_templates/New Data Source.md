@@ -1,4 +1,3 @@
-
 Please take notice of the new data source request [handbook page](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/new-data-source/) before submitting this new data source request. If you have any questions, please ask in the #data slack channel. 
 
 ## Business Use Case (Please explain what this data will be used for):
@@ -11,8 +10,10 @@ Please take notice of the new data source request [handbook page](https://about.
 * [ ] Does it contain MNPI data?
 * [ ] Does it contain PII data?
 * [ ] Severity in case of an incident
-   - [ ]
-   - 
+   - [ ] Critical - S1
+   - [ ] High - S2
+   - [ ] Medium - S3 
+   - [ ] Low - S4
 
 * [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
   - _`{data fields, columns, or objects}`_
