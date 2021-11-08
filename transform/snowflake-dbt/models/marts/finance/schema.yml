@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: mart_waterfall
+    description: Mart table replicating the waterfall report as seen in the Zuora Revenue UI. It shows how revenue is recognized over time for a given line item in a revenue contract. The grain of this table is as of period month - revenue contract line item - accounting segment - accounting type and can be summed to a higher grain if necessary.
+    columns:
+      - name: as_of_period_id
+        description: The waterfall can be seen as of a certain time period. This column allows you to filter the waterfall report to how it appeared in a given month.
+        tests:
+          - not_null
+      - name: book_name
+        description: The unique identifier of an accounting book
+      - name: organization_name
+        description: The unique identifier of an organization in Zuora Revenue
+      - name: revenue_contract_id
+        description: The unique identifier of a revenue contract
+        tests:
+          - not_null
+      - name: revenue_contract_performance_obligation_name
+        description: The unique identifier of one of the performance obligations attached to a revenue contract
+        tests:
+          - not_null
+        tests:
+          - not_null
+      - name: revenue_contract_customer_name
+        description: The name of the customer for a given revenue contract line item
+        tests:
+          - not_null
+      - name: sales_order_number
+        description: The unique identifier of a sales order.
+      - name: sales_order_line_number
+        description: The unique identifier of a line item in a sales order.
+      - name: customer_number
+        description: The unique identifier of a customer in both Zuora Revenue and Zuora Billing
+      - name: accounting_segment
+        description: The unique identifier of an accounting segment.
+      - name: accounting_type_id
+        description: The unique identifier of an accounting type

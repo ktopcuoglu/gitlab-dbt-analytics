@@ -501,6 +501,11 @@ models:
         users_emails:
           enabled: false
 
+      finance:
+        +schema: restricted_safe_common_mart_finance
+        +tags: ["safe"]
+        secure: true 
+
       product:
         +tags: ["product"]
         mart_ci_runner_activity_monthly:

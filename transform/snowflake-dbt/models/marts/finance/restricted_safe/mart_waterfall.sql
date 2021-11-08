@@ -263,8 +263,8 @@
 
 {{ dbt_audit(
     cte_ref="final_waterfall_pivot",
-    created_by="@mcooper",
-    updated_by="@mcooper",
-    created_date="2021-08-17",
-    updated_date="2021-08-17"
+    created_by="@michellecooper",
+    updated_by="@michellecooper",
+    created_date="2021-11-08",
+    updated_date="2021-11-08"
 ) }}
