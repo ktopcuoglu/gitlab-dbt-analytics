@@ -42,7 +42,7 @@ default_args = {
 dag = DAG("papermill_daily", default_args=default_args, schedule_interval="0 5 * * 0")
 
 # Task 1
-drop_clones_cmd = f"""
+pte_scoring_command = f"""
     {clone_datascience_repo_cmd} &&
     cd data-science/deployments/pte && 
     papermill scoring_code.ipynb
@@ -60,6 +60,6 @@ KubernetesPodOperator(
             SNOWFLAKE_LOAD_PASSWORD,
         ],
         env_vars=pod_env_vars,
-        arguments=[drop_clones_cmd],
+        arguments=[pte_scoring_command],
         dag=dag,
 )
