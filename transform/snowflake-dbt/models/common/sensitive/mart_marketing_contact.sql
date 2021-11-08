@@ -172,7 +172,9 @@ WITH marketing_contact AS (
         ELSE FALSE 
       END                                                                                        AS is_zuora_billing_contact,
       MIN(marketing_contact_order.days_since_saas_trial_ended)                                   AS days_since_saas_trial_ended,
+      MIN(marketing_contact_order.days_since_saas_trial_ended_bucket)                            AS days_since_saas_trial_ended_bucket,
       MAX(marketing_contact_order.days_until_saas_trial_ends)                                    AS days_until_saas_trial_ends,
+      MAX(marketing_contact_order.days_until_saas_trial_ends_bucket)                             AS days_until_saas_trial_ends_bucket,
       CASE 
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 1 
@@ -497,11 +499,13 @@ WITH marketing_contact AS (
       marketing_contact.gitlab_dotcom_last_login_date,
       marketing_contact.gitlab_dotcom_email_opted_in,
       marketing_contact.days_since_saas_signup,
+      marketing_contact.days_since_saas_signup_bucket,
       marketing_contact.is_customer_db_user,
       marketing_contact.customer_db_customer_id,
       marketing_contact.customer_db_created_date,
       marketing_contact.customer_db_confirmed_date,
       marketing_contact.days_since_self_managed_owner_signup,
+      marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
@@ -569,8 +573,8 @@ WITH marketing_contact AS (
       'is_individual_namespace_owner',
       'is_customer_db_owner',
       'is_zuora_billing_contact',
-      'days_since_saas_trial_ended',
-      'days_until_saas_trial_ends',
+      'days_since_saas_trial_ended_bucket',
+      'days_until_saas_trial_ends_bucket',
       'individual_namespace_is_saas_trial',
       'individual_namespace_is_saas_free_tier',
       'individual_namespace_is_saas_bronze_tier',

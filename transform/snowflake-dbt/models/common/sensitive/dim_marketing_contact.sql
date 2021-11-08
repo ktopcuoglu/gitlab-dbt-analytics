@@ -13,6 +13,11 @@ WITH sfdc_lead AS (
     SELECT *
     FROM {{ref('sfdc_account_source') }}
 
+), marketo AS (
+
+    SELECT *
+    FROM {{ref('marketo_lead_source') }}
+    
 ), crm_account AS (
 
     SELECT *
@@ -110,6 +115,31 @@ WITH sfdc_lead AS (
       AND email_address <> ''
     QUALIFY record_number = 1
 
+), marketo_lead AS (
+
+    SELECT
+      marketo_lead_id,
+      email                                                                             AS email_address,
+      first_name,
+      last_name,
+      IFF(company_name = '[[unknown]]', NULL, company_name)                             AS company_name,
+      job_title,
+      it_job_title_hierarchy,
+      country,
+      is_lead_inactive,
+      is_contact_inactive,
+      IFF(sales_segmentation = 'Unknown', NULL, sales_segmentation)                     AS sales_segmentation,
+      is_email_bounced,
+      email_bounced_date,
+      is_unsubscribed,
+      compliance_segment_value,
+      (ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC))                 AS record_number
+
+    FROM marketo
+    WHERE email IS NOT NULL
+      OR  email <> ''
+    QUALIFY record_number = 1
+  
 ), gitlab_dotcom AS (
 
     SELECT
@@ -167,7 +197,7 @@ WITH sfdc_lead AS (
         WHEN zuora_contact_source.is_deleted = TRUE THEN 'Inactive'
         ELSE 'Active'
       END                                                                                                                   AS active_state,
-      (ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY zuora_contact_source.created_date DESC))                                           AS record_number
+      (ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY zuora_contact_source.created_date DESC))                      AS record_number
     FROM zuora_contact_source
     INNER JOIN zuora_account_source
       ON zuora_account_source.account_id = zuora_contact_source.account_id
@@ -178,42 +208,54 @@ WITH sfdc_lead AS (
 
 ), emails AS (
 
-    SELECT DISTINCT
-      email_address
+    SELECT email_address
     FROM sfdc
 
     UNION
 
-    SELECT DISTINCT
-      email_address
+    SELECT email_address
     FROM gitlab_dotcom
 
     UNION
 
-    SELECT DISTINCT
-      email_address
+    SELECT email_address
     FROM customer_db
 
     UNION
 
-    SELECT DISTINCT
-      email_address
+    SELECT email_address
     FROM zuora
+
+    UNION
+
+    SELECT email_address
+    FROM marketo_lead
 
 ), final AS (
 
     SELECT
       {{ dbt_utils.surrogate_key(['emails.email_address']) }}                                                            AS dim_marketing_contact_id,
       emails.email_address,
-      COALESCE(zuora.first_name, sfdc.first_name, customer_db.first_name, gitlab_dotcom.first_name)                      AS first_name,
-      COALESCE(zuora.last_name, sfdc.last_name, customer_db.last_name, gitlab_dotcom.last_name)                          AS last_name,
+      COALESCE(zuora.first_name, marketo_lead.first_name, sfdc.first_name, customer_db.first_name, gitlab_dotcom.first_name) 
+                                                                                                                         AS first_name,
+      COALESCE(zuora.last_name, marketo_lead.last_name, sfdc.last_name, customer_db.last_name, gitlab_dotcom.last_name)  AS last_name,
       gitlab_dotcom.user_name                                                                                            AS gitlab_user_name,
-      COALESCE(zuora.company_name,  sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)             AS company_name,
-      COALESCE(sfdc.job_title, gitlab_dotcom.job_title)                                                                  AS job_title,
-      IFF(sfdc.job_title IS NOT NULL, sfdc.it_job_title_hierarchy, gitlab_dotcom.it_job_title_hierarchy)                 AS it_job_title_hierarchy,
-      COALESCE(zuora.country, sfdc.country, customer_db.country)                                                         AS country,
+      COALESCE(zuora.company_name,  marketo_lead.company_name, sfdc.company_name, customer_db.company_name, gitlab_dotcom.company_name)
+                                                                                                                         AS company_name,
+      COALESCE(marketo_lead.job_title, sfdc.job_title, gitlab_dotcom.job_title)                                          AS job_title,
+      CASE
+        WHEN marketo_lead.job_title IS NOT NULL THEN marketo_lead.it_job_title_hierarchy
+        WHEN sfdc.job_title IS NOT NULL THEN sfdc.it_job_title_hierarchy
+        ELSE gitlab_dotcom.it_job_title_hierarchy
+      END                                                                                                                AS it_job_title_hierarchy,
+      COALESCE(zuora.country, marketo_lead.country, sfdc.country, customer_db.country)                                   AS country,
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
       COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,
+      IFF(marketo_lead.email_address IS NOT NULL, TRUE, FALSE)                                                           AS is_marketo_lead,
+      marketo_lead.is_email_bounced                                                                                      AS is_email_hard_bounced,
+      marketo_lead.email_bounced_date                                                                                    AS email_hard_bounced_date,
+      marketo_lead.is_unsubscribed                                                                                       AS is_marketo_opted_out,
+      marketo_lead.compliance_segment_value                                                                              AS compliance_segment_value,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
@@ -235,6 +277,7 @@ WITH sfdc_lead AS (
       gitlab_dotcom.last_login_date                                                                                      AS gitlab_dotcom_last_login_date,
       gitlab_dotcom.email_opted_in                                                                                       AS gitlab_dotcom_email_opted_in,
       DATEDIFF(DAY, gitlab_dotcom.confirmed_date, GETDATE())                                                             AS days_since_saas_signup,
+      {{ days_buckets('days_since_saas_signup') }}                                                                       AS days_since_saas_signup_bucket,
       CASE
         WHEN customer_db.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
@@ -243,6 +286,7 @@ WITH sfdc_lead AS (
       customer_db.created_date                                                                                           AS customer_db_created_date,
       customer_db.confirmed_date                                                                                         AS customer_db_confirmed_date,
       DATEDIFF(DAY, customer_db.confirmed_date, GETDATE())                                                               AS days_since_self_managed_owner_signup,
+      {{ days_buckets('days_since_self_managed_owner_signup') }}                                                         AS days_since_self_managed_owner_signup_bucket,
       CASE
         WHEN zuora.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
@@ -270,6 +314,8 @@ WITH sfdc_lead AS (
       ON customer_db.email_address = emails.email_address
     LEFT JOIN zuora
       ON zuora.email_address = emails.email_address
+    LEFT JOIN marketo_lead
+      ON marketo_lead.email_address = emails.email_address
     LEFT JOIN dnc_list
       ON dnc_list.email_address = emails.email_address
 
@@ -280,5 +326,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2021-10-14"
+    updated_date="2021-11-07"
 ) }}
