@@ -3372,6 +3372,7 @@ roles:
         member_of:
             - analyst_sales
             - restricted_safe
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
