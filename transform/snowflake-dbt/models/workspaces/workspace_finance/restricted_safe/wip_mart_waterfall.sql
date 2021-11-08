@@ -6,11 +6,20 @@
     ('rb', 'zuora_revenue_book_source'),
     ('org', 'zuora_revenue_organization_source'),
     ('cal', 'zuora_revenue_calendar_source'),
-    ('schd', 'zuora_revenue_revenue_contract_schedule_source'),
-    ('zuora_account', 'zuora_account_source')
+    ('deleted_schedules', 'zuora_revenue_revenue_contract_schedule_deleted_source'),
+    ('zuora_account', 'zuora_account_source'),
+    ('zuora_contact_source', 'zuora_contact_source')
 ]) }}
   
-, waterfall_summary AS (
+, schd AS (
+
+    SELECT zuora_revenue_revenue_contract_schedule_source.* 
+    FROM "PREP".zuora_revenue.zuora_revenue_revenue_contract_schedule_source
+    LEFT JOIN deleted_schedules
+      ON zuora_revenue_revenue_contract_schedule_source.revenue_contract_schedule_id = deleted_schedules.revenue_contract_schedule_id
+    WHERE deleted_schedules.revenue_contract_schedule_id IS NULL
+
+), waterfall_summary AS (
 
     SELECT
       cal.period_id                                                                                   AS as_of_period_id,
@@ -57,11 +66,9 @@
       wf.revenue_contract_line_id,
       COALESCE(RCL.customer_name,zuora_account.account_name,RC.customer_name)   AS revenue_contract_customer_name,
       rcl.sales_order_number,
-      rcl.sales_order_line_number,
+      rcl.sales_order_line_id,
       rcl.customer_number,
-      rcl.deferred_amount,
       wf.accounting_segment,
-      wf.accounting_type_id,
       cal.period_name,
       SUM(wf.t_at)                                                              AS amount
      FROM waterfall_summary wf
@@ -84,7 +91,15 @@
        ON rcl.customer_number = zuora_account.account_number
      WHERE act.is_waterfall_account = 'Y'
        AND act.is_cost = 'N'
-    {{ dbt_utils.group_by(n=15) }}
+    {{ dbt_utils.group_by(n=13) }}
+  
+), rcl_max_prd AS (
+   
+    SELECT 
+      revenue_contract_line_id,
+      MAX(period_id)            AS rcl_max_prd_id
+    FROM waterfall
+    {{ dbt_utils.group_by(n=1) }}
   
 ), rcl_min_prd AS (
    
@@ -93,33 +108,14 @@
       MIN(period_id)            AS rcl_min_prd_id
     FROM waterfall
     {{ dbt_utils.group_by(n=1) }}
-
-), schd_max_prd AS (
-
-    SELECT 
-      MAX(period_id) AS schd_max_prd_id
-    FROM schd
   
 ), rc_max_prd AS (
 
-/* 
-  If there is deferred revenue, we want the records to repeat w/ no amount for all future periods, if not, we want it to repeat 
-  until the revenue contract is completed (i.e. all revenue is recognized).
-*/
-
     SELECT 
       revenue_contract_id,
-      schd_max_prd_id,
-      MAX(period_id)                  AS max_prd_id,
-      SUM(deferred_amount)            AS deferred_amount,
-      CASE 
-        WHEN SUM(deferred_amount) > 0
-          THEN schd_max_prd_id
-        ELSE MAX(period_id)
-      END                             AS rc_max_prd_id
+      MAX(period_id)   AS rc_max_prd_id
     FROM waterfall
-    INNER JOIN schd_max_prd
-    {{ dbt_utils.group_by(n=2) }}
+    group by 1
   
 ), last_waterfall_line AS (
 
@@ -143,15 +139,16 @@
       last_waterfall_line.revenue_contract_line_id,
       last_waterfall_line.revenue_contract_customer_name,
       last_waterfall_line.sales_order_number,
-      last_waterfall_line.sales_order_line_number,
+      last_waterfall_line.sales_order_line_id,
       last_waterfall_line.customer_number,
-      last_waterfall_line.deferred_amount,
       last_waterfall_line.accounting_segment,
-      last_waterfall_line.accounting_type_id,
+      --last_waterfall_line.accounting_type_id,
       last_waterfall_line.period_name,
       0                                                                 AS amount
     FROM last_waterfall_line
     CROSS JOIN cal
+    LEFT JOIN rcl_max_prd
+      ON last_waterfall_line.revenue_contract_line_id = rcl_max_prd.revenue_contract_line_id
     LEFT JOIN rcl_min_prd
       ON last_waterfall_line.revenue_contract_line_id = rcl_min_prd.revenue_contract_line_id
     LEFT JOIN rc_max_prd
@@ -179,13 +176,12 @@
     SELECT 
       revenue_contract_line_id,
       as_of_period_id,
-      accounting_type_id,
       accounting_segment,
       period_id, 
       SUM(amount)   AS amount
     FROM unioned_waterfall    AS waterfall
     WHERE as_of_period_id = period_id
-    {{ dbt_utils.group_by(n=5) }}
+    {{ dbt_utils.group_by(n=4) }}
   
 ), previous_revenue AS (
 
@@ -199,13 +195,12 @@
      previous_revenue_base.as_of_period_id,
      previous_revenue_base.period_id,
      previous_revenue_base.amount,
-     accounting_type_id,
      accounting_segment,
-     SUM(amount) OVER (PARTITION BY revenue_contract_line_id, accounting_type_id, accounting_segment 
+     SUM(amount) OVER (PARTITION BY revenue_contract_line_id, accounting_segment 
                         ORDER BY period_id ASC ROWS BETWEEN unbounded preceding AND 1 preceding
                       )                                                                                 AS previous_total
    FROM previous_revenue_base
-   {{ dbt_utils.group_by(n=6) }}
+   {{ dbt_utils.group_by(n=5) }}
 
 ), waterfall_with_previous_revenue AS (
 
@@ -216,7 +211,6 @@
     LEFT JOIN previous_revenue
       ON unioned_waterfall.revenue_contract_line_id = previous_revenue.revenue_contract_line_id
         AND unioned_waterfall.as_of_period_id = previous_revenue.as_of_period_id
-        AND unioned_waterfall.accounting_type_id = previous_revenue.accounting_type_id
         AND unioned_waterfall.accounting_segment = previous_revenue.accounting_segment
   
 ), final_waterfall_pivot AS (
@@ -224,17 +218,25 @@
     SELECT 
       waterfall_with_previous_revenue.as_of_period_id,
       waterfall_with_previous_revenue.book_name,
+      MAX(org.entity_id)                                                            AS entity_id,
       waterfall_with_previous_revenue.organization_name,
-      waterfall_with_previous_revenue.revenue_contract_id,
-      waterfall_with_previous_revenue.revenue_contract_performance_obligation_name,
-      waterfall_with_previous_revenue.revenue_contract_line_id,
       waterfall_with_previous_revenue.revenue_contract_customer_name,
-      waterfall_with_previous_revenue.sales_order_number,
-      waterfall_with_previous_revenue.sales_order_line_number,
-      waterfall_with_previous_revenue.customer_number,
+      MAX(rcl.subscription_name)                                                    AS subscription_name,
+      waterfall_with_previous_revenue.sales_order_line_id,
+      waterfall_with_previous_revenue.revenue_contract_id,
+      MAX(rcl.rate_plan_name)                                                       AS rate_plan_name,
+      MAX(rcl.rate_plan_charge_name)                                                AS rate_plan_charge_name,
+      waterfall_with_previous_revenue.revenue_contract_performance_obligation_name,
       waterfall_with_previous_revenue.accounting_segment,
-      waterfall_with_previous_revenue.accounting_type_id,
-      waterfall_with_previous_revenue.prior_total,
+      MAX(rcl.subscription_start_date)                                              AS subscription_start_date,
+      MAX(rcl.revenue_start_date)                                                   AS revenue_start_date,
+      MAX(rcl.revenue_end_date)                                                     AS revenue_end_date,
+      MAX(rcl.product_family)                                                       AS product_family,
+      MAX(rcl.item_number)                                                          AS item_number,
+      MAX(zuora_contact_source.country)                                             AS country,
+      MAX(rcl.subscription_end_date)                                                AS subscription_end_date,
+      waterfall_with_previous_revenue.customer_number,
+      MAX(rcl.revenue_contract_line_attribute_16)                                   AS revenue_contract_line_attribute_16,
       {{ dbt_utils.pivot(
                           'period_name', 
                           get_column_values_ordered(
@@ -242,12 +244,20 @@
                                                       column =  'period_name', 
                                                       order_by='SUM(period_id)'
                                                     ),
-                          agg = 'MAX',
+                          agg = 'SUM',
                           then_value = 'amount',
                           else_value = 0,
                           ) }}
     FROM waterfall_with_previous_revenue
-    {{ dbt_utils.group_by(n=13) }}
+    LEFT JOIN rcl
+      ON waterfall_with_previous_revenue.revenue_contract_line_id = rcl.revenue_contract_line_id
+    LEFT JOIN org
+      ON waterfall_with_previous_revenue.organization_name = org.organization_name
+    LEFT JOIN zuora_account
+      ON waterfall_with_previous_revenue.customer_number = zuora_account.account_number
+    LEFT JOIN zuora_contact_source
+      ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact_source.contact_id
+    GROUP BY 1,2,4,5,7,8,11,12,20
 
 )
 

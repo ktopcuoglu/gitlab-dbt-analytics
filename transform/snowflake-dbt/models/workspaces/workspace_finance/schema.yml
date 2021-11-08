@@ -68,8 +68,6 @@ models:
         description: The unique identifier of one of the performance obligations attached to a revenue contract
         tests:
           - not_null
-      - name: revenue_contract_line_id
-        description: The unique identifier of a line item in a revenue contract
         tests:
           - not_null
       - name: revenue_contract_customer_name
