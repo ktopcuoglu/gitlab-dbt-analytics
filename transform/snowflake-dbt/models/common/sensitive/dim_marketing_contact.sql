@@ -126,6 +126,7 @@ WITH sfdc_lead AS (
       job_title,
       it_job_title_hierarchy,
       country,
+      mobile_phone,
       is_lead_inactive,
       is_contact_inactive,
       IFF(sales_segmentation = 'Unknown', NULL, sales_segmentation)                     AS sales_segmentation,
@@ -263,7 +264,7 @@ WITH sfdc_lead AS (
       sfdc.sfdc_record_id,
       sfdc.dim_crm_account_id,
       sfdc.sfdc_lead_contact,
-      sfdc.mobile_phone,
+      COALESCE(marketo_lead.mobile_phone, sfdc.mobile_phone)                                                             AS mobile_phone,
       sfdc.sfdc_created_date                                                                                             AS sfdc_created_date,
       sfdc.opted_out_salesforce                                                                                          AS is_sfdc_opted_out,
       CASE

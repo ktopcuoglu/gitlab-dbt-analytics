@@ -17,6 +17,7 @@ WITH source AS (
       title::VARCHAR                            AS job_title,
       {{it_job_title_hierarchy('job_title')}},
       country::VARCHAR                          AS country,
+      mobile_phone::VARCHAR                     AS mobile_phone,
       inactive_lead_c::BOOLEAN                  AS is_lead_inactive,
       inactive_contact_c::BOOLEAN               AS is_contact_inactive,
       sales_segmentation_c::VARCHAR             AS sales_segmentation,
