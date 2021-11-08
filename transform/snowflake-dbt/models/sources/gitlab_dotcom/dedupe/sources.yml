@@ -280,6 +280,7 @@ sources:
         identifier: gitlab_db_projects
       - name: prometheus_alerts
         identifier: gitlab_db_prometheus_alerts
+        freshness: null
       - name: protected_branches
         identifier: gitlab_db_protected_branches
       - name: push_rules
