@@ -2402,3 +2402,4 @@ tables:
       FROM zoom_meetings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+
