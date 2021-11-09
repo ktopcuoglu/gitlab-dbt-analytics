@@ -429,7 +429,7 @@ models:
       - name: total_checkboxes
         description: The number of checkbox tasks included in the description of the Merge Request
       - name: completed_checkboxes
-        description: The number of checkbox tasks marked a completed in the description of the Merge Request
+        description: The number of checkbox tasks marked as completed in the description of the Merge Request
 
   - name: gitlab_dotcom_monthly_stage_active_users
     description: '{{ doc("gitlab_dotcom_monthly_stage_active_users") }}'
