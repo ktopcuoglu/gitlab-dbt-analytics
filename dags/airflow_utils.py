@@ -16,8 +16,8 @@ DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.21"
 
-DATASCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
-DATASCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
+DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
+DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 PROPENSITY_TO_BUY_SSH_REPO = "git@gitlab.com:gitlab-data/propensity-to-buy.git"
 PROPENSITY_TO_BUY_HTTP_REPO = "https://gitlab.com/gitlab-data/propensity-to-buy.git"
@@ -314,15 +314,15 @@ dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
 
-clone_datascience_repo_cmd = f"""
+clone_data_science_repo_cmd = f"""
     {data_test_ssh_key_cmd} &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
     if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
-        export REPO="{DATASCIENCE_HTTP_REPO}";
+        export REPO="{DATA_SCIENCE_HTTP_REPO}";
         else
-        export REPO="{DATASCIENCE_SSH_REPO}";
+        export REPO="{DATA_SCIENCE_SSH_REPO}";
     fi &&
     echo "git clone -b add_deployments_folder --single-branch --depth 1 $REPO" &&
     git clone -b add_deployments_folder --single-branch --depth 1 $REPO &&
