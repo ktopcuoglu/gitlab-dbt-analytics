@@ -83,7 +83,17 @@ SISENSE
 1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
-   * [ ] Run below SQL script to perform the check.
+   * [ ] Step 1: In order to get latest data loaded into 'sheetload_sisense_users' table, Google Sheet needs to be updated to perform this check. Run below SQL in Sisense under database `periscope_usage_data` and paste the data in google sheet (https://docs.google.com/spreadsheets/d/1oY6YhTuXYqy5ujlTxrQKf7KCDNpPwKWD_hZmzR1UPIo/edit#gid=0). Make sure Step 1 task is done atlease 1 day before running SQL in Step 2 as sheetload runs once in 24 hours to get latest data loaded from sheetload into 'sheetload_sisense_users' table.
+
+
+    ```sql
+
+      SELECT * from users;
+   
+    ```
+
+   * [ ] Step 2: Run below SQL script to perform the check.
+   
 
    ```sql
 
