@@ -48,18 +48,18 @@ pte_scoring_command = f"""
     papermill scoring_code.ipynb
 """
 KubernetesPodOperator(
-        **gitlab_defaults,
-        image=ANALYST_IMAGE,
-        task_id="papermill-daily",
-        name="papermill-daily",
-        secrets=[
-            SNOWFLAKE_ACCOUNT,
-            SNOWFLAKE_LOAD_ROLE,
-            SNOWFLAKE_LOAD_USER,
-            SNOWFLAKE_LOAD_WAREHOUSE,
-            SNOWFLAKE_LOAD_PASSWORD,
-        ],
-        env_vars=pod_env_vars,
-        arguments=[pte_scoring_command],
-        dag=dag,
+    **gitlab_defaults,
+    image=ANALYST_IMAGE,
+    task_id="papermill-daily",
+    name="papermill-daily",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[pte_scoring_command],
+    dag=dag,
 )

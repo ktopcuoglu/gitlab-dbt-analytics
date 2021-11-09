@@ -22,6 +22,7 @@ DATASCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 PROPENSITY_TO_BUY_SSH_REPO = "git@gitlab.com:gitlab-data/propensity-to-buy.git"
 PROPENSITY_TO_BUY_HTTP_REPO = "https://gitlab.com/gitlab-data/propensity-to-buy.git"
 
+
 def split_date_parts(day: date, partition: str) -> Dict:
 
     if partition == "month":
