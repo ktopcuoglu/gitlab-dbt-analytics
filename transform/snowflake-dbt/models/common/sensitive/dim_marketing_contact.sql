@@ -130,10 +130,10 @@ WITH sfdc_lead AS (
       is_lead_inactive,
       is_contact_inactive,
       IFF(sales_segmentation = 'Unknown', NULL, sales_segmentation)                     AS sales_segmentation,
-      is_email_bounced,
-      email_bounced_date,
-      is_unsubscribed,
-      compliance_segment_value,
+      is_email_bounced                                                                  AS is_marketo_email_bounced,
+      email_bounced_date                                                                AS marketo_email_bounced_date,
+      is_unsubscribed                                                                   AS is_marketo_unsubscribed,
+      compliance_segment_value                                                          AS marketo_compliance_segment_value,
       (ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC))                 AS record_number
 
     FROM marketo
@@ -253,10 +253,10 @@ WITH sfdc_lead AS (
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
       COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,
       IFF(marketo_lead.email_address IS NOT NULL, TRUE, FALSE)                                                           AS is_marketo_lead,
-      marketo_lead.is_email_bounced                                                                                      AS is_email_hard_bounced,
-      marketo_lead.email_bounced_date                                                                                    AS email_hard_bounced_date,
-      marketo_lead.is_unsubscribed                                                                                       AS is_marketo_opted_out,
-      marketo_lead.compliance_segment_value                                                                              AS compliance_segment_value,
+      marketo_lead.is_marketo_email_bounced                                                                              AS is_marketo_email_hard_bounced,
+      marketo_lead.marketo_email_bounced_date                                                                            AS marketo_email_hard_bounced_date,
+      marketo_lead.is_marketo_unsubscribed                                                                               AS is_marketo_opted_out,
+      marketo_lead.marketo_compliance_segment_value                                                                      AS marketo_compliance_segment_value,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
         ELSE FALSE
