@@ -10,7 +10,6 @@ WITH base AS (
            ping_date    AS ping_date,
            _uploaded_at AS _uploaded_at
       FROM base
-      QUALIFY ROW_NUMBER() OVER (PARTITION BY ping_date ORDER BY ping_date DESC) = 1
 
 ), renamed AS (
 

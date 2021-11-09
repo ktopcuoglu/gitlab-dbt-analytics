@@ -4,7 +4,7 @@ Data is stored in .json format.
 {% enddocs %}
 
 {% docs instance_sql_errors %}
-Source table for handling errors during the generating SQL metrics for the service ping. If any record appear, will be conside as an error in the process.
+Source table for handling errors during the generating SQL metrics for the service ping. If any record appear, will be considered as an error in the process.
 {% enddocs %}
 
 {% docs instance_redis_metrics %}
