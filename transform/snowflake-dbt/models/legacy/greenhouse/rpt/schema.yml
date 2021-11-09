@@ -22,20 +22,28 @@ models:
   - name: rpt_greenhouse_current_openings
     description: Provides current job openings created in Greenhouse.
     columns: 
-    - name: opening_id
+    - name: job_opening_id
+      tests:
+        - not_null
+        - unique
+    - name: job_id
     - name: ghp_id
     - name: job_created_at
     - name: job_status
     - name: opening_id
+    - name: is_hired_in_bamboo
+    - name: candidate_target_hire_date
+    - name: offer_status
     - name: target_start_date
     - name: opening_date
     - name: closing_date
+    - name: close_reason
     - name: job_title
     - name: department_name
     - name: division
     - name: hiring_manager
     - name: opening_type
-    - name: hire_employee_id
+    - name: employee_id
     - name: region
 
   - name: rpt_greenhouse_hired_employees_opening
