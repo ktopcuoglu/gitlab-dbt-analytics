@@ -14,12 +14,11 @@ WITH source AS (
 ), parsed AS (
 
     SELECT
-
-      data_by_row['CRM_ACCOUNT_ID']::VARCHAR                AS crm_account_id,
-      data_by_row['DECILE']::INT                            AS decile,
-      data_by_row['GROUP']::INT                             AS score_group,
-      data_by_row['IMPORTANCE']::INT                        AS importance,
-      data_by_row['SCORE']::NUMBER                          AS score,
+      data_by_row['crm_account_id']::VARCHAR                AS crm_account_id,
+      data_by_row['decile']::INT                            AS decile,
+      data_by_row['group']::INT                             AS score_group,
+      data_by_row['importance']::INT                        AS importance,
+      data_by_row['score']::NUMBER                          AS score,
       uploaded_at::TIMESTAMP                                AS uploaded_at
 
     FROM intermediate
