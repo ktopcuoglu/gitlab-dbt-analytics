@@ -129,7 +129,7 @@ WITH dim_date AS (
       'Seats'                                                                               AS unit_of_measure,
       0                                                                                     AS quantity,
       DATE_TRUNC('month',revenue_start_date::date)                                          AS effective_start_month,
-      DATE_TRUNC('month',revenue_end_date::date)                                            AS effective_end_month
+      DATE_TRUNC('month',DATEADD('day',1,revenue_end_date::date))                           AS effective_end_month
     FROM true_up_lines_subcription_grain
 
 ), rate_plan_charge_filtered AS (
