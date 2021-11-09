@@ -198,15 +198,17 @@ WITH sfdc_opportunity AS (
       partner_account.account_name              AS partner_account_name,
       sfdc_opportunity_xf.dr_status,
       sfdc_opportunity_xf.distributor,
+      ----------------------------------------------------------
+      -- NF 20211108 this field should be removed when possible, need to validate with Channel Ops
       sfdc_opportunity_xf.influence_partner,
+      ----------------------------------------------------------
+      sfdc_opportunity_xf.fulfillment_partner,
       sfdc_opportunity_xf.fulfillment_partner   AS resale_partner_id,
       resale_account.account_name               AS resale_partner_name,
       sfdc_opportunity_xf.platform_partner,
 
       CASE
         WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-            --AND (sfdc_opportunity_xf.partner_account IS NOT NULL 
-            --  OR sfdc_opportunity_xf.fulfillment_partner IS NOT NULL) 
           THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track, resale_account.partner_track,'Open'),'select','Select')
         ELSE 'Direct' 
       END                                                                                           AS calculated_partner_track,
