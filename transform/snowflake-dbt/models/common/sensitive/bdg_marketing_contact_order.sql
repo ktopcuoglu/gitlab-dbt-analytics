@@ -169,6 +169,7 @@
         ELSE 0 
       END                                                                                     AS is_saas_trial,    
       CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                       AS days_since_saas_trial_ended,
+      {{ days_buckets('days_since_saas_trial_ended') }}                                      AS days_since_saas_trial_ended_bucket,
       CASE 
         WHEN saas_customer.order_is_trial 
           THEN CAST(saas_customer.order_end_date AS DATE)
@@ -179,6 +180,7 @@
         WHEN trial_end_date IS NOT NULL AND CURRENT_DATE <= trial_end_date
           THEN trial_end_date - CURRENT_DATE
       END                                                                                     AS days_until_saas_trial_ends,
+      {{ days_buckets('days_until_saas_trial_ends') }}                                       AS days_until_saas_trial_ends_bucket,
       CASE 
         WHEN saas_product_tier = 'SaaS - Free' 
           THEN 1
