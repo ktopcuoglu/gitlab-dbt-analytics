@@ -1,4 +1,5 @@
 version: 2
 
 models:
-  - name: ptb_training_model
+  - name: pte_training_model
+  - name: pte_scores
