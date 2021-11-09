@@ -107,6 +107,7 @@ WITH campaign_details AS (
       combined_touchpoints.bizible_touchpoint_date,
       combined_touchpoints.bizible_touchpoint_position,
       combined_touchpoints.bizible_touchpoint_source,
+      combined_touchpoints.bizible_touchpoint_source_type,
       combined_touchpoints.bizible_touchpoint_type,
       combined_touchpoints.bizible_ad_campaign_name,
       combined_touchpoints.bizible_ad_content,
