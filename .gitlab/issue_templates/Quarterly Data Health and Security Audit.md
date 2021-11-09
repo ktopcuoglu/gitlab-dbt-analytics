@@ -139,8 +139,6 @@ SISENSE
          ON users.id = user_roles.user_id
          LEFT OUTER JOIN roles
          ON user_roles.role_id = roles.id
-         LEFT OUTER JOIN spaces
-         ON roles.space_id = spaces.id
          --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
          WHERE roles.name = 'Everyone'
          GROUP BY 1,2,3,4
