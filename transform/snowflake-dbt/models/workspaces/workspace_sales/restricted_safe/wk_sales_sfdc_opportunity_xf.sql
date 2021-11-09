@@ -88,10 +88,16 @@ WITH sfdc_opportunity AS (
       END                                                          AS is_refund,
 
       CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Credit','Contract Reset')
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit')
           THEN 1
         ELSE 0
-      END                                                          AS is_credit_contract_reset,
+      END                                                          AS is_credit_flag,
+      
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_contract_reset_flag,
   
       sfdc_opportunity_xf.is_downgrade,
       sfdc_opportunity_xf.is_edu_oss,
@@ -188,21 +194,25 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.deal_path,
       sfdc_opportunity_xf.dr_partner_deal_type,
       sfdc_opportunity_xf.dr_partner_engagement,
-      sfdc_opportunity_xf.partner_account,
+      sfdc_opportunity_xf.partner_account       AS partner_account,
+      partner_account.account_name              AS partner_account_name,
       sfdc_opportunity_xf.dr_status,
       sfdc_opportunity_xf.distributor,
       sfdc_opportunity_xf.influence_partner,
-      sfdc_opportunity_xf.fulfillment_partner,
+      sfdc_opportunity_xf.fulfillment_partner   AS resale_partner_id,
+      resale_account.account_name               AS resale_partner_name,
       sfdc_opportunity_xf.platform_partner,
 
       CASE
         WHEN sfdc_opportunity_xf.deal_path = 'Channel' 
-          THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track),'select','Select')
+            --AND (sfdc_opportunity_xf.partner_account IS NOT NULL 
+            --  OR sfdc_opportunity_xf.fulfillment_partner IS NOT NULL) 
+          THEN REPLACE(COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track, resale_account.partner_track,'Open'),'select','Select')
         ELSE 'Direct' 
       END                                                                                           AS calculated_partner_track,
 
       
-      COALESCE(sfdc_opportunity_xf.partner_track,partner_account.partner_track)                     AS partner_track,
+      sfdc_opportunity_xf.partner_track                                                             AS partner_track,
       partner_account.gitlab_partner_program                                                        AS partner_gitlab_program,
 
       sfdc_opportunity_xf.is_public_sector_opp,
@@ -469,6 +479,9 @@ WITH sfdc_opportunity AS (
     -- partner account details
     LEFT JOIN sfdc_accounts_xf partner_account
       ON partner_account.account_id = sfdc_opportunity_xf.partner_account
+    -- NF 20211105 resale partner
+    LEFT JOIN sfdc_accounts_xf resale_account
+      ON resale_account.account_id = sfdc_opportunity_xf.fulfillment_partner 
    -- NF 20210906 remove JiHu opties from the models
     WHERE sfdc_opportunity_xf.is_jihu_account = 0
 
@@ -602,7 +615,7 @@ WITH sfdc_opportunity AS (
       CASE 
         WHEN sfdc_opportunity_xf.is_refund = 1
           THEN -1
-        WHEN sfdc_opportunity_xf.is_credit_contract_reset = 1
+        WHEN sfdc_opportunity_xf.is_credit_flag = 1
           THEN 0
         ELSE 1
       END                                                                    AS calculated_deal_count,
@@ -777,11 +790,8 @@ WITH sfdc_opportunity AS (
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
           AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
-          -- Web Purchase have no Net ARR before reconciliation, exclude those 
-          -- from ASP analysis
-          AND ((oppty_final.is_web_portal_purchase = 1 
-                AND net_arr > 0)
-                OR oppty_final.is_web_portal_purchase = 0)
+          -- Exclude Deals with net ARR < 0
+          AND net_arr > 0
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis_flag,
