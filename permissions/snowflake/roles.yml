@@ -2020,14 +2020,22 @@ roles:
             databases:
                 read:
                     - prep
+                    - prod
+                    - zoominfo_inbound
             schemas:
                 read:
                     - prep.zoominfo
                     - prep.sensitive
+                    - prod.workspace_data
+                    - zoominfo_inbound.gitlab
             tables:
                 read:
                     - prep.zoominfo.*
                     - prep.sensitive.gitlab_contact_enhance_pii
+                    - prod.workspace_data.gitlab_contact_enhance
+                    - prod.workspace_data.zi_reference_techs
+                    - prod.workspace_data.zi_comp_with_linkages_global
+                    - zoominfo_inbound.gitlab.*
 
     - zuora:
         warehouses:
