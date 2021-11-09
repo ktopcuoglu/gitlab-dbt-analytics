@@ -79,6 +79,7 @@ WITH campaign_details AS (
       bizible_touchpoint_date,
       bizible_touchpoint_position,
       bizible_touchpoint_source,
+      bizible_touchpoint_source_type,
       bizible_touchpoint_type,
       bizible_ad_campaign_name,
       bizible_ad_content,
