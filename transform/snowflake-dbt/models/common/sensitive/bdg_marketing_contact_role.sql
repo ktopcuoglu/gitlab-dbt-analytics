@@ -49,7 +49,7 @@ WITH gitlab_namespaces AS (
     LEFT JOIN dim_marketing_contact
       ON dim_marketing_contact.email_address = gitlab_users.notification_email 
     WHERE owner_id IS NOT NULL
-      AND namespace_type IS NULL
+      AND namespace_type = 'User'
       AND parent_id IS NULL
   
     UNION ALL

@@ -86,7 +86,7 @@
                saas_billing_account.dim_namespace_id)                                         AS dim_namespace_id,
       gitlab_namespaces.namespace_path,
       CASE 
-        WHEN namespace_lineage.namespace_type = 'Individual' 
+        WHEN namespace_lineage.namespace_type = 'User' 
           THEN 1 
         ELSE 0 
       END                                                                                     AS is_individual_namespace,
@@ -287,7 +287,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@ischweickartDD",
+    updated_by="@pempey",
     created_date="2021-02-04",
-    updated_date="2021-04-06"
+    updated_date="2021-11-10"
 ) }}
