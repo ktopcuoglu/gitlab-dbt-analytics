@@ -6,7 +6,7 @@ WITH source AS (
 ), renamed AS (
 
   SELECT
-    id::NUMBER                        AS dast_profile_id,
+    id::NUMBER                        AS dast_profiles_id,
     project_id::NUMBER                AS project_id,
     dast_site_profile_id::NUMBER      AS dast_site_profile_id,
     dast_scanner_profile_id::NUMBER   AS dast_scanner_profile_id,
