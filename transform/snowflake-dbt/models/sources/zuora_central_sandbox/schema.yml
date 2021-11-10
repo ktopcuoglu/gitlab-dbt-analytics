@@ -40,11 +40,6 @@ models:
               severity: warn
           - unique:
               severity: warn
-      - name: invoice_id
-        tags: ["tdf", "zuora_central_sandbox"]      
-        tests:
-          - not_null:
-              severity: warn
   - name: zuora_central_sandbox_invoice_source
     description: Source layer for Zuora Invoices for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_central_sandbox_product_rate_plan_charge_source
@@ -77,11 +72,6 @@ models:
   - name: zuora_central_sandbox_revenue_schedule_item_source
     description: Source layer for Zuora Revenue Schedule Item for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
     columns:
-      - name: revenue_schedule_item_id
-        tags: ["tdf", "zuora_central_sandbox"]
-        tests:
-          - not_null:
-              severity: warn
       - name: rate_plan_charge_id
         tags: ["tdf", "zuora_central_sandbox"]
         tests:
