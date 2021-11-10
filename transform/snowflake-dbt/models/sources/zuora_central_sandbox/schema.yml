@@ -72,11 +72,6 @@ models:
   - name: zuora_central_sandbox_revenue_schedule_item_source
     description: Source layer for Zuora Revenue Schedule Item for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
     columns:
-      - name: rate_plan_charge_id
-        tags: ["tdf", "zuora_central_sandbox"]
-        tests:
-          - not_null:
-              severity: warn
       - name: accounting_period_id
         tags: ["tdf", "zuora_central_sandbox"]
         tests:
