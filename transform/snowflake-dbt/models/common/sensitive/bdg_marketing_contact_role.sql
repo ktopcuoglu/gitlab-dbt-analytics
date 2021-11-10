@@ -124,7 +124,7 @@ WITH gitlab_namespaces AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@trevor31",
+    updated_by="@pempey",
     created_date="2021-01-19",
-    updated_date="2021-02-22"
+    updated_date="2021-11-10"
 ) }}
