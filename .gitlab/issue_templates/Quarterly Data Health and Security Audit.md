@@ -88,8 +88,15 @@ SISENSE
 
     ```sql
 
-      SELECT * from users;
-   
+      SELECT distinct email_address 
+      FROM users
+      LEFT OUTER JOIN user_roles
+         ON users.id = user_roles.user_id
+         LEFT OUTER JOIN roles
+         ON user_roles.role_id = roles.id
+         --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+         WHERE roles.name = 'Everyone'
+
     ```
 
    * [ ] Step 2: Run below SQL script to perform the check.
@@ -97,32 +104,23 @@ SISENSE
 
    ```sql
 
-     WITH final AS (
+    WITH final AS (
         
-        SELECT 
-          MAX(date_actual) AS date_actual, 
-          full_name,
-          work_email, 
-          is_termination_date 
-        FROM legacy.employee_directory_analysis 
-        GROUP BY 2,3,4
+       SELECT full_name, 
+        work_email
+       FROM legacy.employee_directory_analysis 
+       WHERE is_termination_date = TRUE
+       QUALIFY ROW_NUMBER() OVER (PARTITION BY work_email ORDER BY date_actual DESC) = 1
 
     )
 
     SELECT   
        final.full_name, 
-       users.email_address , 
-       final.is_termination_date ,
-       final.date_actual
+       final.work_email 
     FROM  final
-    INNER JOIN legacy.sheetload_sisense_users users 
-      ON  final.full_name = concat(users.first_name,' ', users.last_name) 
-      AND final.is_termination_date = 'TRUE' 
-    LEFT JOIN legacy.sheetload_sisense_user_roles roles
-      ON users.id = roles.user_id
-    WHERE roles.user_id IS NOT NULL
-    GROUP BY 1,2,3,4
-    ORDER BY 1 ;
+    JOIN legacy.sheetload_sisense_users users 
+    ON final.work_email = users.email_address
+    order by 2
 
    ```
 
