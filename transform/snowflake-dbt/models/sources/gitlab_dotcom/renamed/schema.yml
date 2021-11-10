@@ -1198,6 +1198,12 @@ models:
           - not_null
       - name: namespace_path
         description: '{{ doc("visibility_documentation") }}'
+      - name: namespace_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group', 'User']
+
       - name: namespace_name
         description: '{{ doc("visibility_documentation") }}'
       - name: visbility_level
