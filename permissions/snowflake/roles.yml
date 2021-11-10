@@ -262,20 +262,15 @@ roles:
             databases:
                 read:
                     - prep
-                    - prod
             schemas:
                 read:
                     - prep.*
-                    - prod.workspace_data
             tables:
                 read:
                     - prep.sensitive.bdg_marketing_contact_role
                     - prep.sensitive.dim_marketing_contact
                     - prep.sensitive.bdg_marketing_contact_order
                     - prep.sensitive.mart_marketing_contact
-                    - prod.workspace_data.gitlab_contact_enhance
-                    - prod.workspace_data.zi_reference_techs
-                    - prod.workspace_data.zi_comp_with_linkages_global
 
     ## For all analyst Roles
     - analyst_core:
@@ -355,11 +350,9 @@ roles:
             databases:
                 read:
                     - prep
-                    - prod
             schemas:
                 read:
                     - prep.sensitive
-                    - prod.workspace_data
             tables:
                 read:
                     - prep.sensitive.gitlab_dotcom_epics
@@ -369,9 +362,6 @@ roles:
                     - prep.sensitive.gitlab_dotcom_milestones
                     - prep.sensitive.gitlab_dotcom_namespaces
                     - prep.sensitive.gitlab_dotcom_projects
-                    - prod.workspace_data.gitlab_contact_enhance
-                    - prod.workspace_data.zi_reference_techs
-                    - prod.workspace_data.zi_comp_with_linkages_global
 
     - analyst_finance:
         warehouses:
@@ -400,21 +390,16 @@ roles:
             databases:
                 read:
                     - raw
-                    - prod
                 write:
                     - raw
             schemas:
                 read:
                     - raw.stitch_google_sheets
-                    - prod.workspace_data
                 write:
                     - raw.stitch_google_sheets
             tables:
                 read:
                     - raw.stitch_google_sheets.*
-                    - prod.workspace_data.gitlab_contact_enhance
-                    - prod.workspace_data.zi_reference_techs
-                    - prod.workspace_data.zi_comp_with_linkages_global
                 write:
                     - raw.stitch_google_sheets.*
 
@@ -437,18 +422,6 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - prod.workspace_data
-            tables:
-                read:
-                    - prod.workspace_data.gitlab_contact_enhance
-                    - prod.workspace_data.zi_reference_techs
-                    - prod.workspace_data.zi_comp_with_linkages_global
 
     - analyst_people:
         warehouses:
@@ -497,18 +470,6 @@ roles:
             - snowflake_db
             - version_db
             - zuora
-        privileges:
-            databases:
-                read:
-                    - prod
-            schemas:
-                read:
-                    - prod.workspace_data
-            tables:
-                read:
-                    - prod.workspace_data.gitlab_contact_enhance
-                    - prod.workspace_data.zi_reference_techs
-                    - prod.workspace_data.zi_comp_with_linkages_global
 
     - data_manager:
         warehouses:
@@ -2060,21 +2021,16 @@ roles:
             databases:
                 read:
                     - prep
-                    - prod
                     - zoominfo_inbound
             schemas:
                 read:
                     - prep.zoominfo
                     - prep.sensitive
-                    - prod.workspace_data
                     - zoominfo_inbound.gitlab
             tables:
                 read:
                     - prep.zoominfo.*
                     - prep.sensitive.gitlab_contact_enhance_pii
-                    - prod.workspace_data.gitlab_contact_enhance
-                    - prod.workspace_data.zi_reference_techs
-                    - prod.workspace_data.zi_comp_with_linkages_global
                     - zoominfo_inbound.gitlab.*
 
     - zuora:
