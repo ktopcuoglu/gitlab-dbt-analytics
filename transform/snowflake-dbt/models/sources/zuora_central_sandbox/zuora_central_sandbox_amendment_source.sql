@@ -1,4 +1,5 @@
 WITH source AS (
+
     SELECT *
     FROM {{ source('zuora_central_sandbox', 'amendment') }}
 
