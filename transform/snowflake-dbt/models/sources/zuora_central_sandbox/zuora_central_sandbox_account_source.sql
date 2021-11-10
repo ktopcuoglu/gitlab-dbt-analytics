@@ -11,6 +11,7 @@ WITH source AS (
       communication_profile_id                               AS communication_profile_id,
       nullif("{{this.database}}".{{target.schema}}.id15to18(IFNULL(crm_id, '')), '')
                                                              AS crm_id,
+
       default_payment_method_id                              AS default_payment_method_id,
       invoice_template_id                                    AS invoice_template_id,
       parent_id                                              AS parent_id,
