@@ -55,7 +55,6 @@ WITH source AS (
       --foreign synced info
       opportunity_name_qt                           AS opportunity_name,
       purchase_order_c                              AS sfdc_purchase_order,
-      --purchaseorder_c                             AS sfdc_purchase_order_,
       quote_business_type_qt                        AS quote_business_type,
       quote_number_qt                               AS quote_number,
       quote_type_qt                                 AS quote_type,
