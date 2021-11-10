@@ -11,7 +11,7 @@ WITH source AS (
       name::VARCHAR                                                 AS namespace_name,
       path::VARCHAR                                                 AS namespace_path,
       owner_id::NUMBER                                              AS owner_id,
-      type                                                          AS namespace_type,
+      IFNULL(type,'User')::VARCHAR                                  AS namespace_type,
       IFF(avatar IS NULL, FALSE, TRUE)                              AS has_avatar,
       created_at::TIMESTAMP                                         AS created_at,
       updated_at::TIMESTAMP                                         AS updated_at,
