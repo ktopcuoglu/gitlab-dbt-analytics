@@ -276,6 +276,7 @@ safe_model_script:
         config.schema:restricted_safe_common
         config.schema:restricted_safe_common_mapping
         config.schema:restricted_safe_common_mart_sales
+        config.schema:restricted_safe_common_mart_product
         config.schema:restricted_safe_common_prep
         config.schema:restricted_safe_legacy
         config.schema:restricted_safe_workspace_finance

@@ -268,3 +268,6 @@ models:
           - not_null
           - unique
         tags: ["tdf", "mart", "arr"]
+
+  - name: mart_retention_crm_account
+    description: "Mart table to support drillable retention analysis by the CRM account grain."

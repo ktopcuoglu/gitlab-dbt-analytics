@@ -79,7 +79,7 @@ WITH source AS (
         web_portal_purchase_datetime__c AS web_portal_purchase_datetime,
         mkto_si__last_interesting_moment__c AS marketo_last_interesting_moment,
         mkto_si__last_interesting_moment_date__c AS marketo_last_interesting_moment_date,
-        last_utm_campaign__c        AS last_utm_campaign,
+        last_utm_campaign__c        AS last_utm_campaign, 
         last_utm_content__c         AS last_utm_content,
         region__c                   AS region,
         sequence_step_type2__c      AS sequence_step_type,
@@ -109,33 +109,6 @@ WITH source AS (
         ae_comments__c              AS ae_comments,
         business_development_rep__c AS business_development_rep_name,
         outbound_bdr__c             AS outbound_business_development_rep_name,
-
-        -- Account Demographics Fields
-
-        account_demographics_hq_country__c
-                                    AS account_demographics_hq_country,
-        account_demographics_hq_street__c
-                                    AS account_demographics_hq_street,
-        account_demographics_hq_postal_code__c
-                                    AS account_demographics_hq_postal_code,
-        account_demographics_hq_state__c
-                                    AS account_demographics_hq_state,
-        account_demographics_max_family_employe__c
-                                    AS account_demographic_max_family_employees,
-        account_demographic_employee_count__c
-                                    AS account_demographics_employee_count,
-        account_demographics_hq_city__c
-                                    AS account_demographics_hq_city,
-        account_demographics_territory__c
-                                    AS account_demographics_territory,
-
-        --Fields available on account object but not on the contact object
-
-        --account_demographics_sales_segment__c         AS account_demographics_sales_segment,
-        --account_demographics_geo__c                   AS account_demographics_geo,
-        --account_demographics_region__c                AS account_demographics_region,
-        --account_demographics_area__c                  AS account_demographics_area,
-
 
         -- metadata
         createdbyid                 AS created_by_id,

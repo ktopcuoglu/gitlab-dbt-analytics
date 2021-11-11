@@ -6,6 +6,12 @@ macros:
       - name: arr
         type: number
         description: ARR for the specified row.
+  - name: days_buckets
+    description: This macro creates grouping of number of days to be used in the `mart_marketing_contact` model.
+    arguments:
+      - name: day_field
+        type: number
+        description: Day field to be grouped into bucket of days.
   - name: number_of_seats_buckets
     description: This macro calculates buckets of values for number of seats.
     arguments:

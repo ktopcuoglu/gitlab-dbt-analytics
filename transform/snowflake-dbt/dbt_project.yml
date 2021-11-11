@@ -67,7 +67,7 @@ vars:
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
-  snowplow:pass_through_columns: ['glm_source','gsc_environment','gsc_extra','gsc_namespace_id','gsc_plan','gsc_project_id','gsc_source','cf_formid','cf_elementid','cf_nodename','cf_type','cf_elementclasses','cf_value','sf_formid','sf_formclasses','sf_elements','ff_formid','ff_elementid','ff_nodename','ff_elementtype','ff_elementclasses','ff_value','lc_elementid','lc_elementclasses','lc_elementtarget','lc_targeturl','lc_elementcontent','tt_category','tt_variable','tt_timing','tt_label']
+  snowplow:pass_through_columns: ['glm_source','gsc_environment','gsc_extra','gsc_namespace_id','gsc_plan','gsc_google_analytics_client_id','gsc_project_id','gsc_pseudonymized_user_id','gsc_source','cf_formid','cf_elementid','cf_nodename','cf_type','cf_elementclasses','cf_value','sf_formid','sf_formclasses','sf_elements','ff_formid','ff_elementid','ff_nodename','ff_elementtype','ff_elementclasses','ff_value','lc_elementid','lc_elementclasses','lc_elementtarget','lc_targeturl','lc_elementcontent','tt_category','tt_variable','tt_timing','tt_label']
   snowplow:page_view_lookback_days: 7
 
   snowplow:
@@ -212,6 +212,9 @@ models:
       marketing_dnc:
         +schema: marketing_dnc
 
+      marketo:
+        +schema: marketo
+
       netsuite:
         +schema: netsuite
         sensitive:
@@ -271,6 +274,14 @@ models:
 
       zendesk_community_relations:
         +schema: zendesk_community_relations
+
+      zoominfo:
+        +schema: zoominfo
+        +materialized: table 
+        sensitive:
+          +schema: sensitive
+          +materialized: view 
+          secure: true
 
       zuora:
         +schema: zuora
@@ -474,6 +485,10 @@ models:
           +tags: ["safe"]
           secure: true
 
+      workspace_engineering:
+        +schema: workspace_engineering
+
+
     # ------------------
     # Marts
     # ------------------
@@ -497,6 +512,10 @@ models:
         +tags: ["product"]
         mart_ci_runner_activity_monthly:
           +enabled: true
+        restricted_safe:
+          +schema: restricted_safe_common_mart_product
+          +tags: ["safe"]
+          secure: true
         
       pumps: 
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
