@@ -212,6 +212,9 @@ models:
       marketing_dnc:
         +schema: marketing_dnc
 
+      marketo:
+        +schema: marketo
+
       netsuite:
         +schema: netsuite
         sensitive:
@@ -275,6 +278,10 @@ models:
       zoominfo:
         +schema: zoominfo
         +materialized: table 
+        sensitive:
+          +schema: sensitive
+          +materialized: view 
+          secure: true
 
       zuora:
         +schema: zuora

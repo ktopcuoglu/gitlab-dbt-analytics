@@ -206,9 +206,17 @@ models:
      - name:	record_id 
      - name:	row_integer 
      - name:	first_name 
+       meta:
+            sensitive: true
      - name:	last_name 
+       meta:
+            sensitive: true
      - name:	users_name 
+       meta:
+            sensitive: true
      - name:	email_id 
+       meta:
+            sensitive: true
      - name:	internal_value1 
      - name:  internal_value2 
      - name:	company_name 
@@ -217,8 +225,14 @@ models:
      - name:	match_status 
      - name:	zoominfo_contact_id 
      - name:	lastname 
+       meta:
+            sensitive: true
      - name:	firstname 
+       meta:
+            sensitive: true
      - name:	middlename 
+       meta:
+            sensitive: true
      - name:	salutation 
      - name:	suffix 
      - name:	job_title 
@@ -226,21 +240,37 @@ models:
      - name:	management_level 
      - name:	company_division_name 
      - name:	direct_phone_number 
+       meta:
+            sensitive: true
      - name:	email_address 
+       meta:
+            sensitive: true
      - name:	email_domain 
      - name:	department 
      - name:	supplemental_email 
+       meta:
+            sensitive: true
      - name:	mobile_phone 
+       meta:
+            sensitive: true
      - name:	contact_accuracy_score 
      - name:	contact_accuracy_grade 
      - name:	zoominfo_contact_profile_url 
+       meta:
+            sensitive: true
      - name:	linkedin_contact_profile_url 
+       meta:
+            sensitive: true
      - name:	notice_provided_date 
      - name:	known_first_name 
      - name:	known_last_name 
      - name:	known_full_name 
      - name:	normalized_first_name 
+       meta:
+            sensitive: true
      - name:	normalized_last_name 
+       meta:
+            sensitive: true
      - name:	email_matched_person_name 
      - name:	email_matched_company_name 
      - name:	free_email 
@@ -252,9 +282,17 @@ models:
      - name:	person_looks_like_eu 
      - name:	within_eu 
      - name:	person_street 
+       meta:
+            sensitive: true
      - name:	person_city 
+       meta:
+            sensitive: true
      - name:	person_state 
+       meta:
+            sensitive: true
      - name:	person_zip_code 
+       meta:
+            sensitive: true
      - name:	country 
      - name:	zoominfo_company_id 
      - name:	companyname 

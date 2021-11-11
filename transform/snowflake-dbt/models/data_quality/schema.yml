@@ -18,6 +18,8 @@ models:
      - name: threshold
        description: The threshold limit which will be compared against the percentage of passed/failed record counts to determine if the data quality detection rule has passed or failed.
  
+ - name: product_data_detection_rule_3
+   description: This table processes the relationship between a subscription name and the current license ID that subscription is related to. It is used in product_data_detection_run_detail to process data quality errors for missing licenses in subscriptions.
 
  - name: product_data_detection_run_detail
    description: '{{ doc("product_data_detection_run_detail") }}'
