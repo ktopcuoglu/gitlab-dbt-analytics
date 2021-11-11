@@ -1130,7 +1130,7 @@ roles:
                 read:
                     - prep.sensitive.*
 
-    - dbt_datascience:
+    - dbt_data_science:
           warehouses:
               - analyst_xs
           privileges:
@@ -1141,7 +1141,7 @@ roles:
                       - raw
               schemas:
                   read:
-                      - prod.workspace_datascience
+                      - prod.workspace_data_science
 
     - demandbase:
         warehouses:
@@ -2868,7 +2868,7 @@ roles:
             - data_team_analyst
             - salesforce
             - restricted_safe
-            - dbt_datascience
+            - dbt_data_science
         warehouses:
             - analyst_xs
         owns:
@@ -2912,9 +2912,8 @@ roles:
             - analyst_finance
             - gainsight
             - analyst_core
-            - data_team_analyst
             - restricted_safe
-            - dbt_datascience
+            - dbt_data_science
         warehouses:
             - analyst_xs
         owns:
