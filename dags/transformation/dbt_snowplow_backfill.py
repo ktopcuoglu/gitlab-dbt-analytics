@@ -70,7 +70,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "dbt_snowplow_backfill", default_args=default_args, schedule_interval=None
+    "dbt_snowplow_backfill", default_args=default_args, schedule_interval=None, concurrency=4
 )
 
 
@@ -80,7 +80,7 @@ def generate_dbt_command(vars_dict):
     dbt_generate_command = f""" 
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
-        dbt run --profiles-dir profile --target prod --models +snowplow --full-refresh --vars '{json_dict}'; ret=$?;
+        dbt run --profiles-dir profile --target prod --models +snowplow snowplow_unstructured_events --full-refresh --vars '{json_dict}'; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
