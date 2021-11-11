@@ -31,6 +31,3 @@ WITH test_results AS (
 
 SELECT *
 FROM joined
-
-
-

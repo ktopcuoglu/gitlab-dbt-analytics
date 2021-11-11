@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH source AS (
 
     SELECT *
@@ -64,6 +68,7 @@ WITH source AS (
       first_order_available__c::BOOLEAN             AS is_first_order_available,
       REPLACE(zi_technologies__c, 'The technologies that are used and not used at this account, according to ZoomInfo, after completing a scan are:', '') AS zi_technologies,
       technical_account_manager_date__c::DATE       AS technical_account_manager_date,
+      gitlab_customer_success_project__c::VARCHAR   AS gitlab_customer_success_project,            
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,

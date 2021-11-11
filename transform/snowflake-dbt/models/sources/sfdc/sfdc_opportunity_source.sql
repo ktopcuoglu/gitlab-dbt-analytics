@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH source AS (
 
     SELECT
@@ -109,7 +113,7 @@ WITH source AS (
         upside_iacv__c                              AS upside_iacv,
         upside_swing_deal_iacv__c                   AS upside_swing_deal_iacv,
         web_portal_purchase__c                      AS is_web_portal_purchase,
-        opportunity_term__c                         AS opportunity_term,
+        opportunity_term_new__c                     AS opportunity_term,
         pio__c                                      AS partner_initiated_opportunity,
         user_segment_o__c                           AS user_segment,
         start_date__c::DATE                         AS subscription_start_date,
@@ -117,7 +121,7 @@ WITH source AS (
         true_up_value__c                            AS true_up_value,
         order_type_live__c                          AS order_type_live,
         order_type_test__c                          AS order_type_stamped,
-        CASE 
+        CASE
           WHEN order_type_stamped = '1. New - First Order'
             THEN '1) New - First Order'
           WHEN order_type_stamped IN ('2. New - Connected', '3. Growth', '4. Contraction', '5. Churn - Partial', '6. Churn - Final')
@@ -134,10 +138,10 @@ WITH source AS (
         days_in_sao__c                              AS days_in_sao,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                     AS user_segment_stamped,
-        CASE 
+        CASE
           WHEN user_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment_stamped
-        END                                         AS user_segment_stamped_grouped,                                            
+        END                                         AS user_segment_stamped_grouped,
         stamped_user_geo__c                         AS user_geo_stamped,
         stamped_user_region__c                      AS user_region_stamped,
         stamped_user_area__c                        AS user_area_stamped,

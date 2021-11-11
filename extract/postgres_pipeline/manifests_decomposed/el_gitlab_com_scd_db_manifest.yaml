@@ -364,6 +364,16 @@ tables:
       , created_at
       , state
       FROM merge_request_reviewers
+  milestone_releases:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'milestone_releases'
+    export_table_primary_key: milestone_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT milestone_id
+      , release_id
+      FROM milestone_releases
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -737,6 +747,16 @@ tables:
       , other_role
       , registration_objective
       FROM user_details
+  users_security_dashboard_projects:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'users_security_dashboard_projects'
+    export_table_primary_key: user_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , project_id
+      FROM users_security_dashboard_projects
   vulnerability_occurrences:
     dbt_source_model: true
     export_schema: 'gitlab_com'

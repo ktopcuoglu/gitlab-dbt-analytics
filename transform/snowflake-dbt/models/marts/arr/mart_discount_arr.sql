@@ -127,6 +127,7 @@ WITH dim_date AS (
       ON arr_agg.dim_crm_account_id_invoice = dim_crm_account_invoice.dim_crm_account_id
     LEFT JOIN dim_crm_account AS dim_crm_account_subscription
       ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.dim_crm_account_id
+    WHERE dim_crm_account_subscription.is_jihu_account != 'TRUE'
     {{ dbt_utils.group_by(n=34) }}
     ORDER BY 3 DESC
 
@@ -148,7 +149,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2021-08-04",
+    updated_date="2021-10-25",
 ) }}

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
         "materialized": "table",
         "schema": "common_mart_product",

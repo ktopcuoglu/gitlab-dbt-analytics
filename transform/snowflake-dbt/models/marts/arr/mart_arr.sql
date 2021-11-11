@@ -66,6 +66,8 @@ WITH dim_billing_account AS (
       dim_billing_account.sold_to_country                                             AS sold_to_country,
       dim_billing_account.billing_account_name                                        AS billing_account_name,
       dim_billing_account.billing_account_number                                      AS billing_account_number,
+      dim_billing_account.ssp_channel                                                 AS ssp_channel,
+      dim_billing_account.po_required                                                 AS po_required,
 
       -- crm account info
       dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
@@ -90,7 +92,7 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
-      
+
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
       dim_subscription.dim_subscription_id_original                                   AS dim_subscription_id_original,
@@ -148,6 +150,7 @@ WITH dim_billing_account AS (
       ON dim_date.date_id = fct_mrr.dim_date_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
 
 ), cohort_diffs AS (
 
@@ -198,7 +201,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-09-04",
-    updated_date="2021-08-24"
+    updated_date="2021-10-25"
 ) }}

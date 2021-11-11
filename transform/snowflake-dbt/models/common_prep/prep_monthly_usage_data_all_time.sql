@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([('dim_date', 'dim_date'),
                 ('prep_usage_ping_payload', 'prep_usage_ping_payload')
                 ]

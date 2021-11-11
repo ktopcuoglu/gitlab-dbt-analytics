@@ -449,6 +449,15 @@ models:
           - not_null
           - unique
 
+  - name: fct_retention_crm_account
+    columns:
+    - name: fct_retention_id
+      description: A unique identifier of the retention record.
+      tests:
+        - not_null
+        - unique
+      tags: ["tdf", "mart", "arr", "retention"]
+  
   - name: fct_retention_parent_account
     description: '{{ doc("fct_retention_parent_account") }}'
     columns:

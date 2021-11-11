@@ -632,3 +632,18 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
       - name: is_myb_with_multi_subs
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+  - name: rpt_manual_true_up_charge
+    description: Report table for tracking true up changes from Zuora Revenue which are added manually into ARR modeling.
+    columns:
+      - name: dim_subscription_id
+        description: Unique identifier of a version of a subscription
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        description: Unique identifier of a billing account
+        tests:
+          - not_null
+      - name: adjustment
+        description: Amount of ARR which needs to be adjusted for the true-up
+        tests:
+          - not_null

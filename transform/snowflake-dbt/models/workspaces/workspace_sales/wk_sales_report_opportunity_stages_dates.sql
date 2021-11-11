@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
  {{ config(alias='report_opportunity_stages_dates') }}
 
  --TODO
