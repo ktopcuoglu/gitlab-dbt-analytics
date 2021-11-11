@@ -19,7 +19,7 @@ WITH prep_amendment AS (
 ), subscription_opportunity_mapping AS (
 
     SELECT *
-    FROM {{ ref('subscription_opportunity_mapping') }}
+    FROM {{ ref('map_subscription_opportunity') }}
 
 ), subscription_lineage AS (
 
@@ -78,6 +78,7 @@ WITH prep_amendment AS (
     subscription.turn_on_auto_renewal,
     subscription.contract_seat_reconciliation,
     subscription.turn_on_seat_reconciliation,
+    subscription_opportunity_mapping.is_questionable_opportunity_mapping,
 
     --Date Information
     subscription.subscription_start_date,
@@ -115,5 +116,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2020-12-16",
-    updated_date="2021-11-08"
+    updated_date="2021-11-10"
 ) }}
