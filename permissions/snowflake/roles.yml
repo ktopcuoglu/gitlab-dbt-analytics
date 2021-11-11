@@ -558,6 +558,7 @@ roles:
             - transformer
             - snowflake_db
             - static_admin
+            - zoominfo
         warehouses:
             - airflow_testing_l
             - engineer_xs
@@ -2020,14 +2021,17 @@ roles:
             databases:
                 read:
                     - prep
+                    - zoominfo_inbound
             schemas:
                 read:
                     - prep.zoominfo
                     - prep.sensitive
+                    - zoominfo_inbound.gitlab
             tables:
                 read:
                     - prep.zoominfo.*
                     - prep.sensitive.gitlab_contact_enhance_pii
+                    - zoominfo_inbound.gitlab.*
 
     - zuora:
         warehouses:
