@@ -2038,17 +2038,17 @@ roles:
             databases:
                 read:
                     - prep
-                    - zoominfo_inbound
+                    #- zoominfo_inbound
             schemas:
                 read:
                     - prep.zoominfo
                     - prep.sensitive
-                    - zoominfo_inbound.gitlab
+                    #- zoominfo_inbound.gitlab
             tables:
                 read:
                     - prep.zoominfo.*
                     - prep.sensitive.gitlab_contact_enhance_pii
-                    - zoominfo_inbound.gitlab.*
+                    #- zoominfo_inbound.gitlab.*
 
     - zuora:
         warehouses:
