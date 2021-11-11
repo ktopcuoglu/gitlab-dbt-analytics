@@ -39,7 +39,9 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("propensity_to_expand", default_args=default_args, schedule_interval="0 10 * * MON")
+dag = DAG(
+    "propensity_to_expand", default_args=default_args, schedule_interval="0 10 * * MON"
+)
 
 # Task 1
 pte_scoring_command = f"""
