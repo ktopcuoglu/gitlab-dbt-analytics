@@ -88,14 +88,17 @@ SISENSE
 
     ```sql
 
-      SELECT distinct email_address, first_name, last_name 
+      SELECT distinct users.id, 
+        users.first_name, 
+        users.last_name,
+        users.email_address 
       FROM users
       LEFT OUTER JOIN user_roles
-         ON users.id = user_roles.user_id
-         LEFT OUTER JOIN roles
-         ON user_roles.role_id = roles.id
-         --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
-         WHERE roles.name = 'Everyone'
+        ON users.id = user_roles.user_id
+        LEFT OUTER JOIN roles
+        ON user_roles.role_id = roles.id
+        --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+        WHERE roles.name = 'Everyone'
 
     ```
 
