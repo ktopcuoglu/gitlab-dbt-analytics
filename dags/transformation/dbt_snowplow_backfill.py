@@ -37,6 +37,7 @@ from kube_secrets import (
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
+
 task_secrets = [
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
@@ -69,7 +70,7 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "dbt_snowplow_backfill_only", default_args=default_args, schedule_interval=None
+    "dbt_snowplow_backfill", default_args=default_args, schedule_interval=None
 )
 
 
