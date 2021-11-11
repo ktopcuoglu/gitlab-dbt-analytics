@@ -39,7 +39,7 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("papermill_daily", default_args=default_args, schedule_interval="0 5 * * 0")
+dag = DAG("propensity_to_expand", default_args=default_args, schedule_interval="0 10 * * MON")
 
 # Task 1
 pte_scoring_command = f"""
@@ -50,8 +50,8 @@ pte_scoring_command = f"""
 KubernetesPodOperator(
     **gitlab_defaults,
     image=ANALYST_IMAGE,
-    task_id="papermill-daily",
-    name="papermill-daily",
+    task_id="propensity-to-expand",
+    name="propensity-to-expand",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
