@@ -491,6 +491,9 @@ models:
       workspace_engineering:
         +schema: workspace_engineering
 
+      workspace_people:
+        +schema: workspace_people
+
 
     # ------------------
     # Marts
