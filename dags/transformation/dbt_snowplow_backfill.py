@@ -70,7 +70,10 @@ default_args = {
 
 # Create the DAG
 dag = DAG(
-    "dbt_snowplow_backfill", default_args=default_args, schedule_interval=None, concurrency=4
+    "dbt_snowplow_backfill",
+    default_args=default_args,
+    schedule_interval=None,
+    concurrency=4,
 )
 
 
