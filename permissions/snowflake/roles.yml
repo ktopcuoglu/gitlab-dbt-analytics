@@ -1142,6 +1142,10 @@ roles:
               schemas:
                   read:
                       - prod.workspace_data_science
+              tables:
+                  read:
+                      - prod.workspace_data_science.*
+
 
     - demandbase:
         warehouses:
