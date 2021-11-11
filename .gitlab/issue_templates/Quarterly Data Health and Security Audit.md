@@ -88,7 +88,7 @@ SISENSE
 
     ```sql
 
-      SELECT distinct email_address 
+      SELECT distinct email_address, first_name, last_name 
       FROM users
       LEFT OUTER JOIN user_roles
          ON users.id = user_roles.user_id
