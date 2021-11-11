@@ -124,4 +124,3 @@ for month in partitions(
     datetime.strptime("2018-07-01", "%Y-%m-%d").date(), date.today(), "month"
 ):
     dummy_operator >> generate_dbt_command(month) >> dbt_snowplow_combined
-
