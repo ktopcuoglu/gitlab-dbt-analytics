@@ -107,23 +107,25 @@ SISENSE
 
    ```sql
 
-    WITH final AS (
-        
-       SELECT full_name, 
-        work_email
-       FROM legacy.employee_directory_analysis 
-       WHERE is_termination_date = TRUE
-       QUALIFY ROW_NUMBER() OVER (PARTITION BY work_email ORDER BY date_actual DESC) = 1
+   WITH final AS (
+  
+      SELECT full_name, 
+         work_email
+      FROM legacy.employee_directory_analysis 
+      WHERE is_termination_date = TRUE
+      QUALIFY ROW_NUMBER() OVER (PARTITION BY work_email ORDER BY date_actual DESC) = 1
 
-    )
+   )
 
-    SELECT   
-       final.full_name, 
-       final.work_email 
-    FROM  final
-    JOIN legacy.sheetload_sisense_users users 
-    ON final.work_email = users.email_address
-    order by 2
+      SELECT   
+         final.full_name, 
+         final.work_email 
+      FROM final
+      JOIN legacy.sheetload_sisense_users users 
+      ON final.work_email = users.email_address 
+         -- incase email adres is empty
+         OR final.full_name = users.FIRST_NAME || ' ' || users.LAST_NAME
+      ORDER BY 2
 
    ```
 
