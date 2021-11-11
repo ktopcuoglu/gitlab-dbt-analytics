@@ -83,36 +83,49 @@ SISENSE
 1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
-   * [ ] Run below SQL script to perform the check.
+   * [ ] Step 1: In order to get latest data loaded into table `legacy.sheetload_sisense_users`, Google Sheet needs to be updated with latest data from Sisense `users` table. To update the latest data, run below SQL in Sisense under database `periscope_usage_data` and paste the data in google sheet (https://docs.google.com/spreadsheets/d/1oY6YhTuXYqy5ujlTxrQKf7KCDNpPwKWD_hZmzR1UPIo/edit#gid=0). Make sure Step 1 is completed atlease 1 day before running SQL in Step 2, as sheetload runs once in 24 hours to get latest data loaded from google sheetload into `legacy.sheetload_sisense_users` table.
+
+
+    ```sql
+
+      SELECT distinct users.id, 
+        users.first_name, 
+        users.last_name,
+        users.email_address 
+      FROM users
+      LEFT OUTER JOIN user_roles
+        ON users.id = user_roles.user_id
+        LEFT OUTER JOIN roles
+        ON user_roles.role_id = roles.id
+        --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+        WHERE roles.name = 'Everyone'
+
+    ```
+
+   * [ ] Step 2: Run below SQL script to perform the check.
+   
 
    ```sql
 
-     WITH final AS (
-        
-        SELECT 
-          MAX(date_actual) AS date_actual, 
-          full_name,
-          work_email, 
-          is_termination_date 
-        FROM legacy.employee_directory_analysis 
-        GROUP BY 2,3,4
+   WITH final AS (
+  
+      SELECT full_name, 
+         work_email
+      FROM legacy.employee_directory_analysis 
+      WHERE is_termination_date = TRUE
+      QUALIFY ROW_NUMBER() OVER (PARTITION BY work_email ORDER BY date_actual DESC) = 1
 
-    )
+   )
 
-    SELECT   
-       final.full_name, 
-       users.email_address , 
-       final.is_termination_date ,
-       final.date_actual
-    FROM  final
-    INNER JOIN legacy.sheetload_sisense_users users 
-      ON  final.full_name = concat(users.first_name,' ', users.last_name) 
-      AND final.is_termination_date = 'TRUE' 
-    LEFT JOIN legacy.sheetload_sisense_user_roles roles
-      ON users.id = roles.user_id
-    WHERE roles.user_id IS NOT NULL
-    GROUP BY 1,2,3,4
-    ORDER BY 1 ;
+      SELECT   
+         final.full_name, 
+         final.work_email 
+      FROM final
+      JOIN legacy.sheetload_sisense_users users 
+      ON final.work_email = users.email_address 
+         -- incase email adres is empty
+         OR final.full_name = users.FIRST_NAME || ' ' || users.LAST_NAME
+      ORDER BY 2
 
    ```
 
