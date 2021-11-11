@@ -85,3 +85,9 @@ Mapping table used to link a usage ping (dim_usage_ping_id) to an active zuora s
 This table is needed to identify how many active subscriptions send us on a month M sent us at least 1 usage ping. 
 {% enddocs %}
 
+{% docs map_subscription_opportunity %}
+
+ Mapping table for subscriptions to opportunities. This incorporates logic from previous processes which is includes taking opportunity-subscription connections from quotes, invoices, and the subscription object itself. Based on the created date, term dates, or subscription name, we fill in missing opportunity ids.
+ 
+{% enddocs %}
+

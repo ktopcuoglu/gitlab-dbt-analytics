@@ -356,6 +356,12 @@ The final result:
 
 {% enddocs %}
 
+{% docs prep_subscription_opportunity %}
+
+ Mapping table for subscriptions to opportunities. This incorporates logic from previous processes which is includes taking opportunity-subscription connections from quotes, invoices, and the subscription object itself. Based on the created date, term dates, or subscription name, we fill in missing opportunity ids.
+ 
+{% enddocs %}
+
 {% docs prep_usage_ping %}
 This data model is a prep model that supports a new dimension model, dim_usage_ping, that will replace PROD.legacy.version_usage_data, dim_usage_pings, version_usage_data_source, and version_raw_usage_data_source in the future .
 

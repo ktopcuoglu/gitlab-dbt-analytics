@@ -141,6 +141,18 @@ models:
       - name: subscription_cohort_year
         tests:
           - not_null
+
+  - name: map_subscription_opportunity
+    description: '{{ doc("map_subscription_opportunity") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+          - unique
+      - name: dim_crm_opportunity_id
+        tests:
+          - not_null
+
   - name: map_ci_runner_project
     description: '{{ doc("map_ci_runner_project") }}'
     columns:
