@@ -454,7 +454,7 @@ models:
           +tags: ["dbt"]
 
       workspace_data_science:
-        +schema: workspace_datascience
+        +schema: workspace_data_science
         pte:
           +materialized: table
 
