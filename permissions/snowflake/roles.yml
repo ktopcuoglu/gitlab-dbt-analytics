@@ -47,6 +47,11 @@ databases:
     - dvanrooijen_prep:
         shared: no
 
+    - dzeissner_prod:
+        shared: no
+    - dzeissner_prep:
+        shared: no
+
     - ianschweickart_prod:
         shared: no
     - ianschweickart_prep:
@@ -2468,6 +2473,44 @@ roles:
                     - dvanrooijen_prep.*.*
                     - dvanrooijen_prod.*.*
 
+    - dzeissner:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - dzeissner_prep
+                - dzeissner_prod
+            schemas:
+                - dzeissner_prep.*
+                - dzeissner_prod.*
+            tables:
+                - dzeissner_prep.*.*
+                - dzeissner_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dzeissner_prep
+                    - dzeissner_prod
+                write:
+                    - dzeissner_prep
+                    - dzeissner_prod
+            schemas:
+                read:
+                    - dzeissner_prep.*
+                    - dzeissner_prod.*
+                write:
+                    - dzeissner_prep.*
+                    - dzeissner_prod.*
+            tables:
+                read:
+                    - dzeissner_prep.*.*
+                    - dzeissner_prod.*.*
+                write:
+                    - dzeissner_prep.*.*
+                    - dzeissner_prod.*.*
+
     - eburke:
         member_of: []
         warehouses: []
@@ -4268,6 +4311,11 @@ users:
             - dvanrooijen
             - accountadmin
             - securityadmin
+
+    - dzeissner:
+        can_login: yes
+        member_of:
+            - dzeissner
 
     - eburke:
         can_login: no
