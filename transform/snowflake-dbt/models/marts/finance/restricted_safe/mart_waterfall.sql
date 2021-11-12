@@ -115,7 +115,7 @@
       revenue_contract_id,
       MAX(period_id)   AS rc_max_prd_id
     FROM waterfall
-    group by 1
+    GROUP BY 1
   
 ), last_waterfall_line AS (
 
