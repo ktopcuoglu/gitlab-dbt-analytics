@@ -13,7 +13,7 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 2, period: weeks}
+      warn_after: {count: 14, period: days}
 
     tables:
     - name: pte_scores
