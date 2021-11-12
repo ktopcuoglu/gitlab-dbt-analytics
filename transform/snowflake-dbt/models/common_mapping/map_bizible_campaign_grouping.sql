@@ -322,7 +322,7 @@ WITH bizible_touchpoints AS (
       CASE
         WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast') 
           THEN 'CI/CD'
-        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast') 
+        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast', 'Technical Demo Series') 
           THEN 'DevOps'
         WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  
           THEN 'GitOps'
