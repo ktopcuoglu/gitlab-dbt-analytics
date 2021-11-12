@@ -26,6 +26,8 @@ models:
         description: Job title of the marketing contact
       - name: country
         description: Country where marketing contacted is located
+      - name: marketo_compliance_segment_value
+        description: Holds one of 4 values saying if they are compliant to be emailed or not
       - name: sfdc_parent_sales_segment
         description: Sales segment of the CRM account related to the marketing contact
       - name: is_sfdc_lead_contact
@@ -240,6 +242,8 @@ models:
         description: Job title of the marketing contact
       - name: country
         description: Country where marketing contacted is located
+      - name: marketo_compliance_segment_value
+        description: Holds one of 4 values saying if they are compliant to be emailed or not
       - name: sfdc_parent_sales_segment
         description: Sales segment of the CRM account related to the marketing contact
       - name: is_sfdc_lead_contact

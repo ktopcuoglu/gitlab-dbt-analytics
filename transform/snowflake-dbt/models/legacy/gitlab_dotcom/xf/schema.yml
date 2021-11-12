@@ -426,6 +426,11 @@ models:
         description: Merge Request has 'community contribution' tag, and is on a project in the gitlab.org namespace.
       - name: namespace_plan_id_at_merge_request_creation
         description: '{{ doc("namespace_plan_id_at_creation") }}'
+      - name: total_checkboxes
+        description: The number of checkbox tasks included in the description of the Merge Request
+      - name: completed_checkboxes
+        description: The number of checkbox tasks marked as completed in the description of the Merge Request
+
   - name: gitlab_dotcom_monthly_stage_active_users
     description: '{{ doc("gitlab_dotcom_monthly_stage_active_users") }}'
     columns:

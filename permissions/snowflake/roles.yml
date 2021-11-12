@@ -17,6 +17,8 @@ databases:
         shared: yes
     - static:
         shared: no
+    - zoominfo_inbound:
+        shared: yes
 
 # User / Testing
     - testing_db:
@@ -45,6 +47,11 @@ databases:
     - dvanrooijen_prod:
         shared: no
     - dvanrooijen_prep:
+        shared: no
+
+    - dzeissner_prod:
+        shared: no
+    - dzeissner_prep:
         shared: no
 
     - ianschweickart_prod:
@@ -558,6 +565,7 @@ roles:
             - transformer
             - snowflake_db
             - static_admin
+            - zoominfo
         warehouses:
             - airflow_testing_l
             - engineer_xs
@@ -2020,14 +2028,17 @@ roles:
             databases:
                 read:
                     - prep
+                    - zoominfo_inbound
             schemas:
                 read:
                     - prep.zoominfo
                     - prep.sensitive
+                    - zoominfo_inbound.gitlab
             tables:
                 read:
                     - prep.zoominfo.*
                     - prep.sensitive.gitlab_contact_enhance_pii
+                    - zoominfo_inbound.gitlab.*
 
     - zuora:
         warehouses:
@@ -2463,6 +2474,44 @@ roles:
                 write:
                     - dvanrooijen_prep.*.*
                     - dvanrooijen_prod.*.*
+
+    - dzeissner:
+        member_of:
+            - analyst_sales
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - dzeissner_prep
+                - dzeissner_prod
+            schemas:
+                - dzeissner_prep.*
+                - dzeissner_prod.*
+            tables:
+                - dzeissner_prep.*.*
+                - dzeissner_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - dzeissner_prep
+                    - dzeissner_prod
+                write:
+                    - dzeissner_prep
+                    - dzeissner_prod
+            schemas:
+                read:
+                    - dzeissner_prep.*
+                    - dzeissner_prod.*
+                write:
+                    - dzeissner_prep.*
+                    - dzeissner_prod.*
+            tables:
+                read:
+                    - dzeissner_prep.*.*
+                    - dzeissner_prod.*.*
+                write:
+                    - dzeissner_prep.*.*
+                    - dzeissner_prod.*.*
 
     - eburke:
         member_of: []
@@ -3878,6 +3927,7 @@ roles:
         member_of:
          - data_team_analyst
          - analyst_core
+         - restricted_safe         
         warehouses:
             - analyst_xs
         owns:
@@ -4263,6 +4313,11 @@ users:
             - dvanrooijen
             - accountadmin
             - securityadmin
+
+    - dzeissner:
+        can_login: yes
+        member_of:
+            - dzeissner
 
     - eburke:
         can_login: no
