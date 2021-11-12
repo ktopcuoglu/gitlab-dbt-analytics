@@ -1,7 +1,6 @@
-WITH 
-hires AS (
-    SELECT
-      *
+WITH hires AS (
+    
+    SELECT *
     FROM {{ ref('greenhouse_hires') }} 
 )
 

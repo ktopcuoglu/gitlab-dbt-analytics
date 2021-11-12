@@ -1,15 +1,22 @@
-WITH 
-job_openings AS (
-    SELECT * FROM {{ ref('rpt_greenhouse_current_openings') }}
+WITH job_openings AS (
+    
+    SELECT * 
+    FROM {{ ref('rpt_greenhouse_current_openings') }}
 ),
 application_jobs AS (
-    SELECT * FROM {{ ref('greenhouse_applications_jobs_source') }}
+    
+    SELECT * 
+    FROM {{ ref('greenhouse_applications_jobs_source') }}
 ),
 applications AS (
-    SELECT * FROM {{ ref('greenhouse_applications_source') }}
+    
+    SELECT * 
+    FROM {{ ref('greenhouse_applications_source') }}
 ),
 interviews AS (
-    SELECT * FROM {{ ref('greenhouse_scheduled_interviews_source') }}
+    
+    SELECT * 
+    FROM {{ ref('greenhouse_scheduled_interviews_source') }}
 )
 
   SELECT
