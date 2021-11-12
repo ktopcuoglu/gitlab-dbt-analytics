@@ -578,7 +578,7 @@ models:
         description: "Numeric product pricing tier, independent of delivery type"
 
   - name: prep_subscription_opportunity_mapping
-    description: '{{ doc("map_subscription_opportunity") }}'
+    description: '{{ doc("prep_subscription_opportunity_mapping") }}'
     columns:
       - name: dim_subscription_id
         tests:

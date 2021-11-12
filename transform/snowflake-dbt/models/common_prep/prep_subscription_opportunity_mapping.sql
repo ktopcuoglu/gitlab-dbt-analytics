@@ -28,7 +28,8 @@ WITH zuora_account_source AS (
       dim_crm_opportunity_id    AS opportunity_id
     FROM zuora_subscription_source
     WHERE opportunity_id IS NOT NULL
-      AND subscription_sales_type_update = 'Self-Service'
+      AND (subscription_created_date >= '2021-04-12'
+        OR subscription_sales_type_update = 'Self-Service')
        
 ), zuora_rate_plan_source AS (
   
@@ -208,18 +209,14 @@ WITH zuora_account_source AS (
     LEFT JOIN prep_crm_account
       ON zuora_subscription_source.dim_crm_account_id = prep_crm_account.dim_crm_account_id
 
-), final_with_mrr AS (
+), final_subs_opps AS (
 
     SELECT
-      final.*,
-      SUM(fct_mrr.mrr)                                                       AS arr
+      final.*
     FROM final
-    LEFT JOIN {{ ref('fct_mrr') }}
-      ON final.dim_subscription_id = fct_mrr.dim_subscription_id
     INNER JOIN zuora_account_source
       ON final.dim_billing_account_id = zuora_account_source.account_id
-    WHERE subscription_created_date > '2019-02-01'
-    {{ dbt_utils.group_by(n=53) }}
+    WHERE subscription_created_date >= '2019-02-01'
   
 ), complete_subs AS (
   
@@ -228,19 +225,19 @@ WITH zuora_account_source AS (
       COUNT_IF(combined_opportunity_id IS NOT NULL)                         AS other_count_test,
       SUM(CASE WHEN combined_opportunity_id IS NOT NULL THEN 1 ELSE 0 END)  AS count_test,
       COUNT(dim_subscription_id)                                            AS sub_count
-    FROM final_with_mrr
+    FROM final_subs_opps
     GROUP BY 1
   
 ), non_duplicates AS ( -- All subscription_ids that do not have multiple opportunities associated with them
   
     SELECT *
-    FROM final_with_mrr
+    FROM final_subs_opps
     WHERE dim_subscription_id NOT IN (SELECT dim_subscription_id FROM final GROUP BY dim_subscription_id HAVING COUNT(*) > 1) 
     
 ), dupes AS ( -- GET ALL SUBSCRIPTION_IDS WITH MULTIPLE OPPORTUNITY_IDS, DUPLICATES (6,620) (4,600 -- with stage_name != '10-duplicate')
 
     SELECT *
-    FROM final_with_mrr
+    FROM final_subs_opps
     WHERE dim_subscription_id IN (SELECT dim_subscription_id FROM final GROUP BY dim_subscription_id HAVING COUNT(*) > 1) 
 
 ),invoice_item_amount AS (
@@ -423,20 +420,6 @@ WITH zuora_account_source AS (
     -- for all dupes, take the subscription-opportunity options where the raw fields (opp on subscription, opp on invoice, and opp on quote number from subscription) match
     SELECT *, 'all matching opps' AS source
     FROM dupes_all_raw_sub_options_match
-    
-), missing_at_least_one_opp_id AS ( -- GET ALL SUBSCRIPTIONS WHERE AT LEAST ONE SUBSCRIPTION_ID IS MISSING AN OPPORTUNITY_ID (31,365) (31,437 -- stage_name != '10-duplicate')
-
-    SELECT *
-    FROM final_matches
-    WHERE subscription_name IN (SELECT DISTINCT subscription_name FROM complete_subs WHERE count_test != sub_count)
-  
-), final_duplicates AS (
-  
-    SELECT dupes.*
-    FROM dupes
-    LEFT JOIN final_matches
-      ON dupes.dim_subscription_id = final_matches.dim_subscription_id
-    WHERE final_matches.dim_subscription_id IS NULL
 
 ), final_matches_with_bad_data_flag AS (
 
@@ -468,7 +451,6 @@ WITH zuora_account_source AS (
         ELSE 0
       END                                                                                                           AS is_questionable_opportunity_mapping
     FROM final_matches
-
 )
 
 {{ dbt_audit(
@@ -476,5 +458,5 @@ WITH zuora_account_source AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-11-10",
-    updated_date="2021-11-10"
+    updated_date="2021-11-12"
 ) }}

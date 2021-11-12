@@ -2,10 +2,6 @@
     tags=["mnpi_exception"]
 ) }}
 
-{{ config(
-    tags=["mnpi_exception"]
-) }}
-
 WITH prep_amendment AS (
 
   SELECT *
@@ -116,5 +112,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2020-12-16",
-    updated_date="2021-11-10"
+    updated_date="2021-11-11"
 ) }}

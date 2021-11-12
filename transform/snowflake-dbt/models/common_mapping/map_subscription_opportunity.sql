@@ -1,9 +1,9 @@
 WITH prep_subscription_opportunity_mapping AS (
   
     SELECT *
-    FROM {{ ref('prep_subscription_opportunity_mapping')}}
-  
-), final AS (
+    FROM {{ ref('prep_subscription_opportunity_mapping') }}
+
+), final_mapping AS (
 
     SELECT DISTINCT
       dim_subscription_id, 
@@ -15,9 +15,9 @@ WITH prep_subscription_opportunity_mapping AS (
 )
 
 {{ dbt_audit(
-    cte_ref="final",
+    cte_ref="final_mapping",
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-11-10",
-    updated_date="2021-11-10"
+    updated_date="2021-11-11"
 ) }}
