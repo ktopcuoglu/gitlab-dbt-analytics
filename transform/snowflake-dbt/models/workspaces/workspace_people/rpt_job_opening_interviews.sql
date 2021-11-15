@@ -1,23 +1,11 @@
-WITH job_openings AS (
-    
-    SELECT * 
-    FROM {{ ref('rpt_greenhouse_current_openings') }}
-),
-application_jobs AS (
-    
-    SELECT * 
-    FROM {{ ref('greenhouse_applications_jobs_source') }}
-),
-applications AS (
-    
-    SELECT * 
-    FROM {{ ref('greenhouse_applications_source') }}
-),
-interviews AS (
-    
-    SELECT * 
-    FROM {{ ref('greenhouse_scheduled_interviews_source') }}
-)
+
+
+{{ simple_cte([
+    ('job_openings','rpt_greenhouse_current_openings'),
+    ('application_jobs','greenhouse_applications_jobs_source'),
+    ('applications','greenhouse_applications_source'),
+    ('interviews','greenhouse_scheduled_interviews_source')
+])}}
 
   SELECT
     job_openings.job_id,
