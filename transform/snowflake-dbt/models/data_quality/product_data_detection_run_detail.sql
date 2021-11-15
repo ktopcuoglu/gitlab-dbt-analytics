@@ -41,7 +41,6 @@
     SELECT DISTINCT
       fct_mrr.dim_subscription_id,
       dim_subscription.subscription_name,
-      dim_license.license_start_date,
       IFF(dim_license.license_start_date > CURRENT_DATE, TRUE, FALSE)                    AS is_license_start_date_future,
       IFF(dim_license.license_start_date > dim_license.license_expire_date, TRUE, FALSE) AS is_license_start_date_greater_expire_date,
       fct_mrr.dbt_updated_at
@@ -118,8 +117,8 @@
     SELECT 
       4                                                                                                            AS rule_id,
       COUNT(DISTINCT(dim_subscription_id))                                                                         AS processed_record_count,
-      SUM(IFF(is_license_start_date_future, 0, 1))                                                                 AS passed_record_count,
-      SUM(IFF(is_license_start_date_future, 1, 0))                                                                 AS failed_record_count,
+      COUNT(DISTINCT IFF(is_license_start_date_future, NULL, dim_subscription_id))                                 AS passed_record_count,
+      (processed_record_count - passed_record_count)                                                               AS failed_record_count,
       dbt_updated_at                                                                                               AS run_date
     FROM self_managed_subs_with_licenses
     GROUP BY run_date
@@ -130,8 +129,8 @@
     SELECT 
       5                                                                                                                   AS rule_id,
       COUNT(DISTINCT(dim_subscription_id))                                                                                AS processed_record_count,
-      SUM(IFF(is_license_start_date_greater_expire_date, 0, 1))                                                           AS passed_record_count,
-      SUM(IFF(is_license_start_date_greater_expire_date, 1, 0))                                                           AS failed_record_count,
+      COUNT(DISTINCT IFF(is_license_start_date_greater_expire_date, NULL, dim_subscription_id))                           AS passed_record_count,
+      (processed_record_count - passed_record_count)                                                                      AS failed_record_count,
       dbt_updated_at                                                                                                      AS run_date
     FROM self_managed_subs_with_licenses 
     GROUP BY run_date
