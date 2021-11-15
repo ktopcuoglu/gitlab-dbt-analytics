@@ -73,5 +73,87 @@ tables:
         FROM ci_trigger_requests
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-
-        
+  cluster_3:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_stages' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_stages
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_4:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_pipelines' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_pipelines
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_5:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_job_artifacts' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_job_artifacts
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_6:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_pipeline_schedules' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_pipeline_schedules
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_7:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_builds AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_builds
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+ cluster_8:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'gitlab_db_ci_platform_metrics AS table_name
+        , DATE(recorded_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_platform_metrics
+        WHERE DATE(recorded_at) > current_date - interval '8' day
+        GROUP BY 1,2,3

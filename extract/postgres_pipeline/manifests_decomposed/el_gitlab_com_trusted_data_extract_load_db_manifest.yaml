@@ -924,26 +924,36 @@ tables:
         , count(*) as number_of_records
         FROM uploads
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2  
-  cluster_13:
-    dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
-    export_table: 'gitlab_pgp_export'
-    export_table_primary_key: created_date
-    import_db: GITLAB_DB
-    import_query: |-      
-        SELECT 'gitlab_db_notes' AS table_name
+        GROUP BY 1,2
+        UNION ALL 
+        SELECT 'gitlab_db_resource_label_events' AS table_name
         , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
-        FROM notes
+        FROM resource_label_events
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
+        GROUP BY 1,2
         UNION ALL
-        SELECT 'gitlab_db_system_note_metadata' AS table_name
+        SELECT 'gitlab_db_lfs_file_locks' AS table_name
         , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
+        , 'null' as updated_date
         , count(*) as number_of_records
-        FROM experiment_subjects
+        FROM lfs_file_locks
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3        
+        GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_project_daily_statistics' AS table_name
+        , date as created_date
+        , 'null' as updated_date
+        , count(*) as number_of_records
+        FROM project_daily_statistics
+        WHERE DATE(date) > current_date - interval '8' day
+        GROUP BY 1,2 
+        UNION ALL
+        SELECT 'gitlab_db_audit_events' AS table_name
+        , date as created_date
+        , 'null' as updated_date
+        , count(*) as number_of_records
+        FROM audit_events
+        WHERE DATE(date) > current_date - interval '8' day
+        GROUP BY 1,2 
