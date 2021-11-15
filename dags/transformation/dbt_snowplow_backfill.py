@@ -38,10 +38,10 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
-if GIT_BRANCH in ['master', 'main']:
-    target = 'prod'
+if GIT_BRANCH in ["master", "main"]:
+    target = "prod"
 else:
-    target = 'ci'
+    target = "ci"
 
 task_secrets = [
     GIT_DATA_TESTS_PRIVATE_KEY,
