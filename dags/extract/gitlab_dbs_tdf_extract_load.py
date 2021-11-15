@@ -100,7 +100,7 @@ config_dict_td_pgp = {
         ],
         "start_date": datetime(2021, 11, 18),
         "sync_schedule_interval": None,
-        "task_name": "gitlab-com",
+        "task_name": "gitlab-ops",
     },
 }
 def extract_manifest(file_path):
