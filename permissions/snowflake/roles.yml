@@ -2162,14 +2162,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - amurray:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
-
     - awaller: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []      
@@ -4178,11 +4170,6 @@ users:
         can_login: yes
         member_of:
             - amihaila
-
-    - amurray:
-        can_login: yes
-        member_of:
-            - amurray
 
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
