@@ -1095,3 +1095,31 @@ tables:
         FROM integrations
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3 
+  cluster_20:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-      
+        SELECT 'gitlab_db_events' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM events
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_21:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-      
+        SELECT 'gitlab_db_namespace_root_storage_statistics' AS table_name
+        , 'null' as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM namespace_root_storage_statistics
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3   
