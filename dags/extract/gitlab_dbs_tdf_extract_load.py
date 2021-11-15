@@ -13,7 +13,6 @@ from airflow_utils import (
     slack_failed_task,
     gitlab_pod_env_vars,
 )
-from dags.kube_secrets import GCP_PROJECT, GCP_REGION, GITLAB_OPS_DB_HOST, GITLAB_OPS_DB_NAME, GITLAB_OPS_DB_PASS, GITLAB_OPS_DB_USER
 from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
     GCP_SERVICE_CREDS,
