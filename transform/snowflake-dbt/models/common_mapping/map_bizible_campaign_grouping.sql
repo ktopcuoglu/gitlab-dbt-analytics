@@ -267,11 +267,11 @@ WITH bizible_touchpoints AS (
             OR bizible_landing_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_landing_page_raw LIKE '%utm_content=introtomlopsdemo%'
             OR bizible_referrer_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_referrer_page_raw LIKE '%utm_content=introtomlopsdemo%'
             ))
-            OR camp.campaign_parent_id LIKE '%7014M000001vjIn%'
-            OR camp.campaign_id LIKE '%7014M000001vjIn%'
+            OR dim_parent_campaign_id LIKE '%7014M000001vjIn%'
+            OR dim_campaign_id LIKE '%7014M000001vjIn%'
             
-            OR camp.campaign_parent_id LIKE '%7014M000001vjHL%'
-            OR camp.campaign_id LIKE '%7014M000001vjHL%')
+            OR dim_parent_campaign_id LIKE '%7014M000001vjHL%'
+            OR dim_campaign_id LIKE '%7014M000001vjHL%')
           Then 'Technical Demo Series'    
         WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
             AND ( bizible_form_url_raw LIKE '%devopsgtm%'
