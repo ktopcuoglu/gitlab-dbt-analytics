@@ -106,7 +106,7 @@ def generate_dbt_command(vars_dict):
 
 dbt_snowplow_combined_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target {target} --models staging.snowplow.combined; ret=$?;
+        dbt run --profiles-dir profile --target {target} --models legacy.snowplow.combined; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
