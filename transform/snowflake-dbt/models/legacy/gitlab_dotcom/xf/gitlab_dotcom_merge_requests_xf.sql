@@ -61,7 +61,7 @@ WITH merge_requests AS (
 
     SELECT *
     FROM {{ref('gitlab_dotcom_namespaces_xf')}}
-    WHERE namespace_type = 'Individual'
+    WHERE namespace_type = 'User'
 
 ), gitlab_subscriptions AS (
 
