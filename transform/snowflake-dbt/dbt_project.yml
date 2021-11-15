@@ -275,6 +275,9 @@ models:
       zendesk_community_relations:
         +schema: zendesk_community_relations
 
+      zengrc:
+        +schema: zengrc
+
       zoominfo:
         +schema: zoominfo
         +materialized: table 
