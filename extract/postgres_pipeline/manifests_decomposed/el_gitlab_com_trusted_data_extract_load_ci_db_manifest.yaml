@@ -143,7 +143,7 @@ tables:
         FROM ci_builds
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
- cluster_8:
+  cluster_8:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
