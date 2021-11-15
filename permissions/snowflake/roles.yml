@@ -2533,14 +2533,6 @@ roles:
                 write:
                     - raw.netsuite_fivetran.*
 
-    - fkurniadi:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
-
     - fstein:
         warehouses:
             - admin
@@ -4310,11 +4302,6 @@ users:
         can_login: yes
         member_of:
             - fivetran_role
-
-    - fkurniadi:
-        can_login: yes
-        member_of:
-            - fkurniadi
 
     - fstein:
         can_login: no
