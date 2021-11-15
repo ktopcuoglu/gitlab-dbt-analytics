@@ -2097,10 +2097,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - ablanco:
-        warehouses:
-            - reporting
-
     - acarella:
         warehouses: []
 
@@ -4128,12 +4124,6 @@ users:
         can_login: yes
         member_of:
             - aakgun
-
-    - ablanco:
-        can_login: yes
-        member_of:
-            - ablanco
-            - securityadmin
 
     - acarella:
         can_login: no
