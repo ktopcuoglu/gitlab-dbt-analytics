@@ -1,13 +1,17 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH prep_subscription_opportunity_mapping AS (
-  
+
     SELECT *
     FROM {{ ref('prep_subscription_opportunity_mapping') }}
 
 ), final_mapping AS (
 
     SELECT DISTINCT
-      dim_subscription_id, 
-      combined_opportunity_id               AS dim_crm_opportunity_id, 
+      dim_subscription_id,
+      combined_opportunity_id               AS dim_crm_opportunity_id,
       is_questionable_opportunity_mapping
     FROM prep_subscription_opportunity_mapping
     WHERE combined_opportunity_id IS NOT NULL
