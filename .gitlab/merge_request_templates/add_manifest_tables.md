@@ -1,7 +1,7 @@
 Closes
 
 * List the tables added/changed below
-* If table are non-SCD add them to reconcile process.
+* If tables are non-SCD add them to reconcile process.
 * Run the `clone_raw_postgres_pipeline` CI job
 * Run the `pgp_test` or `gitlab_ops_pgp_test` CI job by right clicking on the job name and opening in a new tab
   * For `pgp_test`, include the `MANIFEST_NAME` variable and input the name of the db (i.e. `gitlab_com`, `customers`, etc.)
@@ -13,7 +13,7 @@ Closes
 
 * [ ] List
 
-* [ ] If table are non-SCD add them to reconcile process.
+* [ ] If tables are non-SCD add them to reconcile process.
 
 #### PGP Test CI job passed?
 
