@@ -323,6 +323,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - analyst_growth:
         warehouses:
@@ -353,6 +354,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
         privileges:
             databases:
                 read:
@@ -393,6 +395,7 @@ roles:
             - version_db
             - zuora
             - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
         privileges:
             databases:
                 read:
@@ -429,6 +432,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - analyst_people:
         warehouses:
@@ -457,6 +461,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - analyst_sales:
         warehouses:
@@ -477,6 +482,7 @@ roles:
             - snowflake_db
             - version_db
             - zuora
+            - zuora_central_sandbox
 
     - data_manager:
         warehouses:
@@ -510,6 +516,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - decisive_data:
         warehouses:
@@ -2056,6 +2063,24 @@ roles:
                 read:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
+
+    - zuora_central_sandbox:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.zuora_central_sandbox
+                    - raw.zuora_central_sandbox_fivetran
+            tables:
+                read:
+                    - prep.zuora_central_sandbox.*
+                    - raw.zuora_central_sandbox_fivetran.*
+
 
     - zuora_api_sandbox_stitch:
         warehouses:
