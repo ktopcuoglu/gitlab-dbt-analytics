@@ -13,6 +13,7 @@ from airflow_utils import (
     slack_failed_task,
     gitlab_pod_env_vars,
 )
+from dags.kube_secrets import GCP_PROJECT, GCP_REGION, GITLAB_OPS_DB_HOST, GITLAB_OPS_DB_NAME, GITLAB_OPS_DB_PASS, GITLAB_OPS_DB_USER
 from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -83,9 +84,25 @@ config_dict_td_pgp = {
         "sync_schedule_interval": None,
         "task_name": "gitlab-com",
     },
+    "el_gitlab_ops_trusted_data_extract_load": {
+        "cloudsql_instance_name": None,
+        "dag_name": "el_gitlab_ops_trusted_data_extract_load",
+        "dbt_name": "None",
+        "env_vars": {},
+        "extract_schedule_interval": "0 9 */1 * *",
+        "secrets": [
+            GCP_PROJECT,
+            GCP_REGION,
+            GITLAB_OPS_DB_USER,
+            GITLAB_OPS_DB_PASS,
+            GITLAB_OPS_DB_HOST,
+            GITLAB_OPS_DB_NAME,
+        ],
+        "start_date": datetime(2021, 11, 18),
+        "sync_schedule_interval": None,
+        "task_name": "gitlab-com",
+    },
 }
-
-
 def extract_manifest(file_path):
     with open(file_path, "r") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
