@@ -2193,12 +2193,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - brufener:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
-
     - bbutterfield:
         member_of:
             - reporter
@@ -4200,11 +4194,6 @@ users:
     - brittany: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
-
-    - brufener:
-        can_login: yes
-        member_of:
-            - brufener
 
     - bbutterfield:
         can_login: yes
