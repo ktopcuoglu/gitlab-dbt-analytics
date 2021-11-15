@@ -19,3 +19,17 @@ tables:
         FROM ci_pipelines
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+  cluster_2:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_OPS_DB
+    import_query: |- 
+        SELECT 'gitlab_ops_db_ci_stages' AS table_name
+        , DATE(created_at) as created_date
+        , 'null' as updated_date
+        , count(*) as number_of_records
+        FROM ci_stages
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
