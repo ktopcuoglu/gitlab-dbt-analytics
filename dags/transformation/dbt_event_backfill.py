@@ -75,6 +75,9 @@ dag = DAG(
 
 
 def generate_dbt_command(vars_dict):
+    """
+    Generate dbt command to load historical data for prep_event
+    """
     json_dict = json.dumps(vars_dict)
 
     dbt_generate_command = f"""
