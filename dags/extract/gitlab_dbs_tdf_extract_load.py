@@ -89,7 +89,7 @@ config_dict_td_pgp = {
         ],
         "start_date": datetime(2021, 5, 21),
         "sync_schedule_interval": None,
-        "task_name": "gitlab-com",
+        "task_name": "gitlab-com-ci",
     },
     "el_gitlab_ops_trusted_data_extract_load": {
         "cloudsql_instance_name": "ops-db-restore",
