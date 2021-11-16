@@ -3948,7 +3948,7 @@ roles:
         member_of:
          - data_team_analyst
          - analyst_core
-         - restricted_safe
+         - restricted_safe          
         warehouses:
             - analyst_xs
         owns:
