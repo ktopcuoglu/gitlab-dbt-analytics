@@ -82,8 +82,8 @@ WITH dim_date AS (
       active_zuora_subscription.subscription_name           AS subscription_name,
       active_zuora_subscription.subscription_status         AS subscription_status,
       product_rate_plan_charge_id                           AS dim_product_detail_id,
-      true_up_lines.revenue_start_date                      AS revenue_start_date,
-      true_up_lines.revenue_end_date                        AS revenue_end_date
+      true_up_lines_dates.revenue_start_date                AS revenue_start_date,
+      true_up_lines_dates.revenue_end_date                  AS revenue_end_date
     FROM revenue_contract_line
     INNER JOIN active_zuora_subscription
       ON revenue_contract_line.subscription_name = active_zuora_subscription.subscription_name
@@ -94,7 +94,7 @@ WITH dim_date AS (
     LEFT JOIN true_up_lines_dates
       ON revenue_contract_line.subscription_name = true_up_lines_dates.subscription_name
         AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
-    WHERE revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
+    WHERE revenue_contract_line.revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
       AND recognized_amount > 0
   
 ), mje_summed AS (
@@ -111,13 +111,13 @@ WITH dim_date AS (
 ), true_up_lines_subcription_grain AS (
   
     SELECT
-      lns.billing_account_id,
-      lns.crm_account_id,
-      lns.rate_plan_charge_id,
-      lns.subscription_id,
+      lns.dim_billing_account_id,
+      lns.dim_crm_account_id,
+      lns.dim_charge_id,
+      lns.dim_subscription_id,
       lns.subscription_name,
       lns.subscription_status,
-      lns.product_product_details_id,
+      lns.dim_product_detail_id,
       SUM(mje.adjustment)               AS adjustment,
       MIN(revenue_start_date)           AS revenue_start_date,
       MAX(revenue_end_date)             AS revenue_end_date
@@ -130,13 +130,13 @@ WITH dim_date AS (
 ), manual_charges AS (
   
     SELECT 
-      billing_account_id,
-      crm_account_id,
-      rate_plan_charge_id,
-      subscription_id,
+      dim_billing_account_id,
+      dim_crm_account_id,
+      dim_charge_id,
+      dim_subscription_id,
       subscription_name,
       subscription_status,
-      product_product_details_id,
+      dim_product_detail_id,
       adjustment/ROUND(MONTHS_BETWEEN(revenue_end_date::date, revenue_start_date::date),0)  AS mrr,
       NULL                                                                                  AS delta_tcv,
       'Seats'                                                                               AS unit_of_measure,

@@ -80,15 +80,17 @@ WITH map_merged_crm_account AS (
     SELECT 
       revenue_contract_line_id,
       revenue_contract_id,
-      zuora_account.account_id                              AS dim_billing_account_id,
-      map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
-      MD5(rate_plan_charge_id)                              AS dim_charge_id,
-      active_zuora_subscription.subscription_id             AS dim_subscription_id,
-      active_zuora_subscription.subscription_name           AS subscription_name,
-      active_zuora_subscription.subscription_status         AS subscription_status,
-      product_rate_plan_charge_id                           AS dim_product_detail_id,
-      true_up_lines.revenue_start_date                      AS revenue_start_date,
-      true_up_lines.revenue_end_date                        AS revenue_end_date
+      zuora_account.account_id                                  AS dim_billing_account_id,
+      map_merged_crm_account.dim_crm_account_id                 AS dim_crm_account_id,
+      MD5(rate_plan_charge_id)                                  AS dim_charge_id,
+      active_zuora_subscription.subscription_id                 AS dim_subscription_id,
+      active_zuora_subscription.subscription_name               AS subscription_name,
+      active_zuora_subscription.subscription_status             AS subscription_status,
+      product_rate_plan_charge_id                               AS dim_product_detail_id,
+      true_up_lines_dates.revenue_start_date                    AS revenue_start_date,
+      true_up_lines_dates.revenue_end_date                      AS revenue_end_date,
+      revenue_contract_line.revenue_contract_line_created_date  AS revenue_contract_line_created_date,
+      revenue_contract_line.revenue_contract_line_updated_date  AS revenue_contract_line_updated_date
     FROM revenue_contract_line
     INNER JOIN active_zuora_subscription
       ON revenue_contract_line.subscription_name = active_zuora_subscription.subscription_name
@@ -99,7 +101,7 @@ WITH map_merged_crm_account AS (
     LEFT JOIN true_up_lines_dates
       ON revenue_contract_line.subscription_name = true_up_lines_dates.subscription_name
         AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
-    WHERE revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
+    WHERE revenue_contract_line.revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
       AND recognized_amount > 0
   
 ), mje_summed AS (
