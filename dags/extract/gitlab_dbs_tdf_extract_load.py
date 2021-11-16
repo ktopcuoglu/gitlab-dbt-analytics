@@ -83,7 +83,26 @@ config_dict_td_pgp = {
         "sync_schedule_interval": None,
         "task_name": "gitlab-com",
     },
+    "el_gitlab_ops_trusted_data_extract_load": {
+        "cloudsql_instance_name": None,
+        "dag_name": "el_gitlab_ops_trusted_data_extract_load",
+        "dbt_name": "None",
+        "env_vars": {},
+        "extract_schedule_interval": "0 8 */1 * *",
+        "secrets": [
+            GITLAB_COM_CI_DB_NAME,
+            GITLAB_COM_CI_DB_HOST,
+            GITLAB_COM_CI_DB_PASS,
+            GITLAB_COM_CI_DB_PORT,
+            GITLAB_COM_CI_DB_USER,
+        ],
+        "start_date": datetime(2021, 11, 15),
+        "sync_schedule_interval": None,
+        "task_name": "gitlab-com-ops",
+    },
 }
+
+
 def extract_manifest(file_path):
     with open(file_path, "r") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
