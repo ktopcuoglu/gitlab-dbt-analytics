@@ -19,6 +19,7 @@
 
     SELECT
       fct_crm_person.dim_crm_person_id,
+      dim_crm_person.dim_crm_user_id,
       mql_date_first.date_id                   AS mql_date_first_id,
       mql_date_first.date_day                  AS mql_date_first,
       fct_crm_person.mql_datetime_first,
@@ -176,5 +177,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2021-09-17",
+    updated_date="2021-11-05",
   ) }}

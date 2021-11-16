@@ -126,8 +126,10 @@
       ON fct_mrr.dim_product_detail_id = dim_product_detail.dim_product_detail_id
     LEFT JOIN dim_subscription
       ON fct_mrr.dim_subscription_id = dim_subscription.dim_subscription_id
-    WHERE dim_product_detail.product_delivery_type = 'Self-Managed'
-      AND subscription_start_date <= CURRENT_DATE
+    WHERE subscription_start_date <= CURRENT_DATE
+    QUALIFY LAST_VALUE(dim_product_detail.product_delivery_type) OVER(
+        PARTITION BY dim_subscription.subscription_name ORDER BY dim_subscription.subscription_version, fct_mrr.dim_date_id
+      ) = 'Self-Managed'
 
 ), subscriptions_with_arr_in_current_month AS ( -- Get subscriptions names that are currently paying ARR.
      -- If the subscription is not paying ARR no reason to investigate it
