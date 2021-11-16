@@ -34,7 +34,8 @@ WITH prep_issue_user_request AS (
       dim_ticket_id,
       request_priority,
       is_request_priority_empty,
-      FALSE                 AS is_user_request_only_in_collaboration_project 
+      FALSE                 AS is_user_request_only_in_collaboration_project,
+      link_last_updated_at
     FROM prep_issue_user_request
 
     UNION
@@ -47,7 +48,8 @@ WITH prep_issue_user_request AS (
       -1                    AS dim_ticket_id,
       1::NUMBER             AS request_priority,
       TRUE                  AS is_request_priority_empty,
-      TRUE                  AS is_user_request_only_in_collaboration_project
+      TRUE                  AS is_user_request_only_in_collaboration_project,
+      link_last_updated_at
     FROM issue_request_collaboration_projects_filtered
 
 )
@@ -57,6 +59,6 @@ WITH prep_issue_user_request AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-10-27",
+    updated_date="2021-11-16",
 ) }}
 

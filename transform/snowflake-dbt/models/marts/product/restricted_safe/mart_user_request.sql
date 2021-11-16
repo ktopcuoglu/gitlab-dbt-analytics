@@ -290,6 +290,9 @@
       bdg_issue_user_request.request_priority                                     AS request_priority,
       bdg_issue_user_request.is_request_priority_empty                            AS is_request_priority_empty,
       bdg_issue_user_request.is_user_request_only_in_collaboration_project        AS is_user_request_only_in_collaboration_project,
+      bdg_issue_user_request.link_last_updated_at                                 AS link_last_updated_at,
+      bdg_issue_user_request.link_last_updated_at::DATE                           AS link_last_updated_date,
+      DATE_TRUNC('month', bdg_issue_user_request.link_last_updated_at::DATE)      AS link_last_updated_month,
 
       IFF(link_type = 'Opportunity', 'https://gitlab.my.salesforce.com/' || bdg_issue_user_request.dim_crm_opportunity_id, 'No Link')
                                                                                   AS crm_opportunity_link,
@@ -363,6 +366,9 @@
       bdg_epic_user_request.request_priority                                      AS request_priority,
       bdg_epic_user_request.is_request_priority_empty                             AS is_request_priority_empty,
       bdg_epic_user_request.is_user_request_only_in_collaboration_project         AS is_user_request_only_in_collaboration_project,
+      bdg_epic_user_request.link_last_updated_at                                  AS link_last_updated_at,
+      bdg_epic_user_request.link_last_updated_at::DATE                            AS link_last_updated_date,
+      DATE_TRUNC('month', bdg_epic_user_request.link_last_updated_at::DATE)       AS link_last_updated_month,
 
       IFF(link_type = 'Opportunity', 'https://gitlab.my.salesforce.com/' || bdg_epic_user_request.dim_crm_opportunity_id, 'No Link')
                                                                                   AS crm_opportunity_link,

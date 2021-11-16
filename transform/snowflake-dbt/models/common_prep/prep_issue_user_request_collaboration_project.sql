@@ -56,7 +56,8 @@ WITH gitlab_dotcom_projects AS (
       collaboration_projects.*,
       gitlab_dotcom_project_routes.project_id AS collaboration_project_id,
       gitlab_issues.issue_id,
-      gitlab_issues.issue_description
+      gitlab_issues.issue_description,
+      gitlab_issues.updated_at
     FROM collaboration_projects
     LEFT JOIN gitlab_dotcom_project_routes
       ON gitlab_dotcom_project_routes.complete_path = collaboration_projects.gitlab_customer_success_project
@@ -86,7 +87,8 @@ WITH gitlab_dotcom_projects AS (
 
     SELECT 
       collaboration_projects_with_ids.*,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/)gitlab-org\/[^ ]*issues\/[0-9]{1,10}') AS issue_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/)gitlab-org\/[^ ]*issues\/[0-9]{1,10}') AS issue_links,
+      issue_notes.updated_at                                                        AS note_updated_at
     FROM collaboration_projects_with_ids
     LEFT JOIN issue_notes
       ON issue_notes.issue_id = collaboration_projects_with_ids.issue_id
@@ -110,7 +112,8 @@ WITH gitlab_dotcom_projects AS (
       gitlab_customer_success_project,
       collaboration_project_id,
       user_request_issue_iid,
-      user_request_project_path
+      user_request_project_path,
+      note_updated_at  AS link_last_updated_at
     FROM collaboration_projects_issue_notes_parsed
 
     UNION
@@ -120,7 +123,8 @@ WITH gitlab_dotcom_projects AS (
       gitlab_customer_success_project,
       collaboration_project_id,
       user_request_issue_iid,
-      user_request_project_path
+      user_request_project_path,
+      updated_at
     FROM collaboration_projects_issue_descriptions_parsed
 
 ), unioned_with_user_request_project_id AS (
@@ -142,7 +146,8 @@ WITH gitlab_dotcom_projects AS (
       unioned_with_user_request_project_id.collaboration_project_id         AS dim_collaboration_project_id,
       unioned_with_user_request_project_id.user_request_project_id          AS dim_project_id,
       unioned_with_user_request_project_id.gitlab_customer_success_project,
-      unioned_with_user_request_project_id.user_request_issue_iid           AS issue_internal_id
+      unioned_with_user_request_project_id.user_request_issue_iid           AS issue_internal_id,
+      unioned_with_user_request_project_id.link_last_updated_at
     FROM unioned_with_user_request_project_id
     INNER JOIN gitlab_issues
       ON gitlab_issues.project_id = unioned_with_user_request_project_id.user_request_project_id
@@ -156,7 +161,8 @@ WITH gitlab_dotcom_projects AS (
       collaboration_projects_with_ids.collaboration_project_id              AS dim_collaboration_project_id,
       gitlab_issues.project_id                                              AS dim_project_id,
       collaboration_projects_with_ids.gitlab_customer_success_project,
-      gitlab_issues.issue_iid                                               AS issue_internal_id
+      gitlab_issues.issue_iid                                               AS issue_internal_id,
+      issue_links.updated_at                                                AS link_last_updated_at
     FROM collaboration_projects_with_ids
     INNER JOIN issue_links
       ON issue_links.source_id = collaboration_projects_with_ids.issue_id
@@ -174,7 +180,8 @@ WITH gitlab_dotcom_projects AS (
       unioned_with_issue_links.dim_collaboration_project_id,
       unioned_with_issue_links.dim_project_id                 AS dim_original_issue_project_id,
       unioned_with_issue_links.gitlab_customer_success_project,
-      unioned_with_issue_links.issue_internal_id              AS original_issue_internal_id
+      unioned_with_issue_links.issue_internal_id              AS original_issue_internal_id,
+      unioned_with_issue_links.link_last_updated_at
     FROM unioned_with_issue_links
     INNER JOIN map_moved_duplicated_issue
       ON map_moved_duplicated_issue.issue_id = unioned_with_issue_links.dim_issue_id
@@ -186,6 +193,6 @@ WITH gitlab_dotcom_projects AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-10-12",
+    updated_date="2021-11-16",
 ) }}
 

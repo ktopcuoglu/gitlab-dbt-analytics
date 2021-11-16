@@ -66,7 +66,8 @@ WITH gitlab_dotcom_namespaces AS (
       collaboration_projects.*,
       gitlab_dotcom_project_routes.project_id AS collaboration_project_id,
       gitlab_issues.issue_id,
-      gitlab_issues.issue_description
+      gitlab_issues.issue_description,
+      gitlab_issues.updated_at
     FROM collaboration_projects
     LEFT JOIN gitlab_dotcom_project_routes
       ON gitlab_dotcom_project_routes.complete_path = collaboration_projects.gitlab_customer_success_project
@@ -96,7 +97,8 @@ WITH gitlab_dotcom_namespaces AS (
 
     SELECT 
       collaboration_projects_with_ids.*,
-      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/groups\/)gitlab-org\/[^ ]*epics\/[0-9]{1,10}') AS epic_links
+      "{{this.database}}".{{target.schema}}.regexp_to_array(issue_notes.note, '(?<=gitlab.com\/groups\/)gitlab-org\/[^ ]*epics\/[0-9]{1,10}') AS epic_links,
+      issue_notes.updated_at                                                       AS note_updated_at
     FROM collaboration_projects_with_ids
     LEFT JOIN issue_notes
       ON issue_notes.issue_id = collaboration_projects_with_ids.issue_id
@@ -120,7 +122,8 @@ WITH gitlab_dotcom_namespaces AS (
       gitlab_customer_success_project,
       collaboration_project_id,
       user_request_epic_internal_id,
-      user_request_namespace_path
+      user_request_namespace_path,
+      note_updated_at AS link_last_updated_at
     FROM collaboration_projects_issue_notes_parsed
 
     UNION
@@ -130,7 +133,8 @@ WITH gitlab_dotcom_namespaces AS (
       gitlab_customer_success_project,
       collaboration_project_id,
       user_request_epic_internal_id,
-      user_request_namespace_path
+      user_request_namespace_path,
+      updated_at
     FROM collaboration_projects_issue_descriptions_parsed
 
 ), unioned_with_user_request_namespace_id AS (
@@ -151,8 +155,9 @@ WITH gitlab_dotcom_namespaces AS (
       unioned_with_user_request_namespace_id.account_id                       AS dim_crm_account_id,
       unioned_with_user_request_namespace_id.collaboration_project_id         AS dim_collaboration_project_id,
       unioned_with_user_request_namespace_id.user_request_namespace_id        AS dim_namespace_id,
-      unioned_with_user_request_namespace_id.gitlab_customer_success_project,
-      unioned_with_user_request_namespace_id.user_request_epic_internal_id    AS epic_internal_id
+      unioned_with_user_request_namespace_id.gitlab_customer_success_project  AS gitlab_customer_success_project,
+      unioned_with_user_request_namespace_id.user_request_epic_internal_id    AS epic_internal_id,
+      unioned_with_user_request_namespace_id.link_last_updated_at             AS link_last_updated_at
     FROM unioned_with_user_request_namespace_id
     INNER JOIN gitlab_epics
       ON gitlab_epics.group_id = unioned_with_user_request_namespace_id.user_request_namespace_id
@@ -165,6 +170,6 @@ WITH gitlab_dotcom_namespaces AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-10-12",
+    updated_date="2021-11-16",
 ) }}
 
