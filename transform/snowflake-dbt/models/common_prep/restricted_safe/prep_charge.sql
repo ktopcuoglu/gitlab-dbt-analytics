@@ -283,7 +283,7 @@ WITH map_merged_crm_account AS (
       NULL                                                                                  AS rate_plan_charge_number,
       NULL                                                                                  AS rate_plan_charge_version,
       NULL                                                                                  AS rate_plan_charge_segment,
-      MD5(manual_charges_prep.dim_charge_id)                                                AS dim_charge_id,
+      manual_charges_prep.dim_charge_id                                                     AS dim_charge_id,
       manual_charges_prep.dim_product_detail_id                                             AS dim_product_detail_id,
       NULL                                                                                  AS dim_amendment_id_charge,
       active_zuora_subscription.subscription_id                                             AS dim_subscription_id,
