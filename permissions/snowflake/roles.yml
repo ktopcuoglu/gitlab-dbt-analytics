@@ -1525,6 +1525,20 @@ roles:
                     - raw.tap_postgres.gitlab_db_web_hooks_validate
                     - raw.tap_postgres.gitlab_db_web_hook_logs
 
+    - gitlab_dotcom_prep:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.gitlab_dotcom
+            tables:
+                read:
+                    - prep.gitlab_dotcom.*
+
     - google_analytics_360:
         warehouses:
             - analyst_xs
