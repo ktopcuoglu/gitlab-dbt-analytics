@@ -25,7 +25,6 @@ WITH prep_issue_user_request AS (
 
 ), unioned AS (
 
-
     SELECT
       dim_issue_id,
       link_type,
@@ -61,4 +60,3 @@ WITH prep_issue_user_request AS (
     created_date="2021-10-12",
     updated_date="2021-11-16",
 ) }}
-

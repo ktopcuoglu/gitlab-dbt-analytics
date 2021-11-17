@@ -148,7 +148,7 @@ WITH gitlab_dotcom_namespaces AS (
     INNER JOIN gitlab_dotcom_namespaces
       ON gitlab_dotcom_namespaces.namespace_id = gitlab_dotcom_namespace_routes.namespace_id
 
-), final AS (
+), final AS ( -- In case there are various issues with the same link to issues and dim_crm_account_id, dedup them by taking the latest updated link
 
     SELECT
       gitlab_epics.epic_id                                                    AS dim_epic_id,
@@ -162,6 +162,8 @@ WITH gitlab_dotcom_namespaces AS (
     INNER JOIN gitlab_epics
       ON gitlab_epics.group_id = unioned_with_user_request_namespace_id.user_request_namespace_id
       AND gitlab_epics.epic_internal_id = unioned_with_user_request_namespace_id.user_request_epic_internal_id
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY gitlab_epics.epic_id, unioned_with_user_request_namespace_id.collaboration_project_id
+      ORDER BY unioned_with_user_request_namespace_id.link_last_updated_at DESC NULLS LAST) = 1
 
 )
 

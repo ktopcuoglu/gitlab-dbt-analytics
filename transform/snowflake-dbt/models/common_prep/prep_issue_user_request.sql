@@ -198,7 +198,7 @@
       link_type,
       dim_crm_opportunity_id,
       dim_crm_account_id,
-      NULL AS dim_ticket_id,
+      NULL                                       AS dim_ticket_id,
       IFF(request_priority IS NULL, TRUE, FALSE) AS is_request_priority_empty,
       IFNULL(request_priority, 1)::NUMBER        AS request_priority,
       note_updated_at                            AS link_last_updated_at

@@ -172,7 +172,7 @@ WITH gitlab_dotcom_projects AS (
       ON gitlab_dotcom_project_routes.project_id = gitlab_issues.project_id
     WHERE gitlab_dotcom_project_routes.path LIKE 'gitlab-org%'
 
-), final AS (
+), final AS ( -- In case there are various issues that merge to the same, dedup them by taking the latest updated link
 
     SELECT
       map_moved_duplicated_issue.dim_issue_id,
@@ -181,10 +181,12 @@ WITH gitlab_dotcom_projects AS (
       unioned_with_issue_links.dim_project_id                 AS dim_original_issue_project_id,
       unioned_with_issue_links.gitlab_customer_success_project,
       unioned_with_issue_links.issue_internal_id              AS original_issue_internal_id,
-      unioned_with_issue_links.link_last_updated_at
+      unioned_with_issue_links.link_last_updated_at           AS link_last_updated_at
     FROM unioned_with_issue_links
     INNER JOIN map_moved_duplicated_issue
       ON map_moved_duplicated_issue.issue_id = unioned_with_issue_links.dim_issue_id
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY map_moved_duplicated_issue.dim_issue_id, unioned_with_issue_links.dim_crm_account_id
+      ORDER BY unioned_with_issue_links.link_last_updated_at DESC NULLS LAST) = 1
 
 )
 
