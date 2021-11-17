@@ -4139,6 +4139,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - vnagy:
+        member_of:
+            - gitlab_dotcom_prep
+        warehouses:
+            - analyst_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -4954,6 +4960,11 @@ users:
         can_login: yes
         member_of:
             - vjuhasz
+
+    - vnagy:
+        can_login: yes
+        member_of:
+            - vnagy
 
     - vprakash:
         can_login: yes
