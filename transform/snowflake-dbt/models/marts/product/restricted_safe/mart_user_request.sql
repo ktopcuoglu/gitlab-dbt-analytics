@@ -30,6 +30,8 @@
     FROM fct_quote_item
     INNER JOIN dim_crm_opportunity
       ON dim_crm_opportunity.dim_crm_opportunity_id = fct_quote_item.dim_crm_opportunity_id
+    INNER JOIN fct_crm_opportunity
+      ON fct_crm_opportunity.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
     INNER JOIN dim_quote
       ON dim_quote.dim_quote_id = fct_quote_item.dim_quote_id
     INNER JOIN dim_product_detail
@@ -37,6 +39,7 @@
     WHERE dim_quote.is_primary_quote = TRUE
       AND dim_product_detail.product_tier_name IN ('Plus', 'GitHost', 'Standard', 'Self-Managed - Starter', 'Self-Managed - Premium',
         'SaaS - Premium', 'SaaS - Bronze', 'Basic', 'Self-Managed - Ultimate', 'SaaS - Ultimate')
+      AND fct_crm_opportunity.close_date >= '2019-02-01'
     {{ dbt_utils.group_by(5) }}
 
 ), account_open_fo_opp_seats AS (
@@ -64,6 +67,7 @@
       ON dim_order_type.dim_order_type_id = fct_crm_opportunity.dim_order_type_id
     INNER JOIN dim_crm_opportunity
       ON dim_crm_opportunity.dim_crm_opportunity_id = fct_crm_opportunity.dim_crm_opportunity_id
+    WHERE fct_crm_opportunity.close_date >= '2019-02-01' -- Net ARR is only good after 2019-02-01
 
 ), account_lost_opp_arr AS (
 
