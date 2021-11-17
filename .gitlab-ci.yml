@@ -206,7 +206,7 @@ yaml_validation:
 
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.8.0
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.14.0
   tags:
     - analytics
   only:
@@ -217,8 +217,16 @@ yaml_validation:
 permifrost_manual:
   <<: *permifrost
   script:
-    - permifrost grant permissions/snowflake/roles.yml --diff --dry
+    - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
+
+permifrost_automatic:
+  <<: *permifrost
+  script:
+    - permifrost spec-test permissions/snowflake/roles.yml
+  only:
+    changes:
+      - "permissions/snowflake/roles.yml"
 
 # ======
 # dbt docs to GitLab Pages
