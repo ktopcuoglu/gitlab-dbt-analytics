@@ -225,8 +225,11 @@ permifrost_automatic:
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
   only:
+    refs:
+      - merge_requests
     changes:
       - "permissions/snowflake/roles.yml"
+
 
 # ======
 # dbt docs to GitLab Pages
