@@ -1525,6 +1525,20 @@ roles:
                     - raw.tap_postgres.gitlab_db_web_hooks_validate
                     - raw.tap_postgres.gitlab_db_web_hook_logs
 
+    - gitlab_dotcom_prep:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.gitlab_dotcom
+            tables:
+                read:
+                    - prep.gitlab_dotcom.*
+
     - google_analytics_360:
         warehouses:
             - analyst_xs
@@ -4125,6 +4139,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - vnagy:
+        member_of:
+            - gitlab_dotcom_prep
+        warehouses:
+            - analyst_xs
+
     - vprakash:
         member_of:
             - engineer
@@ -4940,6 +4960,11 @@ users:
         can_login: yes
         member_of:
             - vjuhasz
+
+    - vnagy:
+        can_login: yes
+        member_of:
+            - vnagy
 
     - vprakash:
         can_login: yes
