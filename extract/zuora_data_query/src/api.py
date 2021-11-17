@@ -19,23 +19,23 @@ class ZuoraQueriesAPI:
         zuora_token = self.authenticate_zuora(user, password)
 
         self.request_headers = {
-            "Content-Type" : "application/json",
-            "Authorization": f"Bearer {zuora_token}"
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {zuora_token}",
         }
 
     def authenticate_zuora(self, user, password):
         """
-            Written to encapsulate Zuora's authentication functionality
-            :return:
+        Written to encapsulate Zuora's authentication functionality
+        :return:
         """
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
         }
 
         data_auth = {
-            "client_id"    : user,
+            "client_id": user,
             "client_secret": password,
-            "grant_type"   : "client_credentials"
+            "grant_type": "client_credentials",
         }
         auth_url = f"{self.base_url}/oauth/token"
         response = requests.post(auth_url, headers=headers, data=data_auth)
@@ -56,24 +56,24 @@ class ZuoraQueriesAPI:
         api_url = f"{self.base_url}/v1/batch-query/"
 
         data_query_request = {
-            "format"   : "csv",
-            "version"  : "1.1",
-            "name"     : query_type,
+            "format": "csv",
+            "version": "1.1",
+            "name": query_type,
             "encrypted": "none",
-            "partner"  : "",
-            "project"  : "",
+            "partner": "",
+            "project": "",
             "notifyUrl": " ",
-            "queries"  : [{
-                "name" : query_type,
-                "query": query_string,
-                "type" : "zoqlexport"
-            }]
+            "queries": [
+                {"name": query_type, "query": query_string, "type": "zoqlexport"}
+            ],
         }
         info(f"{data_query_request}")
-        response = requests.post(api_url,
-                                 headers=self.request_headers,
-                                 data=json.dumps(data_query_request),
-                                 verify=False).json()
+        response = requests.post(
+            api_url,
+            headers=self.request_headers,
+            data=json.dumps(data_query_request),
+            verify=False,
+        ).json()
 
         if response.get("id") is None:
             warning(response)
@@ -82,9 +82,7 @@ class ZuoraQueriesAPI:
             return response["id"]
 
     def wait_for_zuora_to_complete(self, job_id, wait_time=30):
-        """
-
-        """
+        """ """
         api_url = f"{self.base_url}/v1/batch-query/jobs/{job_id}"
 
         response = requests.get(url=api_url, headers=self.request_headers).json()
@@ -120,25 +118,25 @@ class ZuoraQueriesAPI:
         else:
             return False
 
-    def process_scd(self, scd_file: str = './scd_queries.yml'):
+    def process_scd(self, scd_file: str = "./scd_queries.yml"):
 
         with open(scd_file) as file:
             query_specs = yaml.load(file, Loader=yaml.FullLoader)
 
-        tables = query_specs.get('tables')
+        tables = query_specs.get("tables")
         for table_spec in tables:
-            job_id = self.request_query_data(query_string=tables.get(table_spec).get('query'),
-                                             query_type=table_spec)
+            job_id = self.request_query_data(
+                query_string=tables.get(table_spec).get("query"), query_type=table_spec
+            )
             df = self.get_file_from_zuora(job_id)
 
-
-
-    def main(self ) -> None:
+    def main(self) -> None:
         """
         Read data from a postgres DB and upload it directly to Snowflake.
         """
         self.process_scd()
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     zq = ZuoraQueriesAPI()
     zq.main()

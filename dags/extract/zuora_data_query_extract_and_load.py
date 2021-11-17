@@ -7,7 +7,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
-    gitlab_pod_env_vars
+    gitlab_pod_env_vars,
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -18,6 +18,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
 from kubernetes_helpers import get_affinity, get_toleration
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 pod_env_vars = gitlab_pod_env_vars
@@ -41,7 +42,9 @@ airflow_home = env["AIRFLOW_HOME"]
 
 # Create the DAG
 dag = DAG(
-    "zuora_data_query_extract_and_load", default_args=default_args, schedule_interval="0 */2 * * *"
+    "zuora_data_query_extract_and_load",
+    default_args=default_args,
+    schedule_interval="0 */2 * * *",
 )
 
 # BambooHR Extract
