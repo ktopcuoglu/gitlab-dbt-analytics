@@ -20,6 +20,7 @@ databases:
     - zoominfo_inbound:
         shared: yes
 
+
 # User / Testing
     - testing_db:
         shared: no
