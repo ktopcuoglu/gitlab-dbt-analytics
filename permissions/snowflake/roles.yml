@@ -104,6 +104,11 @@ databases:
     - mcooper_prep:
         shared: no
 
+    - mdrussell_prod:
+        shared: no
+    - mdrussell_prep:
+        shared: no
+
     - mlaanen_prod:
         shared: no
     - mlaanen_prep:
@@ -3241,6 +3246,45 @@ roles:
     - mdewji:
         warehouses: []
 
+    - mdrussell:
+        member_of:
+         - data_team_analyst
+         - restricted_safe
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - mdrussell_prep
+                - mdrussell_prod
+            schemas:
+                - mdrussell_prep.*
+                - mdrussell_prod.*
+            tables:
+                - mdrussell_prep.*.*
+                - mdrussell_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - mdrussell_prep
+                    - mdrussell_prod
+                write:
+                    - mdrussell_prep
+                    - mdrussell_prod
+            schemas:
+                read:
+                    - mdrussell_prep.*
+                    - tmdrussell_prod.*
+                write:
+                    - mdrussell_prep.*
+                    - mdrussell_prod.*
+            tables:
+                read:
+                    - mdrussell_prep.*.*
+                    - mdrussell_prod.*.*
+                write:
+                    - mdrussell_prep.*.*
+                    - mdrussell_prod.*.*      
+
     - michellecooper:
         member_of: []
         warehouses: []
@@ -4599,6 +4643,11 @@ users:
     - mdewji:
         can_login: no
         member_of: []
+
+    - mdrussell:
+        can_login: yes
+        member_of:
+            - mdrussell
 
     - meltano:
         can_login: yes
