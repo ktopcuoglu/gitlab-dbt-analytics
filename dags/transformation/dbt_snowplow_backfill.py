@@ -37,6 +37,12 @@ from kube_secrets import (
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
+
+if GIT_BRANCH in ["master", "main"]:
+    target = "prod"
+else:
+    target = "ci"
+
 task_secrets = [
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
@@ -68,16 +74,21 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt_snowplow_backfill", default_args=default_args, schedule_interval=None)
+dag = DAG(
+    "dbt_snowplow_backfill",
+    default_args=default_args,
+    schedule_interval=None,
+    concurrency=2,
+)
 
 
 def generate_dbt_command(vars_dict):
     json_dict = json.dumps(vars_dict)
 
-    dbt_generate_command = f"""
+    dbt_generate_command = f""" 
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
-        dbt run --profiles-dir profile --target prod --models +snowplow --full-refresh --vars '{json_dict}'; ret=$?;
+        dbt run --profiles-dir profile --target {target} --models +snowplow --full-refresh --vars '{json_dict}'; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
@@ -93,11 +104,9 @@ def generate_dbt_command(vars_dict):
     )
 
 
-dummy_operator = DummyOperator(task_id="start", dag=dag)
-
 dbt_snowplow_combined_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target prod --models staging.snowplow.combined; ret=$?;
+        dbt run --profiles-dir profile --target {target} --models legacy.snowplow.combined; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 
@@ -112,6 +121,9 @@ dbt_snowplow_combined = KubernetesPodOperator(
     arguments=[dbt_snowplow_combined_cmd],
     dag=dag,
 )
+
+
+dummy_operator = DummyOperator(task_id="start", dag=dag)
 
 for month in partitions(
     datetime.strptime("2018-07-01", "%Y-%m-%d").date(), date.today(), "month"

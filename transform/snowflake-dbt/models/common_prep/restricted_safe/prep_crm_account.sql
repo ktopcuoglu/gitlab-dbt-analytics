@@ -37,7 +37,14 @@ WITH map_merged_crm_account AS (
       tsp_account_employees,
       tsp_max_family_employees,
       created_date,
-      zi_technologies
+      zi_technologies,
+      zoom_info_website,
+      zoom_info_company_other_domains,
+      zoom_info_dozisf_zi_id,
+      zoom_info_parent_company_zi_id,
+      zoom_info_parent_company_name,
+      zoom_info_ultimate_parent_company_zi_id,
+      zoom_info_ultimate_parent_company_name
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
@@ -104,9 +111,10 @@ WITH map_merged_crm_account AS (
     sfdc_account.gitlab_com_user,
     sfdc_account.tsp_account_employees,
     sfdc_account.tsp_max_family_employees,
-    sfdc_users.name                                         AS technical_account_manager,
-    sfdc_account.is_deleted                                 AS is_deleted,
-    map_merged_crm_account.dim_crm_account_id               AS merged_to_account_id,
+    account_owner.name                                                  AS account_owner,
+    sfdc_users.name                                                     AS technical_account_manager,
+    sfdc_account.is_deleted                                             AS is_deleted,
+    map_merged_crm_account.dim_crm_account_id                           AS merged_to_account_id,
     IFF(sfdc_record_type.record_type_label = 'Partner'
         AND sfdc_account.partner_type IN ('Alliance', 'Channel')
         AND sfdc_account.partner_status = 'Authorized',
@@ -114,6 +122,13 @@ WITH map_merged_crm_account AS (
     sfdc_account.created_date                               AS crm_account_created_date,
     sfdc_account.zi_technologies                            AS crm_account_zi_technologies,
     sfdc_account.technical_account_manager_date,
+    sfdc_account.zoom_info_website                          AS crm_account_zoom_info_website,
+    sfdc_account.zoom_info_company_other_domains            AS crm_account_zoom_info_company_other_domains,
+    sfdc_account.zoom_info_dozisf_zi_id                     AS crm_account_zoom_info_dozisf_zi_id,
+    sfdc_account.zoom_info_parent_company_zi_id             AS crm_account_zoom_info_parent_company_zi_id,
+    sfdc_account.zoom_info_parent_company_name              AS crm_account_zoom_info_parent_company_name,
+    sfdc_account.zoom_info_ultimate_parent_company_zi_id    AS crm_account_zoom_info_ultimate_parent_company_zi_id,
+    sfdc_account.zoom_info_ultimate_parent_company_name     AS crm_account_zoom_info_ultimate_parent_company_name,
 
     ----ultimate parent crm account info
     ultimate_parent_account.account_id                  AS dim_parent_crm_account_id,
@@ -140,9 +155,16 @@ WITH map_merged_crm_account AS (
        WHEN ultimate_parent_account.tsp_max_family_employees <= 2000 AND ultimate_parent_account.tsp_max_family_employees > 1500 THEN 'Employees > 1.5K'
        WHEN ultimate_parent_account.tsp_max_family_employees <= 1500 AND ultimate_parent_account.tsp_max_family_employees > 1000  THEN 'Employees > 1K'
        ELSE 'Employees < 1K'
-    END                                                 AS parent_crm_account_employee_count_band,
-    ultimate_parent_account.created_date                AS parent_crm_account_created_date,
-    ultimate_parent_account.zi_technologies             AS parent_crm_account_zi_technologies
+    END                                                                AS parent_crm_account_employee_count_band,
+    ultimate_parent_account.created_date                               AS parent_crm_account_created_date,
+    ultimate_parent_account.zi_technologies                            AS parent_crm_account_zi_technologies,
+    ultimate_parent_account.zoom_info_website                          AS parent_crm_account_zoom_info_website,
+    ultimate_parent_account.zoom_info_company_other_domains            AS parent_crm_account_zoom_info_company_other_domains,
+    ultimate_parent_account.zoom_info_dozisf_zi_id                     AS parent_crm_account_zoom_info_dozisf_zi_id,
+    ultimate_parent_account.zoom_info_parent_company_zi_id             AS parent_crm_account_zoom_info_parent_company_zi_id,
+    ultimate_parent_account.zoom_info_parent_company_name              AS parent_crm_account_zoom_info_parent_company_name,
+    ultimate_parent_account.zoom_info_ultimate_parent_company_zi_id    AS parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
+    ultimate_parent_account.zoom_info_ultimate_parent_company_name     AS parent_crm_account_zoom_info_ultimate_parent_company_name
   FROM sfdc_account
   LEFT JOIN map_merged_crm_account
     ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
@@ -150,6 +172,8 @@ WITH map_merged_crm_account AS (
     ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
   LEFT OUTER JOIN sfdc_users
     ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+  LEFT JOIN sfdc_users AS account_owner
+    ON account_owner.user_id = sfdc_account.owner_id
   LEFT JOIN sfdc_record_type
     ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
 
@@ -158,7 +182,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-06-01",
-    updated_date="2021-09-17"
+    updated_date="2021-11-15"
 ) }}

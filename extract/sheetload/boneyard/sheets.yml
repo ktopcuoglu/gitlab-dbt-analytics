@@ -36,10 +36,15 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - pricing_list
+  - name: product_usage_stages_monthly
+    owner: '@Kevin Dietz'
+    tabs: 
+      - product_usage_stages_monthly
   - name: pte_scores
     owner: '@Kevin Dietz'
     tabs:
       - pte_scores_20211013
+      - pte_scores_20211101
   - name: q4fy2021_system_usability_scale_results
     owner: '@rbacovic'
     tabs:

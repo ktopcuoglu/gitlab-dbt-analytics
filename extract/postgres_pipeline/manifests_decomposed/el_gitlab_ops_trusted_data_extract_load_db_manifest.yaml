@@ -1,0 +1,87 @@
+connection_info:
+  database: GITLAB_OPS_DB_NAME
+  host: GITLAB_OPS_DB_HOST
+  pass: GITLAB_OPS_DB_PASS
+  port: PG_PORT
+  user: GITLAB_OPS_DB_USER
+tables:
+  cluster_1:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_OPS_DB
+    import_query: |-
+        SELECT 'gitlab_ops_db_labels' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM labels
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_ops_db_merge_request_metrics' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM merge_request_metrics
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_ops_db_merge_requests' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM merge_requests
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_2:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_OPS_DB
+    import_query: |-
+        SELECT 'gitlab_ops_db_projects' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM projects
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_ops_db_users' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM users
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_3:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_OPS_DB
+    import_query: |-
+        SELECT 'gitlab_ops_db_ci_pipelines' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM ci_pipelines
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+  cluster_4:
+    dbt_source_model: true
+    export_schema: 'gitlab_ops_net'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_OPS_DB
+    import_query: |- 
+        SELECT 'gitlab_ops_db_ci_stages' AS table_name
+        , DATE(created_at) as created_date
+        , 'null' as updated_date
+        , count(*) as number_of_records
+        FROM ci_stages
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3

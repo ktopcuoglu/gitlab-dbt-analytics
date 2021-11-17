@@ -42,34 +42,108 @@ WITH dim_date AS (
     FROM zuora_subscription
     WHERE subscription_status IN ('Active', 'Cancelled')
 
-), manual_arr_true_up_allocation AS (
+), revenue_contract_line AS (
 
     SELECT *
-    FROM {{ ref('sheetload_manual_arr_true_up_allocation_source') }}
+    FROM {{ ref('zuora_revenue_revenue_contract_line_source') }}
+  
+), mje AS (
 
-), manual_charges AS ( -- added as a work around until there is an automated method for adding true-up adjustments to Zuora Revenue/Zuora Billing
+    SELECT 
+      *,
+      CASE 
+        WHEN debit_activity_type = 'Revenue' AND  credit_activity_type = 'Contract Liability' 
+          THEN -amount           
+        WHEN credit_activity_type = 'Revenue' AND  debit_activity_type = 'Contract Liability' 
+          THEN amount
+        ELSE amount                                                                             
+      END                                                                                       AS adjustment_amount
+    FROM {{ ref('zuora_revenue_manual_journal_entry_source') }}
+  
+), true_up_lines_dates AS (
+  
+    SELECT 
+      subscription_name,
+      revenue_contract_line_attribute_16,
+      MIN(revenue_start_date)               AS revenue_start_date,
+      MAX(revenue_end_date)                 AS revenue_end_date
+    FROM revenue_contract_line
+    GROUP BY 1,2
 
-    SELECT
-      manual_arr_true_up_allocation.account_id                                    AS billing_account_id,
-      map_merged_crm_account.dim_crm_account_id                                   AS crm_account_id,
-      MD5(manual_arr_true_up_allocation.rate_plan_charge_id)                      AS rate_plan_charge_id,
-      active_zuora_subscription.subscription_id                                   AS subscription_id,
-      active_zuora_subscription.subscription_name                                 AS subscription_name,
-      active_zuora_subscription.subscription_status                               AS subscription_status,
-      manual_arr_true_up_allocation.dim_product_detail_id                         AS product_details_id,
-      manual_arr_true_up_allocation.mrr                                           AS mrr,
-      NULL                                                                        AS delta_tcv,
-      manual_arr_true_up_allocation.unit_of_measure                               AS unit_of_measure,
-      0                                                                           AS quantity,
-      DATE_TRUNC('month', effective_start_date)                                   AS effective_start_month,
-      DATE_TRUNC('month', effective_end_date)                                     AS effective_end_month
-    FROM manual_arr_true_up_allocation
+), true_up_lines AS (
+
+    SELECT 
+      revenue_contract_line_id,
+      revenue_contract_id,
+      zuora_account.account_id                              AS dim_billing_account_id,
+      map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
+      MD5(rate_plan_charge_id)                              AS dim_charge_id,
+      active_zuora_subscription.subscription_id             AS dim_subscription_id,
+      active_zuora_subscription.subscription_name           AS subscription_name,
+      active_zuora_subscription.subscription_status         AS subscription_status,
+      product_rate_plan_charge_id                           AS dim_product_detail_id,
+      true_up_lines_dates.revenue_start_date                AS revenue_start_date,
+      true_up_lines_dates.revenue_end_date                  AS revenue_end_date
+    FROM revenue_contract_line
     INNER JOIN active_zuora_subscription
-      ON manual_arr_true_up_allocation.subscription_name = active_zuora_subscription.subscription_name
+      ON revenue_contract_line.subscription_name = active_zuora_subscription.subscription_name
     INNER JOIN zuora_account
-      ON active_zuora_subscription.account_id = zuora_account.account_id
+      ON revenue_contract_line.customer_number = zuora_account.account_number
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
+    LEFT JOIN true_up_lines_dates
+      ON revenue_contract_line.subscription_name = true_up_lines_dates.subscription_name
+        AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
+    WHERE revenue_contract_line.revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
+      AND recognized_amount > 0
+  
+), mje_summed AS (
+  
+    SELECT
+      mje.revenue_contract_line_id,
+      SUM(adjustment_amount) AS adjustment
+    FROM mje
+    INNER JOIN true_up_lines
+      ON mje.revenue_contract_line_id = true_up_lines.revenue_contract_line_id
+        AND mje.revenue_contract_id = true_up_lines.revenue_contract_id
+    {{ dbt_utils.group_by(n=1) }}
+
+), true_up_lines_subcription_grain AS (
+  
+    SELECT
+      lns.dim_billing_account_id,
+      lns.dim_crm_account_id,
+      lns.dim_charge_id,
+      lns.dim_subscription_id,
+      lns.subscription_name,
+      lns.subscription_status,
+      lns.dim_product_detail_id,
+      SUM(mje.adjustment)               AS adjustment,
+      MIN(revenue_start_date)           AS revenue_start_date,
+      MAX(revenue_end_date)             AS revenue_end_date
+    FROM true_up_lines lns
+    LEFT JOIN mje_summed mje
+      ON lns.revenue_contract_line_id = mje.revenue_contract_line_id
+    WHERE adjustment IS NOT NULL
+    {{ dbt_utils.group_by(n=7) }}
+  
+), manual_charges AS (
+  
+    SELECT 
+      dim_billing_account_id,
+      dim_crm_account_id,
+      dim_charge_id,
+      dim_subscription_id,
+      subscription_name,
+      subscription_status,
+      dim_product_detail_id,
+      adjustment/ROUND(MONTHS_BETWEEN(revenue_end_date::date, revenue_start_date::date),0)  AS mrr,
+      NULL                                                                                  AS delta_tcv,
+      'Seats'                                                                               AS unit_of_measure,
+      0                                                                                     AS quantity,
+      DATE_TRUNC('month',revenue_start_date::date)                                          AS effective_start_month,
+      DATE_TRUNC('month',DATEADD('day',1,revenue_end_date::date))                           AS effective_end_month
+    FROM true_up_lines_subcription_grain
 
 ), rate_plan_charge_filtered AS (
 
@@ -152,7 +226,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2021-01-04",
-    updated_date="2021-07-29",
+    updated_date="2021-11-15",
 ) }}
