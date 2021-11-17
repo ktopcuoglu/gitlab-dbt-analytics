@@ -11,7 +11,7 @@ WITH snapshots AS (
       name::VARCHAR                                     AS namespace_name,
       path::VARCHAR                                     AS namespace_path,
       owner_id::NUMBER                                  AS owner_id,
-      type                                              AS namespace_type,
+      IFNULL(type, 'User')::VARCHAR                     AS namespace_type,
       IFF(avatar IS NULL, FALSE, TRUE)                  AS has_avatar,
       created_at::TIMESTAMP                             AS namespace_created_at,
       updated_at::TIMESTAMP                             AS namespace_updated_at,
@@ -47,7 +47,7 @@ WITH snapshots AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@pempey",
     created_date="2021-06-15",
-    updated_date="2021-06-15"
+    updated_date="2021-11-10"
 ) }}

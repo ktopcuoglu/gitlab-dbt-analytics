@@ -137,30 +137,34 @@ SISENSE
    * [ ] Run below SQL script to perform the check.
 
    ```sql
-      WITH final as (
-         SELECT users.id, 
-            first_name, 
-            last_name, 
-            email_address, 
-            MAX(DATE(time_on_site_logs.created_at)) AS last_login_date  
-         FROM time_on_site_logs
-         JOIN users
-         --inner join between time_on_site_logs and users. This means if a user never performed a login, it will not show up in the results
-         --improvement point for next iteration check for users that were created over 90 days ago and that didn't perform a login.
-         ON time_on_site_logs.USER_ID = users.ID
-         LEFT OUTER JOIN user_roles
-         ON users.id = user_roles.user_id
-         LEFT OUTER JOIN roles
-         ON user_roles.role_id = roles.id
-         --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
-         WHERE roles.name = 'Everyone'
-         GROUP BY 1,2,3,4
-      )
+   WITH EMPLOYEE_DIRECTORY AS (
+  
+    SELECT full_name, 
+      work_email,
+      date_actual,
+      is_termination_date
+    FROM "PROD"."LEGACY"."EMPLOYEE_DIRECTORY_ANALYSIS"
+    WHERE date_actual <= current_date
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY full_name ORDER BY date_actual DESC) = 1
 
-      SELECT * 
-      FROM final
-      WHERE last_login_date < CURRENT_DATE-90
-      ORDER BY last_name;
+    ), FINAL as (
+
+    SELECT * 
+    FROM  employee_directory
+    WHERE is_termination_date = 'TRUE'
+
+    )
+
+    SELECT   
+      final.full_name, 
+      final.work_email 
+    FROM final
+    JOIN legacy.sheetload_sisense_users users 
+    ON final.work_email = users.email_address 
+      -- incase email adres is empty
+      OR final.full_name = users.FIRST_NAME || ' ' || users.LAST_NAME
+   ORDER BY 2
+
    ```
 
 

@@ -26,6 +26,13 @@ from kube_secrets import (
     GITLAB_COM_CI_DB_PASS,
     GITLAB_COM_CI_DB_PORT,
     GITLAB_COM_CI_DB_USER,
+    GITLAB_OPS_DB_USER,
+    GITLAB_OPS_DB_PASS,
+    GITLAB_OPS_DB_HOST,
+    GITLAB_OPS_DB_NAME,
+    PG_PORT,
+    GCP_PROJECT,
+    GCP_REGION,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
@@ -39,6 +46,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 standard_secrets = [
     GCP_SERVICE_CREDS,
+    PG_PORT,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_ACCOUNT,
@@ -81,7 +89,25 @@ config_dict_td_pgp = {
         ],
         "start_date": datetime(2021, 5, 21),
         "sync_schedule_interval": None,
-        "task_name": "gitlab-com",
+        "task_name": "gitlab-com-ci",
+    },
+    "el_gitlab_ops_trusted_data_extract_load": {
+        "cloudsql_instance_name": "ops-db-restore",
+        "dag_name": "el_gitlab_ops_trusted_data_extract_load",
+        "dbt_name": "None",
+        "env_vars": {},
+        "extract_schedule_interval": "0 8 */1 * *",
+        "secrets": [
+            GCP_PROJECT,
+            GCP_REGION,
+            GITLAB_OPS_DB_USER,
+            GITLAB_OPS_DB_PASS,
+            GITLAB_OPS_DB_HOST,
+            GITLAB_OPS_DB_NAME,
+        ],
+        "start_date": datetime(2021, 11, 15),
+        "sync_schedule_interval": None,
+        "task_name": "gitlab-com-ops",
     },
 }
 
@@ -127,13 +153,21 @@ for source_name, config in config_dict_td_pgp.items():
             task_identifier = (
                 f"{config['task_name']}-{table.replace('_','-')}-{task_type}"
             )
-
-            # td-pgp-extract Task
-            td_pgp_extract_cmd = f"""
-            {clone_repo_cmd} &&
-            cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
-            python main.py tap ../manifests_decomposed/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
-        """
+            if config["cloudsql_instance_name"] is None:
+                # td-pgp-extract Task
+                td_pgp_extract_cmd = f"""
+                {clone_repo_cmd} &&
+                cd analytics/extract/postgres_pipeline/postgres_pipeline/ &&
+                python main.py tap ../manifests_decomposed/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}
+            """
+            else:
+                td_pgp_extract_cmd = f"""
+                {clone_repo_cmd} &&
+                cd analytics/orchestration &&
+                python ci_helpers.py use_proxy --instance_name {config["cloudsql_instance_name"]} --command " \
+                    python ../extract/postgres_pipeline/postgres_pipeline/main.py tap \
+                    ../extract/postgres_pipeline/manifests_decomposed/{config["dag_name"]}_db_manifest.yaml --load_type trusted_data --load_only_table {table}"
+            """
             td_pgp_extract = KubernetesPodOperator(
                 **gitlab_defaults,
                 image=DATA_IMAGE,

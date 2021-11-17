@@ -491,6 +491,9 @@ models:
       workspace_engineering:
         +schema: workspace_engineering
 
+      workspace_people:
+        +schema: workspace_people
+
 
     # ------------------
     # Marts
@@ -510,6 +513,11 @@ models:
 
         users_emails:
           enabled: false
+
+      finance:
+        +schema: restricted_safe_common_mart_finance
+        +tags: ["safe"]
+        secure: true 
 
       product:
         +tags: ["product"]

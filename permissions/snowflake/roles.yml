@@ -323,6 +323,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - analyst_growth:
         warehouses:
@@ -353,6 +354,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
         privileges:
             databases:
                 read:
@@ -393,6 +395,7 @@ roles:
             - version_db
             - zuora
             - zuora_api_sandbox_stitch
+            - zuora_central_sandbox
         privileges:
             databases:
                 read:
@@ -429,6 +432,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - analyst_people:
         warehouses:
@@ -457,6 +461,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - analyst_sales:
         warehouses:
@@ -477,6 +482,7 @@ roles:
             - snowflake_db
             - version_db
             - zuora
+            - zuora_central_sandbox
 
     - data_manager:
         warehouses:
@@ -510,6 +516,7 @@ roles:
             - zendesk
             - zendesk_community_relations
             - zuora
+            - zuora_central_sandbox
 
     - decisive_data:
         warehouses:
@@ -1100,6 +1107,7 @@ roles:
                     - prod.workspace_marketing
                     - prod.workspace_sales
                     - prod.workspace_engineering
+                    - prod.workspace_people
                     - prep.dbt
                     - prep.preparation
                     - raw.dbt
@@ -1118,7 +1126,8 @@ roles:
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
                     - prod.workspace_sales.*
-                    - prod.workspace_engineering.*                    
+                    - prod.workspace_engineering.*
+                    - prod.workspace_people.*                    
                     - prep.dbt.*
                     - prep.preparation.*
                     - raw.dbt.*
@@ -1150,6 +1159,23 @@ roles:
             tables:
                 read:
                     - prep.sensitive.*
+
+    - dbt_data_science:
+          warehouses:
+              - analyst_xs
+          privileges:
+              databases:
+                  read:
+                      - prod
+                      - prep
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+              tables:
+                  read:
+                      - prod.workspace_data_science.*
+
 
     - demandbase:
         warehouses:
@@ -1760,6 +1786,7 @@ roles:
                 read:
                     - prod.restricted_safe_common
                     - prod.restricted_safe_common_mapping
+                    - prod.restricted_safe_common_mart_finance
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_legacy
                     - prod.restricted_safe_common_prep
@@ -1771,6 +1798,7 @@ roles:
                 read:
                     - prod.restricted_safe_common.*
                     - prod.restricted_safe_common_mapping.*
+                    - prod.restricted_safe_common_mart_finance.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.restricted_safe_legacy.*
                     - prod.restricted_safe_common_prep.*
@@ -2057,6 +2085,24 @@ roles:
                     - prep.zuora.*
                     - raw.zuora_stitch.*
 
+    - zuora_central_sandbox:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.zuora_central_sandbox
+                    - raw.zuora_central_sandbox_fivetran
+            tables:
+                read:
+                    - prep.zuora_central_sandbox.*
+                    - raw.zuora_central_sandbox_fivetran.*
+
+
     - zuora_api_sandbox_stitch:
         warehouses:
             - analyst_xs
@@ -2096,10 +2142,6 @@ roles:
             - analyst_growth
         warehouses:
             - analyst_xs
-
-    - ablanco:
-        warehouses:
-            - reporting
 
     - acarella:
         warehouses: []
@@ -2166,14 +2208,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - amurray:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
-
     - awaller: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []      
@@ -2204,12 +2238,6 @@ roles:
     - brittany: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
-
-    - brufener:
-        member_of:
-            - bamboohr_sensitive_separations
-        warehouses:
-            - analyst_xs
 
     - bbutterfield:
         member_of:
@@ -2550,14 +2578,6 @@ roles:
                     - raw.netsuite_fivetran.*
                 write:
                     - raw.netsuite_fivetran.*
-
-    - fkurniadi:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
 
     - fstein:
         warehouses:
@@ -2966,6 +2986,7 @@ roles:
             - data_team_analyst
             - salesforce
             - restricted_safe
+            - dbt_data_science
         warehouses:
             - analyst_xs
         owns:
@@ -3009,8 +3030,8 @@ roles:
             - analyst_finance
             - gainsight
             - analyst_core
-            - data_team_analyst
             - restricted_safe
+            - dbt_data_science
         warehouses:
             - analyst_xs
         owns:
@@ -4129,12 +4150,6 @@ users:
         member_of:
             - aakgun
 
-    - ablanco:
-        can_login: yes
-        member_of:
-            - ablanco
-            - securityadmin
-
     - acarella:
         can_login: no
         member_of: []
@@ -4189,11 +4204,6 @@ users:
         member_of:
             - amihaila
 
-    - amurray:
-        can_login: yes
-        member_of:
-            - amurray
-
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
@@ -4223,11 +4233,6 @@ users:
     - brittany: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
-
-    - brufener:
-        can_login: yes
-        member_of:
-            - brufener
 
     - bbutterfield:
         can_login: yes
@@ -4344,11 +4349,6 @@ users:
         can_login: yes
         member_of:
             - fivetran_role
-
-    - fkurniadi:
-        can_login: yes
-        member_of:
-            - fkurniadi
 
     - fstein:
         can_login: no
