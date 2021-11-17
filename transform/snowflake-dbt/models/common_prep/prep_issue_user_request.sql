@@ -198,10 +198,10 @@
       link_type,
       dim_crm_opportunity_id,
       dim_crm_account_id,
-      NULL AS dim_ticket_id,
+      NULL                                       AS dim_ticket_id,
       IFF(request_priority IS NULL, TRUE, FALSE) AS is_request_priority_empty,
       IFNULL(request_priority, 1)::NUMBER        AS request_priority,
-      note_updated_at                            AS last_update_at
+      note_updated_at                            AS link_last_updated_at
     FROM gitlab_issue_notes_sfdc_links_with_account
     QUALIFY ROW_NUMBER() OVER(PARTITION BY issue_id, sfdc_id_18char ORDER BY note_updated_at DESC) = 1
 
@@ -263,7 +263,7 @@
       IFNULL(union_links.dim_ticket_id, -1)::NUMBER                    AS dim_ticket_id,
       union_links.request_priority,
       union_links.is_request_priority_empty,
-      union_links.last_update_at
+      union_links.link_last_updated_at
     FROM union_links
     INNER JOIN map_moved_duplicated_issue
       ON map_moved_duplicated_issue.issue_id = union_links.dim_issue_id
@@ -282,9 +282,10 @@
       dim_crm_account_id,
       dim_ticket_id,
       request_priority,
-      is_request_priority_empty
+      is_request_priority_empty,
+      link_last_updated_at
     FROM union_links_mapped_issues
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id, dim_crm_opportunity_id, dim_crm_account_id, dim_ticket_id ORDER BY last_update_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id, dim_crm_opportunity_id, dim_crm_account_id, dim_ticket_id ORDER BY link_last_updated_at DESC) = 1
 
 )
 
@@ -293,5 +294,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-10-27",
+    updated_date="2021-11-16",
 ) }}
