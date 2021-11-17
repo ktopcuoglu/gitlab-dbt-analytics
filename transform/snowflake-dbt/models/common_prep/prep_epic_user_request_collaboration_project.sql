@@ -162,7 +162,7 @@ WITH gitlab_dotcom_namespaces AS (
     INNER JOIN gitlab_epics
       ON gitlab_epics.group_id = unioned_with_user_request_namespace_id.user_request_namespace_id
       AND gitlab_epics.epic_internal_id = unioned_with_user_request_namespace_id.user_request_epic_internal_id
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY gitlab_epics.epic_id, unioned_with_user_request_namespace_id.collaboration_project_id
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY gitlab_epics.epic_id, unioned_with_user_request_namespace_id.account_id
       ORDER BY unioned_with_user_request_namespace_id.link_last_updated_at DESC NULLS LAST) = 1
 
 )
