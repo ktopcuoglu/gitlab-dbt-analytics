@@ -212,7 +212,7 @@ yaml_validation:
   only:
     refs:
       - merge_requests
-  allow_failure: true
+  allow_failure: false
 
 permifrost_manual:
   <<: *permifrost
@@ -220,22 +220,13 @@ permifrost_manual:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
 
-.permifrost_auto: &permifrost_auto
-  stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.0
-  tags:
-    - analytics
+permifrost_automatic:
+  <<: *permifrost
+  script:
+    - permifrost spec-test permissions/snowflake/roles.yml
   only:
     changes:
       - "permissions/snowflake/roles.yml"
-  allow_failure: false
-
-
-permifrost_automatic:
-  <<: *permifrost_auto
-  script:
-    - permifrost spec-test permissions/snowflake/roles.yml
-
 
 # ======
 # dbt docs to GitLab Pages
