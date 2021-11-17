@@ -220,13 +220,22 @@ permifrost_manual:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
 
-permifrost_automatic:
-  <<: *permifrost
-  script:
-    - permifrost spec-test permissions/snowflake/roles.yml
+.permifrost_auto: &permifrost_auto
+  stage: 🐍 Python
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.0
+  tags:
+    - analytics
   only:
     changes:
       - "permissions/snowflake/roles.yml"
+  allow_failure: false
+
+
+permifrost_automatic:
+  <<: *permifrost_auto
+  script:
+    - permifrost spec-test permissions/snowflake/roles.yml
+
 
 # ======
 # dbt docs to GitLab Pages
