@@ -13,4 +13,4 @@ FROM version_usage_data,
 WHERE IS_OBJECT(f.value) = FALSE
 -- error when 'groups_bugdb_active' pops up.
 -- more details in the issue https://gitlab.com/gitlab-data/analytics/-/issues/10749
-AND full_ping_name != 'groups_bugdb_active' 
+AND full_ping_name != 'groups_bugdb_active'
