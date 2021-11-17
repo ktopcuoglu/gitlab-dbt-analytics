@@ -25,5 +25,5 @@ WITH base AS (
 
 )
 
-SELECT *
+SELECT * 
 FROM renamed
