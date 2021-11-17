@@ -62,7 +62,7 @@ config_dict_td_pgp = {
         "dag_name": "el_gitlab_com_trusted_data_extract_load",
         "dbt_name": "None",
         "env_vars": {},
-        "extract_schedule_interval": "0 9 */1 * *",
+        "extract_schedule_interval": "0 4 */1 * *",
         "secrets": [
             GITLAB_COM_DB_USER,
             GITLAB_COM_DB_PASS,
@@ -79,7 +79,7 @@ config_dict_td_pgp = {
         "dag_name": "el_gitlab_com_trusted_data_extract_load_ci",
         "dbt_name": "None",
         "env_vars": {},
-        "extract_schedule_interval": "0 9 */1 * *",
+        "extract_schedule_interval": "0 2 */1 * *",
         "secrets": [
             GITLAB_COM_CI_DB_NAME,
             GITLAB_COM_CI_DB_HOST,
@@ -96,7 +96,7 @@ config_dict_td_pgp = {
         "dag_name": "el_gitlab_ops_trusted_data_extract_load",
         "dbt_name": "None",
         "env_vars": {},
-        "extract_schedule_interval": "0 8 */1 * *",
+        "extract_schedule_interval": "0 4 */1 * *",
         "secrets": [
             GCP_PROJECT,
             GCP_REGION,
@@ -140,7 +140,7 @@ for source_name, config in config_dict_td_pgp.items():
         f"{config['dag_name']}",
         default_args=data_quality_dag_args,
         schedule_interval=config["extract_schedule_interval"],
-        concurrency=1,
+        concurrency=2,
     )
     with data_quality_dag:
 
