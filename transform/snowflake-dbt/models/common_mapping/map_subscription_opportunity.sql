@@ -11,7 +11,7 @@ WITH prep_subscription_opportunity_mapping AS (
 
     SELECT DISTINCT
       dim_subscription_id,
-      combined_opportunity_id               AS dim_crm_opportunity_id,
+      dim_crm_opportunity_id,
       is_questionable_opportunity_mapping
     FROM prep_subscription_opportunity_mapping
     WHERE combined_opportunity_id IS NOT NULL
@@ -23,5 +23,5 @@ WITH prep_subscription_opportunity_mapping AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-11-10",
-    updated_date="2021-11-11"
+    updated_date="2021-11-16"
 ) }}
