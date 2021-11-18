@@ -1,7 +1,6 @@
 ### Data Quality Problem
 
-<details>
-<summary><i>Data Quality Problem reporter please complete this section/i></summary>
+Data Quality Problem reporter please complete this section.
 
 - Where did you discover this data quality problem? 
 - When did you first discover this data quality problem?
