@@ -278,7 +278,7 @@ TRUSTED DATA
 
     <details>
 
-     * [ ]  Pull the report for business logic changes made to the mart from link (https://gitlab.com/gitlab-data/analytics/-/blame/master/transform/snowflake-dbt/models/marts/sales_funnel/mart_crm_opportunity.sql) by filtering on label “Business logic change”.
+     * [ ]  Pull the report for business logic changes made to the `mart_crm_opportunity` model from the link (https://gitlab.com/gitlab-data/analytics/-/commits/master/transform/snowflake-dbt/models/marts/sales_funnel/restricted_safe/mart_crm_opportunity.sql?search=) by filtering on label “Business logic change”.
 
           
 
