@@ -136,6 +136,7 @@ WITH dim_date AS (
       subscription_name,
       subscription_status,
       dim_product_detail_id,
+      adjustment,
       adjustment/ROUND(MONTHS_BETWEEN(revenue_end_date::date, revenue_start_date::date),0)  AS mrr,
       NULL                                                                                  AS delta_tcv,
       'Seats'                                                                               AS unit_of_measure,
