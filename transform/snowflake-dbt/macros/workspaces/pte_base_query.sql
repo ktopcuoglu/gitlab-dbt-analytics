@@ -7,15 +7,11 @@
 
 
 {%- if model_run_type=='training' -%}
-{% set period_type = 'MONTH'%}
 {% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
 {% endif %}
 {% if model_run_type=='scoring'  %}
-{% set period_type = 'MONTH'%}
 {% set end_date = prediction_date %}
 {% endif %}
-SELECT '{{ delta_value }}' AS delta_value
-{%- endmacro -%}
 
 --Snapshot for just the "current" ARR month based on SNAPSHOT_DT
 WITH mart_arr_snapshot_bottom_up AS (
@@ -624,3 +620,4 @@ LEFT JOIN bizible b
 LEFT JOIN product_usage u
     ON p1.dim_crm_account_id = u.dim_crm_account_id
 
+{%- endmacro -%}
