@@ -28,7 +28,7 @@ SELECT
   namespace_lineage.ultimate_parent_id 
 FROM namespace_lineage
 INNER JOIN dates
-  ON dates.date_actual BETWEEN namespace_lineage.lineage_valid_from AND namespace_lineage.lineage_valid_to
+  ON dates.date_actual BETWEEN date_trunc('day',namespace_lineage.lineage_valid_from) AND date_trunc('day',namespace_lineage.lineage_valid_to)
 QUALIFY ROW_NUMBER() OVER (PARTITION BY dates.date_actual,namespace_id ORDER BY namespace_lineage.lineage_valid_to DESC) = 1
 ),
 
