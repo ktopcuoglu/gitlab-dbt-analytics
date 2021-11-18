@@ -3287,7 +3287,7 @@ roles:
             schemas:
                 read:
                     - mdrussell_prep.*
-                    - tmdrussell_prod.*
+                    - mdrussell_prod.*
                 write:
                     - mdrussell_prep.*
                     - mdrussell_prod.*
