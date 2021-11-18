@@ -425,10 +425,10 @@ WITH zuora_account_source AS (
 
     SELECT 
       final_matches.*,
-      IFF(len(SPLIT_PART(combined_opportunity_id,'https://gitlab.my.salesforce.com/',1))=0, NULL, SPLIT_PART(combined_opportunity_id,'https://gitlab.my.salesforce.com/',1))    AS opp_id_remove_salesforce_url,
-      {{zuora_slugify("combined_opportunity_id")}}                                                                                                                              AS opp_id_slugify,
+      IFF(len(SPLIT_PART(combined_opportunity_id,'https://gitlab.my.salesforce.com/',2))=0, NULL, SPLIT_PART(combined_opportunity_id,'https://gitlab.my.salesforce.com/',2))    AS opp_id_remove_salesforce_url,
+      {{zuora_slugify("combined_opportunity_id") }}                                                                                                                             AS opp_id_slugify,
       opp_name.opportunity_id                                                                                                                                                   AS opp_id_name,
-      COALESCE(opp_id_remove_salesforce_url, opp_id_name, opp_id_slugify)                                                                                                       AS combined_oportunity_id_coalesced,
+      COALESCE(opp_id_remove_salesforce_url, opp_id_name, IFF(combined_opportunity_id NOT LIKE '0%', opp_id_slugify, combined_opportunity_id))                                  AS combined_oportunity_id_coalesced,
       CASE 
         WHEN subscription_opp_id IS NULL
           AND invoice_opp_id_forward IS NULL

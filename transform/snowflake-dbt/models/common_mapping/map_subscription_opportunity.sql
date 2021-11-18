@@ -14,7 +14,7 @@ WITH prep_subscription_opportunity_mapping AS (
       dim_crm_opportunity_id,
       is_questionable_opportunity_mapping
     FROM prep_subscription_opportunity_mapping
-    WHERE combined_opportunity_id IS NOT NULL
+    WHERE dim_crm_opportunity_id IS NOT NULL
 
 )
 
