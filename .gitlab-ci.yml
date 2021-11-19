@@ -212,7 +212,7 @@ yaml_validation:
   only:
     refs:
       - merge_requests
-  allow_failure: false
+  allow_failure: true
 
 permifrost_manual:
   <<: *permifrost
@@ -229,6 +229,7 @@ permifrost_automatic:
       - merge_requests
     changes:
       - "permissions/snowflake/roles.yml"
+  allow_failure: false
 
 
 # ======
