@@ -50,8 +50,8 @@ WITH prep_ci_runner AS (
 {{ dbt_audit(
     cte_ref="prep_ci_runner",
     created_by="@snalamaru",
-    updated_by="@ischweickartDD",
+    updated_by="@davis_townsend",
     created_date="2021-06-23",
-    updated_date="2021-07-09"
+    updated_date="2021-11-09"
 ) }}
 
