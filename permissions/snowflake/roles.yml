@@ -489,6 +489,29 @@ roles:
             - zuora
             - zuora_central_sandbox
 
+    - analytics_engineer:
+        member_of:
+            - analyst_core
+            - transformer
+            - snowflake_db
+            - data_team_analyst
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+            tables:
+                read:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
+
     - data_manager:
         warehouses:
             - analyst_xs
