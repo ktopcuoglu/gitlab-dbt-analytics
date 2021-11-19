@@ -34,3 +34,9 @@ macros:
       - name: extra_where_clause
         type: string
         description: Extra where clause to filter the cut by. 
+  - name: pte_base_query
+    description: '{{ doc("pte_base_query") }}'
+    arguments:
+      - name: model_run_type
+        type: string
+        description: Either 'training' or 'scoring' based on the desired output.
