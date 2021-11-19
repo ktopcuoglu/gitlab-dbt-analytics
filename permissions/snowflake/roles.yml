@@ -3299,6 +3299,16 @@ roles:
                     - mdrussell_prep.*.*
                     - mdrussell_prod.*.*      
 
+    - mfleisher:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - michellecooper:
         member_of: []
         warehouses: []
@@ -4673,6 +4683,11 @@ users:
         can_login: yes
         member_of: 
             - meltano
+
+    - mfleisher:
+        can_login: yes
+        member_of:
+            - mfleisher            
 
     - michellecooper:
         can_login: no
