@@ -501,16 +501,25 @@ roles:
                     - prep
                     - prod
                     - raw
+                write:
+                    - prep.*.*
+                    - prod.*.*
             schemas:
                 read:
                     - prep.*
                     - prod.*
                     - raw.*
+                write:
+                    - prep.*.*
+                    - prod.*.*
             tables:
                 read:
                     - prep.*.*
                     - prod.*.*
                     - raw.*.*
+                write:
+                    - prep.*.*
+                    - prod.*.*
 
     - data_manager:
         warehouses:
