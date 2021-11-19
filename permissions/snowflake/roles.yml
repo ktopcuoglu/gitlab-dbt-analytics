@@ -502,16 +502,16 @@ roles:
                     - prod
                     - raw
                 write:
-                    - prep.*.*
-                    - prod.*.*
+                    - prep
+                    - prod
             schemas:
                 read:
                     - prep.*
                     - prod.*
                     - raw.*
                 write:
-                    - prep.*.*
-                    - prod.*.*
+                    - prep.*
+                    - prod.*
             tables:
                 read:
                     - prep.*.*
