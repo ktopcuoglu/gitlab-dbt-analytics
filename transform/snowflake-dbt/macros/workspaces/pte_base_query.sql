@@ -329,7 +329,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT)) as gitlab_version
     FROM {{ref('mart_product_usage_paid_user_metrics_monthly')}}
     WHERE PING_CREATED_AT IS NOT NULL
-        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND cast('{{ end_date }}' as date)))
+        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND cast('{{ end_date }}' as date)
     GROUP BY dim_crm_account_id
 
 )
