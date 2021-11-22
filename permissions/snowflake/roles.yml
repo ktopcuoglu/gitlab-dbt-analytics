@@ -21,6 +21,9 @@ databases:
         shared: yes
 
 # User / Testing
+    - bi_tool_eval:
+        shared: no 
+
     - testing_db:
         shared: no
 
@@ -488,6 +491,21 @@ roles:
             - version_db
             - zuora
             - zuora_central_sandbox
+
+    - bi_tool_eval:
+        warehouses:
+            - engineer_xs
+        privileges:
+            databases:
+                write:
+                   - bi_tool_eval
+            schemas:
+              write:
+                  - bi_tool_eval.*
+
+            tables:
+              write:
+                  - bi_tool_eval.*.*
 
     - data_manager:
         warehouses:
@@ -2699,6 +2717,7 @@ roles:
             - data_manager
             - restricted_safe
             - xactly
+            - bi_tool_eval              
         warehouses:
             - analyst_xs
         owns:
@@ -3333,6 +3352,7 @@ roles:
             - analyst_core
             - data_manager
             - restricted_safe
+            - bi_tool_eval              
         warehouses:
             - analyst_xs
         owns:
@@ -3622,6 +3642,7 @@ roles:
     - pempey:
         member_of:
             - engineer
+            - bi_tool_eval              
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -4024,7 +4045,8 @@ roles:
         member_of:
          - data_team_analyst
          - analyst_core
-         - restricted_safe         
+         - restricted_safe
+         - bi_tool_eval         
         warehouses:
             - analyst_xs
         owns:
