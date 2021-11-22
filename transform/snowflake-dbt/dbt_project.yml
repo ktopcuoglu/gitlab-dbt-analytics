@@ -212,6 +212,9 @@ models:
       marketing_dnc:
         +schema: marketing_dnc
 
+      marketo:
+        +schema: marketo
+
       netsuite:
         +schema: netsuite
         sensitive:
@@ -271,6 +274,9 @@ models:
 
       zendesk_community_relations:
         +schema: zendesk_community_relations
+
+      zengrc:
+        +schema: zengrc
 
       zoominfo:
         +schema: zoominfo
@@ -485,6 +491,9 @@ models:
       workspace_engineering:
         +schema: workspace_engineering
 
+      workspace_people:
+        +schema: workspace_people
+
 
     # ------------------
     # Marts
@@ -504,6 +513,11 @@ models:
 
         users_emails:
           enabled: false
+
+      finance:
+        +schema: restricted_safe_common_mart_finance
+        +tags: ["safe"]
+        secure: true 
 
       product:
         +tags: ["product"]

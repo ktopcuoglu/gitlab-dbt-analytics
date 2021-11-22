@@ -42,6 +42,11 @@ sources:
           - name: id
             tests:
               - not_null
+      - name: customers_db_leads
+        columns:
+          - name: id
+            tests:
+              - not_null              
       - name: customers_db_license_seat_links
         columns:
           - name: zuora_subscription_id

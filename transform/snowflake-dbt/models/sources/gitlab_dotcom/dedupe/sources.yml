@@ -289,6 +289,7 @@ sources:
         identifier: gitlab_db_projects
       - name: prometheus_alerts
         identifier: gitlab_db_prometheus_alerts
+        freshness: null #https://gitlab.com/gitlab-data/analytics/-/issues/10835
       - name: protected_branches
         identifier: gitlab_db_protected_branches
       - name: push_rules

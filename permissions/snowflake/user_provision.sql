@@ -22,11 +22,6 @@ GRANT ROLE identifier($username) TO ROLE "SYSADMIN";
 
 GRANT ROLE identifier($username) to user identifier($username);
 
--- IF PASSWORD NEEDED (PROBABLY NOT NEEDED)
--- RUN THE FOLLOWING TO SET PASSWORD AND FORCE RESET (with randomly generated values) https://passwordsgenerator.net
--- ====================
--- ALTER USER identifier($username) SET PASSWORD ='randomGeneratedPassword' MUST_CHANGE_PASSWORD = TRUE;
-
 -- IF GOING TO BE A DBT USER, run this to create the development databases
 
 set prod_db = (select $username || '_PROD');

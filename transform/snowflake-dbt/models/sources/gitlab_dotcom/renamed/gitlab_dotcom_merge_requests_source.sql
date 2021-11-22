@@ -36,7 +36,8 @@ WITH source AS (
       allow_maintainer_to_push::BOOLEAN                          AS does_allow_maintainer_to_push,
       created_at::TIMESTAMP                                      AS created_at,
       updated_at::TIMESTAMP                                      AS updated_at,
-      last_edited_at::TIMESTAMP                                  AS merge_request_last_edited_at
+      last_edited_at::TIMESTAMP                                  AS merge_request_last_edited_at,
+      description::VARCHAR                                       AS merge_request_description
 
       --merge_params // hidden for privacy
 
