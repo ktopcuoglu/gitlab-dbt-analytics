@@ -198,11 +198,13 @@ WITH sfdc_opportunity AS (
       partner_account.account_name              AS partner_account_name,
       sfdc_opportunity_xf.dr_status,
       sfdc_opportunity_xf.distributor,
+
+      sfdc_opportunity_xf.influence_partner,
+
       ----------------------------------------------------------
       -- NF 20211108 this field should be removed when possible, need to validate with Channel Ops
-      sfdc_opportunity_xf.influence_partner,
-      ----------------------------------------------------------
       sfdc_opportunity_xf.fulfillment_partner,
+      ----------------------------------------------------------
       sfdc_opportunity_xf.fulfillment_partner   AS resale_partner_id,
       resale_account.account_name               AS resale_partner_name,
       sfdc_opportunity_xf.platform_partner,
