@@ -492,8 +492,6 @@ roles:
             - zuora
             - zuora_central_sandbox
 
-
-
     - data_manager:
         warehouses:
             - analyst_xs
