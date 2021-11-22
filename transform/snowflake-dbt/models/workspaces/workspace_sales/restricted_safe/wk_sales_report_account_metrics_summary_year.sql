@@ -1,5 +1,3 @@
-dbt run -x --models +wk_sales_report_account_metrics_summary_year --target=dev_xl
-
 {{ config(alias='report_account_metrics_summary_year') }}
 --https://gitlab.my.salesforce.com/0016100000g04uJAAQ
 WITH date_details AS (
