@@ -497,13 +497,19 @@ roles:
             - engineer_xs
         privileges:
             databases:
-                write:
-                   - bi_tool_eval
+              read: 
+                  - bi_tool_eval                  
+              write:
+                  - bi_tool_eval
             schemas:
+              read:
+                  - bi_tool_eval
               write:
                   - bi_tool_eval.*
 
             tables:
+              read:
+                  - bi_tool_eval
               write:
                   - bi_tool_eval.*.*
 
