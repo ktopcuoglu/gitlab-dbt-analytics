@@ -492,26 +492,7 @@ roles:
             - zuora
             - zuora_central_sandbox
 
-    - bi_tool_eval:
-        warehouses:
-            - engineer_xs
-        privileges:
-            databases:
-              read: 
-                  - bi_tool_eval                  
-              write:
-                  - bi_tool_eval
-            schemas:
-              read:
-                  - bi_tool_eval
-              write:
-                  - bi_tool_eval.*
 
-            tables:
-              read:
-                  - bi_tool_eval
-              write:
-                  - bi_tool_eval.*.*
 
     - data_manager:
         warehouses:
@@ -1048,6 +1029,26 @@ roles:
             tables:
                 read:
                     - prod.boneyard.*
+
+    - bi_tool_eval_db:
+        warehouses:
+            - engineer_xs
+        privileges:
+            databases:
+                read:
+                    - bi_tool_eval
+                write:
+                    - bi_tool_eval
+            schemas:
+                read:
+                    - bi_tool_eval.*
+                write:
+                    - bi_tool_eval.*
+            tables:
+                read:
+                    - bi_tool_eval.*.*
+                write:
+                    - bi_tool_eval.*.*
 
     - covid19:
         privileges:
@@ -2723,7 +2724,7 @@ roles:
             - data_manager
             - restricted_safe
             - xactly
-            - bi_tool_eval              
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -3358,7 +3359,7 @@ roles:
             - analyst_core
             - data_manager
             - restricted_safe
-            - bi_tool_eval              
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -3648,7 +3649,7 @@ roles:
     - pempey:
         member_of:
             - engineer
-            - bi_tool_eval              
+            - bi_tool_eval_db
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -4052,7 +4053,7 @@ roles:
          - data_team_analyst
          - analyst_core
          - restricted_safe
-         - bi_tool_eval         
+         - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
