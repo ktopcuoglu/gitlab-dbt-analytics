@@ -295,7 +295,7 @@ WITH bizible_touchpoints AS (
          THEN 'GitLab 14 webcast'
         WHEN dim_campaign_id LIKE '%7014M000001drcQ%'
          THEN '20210512_ISSAWebcast'
-        WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-0830 MSandP: 325
+        WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-08-30 MSandP: 325
           AND (( bizible_form_url_raw LIKE '%psdigitaltransformation%'
           OR bizible_landing_page_raw LIKE '%psdigitaltransformation%'
           OR bizible_referrer_page_raw LIKE '%psdigitaltransformation%')
@@ -305,13 +305,30 @@ WITH bizible_touchpoints AS (
           OR bizible_referrer_page_raw LIKE '%psglobal%'
             )))
         THEN 'PubSec Nurture'
+       WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-11-22 MSandP: 585
+        AND (( bizible_form_url_raw LIKE '%whygitlabdevopsplatform%'
+        OR bizible_landing_page_raw LIKE '%whygitlabdevopsplatform%'
+        OR bizible_referrer_page_raw LIKE '%whygitlabdevopsplatform%')
+        OR(
+         bizible_form_url_raw LIKE '%githubcompete%'
+        OR bizible_landing_page_raw LIKE '%githubcompete%'
+        OR bizible_referrer_page_raw LIKE '%githubcompete%'
+         )))
+        THEN 'FY22 GitHub Competitive Campaign'
+       WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-11-22 MSandP: 570
+        AND (( bizible_form_url_raw LIKE '%devopsgtm%'
+        OR bizible_landing_page_raw LIKE '%devopsgtm%'
+        OR bizible_referrer_page_raw LIKE '%devopsgtm%')
+         ))
+        OR dim_campaign_id LIKE '%7014M000001dqb2%'
+        THEN 'DOI Webcast' 
           Else 'None'
       END                                                                                               AS bizible_integrated_campaign_grouping,
       IFF(bizible_integrated_campaign_grouping <> 'None','Demand Gen','Other')                          AS touchpoint_segment,
       CASE
         WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast') 
           THEN 'CI/CD'
-        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast') 
+        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast','DOI Webcast','FY22 GitHub Competitive Campaign') 
           THEN 'DevOps'
         WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  
           THEN 'GitOps'
@@ -361,5 +378,5 @@ WITH bizible_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-03-02",
-    updated_date="2021-09-30"
+    updated_date="2021-11-22"
 ) }}
