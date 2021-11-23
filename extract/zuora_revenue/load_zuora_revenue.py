@@ -111,6 +111,11 @@ def zuora_revenue_load(
     # Set some vars
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
+    # Truncate the table before every load
+    truncate_table=f"""TRUNCATE TABLE {table_name}"""
+    truncate_table_result = query_executor(engine, truncate_table)
+    logging.info(truncate_table_result)
+
     upload_query = f"""
         copy into {table_name}
         from @zuora_revenue_staging/RAW_DB/staging/{table_name}/

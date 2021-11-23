@@ -92,8 +92,9 @@ if __name__ == "__main__":
         end_date,
     )
     print(f"{results.table_name} = {end_date}")
-    logger.info("update the load date  in the file for the table")
-    zuora_revpro.set_load_date(results.table_name, end_date)
+    # To do daily full refresh as part of this issue https://gitlab.com/gitlab-data/analytics/-/issues/10774 it has been turned to do daily full refresh.
+    #logger.info("update the load date  in the file for the table")
+    #zuora_revpro.set_load_date(results.table_name, end_date)
     log_path = os.getenv("zuora_extract_log")
     # Upload the log file for downstream  validation while loading
     cmd_to_upload_log_file = f"gsutil cp {log_path}{log_file_name} gs://{results.bucket_name}/RAW_DB/staging/{results.table_name}/{results.table_name}_{(datetime.now()).strftime('%d-%m-%Y')}.log"
