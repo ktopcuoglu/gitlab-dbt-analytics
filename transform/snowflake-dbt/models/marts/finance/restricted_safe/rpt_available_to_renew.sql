@@ -105,7 +105,7 @@
     FROM dim_subscription sub_1
     INNER JOIN dim_subscription sub_2
       ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
-      AND DATE_TRUNC('month',sub_2.subscription_end_date) > DATEADD('month',12,CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))
+      AND DATE_TRUNC('month',sub_2.subscription_end_date) > CONCAT('{{renewal_fiscal_year}}','-01-01')
     WHERE sub_1.zuora_renewal_subscription_name != ''
     QUALIFY rank = 1
 
@@ -133,14 +133,17 @@
       dim_subscription.zuora_renewal_subscription_name,
       dim_subscription.current_term,
       CASE
-        WHEN dim_subscription.current_term >= 24 THEN TRUE
-        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) THEN TRUE
+        WHEN dim_subscription.current_term >= 24 
+          THEN TRUE
+        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
+          THEN TRUE
         ELSE FALSE
-      END                                                                               AS is_myb,
+      END                                                                                                                                               AS is_myb,
       CASE
-        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) THEN TRUE
+        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
+          THEN TRUE
         ELSE FALSE
-      END                                                                               AS is_myb_with_multi_subs,
+      END                                                                                                                                               AS is_myb_with_multi_subs,
       mart_charge.is_paid_in_full,
       mart_charge.estimated_total_future_billings,
       mart_charge.effective_start_month,
@@ -149,9 +152,9 @@
       mart_charge.subscription_end_month,
       mart_charge.term_start_month,
       mart_charge.term_end_month,
-      DATEADD('month',-1,mart_charge.term_end_month)                                AS last_paid_month_in_term,
-      renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month           AS myb_subscription_end_month,
-      DATEDIFF(month,mart_charge.effective_start_month,mart_charge.effective_end_month)    AS charge_term,
+      DATEADD('month',-1,mart_charge.term_end_month)                                                                                                    AS last_paid_month_in_term,
+      renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month                                                                              AS myb_subscription_end_month,
+      DATEDIFF(month,mart_charge.effective_start_month,mart_charge.effective_end_month)                                                                 AS charge_term,
       mart_charge.arr
     FROM mart_charge
     LEFT JOIN dim_subscription
@@ -180,6 +183,13 @@
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
@@ -190,7 +200,7 @@
       SUM(arr)   AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term <= 12
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    {{ dbt_utils.group_by(n=22) }}
 
 ), agg_charge_term_greater_than_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for terms > 12 months. These terms need additional logic.
 
@@ -198,7 +208,7 @@
       CASE
         WHEN is_myb = TRUE THEN 'MYB'
         ELSE 'Non-MYB'
-      END                           AS renewal_type,
+      END                                   AS renewal_type,
       is_myb,
       is_myb_with_multi_subs,
       --current_term,
@@ -219,11 +229,18 @@
         WHEN current_term = 49 THEN 48
         WHEN current_term = 57 THEN 60
         ELSE current_term
-      END                           AS current_term,
+      END                                   AS current_term,
       charge_id,
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
       dim_product_detail_id,
       product_tier_name,
       product_delivery_type,
@@ -231,65 +248,352 @@
       term_start_month,
       term_end_month,
       subscription_end_month,
-      SUM(arr)   AS arr
+      SUM(arr)                              AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term > 12
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    {{ dbt_utils.group_by(n=22) }}
 
 ), twenty_four_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for MYB.
 
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/2,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 13 AND 24 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs, 
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id,
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/2,term_start_month)  AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                          AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 13 AND 24 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
+    {{ dbt_utils.group_by(n=22) }}
 
 ), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
 
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/3,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 25 AND 36 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs, 
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id,
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/3,term_start_month)      AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                              AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 25 AND 36 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
+    
     UNION ALL
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs, current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id,product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/3*2,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 25 AND 36 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs, 
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id,
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/3*2,term_start_month)    AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                              AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 25 AND 36 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
+    {{ dbt_utils.group_by(n=22) }}
     ORDER BY 1
 
 ), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
 
-   SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id, dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/4,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 37 AND 48 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id, 
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id,
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/4,term_start_month)      AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                              AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 37 AND 48 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
+    
     UNION ALL
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/4*2,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 37 AND 48 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id, 
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/4*2,term_start_month)        AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                                  AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 37 AND 48 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
+    
     UNION ALL
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/4*3,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 37 AND 48 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id, 
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/4*3,term_start_month)        AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                                  AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 37 AND 48 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
     ORDER BY 1
 
 ), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
 
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/5,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 49 AND 60 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id, 
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/5,term_start_month)          AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                                  AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 49 AND 60 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
+    
     UNION ALL
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/5*2,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 49 AND 60 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+   
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id, 
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/5*2,term_start_month)        AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                                  AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 49 AND 60 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
+    
     UNION ALL
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/5*3,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 49 AND 60 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id, 
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/5*3,term_start_month)        AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                                  AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 49 AND 60 
+      AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
+    {{ dbt_utils.group_by(n=22) }}
+    
     UNION ALL
-    SELECT renewal_type, is_myb, is_myb_with_multi_subs,current_term, charge_id, dim_crm_account_id,dim_billing_account_id,dim_subscription_id,dim_product_detail_id, product_tier_name,product_delivery_type,subscription_name, term_start_month, DATEADD('month',current_term/5*4,term_start_month) AS term_end_month,subscription_end_month,SUM(arr) AS arr
-    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} WHERE current_term BETWEEN 49 AND 60 AND term_end_month > DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+    
+    SELECT 
+      renewal_type, 
+      is_myb, 
+      is_myb_with_multi_subs,
+      current_term, 
+      charge_id, 
+      dim_crm_account_id,
+      dim_billing_account_id,
+      dim_subscription_id,
+      dim_crm_user_id,
+      user_name,
+      user_role_id,
+      crm_user_sales_segment,
+      crm_user_geo,
+      crm_user_region,
+      crm_user_area,
+      dim_product_detail_id, 
+      product_tier_name,
+      product_delivery_type,
+      subscription_name, 
+      term_start_month, 
+      DATEADD('month',current_term/5*4,term_start_month)    AS term_end_month,
+      subscription_end_month,
+      SUM(arr)                                              AS arr
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
+    WHERE current_term BETWEEN 49 AND 60 AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
+    {{ dbt_utils.group_by(n=22) }}
     ORDER BY 1
 
 ), combined_{{renewal_fiscal_year}} AS (--union all of the charges
 
-    SELECT * FROM agg_charge_term_less_than_equal_12_{{renewal_fiscal_year}}
+    SELECT * 
+    FROM agg_charge_term_less_than_equal_12_{{renewal_fiscal_year}}
+    
     UNION ALL
-    SELECT * FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
+    
+    SELECT * 
+    FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}}
+    
     UNION ALL
-    SELECT * FROM twenty_four_mth_term_{{renewal_fiscal_year}}
+    
+    SELECT * 
+    FROM twenty_four_mth_term_{{renewal_fiscal_year}}
+    
     UNION ALL
-    SELECT * FROM thirty_six_mth_term_{{renewal_fiscal_year}}
+    
+    SELECT * 
+    FROM thirty_six_mth_term_{{renewal_fiscal_year}}
+    
     UNION ALL
-    SELECT * FROM forty_eight_mth_term_{{renewal_fiscal_year}}
+    
+    SELECT * 
+    FROM forty_eight_mth_term_{{renewal_fiscal_year}}
+    
     UNION ALL
-    SELECT * FROM sixty_mth_term_{{renewal_fiscal_year}}
+    
+    SELECT * 
+    FROM sixty_mth_term_{{renewal_fiscal_year}}
 
 ), opportunity_term_group AS (
   
@@ -301,18 +605,28 @@
         ELSE DATE_TRUNC('month',close_date)
       END                                     AS close_month,
       CASE
-        WHEN dim_crm_opportunity.opportunity_term = 0 THEN '0 Years'
-        WHEN dim_crm_opportunity.opportunity_term <= 12 THEN '1 Year'
-        WHEN dim_crm_opportunity.opportunity_term > 12 AND dim_crm_opportunity.opportunity_term <= 24 THEN '2 Years'
-        WHEN dim_crm_opportunity.opportunity_term > 24 AND dim_crm_opportunity.opportunity_term <= 36 THEN '3 Years'
-        WHEN dim_crm_opportunity.opportunity_term > 36 THEN '4 Years+'
-        WHEN dim_crm_opportunity.opportunity_term IS NULL THEN 'No Opportunity Term' 
-      END                                     AS opportunity_term_group,
+        WHEN dim_crm_opportunity.opportunity_term = 0 
+          THEN '0 Years'
+        WHEN dim_crm_opportunity.opportunity_term <= 12 
+          THEN '1 Year'
+        WHEN dim_crm_opportunity.opportunity_term > 12 
+          AND dim_crm_opportunity.opportunity_term <= 24
+            THEN '2 Years'
+        WHEN dim_crm_opportunity.opportunity_term > 24 
+          AND dim_crm_opportunity.opportunity_term <= 36 
+            THEN '3 Years'
+        WHEN dim_crm_opportunity.opportunity_term > 36 
+          THEN '4 Years+'
+        WHEN dim_crm_opportunity.opportunity_term IS NULL 
+          THEN 'No Opportunity Term' 
+      END                                                                                                               AS opportunity_term_group,
       CASE
-        WHEN dim_crm_opportunity.opportunity_term <= 12 THEN FALSE
-        WHEN dim_crm_opportunity.opportunity_term > 12 THEN TRUE
+        WHEN dim_crm_opportunity.opportunity_term <= 12 
+          THEN FALSE
+        WHEN dim_crm_opportunity.opportunity_term > 12 
+          THEN TRUE
         ELSE NULL
-      END                                     AS is_myb_opportunity_term_test
+      END                                                                                                               AS is_myb_opportunity_term_test
     FROM {{ ref('dim_subscription') }}
     LEFT JOIN {{ ref('dim_crm_opportunity') }}
       ON dim_subscription.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
@@ -336,38 +650,48 @@
       base_{{renewal_fiscal_year}}.subscription_end_month,
       base_{{renewal_fiscal_year}}.term_start_month,
       base_{{renewal_fiscal_year}}.term_end_month,
-      combined_{{renewal_fiscal_year}}.term_end_month                                    AS bookings_term_end_month,
+      combined_{{renewal_fiscal_year}}.term_end_month                                                                               AS bookings_term_end_month,
       base_{{renewal_fiscal_year}}.myb_subscription_end_month,
       base_{{renewal_fiscal_year}}.last_paid_month_in_term,
       base_{{renewal_fiscal_year}}.current_term,
       renewal_subscriptions_{{renewal_fiscal_year}}.zuora_renewal_subscription_name,
-      renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month               AS renewal_subscription_end_month,
+      renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month                                                          AS renewal_subscription_end_month,
       base_{{renewal_fiscal_year}}.parent_crm_account_name,
       base_{{renewal_fiscal_year}}.crm_account_name,
       base_{{renewal_fiscal_year}}.parent_crm_account_sales_segment,
+      base_{{renewal_fiscal_year}}.dim_crm_user_id,
+      base_{{renewal_fiscal_year}}.user_name,
+      base_{{renewal_fiscal_year}}.user_role_id,
+      base_{{renewal_fiscal_year}}.crm_user_sales_segment,
+      base_{{renewal_fiscal_year}}.crm_user_geo,
+      base_{{renewal_fiscal_year}}.crm_user_region,
+      base_{{renewal_fiscal_year}}.crm_user_area,
       base_{{renewal_fiscal_year}}.product_tier_name,
       base_{{renewal_fiscal_year}}.product_delivery_type,
       combined_{{renewal_fiscal_year}}.renewal_type,
       base_{{renewal_fiscal_year}}.is_myb,
       base_{{renewal_fiscal_year}}.is_myb_with_multi_subs,
-      base_{{renewal_fiscal_year}}.current_term                                          AS subscription_term,
+      base_{{renewal_fiscal_year}}.current_term                                                                                     AS subscription_term,
       base_{{renewal_fiscal_year}}.estimated_total_future_billings,
       CASE
-        WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-          AND DATEADD('month',12,CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-          AND base_{{renewal_fiscal_year}}.is_myb_with_multi_subs = FALSE THEN TRUE
+        WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))
+          AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
+            AND base_{{renewal_fiscal_year}}.is_myb_with_multi_subs = FALSE 
+            THEN TRUE
         ELSE FALSE
-      END                                AS is_atr,
+      END                                                                                                                           AS is_atr,
       CASE
         WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-          AND DATEADD('month',12,CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-          AND opportunity_term_group.is_myb_opportunity_term_test = FALSE THEN TRUE
+          AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
+            AND opportunity_term_group.is_myb_opportunity_term_test = FALSE 
+              THEN TRUE
         ELSE FALSE
-      END                                AS is_atr_opportunity_term_test,
+      END                                                                                                                           AS is_atr_opportunity_term_test,
       CASE 
-        WHEN opportunity_term_group.opportunity_term_group IS NULL THEN 'No Opportunity Term' 
+        WHEN opportunity_term_group.opportunity_term_group IS NULL 
+          THEN 'No Opportunity Term' 
         ELSE opportunity_term_group.opportunity_term_group
-      END                                AS opportunity_term_group,
+      END                                                                                                                           AS opportunity_term_group,
       base_{{renewal_fiscal_year}}.arr
     FROM combined_{{renewal_fiscal_year}}
     LEFT JOIN dim_date
@@ -379,8 +703,8 @@
     LEFT JOIN opportunity_term_group
       ON base_{{renewal_fiscal_year}}.dim_subscription_id = opportunity_term_group.dim_subscription_id
     WHERE combined_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-      AND DATEADD('month',12, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-      AND day_of_month = 1
+      AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
+        AND day_of_month = 1
     ORDER BY fiscal_quarter_name_fy
 
 {% endfor -%}
@@ -400,6 +724,6 @@
     cte_ref="unioned",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2021-11-19",
-    updated_date="2021-11-19"
+    created_date="2021-11-22",
+    updated_date="2021-11-22"
 ) }}
