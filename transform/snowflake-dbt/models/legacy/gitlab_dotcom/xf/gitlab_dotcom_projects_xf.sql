@@ -126,9 +126,7 @@ joined AS (
           THEN 'trial'
         ELSE COALESCE(gitlab_subscriptions.plan_id, 34)::VARCHAR
       END                                                          AS plan_id_at_project_creation,
-
-      ARRAYAGG(active_services.service_type)                       AS active_service_types,
-      CASE
+            CASE
         WHEN import_type IS NULL
           THEN NULL
         WHEN import_type = 'gitlab_project' AND project_import_url IS NULL
@@ -138,7 +136,7 @@ joined AS (
         WHEN import_type IS NOT NULL AND import_type != 'gitlab_project' AND project_import_url IS NOT NULL
           THEN 'other_source_project_import'
       END                                                          AS project_template,
-
+      ARRAYAGG(active_services.service_type)                       AS active_service_types,
       COALESCE(COUNT(DISTINCT members.member_id), 0)               AS member_count
     FROM projects
       LEFT JOIN members
