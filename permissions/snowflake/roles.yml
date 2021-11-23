@@ -3294,6 +3294,7 @@ roles:
     - mdrussell:
         member_of:
          - data_team_analyst
+         - analytics_engineer
          - restricted_safe
         warehouses:
             - analyst_xs
