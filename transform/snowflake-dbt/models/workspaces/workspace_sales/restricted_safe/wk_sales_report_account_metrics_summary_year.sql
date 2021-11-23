@@ -1,5 +1,5 @@
 {{ config(alias='report_account_metrics_summary_year') }}
---https://gitlab.my.salesforce.com/0016100000g04uJAAQ
+
 WITH date_details AS (
 
       SELECT * 
@@ -8,12 +8,12 @@ WITH date_details AS (
   
  ), sfdc_opportunity_xf AS (
   
-    SELECT o.*
-    --FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf o
-    FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  o
-    WHERE o.is_deleted = 0
-      AND o.is_edu_oss = 0
-      AND o.is_jihu_account = 0
+    SELECT *
+    --FROM prod.restricted_safe_workspace_sales.sfdc_opportunity_xf
+    FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
+    WHERE is_deleted = 0
+      AND is_edu_oss = 0
+      AND is_jihu_account = 0
 
  ), sfdc_opportunity_snapshot_xf AS (
   
@@ -39,8 +39,7 @@ WITH date_details AS (
             ELSE 0 
         END                                 AS is_channel_arr_flag
     --FROM raw.zuora_stitch.subscription s 
-    FROM {{ source('zuora', 'subscription') }} s
- 
+    FROM {{ source('zuora', 'subscription') }} s 
  
  ), mart_arr AS (
 
@@ -58,14 +57,14 @@ WITH date_details AS (
   ), sfdc_accounts_xf AS (
     
     SELECT *
-    --FROM prod.restricted_safe_legacy.sfdc_accounts_xf
-    FROM {{ref('sfdc_accounts_xf')}} 
+    FROM prod.restricted_safe_legacy.sfdc_accounts_xf
+    --FROM {{ref('sfdc_accounts_xf')}} 
 
   ), stitch_account  AS (
 
     SELECT *
-    --FROM raw.salesforce_stitch.account
-    FROM {{ source('salesforce', 'account') }}
+    FROM raw.salesforce_stitch.account
+    --FROM {{ source('salesforce', 'account') }}
 
 
   ), sfdc_users_xf AS (
@@ -535,6 +534,8 @@ SELECT
   coalesce(raw.ZI_NUMBER_OF_DEVELOPERS__C,0)                    AS zi_developers,
   coalesce(raw.zi_revenue__c,0)                                 AS zi_revenue,
   coalesce(raw.ACCOUNT_DEMOGRAPHICS_EMPLOYEE_COUNT__C,0)        AS employees,
+ 
+  LEAST(50000,GREATEST(coalesce(raw.Number_of_Licenses_This_Account__c,0),COALESCE(raw.POTENTIAL_USERS__C,raw.Decision_Maker_Count_Linkedin__c,raw.ZI_NUMBER_OF_DEVELOPERS__C,raw.ZI_NUMBER_OF_DEVELOPERS__C,0)))  AS calculated_developer_count,
   
   a.technical_account_manager_date,              
   a.technical_account_manager                   AS technical_account_manager_name,
@@ -863,6 +864,8 @@ FROM account_year_key ak
     SELECT 
         upa_id,
   
+        arr,
+  
         CASE
             WHEN potential_users > licenses
                 THEN potential_users
@@ -871,13 +874,13 @@ FROM account_year_key ak
   
         CASE
             WHEN linkedin_developer > licenses
-                THEN potential_users
+                THEN linkedin_developer
              ELSE Null 
-        END                                 AS adjusted_linkedin,
+        END                                 AS adjusted_linkedin_developers,
   
         CASE
             WHEN zi_developers > licenses
-                THEN potential_users
+                THEN zi_developers
              ELSE Null 
         END                                 AS adjusted_zi_developers,
   
@@ -887,22 +890,58 @@ FROM account_year_key ak
              ELSE Null 
         END                                 AS adjusted_employees,
         
-        LEAST(50000,GREATEST(licenses, COALESCE(adjusted_potential_users,adjusted_linkedin,adjusted_zi_developers,adjusted_employees))) AS lam_dev_count
+        is_customer_flag,
+        
+        LEAST(50000,GREATEST(licenses, COALESCE(adjusted_potential_users,adjusted_linkedin_developers,adjusted_zi_developers,adjusted_employees))) AS lam_dev_count
   
   
     FROM consolidated_upa
-    WHERE report_fiscal_year = 2022
+    --WHERE report_fiscal_year = 2022
 
 
 ), final AS (
 
   SELECT
       acc.*,
-      COALESCE(upa.lam_dev_count,0) AS lam_dev_count
+      CASE 
+          WHEN acc.calculated_developer_count > 500 
+            THEN 1
+          ELSE 0
+      END                                       AS account_has_over_500_dev_flag,
+      CASE WHEN upa.upa_id = acc.account_id 
+           THEN upa.arr ELSE 0 END              AS upa_arr,
+  
+      CASE WHEN upa.upa_id = acc.account_id 
+           THEN upa.adjusted_potential_users 
+            ELSE 0 END                          AS upa_potential_users,
+      CASE WHEN upa.upa_id = acc.account_id 
+           THEN upa.adjusted_linkedin_developers 
+            ELSE 0 END                          AS upa_linkedin_developers,
+      CASE WHEN upa.upa_id = acc.account_id 
+           THEN upa.adjusted_zi_developers 
+            ELSE 0 END                          AS upa_zi_developers,
+      CASE WHEN upa.upa_id = acc.account_id 
+           THEN upa.adjusted_employees 
+            ELSE 0 END                          AS upa_employees,
+      CASE WHEN upa.upa_id = acc.account_id 
+           THEN  COALESCE(upa.lam_dev_count,0)   
+            ELSE 0 END                          AS lam_dev_count,
+      CASE
+        WHEN upa.upa_id = acc.account_id 
+            THEN 1
+        ELSE 0
+       END                                  AS is_upa_flag,
+  
+        upa.is_customer_flag                AS hierarchy_is_customer_flag,
+        CASE 
+            WHEN COALESCE(upa.lam_dev_count,0) > 500
+                THEN 1
+            ELSE 0
+        END                                 AS hierarchy_has_over_500_dev_flag
   FROM consolidated_accounts acc
   LEFT JOIN upa_lam upa
-      ON upa.upa_id = acc.account_id
-  WHERE acc.report_fiscal_year = 2022
+      ON upa.upa_id = acc.upa_id
+  --WHERE acc.report_fiscal_year = 2022
   
 )
 
