@@ -11,6 +11,19 @@ gitlab-snowflake:
       warehouse: ANALYST_XS # <-- [ANALYST_XS, ENGINEER_XS], depends on your role
       schema: preparation
       authenticator: externalbrowser # <--- You must be logged in via OKTA
+
+    # use the dev_l target when running a query that requires additional compute
+    dev_l:
+      type: snowflake
+      threads: 16
+      account: gitlab
+      user: YOUR USER # <-- This will be your GitLab email
+      role: YOUR ROLE # <-- Talk to your manager, usually, it is JSMITH for Jane Smith
+      database: YOUR USERNAME # <-- JSMITH for Jane Smith
+      warehouse: ANALYST_L # <-- [ANALYST_L, ENGINEER_L], depends on your role
+      schema: preparation
+      authenticator: externalbrowser # <--- You must be logged in via OKTA
+      
     docs:
       type: snowflake
       threads: 8
