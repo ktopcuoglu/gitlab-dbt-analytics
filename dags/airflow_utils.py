@@ -154,7 +154,7 @@ def slack_snapshot_failed_task(context):
     Send a Slack alert to #dbt-runs and #analytics-pipelines
     """
     multi_channel_alert = MultiSlackChannelOperator(
-        channels=["#dbt-runs", "#analytics-pipelines"], context=context
+        channels=["#analytics-pipelines"], context=context
     )
 
     return multi_channel_alert.execute()
