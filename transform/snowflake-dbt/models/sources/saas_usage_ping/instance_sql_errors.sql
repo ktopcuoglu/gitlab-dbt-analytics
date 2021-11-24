@@ -5,11 +5,12 @@ WITH base AS (
 
 ), partitioned AS (
 
-    SELECT run_id       AS run_id,
-           sql_errors   AS sql_errors,
-           ping_date    AS ping_date,
-           _uploaded_at AS _uploaded_at
-      FROM base
+    SELECT 
+      run_id       AS run_id,
+      sql_errors   AS sql_errors,
+      ping_date    AS ping_date,
+      _uploaded_at AS _uploaded_at
+    FROM base
 
 ), renamed AS (
 
