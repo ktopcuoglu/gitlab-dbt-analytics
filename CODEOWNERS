@@ -145,7 +145,7 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru  @mpeychet_  @rparker
 /transform/snowflake-dbt/data/handbook_file_classification_mapping.csv                  @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @vedprakash2021
 /transform/snowflake-dbt/data/historical_counts_maintainers_engineers.csv               @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @vedprakash2021
 /transform/snowflake-dbt/data/netsuite_expense_cost_category.csv                        @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @vedprakash2021
-/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1
+/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1 @dvanrooijen2
 /transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1
 /transform/snowflake-dbt/data/raw_netsuite_currencies.csv                               @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @vedprakash2021
 /transform/snowflake-dbt/data/seeds.md                                                  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @mpeychet_ @vedprakash2021

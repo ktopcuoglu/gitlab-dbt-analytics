@@ -6,7 +6,7 @@ Please see the [handbook page](https://about.gitlab.com/handbook/business-techno
 
 Below checklist of activities would be run once for quarter to validate security and system health.
 
-SNOWFLAKE
+## SNOWFLAKE
 1. [ ] Validate terminated employees have been removed from Snowflake access.
     <details>
 
@@ -79,7 +79,7 @@ SNOWFLAKE
  
     ```
 
-SISENSE
+## SISENSE
 1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
@@ -107,36 +107,6 @@ SISENSE
 
    ```sql
 
-   WITH final AS (
-  
-      SELECT full_name, 
-         work_email
-      FROM legacy.employee_directory_analysis 
-      WHERE is_termination_date = TRUE
-      QUALIFY ROW_NUMBER() OVER (PARTITION BY work_email ORDER BY date_actual DESC) = 1
-
-   )
-
-      SELECT   
-         final.full_name, 
-         final.work_email 
-      FROM final
-      JOIN legacy.sheetload_sisense_users users 
-      ON final.work_email = users.email_address 
-         -- incase email adres is empty
-         OR final.full_name = users.FIRST_NAME || ' ' || users.LAST_NAME
-      ORDER BY 2
-
-   ```
-
-
-2. [ ] De-activate any account that has not logged-in within the past 90 days from the moment of performing audit from Sisense.
-
-    <details>
-
-   * [ ] Run below SQL script to perform the check.
-
-   ```sql
    WITH EMPLOYEE_DIRECTORY AS (
   
     SELECT full_name, 
@@ -168,7 +138,43 @@ SISENSE
    ```
 
 
-TRUSTED DATA
+2. [ ] De-activate any account that has not logged-in within the past 90 days from the moment of performing audit from Sisense.
+
+    <details>
+
+   * [ ] Run below SQL script to perform the check.
+
+   ```sql
+   WITH final as (
+      SELECT users.id, 
+         first_name, 
+         last_name, 
+         email_address, 
+         spaces.name,
+         MAX(DATE(time_on_site_logs.created_at)) AS last_login_date  
+      FROM time_on_site_logs
+      JOIN users
+      --inner join between time_on_site_logs and users. This means if a user never performed a login, it will not show up in the results
+      --improvement point for next iteration check for users that were created over 90 days ago and that didn't perform a login.
+      ON time_on_site_logs.USER_ID = users.ID
+      LEFT OUTER JOIN user_roles
+      ON users.id = user_roles.user_id
+      LEFT OUTER JOIN roles
+      ON user_roles.role_id = roles.id
+      --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+      LEFT OUTER JOIN spaces
+      on roles.space_id = spaces.id
+      WHERE roles.name = 'Everyone'
+      GROUP BY 1,2,3,4,5
+   )
+
+   SELECT * 
+   FROM final
+   WHERE last_login_date < CURRENT_DATE-90
+   ORDER BY last_name;
+   ```
+
+## TRUSTED DATA
 1. [ ] Review all Golden Record TD tests and make sure they're passing.
 
     <details>
