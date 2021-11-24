@@ -24,6 +24,10 @@ models:
         description: CRM Account amount of seats in the current month based on Zuora subscription and charge information.
       - name: crm_account_open_opp_net_arr
         description: Sum of Net ARR for all currently open SFDC opportunities for the CRM Account.
+      - name: crm_account_open_opp_net_arr_fo
+        description: Sum of Net ARR for all currently open SFDC opportunities for the CRM Account with order type New First Order.
+      - name: crm_account_open_opp_net_arr_growth
+        description: Sum of Net ARR for all currently open SFDC opportunities for the CRM Account with order type New Connected and Growth.
       - name: opportunity_reach
         description: Count of aggregate prospect licenses from open SFDC opportunities, where prospect means New First Order opportunities. The amount of seats in the opportunity are fetched from the primary quote linked to the opportunity.
       - name: crm_account_lost_opp_net_arr

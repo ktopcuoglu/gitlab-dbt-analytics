@@ -98,6 +98,26 @@
     WHERE stage_is_closed = FALSE
     GROUP BY 1 
 
+), account_open_opp_net_arr_fo AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr) AS net_arr
+    FROM opportunity_net_arr
+    WHERE stage_is_closed = FALSE
+      AND order_type_name IN ('1. New - First Order')
+    GROUP BY 1 
+
+), account_open_opp_net_arr_growth AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr) AS net_arr
+    FROM opportunity_net_arr
+    WHERE stage_is_closed = FALSE
+      AND order_type_name IN ('2. New - Connected', '3. Growth')
+    GROUP BY 1 
+
 ), account_next_renewal_month AS (
 
     SELECT
@@ -226,6 +246,15 @@
     WHERE type_label IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY type_label) = 1
 
+), issue_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
+
+    SELECT
+      dim_issue_id,
+      devops_label
+    FROM issue_labels
+    WHERE devops_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY devops_label) = 1
+
 ), issue_status AS ( -- Some issues for some reason had two valid workflow labels, this dedup them
 
     SELECT
@@ -270,6 +299,15 @@
     FROM epic_labels
     WHERE type_label IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY type_label) = 1
+
+), epic_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
+
+    SELECT
+      dim_epic_id,
+      devops_label
+    FROM epic_labels
+    WHERE devops_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY devops_label) = 1
 
 ), epic_last_milestone AS ( -- Get issue milestone with the latest due dates for epics
     
@@ -326,6 +364,7 @@
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
       dev_label.dev_label                                                         AS product_stage,
+      devops_label.devops_label                                                   AS stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -353,6 +392,8 @@
     LEFT JOIN issue_labels AS dev_label
       ON dev_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
       AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN issue_devops_label AS devops_label
+      ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
       ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
 
@@ -402,6 +443,7 @@
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
       dev_label.dev_label                                                         AS product_stage,
+      devops_label.devops_label                                                   AS stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -433,6 +475,8 @@
     LEFT JOIN epic_labels AS dev_label
       ON dev_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
       AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN epic_devops_label AS devops_label
+      ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
       ON type_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
 
@@ -458,6 +502,8 @@
       IFNULL(arr_metrics_current_month.quantity, 0)                               AS customer_reach,
       IFNULL(arr_metrics_current_month.arr, 0)                                    AS crm_account_arr,
       IFNULL(account_open_opp_net_arr.net_arr, 0)                                 AS crm_account_open_opp_net_arr,
+      IFNULL(account_open_opp_net_arr_fo.net_arr, 0)                              AS crm_account_open_opp_net_arr_fo,
+      IFNULL(account_open_opp_net_arr_growth.net_arr, 0)                          AS crm_account_open_opp_net_arr_growth,
       IFNULL(account_open_fo_opp_seats.seats, 0)                                  AS opportunity_reach,
       IFNULL(account_lost_opp_arr.net_arr, 0)                                     AS crm_account_lost_opp_net_arr,
       IFNULL(account_lost_customer_arr.arr_basis, 0)                              AS crm_account_lost_customer_arr,
@@ -491,6 +537,10 @@
       ON account_lost_customer_arr.dim_crm_account_id = user_request.dim_crm_account_id
     LEFT JOIN account_open_opp_net_arr
       ON account_open_opp_net_arr.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_opp_net_arr_fo
+      ON account_open_opp_net_arr_fo.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_opp_net_arr_growth
+      ON account_open_opp_net_arr_growth.dim_crm_account_id = user_request.dim_crm_account_id
 
     -- Opportunity Joins
     LEFT JOIN fct_crm_opportunity
@@ -508,5 +558,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2021-11-16",
+    updated_date="2021-11-24",
   ) }}
