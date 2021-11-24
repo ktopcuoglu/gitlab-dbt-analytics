@@ -1,4 +1,0 @@
-Running with dbt=0.19.0
-Encountered an error:
-Runtime Error
-  fatal: Not a dbt project (or any of the parent directories). Missing dbt_project.yml file
