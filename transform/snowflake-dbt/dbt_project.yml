@@ -488,6 +488,9 @@ models:
       workspace_engineering:
         +schema: workspace_engineering
 
+      workspace_product:
+        source_view:
+          +schema: workspace_product  
 
     # ------------------
     # Marts
