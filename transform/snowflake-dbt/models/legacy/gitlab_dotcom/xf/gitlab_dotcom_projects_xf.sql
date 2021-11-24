@@ -126,7 +126,7 @@ joined AS (
           THEN 'trial'
         ELSE COALESCE(gitlab_subscriptions.plan_id, 34)::VARCHAR
       END                                                          AS plan_id_at_project_creation,
-            CASE
+      CASE
         WHEN import_type IS NULL
           THEN NULL
         WHEN import_type = 'gitlab_project' AND project_import_url IS NULL
