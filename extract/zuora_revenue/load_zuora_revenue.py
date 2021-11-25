@@ -9,7 +9,7 @@ from datetime import datetime
 from google.cloud import storage
 from google.oauth2 import service_account
 from google.cloud.storage.bucket import Bucket
-from sqlalchemy.engine.base import Engine
+from sqlalchemy.engine.base import Connection, Engine
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -103,11 +103,16 @@ def table_truncate_to_daily_load(
     truncate_table = f"""TRUNCATE TABLE {table_name}"""
     end_work="end work"
     logging.info(truncate_table)
-    engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
-    query_executor(engine1,begin_work)
-    truncate_table_result = query_executor(engine1, truncate_table)
-    query_executor(engine1,end_work)
-    logging.info(truncate_table_result)
+    engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    try:
+        connection = engine.connect()
+        connection.execute(begin_work)
+        results=connection.execute(truncate_table).fetchall()
+        connection.execute(end_work)
+    finally:
+        connection.close()
+        engine.dispose()
+    logging.info(results)
 
 def zuora_revenue_load(
     bucket: str,
