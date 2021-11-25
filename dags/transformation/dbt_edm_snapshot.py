@@ -136,8 +136,4 @@ dbt_test_snapshot_models = KubernetesPodOperator(
 )
 
 
-(
-    dbt_snapshot
-    >> dbt_snapshot_models_run
-    >> dbt_test_snapshot_models
-)
+(dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models)
