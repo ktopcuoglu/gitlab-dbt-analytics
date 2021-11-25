@@ -99,10 +99,14 @@ def table_truncate_to_daily_load(
     table_name: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
+    begin_work="begin work;"
     truncate_table = f"""TRUNCATE TABLE {table_name}"""
+    end_work="end_work"
     logging.info(truncate_table)
     engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    query_executor(engine1,begin_work)
     truncate_table_result = query_executor(engine1, truncate_table)
+    query_executor(engine1,end_work)
     logging.info(truncate_table_result)
 
 def zuora_revenue_load(
