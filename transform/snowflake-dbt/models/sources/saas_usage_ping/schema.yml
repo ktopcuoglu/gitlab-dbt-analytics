@@ -43,7 +43,7 @@ models:
         - name: ping_date
           tests:
             - not_null
-        - name: _uploaded_at
+        - name: uploaded_at
           tests:
             - not_null
     - name: instance_redis_metrics
