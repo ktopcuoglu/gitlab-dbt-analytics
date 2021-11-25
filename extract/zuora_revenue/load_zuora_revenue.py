@@ -104,11 +104,6 @@ def table_truncate_to_daily_load(
     engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     truncate_table_result = query_executor(engine1, truncate_table)
     logging.info(truncate_table_result)
-    
-    # Truncate the table before every load
-    truncate_table_commit = "COMMIT"
-    truncate_table_commit_result = query_executor(engine1, truncate_table_commit)
-    logging.info(truncate_table_commit_result)
 
 def zuora_revenue_load(
     bucket: str,
