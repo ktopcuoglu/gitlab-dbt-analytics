@@ -1,3 +1,9 @@
+{{config({
+    "materialized": "table",
+    "transient": false
+  })
+}}
+
 {% set renewal_fiscal_years= ['2019',
                               '2020',
                               '2021',
@@ -112,7 +118,7 @@
 ), base_{{renewal_fiscal_year}} AS (--get the base data set of recurring charges.
 
     SELECT
-      mart_charge.dim_charge_id              AS charge_id,
+      mart_charge.dim_charge_id,
       mart_charge.dim_crm_account_id,
       mart_charge.dim_billing_account_id,
       mart_charge.dim_subscription_id,
@@ -179,7 +185,7 @@
       is_myb_with_multi_subs,
       current_term,
       --charge_term,
-      charge_id,
+      dim_charge_id,
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -230,7 +236,7 @@
         WHEN current_term = 57 THEN 60
         ELSE current_term
       END                                   AS current_term,
-      charge_id,
+      dim_charge_id,
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -260,7 +266,7 @@
       is_myb, 
       is_myb_with_multi_subs, 
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -291,7 +297,7 @@
       is_myb, 
       is_myb_with_multi_subs, 
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -322,7 +328,7 @@
       is_myb, 
       is_myb_with_multi_subs, 
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -354,7 +360,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id, 
       dim_subscription_id,
@@ -385,7 +391,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -416,7 +422,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -448,7 +454,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -479,7 +485,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -510,7 +516,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -541,7 +547,7 @@
       is_myb, 
       is_myb_with_multi_subs,
       current_term, 
-      charge_id, 
+      dim_charge_id, 
       dim_crm_account_id,
       dim_billing_account_id,
       dim_subscription_id,
@@ -636,10 +642,12 @@
 ), renewal_report_{{renewal_fiscal_year}} AS (--create the renewal report for the applicable fiscal year.
 
     SELECT
+      {{ dbt_utils.surrogate_key(['CONCAT(dim_date.fiscal_quarter_name_fy, base_{{renewal_fiscal_year}}.dim_charge_id)']) }} AS primary_key,
       dim_date.fiscal_year,
+      dim_date.first_day_of_fiscal_quarter,
       dim_date.fiscal_quarter_name_fy,
       opportunity_term_group.close_month,
-      base_{{renewal_fiscal_year}}.charge_id,
+      base_{{renewal_fiscal_year}}.dim_charge_id,
       opportunity_term_group.dim_crm_opportunity_id,
       base_{{renewal_fiscal_year}}.dim_crm_account_id,
       base_{{renewal_fiscal_year}}.dim_billing_account_id,
@@ -697,7 +705,7 @@
     LEFT JOIN dim_date
       ON combined_{{renewal_fiscal_year}}.term_end_month = dim_date.first_day_of_month
     LEFT JOIN base_{{renewal_fiscal_year}}
-      ON combined_{{renewal_fiscal_year}}.charge_id = base_{{renewal_fiscal_year}}.charge_id
+      ON combined_{{renewal_fiscal_year}}.dim_charge_id = base_{{renewal_fiscal_year}}.dim_charge_id
     LEFT JOIN renewal_subscriptions_{{renewal_fiscal_year}}
       ON base_{{renewal_fiscal_year}}.subscription_name = renewal_subscriptions_{{renewal_fiscal_year}}.subscription_name
     LEFT JOIN opportunity_term_group
@@ -724,6 +732,6 @@
     cte_ref="unioned",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2021-11-22",
-    updated_date="2021-11-22"
+    created_date="2021-11-24",
+    updated_date="2021-11-24"
 ) }}
