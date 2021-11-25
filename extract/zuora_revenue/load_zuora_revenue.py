@@ -94,6 +94,21 @@ def show_extraction_status(bucket: str, table_name: str):
         )
         sys.exit(1)
 
+def table_truncate_to_daily_load(
+    schema: str,
+    table_name: str,
+    conn_dict: Dict[str, str] = None,
+) -> None:
+    truncate_table = f"""TRUNCATE TABLE {table_name}"""
+    logging.info(truncate_table)
+    engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    truncate_table_result = query_executor(engine1, truncate_table)
+    logging.info(truncate_table_result)
+    
+    # Truncate the table before every load
+    truncate_table_commit = "COMMIT"
+    truncate_table_commit_result = query_executor(engine, truncate_table_commit)
+    logging.info(truncate_table_commit_result)
 
 def zuora_revenue_load(
     bucket: str,
@@ -101,6 +116,7 @@ def zuora_revenue_load(
     table_name: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
+    
     """
     This function is responsible for checking if there has been extraction done today for this table.
     If Yes then it will load all the file present in the GCS folder under processed  for particular table and give number of rows loaded.
@@ -112,16 +128,7 @@ def zuora_revenue_load(
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
     # Truncate the table before every load
-    truncate_table = f"""TRUNCATE TABLE {table_name}"""
-    logging.info(truncate_table)
-    engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
-    truncate_table_result = query_executor(engine1, truncate_table)
-    logging.info(truncate_table_result)
-    
-    # Truncate the table before every load
-    truncate_table_commit = "COMMIT"
-    truncate_table_commit_result = query_executor(engine, truncate_table_commit)
-    logging.info(truncate_table_commit_result)
+    table_truncate_to_daily_load(schema,table_name,conn_dict)
 
     upload_query = f"""
         copy into {table_name}
