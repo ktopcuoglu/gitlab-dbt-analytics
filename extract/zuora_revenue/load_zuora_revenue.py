@@ -101,7 +101,7 @@ def table_truncate_to_daily_load(
 ) -> None:
     begin_work="begin work;"
     truncate_table = f"""TRUNCATE TABLE {table_name}"""
-    end_work="end_work"
+    end_work="end work"
     logging.info(truncate_table)
     engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
     query_executor(engine1,begin_work)
