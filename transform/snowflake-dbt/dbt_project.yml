@@ -586,7 +586,7 @@ snapshots:
     transient: false
 
     common:
-      +tags: ["daily"]
+      +tags: ["edm_snapshot"]
 
     customers:
       +tags: ["daily", "customers_db"]
@@ -598,7 +598,7 @@ snapshots:
       +tags: ["daily", "license_db"]
 
     marts:
-      +tags: ["daily"]
+      +tags: ["edm_snapshot"]
 
     netsuite:
       +tags: ["daily"]
