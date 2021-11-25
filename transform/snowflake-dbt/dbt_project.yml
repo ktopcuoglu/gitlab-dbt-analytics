@@ -459,9 +459,9 @@ models:
         dbt:
           +tags: ["dbt"]
 
-      workspace_datascience:
-        +schema: workspace_datascience
-        ptb:
+      workspace_data_science:
+        +schema: workspace_data_science
+        pte:
           +materialized: table
 
       workspace_marketing:

@@ -148,7 +148,7 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'bulk_import_entities' AS table_name
+        SELECT 'gitlab_db_bulk_import_entities' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
@@ -464,14 +464,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_protected_environments' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM protected_environments
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL 
         SELECT 'gitlab_db_protected_environments' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -964,20 +956,6 @@ tables:
     export_table_primary_key: created_date
     import_db: GITLAB_DB
     import_query: |-      
-        SELECT 'gitlab_db_notes' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM notes
-        WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-  cluster_14:
-    dbt_source_model: true
-    export_schema: 'gitlab_dotcom'
-    export_table: 'gitlab_pgp_export'
-    export_table_primary_key: created_date
-    import_db: GITLAB_DB
-    import_query: |-      
         SELECT 'gitlab_db_system_note_metadata' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -993,7 +971,7 @@ tables:
         FROM merge_request_blocks
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3 
-  cluster_15:
+  cluster_14:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
@@ -1015,7 +993,7 @@ tables:
         FROM experiment_subjects
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-  cluster_16:
+  cluster_15:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
@@ -1037,7 +1015,7 @@ tables:
         FROM namespace_settings
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-  cluster_17: 
+  cluster_16: 
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
@@ -1051,7 +1029,7 @@ tables:
         FROM deployments
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-  cluster_18:
+  cluster_17:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
@@ -1073,7 +1051,7 @@ tables:
         FROM remote_mirrors
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3 
-  cluster_19:
+  cluster_18:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
@@ -1095,7 +1073,7 @@ tables:
         FROM integrations
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3 
-  cluster_20:
+  cluster_19:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
@@ -1109,7 +1087,7 @@ tables:
         FROM events
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-  cluster_21:
+  cluster_20:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'

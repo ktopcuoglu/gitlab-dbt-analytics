@@ -107,10 +107,21 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+          # - unique manually tested during development (2021-11-16) and found to pass.  Times out on XS warehouse.
   
   - name: gitlab_dotcom_namespace_lineage_historical_monthly
 
   - name: gitlab_dotcom_namespace_statistics_historical_monthly
 
   - name: gitlab_dotcom_namespace_storage_statistics_historical_monthly
+
+  - name: gitlab_dotcom_namespace_lineage_scd
+    description: >-
+      A derivative table from the namespace snapshot table that identifies that valid time range for the
+      namespace lineage of a given namespace.
+    columns:
+      - name: namespace_lineage_id
+        tests:
+          - not_null
+          - unique
 
