@@ -114,7 +114,8 @@ def zuora_revenue_load(
     # Truncate the table before every load
     truncate_table = f"""TRUNCATE TABLE {table_name}"""
     logging.info(truncate_table)
-    truncate_table_result = query_executor(engine, truncate_table)
+    engine1 = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    truncate_table_result = query_executor(engine1, truncate_table)
     logging.info(truncate_table_result)
     
     # Truncate the table before every load
