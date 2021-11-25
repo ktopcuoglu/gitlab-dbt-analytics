@@ -107,7 +107,7 @@ def table_truncate_to_daily_load(
     
     # Truncate the table before every load
     truncate_table_commit = "COMMIT"
-    truncate_table_commit_result = query_executor(engine, truncate_table_commit)
+    truncate_table_commit_result = query_executor(engine1, truncate_table_commit)
     logging.info(truncate_table_commit_result)
 
 def zuora_revenue_load(
