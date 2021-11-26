@@ -64,7 +64,7 @@ dag = DAG("dbt-testing-only", default_args=default_args, schedule_interval="45 8
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target test --models +dim_subscription; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
