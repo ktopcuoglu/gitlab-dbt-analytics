@@ -3,6 +3,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - bronze_sus_responders_fy22q1
+  - name: country_lat_long
+    owner: '@nicolegalang'
+    tabs:
+      - latitude_and_longitude
   - name: crm_accounts_pricing_eoa
     owner: '@jeanpeguero'
     tabs:
