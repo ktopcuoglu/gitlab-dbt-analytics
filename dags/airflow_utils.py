@@ -84,7 +84,7 @@ def slack_defaults(context, task_type):
     Function to handle switching between a task failure and success.
     """
     # base_url = "https://airflow.gitlabdata.com"
-    base_url = "http://35.230.59.166:8080"
+    base_url = "http://35.233.169.210:8080"
     execution_date = context["ts"]
     dag_context = context["dag"]
     dag_name = dag_context.dag_id
@@ -154,7 +154,7 @@ def slack_snapshot_failed_task(context):
     Send a Slack alert to #dbt-runs and #analytics-pipelines
     """
     multi_channel_alert = MultiSlackChannelOperator(
-        channels=["#dbt-runs", "#analytics-pipelines"], context=context
+        channels=["#analytics-pipelines"], context=context
     )
 
     return multi_channel_alert.execute()
