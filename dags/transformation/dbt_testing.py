@@ -58,7 +58,7 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("dbt", default_args=default_args, schedule_interval="45 8 * * *")
+dag = DAG("dbt-testing-only", default_args=default_args, schedule_interval="45 8 * * *")
 
 # dbt-test
 dbt_test_cmd = f"""
