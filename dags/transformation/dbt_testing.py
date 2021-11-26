@@ -66,7 +66,9 @@ dbt_test_cmd = f"""
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
+    echo $ret 
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+    echo "Finished" 
 """
 dbt_test = KubernetesPodOperator(
     **gitlab_defaults,
