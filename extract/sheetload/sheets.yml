@@ -47,10 +47,6 @@ sheets:
   #    - cert_product_adoption_dashboard_user
   #    - cert_sales_funnel_dashboard_user
   #    - cert_sales_funnel_dashboard_developer
-  - name: country_lat_long
-    owner: '@nicolegalang'
-    tabs:
-      - latitude_and_longitude
   - name: data_team_capacity
     owner: '@kathleentam'
     tabs:
