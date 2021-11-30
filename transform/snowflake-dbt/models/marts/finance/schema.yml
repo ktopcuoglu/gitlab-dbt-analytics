@@ -83,7 +83,7 @@ models:
       - name: term_start_month
         description: Month when a charge begins for a subscription.
       - name: term_end_month
-        description: Month when a charge ends for a subscription.
+        description: Month when a subscription term ends.
       - name: bookings_term_end_month
         description: Similar to the term end month but calculates intermediate term end months for multi year subscriptions with terms greater than 12 months. These end months do not exist in the Zuora billing system. This allows us to get a view of all subscriptions renewing on a yearly basis.
       - name: myb_subscription_end_month
