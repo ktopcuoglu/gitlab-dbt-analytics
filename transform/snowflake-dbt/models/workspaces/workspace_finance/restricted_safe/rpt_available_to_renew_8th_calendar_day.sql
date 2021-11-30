@@ -16,7 +16,7 @@ WITH snapshot_dates AS (
     SELECT *
     FROM mart_available_to_renew_snapshot
     INNER JOIN snapshot_dates
-      ON mart_available_to_renew.first_day_of_fiscal_quarter = snapshot_dates.first_day_of_fiscal_quarter
+      ON mart_available_to_renew.term_end_month = snapshot_dates.first_day_of_fiscal_quarter
       AND mart_available_to_renew.snapshot_date = snapshot_dates.snapshot_date_fpa
 
 )

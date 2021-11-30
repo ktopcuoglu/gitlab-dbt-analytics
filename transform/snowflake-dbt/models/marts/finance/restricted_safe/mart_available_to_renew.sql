@@ -144,12 +144,12 @@
         WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
           THEN TRUE
         ELSE FALSE
-      END                                                                                                                                               AS is_myb,
+      END                                                                                                                                               AS is_multi_year_booking,
       CASE
         WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
           THEN TRUE
         ELSE FALSE
-      END                                                                                                                                               AS is_myb_with_multi_subs,
+      END                                                                                                                                               AS is_multi_year_booking_with_multi_subs,
       mart_charge.is_paid_in_full,
       mart_charge.estimated_total_future_billings,
       mart_charge.effective_start_month,
@@ -178,11 +178,11 @@
 
     SELECT
       CASE
-        WHEN is_myb = TRUE THEN 'MYB'
+        WHEN is_multi_year_booking = TRUE THEN 'MYB'
         ELSE 'Non-MYB'
       END                             AS renewal_type,
-      is_myb,
-      is_myb_with_multi_subs,
+      is_multi_year_booking,
+      is_multi_year_booking_with_multi_subs,
       current_term,
       --charge_term,
       dim_charge_id,
@@ -212,11 +212,11 @@
 
     SELECT
       CASE
-        WHEN is_myb = TRUE THEN 'MYB'
+        WHEN is_multi_year_booking = TRUE THEN 'MYB'
         ELSE 'Non-MYB'
       END                                   AS renewal_type,
-      is_myb,
-      is_myb_with_multi_subs,
+      is_multi_year_booking,
+      is_multi_year_booking_with_multi_subs,
       --current_term,
       CASE--the below odd term charges do not behave well in the MYB logic and end up with duplicate renewals in the fiscal year. This CASE statement smooths out the charges so they only have one renewal entry in the fiscal year.
         WHEN current_term = 25 THEN 24
@@ -263,8 +263,8 @@
 
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs, 
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs, 
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -294,8 +294,8 @@
 
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs, 
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs, 
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -325,8 +325,8 @@
     
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs, 
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs, 
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -357,8 +357,8 @@
 
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -388,8 +388,8 @@
     
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -419,8 +419,8 @@
     
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -451,8 +451,8 @@
 
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -482,8 +482,8 @@
    
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -513,8 +513,8 @@
     
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -544,8 +544,8 @@
     
     SELECT 
       renewal_type, 
-      is_myb, 
-      is_myb_with_multi_subs,
+      is_multi_year_booking, 
+      is_multi_year_booking_with_multi_subs,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -632,7 +632,7 @@
         WHEN dim_crm_opportunity.opportunity_term > 12 
           THEN TRUE
         ELSE NULL
-      END                                                                                                               AS is_myb_opportunity_term_test
+      END                                                                                                               AS is_multi_year_booking_opportunity_term_test
     FROM {{ ref('dim_subscription') }}
     LEFT JOIN {{ ref('dim_crm_opportunity') }}
       ON dim_subscription.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
@@ -677,21 +677,21 @@
       base_{{renewal_fiscal_year}}.product_tier_name,
       base_{{renewal_fiscal_year}}.product_delivery_type,
       combined_{{renewal_fiscal_year}}.renewal_type,
-      base_{{renewal_fiscal_year}}.is_myb,
-      base_{{renewal_fiscal_year}}.is_myb_with_multi_subs,
+      base_{{renewal_fiscal_year}}.is_multi_year_booking,
+      base_{{renewal_fiscal_year}}.is_multi_year_booking_with_multi_subs,
       base_{{renewal_fiscal_year}}.current_term                                                                                     AS subscription_term,
       base_{{renewal_fiscal_year}}.estimated_total_future_billings,
       CASE
         WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))
           AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
-            AND base_{{renewal_fiscal_year}}.is_myb_with_multi_subs = FALSE 
+            AND base_{{renewal_fiscal_year}}.is_multi_year_booking_with_multi_subs = FALSE 
             THEN TRUE
         ELSE FALSE
-      END                                                                                                                           AS is_atr,
+      END                                                                                                                           AS is_available_to_renew,
       CASE
         WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
           AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
-            AND opportunity_term_group.is_myb_opportunity_term_test = FALSE 
+            AND opportunity_term_group.is_multi_year_booking_opportunity_term_test = FALSE 
               THEN TRUE
         ELSE FALSE
       END                                                                                                                           AS is_atr_opportunity_term_test,
