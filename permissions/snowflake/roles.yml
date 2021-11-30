@@ -21,6 +21,9 @@ databases:
         shared: yes
 
 # User / Testing
+    - bi_tool_eval:
+        shared: no 
+
     - testing_db:
         shared: no
 
@@ -488,6 +491,29 @@ roles:
             - version_db
             - zuora
             - zuora_central_sandbox
+
+    - analytics_engineer:
+        member_of:
+            - analyst_core
+            - transformer
+            - snowflake_db
+            - data_team_analyst
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+            tables:
+                read:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
 
     - data_manager:
         warehouses:
@@ -1024,6 +1050,26 @@ roles:
             tables:
                 read:
                     - prod.boneyard.*
+
+    - bi_tool_eval_db:
+        warehouses:
+            - engineer_xs
+        privileges:
+            databases:
+                read:
+                    - bi_tool_eval
+                write:
+                    - bi_tool_eval
+            schemas:
+                read:
+                    - bi_tool_eval.*
+                write:
+                    - bi_tool_eval.*
+            tables:
+                read:
+                    - bi_tool_eval.*.*
+                write:
+                    - bi_tool_eval.*.*
 
     - covid19:
         privileges:
@@ -2598,6 +2644,14 @@ roles:
                 write:
                     - raw.netsuite_fivetran.*
 
+    - fkurniadi:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - fstein:
         warehouses:
             - admin
@@ -2691,6 +2745,7 @@ roles:
             - data_manager
             - restricted_safe
             - xactly
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -3263,6 +3318,7 @@ roles:
     - mdrussell:
         member_of:
          - data_team_analyst
+         - analytics_engineer
          - restricted_safe
         warehouses:
             - analyst_xs
@@ -3287,7 +3343,7 @@ roles:
             schemas:
                 read:
                     - mdrussell_prep.*
-                    - tmdrussell_prod.*
+                    - mdrussell_prod.*
                 write:
                     - mdrussell_prep.*
                     - mdrussell_prod.*
@@ -3298,6 +3354,16 @@ roles:
                 write:
                     - mdrussell_prep.*.*
                     - mdrussell_prod.*.*      
+
+    - mfleisher:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
     - michellecooper:
         member_of: []
@@ -3315,6 +3381,7 @@ roles:
             - analyst_core
             - data_manager
             - restricted_safe
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -3604,6 +3671,7 @@ roles:
     - pempey:
         member_of:
             - engineer
+            - bi_tool_eval_db
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -4006,7 +4074,8 @@ roles:
         member_of:
          - data_team_analyst
          - analyst_core
-         - restricted_safe         
+         - restricted_safe
+         - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -4414,6 +4483,11 @@ users:
         member_of:
             - fivetran_role
 
+    - fkurniadi:
+        can_login: yes
+        member_of:
+            - fkurniadi
+
     - fstein:
         can_login: no
         member_of: []
@@ -4673,6 +4747,11 @@ users:
         can_login: yes
         member_of: 
             - meltano
+
+    - mfleisher:
+        can_login: yes
+        member_of:
+            - mfleisher            
 
     - michellecooper:
         can_login: no

@@ -20,6 +20,7 @@ Please add a number for days you'll be working this milestone. Data Analysts and
 - @michellecooper: 
 - @pempey:
 - @iweeks: 
+- @tpoole1: 
 
 **Total Analytics days**: <!-- sum the above analytics days -->
 
@@ -73,6 +74,7 @@ Please add a number for days you'll be working this milestone. Data Analysts and
 - @mlaanen:
 - @rbacovic: 
 - @jeanpeguero: 
+- @tpoole1:
 
 **Total Analytics days**: <!-- sum the above analytics days -->
 

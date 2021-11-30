@@ -22,6 +22,7 @@
      ci_runner_activity.is_paid_by_gitlab,
      ci_runner_activity.public_projects_minutes_cost_factor,
      ci_runner_activity.private_projects_minutes_cost_factor,
+     COUNT(DISTINCT ci_runner_activity.dim_ci_build_id)                AS job_count,
      SUM(ci_runner_activity.ci_build_duration_in_s)                    AS ci_build_duration_in_s
    FROM ci_runner_activity
    INNER JOIN dim_date
@@ -43,6 +44,7 @@
     
  
      -- CI RUNNER METRICS
+     ci_runner_activity_daily.job_count,
      ci_runner_activity_daily.ci_build_duration_in_s,
      ci_runner_activity_daily.public_projects_minutes_cost_factor,
      ci_runner_activity_daily.private_projects_minutes_cost_factor,
@@ -65,7 +67,7 @@
 {{ dbt_audit(
    cte_ref="joined",
    created_by="@ischweickartDD",
-   updated_by="@chrissharp",
+   updated_by="@davis_townsend",
    created_date="2021-07-30",
-   updated_date="2021-10-26"
+   updated_date="2021-11-09"
 ) }}

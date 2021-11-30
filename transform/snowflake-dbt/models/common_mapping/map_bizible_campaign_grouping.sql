@@ -262,6 +262,17 @@ WITH bizible_touchpoints AS (
             OR bizible_referrer_page_raw LIKE '%webcast-gitops-multicloudapp%'))
             OR (dim_parent_campaign_id LIKE '%7014M000001dpmf%')
           THEN 'GitOps GTM webcast'
+        WHEN ((bizible_touchpoint_type = 'Web Form' --added 2021-11-12 MSandP: 536
+            AND ( bizible_form_url_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_form_url_raw LIKE '%utm_content=introtomlopsdemo%'
+            OR bizible_landing_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_landing_page_raw LIKE '%utm_content=introtomlopsdemo%'
+            OR bizible_referrer_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_referrer_page_raw LIKE '%utm_content=introtomlopsdemo%'
+            ))
+            OR dim_parent_campaign_id LIKE '%7014M000001vjIn%'
+            OR dim_campaign_id LIKE '%7014M000001vjIn%'
+            
+            OR dim_parent_campaign_id LIKE '%7014M000001vjHL%'
+            OR dim_campaign_id LIKE '%7014M000001vjHL%')
+          THEN 'Technical Demo Series'    
         WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
             AND ( bizible_form_url_raw LIKE '%devopsgtm%'
             OR bizible_landing_page_raw LIKE '%devopsgtm%'
@@ -311,7 +322,7 @@ WITH bizible_touchpoints AS (
       CASE
         WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast') 
           THEN 'CI/CD'
-        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast') 
+        WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast', 'Technical Demo Series') 
           THEN 'DevOps'
         WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  
           THEN 'GitOps'
@@ -359,7 +370,7 @@ WITH bizible_touchpoints AS (
 {{ dbt_audit(
     cte_ref="touchpoints_with_campaign",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2021-03-02",
-    updated_date="2021-09-30"
+    updated_date="2021-11-12"
 ) }}
