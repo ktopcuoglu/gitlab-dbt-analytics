@@ -1,0 +1,18 @@
+[sqlfluff:rules]
+max_line_length = 140
+
+
+[sqlfluff:rules:L010]
+capitalisation_policy = upper
+
+[sqlfluff:rules:L014]
+extended_capitalisation_policy = lower
+
+[sqlfluff]
+dialect = snowflake
+templater = dbt
+
+[sqlfluff:templater:dbt]
+project_dir = ./
+profiles_dir = ~/.dbt
+# profile = dev
