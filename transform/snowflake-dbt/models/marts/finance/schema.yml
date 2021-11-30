@@ -65,7 +65,7 @@ models:
       - name: dim_crm_opportunity_id
         description: Unique identifier of the crm opportunity associated with the subscription.
       - name: dim_crm_account_id
-        description: Unique identifier of the Scrm account associated with the subscription.
+        description: Unique identifier of the crm account associated with the subscription.
       - name: dim_billing_account_id
         description: Unique identifier of the billing account associated with the subscription.
       - name: dim_subscription_id
@@ -81,11 +81,11 @@ models:
       - name: subscription_end_month
         description: Month when the subscription is set to end.
       - name: term_start_month
-        description: Month when a charge begins for a subscription.
+        description: Month when a subscription term begins.
       - name: term_end_month
-        description: Month when a charge ends for a subscription.
+        description: Month when a subscription term ends.
       - name: bookings_term_end_month
-        description: Month when a charge ends for a subscription in the Billings system.
+        description: Similar to the term end month but calculates intermediate term end months for multi year subscriptions with terms greater than 12 months. These end months do not exist in the Zuora billing system. This allows us to get a view of all subscriptions renewing on a yearly basis.
       - name: myb_subscription_end_month
         description: Month when the final subscription in a multi-year booking is set to end.
       - name: last_paid_month_in_term
@@ -131,7 +131,7 @@ models:
       - name: estimated_total_future_billings
         description: Estimate of total amount to be billed in the future for a given charge.
       - name: is_atr
-        description: Flag indicating the subscription is available to renew in the period.
+        description: Flag indicating if the subscription is available to renew in the period.
       - name: is_atr_opportunity_term_test
         description:  Test flag indicating if a subscription is available to renew based on the opportunity term.
       - name: opportunity_term_group
