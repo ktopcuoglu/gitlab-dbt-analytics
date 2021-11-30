@@ -81,7 +81,7 @@ models:
       - name: subscription_end_month
         description: Month when the subscription is set to end.
       - name: term_start_month
-        description: Month when a charge begins for a subscription.
+        description: Month when a subscription term begins.
       - name: term_end_month
         description: Month when a subscription term ends.
       - name: bookings_term_end_month
