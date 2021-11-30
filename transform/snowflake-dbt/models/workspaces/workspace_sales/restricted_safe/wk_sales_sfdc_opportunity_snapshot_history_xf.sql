@@ -1,4 +1,6 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
+-- TODO
+-- Add CS churn fields into model from wk_sales_opportunity object
 
 WITH date_details AS (
 
@@ -775,7 +777,7 @@ WITH date_details AS (
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
-    LEFT JOIN sfdc_account_xf upa
+    LEFT JOIN sfdc_accounts_xf upa
       ON upa.account_id = a.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id

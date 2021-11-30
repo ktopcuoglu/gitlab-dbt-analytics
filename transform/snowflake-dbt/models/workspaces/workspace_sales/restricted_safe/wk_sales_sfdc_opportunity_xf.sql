@@ -106,6 +106,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.professional_services_value,
       sfdc_opportunity_xf.reason_for_loss,
       sfdc_opportunity_xf.reason_for_loss_details,
+      sfdc_opportunity_xf.downgrade_reason,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
       CASE
@@ -539,6 +540,44 @@ WITH sfdc_opportunity AS (
           'PubSec'                  AS "USER_SEGMENT_STAMPED", 
           0.965670500               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
+
+), churn_metrics AS (
+
+SELECT
+    o.opportunity_id,
+    NVL(o.reason_for_loss, o.downgrade_reason) AS reason_for_loss_staged,
+    CASE 
+      WHEN reason_for_loss_staged IN ('Do Nothing','Other','Competitive Loss','Operational Silos') 
+        OR reason_for_loss_staged IS NULL 
+          THEN 'Unknown'
+      WHEN reason_for_loss_staged IN ('Missing Feature','Product value/gaps','Product Value / Gaps',
+                                          'Stayed with Community Edition','Budget/Value Unperceived') 
+          THEN 'Product Value / Gaps'
+      WHEN reason_for_loss_staged IN ('Lack of Engagement / Sponsor','Went Silent','Evangelist Left') 
+          THEN 'Lack of Engagement / Sponsor'
+      WHEN reason_for_loss_staged IN ('Loss of Budget','No budget') 
+          THEN 'Loss of Budget'
+      WHEN reason_for_loss_staged = 'Merged into another opportunity' 
+          THEN 'Merged Opp'
+      WHEN reason_for_loss_staged = 'Stale Opportunity' 
+          THEN 'No Progression - Auto-close'
+      WHEN reason_for_loss_staged IN ('Product Quality / Availability','Product quality/availability') 
+          THEN 'Product Quality / Availability'
+      ELSE reason_for_loss_staged
+     END                                    AS reason_for_loss_calc,
+    o.reason_for_loss_details,
+    
+    CASE 
+      WHEN o.order_type_stamped IN ('4. Contraction','5. Churn - Partial')
+        THEN 'Contraction'
+      ELSE 'Churn'
+    END                                    AS churn_contraction_type_calc
+
+FROM sfdc_opportunity_xf o
+WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn - Final')
+    AND (o.is_won = 1
+        OR (is_renewal = 1 AND is_lost = 1))
+
 ), oppty_final AS (
 
     SELECT 
@@ -654,11 +693,19 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
           THEN 1
         ELSE 0
-      END                                                                       AS is_excluded_flag
+      END                                                                       AS is_excluded_flag,
+
+      -- Customer Success related fields
+      -- DRI Michael Armtz
+      churn_metrics.reason_for_loss_staged,
+      churn_metrics.reason_for_loss_calc,
+      churn_metrics.churn_contraction_type_calc
 
     FROM sfdc_opportunity_xf
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
+    LEFT JOIN churn_metrics 
+      ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
     
     WHERE sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')   -- remove test account
       AND sfdc_opportunity_xf.account_id NOT IN ('0014M00001kGcORQA0')                -- remove test account
@@ -925,7 +972,21 @@ WITH sfdc_opportunity AS (
             AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
         THEN net_arr
         ELSE 0
-      END                                                 AS churned_contraction_net_arr
+      END                                                 AS churned_contraction_net_arr,
+
+
+      CASE 
+        WHEN net_arr > -5000 
+          THEN '1. < 5k'
+        WHEN net_arr > -20000 AND net_arr <= -5000 
+          THEN '2. 5k-20k'
+        WHEN net_arr > -50000 AND net_arr <= -20000 
+          THEN '3. 20k-50k'
+        WHEN net_arr > -100000 AND net_arr <= -50000 
+          THEN '4. 50k-100k'
+        WHEN net_arr < -100000 
+          THEN '5. 100k+'
+      END                                                 AS churn_contracton_net_arr_bucket
       
     FROM oppty_final
     -- Net IACV to Net ARR conversion table

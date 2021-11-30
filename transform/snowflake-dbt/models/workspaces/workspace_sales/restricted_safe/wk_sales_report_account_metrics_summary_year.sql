@@ -534,7 +534,7 @@ SELECT
   coalesce(raw.ZI_NUMBER_OF_DEVELOPERS__C,0)                    AS zi_developers,
   coalesce(raw.zi_revenue__c,0)                                 AS zi_revenue,
   coalesce(raw.ACCOUNT_DEMOGRAPHICS_EMPLOYEE_COUNT__C,0)        AS employees,
- 
+  coalesce(raw.Aggregate_Developer_Count__c,0)                  AS upa_aggregate_dev_count,
   LEAST(50000,GREATEST(coalesce(raw.Number_of_Licenses_This_Account__c,0),COALESCE(raw.POTENTIAL_USERS__C,raw.Decision_Maker_Count_Linkedin__c,raw.ZI_NUMBER_OF_DEVELOPERS__C,raw.ZI_NUMBER_OF_DEVELOPERS__C,0)))  AS calculated_developer_count,
   
   a.technical_account_manager_date,              
@@ -767,6 +767,7 @@ FROM account_year_key ak
     MAX(zi_developers)            AS zi_developers,
     MAX(zi_revenue)               AS zi_revenue,
     MAX(employees)                AS employees,
+    MAX(upa_aggregate_dev_count)  AS upa_aggregate_dev_count,
 
     SUM(has_technical_account_manager_flag) AS count_technical_account_managers,
 
@@ -869,34 +870,34 @@ FROM account_year_key ak
         CASE
             WHEN potential_users > licenses
                 THEN potential_users
-             ELSE Null 
+             ELSE 0 
         END                                 AS adjusted_potential_users,
   
         CASE
             WHEN linkedin_developer > licenses
                 THEN linkedin_developer
-             ELSE Null 
+             ELSE 0 
         END                                 AS adjusted_linkedin_developers,
   
         CASE
             WHEN zi_developers > licenses
                 THEN zi_developers
-             ELSE Null 
+             ELSE 0 
         END                                 AS adjusted_zi_developers,
   
         CASE
             WHEN employees * 0.1 > licenses
                 THEN round(employees * 0.1,0) 
-             ELSE Null 
+             ELSE 0 
         END                                 AS adjusted_employees,
         
         is_customer_flag,
         
-        LEAST(50000,GREATEST(licenses, COALESCE(adjusted_potential_users,adjusted_linkedin_developers,adjusted_zi_developers,adjusted_employees))) AS lam_dev_count
-  
+        --LEAST(50000,GREATEST(licenses, COALESCE(adjusted_potential_users,adjusted_linkedin_developers,adjusted_zi_developers,adjusted_employees))) AS lam_dev_count
+        upa_aggregate_dev_count  AS lam_dev_count
   
     FROM consolidated_upa
-    --WHERE report_fiscal_year = 2022
+    WHERE report_fiscal_year = 2022
 
 
 ), final AS (
@@ -941,7 +942,7 @@ FROM account_year_key ak
   FROM consolidated_accounts acc
   LEFT JOIN upa_lam upa
       ON upa.upa_id = acc.upa_id
-  --WHERE acc.report_fiscal_year = 2022
+  WHERE acc.report_fiscal_year = 2022
   
 )
 
