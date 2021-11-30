@@ -12,6 +12,8 @@ Downstream Airflow tasks or dbt models that were skipped: <!-- None -->
 
 ## DE Triage Guidelines
 
+* See the [handbook](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#triage-common-issues) for common triage issues.
+
 <details>
 <summary>dbt model failures</summary>
 Should any model fail, you are welcome to investigate the issue end to end, however to ensure all of the errors are being addressed ensure the below is completed 

@@ -50,7 +50,7 @@ WITH greenhouse_openings AS (
   
     SELECT DISTINCT 
       date_actual,   
-      division, 
+      division_mapped_current as division, 
       department AS department
     FROM {{ref('employee_directory_intermediate')}}
 
@@ -80,22 +80,26 @@ WITH greenhouse_openings AS (
   
     SELECT 
       greenhouse_jobs_offices.job_id, 
-      office_name
+      listagg(DISTINCT office_name,', ') as office_name
     FROM greenhouse_jobs_offices
     LEFT JOIN greenhouse_offices_sources
       ON greenhouse_offices_sources.office_id = greenhouse_jobs_offices.office_id
     WHERE office_name IS NOT NULL
+    GROUP BY 1
 
 
 ), aggregated AS (
 
     SELECT 
+      greenhouse_openings.job_opening_id,
       greenhouse_openings.job_id,
       greenhouse_opening_custom_fields.finance_id               AS ghp_id,
       greenhouse_jobs.job_created_at, 
       greenhouse_jobs.job_status,
       greenhouse_openings.opening_id, 
       greenhouse_recruiting_xf.is_hired_in_bamboo,
+      greenhouse_recruiting_xf.candidate_target_hire_date,
+      greenhouse_recruiting_xf.offer_status,
       greenhouse_openings.target_start_date,
       greenhouse_openings.job_opened_at                         AS opening_date,
       greenhouse_openings.job_closed_at                         AS closing_date,

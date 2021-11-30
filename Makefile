@@ -124,8 +124,9 @@ radon:
 	@radon cc . --total-average -nb
 
 update-containers:
-	@echo "Pulling latest containers for airflow-image, data-image and dbt-image..."
+	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
 	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
 

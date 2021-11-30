@@ -10,15 +10,19 @@ WITH prep_ci_runner AS (
       updated_at,
       ci_runner_description,
       CASE 
-        WHEN ci_runner_description LIKE 'private-runners-manager%'
+        WHEN ci_runner_description LIKE '%private%manager%'
           THEN 'private-runner-mgr'
         WHEN ci_runner_description LIKE 'shared-runners-manager%'
+          THEN 'linux-runner-mgr'
+        WHEN ci_runner_description LIKE '%.shared.runners-manager.%' 
           THEN 'linux-runner-mgr'
         WHEN ci_runner_description LIKE 'gitlab-shared-runners-manager%'
           THEN 'gitlab-internal-runner-mgr'
         WHEN ci_runner_description LIKE 'windows-shared-runners-manager%'
           THEN 'windows-runner-mgr'
-          ELSE 'Other'
+        WHEN ci_runner_description LIKE '%.shared-gitlab-org.runners-manager.%' 
+          THEN 'shared-gitlab-org-runner-mgr'
+        ELSE 'Other'
       END                                           AS ci_runner_manager,
       contacted_at,
       is_active,
@@ -46,8 +50,8 @@ WITH prep_ci_runner AS (
 {{ dbt_audit(
     cte_ref="prep_ci_runner",
     created_by="@snalamaru",
-    updated_by="@ischweickartDD",
+    updated_by="@davis_townsend",
     created_date="2021-06-23",
-    updated_date="2021-07-09"
+    updated_date="2021-11-09"
 ) }}
 

@@ -523,7 +523,7 @@ This model transforms all_time counters stored in the usage data payload into mo
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
-Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload). 
+Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload).
 
 Those metrics sent could be of various types:
 * all_time counters (for example how many issues a specific instance has created since its inception)
@@ -531,7 +531,7 @@ Those metrics sent could be of various types:
 * 7_days counters (how many users have created at least one issue over the last 7 days)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the 7-days counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the 7-days counters (based on the mapping table in this spreadsheet) and flattens the json.
 
 The models transforms this json:
 
@@ -578,14 +578,14 @@ into this table:
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
-Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload). 
+Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload).
 
 Those metrics sent could be of various types:
 * all_time counters (for example how many issues a specific instance has created since its inception)
 * 7_days counters (how many users have created at least one issue over the last 4 weeks)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the 28-days counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the 28-days counters (based on the mapping table in this spreadsheet) and flattens the json.
 
 The models transforms this json:
 
@@ -632,14 +632,14 @@ into this table:
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
-Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload). 
+Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload).
 
 Those metrics sent could be of various types:
 * all_time counters (for example how many issues a specific instance has created since its inception)
 * 28_days counters (how many users have created at least one issue over the last 4 months)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the all-time counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the all-time counters (based on the mapping table in this spreadsheet) and flattens the json.
 
 The models transforms this json:
 
