@@ -131,7 +131,7 @@ models:
       - name: estimated_total_future_billings
         description: Estimate of total amount to be billed in the future for a given charge.
       - name: is_atr
-        description: Flag indicating the subscription is available to renew in the period.
+        description: Flag indicating if the subscription is available to renew in the period.
       - name: is_atr_opportunity_term_test
         description:  Test flag indicating if a subscription is available to renew based on the opportunity term.
       - name: opportunity_term_group
