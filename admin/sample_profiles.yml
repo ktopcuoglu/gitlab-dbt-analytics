@@ -12,7 +12,8 @@ gitlab-snowflake:
       schema: preparation
       authenticator: externalbrowser # <--- You must be logged in via OKTA
 
-    # use the dev_l target when running a query that requires additional compute
+    # If you have access to the ANALYST_L warhouse, you could specify a dev_l target.
+    # This could be used when running a query that requires additional compute resources.
     dev_l:
       type: snowflake
       threads: 16
@@ -24,6 +25,7 @@ gitlab-snowflake:
       schema: preparation
       authenticator: externalbrowser # <--- You must be logged in via OKTA
 
+    # You can create targets for any warehouse that you have access to.
     dev_..:
       type: snowflake
       threads: 8
