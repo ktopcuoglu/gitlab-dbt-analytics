@@ -13,7 +13,6 @@ SELECT
   days_since_saas_signup_bucket,
   days_since_saas_trial_ended_bucket,
   days_since_self_managed_owner_signup_bucket,
-  days_until_saas_trial_ends_bucket,
   dim_marketing_contact_id,
   email_address,
   first_name,
