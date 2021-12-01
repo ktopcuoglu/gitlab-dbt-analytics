@@ -503,7 +503,8 @@
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
       dim_crm_opportunity.stage_is_closed                                         AS crm_opp_is_closed,
       fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
-      dim_crm_opportunity.order_type                                              AS crm_opp_order_type,
+      dim_order_type.order_type_name                                              AS crm_opp_order_type,
+      dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
       IFF(DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
@@ -537,6 +538,8 @@
     -- Opportunity Joins
     LEFT JOIN fct_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN dim_order_type
+      ON dim_order_type.dim_order_type_id = fct_crm_opportunity.dim_order_type_id
     LEFT JOIN dim_crm_opportunity
       ON dim_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
     LEFT JOIN opportunity_seats
