@@ -8,7 +8,7 @@ from airflow_utils import (
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
-    gitlab_pod_env_vars
+    gitlab_pod_env_vars,
 )
 
 from kube_secrets import (
@@ -40,9 +40,7 @@ default_args = {
 
 dag = DAG("pmg_extract", default_args=default_args, schedule_interval="0 23 * * *")
 
-test_tolerations = {
-
-}
+test_tolerations = {}
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 pmg_extract_command = f"{clone_and_setup_extraction_cmd} && python pmg/src/execute.py"
 

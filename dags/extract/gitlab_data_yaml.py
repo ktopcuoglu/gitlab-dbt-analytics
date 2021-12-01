@@ -2,7 +2,9 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+    KubernetesPodOperator,
+)
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
@@ -47,7 +49,9 @@ dag = DAG(
 )
 
 # YAML Extract
-data_yaml_extract_cmd = f"""{clone_and_setup_extraction_cmd} && python gitlab_data_yaml/upload.py"""
+data_yaml_extract_cmd = (
+    f"""{clone_and_setup_extraction_cmd} && python gitlab_data_yaml/upload.py"""
+)
 data_yaml_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
@@ -70,7 +74,9 @@ data_yaml_extract = KubernetesPodOperator(
 )
 
 # Flaky tests extract
-flaky_tests_extract_cmd = f"""{clone_and_setup_extraction_cmd} && python gitlab_flaky_tests/upload.py"""
+flaky_tests_extract_cmd = (
+    f"""{clone_and_setup_extraction_cmd} && python gitlab_flaky_tests/upload.py"""
+)
 
 flaky_tests_extract = KubernetesPodOperator(
     **gitlab_defaults,

@@ -2,13 +2,15 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+    KubernetesPodOperator,
+)
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
     gitlab_defaults,
     slack_failed_task,
-    gitlab_pod_env_vars
+    gitlab_pod_env_vars,
 )
 from kube_secrets import (
     GITLAB_COM_API_TOKEN,

@@ -41,10 +41,10 @@ def is_local_test():
 
 
 def get_affinity(is_scd):
-    #if is_local_test():
+    # if is_local_test():
     #    return test_affinity
-    #if is_scd:
-    #return scd_affinity
+    # if is_scd:
+    # return scd_affinity
     return production_affinity
 
 
@@ -52,5 +52,5 @@ def get_toleration(is_scd):
     # if is_local_test():
     #     return test_tolerations
     # if is_scd:
-    #return scd_tolerations
+    # return scd_tolerations
     return production_tolerations
