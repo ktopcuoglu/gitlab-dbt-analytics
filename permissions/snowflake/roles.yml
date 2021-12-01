@@ -3322,6 +3322,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - levans:
+        member_of:
+            - reporter
+            - snowplow
+        warehouses:
+            - reporting
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -4801,6 +4808,11 @@ users:
         can_login: yes
         member_of:
             - lcanoy
+            
+    - levans:
+        can_login: yes
+        member_of:
+            - levans
 
     - lmai:
         can_login: yes
