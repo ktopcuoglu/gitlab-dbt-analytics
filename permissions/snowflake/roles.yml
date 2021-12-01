@@ -62,6 +62,11 @@ databases:
     - dzeissner_prep:
         shared: no
 
+    - ian_prod:
+        shared: no
+    - ian_prep:
+        shared: no 
+
     - ianschweickart_prod:
         shared: no
     - ianschweickart_prep:
@@ -2728,6 +2733,46 @@ roles:
     - hsharma: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
+    - ian:
+        member_of:
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        owns:
+            databases:
+                - ian_prep
+                - ian_prod
+            schemas:
+                - ian_prep.*
+                - ian_prod.*
+            tables:
+                - ian_prep.*.*
+                - ian_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - Ian_prep
+                    - Ian_prod
+                write:
+                    - ian_prep
+                    - ian_prod
+            schemas:
+                read:
+                    - ian_prep.*
+                    - ian_prod.*
+                write:
+                    - ian_prep.*
+                    - ian_prod.*
+            tables:
+                read:
+                    - ian_prep.*.*
+                    - ian_prod.*.*
+                write:
+                    - ian_prep.*.*
+                    - ian_prod.*.*       
+
     - ianschweickart:
         member_of:
             - decisive_data
@@ -4575,6 +4620,11 @@ users:
         can_login: yes
         member_of:
             - ianschweickart
+
+    - ian:
+        can_login: yes
+        member_of:
+            - ian       
 
     - iroussos:
         can_login: yes
