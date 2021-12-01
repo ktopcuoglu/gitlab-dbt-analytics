@@ -32,6 +32,11 @@ databases:
     - csharp_prep:
         shared: no   
 
+    - david_prod:
+        shared: no
+    - david_prep:
+        shared: no 
+
     - degan_prod:
         shared: no
     - degan_prep:
@@ -2388,6 +2393,46 @@ roles:
     - datwood:
         member_of: []
         warehouses: []
+        
+    - david:
+        member_of:
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        owns:
+            databases:
+                - david_prep
+                - david_prod
+            schemas:
+                - david_prep.*
+                - david_prod.*
+            tables:
+                - david_prep.*.*
+                - david_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - david_prep
+                    - david_prod
+                write:
+                    - david_prep
+                    - david_prod
+            schemas:
+                read:
+                    - david_prep.*
+                    - david_prod.*
+                write:
+                    - david_prep.*
+                    - david_prod.*
+            tables:
+                read:
+                    - david_prep.*.*
+                    - david_prod.*.*
+                write:
+                    - david_prep.*.*
+                    - david_prod.*.*
 
     - degan:
         member_of:
@@ -4408,6 +4453,11 @@ users:
     - datwood: # https://gitlab.com/gitlab-data/analytics/-/issues/6551
         can_login: no
         member_of: []
+
+    - david:
+        can_login: yes
+        member_of:
+            - david       
 
     - degan:
         can_login: yes
