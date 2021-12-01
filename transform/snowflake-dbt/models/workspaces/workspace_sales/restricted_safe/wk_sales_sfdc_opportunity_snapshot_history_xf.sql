@@ -778,7 +778,7 @@ WITH date_details AS (
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
     LEFT JOIN sfdc_accounts_xf upa
-      ON upa.account_id = a.ultimate_parent_account_id
+      ON upa.account_id = sfdc_accounts_xf.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner
