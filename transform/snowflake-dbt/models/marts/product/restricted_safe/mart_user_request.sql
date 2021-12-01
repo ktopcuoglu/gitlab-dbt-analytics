@@ -180,7 +180,6 @@
       COALESCE(group_label, devops_label, section_label)                                                                       AS product_group_extended,
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -200,7 +199,6 @@
       COALESCE(group_label, devops_label, section_label)                                                                       AS product_group_extended,
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -363,8 +361,7 @@
       IFNULL(issue_group_extended_label.product_group_extended, 'Unknown')        AS product_group_extended,
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
-      dev_label.dev_label                                                         AS product_stage,
-      devops_label.devops_label                                                   AS stage,
+      devops_label.devops_label                                                   AS product_stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -389,9 +386,6 @@
       ON category_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_group_label AS group_label
       ON group_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-    LEFT JOIN issue_labels AS dev_label
-      ON dev_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-      AND dev_label.dev_label IS NOT NULL
     LEFT JOIN issue_devops_label AS devops_label
       ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
@@ -442,8 +436,7 @@
       IFNULL(epic_group_extended_label.product_group_extended, 'Unknown')         AS product_group_extended,
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
-      dev_label.dev_label                                                         AS product_stage,
-      devops_label.devops_label                                                   AS stage,
+      devops_label.devops_label                                                   AS product_stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -472,9 +465,6 @@
       ON category_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_group_label AS group_label
       ON group_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-    LEFT JOIN epic_labels AS dev_label
-      ON dev_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-      AND dev_label.dev_label IS NOT NULL
     LEFT JOIN epic_devops_label AS devops_label
       ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
@@ -512,12 +502,14 @@
       -- CRM Opportunity attributes
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
       dim_crm_opportunity.stage_is_closed                                         AS crm_opp_is_closed,
+      fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
       dim_crm_opportunity.order_type                                              AS crm_opp_order_type,
       IFF(DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
       IFNULL(fct_crm_opportunity.net_arr, 0)                                      AS crm_opp_net_arr,
+      IFNULL(fct_crm_opportunity.arr_basis, 0)                                    AS crm_opp_arr_basis,
       IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats
 
     FROM user_request
