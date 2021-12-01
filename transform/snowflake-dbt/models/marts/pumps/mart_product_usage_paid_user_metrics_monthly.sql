@@ -272,7 +272,7 @@
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
-      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      ON monthly_saas_metrics.dim_subscription_id_original = subscriptions.dim_subscription_id_original 
       AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country

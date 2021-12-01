@@ -140,7 +140,7 @@
     -- LEFT JOIN location_country
     --   ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
-      ON monthly_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      ON monthly_metrics.dim_subscription_id_original = subscriptions.dim_subscription_id_original 
       AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
