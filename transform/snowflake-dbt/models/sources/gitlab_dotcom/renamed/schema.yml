@@ -357,6 +357,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_sources_pipelines_source
+    description: Base model for Gitlab.com ci_sources_pipelines
+    columns:
+      - name: ci_source_pipeline_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_ci_stages_source
     description: Base model for Gitlab.com ci_stages
     columns:

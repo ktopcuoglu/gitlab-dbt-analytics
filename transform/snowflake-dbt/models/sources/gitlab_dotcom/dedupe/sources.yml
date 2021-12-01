@@ -88,6 +88,8 @@ sources:
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners
         identifier: gitlab_db_ci_runners
+      - name: ci_sources_pipelines
+        identifier: gitlab_db_ci_sources_pipelines
       - name: ci_stages
         identifier: gitlab_db_ci_stages
       - name: ci_trigger_requests
