@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH source AS (
 
     SELECT *
@@ -64,6 +68,7 @@ WITH source AS (
       first_order_available__c::BOOLEAN             AS is_first_order_available,
       REPLACE(zi_technologies__c, 'The technologies that are used and not used at this account, according to ZoomInfo, after completing a scan are:', '') AS zi_technologies,
       technical_account_manager_date__c::DATE       AS technical_account_manager_date,
+      gitlab_customer_success_project__c::VARCHAR   AS gitlab_customer_success_project,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,
@@ -156,7 +161,17 @@ WITH source AS (
       partner_track__c                              AS partner_track,
       partners_partner_type__c                      AS partners_partner_type,
       gitlab_partner_programs__c                    AS gitlab_partner_program,
-      
+
+      --*************************************
+      -- Zoom Info Fields
+      zi_website__c                                 AS zoom_info_website,
+      zi_company_other_domains__c                   AS zoom_info_company_other_domains,
+      dozisf__zoominfo_id__c                        AS zoom_info_dozisf_zi_id,
+      zi_parent_company_zoominfo_id__c              AS zoom_info_parent_company_zi_id,
+      zi_parent_company_name__c                     AS zoom_info_parent_company_name,
+      zi_ultimate_parent_company_zoominfo_id__c     AS zoom_info_ultimate_parent_company_zi_id,
+      zi_ultimate_parent_company_name__c            AS zoom_info_ultimate_parent_company_name,
+
       -- metadata
       createdbyid                                   AS created_by_id,
       createddate                                   AS created_date,

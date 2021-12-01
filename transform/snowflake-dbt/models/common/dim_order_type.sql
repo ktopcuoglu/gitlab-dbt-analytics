@@ -1,4 +1,6 @@
-
+{{ config(
+    tags=["mnpi_exception"]
+) }}
 
 WITH order_type AS (
 

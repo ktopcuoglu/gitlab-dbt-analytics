@@ -1,0 +1,344 @@
+version: 2
+
+models:
+  - name: zi_comp_with_linkages_global_source
+    description: International table, data ingested from Zoominfo inbound share.
+    columns:      
+      - name: zi_c_id
+      - name: zi_c_hq_id
+      - name: zi_c_is_hq
+      - name: zi_es_ecid
+      - name: zi_es_location_id
+      - name: zi_c_tier_grade
+      - name: zi_c_name
+      - name: zi_c_name_display
+      - name: zi_c_legal_entity_type
+      - name: zi_c_url
+      - name: zi_c_street
+      - name: zi_c_street_2
+      - name: zi_c_city
+      - name: zi_c_state
+      - name: zi_c_zip
+      - name: zi_c_country
+      - name: zi_c_cbsa_name
+      - name: zi_c_county
+      - name: zi_c_latitude
+      - name: zi_c_longitude
+      - name: zi_c_verified_address
+      - name: zi_c_employee_range
+      - name: zi_c_employees
+      - name: zi_c_revenue_range
+      - name: zi_c_revenue
+      - name: zi_c_phone
+      - name: zi_c_fax
+      - name: zi_c_industry_primary
+      - name: zi_c_sub_industry_primary
+      - name: zi_c_industries
+      - name: zi_c_sub_industries
+      - name: zi_es_industry
+      - name: zi_es_industries_top3
+      - name: zi_c_naics2
+      - name: zi_c_naics4
+      - name: zi_c_naics6
+      - name: zi_c_naics_top3
+      - name: zi_c_sic2
+      - name: zi_c_sic3
+      - name: zi_c_sic4
+      - name: zi_c_sic_top3
+      - name: zi_c_estimated_age
+      - name: zi_c_year_founded
+      - name: zi_c_is_b2b
+      - name: zi_c_is_b2c
+      - name: zi_es_hq_ecid
+      - name: zi_es_hq_location_id
+      - name: zi_c_hq_name
+      - name: zi_c_hq_url
+      - name: zi_c_hq_street
+      - name: zi_c_hq_street_2
+      - name: zi_c_hq_city
+      - name: zi_c_hq_state
+      - name: zi_c_hq_zip
+      - name: zi_c_hq_country
+      - name: zi_c_hq_cbsa_name
+      - name: zi_c_hq_county
+      - name: zi_c_hq_latitude
+      - name: zi_c_hq_longitude
+      - name: zi_c_hq_verified_address
+      - name: zi_c_hq_employee_range
+      - name: zi_c_hq_employees
+      - name: zi_c_hq_revenue_range
+      - name: zi_c_hq_revenue
+      - name: zi_c_hq_phone
+      - name: zi_c_hq_fax
+      - name: zi_c_linkedin_url
+      - name: zi_c_facebook_url
+      - name: zi_c_twitter_url
+      - name: zi_c_yelp_url
+      - name: zi_c_alexa_rank
+      - name: zi_c_keywords
+      - name: zi_c_top_keywords
+      - name: zi_c_num_keywords
+      - name: zi_c_employee_growth_1yr
+      - name: zi_c_employee_growth_2yr
+      - name: zi_es_growth
+      - name: zi_es_employee_growth
+      - name: zi_es_revenue_growth
+      - name: zi_es_percent_employee_growth
+      - name: zi_es_percent_revenue_growth
+      - name: zi_c_name_confidence_score
+      - name: zi_c_url_confidence_score
+      - name: zi_c_address_confidence_score
+      - name: zi_c_phone_confidence_score
+      - name: zi_c_employees_confidence_score
+      - name: zi_c_revenue_confidence_score
+      - name: zi_es_industry_confidence_score
+      - name: zi_c_naics_confidence_score
+      - name: zi_c_sic_confidence_score
+      - name: zi_es_industries_top3_confidence_scores
+      - name: zi_c_naics_top3_confidence_scores
+      - name: zi_c_sic_top3_confidence_scores
+      - name: zi_c_ids_merged
+      - name: zi_c_names_other
+      - name: zi_c_url_status
+      - name: zi_c_urls_alt
+      - name: zi_c_url_last_updated
+      - name: zi_c_inactive_flag
+      - name: zi_c_ein
+      - name: zi_c_is_small_business
+      - name: zi_c_is_public
+      - name: zi_c_ticker
+      - name: zi_c_tickers_alt
+      - name: zi_c_has_mobile_app
+      - name: zi_c_currency_code
+      - name: zi_c_num_locations
+      - name: zi_c_hr_contacts
+      - name: zi_c_sales_contacts
+      - name: zi_c_marketing_contacts
+      - name: zi_c_finance_contacts
+      - name: zi_c_c_suite_contacts
+      - name: zi_c_engineering_contacts
+      - name: zi_c_it_contacts
+      - name: zi_c_operations_contacts
+      - name: zi_c_legal_contacts
+      - name: zi_c_medical_contacts
+      - name: zi_c_tech_ids
+      - name: zi_c_latest_funding_age
+      - name: zi_c_num_of_investors
+      - name: zi_c_investor_names
+      - name: zi_c_funding_strength
+      - name: zi_c_funding_type
+      - name: zi_c_total_funding_amount
+      - name: zi_c_latest_funding_amount
+      - name: zi_c_latest_funding_date
+      - name: zi_c_num_funding_rounds
+      - name: zi_c_is_fortune_100
+      - name: zi_c_is_fortune_500
+      - name: zi_c_is_s_and_p_500
+      - name: zi_c_is_domestic_hq
+      - name: zi_c_is_global_parent
+      - name: zi_c_is_subsidiary
+      - name: zi_c_is_franchisor
+      - name: zi_c_is_franchisee
+      - name: zi_c_hierarchy_code
+      - name: zi_c_hierarchy_level
+      - name: zi_c_parent_child_confidence_score
+      - name: zi_c_immediate_parent_id
+      - name: zi_es_immediate_parent_ecid
+      - name: zi_es_immediate_parent_location_id
+      - name: zi_c_immediate_parent_name
+      - name: zi_c_immediate_parent_url
+      - name: zi_c_immediate_parent_street
+      - name: zi_c_immediate_parent_street_2
+      - name: zi_c_immediate_parent_city
+      - name: zi_c_immediate_parent_zip
+      - name: zi_c_immediate_parent_state
+      - name: zi_c_immediate_parent_country
+      - name: zi_c_domestic_parent_id
+      - name: zi_es_domestic_parent_ecid
+      - name: zi_es_domestic_parent_location_id
+      - name: zi_c_domestic_parent_name
+      - name: zi_c_domestic_parent_url
+      - name: zi_c_domestic_parent_street
+      - name: zi_c_domestic_parent_street_2
+      - name: zi_c_domestic_parent_city
+      - name: zi_c_domestic_parent_zip
+      - name: zi_c_domestic_parent_state
+      - name: zi_c_domestic_parent_country
+      - name: zi_c_global_parent_id
+      - name: zi_es_global_parent_ecid
+      - name: zi_es_global_parent_location_id
+      - name: zi_c_global_parent_name
+      - name: zi_c_global_parent_url
+      - name: zi_c_global_parent_street
+      - name: zi_c_global_parent_street_2
+      - name: zi_c_global_parent_city
+      - name: zi_c_global_parent_zip
+      - name: zi_c_global_parent_state
+      - name: zi_c_global_parent_country
+      - name: zi_c_franchisor_id
+      - name: zi_es_franchisor_ecid
+      - name: zi_es_franchisor_location_id
+      - name: zi_c_franchisor_name
+      - name: zi_c_franchisor_url
+      - name: zi_c_franchisor_street
+      - name: zi_c_franchisor_street_2
+      - name: zi_c_franchisor_city
+      - name: zi_c_franchisor_zip
+      - name: zi_c_franchisor_state
+      - name: zi_c_franchisor_country
+      - name: zi_c_last_updated_date
+      - name: zi_c_release_date
+
+  - name: zi_reference_techs_source
+    description: Technograph table, data ingested from Zoominfo inbound share.
+    columns: 
+      - name: zi_c_tech_id
+      - name: zi_c_tech_name
+      - name: zi_c_category
+      - name: zi_c_category_parent
+      - name: zi_c_vendor
+      - name: zi_c_tech_domain
+      - name: zi_c_description
+  
+  - name: gitlab_contact_enhance_source
+    description: User company matched table which appends company information to the user list Gitlab sends to zoominfo. Data ingested from Zoominfo inbound share.
+    columns: 
+     - name:	record_id 
+     - name:	row_integer 
+     - name:	first_name 
+       meta:
+            sensitive: true
+     - name:	last_name 
+       meta:
+            sensitive: true
+     - name:	users_name 
+       meta:
+            sensitive: true
+     - name:	email_id 
+       meta:
+            sensitive: true
+     - name:	internal_value1 
+     - name:  internal_value2 
+     - name:	company_name 
+     - name:	parent_company_name 
+     - name:	email_type 
+     - name:	match_status 
+     - name:	zoominfo_contact_id 
+     - name:	lastname 
+       meta:
+            sensitive: true
+     - name:	firstname 
+       meta:
+            sensitive: true
+     - name:	middlename 
+       meta:
+            sensitive: true
+     - name:	salutation 
+     - name:	suffix 
+     - name:	job_title 
+     - name:	job_function 
+     - name:	management_level 
+     - name:	company_division_name 
+     - name:	direct_phone_number 
+       meta:
+            sensitive: true
+     - name:	email_address 
+       meta:
+            sensitive: true
+     - name:	email_domain 
+     - name:	department 
+     - name:	supplemental_email 
+       meta:
+            sensitive: true
+     - name:	mobile_phone 
+       meta:
+            sensitive: true
+     - name:	contact_accuracy_score 
+     - name:	contact_accuracy_grade 
+     - name:	zoominfo_contact_profile_url 
+       meta:
+            sensitive: true
+     - name:	linkedin_contact_profile_url 
+       meta:
+            sensitive: true
+     - name:	notice_provided_date 
+     - name:	known_first_name 
+     - name:	known_last_name 
+     - name:	known_full_name 
+     - name:	normalized_first_name 
+       meta:
+            sensitive: true
+     - name:	normalized_last_name 
+       meta:
+            sensitive: true
+     - name:	email_matched_person_name 
+     - name:	email_matched_company_name 
+     - name:	free_email 
+     - name:	generic_email 
+     - name:	malformed_email 
+     - name:	calculated_job_function 
+     - name:	calculated_management_level 
+     - name:	person_has_moved 
+     - name:	person_looks_like_eu 
+     - name:	within_eu 
+     - name:	person_street 
+       meta:
+            sensitive: true
+     - name:	person_city 
+       meta:
+            sensitive: true
+     - name:	person_state 
+       meta:
+            sensitive: true
+     - name:	person_zip_code 
+       meta:
+            sensitive: true
+     - name:	country 
+     - name:	zoominfo_company_id 
+     - name:	companyname 
+     - name:	website 
+     - name:	founded_year 
+     - name:	company_hq_phone 
+     - name:	fax 
+     - name:	ticker 
+     - name:	revenue 
+     - name:	revenue_range 
+     - name:	est_marketing_department_budget 
+     - name:	est_finance_department_budget 
+     - name:	est_it_department_budget 
+     - name:	est_hr_department_budget 
+     - name:	employees 
+     - name:	employee_Range 
+     - name:	past_1_year_employee_growth_rate 
+     - name:	past_2_year_employee_growth_rate 
+     - name:	sic_code_1 
+     - name:	sic_code_2 
+     - name:	sic_codes 
+     - name:	naics_code_1 
+     - name:	naics_code_2 
+     - name:	naics_codes 
+     - name:	primary_industry 
+     - name:	primary_sub_industry 
+     - name:	all_industries 
+     - name:	All_Sub_industries 
+     - name:	industry_hierarchical_category 
+     - name:	secondary_industry_hierarchical_category 
+     - name:	alexa_rank 
+     - name:	zoominfo_company_profile_url 
+     - name:	linkedin_company_profile_url 
+     - name:	facebook_company_profile_url 
+     - name:	twitter_company_profile_url 
+     - name:	ownership_type 
+     - name:	business_model 
+     - name:	certified_active_company 
+     - name:	certification_date 
+     - name:	total_funding_amount 
+     - name:	recent_funding_amount 
+     - name:	recent_funding_date 
+     - name:	company_street_address 
+     - name:	company_city 
+     - name:	company_state 
+     - name:	company_zip_code 
+     - name:	company_country 
+     - name:	full_address 
+     - name:	number_of_locations	

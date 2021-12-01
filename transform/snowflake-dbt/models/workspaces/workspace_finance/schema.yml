@@ -49,43 +49,6 @@ models:
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
       - name: charge_type
         description: Specifies the type of charge
-  - name: wip_mart_waterfall
-    description: Work in progress mart table replicating the waterfall report as seen in the Zuora Revenue UI. It shows how revenue is recognized over time for a given line item in a revenue contract. The grain of this table is as of period month - revenue contract line item - accounting segment - accounting type and can be summed to a higher grain if necessary.
-    columns:
-      - name: as_of_period_id
-        description: The waterfall can be seen as of a certain time period. This column allows you to filter the waterfall report to how it appeared in a given month.
-        tests:
-          - not_null
-      - name: book_name
-        description: The unique identifier of an accounting book
-      - name: organization_name
-        description: The unique identifier of an organization in Zuora Revenue
-      - name: revenue_contract_id
-        description: The unique identifier of a revenue contract
-        tests:
-          - not_null
-      - name: revenue_contract_performance_obligation_name
-        description: The unique identifier of one of the performance obligations attached to a revenue contract
-        tests:
-          - not_null
-      - name: revenue_contract_line_id
-        description: The unique identifier of a line item in a revenue contract
-        tests:
-          - not_null
-      - name: revenue_contract_customer_name
-        description: The name of the customer for a given revenue contract line item
-        tests:
-          - not_null
-      - name: sales_order_number
-        description: The unique identifier of a sales order.
-      - name: sales_order_line_number
-        description: The unique identifier of a line item in a sales order.
-      - name: customer_number
-        description: The unique identifier of a customer in both Zuora Revenue and Zuora Billing
-      - name: accounting_segment
-        description: The unique identifier of an accounting segment.
-      - name: accounting_type_id
-        description: The unique identifier of an accounting type
   - name: rpt_crm_opportunity_accepted_period
   - name: rpt_crm_opportunity_closed_period
   - name: rpt_crm_person_mql
@@ -373,7 +336,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
       - name: dim_subscription_id_previous
@@ -431,7 +394,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
         tests:
@@ -562,73 +525,18 @@ models:
         description: Annual Recurring Revenue value for given month
       - name: quantity
         description: Total quantity
-  - name: wip_dim_subscription
-    description: '{{ doc("dim_subscription") }}'
+  - name: rpt_manual_true_up_charge
+    description: Report table for tracking true up changes from Zuora Revenue which are added manually into ARR modeling.
     columns:
       - name: dim_subscription_id
         description: Unique identifier of a version of a subscription
         tests:
           - not_null
-          - unique
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_crm_account_id
-        description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
-        description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
-      - name: dim_crm_opportunity_id
-      - name: dim_subscription_id_original
+        description: Unique identifier of a billing account
         tests:
           - not_null
-        tags: ["tdf", "common", "gainsight"]
-      - name: dim_subscription_id_previous
-      - name: amendment_id
-      - name: subscription_name_slugify
-        description: The unique identifier of the subscription
-      - name: subscription_status
-        description: The status of the subscription
+      - name: adjustment
+        description: Amount of ARR which needs to be adjusted for the true-up
         tests:
           - not_null
-          - accepted_values:
-              values: ['Active', 'Cancelled', 'Draft', 'Expired']
-        tags: ["tdf", "common", "gainsight"]
-      - name: namespace_name
-        description: The namespace related to the subscription.
-      - name: namespace_id
-        description: The id of the namespace related to the subscription.
-      - name: subscription_version
-        description: The version number of the subscription
-      - name: is_auto_renew
-        description: Boolean field, if true, this subscription automatically renews at the end of the subscription term
-      - name: zuora_renewal_subscription_name
-        description: name of the linked subscription that renews the prior subscription in a lineage
-      - name: zuora_renewal_subscription_name_slugify
-        description: name of the linked subscription that renews the prior subscription in a lineage
-      - name: renewal_term
-        description: The length of the period for the subscription renewal term
-      - name: renewal_term_period_type
-        description: The period type for the subscription renewal term. This field is used with the renewal term field to specify the subscription renewal term.
-      - name: subscription_start_date
-        description: The date when the subscription term starts. This date is the same as the start date of the original term, which isn't necessarily the start date of the current or new term.
-      - name: subscription_end_date
-        description: The date when the subscription term ends, where the subscription ends at midnight the day before. For example, if the SubscriptionEndDate is 12/31/2016, the subscriptions ends at midnight (00:00:00 hours) on 12/30/2016. This date is the same as the term end date or the cancelation date, as appropriate.
-      - name: subscription_start_month
-        description: The month when the subscription term starts. This month is the same as the start month of the original term, which isn't necessarily the start month of the current or new term.
-      - name: subscription_end_month
-        description: The month when the subscription term ends. This month is the same as the term end month or the cancelation month, as appropriate.
-      - name: subscription_sales_type
-        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
-        tests:
-          - not_null
-          - accepted_values:
-                  values: ['Sales-Assisted', 'Self-Service']
-        tags: ["tdf", "common", "gainsight"]
-      - name: lineage
-        description: "All the subscriptions subsquent to the primary subscription, separated by commas."
-      - name: cohort_month
-      - name: cohort_quarter
-      - name: cohort_year
-      - name: is_myb
-        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
-      - name: is_myb_with_multi_subs
-        description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.

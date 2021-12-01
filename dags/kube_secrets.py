@@ -9,6 +9,11 @@ DISCOURSE_API_TOKEN = Secret(
     "env", "DISCOURSE_API_TOKEN", "airflow", "DISCOURSE_API_TOKEN"
 )
 
+# gemnasium data token
+GEMNASIUM_DB_DATA_TOKEN = Secret(
+    "env", "GEMNASIUM_DB_DATA_TOKEN", "airflow", "GEMNASIUM_DB_DATA_TOKEN"
+)
+
 # gitlab_analytics user private token
 GITLAB_ANALYTICS_PRIVATE_TOKEN = Secret(
     "env", "GITLAB_ANALYTICS_PRIVATE_TOKEN", "airflow", "GITLAB_ANALYTICS_PRIVATE_TOKEN"

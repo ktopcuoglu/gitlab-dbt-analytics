@@ -1,4 +1,8 @@
 /* grain: one record per host per metric per month */
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
     "materialized": "incremental",
     "unique_key": "primary_key"

@@ -35,7 +35,7 @@ gitlab-org/gitlab-compose-kit,4534254
 gitlab-org/gitlab-development-kit,74823
 gitlab-org/gitlab-docs,1794617
 gitlab-org/gitlab-elasticsearch-indexer,2953390
-gitlab-org/gitlab-experiment,21250701
+gitlab-org/ruby/gems/gitlab-experiment,21250701
 gitlab-org/gitlab-exporter,1507906
 gitlab-org/gitlab-foss,13083
 gitlab-org/gitlab-gollum-lib,6043225
@@ -48,6 +48,7 @@ gitlab-org/gitlab-recipes,13764
 gitlab-org/gitlab-runner,250833
 gitlab-org/gitlab-shell,14022
 gitlab-org/gitlab-terminal,7792567
+gitlab-org/gitlab-vscode-extension,5261717
 gitlab-org/gitlab-workhorse,554859
 gitlab-org/gitlabktl,11080193
 gitlab-org/grafana-dashboards,928825
@@ -82,6 +83,7 @@ gitlab-org/security-products/analyzers/gemnasium,9450192
 gitlab-org/security-products/analyzers/gemnasium-maven,9450197
 gitlab-org/security-products/analyzers/gemnasium-python,9450195
 gitlab-org/security-products/analyzers/gosec,7660893
+gitlab-org/security-products/analyzers/kics,30656896
 gitlab-org/security-products/analyzers/klar,13922331
 gitlab-org/security-products/analyzers/nodejs-scan,7145793
 gitlab-org/security-products/analyzers/phpcs-security-audit,6392811
@@ -180,7 +182,13 @@ gitlab-org/security-products/analyzers/command,23597850
 gitlab-org/security-products/analyzers/report,23545481
 gitlab-org/security-products/analyzers/ruleset,23455079
 gitlab-org/security-products/post-analyzers/tracking-calculator,24257614
+gitlab-org/security-products/post-analyzers/scripts,28589369
 gitlab-org/security-products/taggr,24249085
+gitlab-org/security-products/cwe-info-go,15232184
+gitlab-org/security-products/vet/vet,27819859
+gitlab-org/security-products/vet/go-tree-sitter,27821148
+gitlab-org/security-products/vet/tree-sitter70cast,27821122
+gitlab-org/security-products/vet/stencils,28502955
 gitlab-org/security-products/analyzers/container-scanning,24673064
 gitlab-org/security-products/analyzers/cluster-image-scanning,27497069
 gitlab-org/security-products/security-report-schemas,16683102
@@ -263,3 +271,4 @@ gitlab-cookbooks/cookbook-wrapper-gitlab-runner,1755701
 gitlab-org/gl-openshift/gitlab-runner-operator,22848448
 gitlab-org/gl-openshift/gitlab-operator,18899486
 gitlab-com/gl-infra/customersdot-ansible-poc,26392061
+gitlab-org/tanuki_emoji,27628435

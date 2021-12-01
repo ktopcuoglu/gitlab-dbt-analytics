@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: marketo_lead_source
+    description: This table has marketo lead information.
+    columns:
+      - name: marketo_lead_id
+        tests:
+          - not_null
+          - unique

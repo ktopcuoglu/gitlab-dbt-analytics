@@ -167,11 +167,22 @@
 ➕📸🥩specify_snapshot:
   <<: *snowflake_dbt_jobs
   script:
+    - echo $DBT_MODELS
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
-    
+
+➕📸🥩🦖specify_l_snapshot:
+  <<: *snowflake_dbt_jobs
+  script:
+    - echo $DBT_MODELS
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
+    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - *l_warehouse
+    - *deps_and_seed
+    - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
+
 
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs
@@ -216,6 +227,63 @@
     - *deps_and_seed
     - echo $DBT_MODELS
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS
+
+# ======
+# SAFE Models Check
+# ======
+
+.safe_models_check: &safe_models_check
+  stage: 🛠 dbt Misc
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+  before_script:
+    - cd transform/snowflake-dbt/
+    - echo $BRANCH_NAME
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PREP_DATABASE="PREP"; else export SNOWFLAKE_PREP_DATABASE="${CI_COMMIT_REF_NAME^^}_PREP"; fi
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PROD_DATABASE="PROD"; else export SNOWFLAKE_PROD_DATABASE="${CI_COMMIT_REF_NAME^^}_PROD"; fi
+    - echo $SNOWFLAKE_PREP_DATABASE
+    - echo $SNOWFLAKE_PROD_DATABASE
+    - export SNOWFLAKE_LOAD_DATABASE="RAW" # dbt pulls from RAW
+    - echo $SNOWFLAKE_LOAD_DATABASE
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
+    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
+    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
+    - echo $CI_PROFILE_TARGET
+    - mkdir -p ~/.ssh
+    - touch ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh
+    - echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa # decodes key from base64
+    - chmod 0400 ~/.ssh/id_rsa # Makes key read only
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
+  tags:
+    - analytics
+  only:
+    changes:
+      - "transform/snowflake-dbt/models/**/*.sql"
+    refs:
+      - merge_request
+  allow_failure: false
+
+safe_model_script:
+  <<: *safe_models_check
+  script:
+    - dbt deps $CI_PROFILE_TARGET
+    - dbt --partial-parse ls $CI_PROFILE_TARGET --models tag:mnpi+
+      --exclude
+        tag:mnpi_exception
+        config.database:$SNOWFLAKE_PREP_DATABASE
+        config.schema:restricted_safe_common
+        config.schema:restricted_safe_common_mapping
+        config.schema:restricted_safe_common_mart_finance
+        config.schema:restricted_safe_common_mart_sales
+        config.schema:restricted_safe_common_mart_product
+        config.schema:restricted_safe_common_prep
+        config.schema:restricted_safe_legacy
+        config.schema:restricted_safe_workspace_finance
+        config.schema:restricted_safe_workspace_sales 
+      --output json > safe_models.json
+    - python3 safe_model_check.py
 
 # ======
 # Periscope Model Check

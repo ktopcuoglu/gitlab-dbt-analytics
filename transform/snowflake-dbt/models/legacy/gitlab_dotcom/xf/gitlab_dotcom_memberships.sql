@@ -123,7 +123,7 @@ WITH members AS ( -- direct group and project members
 
     SELECT *
     FROM namespaces
-    WHERE namespace_type IS NULL
+    WHERE namespace_type = 'User'
 
 ), unioned AS (
 

@@ -18,7 +18,7 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
-          
+
   - name: prep_audit_event_details_clean
     description: '{{ doc("prep_audit_event_details_clean") }}'
     columns:
@@ -62,6 +62,62 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common"]
+
+  - name: prep_epic_user_request_collaboration_project
+    description: ' {{ doc("prep_epic_user_request_collaboration_project") }} '
+    columns:
+      - name: dim_epic_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_epic_id, dim_crm_account_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_epic_user_request
+    description: ' {{ doc("prep_epic_user_request") }} '
+    columns:
+      - name: dim_epic_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_epic_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_issue_user_request_collaboration_project
+    description: ' {{ doc("prep_issue_user_request_collaboration_project") }} '
+    columns:
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_original_issue_project_id, original_issue_internal_id)
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_issue_user_request
+    description: ' {{ doc("prep_issue_user_request") }} '
+    columns:
+      - name: dim_issue_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: CONCAT(dim_issue_id, dim_crm_account_id, dim_crm_opportunity_id, dim_ticket_id)
+        tests:
+          - not_null
+          - unique
 
   - name: prep_campaign
     description: '{{ doc("prep_campaign") }}'
@@ -137,7 +193,7 @@ models:
         tests:
           - not_null
           - unique
-  
+
   - name: prep_namespace_hist
     description: '{{ doc("dim_namespace_hist") }}'
     columns:
@@ -314,7 +370,7 @@ models:
         description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
         tests:
           - not_null
-          
+
   - name: prep_gitlab_dotcom_plan
     description: '{{ doc("prep_gitlab_dotcom_plan") }}'
     columns:
@@ -391,7 +447,7 @@ models:
         description: account id from SFDC identifing the customer
       - name: dim_billing_account_id
         description: The id of the Zuora account the subscription is associated with
-      - name: dim_crm_person_id_invoice_owner
+      - name: dim_billing_account_id_invoice_owner
       - name: dim_crm_opportunity_id
       - name: dim_subscription_id_original
       - name: dim_subscription_id_previous
@@ -1424,6 +1480,8 @@ models:
       - name: dim_namespace_id
       - name: dim_subscription_id
       - name: reporting_month
+      - name: instance_type
+        description: Type of instance (Production/Non-Production)
 
   - name: prep_saas_usage_ping_namespace
     description: '{{ doc("prep_saas_usage_ping_namespace") }}'
@@ -1492,8 +1550,8 @@ models:
           - not_null
           - unique
       - name: created_date_id
-      - name: created_at 
-      - name: updated_at 
+      - name: created_at
+      - name: updated_at
       - name: ci_runner_description
       - name: contacted_at
       - name: is_active
@@ -1533,7 +1591,7 @@ models:
       - name: created_at
         tests:
           - not_null
-    
+
   - name: prep_issue
     description: '{{ doc("prep_issue") }}'
     columns:
@@ -1541,7 +1599,7 @@ models:
         tests:
           - unique
           - not_null
-          
+
   - name: prep_note
     description: '{{ doc("prep_note") }}'
     columns:
@@ -1557,7 +1615,7 @@ models:
         tests:
           - unique
           - not_null
-          
+
   - name: prep_epic
     description: '{{ doc("prep_epic") }}'
     columns:
@@ -1635,7 +1693,7 @@ models:
         - name: metrics_path
           tests:
             - not_null
-          
+
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'
     columns:
@@ -1683,7 +1741,7 @@ models:
       - name: dim_target_issue_id
         tests:
           - not_null
-          
+
   - name: prep_package
     description: '{{ doc("prep_package") }}'
     columns:
@@ -1691,7 +1749,7 @@ models:
         tests:
           - unique
           - not_null
-          
+
   - name: prep_release
     description: '{{ doc("prep_release") }}'
     columns:
@@ -1699,7 +1757,7 @@ models:
         tests:
           - unique
           - not_null
-                    
+
   - name: prep_requirement
     description: '{{ doc("prep_requirement") }}'
     columns:

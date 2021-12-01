@@ -2,7 +2,11 @@
 
 Mart table containing quantitative data related to CI runner activity on GitLab.com.
 
-These metrics are aggregated at a monthly grain per `dim_namespace_id`. Only activity since 2020-01-01 is being processed due to volume of data.
+These metrics are aggregated at a monthly grain per `dim_namespace_id`.
+
+Additional identifier/key fields - `dim_ci_runner_id`, `dim_ci_pipeline_id`, `dim_ci_stage_id` have been included for Reporting purposes. 
+
+Only activity since 2020-01-01 is being processed due to the high volume of the data.
 
 {% enddocs %}
 
@@ -77,6 +81,19 @@ Only events that happened the last 400 days are included in this table.
  
 Mart table containing quantitative data related to CI runner activity on GitLab.com.
  
-These metrics are aggregated at a daily grain per `dim_project_id`. Only activity since 2020-01-01 is being processed due to volume of data.
+These metrics are aggregated at a daily grain per `dim_project_id`.
+
+Additional identifier/key fields - `dim_ci_runner_id`, `dim_ci_pipeline_id`, `dim_ci_stage_id` have been included for Reporting purposes. 
+
+Only activity since 2020-01-01 is being processed due to the high volume of the data.
+
+{% enddocs %}
+
+{% docs mart_user_request %}
+ 
+Mart table that contains all user requests to the Gitlab product by the customers.
+ 
+It unions `bdg_issue_user_request` and `bdg_epic_user_request` to have the product request that are contained both in the epics and issues in the `gitlab-org` group.
+After that, it adds useful data around these issues and epics as well the crm_account and crm_opportunity links that are useful to prioritize those user requests.
 
 {% enddocs %}

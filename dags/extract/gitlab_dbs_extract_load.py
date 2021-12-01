@@ -509,7 +509,7 @@ for source_name, config in config_dict.items():
             f"{config['dag_name']}_db_sync",
             default_args=sync_dag_args,
             schedule_interval=config["sync_schedule_interval"],
-            concurrency=1,
+            concurrency=2,
             description=config["description"],
         )
 

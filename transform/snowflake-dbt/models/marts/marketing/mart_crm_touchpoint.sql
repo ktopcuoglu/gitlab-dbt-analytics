@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{config({
     "schema": "common_mart_marketing"
   })
@@ -22,6 +26,7 @@
       dim_crm_touchpoint.bizible_touchpoint_date,
       dim_crm_touchpoint.bizible_touchpoint_position,
       dim_crm_touchpoint.bizible_touchpoint_source,
+      dim_crm_touchpoint.bizible_touchpoint_source_type,
       dim_crm_touchpoint.bizible_touchpoint_type,
       dim_crm_touchpoint.bizible_ad_campaign_name,
       dim_crm_touchpoint.bizible_ad_content,
@@ -202,5 +207,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-02-18",
-    updated_date="2021-10-05"
+    updated_date="2021-11-09"
 ) }}

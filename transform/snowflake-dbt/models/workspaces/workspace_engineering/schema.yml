@@ -1,0 +1,64 @@
+version: 2
+
+models:
+    - name: zengrc_assessment
+      description: '{{ doc("zengrc_assessments_desc") }}'
+      columns: 
+        - name: assessment_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_audit
+      description: '{{ doc("zengrc_audits_desc") }}'
+      columns: 
+        - name: audit_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_control
+      description: '{{ doc("zengrc_controls_desc") }}'
+      columns: 
+        - name: control_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_objective
+      description: '{{ doc("zengrc_objectives_desc") }}'
+      columns: 
+        - name: objective_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_program
+      description: This table is derived from the `zengrc_audits_source` table until the program is explicitly brought into the data warehouse.
+      columns: 
+        - name: program_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_person
+      description: This table is derived from the `zengrc_audit_source` and `zengrc_assessment_source` tables until the person object is explicitly brought into the data warehouse.
+      columns: 
+        - name: person_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_assessment_to_assessors
+      description: This table lists the many to many relationship between Person, the assessor, and an assessment.  Joining this table to Assessment directly will result in duplicate rows.
+
+    - name: zengrc_assessment_to_audit
+      description: The tables list the many to many relationship between Assessment and Audit. Joining this table to Assessment or Audit directly will result in duplicate rows.
+
+    - name: zengrc_audit_to_audit_managers
+      description: This table lists the many to many relationship between Person, the audit manager, and an audit.  Joining this table to Audit directly will result in duplicate rows.
+
+    - name: zengrc_control_to_objective
+      description: The tables list the many to many relationship between Control and Objective. Joining this table to Control or Objective directly will result in duplicate rows.
+
+

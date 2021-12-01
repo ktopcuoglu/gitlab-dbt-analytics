@@ -109,6 +109,8 @@ tables:
       , name
       , rule_type
       , report_type
+      , section
+      , modified_from_project_rule
       FROM approval_merge_request_rules
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -174,6 +176,19 @@ tables:
       , user_name
       FROM authentication_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  banned_users:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'banned_users'
+    export_table_primary_key: user_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT user_id
+      , created_at
+      , updated_at
+      FROM banned_users
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   boards:
     dbt_source_model: true
@@ -410,6 +425,36 @@ tables:
       FROM clusters_kubernetes_namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  clusters_integration_elasticstack:
+    export_schema: 'gitlab_com'
+    export_table: 'clusters_integration_elasticstack'
+    export_table_primary_key: cluster_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT cluster_id
+      , enabled
+      , chart_version
+      , created_at
+      , updated_at
+      FROM clusters_integration_elasticstack
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  clusters_integration_prometheus:
+    export_schema: 'gitlab_com'
+    export_table: 'clusters_integration_prometheus'
+    export_table_primary_key: cluster_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT cluster_id
+      , enabled
+      , encrypted_alert_manager_token
+      , encrypted_alert_manager_token_iv
+      , health_status
+      , created_at
+      , updated_at
+      FROM clusters_integration_prometheus
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   container_expiration_policies:
     export_schema: "gitlab_com"
     export_table: container_expiration_policies
@@ -441,6 +486,24 @@ tables:
       , created_at
       , updated_at
       FROM csv_issue_imports
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  dast_profiles:
+    export_schema: "gitlab_com"
+    export_table: dast_profiles
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , dast_site_profile_id
+      , dast_scanner_profile_id
+      , created_at
+      , updated_at
+      , name
+      , description
+      , branch_name
+      FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   deployments:
@@ -1015,6 +1078,21 @@ tables:
       FROM lists
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  merge_request_blocks:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'merge_request_blocks'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , blocking_merge_request_id
+      , blocked_merge_request_id
+      , created_at
+      , updated_at
+      FROM merge_request_blocks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   merge_request_diffs:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1198,6 +1276,7 @@ tables:
       , auto_devops_enabled
       , push_rule_id
       , shared_runners_enabled
+      , custom_project_templates_group_id
       FROM namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1788,6 +1867,10 @@ tables:
       , updated_at
       , build_id
       , scan_type
+      , project_id
+      , pipeline_id
+      , latest
+      , status
       FROM security_scans
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -2057,6 +2140,8 @@ tables:
       , tab_width
       , experience_level
       , view_diffs_file_by_file
+      , id
+      , gitpod_enabled
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

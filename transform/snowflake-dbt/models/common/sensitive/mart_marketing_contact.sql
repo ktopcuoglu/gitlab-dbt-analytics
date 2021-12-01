@@ -172,7 +172,9 @@ WITH marketing_contact AS (
         ELSE FALSE 
       END                                                                                        AS is_zuora_billing_contact,
       MIN(marketing_contact_order.days_since_saas_trial_ended)                                   AS days_since_saas_trial_ended,
+      MIN(marketing_contact_order.days_since_saas_trial_ended_bucket)                            AS days_since_saas_trial_ended_bucket,
       MAX(marketing_contact_order.days_until_saas_trial_ends)                                    AS days_until_saas_trial_ends,
+      MAX(marketing_contact_order.days_until_saas_trial_ends_bucket)                             AS days_until_saas_trial_ends_bucket,
       CASE 
         WHEN MAX(CASE 
                   WHEN marketing_contact_order.is_individual_namespace = 1 
@@ -482,8 +484,14 @@ WITH marketing_contact AS (
       marketing_contact.job_title,
       marketing_contact.it_job_title_hierarchy,
       marketing_contact.country,
+      marketing_contact.mobile_phone,
       marketing_contact.sfdc_parent_sales_segment,
       marketing_contact.sfdc_parent_crm_account_tsp_region,
+      marketing_contact.is_marketo_lead,
+      marketing_contact.is_marketo_email_hard_bounced,
+      marketing_contact.marketo_email_hard_bounced_date,
+      marketing_contact.is_marketo_opted_out,
+      marketing_contact.marketo_compliance_segment_value,
       marketing_contact.is_sfdc_lead_contact,
       marketing_contact.sfdc_lead_contact,
       marketing_contact.sfdc_created_date,
@@ -496,11 +504,13 @@ WITH marketing_contact AS (
       marketing_contact.gitlab_dotcom_last_login_date,
       marketing_contact.gitlab_dotcom_email_opted_in,
       marketing_contact.days_since_saas_signup,
+      marketing_contact.days_since_saas_signup_bucket,
       marketing_contact.is_customer_db_user,
       marketing_contact.customer_db_customer_id,
       marketing_contact.customer_db_created_date,
       marketing_contact.customer_db_confirmed_date,
       marketing_contact.days_since_self_managed_owner_signup,
+      marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
       marketing_contact.zuora_created_date,
       marketing_contact.zuora_active_state,
@@ -671,7 +681,7 @@ WITH marketing_contact AS (
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2021-05-07"
+    updated_date="2021-10-14"
 ) }}
 
 

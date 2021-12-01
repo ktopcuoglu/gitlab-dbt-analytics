@@ -1,3 +1,6 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
 
 {{ simple_cte([
     ('dim_dates','dim_date'),

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH prep_amendment AS (
 
   SELECT *
@@ -7,6 +11,11 @@ WITH prep_amendment AS (
 
     SELECT *
     FROM {{ ref('prep_subscription') }}
+
+), subscription_opportunity_mapping AS (
+
+    SELECT *
+    FROM {{ ref('map_subscription_opportunity') }}
 
 ), subscription_lineage AS (
 
@@ -32,9 +41,13 @@ WITH prep_amendment AS (
     --Common Dimension Keys
     subscription.dim_crm_account_id,
     subscription.dim_billing_account_id,
-    subscription.dim_crm_person_id_invoice_owner,
-    subscription.dim_crm_opportunity_id,
-    {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}       AS dim_amendment_id_subscription,
+    subscription.dim_billing_account_id_invoice_owner,
+    CASE
+       WHEN subscription.subscription_created_date < '2019-02-01'
+         THEN NULL
+       ELSE subscription_opportunity_mapping.dim_crm_opportunity_id
+    END                                                                             AS dim_crm_opportunity_id,
+    {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}                        AS dim_amendment_id_subscription,
 
     --Subscription Information
     subscription.created_by_id,
@@ -61,6 +74,7 @@ WITH prep_amendment AS (
     subscription.turn_on_auto_renewal,
     subscription.contract_seat_reconciliation,
     subscription.turn_on_seat_reconciliation,
+    subscription_opportunity_mapping.is_questionable_opportunity_mapping,
 
     --Date Information
     subscription.subscription_start_date,
@@ -88,13 +102,15 @@ WITH prep_amendment AS (
     ON subscription_lineage.subscription_name_slugify = subscription.subscription_name_slugify
   LEFT JOIN prep_amendment
     ON subscription.dim_amendment_id_subscription = prep_amendment.dim_amendment_id
+  LEFT JOIN subscription_opportunity_mapping
+    ON subscription.dim_subscription_id = subscription_opportunity_mapping.dim_subscription_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2020-12-16",
-    updated_date="2021-09-06"
+    updated_date="2021-11-11"
 ) }}
