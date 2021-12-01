@@ -1,4 +1,4 @@
-{% snapshot mart_available_to_renew %}
+{% snapshot mart_available_to_renew_snapshot %}
     -- Using dbt updated at field as we want a new set of data everyday.
     {{
         config(
@@ -17,6 +17,6 @@
             except=['DBT_UPDATED_AT']
             )
       }}
-    FROM {{ ref('mart_waterfall') }}
+    FROM {{ ref('mart_available_to_renew') }}
 
 {% endsnapshot %}

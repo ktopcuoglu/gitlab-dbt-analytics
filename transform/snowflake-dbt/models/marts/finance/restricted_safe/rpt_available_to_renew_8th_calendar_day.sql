@@ -9,15 +9,15 @@ WITH snapshot_dates AS (
 ), mart_available_to_renew_snapshot AS (
 
     SELECT *
-    FROM {{ ref('mart_available_to_renew') }}
+    FROM {{ ref('mart_available_to_renew_snapshot') }}
 
 ), final AS (
 
     SELECT *
     FROM mart_available_to_renew_snapshot
     INNER JOIN snapshot_dates
-      ON mart_available_to_renew.term_end_month = snapshot_dates.first_day_of_fiscal_quarter
-      AND mart_available_to_renew.snapshot_date = snapshot_dates.snapshot_date_fpa
+      ON mart_available_to_renew_snapshot.renewal_month = snapshot_dates.first_day_of_fiscal_quarter
+      AND mart_available_to_renew_snapshot.snapshot_date = snapshot_dates.snapshot_date_fpa
 
 )
 

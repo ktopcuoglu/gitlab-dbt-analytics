@@ -82,11 +82,13 @@ models:
         description: Month when the subscription is set to end.
       - name: term_start_month
         description: Month when a subscription term begins.
-      - name: term_end_month
+      - name: renewal_month
         description: Month when a subscription term ends.
+        tests:
+          - not_null
       - name: bookings_term_end_month
         description: Similar to the term end month but calculates intermediate term end months for multi year subscriptions with terms greater than 12 months. These end months do not exist in the Zuora billing system. This allows us to get a view of all subscriptions renewing on a yearly basis.
-      - name: myb_subscription_end_month
+      - name: multi-year_booking_subscription_end_month
         description: Month when the final subscription in a multi-year booking is set to end.
       - name: last_paid_month_in_term
         description: Last month charge is applied for a charge's term.
@@ -121,20 +123,21 @@ models:
       - name: product_delivery_type
         description: Delivery type of the product on the charge.
       - name: renewal_type
-        description: Type of renewal (MYB or not)
-      - name: is_myb
+        description: Type of renewal (multi-year_booking or not)
+      - name: is_multi_year_booking
         description: Flag indicating if a subscription is multi-year or not.
-      - name: is_myb_with_multi_subs
+      - name: is_multi_year_booking_with_multi_subs
         description: Flag indicating if a subscription is multi-year with multiple associated subscriptions.
       - name: subscription_term
         description: Current term of the subscription.
       - name: estimated_total_future_billings
         description: Estimate of total amount to be billed in the future for a given charge.
-      - name: is_atr
+      - name: is_available_to_renew
         description: Flag indicating if the subscription is available to renew in the period.
-      - name: is_atr_opportunity_term_test
-        description:  Test flag indicating if a subscription is available to renew based on the opportunity term.
       - name: opportunity_term_group
         description: Duration of the opportunity in years based on the opportunity's term.
       - name: arr
         description: Annual recurring revenue associated with the subscription.
+
+  - name: rpt_available_to_renew_8th_calendar_day
+    description: Snapshot on the 8th calendar day after a renewal month from the available to renew model (`mart_available_to_renew_snapshot`) which generates a list of subscriptions which will be available to renew in a given time period based on existing charges and term dates. It also has logic built in to identify multi-year bookings which is not yet avilable in the source data.

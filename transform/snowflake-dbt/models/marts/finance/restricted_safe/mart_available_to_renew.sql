@@ -16,7 +16,10 @@
 {{ simple_cte([
     ('dim_date','dim_date'),
     ('dim_crm_account','dim_crm_account'),
-    ('dim_crm_user','dim_crm_user')
+    ('dim_crm_user','dim_crm_user'),
+    ('dim_subscription', 'dim_subscription'),
+    ('dim_crm_opportunity', 'dim_crm_opportunity'),
+    ('fct_crm_opportunity', 'fct_crm_opportunity')
 ]) }}
 
 , dim_subscription_source AS (
@@ -28,10 +31,10 @@
              = term_start_month THEN TRUE
          ELSE FALSE
        END AS is_dup_term
-     FROM {{ ref('dim_subscription') }}
+     FROM dim_subscription
      WHERE 
        --data quality, last version is expired with no ARR in mart_arr. Should filter it out completely.
-       subscription_name != 'VMware - 4000 EEP'
+       dim_subscription_id NOT IN ('2c92a0ff5e1dcf14015e3bb595f14eef','2c92a0ff5e1dcf14015e3c191d4f7689','2c92a007644967bc01645d54e7df49a8', '2c92a007644967bc01645d54e9b54a4b', '2c92a0ff5e1dcf1a015e3bf7a32475a5')
        --test subscription
        AND subscription_name != 'Test- New Subscription'
        --data quality, last term not entered with same pattern, sub_name = A-S00022101
@@ -69,6 +72,18 @@
             < term_start_month THEN TRUE
         WHEN LEAD(term_start_month,8) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
             < term_start_month THEN TRUE
+        WHEN LEAD(term_start_month,9) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
+            < term_start_month THEN TRUE
+        WHEN LEAD(term_start_month,10) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
+            < term_start_month THEN TRUE
+        WHEN LEAD(term_start_month,11) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
+            < term_start_month THEN TRUE
+        WHEN LEAD(term_start_month,12) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
+            < term_start_month THEN TRUE
+        WHEN LEAD(term_start_month,13) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
+            < term_start_month THEN TRUE
+        WHEN LEAD(term_start_month,14) OVER (PARTITION BY subscription_name ORDER BY subscription_version) 
+            < term_start_month THEN TRUE
         ELSE FALSE
       END AS exclude_from_term_sorting
     FROM dim_subscription_source
@@ -82,10 +97,10 @@
     FROM dim_subscription_int
     WHERE exclude_from_term_sorting = FALSE
   
-), dim_subscription AS (
+), dim_subscription_last_term AS (
 
     SELECT dim_subscription.*
-    FROM {{ ref('dim_subscription') }}
+    FROM dim_subscription
     INNER JOIN base_subscriptions
       ON dim_subscription.dim_subscription_id = base_subscriptions.dim_subscription_id
     WHERE last_term_version = 1
@@ -94,8 +109,8 @@
 
     SELECT mart_charge.*
     FROM {{ ref('mart_charge') }}
-    INNER JOIN dim_subscription
-      ON mart_charge.dim_subscription_id = dim_subscription.dim_subscription_id
+    INNER JOIN dim_subscription_last_term
+      ON mart_charge.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
     WHERE is_included_in_arr_calc = 'TRUE'
       AND mart_charge.term_end_month = mart_charge.effective_end_month
       AND arr != 0
@@ -108,8 +123,8 @@
       sub_1.zuora_renewal_subscription_name,
       DATE_TRUNC('month',sub_2.subscription_end_date) AS subscription_end_month,
       RANK() OVER (PARTITION BY sub_1.subscription_name ORDER BY sub_2.subscription_end_date DESC) AS rank
-    FROM dim_subscription sub_1
-    INNER JOIN dim_subscription sub_2
+    FROM dim_subscription_last_term sub_1
+    INNER JOIN dim_subscription_last_term sub_2
       ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
       AND DATE_TRUNC('month',sub_2.subscription_end_date) > CONCAT('{{renewal_fiscal_year}}','-01-01')
     WHERE sub_1.zuora_renewal_subscription_name != ''
@@ -136,17 +151,17 @@
       mart_charge.product_tier_name,
       mart_charge.product_delivery_type,
       mart_charge.subscription_name,
-      dim_subscription.zuora_renewal_subscription_name,
-      dim_subscription.current_term,
+      dim_subscription_last_term.zuora_renewal_subscription_name,
+      dim_subscription_last_term.current_term,
       CASE
-        WHEN dim_subscription.current_term >= 24 
+        WHEN dim_subscription_last_term.current_term >= 24 
           THEN TRUE
-        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
+        WHEN dim_subscription_last_term.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
           THEN TRUE
         ELSE FALSE
       END                                                                                                                                               AS is_multi_year_booking,
       CASE
-        WHEN dim_subscription.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
+        WHEN dim_subscription_last_term.subscription_name IN (SELECT DISTINCT subscription_name FROM renewal_subscriptions_{{renewal_fiscal_year}}) 
           THEN TRUE
         ELSE FALSE
       END                                                                                                                                               AS is_multi_year_booking_with_multi_subs,
@@ -159,12 +174,12 @@
       mart_charge.term_start_month,
       mart_charge.term_end_month,
       DATEADD('month',-1,mart_charge.term_end_month)                                                                                                    AS last_paid_month_in_term,
-      renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month                                                                              AS myb_subscription_end_month,
+      renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month                                                                              AS multi_year_booking_subscription_end_month,
       DATEDIFF(month,mart_charge.effective_start_month,mart_charge.effective_end_month)                                                                 AS charge_term,
       mart_charge.arr
     FROM mart_charge
-    LEFT JOIN dim_subscription
-      ON mart_charge.dim_subscription_id = dim_subscription.dim_subscription_id
+    LEFT JOIN dim_subscription_last_term
+      ON mart_charge.dim_subscription_id = dim_subscription_last_term.dim_subscription_id
     LEFT JOIN dim_crm_account
       ON mart_charge.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_crm_user
@@ -218,7 +233,7 @@
       is_multi_year_booking,
       is_multi_year_booking_with_multi_subs,
       --current_term,
-      CASE--the below odd term charges do not behave well in the MYB logic and end up with duplicate renewals in the fiscal year. This CASE statement smooths out the charges so they only have one renewal entry in the fiscal year.
+      CASE--the below odd term charges do not behave well in the multi-year bookings logic and end up with duplicate renewals in the fiscal year. This CASE statement smooths out the charges so they only have one renewal entry in the fiscal year.
         WHEN current_term = 25 THEN 24
         WHEN current_term = 26 THEN 24
         WHEN current_term = 27 THEN 36
@@ -259,7 +274,7 @@
     WHERE current_term > 12
     {{ dbt_utils.group_by(n=22) }}
 
-), twenty_four_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for MYB.
+), twenty_four_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
     SELECT 
       renewal_type, 
@@ -290,7 +305,7 @@
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
     {{ dbt_utils.group_by(n=22) }}
 
-), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
+), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
     SELECT 
       renewal_type, 
@@ -353,7 +368,7 @@
     {{ dbt_utils.group_by(n=22) }}
     ORDER BY 1
 
-), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
+), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
 
     SELECT 
       renewal_type, 
@@ -447,7 +462,7 @@
     {{ dbt_utils.group_by(n=22) }}
     ORDER BY 1
 
-), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for MYBs that are not in the Zuora data. The start and end months are in the agg_myb for MYBs.
+), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
 
     SELECT 
       renewal_type, 
@@ -625,62 +640,55 @@
           THEN '4 Years+'
         WHEN dim_crm_opportunity.opportunity_term IS NULL 
           THEN 'No Opportunity Term' 
-      END                                                                                                               AS opportunity_term_group,
-      CASE
-        WHEN dim_crm_opportunity.opportunity_term <= 12 
-          THEN FALSE
-        WHEN dim_crm_opportunity.opportunity_term > 12 
-          THEN TRUE
-        ELSE NULL
-      END                                                                                                               AS is_multi_year_booking_opportunity_term_test
-    FROM {{ ref('dim_subscription') }}
-    LEFT JOIN {{ ref('dim_crm_opportunity') }}
+      END                                                                                                               AS opportunity_term_group
+    FROM dim_subscription
+    LEFT JOIN dim_crm_opportunity
       ON dim_subscription.dim_crm_opportunity_id = dim_crm_opportunity.dim_crm_opportunity_id
-    LEFT JOIN {{ ref('fct_crm_opportunity') }}
+    LEFT JOIN fct_crm_opportunity
       ON dim_subscription.dim_crm_opportunity_id = fct_crm_opportunity.dim_crm_opportunity_id
   
 ), renewal_report_{{renewal_fiscal_year}} AS (--create the renewal report for the applicable fiscal year.
 
     SELECT
-      {{ dbt_utils.surrogate_key(['CONCAT(dim_date.fiscal_quarter_name_fy, base_{{renewal_fiscal_year}}.dim_charge_id)']) }} AS primary_key,
-      dim_date.fiscal_year,
-      dim_date.first_day_of_fiscal_quarter,
-      dim_date.fiscal_quarter_name_fy,
-      opportunity_term_group.close_month,
-      base_{{renewal_fiscal_year}}.dim_charge_id,
-      opportunity_term_group.dim_crm_opportunity_id,
-      base_{{renewal_fiscal_year}}.dim_crm_account_id,
-      base_{{renewal_fiscal_year}}.dim_billing_account_id,
-      base_{{renewal_fiscal_year}}.dim_subscription_id,
-      base_{{renewal_fiscal_year}}.dim_product_detail_id,
-      base_{{renewal_fiscal_year}}.subscription_name,
-      base_{{renewal_fiscal_year}}.subscription_start_month,
-      base_{{renewal_fiscal_year}}.subscription_end_month,
-      base_{{renewal_fiscal_year}}.term_start_month,
-      base_{{renewal_fiscal_year}}.term_end_month,
+      CONCAT(base_{{renewal_fiscal_year}}.term_end_month, base_{{renewal_fiscal_year}}.dim_charge_id)                               AS concat_primary_key,
+      {{ dbt_utils.surrogate_key(['concat_primary_key' ]) }}                                                                        AS primary_key,
+      dim_date.fiscal_year                                                                                                          AS fiscal_year,
+      dim_date.fiscal_quarter_name_fy                                                                                               AS fiscal_quarter_name_fy,
+      opportunity_term_group.close_month                                                                                            AS close_month,
+      base_{{renewal_fiscal_year}}.dim_charge_id                                                                                    AS dim_charge_id,
+      opportunity_term_group.dim_crm_opportunity_id                                                                                 AS dim_crm_opportunity_id,
+      base_{{renewal_fiscal_year}}.dim_crm_account_id                                                                               AS dim_crm_account_id,
+      base_{{renewal_fiscal_year}}.dim_billing_account_id                                                                           AS dim_billing_account_id,
+      base_{{renewal_fiscal_year}}.dim_subscription_id                                                                              AS dim_subscription_id,
+      base_{{renewal_fiscal_year}}.dim_product_detail_id                                                                            AS dim_product_detail_id,
+      base_{{renewal_fiscal_year}}.subscription_name                                                                                AS subscription_name,
+      base_{{renewal_fiscal_year}}.subscription_start_month                                                                         AS subscription_start_month,
+      base_{{renewal_fiscal_year}}.subscription_end_month                                                                           AS subscription_end_month,
+      base_{{renewal_fiscal_year}}.term_start_month                                                                                 AS term_start_month,
+      base_{{renewal_fiscal_year}}.term_end_month                                                                                   AS renewal_month,
       combined_{{renewal_fiscal_year}}.term_end_month                                                                               AS bookings_term_end_month,
-      base_{{renewal_fiscal_year}}.myb_subscription_end_month,
-      base_{{renewal_fiscal_year}}.last_paid_month_in_term,
-      base_{{renewal_fiscal_year}}.current_term,
-      renewal_subscriptions_{{renewal_fiscal_year}}.zuora_renewal_subscription_name,
+      base_{{renewal_fiscal_year}}.multi_year_booking_subscription_end_month                                                        AS multi_year_booking_subscription_end_month,
+      base_{{renewal_fiscal_year}}.last_paid_month_in_term                                                                          AS last_paid_month_in_term,
+      base_{{renewal_fiscal_year}}.current_term                                                                                     AS current_term,
+      renewal_subscriptions_{{renewal_fiscal_year}}.zuora_renewal_subscription_name                                                 AS zuora_renewal_subscription_name,
       renewal_subscriptions_{{renewal_fiscal_year}}.subscription_end_month                                                          AS renewal_subscription_end_month,
-      base_{{renewal_fiscal_year}}.parent_crm_account_name,
-      base_{{renewal_fiscal_year}}.crm_account_name,
-      base_{{renewal_fiscal_year}}.parent_crm_account_sales_segment,
-      base_{{renewal_fiscal_year}}.dim_crm_user_id,
-      base_{{renewal_fiscal_year}}.user_name,
-      base_{{renewal_fiscal_year}}.user_role_id,
-      base_{{renewal_fiscal_year}}.crm_user_sales_segment,
-      base_{{renewal_fiscal_year}}.crm_user_geo,
-      base_{{renewal_fiscal_year}}.crm_user_region,
-      base_{{renewal_fiscal_year}}.crm_user_area,
-      base_{{renewal_fiscal_year}}.product_tier_name,
-      base_{{renewal_fiscal_year}}.product_delivery_type,
-      combined_{{renewal_fiscal_year}}.renewal_type,
-      base_{{renewal_fiscal_year}}.is_multi_year_booking,
-      base_{{renewal_fiscal_year}}.is_multi_year_booking_with_multi_subs,
+      base_{{renewal_fiscal_year}}.parent_crm_account_name                                                                          AS parent_crm_account_name,
+      base_{{renewal_fiscal_year}}.crm_account_name                                                                                 AS crm_account_name,
+      base_{{renewal_fiscal_year}}.parent_crm_account_sales_segment                                                                 AS parent_crm_account_sales_segment,
+      base_{{renewal_fiscal_year}}.dim_crm_user_id                                                                                  AS dim_crm_user_id,
+      base_{{renewal_fiscal_year}}.user_name                                                                                        AS user_name,
+      base_{{renewal_fiscal_year}}.user_role_id                                                                                     AS user_role_id,
+      base_{{renewal_fiscal_year}}.crm_user_sales_segment                                                                           AS crm_user_sales_segment,
+      base_{{renewal_fiscal_year}}.crm_user_geo                                                                                     AS crm_user_geo,
+      base_{{renewal_fiscal_year}}.crm_user_region                                                                                  AS crm_user_region,
+      base_{{renewal_fiscal_year}}.crm_user_area                                                                                    AS crm_user_area,
+      base_{{renewal_fiscal_year}}.product_tier_name                                                                                AS product_tier_name,
+      base_{{renewal_fiscal_year}}.product_delivery_type                                                                            AS product_delivery_type,
+      combined_{{renewal_fiscal_year}}.renewal_type                                                                                 AS renewal_type,
+      base_{{renewal_fiscal_year}}.is_multi_year_booking                                                                            AS is_multi_year_booking,
+      base_{{renewal_fiscal_year}}.is_multi_year_booking_with_multi_subs                                                            AS is_multi_year_booking_with_multi_subs,
       base_{{renewal_fiscal_year}}.current_term                                                                                     AS subscription_term,
-      base_{{renewal_fiscal_year}}.estimated_total_future_billings,
+      base_{{renewal_fiscal_year}}.estimated_total_future_billings                                                                  AS estimated_total_future_billings,
       CASE
         WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01'))
           AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
@@ -688,19 +696,12 @@
             THEN TRUE
         ELSE FALSE
       END                                                                                                                           AS is_available_to_renew,
-      CASE
-        WHEN base_{{renewal_fiscal_year}}.term_end_month BETWEEN DATEADD('month',1, CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')) 
-          AND CONCAT('{{renewal_fiscal_year}}','-01-01') 
-            AND opportunity_term_group.is_multi_year_booking_opportunity_term_test = FALSE 
-              THEN TRUE
-        ELSE FALSE
-      END                                                                                                                           AS is_atr_opportunity_term_test,
       CASE 
         WHEN opportunity_term_group.opportunity_term_group IS NULL 
           THEN 'No Opportunity Term' 
         ELSE opportunity_term_group.opportunity_term_group
       END                                                                                                                           AS opportunity_term_group,
-      base_{{renewal_fiscal_year}}.arr
+      base_{{renewal_fiscal_year}}.arr                                                                                              AS arr
     FROM combined_{{renewal_fiscal_year}}
     LEFT JOIN dim_date
       ON combined_{{renewal_fiscal_year}}.term_end_month = dim_date.first_day_of_month
@@ -720,7 +721,48 @@
 
 {% for renewal_fiscal_year in renewal_fiscal_years-%} 
 
-    SELECT * 
+    SELECT 
+    primary_key,
+    fiscal_year,
+    fiscal_quarter_name_fy,
+    close_month,
+    dim_charge_id,
+    dim_crm_opportunity_id,
+    dim_crm_account_id,
+    dim_billing_account_id,
+    dim_subscription_id,
+    dim_product_detail_id,
+    subscription_name,
+    subscription_start_month,
+    subscription_end_month,
+    term_start_month,
+    renewal_month,
+    bookings_term_end_month,
+    multi_year_booking_subscription_end_month,
+    last_paid_month_in_term,
+    current_term,
+    zuora_renewal_subscription_name,
+    renewal_subscription_end_month,
+    parent_crm_account_name,
+    crm_account_name,
+    parent_crm_account_sales_segment,
+    dim_crm_user_id,
+    user_name,
+    user_role_id,
+    crm_user_sales_segment,
+    crm_user_geo,
+    crm_user_region,
+    crm_user_area,
+    product_tier_name,
+    product_delivery_type,
+    renewal_type,
+    is_multi_year_booking,
+    is_multi_year_booking_with_multi_subs,
+    subscription_term,
+    estimated_total_future_billings,
+    is_available_to_renew,
+    opportunity_term_group,
+    arr
     FROM renewal_report_{{renewal_fiscal_year}}
     {%- if not loop.last %} UNION ALL {%- endif %}
     
