@@ -9,7 +9,7 @@ from datetime import datetime
 from google.cloud import storage
 from google.oauth2 import service_account
 from google.cloud.storage.bucket import Bucket
-from sqlalchemy.engine.base import Engine
+from sqlalchemy.engine.base import Connection, Engine
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -95,12 +95,38 @@ def show_extraction_status(bucket: str, table_name: str):
         sys.exit(1)
 
 
+def table_truncate_to_daily_load(
+    schema: str,
+    table_name: str,
+    conn_dict: Dict[str, str] = None,
+) -> None:
+    """
+    To do the truncate and commit in the same session explicit connection has been created.
+    Directly calling the truncate statement lead to the rollback of it and because of which the table was getting duplicate records.
+    """
+    begin_work = "begin work;"
+    truncate_table = f"""TRUNCATE TABLE {table_name}"""
+    end_work = "commit work"
+    logging.info(truncate_table)
+    engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
+    try:
+        connection = engine.connect()
+        connection.execute(begin_work)
+        results = connection.execute(truncate_table).fetchall()
+        connection.execute(end_work)
+    finally:
+        connection.close()
+        engine.dispose()
+    logging.info(results)
+
+
 def zuora_revenue_load(
     bucket: str,
     schema: str,
     table_name: str,
     conn_dict: Dict[str, str] = None,
 ) -> None:
+
     """
     This function is responsible for checking if there has been extraction done today for this table.
     If Yes then it will load all the file present in the GCS folder under processed  for particular table and give number of rows loaded.
@@ -112,9 +138,7 @@ def zuora_revenue_load(
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
 
     # Truncate the table before every load
-    truncate_table = f"""TRUNCATE TABLE {table_name}"""
-    truncate_table_result = query_executor(engine, truncate_table)
-    logging.info(truncate_table_result)
+    table_truncate_to_daily_load(schema, table_name, conn_dict)
 
     upload_query = f"""
         copy into {table_name}
