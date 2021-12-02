@@ -1,4 +1,6 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
+-- TODO
+-- Add CS churn fields into model from wk_sales_opportunity object
 
 WITH date_details AS (
 
@@ -144,13 +146,17 @@ WITH date_details AS (
         ELSE 0
       END                                                          AS is_refund,
 
-
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit','Contract Reset')
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit')
           THEN 1
         ELSE 0
-      END                                                          AS is_credit_contract_reset,
-
+      END                                                          AS is_credit_flag,
+      
+      CASE
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_contract_reset_flag,
       --sfdc_opportunity_snapshot_history.is_refund,
 
       --sfdc_opportunity_snapshot_history.is_downgrade,
@@ -301,6 +307,10 @@ WITH date_details AS (
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
+      sales_accepted_date.first_day_of_month                     AS sales_accepted_date_month,
+      sales_accepted_date.fiscal_year                            AS sales_accepted_date_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_date_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_date_fiscal_quarter_date,
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
@@ -507,6 +517,8 @@ WITH date_details AS (
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
     LEFT JOIN date_details net_arr_created_date
       ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
+    LEFT JOIN date_details sales_accepted_date
+      ON sales_accepted_date.date_actual = sfdc_opportunity_snapshot_history.sales_accepted_date::DATE
 
 
 ), net_iacv_to_net_arr_ratio AS (
@@ -636,7 +648,7 @@ WITH date_details AS (
       CASE 
         WHEN opp_snapshot.is_refund = 1
           THEN -1
-        WHEN opp_snapshot.is_credit_contract_reset = 1
+        WHEN opp_snapshot.is_credit_flag = 1
           THEN 0
         ELSE 1
       END                                                                     AS calculated_deal_count,
@@ -755,6 +767,7 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
       sfdc_accounts_xf.ultimate_parent_account_id,
+      upa.account_name                        AS ultimate_parent_account_name,
       sfdc_accounts_xf.ultimate_parent_id,
       sfdc_accounts_xf.is_jihu_account        
       
@@ -764,6 +777,8 @@ WITH date_details AS (
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
+    LEFT JOIN sfdc_accounts_xf upa
+      ON upa.account_id = sfdc_accounts_xf.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner
