@@ -20,7 +20,6 @@ databases:
     - zoominfo_inbound:
         shared: yes
 
-
 # User / Testing
     - bi_tool_eval:
         shared: no 
