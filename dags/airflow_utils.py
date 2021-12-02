@@ -151,7 +151,7 @@ def slack_defaults(context, task_type):
 def slack_snapshot_failed_task(context):
     """
     Function to be used as a callable for on_failure_callback for dbt-snapshots
-    Send a Slack alert to #dbt-runs and #analytics-pipelines
+    Send a Slack alert to #analytics-pipelines
     """
     multi_channel_alert = MultiSlackChannelOperator(
         channels=["#analytics-pipelines"], context=context

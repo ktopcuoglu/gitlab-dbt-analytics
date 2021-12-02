@@ -113,7 +113,6 @@ There are many slack channels for communication of data team needs and informati
 | `data-engineering` | No | Yes | Yes | Yes | Yes |
 | `business-technology` | No | Yes | Yes | Yes | Yes |
 | `bt-team-lounge` | No | Yes | Yes | Yes | Yes |
-| `dbt-runs` | No | No | Yes | No | Yes |
 | `analytics-pipelines` | No | No | No | No | Yes |
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
