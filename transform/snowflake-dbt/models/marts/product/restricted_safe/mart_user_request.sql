@@ -98,6 +98,26 @@
     WHERE stage_is_closed = FALSE
     GROUP BY 1 
 
+), account_open_opp_net_arr_fo AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr) AS net_arr
+    FROM opportunity_net_arr
+    WHERE stage_is_closed = FALSE
+      AND order_type_name IN ('1. New - First Order')
+    GROUP BY 1 
+
+), account_open_opp_net_arr_growth AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr) AS net_arr
+    FROM opportunity_net_arr
+    WHERE stage_is_closed = FALSE
+      AND order_type_name IN ('2. New - Connected', '3. Growth')
+    GROUP BY 1 
+
 ), account_next_renewal_month AS (
 
     SELECT
@@ -160,7 +180,6 @@
       COALESCE(group_label, devops_label, section_label)                                                                       AS product_group_extended,
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -180,7 +199,6 @@
       COALESCE(group_label, devops_label, section_label)                                                                       AS product_group_extended,
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -226,6 +244,15 @@
     WHERE type_label IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY type_label) = 1
 
+), issue_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
+
+    SELECT
+      dim_issue_id,
+      devops_label
+    FROM issue_labels
+    WHERE devops_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY devops_label) = 1
+
 ), issue_status AS ( -- Some issues for some reason had two valid workflow labels, this dedup them
 
     SELECT
@@ -270,6 +297,15 @@
     FROM epic_labels
     WHERE type_label IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY type_label) = 1
+
+), epic_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
+
+    SELECT
+      dim_epic_id,
+      devops_label
+    FROM epic_labels
+    WHERE devops_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY devops_label) = 1
 
 ), epic_last_milestone AS ( -- Get issue milestone with the latest due dates for epics
     
@@ -325,7 +361,7 @@
       IFNULL(issue_group_extended_label.product_group_extended, 'Unknown')        AS product_group_extended,
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
-      dev_label.dev_label                                                         AS product_stage,
+      devops_label.devops_label                                                   AS product_stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -350,9 +386,8 @@
       ON category_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_group_label AS group_label
       ON group_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-    LEFT JOIN issue_labels AS dev_label
-      ON dev_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-      AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN issue_devops_label AS devops_label
+      ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
       ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
 
@@ -401,7 +436,7 @@
       IFNULL(epic_group_extended_label.product_group_extended, 'Unknown')         AS product_group_extended,
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
-      dev_label.dev_label                                                         AS product_stage,
+      devops_label.devops_label                                                   AS product_stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -430,9 +465,8 @@
       ON category_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_group_label AS group_label
       ON group_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-    LEFT JOIN epic_labels AS dev_label
-      ON dev_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-      AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN epic_devops_label AS devops_label
+      ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
       ON type_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
 
@@ -457,7 +491,10 @@
       dim_crm_account.account_owner                                               AS strategic_account_leader,
       IFNULL(arr_metrics_current_month.quantity, 0)                               AS customer_reach,
       IFNULL(arr_metrics_current_month.arr, 0)                                    AS crm_account_arr,
+      IFNULL(dim_crm_account.carr_total, 0)                                       AS crm_account_carr_total,
       IFNULL(account_open_opp_net_arr.net_arr, 0)                                 AS crm_account_open_opp_net_arr,
+      IFNULL(account_open_opp_net_arr_fo.net_arr, 0)                              AS crm_account_open_opp_net_arr_fo,
+      IFNULL(account_open_opp_net_arr_growth.net_arr, 0)                          AS crm_account_open_opp_net_arr_growth,
       IFNULL(account_open_fo_opp_seats.seats, 0)                                  AS opportunity_reach,
       IFNULL(account_lost_opp_arr.net_arr, 0)                                     AS crm_account_lost_opp_net_arr,
       IFNULL(account_lost_customer_arr.arr_basis, 0)                              AS crm_account_lost_customer_arr,
@@ -466,13 +503,17 @@
       -- CRM Opportunity attributes
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
       dim_crm_opportunity.stage_is_closed                                         AS crm_opp_is_closed,
-      dim_crm_opportunity.order_type                                              AS crm_opp_order_type,
+      fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
+      dim_order_type.order_type_name                                              AS crm_opp_order_type,
+      dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
       IFF(DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
       IFNULL(fct_crm_opportunity.net_arr, 0)                                      AS crm_opp_net_arr,
-      IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats
+      IFNULL(fct_crm_opportunity.arr_basis, 0)                                    AS crm_opp_arr_basis,
+      IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats,
+      fct_crm_opportunity.probability                                             AS crm_opp_probability
 
     FROM user_request
 
@@ -491,10 +532,16 @@
       ON account_lost_customer_arr.dim_crm_account_id = user_request.dim_crm_account_id
     LEFT JOIN account_open_opp_net_arr
       ON account_open_opp_net_arr.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_opp_net_arr_fo
+      ON account_open_opp_net_arr_fo.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_opp_net_arr_growth
+      ON account_open_opp_net_arr_growth.dim_crm_account_id = user_request.dim_crm_account_id
 
     -- Opportunity Joins
     LEFT JOIN fct_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN dim_order_type
+      ON dim_order_type.dim_order_type_id = fct_crm_opportunity.dim_order_type_id
     LEFT JOIN dim_crm_opportunity
       ON dim_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
     LEFT JOIN opportunity_seats
@@ -508,5 +555,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2021-11-16",
+    updated_date="2021-11-24",
   ) }}
