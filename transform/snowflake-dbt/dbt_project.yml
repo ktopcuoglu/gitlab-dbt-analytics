@@ -489,7 +489,7 @@ models:
         +schema: workspace_engineering
 
       workspace_product:
-        source_view:
+        source_1_on_1_copy:
           +schema: workspace_product  
 
     # ------------------
