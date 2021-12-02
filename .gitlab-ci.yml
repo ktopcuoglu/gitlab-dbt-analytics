@@ -214,13 +214,13 @@ yaml_validation:
       - merge_requests
   allow_failure: true
 
-🧊⚙permifrost_manual:
+🧊⚙permifrost_run:
   <<: *permifrost
   script:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
 
-🧊permifrost_manual_spec_test:
+🧊permifrost_spec_test:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
