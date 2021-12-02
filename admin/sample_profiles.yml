@@ -12,19 +12,6 @@ gitlab-snowflake:
       schema: preparation
       authenticator: externalbrowser # <--- You must be logged in via OKTA
 
-    # If you have access to the ANALYST_L warhouse, you could specify a dev_l target.
-    # This could be used when running a query that requires additional compute resources.
-    dev_l:
-      type: snowflake
-      threads: 16
-      account: gitlab
-      user: YOUR USER # <-- This will be your GitLab email
-      role: YOUR ROLE # <-- Talk to your manager, usually, it is JSMITH for Jane Smith
-      database: YOUR USERNAME # <-- JSMITH for Jane Smith
-      warehouse: ANALYST_L # <-- [ANALYST_L, ENGINEER_L], depends on your role
-      schema: preparation
-      authenticator: externalbrowser # <--- You must be logged in via OKTA
-
     # You can create targets for any warehouse that you have access to.
     dev_..:
       type: snowflake
