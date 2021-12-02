@@ -105,6 +105,7 @@ WITH map_merged_crm_account AS (
     sfdc_account.federal_account                        AS federal_account,
     sfdc_account.is_jihu_account                        AS is_jihu_account,
     sfdc_account.carr_this_account,
+    sfdc_account.carr_total,
     sfdc_account.potential_arr_lam,
     sfdc_account.fy22_new_logo_target_list,
     sfdc_account.is_first_order_available,
@@ -182,7 +183,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-06-01",
-    updated_date="2021-11-15"
+    updated_date="2021-12-02"
 ) }}
