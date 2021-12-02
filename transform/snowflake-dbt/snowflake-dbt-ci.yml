@@ -275,6 +275,7 @@ safe_model_script:
         config.database:$SNOWFLAKE_PREP_DATABASE
         config.schema:restricted_safe_common
         config.schema:restricted_safe_common_mapping
+        config.schema:restricted_safe_common_mart_finance
         config.schema:restricted_safe_common_mart_sales
         config.schema:restricted_safe_common_mart_product
         config.schema:restricted_safe_common_prep

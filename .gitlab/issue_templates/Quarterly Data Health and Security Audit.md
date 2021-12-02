@@ -6,7 +6,7 @@ Please see the [handbook page](https://about.gitlab.com/handbook/business-techno
 
 Below checklist of activities would be run once for quarter to validate security and system health.
 
-SNOWFLAKE
+## SNOWFLAKE
 1. [ ] Validate terminated employees have been removed from Snowflake access.
     <details>
 
@@ -79,40 +79,61 @@ SNOWFLAKE
  
     ```
 
-SISENSE
+## SISENSE
 1. [ ] Validate off-boarded employees have been removed from Sisense access.
     <details>
 
-   * [ ] Run below SQL script to perform the check.
+   * [ ] Step 1: In order to get latest data loaded into table `legacy.sheetload_sisense_users`, Google Sheet needs to be updated with latest data from Sisense `users` table. To update the latest data, run below SQL in Sisense under database `periscope_usage_data` and paste the data in google sheet (https://docs.google.com/spreadsheets/d/1oY6YhTuXYqy5ujlTxrQKf7KCDNpPwKWD_hZmzR1UPIo/edit#gid=0). Make sure Step 1 is completed atlease 1 day before running SQL in Step 2, as sheetload runs once in 24 hours to get latest data loaded from google sheetload into `legacy.sheetload_sisense_users` table.
+
+
+    ```sql
+
+      SELECT distinct users.id, 
+        users.first_name, 
+        users.last_name,
+        users.email_address 
+      FROM users
+      LEFT OUTER JOIN user_roles
+        ON users.id = user_roles.user_id
+        LEFT OUTER JOIN roles
+        ON user_roles.role_id = roles.id
+        --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+        WHERE roles.name = 'Everyone'
+
+    ```
+
+   * [ ] Step 2: Run below SQL script to perform the check.
+   
 
    ```sql
 
-     WITH final AS (
-        
-        SELECT 
-          MAX(date_actual) AS date_actual, 
-          full_name,
-          work_email, 
-          is_termination_date 
-        FROM legacy.employee_directory_analysis 
-        GROUP BY 2,3,4
+   WITH EMPLOYEE_DIRECTORY AS (
+  
+    SELECT full_name, 
+      work_email,
+      date_actual,
+      is_termination_date
+    FROM "PROD"."LEGACY"."EMPLOYEE_DIRECTORY_ANALYSIS"
+    WHERE date_actual <= current_date
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY full_name ORDER BY date_actual DESC) = 1
+
+    ), FINAL as (
+
+    SELECT * 
+    FROM  employee_directory
+    WHERE is_termination_date = 'TRUE'
 
     )
 
     SELECT   
-       final.full_name, 
-       users.email_address , 
-       final.is_termination_date ,
-       final.date_actual
-    FROM  final
-    INNER JOIN legacy.sheetload_sisense_users users 
-      ON  final.full_name = concat(users.first_name,' ', users.last_name) 
-      AND final.is_termination_date = 'TRUE' 
-    LEFT JOIN legacy.sheetload_sisense_user_roles roles
-      ON users.id = roles.user_id
-    WHERE roles.user_id IS NOT NULL
-    GROUP BY 1,2,3,4
-    ORDER BY 1 ;
+      final.full_name, 
+      final.work_email 
+    FROM final
+    JOIN legacy.sheetload_sisense_users users 
+    ON final.work_email = users.email_address 
+      -- incase email adres is empty
+      OR final.full_name = users.FIRST_NAME || ' ' || users.LAST_NAME
+   ORDER BY 2
 
    ```
 
@@ -124,34 +145,36 @@ SISENSE
    * [ ] Run below SQL script to perform the check.
 
    ```sql
-      WITH final as (
-         SELECT users.id, 
-            first_name, 
-            last_name, 
-            email_address, 
-            MAX(DATE(time_on_site_logs.created_at)) AS last_login_date  
-         FROM time_on_site_logs
-         JOIN users
-         --inner join between time_on_site_logs and users. This means if a user never performed a login, it will not show up in the results
-         --improvement point for next iteration check for users that were created over 90 days ago and that didn't perform a login.
-         ON time_on_site_logs.USER_ID = users.ID
-         LEFT OUTER JOIN user_roles
-         ON users.id = user_roles.user_id
-         LEFT OUTER JOIN roles
-         ON user_roles.role_id = roles.id
-         --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
-         WHERE roles.name = 'Everyone'
-         GROUP BY 1,2,3,4
-      )
+   WITH final as (
+      SELECT users.id, 
+         first_name, 
+         last_name, 
+         email_address, 
+         spaces.name,
+         MAX(DATE(time_on_site_logs.created_at)) AS last_login_date  
+      FROM time_on_site_logs
+      JOIN users
+      --inner join between time_on_site_logs and users. This means if a user never performed a login, it will not show up in the results
+      --improvement point for next iteration check for users that were created over 90 days ago and that didn't perform a login.
+      ON time_on_site_logs.USER_ID = users.ID
+      LEFT OUTER JOIN user_roles
+      ON users.id = user_roles.user_id
+      LEFT OUTER JOIN roles
+      ON user_roles.role_id = roles.id
+      --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+      LEFT OUTER JOIN spaces
+      on roles.space_id = spaces.id
+      WHERE roles.name = 'Everyone'
+      GROUP BY 1,2,3,4,5
+   )
 
-      SELECT * 
-      FROM final
-      WHERE last_login_date < CURRENT_DATE-90
-      ORDER BY last_name;
+   SELECT * 
+   FROM final
+   WHERE last_login_date < CURRENT_DATE-90
+   ORDER BY last_name;
    ```
 
-
-TRUSTED DATA
+## TRUSTED DATA
 1. [ ] Review all Golden Record TD tests and make sure they're passing.
 
     <details>
@@ -261,7 +284,7 @@ TRUSTED DATA
 
     <details>
 
-     * [ ]  Pull the report for business logic changes made to the mart from link (https://gitlab.com/gitlab-data/analytics/-/blame/master/transform/snowflake-dbt/models/marts/sales_funnel/mart_crm_opportunity.sql) by filtering on label “Business logic change”.
+     * [ ]  Pull the report for business logic changes made to the `mart_crm_opportunity` model from the link (https://gitlab.com/gitlab-data/analytics/-/commits/master/transform/snowflake-dbt/models/marts/sales_funnel/restricted_safe/mart_crm_opportunity.sql?search=) by filtering on label “Business logic change”.
 
           
 

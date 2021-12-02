@@ -51,7 +51,7 @@ projects AS (
       {% endfor %}
 
       namespaces.owner_id,
-      COALESCE(namespaces.namespace_type, 'Individual')                AS namespace_type,
+      namespaces.namespace_type                                        AS namespace_type,
       namespaces.has_avatar,
       namespaces.created_at                                            AS namespace_created_at,
       namespaces.updated_at                                            AS namespace_updated_at,

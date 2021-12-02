@@ -238,7 +238,7 @@ models:
 
       saas_usage_ping:
         +schema: saas_usage_ping
-        +tags: ["product"]
+        +tags: ["product", "service_ping"]
 
       sfdc:
         +schema: sfdc
@@ -274,6 +274,9 @@ models:
 
       zendesk_community_relations:
         +schema: zendesk_community_relations
+
+      zengrc:
+        +schema: zengrc
 
       zoominfo:
         +schema: zoominfo
@@ -456,9 +459,9 @@ models:
         dbt:
           +tags: ["dbt"]
 
-      workspace_datascience:
-        +schema: workspace_datascience
-        ptb:
+      workspace_data_science:
+        +schema: workspace_data_science
+        pte:
           +materialized: table
 
       workspace_marketing:
@@ -491,6 +494,8 @@ models:
       workspace_product:
         source_1_on_1_copy:
           +schema: workspace_product  
+      workspace_people:
+        +schema: workspace_people
 
     # ------------------
     # Marts
@@ -510,6 +515,11 @@ models:
 
         users_emails:
           enabled: false
+
+      finance:
+        +schema: restricted_safe_common_mart_finance
+        +tags: ["safe"]
+        secure: true 
 
       product:
         +tags: ["product"]
