@@ -220,17 +220,11 @@ yaml_validation:
     - permifrost run permissions/snowflake/roles.yml --diff --dry
   when: manual
 
-🧊permifrost_automatic_spec_test:
+🧊permifrost_manual_spec_test:
   <<: *permifrost
   script:
     - permifrost spec-test permissions/snowflake/roles.yml
-  only:
-    refs:
-      - merge_requests
-    changes:
-      - "permissions/snowflake/roles.yml"
-  allow_failure: false
-
+  when: manual
 
 # ======
 # dbt docs to GitLab Pages
