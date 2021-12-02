@@ -1109,4 +1109,3 @@ tables:
         FROM namespace_root_storage_statistics
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,3   
->>>>>>> extract/postgres_pipeline/manifests_decomposed/el_gitlab_com_trusted_data_extract_load_db_manifest.yaml
