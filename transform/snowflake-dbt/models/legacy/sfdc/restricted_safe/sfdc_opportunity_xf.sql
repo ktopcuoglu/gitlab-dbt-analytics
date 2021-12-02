@@ -151,6 +151,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.pushed_count,
       sfdc_opportunity.reason_for_loss,
       sfdc_opportunity.reason_for_loss_details,
+      sfdc_opportunity.downgrade_reason,
       sfdc_opportunity.refund_iacv,
       sfdc_opportunity.downgrade_iacv,
       sfdc_opportunity.renewal_acv,
