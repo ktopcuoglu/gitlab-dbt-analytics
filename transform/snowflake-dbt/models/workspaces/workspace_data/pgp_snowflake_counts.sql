@@ -55,7 +55,6 @@ WITH postgres_counts AS (
     {% endif %}
 
 {% endfor %}
->>>>>>> transform/snowflake-dbt/models/workspaces/workspace_data/pgp_snowflake_counts.sql
 
 UNION ALL
 
