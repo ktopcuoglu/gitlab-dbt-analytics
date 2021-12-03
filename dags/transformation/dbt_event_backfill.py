@@ -61,7 +61,6 @@ default_args = {
     "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
-    "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "start_date": datetime(2017, 1, 1, 0, 0, 0),
 }
@@ -75,6 +74,9 @@ dag = DAG(
 
 
 def generate_dbt_command(vars_dict):
+    """
+    Generate dbt command to load historical data for prep_event
+    """
     json_dict = json.dumps(vars_dict)
 
     dbt_generate_command = f"""
@@ -87,8 +89,8 @@ def generate_dbt_command(vars_dict):
     return KubernetesPodOperator(
         **gitlab_defaults,
         image=DBT_IMAGE,
-        task_id=f"t-dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
-        name=f"t-dbt-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
+        task_id=f"dbt-prep-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
+        name=f"dbt-prep-event-backfill-{vars_dict['year']}-{vars_dict['month']}",
         secrets=task_secrets,
         env_vars=pod_env_vars,
         arguments=[dbt_generate_command],
