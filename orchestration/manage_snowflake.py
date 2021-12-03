@@ -95,7 +95,12 @@ class SnowflakeManager:
         return queries
 
     def manage_clones(
-        self, database: str, empty: bool = False, force: bool = False, schema: str = "", include_stages = False,
+        self,
+        database: str,
+        empty: bool = False,
+        force: bool = False,
+        schema: str = "",
+        include_stages=False,
     ) -> None:
         """
         For the creation of zero copy clones in Snowflake.
@@ -247,8 +252,12 @@ class SnowflakeManager:
 
         for stage in stages:
 
-            output_stage_name = f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
-            from_stage_name = f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
+            output_stage_name = (
+                f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
+            )
+            from_stage_name = (
+                f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
+            )
             clone_stage_query = f"""
                  CREATE OR REPLACE STAGE {output_stage_name} LIKE  
                  {from_stage_name}
