@@ -317,8 +317,11 @@ safe_model_script:
 
 sqlfluff:
   <<: *dbt_misc_jobs
+  only:
+    changes:
+      - "**/*.sql"
   script:
     - dbt deps $CI_PROFILE_TARGET
     - pip install sqlfluff==0.8.2
     - pip install sqlfluff-templater-dbt==0.8.2
-    - diff-quality --violations sqlfluff
+    - sqlfluff lint
