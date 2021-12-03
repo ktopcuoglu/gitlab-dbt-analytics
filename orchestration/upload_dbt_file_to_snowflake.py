@@ -46,7 +46,6 @@ if __name__ == "__main__":
             get_table_name(config_name, snowflake_database),
             snowflake_engine,
         )
-        logging.info(f"{file_name} uploaded successfully")
     else:
         logging.error(
             f"Dbt File {file_name} is missing. Check if dbt run completed successfully"
