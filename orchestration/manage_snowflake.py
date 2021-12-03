@@ -95,7 +95,7 @@ class SnowflakeManager:
         return queries
 
     def manage_clones(
-        self, database: str, empty: bool = False, force: bool = False, schema: str = ""
+        self, database: str, empty: bool = False, force: bool = False, schema: str = "", include_stages = False,
     ) -> None:
         """
         For the creation of zero copy clones in Snowflake.
@@ -144,6 +144,9 @@ class SnowflakeManager:
                 finally:
                     connection.close()
                     self.engine.dispose()
+
+            if include_stages:
+                self.clone_stages(create_db, database, schema)
 
     def delete_clones(self):
         """
