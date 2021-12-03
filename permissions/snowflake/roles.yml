@@ -505,7 +505,6 @@ roles:
     - analytics_engineer:
         member_of:
             - analyst_core
-            - transformer
             - snowflake_db
             - data_team_analyst
         privileges:
