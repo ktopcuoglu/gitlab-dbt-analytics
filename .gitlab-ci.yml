@@ -91,7 +91,7 @@ include:
 🥩clone_raw_full:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw
+    - manage_snowflake.py manage_clones --database raw --include_stages True
 
 🥩📜clone_raw_sheetload:
   <<: *snowflake_start_clone
