@@ -354,4 +354,7 @@ dbt_sqlfluff:
     - dbt deps $CI_PROFILE_TARGET
     - pip install sqlfluff
     - pip install sqlfluff-templater-dbt
-    - sqlfluff lint --config ./.sqlfluff-ci
+    # - sqlfluff lint --config /.sqlfluff-ci need newer version of sqlfluff
+    - lint_list=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
+    - echo $link_list
+    - sqlfluff lint $lint_list

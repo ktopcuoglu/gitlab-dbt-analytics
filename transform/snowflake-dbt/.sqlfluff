@@ -14,5 +14,6 @@ templater = dbt
 
 [sqlfluff:templater:dbt]
 project_dir = ./
-profiles_dir = ~/.dbt
-# profile = dev
+#profiles_dir = ~/.dbt
+profiles_dir = ./profile/ 
+profile = ci
