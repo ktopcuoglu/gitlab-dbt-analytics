@@ -340,6 +340,7 @@ safe_model_script:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
   tags:
     - analytics
+  when: manual
   only:
     changes:
       - "transform/snowflake-dbt/models/**/*.sql"
@@ -353,4 +354,4 @@ dbt_sqlfluff:
     - dbt deps $CI_PROFILE_TARGET
     - pip install sqlfluff==0.8.2
     - pip install sqlfluff-templater-dbt==0.8.2
-    - sqlfluff lint
+    - sqlfluff lint --config ./.sqlfluff-ci
