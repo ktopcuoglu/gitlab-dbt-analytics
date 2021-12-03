@@ -26,3 +26,17 @@ gitlab-snowflake:
       role: "{{ env_var('SNOWFLAKE_TRANSFORM_ROLE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
       schema: "{{ env_var('SNOWFLAKE_PREPARATION_SCHEMA') }}"
+
+sqlfluff:
+  target: ci
+  outputs:
+    ci:
+      type: snowflake
+      threads: 16
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}"
+      role: "{{ env_var('SNOWFLAKE_TRANSFORM_ROLE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
+      schema: "{{ env_var('SNOWFLAKE_PREPARATION_SCHEMA') }}"

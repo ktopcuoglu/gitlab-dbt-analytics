@@ -1,4 +1,4 @@
 
 [sqlfluff:templater:dbt]
 profiles_dir = ./profile/
-profile = ci
+#profile = ci
