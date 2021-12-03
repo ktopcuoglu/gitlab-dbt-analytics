@@ -51,4 +51,3 @@ if __name__ == "__main__":
         logging.error(
             f"Dbt File {file_name} is missing. Check if dbt run completed successfully"
         )
-
