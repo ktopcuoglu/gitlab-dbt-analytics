@@ -3,9 +3,7 @@ from datetime import datetime, timedelta
 from yaml import safe_load, YAMLError
 from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
-    KubernetesPodOperator,
-)
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
@@ -25,6 +23,8 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
+GIT_BRANCH = env["GIT_BRANCH"]
+pod_env_vars = gitlab_pod_env_vars
 
 # Default arguments for the DAG
 default_args = {
@@ -63,7 +63,7 @@ with open(
 dag = DAG(
     "zuora_revenue_load_snow",
     default_args=default_args,
-    schedule_interval="0 13 * * *",
+    schedule_interval="0 6 * * *",
     concurrency=1,
 )
 
@@ -91,7 +91,7 @@ for table_name in table_name_list:
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
         ],
-        env_vars=gitlab_pod_env_vars,
+        env_vars=pod_env_vars,
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[container_cmd_load],

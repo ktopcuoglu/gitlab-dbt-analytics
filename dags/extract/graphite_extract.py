@@ -2,9 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
-    KubernetesPodOperator,
-)
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_and_setup_extraction_cmd,
@@ -18,7 +16,6 @@ from kube_secrets import (
     GRAPHITE_PASSWORD,
     GRAPHITE_USERNAME,
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -27,8 +24,7 @@ from kube_secrets import (
 
 from kubernetes_helpers import get_affinity, get_toleration
 
-env = os.environ.copy()
-pod_env_vars = gitlab_pod_env_vars
+env = gitlab_pod_env_vars
 
 default_args = {
     "catchup": True,
@@ -46,6 +42,7 @@ default_args = {
 dag = DAG(
     "graphite_lcp_extract", default_args=default_args, schedule_interval="0 23 * * *"
 )
+
 
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 extract_command = (

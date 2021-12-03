@@ -24,6 +24,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
+pod_env_vars = gitlab_pod_env_vars
 
 default_args = {
     "catchup": True,
@@ -40,7 +41,7 @@ default_args = {
 
 dag = DAG("pmg_extract", default_args=default_args, schedule_interval="0 23 * * *")
 
-test_tolerations = {}
+
 # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
 pmg_extract_command = f"{clone_and_setup_extraction_cmd} && python pmg/src/execute.py"
 
@@ -58,7 +59,7 @@ pmg_operator = KubernetesPodOperator(
         GCP_SERVICE_CREDS,
     ],
     env_vars={
-        **gitlab_pod_env_vars,
+        **pod_env_vars,
         "START_TIME": "{{ execution_date.isoformat() }}",
         "END_TIME": "{{ yesterday_ds }}",
     },

@@ -3,9 +3,7 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
-    KubernetesPodOperator,
-)
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
     clone_repo_cmd,
@@ -28,6 +26,7 @@ from kube_secrets import (
 # Load the env vars into a dict and set env vars
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
+
 # tomorrow_ds -  the day after the execution date as YYYY-MM-DD
 # ds - the execution date as YYYY-MM-DD
 pod_env_vars = {
