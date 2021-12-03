@@ -315,16 +315,8 @@ safe_model_script:
 # Lint dbt SQL
 # ======
 
-.lint_dbt_sql: &lint_dbt_sql
-  <<: *snowflake_dbt_jobs
-  stage: 🛠 dbt Misc
-  only:
-    changes:
-      - "**/*.sql"
-  allow_failure: true
-
 sqlfluff:
-  <<: *lint_dbt_sql
+  <<: *dbt_misc_jobs
   script:
     - dbt deps $CI_PROFILE_TARGET
     - diff-quality --violations sqlfluff
