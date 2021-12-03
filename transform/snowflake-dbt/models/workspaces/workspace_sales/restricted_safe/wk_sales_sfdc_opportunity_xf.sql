@@ -924,14 +924,20 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       -- churned contraction deal count as OT
       CASE
-        WHEN ((oppty_final.is_renewal = 1
-            AND oppty_final.is_lost = 1)
-            OR oppty_final.is_won = 1 )
-            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        WHEN is_eligible_churn_contraction_flag = 1
         THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                                 AS churned_contraction_deal_count,
     
+
+        CASE
+        WHEN ((oppty_final.is_renewal = 1
+                AND oppty_final.is_lost = 1)
+              OR oppty_final.is_won = 1 )
+            AND is_eligible_churn_contraction_flag = 1
+        THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                                 AS booked_churned_contraction_deal_count,
       -----------------
       -- Net ARR
 
