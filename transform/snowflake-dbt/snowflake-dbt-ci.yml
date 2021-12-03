@@ -352,6 +352,6 @@ dbt_sqlfluff:
   <<: *dbt_sql_lint
   script:
     - dbt deps $CI_PROFILE_TARGET
-    - pip install sqlfluff==0.8.2
-    - pip install sqlfluff-templater-dbt==0.8.2
+    - pip install sqlfluff
+    - pip install sqlfluff-templater-dbt
     - sqlfluff lint --config ./.sqlfluff-ci
