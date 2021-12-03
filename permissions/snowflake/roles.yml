@@ -2753,8 +2753,8 @@ roles:
         privileges:
             databases:
                 read:
-                    - Ian_prep
-                    - Ian_prod
+                    - ian_prep
+                    - ian_prod
                 write:
                     - ian_prep
                     - ian_prod
