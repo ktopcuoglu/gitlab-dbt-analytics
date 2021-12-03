@@ -14,6 +14,8 @@ templater = dbt
 
 [sqlfluff:templater:dbt]
 project_dir = ./
-#profiles_dir = ~/.dbt
-profiles_dir = ./profile/ 
-profile =  sqlfluff
+# uncoment for local linting
+profiles_dir = ~/.dbt
+# CI linting comment out for local linting 
+#profiles_dir = ./profile/ 
+#profile =  sqlfluff
