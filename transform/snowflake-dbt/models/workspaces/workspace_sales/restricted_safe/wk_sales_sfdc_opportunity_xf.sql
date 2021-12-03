@@ -964,27 +964,42 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churned contraction net arr as OT
+      -- booked churned contraction net arr as OT
       CASE
-        WHEN ((oppty_final.is_renewal = 1
+        WHEN 
+          ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
             OR oppty_final.is_won = 1 )
-            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+            AND is_eligible_churn_contraction_flag = 1
+        THEN net_arr
+        ELSE 0
+      END                                                 AS booked_churned_contraction_net_arr,
+
+      -- churned contraction net arr as OT
+      CASE
+        WHEN is_eligible_churn_contraction_flag = 1
         THEN net_arr
         ELSE 0
       END                                                 AS churned_contraction_net_arr,
 
-
       CASE 
-        WHEN net_arr > -5000 
+        WHEN net_arr > -5000             
+            AND is_eligible_churn_contraction_flag = 1
           THEN '1. < 5k'
-        WHEN net_arr > -20000 AND net_arr <= -5000 
+        WHEN net_arr > -20000 
+          AND net_arr <= -5000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '2. 5k-20k'
-        WHEN net_arr > -50000 AND net_arr <= -20000 
+        WHEN net_arr > -50000 
+          AND net_arr <= -20000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '3. 20k-50k'
-        WHEN net_arr > -100000 AND net_arr <= -50000 
+        WHEN net_arr > -100000 
+          AND net_arr <= -50000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '4. 50k-100k'
         WHEN net_arr < -100000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '5. 100k+'
       END                                                 AS churn_contracton_net_arr_bucket
       
