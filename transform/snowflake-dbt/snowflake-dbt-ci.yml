@@ -309,3 +309,22 @@ safe_model_script:
     - touch comparison.txt
     - python3 transform/periscope_check.py
     - if (( $(cat comparison.txt | wc -l | tr -d ' ') > 0 )); then echo "Check these!" && cat comparison.txt && exit 1; else echo "All good" && exit 0; fi;
+
+
+# ======
+# Lint dbt SQL
+# ======
+
+.lint_dbt_sql: &lint_dbt_sql
+  <<: *snowflake_dbt_jobs
+  stage: 🛠 dbt Misc
+  only:
+    changes:
+      - "**/*.sql"
+  allow_failure: true
+
+sqlfluff:
+  <<: *lint_dbt_sql
+  script:
+    - dbt deps $CI_PROFILE_TARGET
+    - diff-quality --violations sqlfluff
