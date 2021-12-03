@@ -49,7 +49,7 @@
 
     SELECT 
       gitlab_dotcom_issues_source.issue_id                                                        AS dim_issue_id,
-      ARRAY_AGG(LOWER(prep_labels.label_name)) WITHIN GROUP (ORDER BY prep_labels.label_name ASC) AS labels
+      ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
     FROM gitlab_dotcom_issues_source
     LEFT JOIN prep_label_links
         ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_id

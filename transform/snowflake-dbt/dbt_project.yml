@@ -490,6 +490,7 @@ models:
 
       workspace_engineering:
         +schema: workspace_engineering
+        +materialized: table
 
       workspace_people:
         +schema: workspace_people
