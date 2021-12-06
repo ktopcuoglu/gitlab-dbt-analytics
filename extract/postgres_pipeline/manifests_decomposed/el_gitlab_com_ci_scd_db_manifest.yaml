@@ -62,6 +62,20 @@ tables:
       , runner_id
       , namespace_id
       FROM ci_runner_namespaces
+  ci_sources_pipelines:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_sources_pipelines
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , pipeline_id
+      , source_project_id
+      , source_pipeline_id
+      , source_job_id
+      FROM ci_sources_pipelines
   ci_variables:
     export_schema: 'gitlab_com'
     export_table: ci_variables
