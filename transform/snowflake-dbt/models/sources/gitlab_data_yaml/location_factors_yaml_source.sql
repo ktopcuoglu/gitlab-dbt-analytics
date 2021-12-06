@@ -41,7 +41,7 @@ WITH source AS (
 
     SELECT DISTINCT
       initial_unnest.value['country']::VARCHAR      AS country, 
-      countries_info.value['name']::VARCHAR         AS state,
+      countries_info.value['sub_location']::VARCHAR AS state,
       countries_info.value['name']::VARCHAR         AS metro_area,
       countries_info.value['factor']::VARCHAR       AS location_factor,
       snapshot_date,
@@ -90,7 +90,7 @@ WITH source AS (
     UNION ALL 
   
     SELECT
-      metro_area,
+      metro_area || IFF( state is null,'',', ' || state ) AS metro_area,
       country,
       location_factor,
       snapshot_date,
@@ -109,7 +109,7 @@ WITH source AS (
     FROM countries_without_metro_areas
 
     UNION ALL 
-  
+
     SELECT
       metro_area,
       country,
