@@ -70,6 +70,7 @@ dag = DAG(
     "t_prep_dotcom_usage_events_backfill",
     default_args=default_args,
     schedule_interval=None,
+    concurrency=2,
 )
 
 
