@@ -100,7 +100,7 @@ class SnowflakeManager:
         empty: bool = False,
         force: bool = False,
         schema: str = "",
-        include_stages=False,
+        include_stages: bool = False,
     ) -> None:
         """
         For the creation of zero copy clones in Snowflake.
@@ -229,7 +229,13 @@ class SnowflakeManager:
         return self
 
     def clone_stages(self, create_db: str, database: str, schema: str = ""):
-
+        """
+         Clones the stages available in a DB or schema (if specified).
+         Required as SnowFlake currently does not support the cloning of internal stages.
+        :param create_db:
+        :param database:
+        :param schema:
+        """
         if schema != "":
             stages_query = f"""
                  SELECT 
@@ -268,10 +274,16 @@ class SnowflakeManager:
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name}  
                     """
-            logging.info(f"Creating stage {output_stage_name}")
+
+            grants_query = f"GRANT READ, WRITE ON {output_stage_name} TO LOADER"
 
             try:
+                logging.info(f"Creating stage {output_stage_name}")
                 res = query_executor(self.engine, clone_stage_query)
+                logging.info(res[0])
+
+                logging.info("Granting rights on stage to LOADER")
+                res = query_executor(self.engine, grants_query)
                 logging.info(res[0])
             except ProgrammingError as prg:
                 # Catches permissions errors
