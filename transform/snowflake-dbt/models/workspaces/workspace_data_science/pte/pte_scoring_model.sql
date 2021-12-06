@@ -2,4 +2,4 @@
     tags=["mnpi_exception"]
 ) }}
 
-{{ pte_base_query('training')}}
+{{ pte_base_query('scoring') }}
