@@ -51,7 +51,6 @@ default_args = {
     "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
-    "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "start_date": datetime(2020, 7, 30, 0, 0, 0),
 }

@@ -7,6 +7,9 @@ from typing import Dict, List
 from fire import Fire
 from snowflake.sqlalchemy import URL
 from sqlalchemy import create_engine
+from sqlalchemy.exc import ProgrammingError
+
+from gitlabdata.orchestration_utils import query_executor
 
 
 # Set logging defaults
@@ -92,7 +95,12 @@ class SnowflakeManager:
         return queries
 
     def manage_clones(
-        self, database: str, empty: bool = False, force: bool = False, schema: str = ""
+        self,
+        database: str,
+        empty: bool = False,
+        force: bool = False,
+        schema: str = "",
+        include_stages=False,
     ) -> None:
         """
         For the creation of zero copy clones in Snowflake.
@@ -141,6 +149,9 @@ class SnowflakeManager:
                 finally:
                     connection.close()
                     self.engine.dispose()
+
+            if include_stages:
+                self.clone_stages(create_db, database, schema)
 
     def delete_clones(self):
         """
@@ -216,6 +227,49 @@ class SnowflakeManager:
             self.engine.dispose()
 
         return self
+
+    def clone_stages(self, create_db: str, database: str, schema: str = ""):
+
+        if schema != "":
+            stages_query = f"""
+                 SELECT 
+                     stage_schema,
+                     stage_name,
+                     stage_url
+                 FROM {database}.information_schema.stages 
+                 WHERE stage_schema = '{schema.upper()}' 
+             """
+        else:
+            stages_query = f"""
+                 SELECT 
+                     stage_schema,
+                     stage_name,
+                     stage_url
+                 FROM {database}.information_schema.stages 
+             """
+
+        stages = query_executor(self.engine, stages_query)
+
+        for stage in stages:
+
+            output_stage_name = (
+                f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
+            )
+            from_stage_name = (
+                f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
+            )
+            clone_stage_query = f"""
+                 CREATE OR REPLACE STAGE {output_stage_name} LIKE  
+                 {from_stage_name}
+                 """
+            logging.info(f"Creating stage {output_stage_name}")
+
+            try:
+                res = query_executor(self.engine, clone_stage_query)
+                logging.info(res[0])
+            except ProgrammingError as prg:
+                # Catches permissions errors
+                logging.error(prg._sql_message(as_unicode=False))
 
 
 if __name__ == "__main__":

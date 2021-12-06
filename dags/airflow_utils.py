@@ -12,7 +12,7 @@ SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
-PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
+PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.23"
 
 DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
@@ -150,7 +150,7 @@ def slack_defaults(context, task_type):
 def slack_snapshot_failed_task(context):
     """
     Function to be used as a callable for on_failure_callback for dbt-snapshots
-    Send a Slack alert to #dbt-runs and #analytics-pipelines
+    Send a Slack alert to #analytics-pipelines
     """
     multi_channel_alert = MultiSlackChannelOperator(
         channels=["#analytics-pipelines"], context=context
