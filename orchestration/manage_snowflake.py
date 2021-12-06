@@ -100,7 +100,7 @@ class SnowflakeManager:
         empty: bool = False,
         force: bool = False,
         schema: str = "",
-        include_stages=False,
+        include_stages: bool = False,
     ) -> None:
         """
         For the creation of zero copy clones in Snowflake.
@@ -229,7 +229,13 @@ class SnowflakeManager:
         return self
 
     def clone_stages(self, create_db: str, database: str, schema: str = ""):
-
+        """
+         Clones the stages available in a DB or schema (if specified).
+         Required as SnowFlake currently does not support the cloning of internal stages.
+        :param create_db:
+        :param database:
+        :param schema:
+        """
         if schema != "":
             stages_query = f"""
                  SELECT 
