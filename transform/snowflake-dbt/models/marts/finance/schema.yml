@@ -141,3 +141,6 @@ models:
 
   - name: rpt_available_to_renew_8th_calendar_day
     description: Snapshot on the 8th calendar day after a renewal month from the available to renew model (`mart_available_to_renew_snapshot`) which generates a list of subscriptions which will be available to renew in a given time period based on existing charges and term dates. It also has logic built in to identify multi-year bookings which is not yet avilable in the source data.
+
+  - name: rpt_available_to_renew_45th_calendar_day
+    description: Snapshot on the 45th calendar day after a renewal month from the available to renew model (`mart_available_to_renew_snapshot`) which generates a list of subscriptions which will be available to renew in a given time period based on existing charges and term dates. It also has logic built in to identify multi-year bookings which is not yet avilable in the source data.
