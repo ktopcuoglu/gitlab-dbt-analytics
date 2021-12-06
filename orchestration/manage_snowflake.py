@@ -258,10 +258,16 @@ class SnowflakeManager:
             from_stage_name = (
                 f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
             )
-            clone_stage_query = f"""
-                 CREATE OR REPLACE STAGE {output_stage_name} LIKE  
-                 {from_stage_name}
-                 """
+
+            if stage["stage_url"] != '':
+                clone_stage_query = f"""
+                    CREATE OR REPLACE STAGE {output_stage_name} LIKE  
+                    {from_stage_name}
+                    """
+            else:
+                clone_stage_query = f"""
+                    CREATE OR REPLACE STAGE {output_stage_name}  
+                    """
             logging.info(f"Creating stage {output_stage_name}")
 
             try:
