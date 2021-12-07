@@ -56,6 +56,39 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 
 In addition to these tasks the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859)
 
+#### Handling dbt-test errors:
+
+* [ ] Clean up the dbt-test failure logs and put them into a table in the comments of this issue, use the below format as an example: 
+
+``` 
+dbt-test errors: <Link to airflow log> 
+
+Completed with 7 errors and 5 warnings:
+
+##### Existing errors 
+| Issue | Error | 
+| ----- | ----- | 
+
+##### New errors 
+| Issue | Error | 
+| ----- | ----- |
+
+##### Warnings
+| Warning | 
+| ------- |
+```
+
+* Quick procedure to cleanup the log:
+  1. Open any text editor with a regex find and replace; run through the below strings doing a find and replace for all: 
+        * `^(?!.*(Failure in test|Database error|Warning)).*$`
+        * `^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}] INFO - b'\\x1b\[\d{2}m`
+        * `\\x1b.*`
+        * `^\R`
+  2. In order, each of these lines: 
+     1. Removes all lines without Database Failure or Test Failure
+     2. Removes extra date and nonsense strings
+     3. Removes end of string
+     4. Removes empty lines
 
 ### Data Notification Templates
 
