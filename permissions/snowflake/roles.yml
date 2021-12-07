@@ -1165,6 +1165,7 @@ roles:
                     - prod.workspace_data
                     - prod.workspace_finance
                     - prod.workspace_marketing
+                    - prod.workspace_product
                     - prod.workspace_sales
                     - prod.workspace_engineering
                     - prod.workspace_people
@@ -1185,6 +1186,7 @@ roles:
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
+                    - prod.workspace_product.*
                     - prod.workspace_sales.*
                     - prod.workspace_engineering.*
                     - prod.workspace_people.*                    
