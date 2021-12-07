@@ -63,7 +63,7 @@ In addition to these tasks the Data Engineer on triage should be focused on reso
 ``` 
 dbt-test errors: <Link to airflow log> 
 
-Completed with 7 errors and 5 warnings:
+Completed with x errors and x warnings:
 
 ##### Existing errors 
 | Issue | Error | 
