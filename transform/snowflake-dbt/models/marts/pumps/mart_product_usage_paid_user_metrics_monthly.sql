@@ -148,7 +148,7 @@
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     LEFT JOIN subscriptions as subscriptions_original
-      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions.dim_subscription_id_original
+      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
