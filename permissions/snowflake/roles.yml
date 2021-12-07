@@ -503,6 +503,9 @@ roles:
             - zuora_central_sandbox
 
     - analytics_engineer:
+        warehouses:
+            - engineer_xs
+            - engineer_xl
         member_of:
             - analyst_core
             - snowflake_db
