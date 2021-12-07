@@ -1,18 +1,27 @@
-with issues AS (
+{{ simple_cte([
+    ('issues','infradev_issues_base'),
+    ('projects','dim_project'),
+    ('assigend_users','infradev_current_issue_users'),
+    ('label_groups','infradev_label_history'),
+    ('namespace_path','infradev_namespace_path')
+])}}
+
+/*with issues AS (
   SELECT
     *
-  FROM {{ ref('base_infradev_issues') }} 
+  FROM {{ ref('infradev_issues_base') }} 
 
-),
+),*/
 
-dates AS (
+, dates AS (
   SELECT
     *,
     MIN(date_id) OVER () AS min_date_id
   FROM {{ ref('dim_date') }}  
   WHERE date_actual > DATE_TRUNC('month', DATEADD('year', -2, CURRENT_DATE()))
     AND date_actual < CURRENT_DATE()
-),
+)
+/*,
 
 projects AS (
   SELECT * 
@@ -37,9 +46,10 @@ namespace_path as (
   SELECT
     *
   FROM {{ ref('infradev_namespace_path') }}
-)
+)*/
 
-SELECT --count(*)
+SELECT 
+  {{ dbt_utils.surrogate_key(['dates.date_actual','issues.dim_issue_id']) }} AS daily_issue_id,
   dates.date_actual,
   issues.dim_issue_id,
   issues.issue_internal_id,

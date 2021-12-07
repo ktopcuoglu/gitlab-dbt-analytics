@@ -743,13 +743,3 @@ Prep table for the dim table `dim_release` that is not yet created. It is also u
 
 Prep table for the dim table `dim_requirement` that is not yet created. It is also used in the `prep_event` table
 {% enddocs %}
-
-{% docs prep_issue_assignees %}
-
-Prep table for the dim table `dim_issue_assignees` that is not yet created. This table tracks the relation between GitLab issues & assigned users on the issues. You can learn more about issue assignees [here](https://docs.gitlab.com/ee/user/project/issues/issue_data_and_actions.html#assignee)
-{% enddocs %}
-
-{% docs prep_issue_labels%}
-
-Prep table for the dim table `dim_issue_labels` table. This table tracks the current & historical labels that have been applied to GitLab issues. This is used for issue metric calculations. You can learn more about GitLab Issue labels [here](https://docs.gitlab.com/ee/development/contributing/issue_workflow.html#labels)
-{% enddocs %}

@@ -89,13 +89,6 @@ Only activity since 2020-01-01 is being processed due to the high volume of the 
 
 {% enddocs %}
 
-{% docs mart_gitlab_dotcom_issue_metrics %}
-
-Mart table containing age metrics & related metadata for gitlab.com internal issues. Used for tracking internal work progress for things like Engineering Allocation & Corrective Actions
-
-These metrics are available for individual issues at daily level & can be aggregated up from there
-
-{% enddocs %}
 {% docs mart_user_request %}
  
 Mart table that contains all user requests to the Gitlab product by the customers.
