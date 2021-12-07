@@ -5177,7 +5177,8 @@ users:
 
     - ysun: # De provisioned as part of Quarterly audit and security check.
         can_login: yes
-        member_of: ysun
+        member_of: 
+            - ysun
 
 # ==========================================
 # Warehouses
