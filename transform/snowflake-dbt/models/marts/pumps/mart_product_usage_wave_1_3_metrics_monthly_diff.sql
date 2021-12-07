@@ -188,6 +188,7 @@
       smoothed_diffs.dim_subscription_id_original,
       smoothed_diffs.dim_billing_account_id,
       subscriptions.subscription_status,
+      subscriptions_original.subscription_status,
       smoothed_diffs.snapshot_month,
       smoothed_diffs.uuid,
       smoothed_diffs.hostname,
@@ -236,7 +237,11 @@
       AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
     LEFT JOIN subscriptions
-      ON smoothed_diffs.dim_subscription_id_original = subscriptions.dim_subscription_id_original 
+      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
+      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions AS subscriptions_original
+      ON smoothed_diffs.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original 
       AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
 
