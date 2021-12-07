@@ -5,8 +5,9 @@
 WITH namespaces AS (
     SELECT *
     FROM {{ ref('dim_namespace') }} 
-),
-namespace_path AS (
+
+), namespace_path AS (
+
     SELECT
       namespaces.dim_namespace_id,
       CASE
@@ -35,7 +36,8 @@ namespace_path AS (
       ON namespace_3.dim_namespace_id = namespace_2.parent_id AND namespace_2.namespace_is_ultimate_parent = FALSE
     LEFT OUTER JOIN namespaces namespace_4
       ON namespace_4.dim_namespace_id = namespace_3.parent_id AND namespace_3.namespace_is_ultimate_parent = FALSE
-  )
+
+)
 
 SELECT *
 FROM namespace_path

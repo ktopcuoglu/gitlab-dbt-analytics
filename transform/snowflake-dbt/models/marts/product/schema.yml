@@ -344,5 +344,4 @@ models:
         tests:
           - not_null
       - name: active_stage_count
-        description: number of active stages for a given organization in a given month
-        
+        description: number of active stages for a given organization in a given month    

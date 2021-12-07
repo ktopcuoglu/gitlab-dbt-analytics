@@ -3,16 +3,17 @@
 ) }}
 
 WITH labels AS (
-  SELECT *
-  FROM {{ ref('prep_labels') }} 
-),
 
-label_links AS (
-  SELECT *
-  FROM {{ ref('gitlab_dotcom_label_links_source') }} 
-),
+    SELECT *
+    FROM {{ ref('prep_labels') }} 
 
-label_type AS (
+), label_links AS (
+
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_label_links_source') }} 
+
+), label_type AS (
+
     SELECT
       dim_label_id,
       label_title,
@@ -24,9 +25,8 @@ label_type AS (
       END AS label_type
     FROM labels
 
-),
+),  base_labels AS (
 
-  base_labels AS ( -- what if a label is added then removed and then added again?
     SELECT
       label_links.label_link_id                                                                                           AS dim_issue_id,
       label_type.label_title,
@@ -41,9 +41,9 @@ label_type AS (
       AND label_links.target_type = 'Issue'
     WHERE label_type.label_type != 'other'
       AND label_links.label_link_id IS NOT NULL
-  ),
 
-  label_groups AS (
+),  label_groups AS (
+
     SELECT
       severity.dim_issue_id,
       severity.label_title                                                      AS severity_label,
@@ -59,7 +59,8 @@ label_type AS (
       ON severity.dim_issue_id = team.dim_issue_id
     WHERE severity.label_type = 'severity'
       AND team.label_type = 'team'
-  )
+      
+)
 
 SELECT *
 FROM label_groups
