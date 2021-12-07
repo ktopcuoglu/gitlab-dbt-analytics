@@ -95,6 +95,10 @@ sheets:
     owner: '@dtownsend'
     tabs:
       - gcp_active_cud
+  - name: gitlab_certification_tracking_dashboard
+    owner: '@rbacovic'
+    tabs:
+      - old_impartner_data_static
   - name: gitlab_slack_stats
     owner: '@ken_aguilar'
     tabs:
