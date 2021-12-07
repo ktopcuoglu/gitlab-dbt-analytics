@@ -4364,9 +4364,13 @@ roles:
         member_of: []
         warehouses: []
 
-    - ysun: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - ysun:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
 
 
 # ==========================================
@@ -5172,8 +5176,9 @@ users:
         member_of: []
 
     - ysun: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of: 
+            - ysun
 
 # ==========================================
 # Warehouses
