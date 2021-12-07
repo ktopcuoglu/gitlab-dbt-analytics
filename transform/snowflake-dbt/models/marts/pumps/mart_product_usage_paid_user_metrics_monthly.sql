@@ -28,6 +28,8 @@
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -159,6 +161,8 @@
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
@@ -272,7 +276,7 @@
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
-      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
@@ -293,7 +297,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2021-10-21"
+    updated_date="2021-12-07"
 ) }}

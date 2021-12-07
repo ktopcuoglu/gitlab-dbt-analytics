@@ -21,8 +21,6 @@
       monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
-      subscriptions.subscription_start_date,
-      subscriptions.subscription_end_date,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.snapshot_month,
