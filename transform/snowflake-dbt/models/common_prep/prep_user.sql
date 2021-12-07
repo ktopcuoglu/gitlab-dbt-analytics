@@ -19,7 +19,6 @@ WITH source AS (
       admin::BOOLEAN                                                   AS is_admin,
       state::VARCHAR                                                   AS user_state
 
-
     FROM source
     
 )
