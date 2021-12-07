@@ -4370,6 +4370,7 @@ roles:
         member_of:
             - analyst_finance
             - bamboohr_analytics
+            - restricted_safe
         warehouses:
             - analyst_xs
 
