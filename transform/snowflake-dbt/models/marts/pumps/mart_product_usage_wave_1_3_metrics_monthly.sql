@@ -21,12 +21,9 @@
       monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
-<<<<<<< HEAD
       subscriptions_original.subscription_status                            AS subscription_status_original,
-=======
       subscriptions.subscription_start_date,
       subscriptions.subscription_end_date,
->>>>>>> bb52d2ac0 (adding subscription start/end date fields)
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.snapshot_month,
@@ -160,11 +157,7 @@
       ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
       ON monthly_metrics.dim_subscription_id = subscriptions.dim_subscription_id
-<<<<<<< HEAD
       AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
-=======
-      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month))
->>>>>>> bb52d2ac0 (adding subscription start/end date fields)
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     LEFT JOIN subscriptions AS subscriptions_original
       ON monthly_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original 
@@ -178,10 +171,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-02-11",
-<<<<<<< HEAD
     updated_date="2021-12-08"
 ) }}
-=======
-    updated_date="2021-10-21"
-) }}
->>>>>>> bb52d2ac0 (adding subscription start/end date fields)
