@@ -9,7 +9,7 @@ WITH
   ),
   users AS (
     SELECT *
-    FROM {{ ref('prep_user') }} 
+    FROM {{ ref('gitlab_dotcom_users_dedupe_source') }} 
   ),
    assigend_users AS (
     SELECT
@@ -17,7 +17,7 @@ WITH
       LISTAGG(DISTINCT users.username, ', ') AS assigned_usernames
     FROM issue_assignees
     LEFT JOIN users
-      ON issue_assignees.user_id = users.dim_user_id
+      ON issue_assignees.user_id = users.id
     GROUP BY 1
   )
 

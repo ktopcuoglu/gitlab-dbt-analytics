@@ -64,24 +64,16 @@ SELECT --count(*)
   DATEDIFF('day', label_groups.severity_label_added_at, dates.date_actual) AS severity_label_age_in_days,
   assigend_users.assigned_usernames,
   IFF(assigend_users.assigned_usernames IS NULL, TRUE, FALSE)              AS is_issue_unassigned
-FROM issues -- 521,491
-INNER JOIN dates -- 108,777,470
+FROM issues 
+INNER JOIN dates 
   ON issues.created_date_id <= dates.date_id
-  --and issues.created_date_id > dates.min_date_id -- inlcude all open issues
-LEFT JOIN projects --
+  AND (issues.created_date_id > dates.min_date_id  OR issues.created_date_id IS NULL) 
+LEFT JOIN projects 
   ON issues.dim_project_id = projects.dim_project_id
-LEFT JOIN namespace_path --
+LEFT JOIN namespace_path 
   ON issues.dim_namespace_id = namespace_path.dim_namespace_id
 LEFT JOIN assigend_users
   ON issues.dim_issue_id = assigend_users.dim_issue_id
-  --left join issue_assignees -- 675270
-  --on issues.dim_issue_id = issue_assignees.issue_id
---left join users -- 675270
-  --on issue_assignees.user_id = users.dim_user_id
-LEFT JOIN label_groups -- 108,780,372
+LEFT JOIN label_groups 
   ON issues.dim_issue_id = label_groups.dim_issue_id
-  AND
-     dates.date_actual BETWEEN DATE_TRUNC('day', label_groups.label_group_valid_from) AND DATE_TRUNC('day', label_groups.label_group_valid_to)
---inner join dates -- 44,174,012  10,126,698
---on dates.date_actual BETWEEN DATE_TRUNC('day',lable_groups.label_group_valid_from) AND DATE_TRUNC('day',lable_groups.label_group_valid_to)
---where issue_state = 'open'
+  AND dates.date_actual BETWEEN DATE_TRUNC('day', label_groups.label_group_valid_from) AND DATE_TRUNC('day', label_groups.label_group_valid_to)

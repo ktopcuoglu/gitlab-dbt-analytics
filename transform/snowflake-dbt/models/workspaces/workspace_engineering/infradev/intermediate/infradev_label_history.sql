@@ -9,7 +9,7 @@ WITH labels AS (
 
 label_links AS (
   SELECT *
-  FROM {{ ref('prep_label_links') }} 
+  FROM {{ ref('gitlab_dotcom_label_links_source') }} 
 ),
 
 label_type AS (
@@ -28,18 +28,19 @@ label_type AS (
 
   base_labels AS ( -- what if a label is added then removed and then added again?
     SELECT
-      label_links.dim_issue_id,
+      label_links.label_link_id                                                                                           AS dim_issue_id,
       label_type.label_title,
       label_type.label_type,
-      label_links.label_added_at,
-      label_links.label_added_at                                                                                  AS label_valid_from,
-      LEAD(label_links.label_added_at, 1, CURRENT_DATE())
-           OVER (PARTITION BY label_links.dim_issue_id,label_type.label_type ORDER BY label_links.label_added_at) AS label_valid_to
+      label_links.label_link_created_at                                                                                   AS label_added_at,
+      label_links.label_link_created_at                                                                                   AS label_valid_from,
+      LEAD(label_links.label_link_created_at, 1, CURRENT_DATE())
+           OVER (PARTITION BY label_links.label_link_id,label_type.label_type ORDER BY label_links.label_link_created_at) AS label_valid_to
     FROM label_type
     LEFT JOIN label_links
-      ON label_links.dim_label_id = label_type.dim_label_id
+      ON label_type.dim_label_id = label_links.target_id
+      AND label_links.target_type = 'Issue'
     WHERE label_type.label_type != 'other'
-      AND label_links.dim_issue_id IS NOT NULL
+      AND label_links.label_link_id IS NOT NULL
   ),
 
   label_groups AS (

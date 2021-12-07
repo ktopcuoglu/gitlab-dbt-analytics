@@ -48,14 +48,13 @@
 ), agg_labels AS (
 
     SELECT 
-      gitlab_dotcom_issues_source.issue_id                                                        AS dim_issue_id,
+      gitlab_dotcom_issues_source.issue_id                                                          AS dim_issue_id,
       ARRAY_AGG(LOWER(prep_labels.label_title)) WITHIN GROUP (ORDER BY prep_labels.label_title ASC) AS labels
     FROM gitlab_dotcom_issues_source
     LEFT JOIN prep_label_links
         ON gitlab_dotcom_issues_source.issue_id = prep_label_links.dim_issue_id
     LEFT JOIN prep_labels
         ON prep_label_links.dim_label_id = prep_labels.dim_label_id
-    WHERE prep_label_links.is_currently_valid = TRUE
     GROUP BY gitlab_dotcom_issues_source.issue_id  
 
 
