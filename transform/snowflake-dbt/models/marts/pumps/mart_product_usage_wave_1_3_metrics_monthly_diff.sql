@@ -188,7 +188,7 @@
       smoothed_diffs.dim_subscription_id_original,
       smoothed_diffs.dim_billing_account_id,
       subscriptions.subscription_status,
-      subscriptions_original.subscription_status,
+      subscriptions_original.subscription_status                                        AS subscription_status_original,
       smoothed_diffs.snapshot_month,
       smoothed_diffs.uuid,
       smoothed_diffs.hostname,
