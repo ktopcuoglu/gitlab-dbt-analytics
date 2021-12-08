@@ -243,7 +243,7 @@
     LEFT JOIN subscriptions AS subscriptions_original
       ON smoothed_diffs.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original 
       AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
 
 )
 
@@ -252,5 +252,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-03-04",
-    updated_date="2021-10-21"
+    updated_date="2021-12-08"
 ) }}

@@ -160,7 +160,7 @@
     LEFT JOIN subscriptions AS subscriptions_original
       ON monthly_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original 
       AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
 
 )
 
@@ -169,5 +169,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-02-11",
-    updated_date="2021-10-21"
+    updated_date="2021-12-08"
 ) }}

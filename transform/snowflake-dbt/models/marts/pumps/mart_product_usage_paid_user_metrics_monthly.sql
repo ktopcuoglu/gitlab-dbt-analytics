@@ -13,7 +13,8 @@
     ('billing_accounts','dim_billing_account'),
     ('crm_accounts','dim_crm_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up'),
+    ('subscriptions_original', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , sm_paid_user_metrics AS (
@@ -147,10 +148,10 @@
       ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN subscriptions AS subscriptions_original
+    LEFT JOIN subscriptions_original
       ON monthly_sm_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
 
 ), saas_paid_user_metrics AS (
 
@@ -281,10 +282,10 @@
       ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN subscriptions AS subscriptions_original
+    LEFT JOIN subscriptions_original
       ON monthly_saas_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original 
       AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
 
@@ -305,5 +306,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-06-11",
-    updated_date="2021-10-21"
+    updated_date="2021-12-08"
 ) }}
