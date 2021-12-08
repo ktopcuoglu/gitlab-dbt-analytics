@@ -88,4 +88,3 @@ WITH source AS (
 
 SELECT  *
 FROM add_job_hierarchy
-ORDER BY updated_at
