@@ -38,8 +38,6 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
-# This value is set based on the commit hash setter task in dbt_snapshot
-pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 
 # Default arguments for the DAG
 default_args = {
@@ -63,7 +61,6 @@ dag = DAG(
 
 # dbt-test-results
 dbt_test_results_command = f"""
-    {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.dbt.dbt_run_results; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -100,7 +97,6 @@ dbt_test_results = KubernetesPodOperator(
 
 # dbt-run-results
 dbt_run_results_command = f"""
-    {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.dbt.dbt_run_results; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -137,7 +133,6 @@ dbt_run_results = KubernetesPodOperator(
 
 #dbt-source-freshness
 dbt_source_freshness_command = f"""
-    {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.dbt.dbt_source_freshness; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
@@ -174,7 +169,6 @@ dbt_source_freshness = KubernetesPodOperator(
 
 #dbt-workspace-data-tdf
 dbt_workspace_data_tdf_command = f"""
-    {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.tdf.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
