@@ -57,6 +57,11 @@ WITH source AS (
 ), countries_without_metro_areas AS (
 
     SELECT DISTINCT
+      CASE
+        WHEN initial_unnest.value['country']::VARCHAR = 'Israel' THEN 'All'
+        WHEN initial_unnest.value['metro_areas']::VARCHAR IS NOT NULL THEN 'Everywhere else'
+        ELSE 'All'
+      END                                           AS area,
       initial_unnest.value['country']::VARCHAR      AS country, 
       initial_unnest.value['factor']::VARCHAR       AS location_factor,
       snapshot_date,
@@ -101,7 +106,7 @@ WITH source AS (
     UNION  ALL
 
     SELECT
-      NULL AS metro_area,
+      area AS metro_area,
       country,
       location_factor,
       snapshot_date,
