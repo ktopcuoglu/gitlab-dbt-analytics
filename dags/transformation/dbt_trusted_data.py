@@ -7,10 +7,10 @@ from airflow.operators.python_operator import BranchPythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
-    dbt_install_deps_nosha_cmd,
+    clone_repo_cmd,
+    dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
-    partitions,
     slack_failed_task,
 )
 from kube_secrets import (
@@ -37,25 +37,9 @@ from kube_secrets import (
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
-task_secrets = [
-    GIT_DATA_TESTS_PRIVATE_KEY,
-    GIT_DATA_TESTS_CONFIG,
-    SALT,
-    SALT_EMAIL,
-    SALT_IP,
-    SALT_NAME,
-    SALT_PASSWORD,
-    SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_PASSWORD,
-    SNOWFLAKE_TRANSFORM_ROLE,
-    SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_TRANSFORM_WAREHOUSE,
-    SNOWFLAKE_USER,
-    SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
-    SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE,
-]
+
+# This value is set based on the commit hash setter task in dbt_snapshot
+pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 
 # Default arguments for the DAG
 default_args = {
@@ -74,21 +58,153 @@ dag = DAG(
     "dbt_trusted_data",
     default_args=default_args,
     schedule_interval=dag_schedule,
+    concurrency=1,
 )
-dbt_trusted_data_command = f"""
-    {dbt_install_deps_nosha_cmd} &&
-    dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.tdf.* +workspaces.workspace_data.dbt.dbt_test_results +workspaces.workspace_data.dbt.dbt_run_results +workspaces.workspace_data.dbt.dbt_source_freshness; ret=$?;
+
+# dbt-test-results
+dbt_test_results_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.dbt.dbt_run_results; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
-dbt_trusted_data = KubernetesPodOperator(
+dbt_test_results = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt_trusted_data",
-    name="dbt_trusted_data",
+    task_id="dbt-test-results",
+    name="dbt-test-results",
     trigger_rule="all_done",
-    secrets=task_secrets,
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
     env_vars=pod_env_vars,
-    arguments=[dbt_trusted_data_command],
+    arguments=[dbt_test_results_command],
     dag=dag,
 )
 
+# dbt-run-results
+dbt_run_results_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.dbt.dbt_run_results; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_run_results = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-run-results",
+    name="dbt-run-results",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_run_results_command],
+    dag=dag,
+)
+
+#dbt-source-freshness
+dbt_source_freshness_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.dbt.dbt_source_freshness; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_source_freshness = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-source-freshness",
+    name="dbt-source-freshness",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_source_freshness_command],
+    dag=dag,
+)
+
+#dbt-workspace-data-tdf
+dbt_workspace_data_tdf_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.tdf.*; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_workspace_data_tdf = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspace-data-tdf",
+    name="dbt-workspace-data-tdf",
+    trigger_rule="all_done",
+    secrets=[
+        GIT_DATA_TESTS_PRIVATE_KEY,
+        GIT_DATA_TESTS_CONFIG,
+        SALT,
+        SALT_EMAIL,
+        SALT_IP,
+        SALT_NAME,
+        SALT_PASSWORD,
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_USER,
+        SNOWFLAKE_PASSWORD,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_ROLE,
+        SNOWFLAKE_TRANSFORM_WAREHOUSE,
+        SNOWFLAKE_TRANSFORM_SCHEMA,
+    ],
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspace_data_tdf_command],
+    dag=dag,
+)
