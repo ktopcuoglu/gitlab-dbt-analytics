@@ -45,7 +45,12 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
+    "retries": 0,
+    "sla": timedelta(hours=8),
+    "sla_miss_callback": slack_failed_task,
     "start_date": datetime(2021, 12, 6, 0, 0, 0),
+    "trigger_rule": TriggerRule.ALL_DONE,
+    "dagrun_timeout": timedelta(hours=6),
 }
 
 # Runs every 6 hours
@@ -64,11 +69,11 @@ dbt_trusted_data_command = f"""
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.tdf.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
-dbt_trusted_data_tdf = KubernetesPodOperator(
+dbt_trusted_data = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-trusted-data-tdf",
-    name="dbt-trusted-data-tdf",
+    task_id="dbt-trusted-data",
+    name="dbt-trusted-data",
     trigger_rule="all_done",
     secrets=[
         GIT_DATA_TESTS_PRIVATE_KEY,
@@ -93,3 +98,5 @@ dbt_trusted_data_tdf = KubernetesPodOperator(
     arguments=[dbt_trusted_data_command],
     dag=dag,
 )
+
+
