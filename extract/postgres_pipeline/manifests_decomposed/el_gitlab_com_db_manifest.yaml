@@ -174,7 +174,7 @@ tables:
       , destination_url
       , created_at
       , updated_at
-      FROM audit_events
+      FROM audit_events_external_audit_event_destinations
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   authentication_events:
