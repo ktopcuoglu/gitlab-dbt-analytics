@@ -21,6 +21,9 @@ databases:
         shared: yes
 
 # User / Testing
+    - bi_tool_eval:
+        shared: no 
+
     - testing_db:
         shared: no
 
@@ -28,6 +31,11 @@ databases:
         shared: no
     - csharp_prep:
         shared: no   
+
+    - david_prod:
+        shared: no
+    - david_prep:
+        shared: no 
 
     - degan_prod:
         shared: no
@@ -53,6 +61,11 @@ databases:
         shared: no
     - dzeissner_prep:
         shared: no
+
+    - ian_prod:
+        shared: no
+    - ian_prep:
+        shared: no 
 
     - ianschweickart_prod:
         shared: no
@@ -488,6 +501,31 @@ roles:
             - version_db
             - zuora
             - zuora_central_sandbox
+
+    - analytics_engineer:
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        member_of:
+            - analyst_core
+            - snowflake_db
+            - data_team_analyst
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+            tables:
+                read:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
 
     - data_manager:
         warehouses:
@@ -1025,6 +1063,26 @@ roles:
                 read:
                     - prod.boneyard.*
 
+    - bi_tool_eval_db:
+        warehouses:
+            - engineer_xs
+        privileges:
+            databases:
+                read:
+                    - bi_tool_eval
+                write:
+                    - bi_tool_eval
+            schemas:
+                read:
+                    - bi_tool_eval.*
+                write:
+                    - bi_tool_eval.*
+            tables:
+                read:
+                    - bi_tool_eval.*.*
+                write:
+                    - bi_tool_eval.*.*
+
     - covid19:
         privileges:
             databases:
@@ -1110,6 +1168,7 @@ roles:
                     - prod.workspace_data
                     - prod.workspace_finance
                     - prod.workspace_marketing
+                    - prod.workspace_product
                     - prod.workspace_sales
                     - prod.workspace_engineering
                     - prod.workspace_people
@@ -1130,6 +1189,7 @@ roles:
                     - prod.workspace_data.*
                     - prod.workspace_finance.*
                     - prod.workspace_marketing.*
+                    - prod.workspace_product.*
                     - prod.workspace_sales.*
                     - prod.workspace_engineering.*
                     - prod.workspace_people.*                    
@@ -2342,6 +2402,46 @@ roles:
     - datwood:
         member_of: []
         warehouses: []
+        
+    - david:
+        member_of:
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        owns:
+            databases:
+                - david_prep
+                - david_prod
+            schemas:
+                - david_prep.*
+                - david_prod.*
+            tables:
+                - david_prep.*.*
+                - david_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - david_prep
+                    - david_prod
+                write:
+                    - david_prep
+                    - david_prod
+            schemas:
+                read:
+                    - david_prep.*
+                    - david_prod.*
+                write:
+                    - david_prep.*
+                    - david_prod.*
+            tables:
+                read:
+                    - david_prep.*.*
+                    - david_prod.*.*
+                write:
+                    - david_prep.*.*
+                    - david_prod.*.*
 
     - degan:
         member_of:
@@ -2598,6 +2698,14 @@ roles:
                 write:
                     - raw.netsuite_fivetran.*
 
+    - fkurniadi:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - fstein:
         warehouses:
             - admin
@@ -2628,6 +2736,46 @@ roles:
 
     - hsharma: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
+
+    - ian:
+        member_of:
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        owns:
+            databases:
+                - ian_prep
+                - ian_prod
+            schemas:
+                - ian_prep.*
+                - ian_prod.*
+            tables:
+                - ian_prep.*.*
+                - ian_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - ian_prep
+                    - ian_prod
+                write:
+                    - ian_prep
+                    - ian_prod
+            schemas:
+                read:
+                    - ian_prep.*
+                    - ian_prod.*
+                write:
+                    - ian_prep.*
+                    - ian_prod.*
+            tables:
+                read:
+                    - ian_prep.*.*
+                    - ian_prod.*.*
+                write:
+                    - ian_prep.*.*
+                    - ian_prod.*.*       
 
     - ianschweickart:
         member_of:
@@ -2691,6 +2839,7 @@ roles:
             - data_manager
             - restricted_safe
             - xactly
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -3177,6 +3326,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - levans:
+        member_of:
+            - reporter
+            - snowplow
+        warehouses:
+            - reporting
+
     - lmai:
         member_of:
             - analyst_engineering
@@ -3263,6 +3419,7 @@ roles:
     - mdrussell:
         member_of:
          - data_team_analyst
+         - analytics_engineer
          - restricted_safe
         warehouses:
             - analyst_xs
@@ -3287,7 +3444,7 @@ roles:
             schemas:
                 read:
                     - mdrussell_prep.*
-                    - tmdrussell_prod.*
+                    - mdrussell_prod.*
                 write:
                     - mdrussell_prep.*
                     - mdrussell_prod.*
@@ -3298,6 +3455,16 @@ roles:
                 write:
                     - mdrussell_prep.*.*
                     - mdrussell_prod.*.*      
+
+    - mfleisher:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
     - michellecooper:
         member_of: []
@@ -3315,6 +3482,7 @@ roles:
             - analyst_core
             - data_manager
             - restricted_safe
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -3604,6 +3772,7 @@ roles:
     - pempey:
         member_of:
             - engineer
+            - bi_tool_eval_db
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -4006,7 +4175,8 @@ roles:
         member_of:
          - data_team_analyst
          - analyst_core
-         - restricted_safe         
+         - restricted_safe
+         - bi_tool_eval_db
         warehouses:
             - analyst_xs
         owns:
@@ -4199,9 +4369,13 @@ roles:
         member_of: []
         warehouses: []
 
-    - ysun: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - ysun:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+        warehouses:
+            - analyst_xs
+
 
 
 # ==========================================
@@ -4340,6 +4514,11 @@ users:
         can_login: no
         member_of: []
 
+    - david:
+        can_login: yes
+        member_of:
+            - david       
+
     - degan:
         can_login: yes
         member_of:
@@ -4414,6 +4593,11 @@ users:
         member_of:
             - fivetran_role
 
+    - fkurniadi:
+        can_login: yes
+        member_of:
+            - fkurniadi
+
     - fstein:
         can_login: no
         member_of: []
@@ -4451,6 +4635,11 @@ users:
         can_login: yes
         member_of:
             - ianschweickart
+
+    - ian:
+        can_login: yes
+        member_of:
+            - ian       
 
     - iroussos:
         can_login: yes
@@ -4627,6 +4816,11 @@ users:
         can_login: yes
         member_of:
             - lcanoy
+            
+    - levans:
+        can_login: yes
+        member_of:
+            - levans
 
     - lmai:
         can_login: yes
@@ -4673,6 +4867,11 @@ users:
         can_login: yes
         member_of: 
             - meltano
+
+    - mfleisher:
+        can_login: yes
+        member_of:
+            - mfleisher            
 
     - michellecooper:
         can_login: no
@@ -4982,8 +5181,9 @@ users:
         member_of: []
 
     - ysun: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+        can_login: yes
+        member_of: 
+            - ysun
 
 # ==========================================
 # Warehouses

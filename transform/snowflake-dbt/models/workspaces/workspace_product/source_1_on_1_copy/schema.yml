@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: gitlab_dotcom_dast_profiles
+    description: Workspace model of the source data (deduplicated).
+
+  - name: gitlab_dotcom_users_security_dashboard_projects
+    description: Workspace model of the source data (deduped).

@@ -13,7 +13,11 @@ SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
-PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
+PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.23"
+
+DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
+DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 
 def split_date_parts(day: date, partition: str) -> Dict:
@@ -80,7 +84,7 @@ def slack_defaults(context, task_type):
     Function to handle switching between a task failure and success.
     """
     # base_url = "https://airflow.gitlabdata.com"
-    base_url = "http://35.230.59.166:8080"
+    base_url = "http://35.233.169.210:8080"
     execution_date = context["ts"]
     dag_context = context["dag"]
     dag_name = dag_context.dag_id
@@ -147,10 +151,10 @@ def slack_defaults(context, task_type):
 def slack_snapshot_failed_task(context):
     """
     Function to be used as a callable for on_failure_callback for dbt-snapshots
-    Send a Slack alert to #dbt-runs and #analytics-pipelines
+    Send a Slack alert to #analytics-pipelines
     """
     multi_channel_alert = MultiSlackChannelOperator(
-        channels=["#dbt-runs", "#analytics-pipelines"], context=context
+        channels=["#analytics-pipelines"], context=context
     )
 
     return multi_channel_alert.execute()
@@ -306,6 +310,23 @@ dbt_install_deps_nosha_cmd = f"""
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
+
+clone_data_science_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATA_SCIENCE_HTTP_REPO}";
+        else
+        export REPO="{DATA_SCIENCE_SSH_REPO}";
+    fi &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd data-science &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
 
 
 def number_of_dbt_threads_argument(number_of_threads):

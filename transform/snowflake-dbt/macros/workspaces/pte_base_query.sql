@@ -1,12 +1,17 @@
-{{ config(
-    tags=["mnpi_exception"]
-) }}
+{%- macro pte_base_query(model_run_type) -%}
 
 {% set period_type = 'MONTH'%}
 {% set delta_value = 3 %}
 -- Prediction date offset by -1 to ensure its only predicting with complete days.
 {% set prediction_date = (modules.datetime.datetime.now() - modules.datetime.timedelta(days=1)).date()  %}
+
+
+{%- if model_run_type=='training' -%}
 {% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
+{% endif %}
+{% if model_run_type=='scoring'  %}
+{% set end_date = prediction_date %}
+{% endif %}
 
 --Snapshot for just the "current" ARR month based on SNAPSHOT_DT
 WITH mart_arr_snapshot_bottom_up AS (
@@ -54,26 +59,8 @@ WITH mart_arr_snapshot_bottom_up AS (
         AND ARR_MONTH = date_trunc('MONTH', cast('{{ end_date }}' as date)) -- limit data for just the month the '{{ end_date }}' falls in. arr_month is unique at the dim_crm_account_id & snapshot_date level
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
         AND subscription_end_date >= '{{ end_date }}' -- filter to just active subscriptions per feedback by Melia
-        --AND term_start_date <= '{{ end_date }}' --proposed fix for subscription_months_into it will exclude any future.
     GROUP BY dim_crm_account_id -- dim_crm_account_id is not unique at each snapshot date, hence the group by
 
--- Outcome variables, as defined by those events occuring at a set time period after the SNAPSHOT_DT
-), target AS (
-
-    SELECT dim_crm_account_id
-        , MAX(sum_arr) as future_arr --Provides the maximum ARR that account reached during our prediction window.
-    FROM
-        --For accounts with multiple subscriptions we first have to sum their ARR to the arr_month level
-        (
-        SELECT dim_crm_account_id, arr_month, sum(arr) as sum_arr
-        FROM mart_arr_snapshot_bottom_up -- Contains Snapshot for every date from 2020-03-01 to Present
-        WHERE snapshot_date = '{{ prediction_date }}'
-            AND arr_month > '{{ end_date }}'
-            AND arr_month <= '{{ prediction_date }}'
-        GROUP BY dim_crm_account_id, arr_month
-        )
-
-    GROUP BY dim_crm_account_id
 
 --Snapshot for the set period prior to the "current" month (as specified by SNAPSHOT_DT).
 ), period_2 AS (
@@ -110,7 +97,7 @@ WITH mart_arr_snapshot_bottom_up AS (
            --not added in period1 cte as it will always give 0
            , SUM(CASE WHEN subscription_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_subscriptions_lifetime
     FROM PROD.COMMON_MART_SALES.MART_ARR_SNAPSHOT_BOTTOM_UP -- Contains Snapshot for every date from 2020-03-01 to Present
-    WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot X periods prior to today
+    WHERE snapshot_date = $SNAPSHOT_DT -- limit to snapshot X periods prior to today
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts per Bhawana's notes, confirmed by Melia, removed missing values as per Israel's feedback
     GROUP BY dim_crm_account_id -- dim_crm_account_id is not unique at each snapshot date, hence the group by
 */
@@ -213,38 +200,38 @@ WITH mart_arr_snapshot_bottom_up AS (
     WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic task table, going on createddate
     GROUP BY account_id
 
-), zi_technologies AS (   
+), zi_technologies AS (
 
     SELECT account_id_18__c AS account_id
         , MAX(zi_revenue__c) AS zi_revenue
-        , MAX(zi_industry__c) AS zi_industry    
+        , MAX(zi_industry__c) AS zi_industry
         , MAX(zi_sic_code__c) AS zi_sic_code
         , MAX(zi_naics_code__c) AS zi_naics_code
-        , MAX(zi_number_of_developers__c) AS zi_developers_cnt 
-        --, MAX(zi_products_and_services__c) AS zi_products_and_services -- Leaving out for now but could be useful to parse later 
-        
+        , MAX(zi_number_of_developers__c) AS zi_developers_cnt
+        --, MAX(zi_products_and_services__c) AS zi_products_and_services -- Leaving out for now but could be useful to parse later
+
         --Atlassian
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Atlassian') THEN 1 END) AS zi_atlassian_flag
         , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: BitBucket') OR CONTAINS(zi_technologies__c, 'ARE_USED: AtlASsian Bitbucket')) THEN 1 END) AS zi_bitbucket_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Atlassian Jira Agile Tools') THEN 1 END) AS zi_jira_flag
-        
+
         --GCP
         , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: Google Cloud Platform') OR CONTAINS(zi_technologies__c, 'ARE_USED: GCP')) THEN 1 END) AS zi_gcp_flag
 
         --Github
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: GitHub') THEN 1 END) AS zi_github_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: GitHub Enterprise') THEN 1 END) AS zi_github_enterprise_flag
-        
+
         --AWS
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: AWS') THEN 1 END) AS zi_aws_flag
         , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: Amazon AWS Identity and Access Management') OR CONTAINS(zi_technologies__c, 'Amazon AWS Identity and Access Management (IAM)')) THEN 1 END) AS zi_aws_iam_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Amazon AWS CloudTrail') THEN 1 END) AS zi_aws_cloud_trail_flag
-        
+
         --Other CI
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Hashicorp') THEN 1 END) AS zi_hAShicorp_flag
         , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: CircleCI') OR CONTAINS(zi_technologies__c, 'ARE_USED: Circle Internet Services')) THEN 1 END) AS zi_circleci_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: TravisCI') THEN 1 END) AS zi_travisci_flag
-        --Open Source/Free 
+        --Open Source/Free
         , MAX(CASE WHEN (CONTAINS(zi_technologies__c, 'ARE_USED: Apache Subversion') OR CONTAINS(zi_technologies__c, 'ARE_USED: SVN')) THEN 1 END) AS zi_apache_subversion_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: Jenkins') THEN 1 END) AS zi_jenkins_flag
         , MAX(CASE WHEN CONTAINS(zi_technologies__c, 'ARE_USED: TortoiseSVN') THEN 1 END) AS zi_tortoise_svn_flag
@@ -252,6 +239,8 @@ WITH mart_arr_snapshot_bottom_up AS (
     FROM {{ source('snapshots', 'sfdc_account_snapshots') }}
     WHERE CAST(DBT_UPDATED_AT AS date) = '{{ end_date }}' -- Cast from datetime to date
     GROUP BY account_id  -- snapshots occur multiple times a day so data is not unique at the acccount + dbt_updated_at level.
+
+
 ), bizible AS (
 
     SELECT
@@ -321,10 +310,9 @@ WITH mart_arr_snapshot_bottom_up AS (
         , AVG(epics_28_days_user) as epics_avg
         , AVG(issues_28_days_user) as issues_avg
         , AVG(analytics_28_days_user) as analytics_avg
-        , AVG(license_utilization) AS license_utilization_avg
-        , AVG(active_user_count) AS active_user_count_avg
-        , AVG(license_user_count) AS license_user_count_avg
-        , AVG(billable_user_count) AS billable_user_count_avg
+        , SUM(CASE WHEN instance_type='Production' THEN active_user_count END) AS active_user_count_cnt
+        , SUM(CASE WHEN instance_type='Production' THEN license_user_count END) AS license_user_count_cnt
+        , SUM(CASE WHEN instance_type='Production' THEN billable_user_count END) AS billable_user_count_cnt
         , MAX(commit_comment_all_time_event) AS commit_comment_all_time_event
         , MAX(source_code_pushes_all_time_event) AS source_code_pushes_all_time_event
         , MAX(template_repositories_all_time_event) AS template_repositories_all_time_event
@@ -337,18 +325,11 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(projects_all_time_event) as projects_all_time_event
         , MAX(CASE WHEN gitlab_shared_runners_enabled = 'TRUE' THEN 1 ELSE 0 END) AS gitlab_shared_runners_enabled
         , MAX(CASE WHEN container_registry_enabled = 'TRUE' THEN 1 ELSE 0 END) AS container_registry_enabled
-        , MAX(max_historical_user_count) AS max_historical_user_count
-       /* --proposed fix to remove missing values coming from SaaS
-       , MAX(CASE WHEN delivery_type = 'SaaS' AND dim_usage_ping_id IS null AND billable_user_count IS NOT NULL THEN 14
-     WHEN delivery_type = 'SaaS' AND dim_usage_ping_id IS null AND billable_user_count IS NULL THEN 13
-     ELSE CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT) END) AS gitlab_version*/
+        , MAX(CASE WHEN instance_type='Production' THEN max_historical_user_count END) AS max_historical_user_count
         , MAX(CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT)) as gitlab_version
     FROM {{ref('mart_product_usage_paid_user_metrics_monthly')}}
     WHERE PING_CREATED_AT IS NOT NULL
-        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, cast('{{ end_date }}' as date))) -- Usage data is at the SNAPSHOT_MONTH level. As such, we have to use the whole month PRIOR to our SNAPSHOT_DT to avoid leakage
-        AND ((delivery_type = 'SaaS')
-            OR
-            (instance_type='Production' AND delivery_type = 'Self-Managed'))
+        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND cast('{{ end_date }}' as date)
     GROUP BY dim_crm_account_id
 
 )
@@ -356,12 +337,6 @@ WITH mart_arr_snapshot_bottom_up AS (
 -- This is the final output table that creates the modeling dataset
 SELECT
     p1.dim_crm_account_id AS crm_account_id
-
-    --Outcome variables
-    , CASE WHEN COALESCE(p1.sum_arr, 0) != 0 AND ((COALESCE(t.future_arr,0) - COALESCE(p1.sum_arr,0)) / COALESCE(p1.sum_arr,0)) > 0.1 THEN 1 -- If there is more than a 10% increase in ARR
-         ELSE 0
-         END AS is_expanded_flag
-    , COALESCE(t.future_arr, 0) - COALESCE(p1.sum_arr, 0) AS is_expanded_amt
 
     --Zuora Fields
     , p1.num_of_subs AS subs_cnt
@@ -460,6 +435,7 @@ SELECT
     , COALESCE(o.lost_opportunities_by_renewal, 0) AS lost_opportunities_by_renewal_cnt
     , COALESCE(o.lost_opportunities_new_business, 0) AS lost_opportunities_new_business_cnt
     , COALESCE(o.lost_opportunities_add_on_business, 0) AS lost_opportunities_add_on_business_cnt
+
     , COALESCE(o.competitors_other, 0) AS competitors_other_flag
     , COALESCE(o.competitors_gitlab_core, 0) AS competitors_gitlab_core_flag
     , COALESCE(o.competitors_none, 0) AS competitors_none_flag
@@ -492,31 +468,6 @@ SELECT
     , COALESCE(o.use_case_git_ops, 0) AS use_case_git_ops_cnt
     , CASE WHEN o.account_id IS NOT NULL THEN 1 ELSE 0 END AS has_sfdc_opportunities_flag
 
---Event Salesforce
-    , COALESCE(es.initial_qualifying_meeting_event_count, 0) AS initial_qualifying_meeting_event_cnt
-    , COALESCE(es.meeting_event_count, 0) AS meeting_event_cnt
-    , COALESCE(es.web_conference_event_count, 0) AS web_conference_event_cnt
-    , COALESCE(es.call_event_count, 0) AS call_event_cnt
-    , COALESCE(es.demo_event_count, 0) AS demo_event_cnt
-    , COALESCE(es.in_person_event_count, 0) AS in_person_event_cnt
-    , COALESCE(es.renewal_event_count, 0) AS renewal_event_cnt
-    , COALESCE(es.total_event_count, 0) AS total_event_cnt
-    , CASE WHEN es.account_id IS NOT NULL THEN 1 ELSE 0 END AS has_sfdc_events_flag
-
-
---Task Salesforce
-    , COALESCE(ts.email_task_count, 0) AS email_task_cnt
-    , COALESCE(ts.call_task_count, 0) AS call_task_cnt
-    , COALESCE(ts.demo_task_count, 0) AS demo_task_cnt
-    , COALESCE(ts.sales_alignment_task_count, 0) AS sales_alignment_task_cnt
-    , COALESCE(ts.total_task_count, 0) AS total_task_cnt
-    , COALESCE(ts.is_answered_task, 0) AS is_answered_task_flag
-    , COALESCE(ts.is_busy_task, 0) AS is_busy_task_flag
-    , COALESCE(ts.is_correct_contact_task, 0) AS is_correct_contact_task_flag
-    , COALESCE(ts.is_left_message_task, 0) AS is_left_message_task_flag
-    , COALESCE(ts.is_not_answered_task, 0) AS is_not_answered_task_flag
-    , CASE WHEN ts.account_id IS NOT NULL THEN 1 ELSE 0 END AS has_sfdc_tasks_flag
-
 --ZoomInfo Fields
     , zt.zi_revenue AS zi_revenue
     , zt.zi_industry AS zi_industry
@@ -545,7 +496,32 @@ SELECT
     , COALESCE(zt.zi_hashicorp_flag, zt.zi_bitbucket_flag, zt.zi_jira_flag, 0) AS zi_other_ci_any_flag
     , COALESCE(zt.zi_apache_subversion_flag, zt.zi_jenkins_flag, zt.zi_tortoise_svn_flag, zt.zi_kubernetes_flag, 0) AS zi_open_source_any_flag
 
-    --Bizible Fields
+--Event Salesforce
+    , COALESCE(es.initial_qualifying_meeting_event_count, 0) AS initial_qualifying_meeting_event_cnt
+    , COALESCE(es.meeting_event_count, 0) AS meeting_event_cnt
+    , COALESCE(es.web_conference_event_count, 0) AS web_conference_event_cnt
+    , COALESCE(es.call_event_count, 0) AS call_event_cnt
+    , COALESCE(es.demo_event_count, 0) AS demo_event_cnt
+    , COALESCE(es.in_person_event_count, 0) AS in_person_event_cnt
+    , COALESCE(es.renewal_event_count, 0) AS renewal_event_cnt
+    , COALESCE(es.total_event_count, 0) AS total_event_cnt
+    , CASE WHEN es.account_id IS NOT NULL THEN 1 ELSE 0 END AS has_sfdc_events_flag
+
+
+--Task Salesforce
+    , COALESCE(ts.email_task_count, 0) AS email_task_cnt
+    , COALESCE(ts.call_task_count, 0) AS call_task_cnt
+    , COALESCE(ts.demo_task_count, 0) AS demo_task_cnt
+    , COALESCE(ts.sales_alignment_task_count, 0) AS sales_alignment_task_cnt
+    , COALESCE(ts.total_task_count, 0) AS total_task_cnt
+    , COALESCE(ts.is_answered_task, 0) AS is_answered_task_flag
+    , COALESCE(ts.is_busy_task, 0) AS is_busy_task_flag
+    , COALESCE(ts.is_correct_contact_task, 0) AS is_correct_contact_task_flag
+    , COALESCE(ts.is_left_message_task, 0) AS is_left_message_task_flag
+    , COALESCE(ts.is_not_answered_task, 0) AS is_not_answered_task_flag
+    , CASE WHEN ts.account_id IS NOT NULL THEN 1 ELSE 0 END AS has_sfdc_tasks_flag
+
+--Bizible Fields
     , COALESCE(b.num_bizible_touchpoints, 0) AS bizible_touchpoints_cnt
     , COALESCE(b.num_campaigns, 0) AS campaigns_cnt
     , COALESCE(b.touchpoint_source_web_direct, 0) AS touchpoint_source_web_direct_cnt
@@ -618,17 +594,15 @@ SELECT
     , u.projects_all_time_event as projects_all_time_event_cnt
     , u.gitlab_shared_runners_enabled as gitlab_shared_runners_enabled_flag
     , u.container_registry_enabled as container_registry_enabled_flag
-    , u.license_utilization_avg as license_utilization_avg
-    , u.active_user_count_avg as active_user_count_avg
+    , CASE WHEN u.license_user_count_cnt > 0 THEN u.active_user_count_cnt / u.license_user_count_cnt  ELSE 0 END AS license_utilization_pct
+    , u.active_user_count_cnt AS active_user_count_cnt
+    , u.license_user_count_cnt AS license_user_count_cnt
+    , u.billable_user_count_cnt AS billable_user_count_cnt
     , u.max_historical_user_count as max_historical_user_cnt
-    , u.license_user_count_avg as license_user_count_avg
-    , u.billable_user_count_avg as billable_user_count_avg
     , u.gitlab_version AS gitlab_version
     , CASE WHEN u.dim_crm_account_id IS NOT NULL THEN 1 ELSE 0 END AS has_usage_data_flag
 
 FROM period_1 p1
-LEFT JOIN target t
-    ON p1.dim_crm_account_id = t.dim_crm_account_id
 LEFT JOIN period_2 p2
     ON p1.dim_crm_account_id = p2.dim_crm_account_id
 LEFT JOIN opps o
@@ -645,3 +619,5 @@ LEFT JOIN bizible b
     ON p1.dim_crm_account_id = b.dim_crm_account_id
 LEFT JOIN product_usage u
     ON p1.dim_crm_account_id = u.dim_crm_account_id
+
+{%- endmacro -%}

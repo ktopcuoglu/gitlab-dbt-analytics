@@ -134,6 +134,11 @@ sources:
       - name: clusters_applications_runners
         identifier: gitlab_db_clusters_applications_runners
         freshness: null
+      - name: dast_profiles
+        identifier: gitlab_db_dast_profiles
+        freshness:
+          warn_after: {count: 3, period: day}
+          error_after: {count: 4, period: day}
       - name: deployments
         identifier: gitlab_db_deployments
       - name: deployment_merge_requests
@@ -342,6 +347,9 @@ sources:
         freshness:
           warn_after: { count: 7, period: day }
           error_after: { count: 30, period: day }
+      - name: users_security_dashboard_projects
+        identifier: gitlab_db_users_security_dashboard_projects
+        freshness: null
       - name: vulnerabilities
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
