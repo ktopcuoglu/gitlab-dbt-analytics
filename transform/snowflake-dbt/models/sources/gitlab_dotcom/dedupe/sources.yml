@@ -42,6 +42,8 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 30, period: day}
+      - name: audit_events_external_audit_event_destinations
+        identifier: gitlab_db_audit_events_external_audit_event_destinations
       - name: award_emoji
         identifier: gitlab_db_award_emoji
       - name: banned_users
