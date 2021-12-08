@@ -20,7 +20,7 @@ WITH snapshot_dates AS (
 ), mart_available_to_renew AS (
 
     SELECT *
-    FROM {{ ref('mart_available_to_renew_snapshot') }}
+    FROM {{ ref('prep_mart_available_to_renew_snapshot_base') }}
 
 ), mart_available_to_renew_spined AS (
     SELECT
