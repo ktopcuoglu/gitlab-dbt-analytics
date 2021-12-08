@@ -169,7 +169,6 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , author_id
       , namespace_id
       , destination_url
       , created_at
