@@ -8,7 +8,7 @@ from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
     clone_repo_cmd,
-    dbt_install_deps_cmd,
+    dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
@@ -65,7 +65,7 @@ dag = DAG(
 
 #dbt_trusted_data
 dbt_trusted_data_command = f"""
-    {dbt_install_deps_cmd} &&
+    {dbt_install_deps_nosha_cmd} &&
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.tdf.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
