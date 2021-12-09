@@ -20,12 +20,15 @@ WITH sfdc_opportunity AS (
 
     SELECT DISTINCT
       sfdc_zqu_quote_source.zqu__opportunity                AS opportunity_id,
-      sfdc_zqu_quote_source.zqu__start_date::DATE           AS quote_start_date
+      sfdc_zqu_quote_source.zqu__start_date::DATE           AS quote_start_date,
+      (ROW_NUMBER() OVER (PARTITION BY sfdc_zqu_quote_source.zqu__opportunity ORDER BY sfdc_zqu_quote_source.last_modified_date DESC))
+                                                            AS record_number
     FROM sfdc_zqu_quote_source
     INNER JOIN sfdc_opportunity
       ON sfdc_zqu_quote_source.zqu__opportunity = sfdc_opportunity.opportunity_id
     WHERE stage_name IN ('Closed Won', '8-Closed Lost')
       AND zqu__primary = TRUE
+    QUALIFY record_number = 1
 
 ), layered AS (
 
