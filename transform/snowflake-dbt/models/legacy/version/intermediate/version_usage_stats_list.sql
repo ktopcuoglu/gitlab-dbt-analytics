@@ -13,4 +13,8 @@ FROM version_usage_data,
 WHERE IS_OBJECT(f.value) = FALSE
 -- error when 'license_scanning_jobs' pops up.
 -- more details in the issue https://gitlab.com/gitlab-data/analytics/-/issues/10749
-AND full_ping_name != 'license_scanning_jobs'
+AND full_ping_name NOT IN ('groups_bugdb_active',
+                           'license_scanning_jobs',
+                           'groups_shimo_active',
+                           'projects_inheriting_shimo_active',
+                           'projects_inheriting_bugdb_active')
