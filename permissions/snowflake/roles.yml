@@ -162,6 +162,11 @@ databases:
     - rbacovic_prep:
         shared: no
 
+    - rdemiri_prod:
+        shared: no
+    - rdemiri_prep:
+        shared: no        
+
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -3879,6 +3884,48 @@ roles:
                     - rbacovic_prep.*.*
                     - rbacovic_prod.*.*           
 
+    - rdemiri:
+        member_of:
+            - engineer
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - rdemiri_prep
+                - rdemiri_prod
+            schemas:
+                - rdemiri_prep.*
+                - rdemiri_prod.*
+            tables:
+                - rdemiri_prep.*.*
+                - rdemiri_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rdemiri_prep
+                    - rdemiri_prod
+                write:
+                    - rdemiri_prep
+                    - rdemiri_prod
+            schemas:
+                read:
+                    - rdemiri_prep.*
+                    - rdemiri_prod.*
+                write:
+                    - rdemiri_prep.*
+                    - rdemiri_prod.*
+            tables:
+                read:
+                    - rdemiri_prep.*.*
+                    - rdemiri_prod.*.*
+                write:
+                    - rdemiri_prep.*.*
+                    - rdemiri_prod.*.*           
+
     - rheannamistry:
         member_of:
             - decisive_data
@@ -5027,6 +5074,11 @@ users:
         can_login: yes
         member_of:
             - rbacovic
+
+    - rdemiri:
+        can_login: yes
+        member_of:
+            - rdemiri
 
     - rheannamistry:
         can_login: yes
