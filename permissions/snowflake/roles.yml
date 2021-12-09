@@ -194,11 +194,6 @@ databases:
     - tnguyen_prep:
         shared: no        
 
-    - trevorromero_prod:
-        shared: no
-    - trevorromero_prep:
-        shared: no
-
     - tullylanterdd_prod:
         shared: no
     - tullylanterdd_prep:
@@ -4261,45 +4256,6 @@ roles:
                     - tnguyen_prep.*.*
                     - tnguyen_prod.*.*      
 
-    - trevorromero:
-        member_of:
-            - decisive_data
-            - marketing_dnc
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - trevorromero_prep
-                - trevorromero_prod
-            schemas:
-                - trevorromero_prep.*
-                - trevorromero_prod.*
-            tables:
-                - trevorromero_prep.*.*
-                - trevorromero_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - trevorromero_prep
-                    - trevorromero_prod
-                write:
-                    - trevorromero_prep
-                    - trevorromero_prod
-            schemas:
-                read:
-                    - trevorromero_prep.*
-                    - trevorromero_prod.*
-                write:
-                    - trevorromero_prep.*
-                    - trevorromero_prod.*
-            tables:
-                read:
-                    - trevorromero_prep.*.*
-                    - trevorromero_prod.*.*
-                write:
-                    - trevorromero_prep.*.*
-                    - trevorromero_prod.*.*
-
     - tullylanterdd:
         member_of:
             - decisive_data
@@ -5191,11 +5147,6 @@ users:
         can_login: yes
         member_of:
             - tnguyen
-
-    - trevorromero:
-        can_login: yes
-        member_of:
-            - trevorromero
 
     - valexieva:
         can_login: no
