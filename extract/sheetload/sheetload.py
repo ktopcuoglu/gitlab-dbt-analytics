@@ -360,6 +360,8 @@ def drive_loader(
     for folder in folders:
         folder_name = folder.get("folder_name")
         table_name = folder.get("table_name")
+        # If chunk is NULL or not passed then the current code behavior is to do the replace.
+        chunk = folder.get("table_replace_append")
         # mypy fix
         if table_name is None:
             raise ValueError
@@ -379,7 +381,7 @@ def drive_loader(
         for file in files:
             file_id = file.get("id", "")
             data = google_drive_client.get_data_frame_from_file_id(file_id=file_id)
-            dw_uploader_append_only(engine, table=table_name, data=data, chunk=1)
+            dw_uploader_append_only(engine, table=table_name, data=data, chunk=chunk)
             google_drive_client.move_file_to_folder(
                 file_id=file_id, to_folder_id=archive_folder_id
             )
