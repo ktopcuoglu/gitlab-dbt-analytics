@@ -379,7 +379,7 @@ def drive_loader(
         for file in files:
             file_id = file.get("id", "")
             data = google_drive_client.get_data_frame_from_file_id(file_id=file_id)
-            dw_uploader_append_only(engine, table=table_name, data=data)
+            dw_uploader_append_only(engine, table=table_name, data=data, chunk=1)
             google_drive_client.move_file_to_folder(
                 file_id=file_id, to_folder_id=archive_folder_id
             )
