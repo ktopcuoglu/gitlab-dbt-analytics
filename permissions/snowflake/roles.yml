@@ -2336,6 +2336,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - cbalane:
+        member_of:
+            - reporter
+            - gitlab_dotcom_prep
+        warehouses:
+            - analyst_xs  
+
     - cbraza:
         member_of:
             - analyst_growth
@@ -4531,6 +4538,11 @@ users:
         can_login: no
         member_of: []
  
+    - cbalane:
+        can_login: yes
+        member_of:
+            - cbalane
+
     - cbraza:
         can_login: yes
         member_of:
