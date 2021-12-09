@@ -20,7 +20,7 @@ WITH sfdc_opportunity AS (
 
     SELECT DISTINCT
       sfdc_zqu_quote_source.zqu__opportunity                AS opportunity_id,
-      sfdc_zqu_quote_source.zqu__start_date                 AS quote_start_date
+      sfdc_zqu_quote_source.zqu__start_date::DATE           AS quote_start_date
     FROM sfdc_zqu_quote_source
     INNER JOIN sfdc_opportunity
       ON sfdc_zqu_quote_source.zqu__opportunity = sfdc_opportunity.opportunity_id
@@ -103,11 +103,15 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.payment_schedule,
       sfdc_opportunity.comp_y2_iacv,
       CASE
-        WHEN sfdc_opportunity.opportunity_term IS NULL THEN
-          DATEDIFF('days', quote.quote_start_date, sfdc_opportunity.subscription_end_date)
+        WHEN sfdc_opportunity.opportunity_term IS NULL AND quote.quote_start_date IS NOT NULL THEN
+          DATEDIFF('month', quote.quote_start_date, sfdc_opportunity.subscription_end_date)
+        WHEN sfdc_opportunity.opportunity_term IS NULL AND quote.quote_start_date IS NULL THEN
+          DATEDIFF('month', sfdc_opportunity.subscription_start_date, sfdc_opportunity.subscription_end_date)
         ELSE sfdc_opportunity.opportunity_term
       END                                              AS opportunity_term,
       quote.quote_start_date,
+      sfdc_opportunity.subscription_start_date,
+      sfdc_opportunity.subscription_end_date,
 
       -- Command Plan fields
       sfdc_opportunity.cp_partner,
