@@ -106,10 +106,8 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.payment_schedule,
       sfdc_opportunity.comp_y2_iacv,
       CASE
-        WHEN sfdc_opportunity.opportunity_term IS NULL AND quote.quote_start_date IS NOT NULL THEN
+        WHEN sfdc_opportunity.opportunity_term IS NULL THEN
           DATEDIFF('month', quote.quote_start_date, sfdc_opportunity.subscription_end_date)
-        WHEN sfdc_opportunity.opportunity_term IS NULL AND quote.quote_start_date IS NULL THEN
-          DATEDIFF('month', sfdc_opportunity.subscription_start_date, sfdc_opportunity.subscription_end_date)
         ELSE sfdc_opportunity.opportunity_term
       END                                              AS opportunity_term,
       quote.quote_start_date,
