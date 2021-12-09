@@ -3364,6 +3364,10 @@ roles:
         member_of: []
         warehouses: []
 
+    - lvandijk:
+        warehouses:
+            - admin
+
     - marntz:
         member_of:
             - analyst_sales
@@ -4884,6 +4888,12 @@ users:
     - lvandensteen: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - lvandijk:
+        can_login: yes
+        member_of:
+            - lvandijk
+            - securityadmin
 
     - marntz:
         can_login: yes
