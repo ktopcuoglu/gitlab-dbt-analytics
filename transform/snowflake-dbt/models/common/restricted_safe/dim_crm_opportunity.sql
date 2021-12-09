@@ -21,7 +21,7 @@ WITH sfdc_opportunity AS (
     SELECT DISTINCT
       sfdc_zqu_quote_source.zqu__opportunity                AS opportunity_id,
       sfdc_zqu_quote_source.zqu__start_date::DATE           AS quote_start_date,
-      (ROW_NUMBER() OVER (PARTITION BY sfdc_zqu_quote_source.zqu__opportunity ORDER BY sfdc_zqu_quote_source.last_modified_date DESC))
+      (ROW_NUMBER() OVER (PARTITION BY sfdc_zqu_quote_source.zqu__opportunity ORDER BY sfdc_zqu_quote_source.created_date DESC))
                                                             AS record_number
     FROM sfdc_zqu_quote_source
     INNER JOIN sfdc_opportunity
