@@ -100,6 +100,7 @@ tables:
       , comment_capture
       , glm_content
       , glm_source
+      , sent_at
       FROM leads
   license_seat_links:
     advanced_metadata: true
