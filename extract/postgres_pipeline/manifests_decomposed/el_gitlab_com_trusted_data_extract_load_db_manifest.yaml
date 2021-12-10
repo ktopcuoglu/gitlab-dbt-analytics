@@ -1116,4 +1116,18 @@ tables:
         , count(*) as number_of_records
         FROM namespace_root_storage_statistics
         WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,3   
+        GROUP BY 1,3  
+  cluster_21:
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-      
+        SELECT 'gitlab_db_notes' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM notes
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3  
