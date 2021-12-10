@@ -245,7 +245,7 @@ sheets:
   - name: sales_capacity_kpi
     owner: '@mvilain'
     tabs:
-     - sales_capacity_kpi
+      - sales_capacity_kpi
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
