@@ -98,7 +98,7 @@ sheets:
   - name: gitlab_certification_tracking_dashboard
     owner: '@rbacovic'
     tabs:
-      - old_impartner_data_static
+      - gitlab_certification_tracking_dashboard
   - name: gitlab_slack_stats
     owner: '@ken_aguilar'
     tabs:
