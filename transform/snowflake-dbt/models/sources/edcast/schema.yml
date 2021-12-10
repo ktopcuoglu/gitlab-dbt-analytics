@@ -2,7 +2,8 @@ version: 2
 
 models:
 - name: sheetload_gitlab_certification_tracking_dashboard
-  description: Source of static data for old file with the list of tracking certification, belong to EdCast intgegration, saved due to historical reasons.
+  tags: ["people", "edcast"]
+  description: '{{ doc("sheetload_gitlab_certification_tracking_dashboard") }}'
   columns:
   - name: user
     tests:
@@ -16,3 +17,12 @@ models:
   - name: certification
     tests:
     - not_null
+  - name: cert_date
+  - name: partner_sfdc_id
+  - name: account_owner
+  - name: region
+  - name: track
+  - name: pubsec_partner
+  - name: cert_month
+  - name: cert_quarter
+  - name: _updated_at

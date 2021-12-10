@@ -171,6 +171,7 @@ models:
 
       edcast:
         +schema: edcast
+        +tags: ["people", "edcast"]
 
       gainsight:
         +materialized: table
