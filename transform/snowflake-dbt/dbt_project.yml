@@ -169,6 +169,9 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
 
+      edcast:
+        +schema: edcast
+
       gainsight:
         +materialized: table
         +schema: gainsight

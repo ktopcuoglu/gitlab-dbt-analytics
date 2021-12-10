@@ -1,0 +1,18 @@
+version: 2
+
+models:
+- name: sheetload_gitlab_certification_tracking_dashboard
+  description: Source of static data for old file with the list of tracking certification, belong to EdCast intgegration, saved due to historical reasons.
+  columns:
+  - name: user
+    tests:
+    - not_null
+  - name: account
+    tests:
+    - not_null
+  - name: passed_datetime
+    tests:
+    - not_null
+  - name: certification
+    tests:
+    - not_null

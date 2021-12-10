@@ -75,21 +75,6 @@ models:
       - not_null
 - name: sheetload_gcp_active_cud_source
   description: table of committed use discounts (CUD) in GCP
-- name: sheetload_gitlab_certification_tracking_dashboard
-  description: Source of static data for old file with the list of tracking certification.
-  columns:
-  - name: user
-    tests:
-    - not_null
-  - name: account
-    tests:
-    - not_null
-  - name: passed_datetime
-    tests:
-    - not_null
-  - name: certification
-    tests:
-    - not_null
 - name: sheetload_gitlab_contributing_organizations_source
   description: Source of contributing users mapped to customer organizations used to support MRARR.
 - name: sheetload_gitlab_slack_stats_source
