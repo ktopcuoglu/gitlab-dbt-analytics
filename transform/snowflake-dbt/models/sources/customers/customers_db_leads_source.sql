@@ -30,7 +30,8 @@ WITH source AS (
       provider::VARCHAR               AS provider,
       comment_capture::VARCHAR        AS comment_capture,
       glm_content::VARCHAR            AS glm_content,
-      glm_source::VARCHAR             AS glm_source
+      glm_source::VARCHAR             AS glm_source,
+      sent_at::TIMESTAMP              as sent_at
 
     FROM source  
 
