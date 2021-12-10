@@ -43,7 +43,7 @@ Below checklist of activities would be run once for quarter to validate security
 
    * [ ] Run below SQL script to perform the check.
 
-     `NOTE: Exclude deactivating system accounts that show up from executing below SQL script.`
+     `NOTE: Exclude deactivating system accounts that show up in the list when below SQL script is executed.`
   
 
     ```sql
