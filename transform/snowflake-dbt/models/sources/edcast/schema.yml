@@ -6,6 +6,8 @@ models:
   description: '{{ doc("sheetload_gitlab_certification_tracking_dashboard") }}'
   columns:
   - name: user
+    meta:
+      sensitive: true
     tests:
     - not_null
   - name: account
