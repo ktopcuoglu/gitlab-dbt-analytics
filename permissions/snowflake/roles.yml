@@ -2292,7 +2292,14 @@ roles:
     - awaller: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []      
-    
+
+    - bleducmills:
+        member_of:
+            - reporter
+            - snowplow
+        warehouses:
+            - analyst_xs         
+
     - bmartin:
         member_of:  
             - empiricalpath
@@ -4462,6 +4469,11 @@ users:
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - bleducmills:
+        can_login: yes
+        member_of:
+            - bleducmills
 
     - bmartin:
         can_login: yes
