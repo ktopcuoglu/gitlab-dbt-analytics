@@ -242,6 +242,10 @@ sheets:
     owner: '@jjstark'
     tabs:
       - test_sheet
+  - name: sales_capacity_kpi
+    owner: '@mvilain'
+    tabs:
+      - sales_capacity_kpi
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:
