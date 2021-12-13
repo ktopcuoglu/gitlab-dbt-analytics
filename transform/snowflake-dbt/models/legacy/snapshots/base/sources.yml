@@ -50,3 +50,4 @@ sources:
       - name: zuora_refund_snapshots
       - name: zuora_revenue_schedule_item_snapshots
       - name: zuora_subscription_snapshots
+      - name: mart_available_to_renew_snapshot

@@ -67,11 +67,6 @@ databases:
     - ian_prep:
         shared: no 
 
-    - ianschweickart_prod:
-        shared: no
-    - ianschweickart_prep:
-        shared: no
-
     - iweeks_prod:
         shared: no
     - iweeks_prep:
@@ -162,6 +157,11 @@ databases:
     - rbacovic_prep:
         shared: no
 
+    - rdemiri_prod:
+        shared: no
+    - rdemiri_prep:
+        shared: no        
+
     - rheannamistry_prod:
         shared: no
     - rheannamistry_prep:
@@ -188,11 +188,6 @@ databases:
         shared: no
     - tnguyen_prep:
         shared: no        
-
-    - trevorromero_prod:
-        shared: no
-    - trevorromero_prep:
-        shared: no
 
     - tullylanterdd_prod:
         shared: no
@@ -1316,6 +1311,7 @@ roles:
                     - prod.common
                     - prod.common_mart_product
                     - prod.common_mapping
+                    - prod.restricted_safe_common_mart_sales
                 write:
                     - prod.common_mart_product
             tables:
@@ -1327,6 +1323,7 @@ roles:
                     - prod.common_mart_product.mart_saas_product_usage_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
+                    - prod.restricted_safe_common_mart_sales.mart_arr
 
     - gainsight:
         warehouses:
@@ -2290,7 +2287,14 @@ roles:
     - awaller: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []      
-    
+
+    - bleducmills:
+        member_of:
+            - reporter
+            - snowplow
+        warehouses:
+            - analyst_xs         
+
     - bmartin:
         member_of:  
             - empiricalpath
@@ -2328,6 +2332,13 @@ roles:
     - camsmith: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
+
+    - cbalane:
+        member_of:
+            - reporter
+            - gitlab_dotcom_prep
+        warehouses:
+            - analyst_xs  
 
     - cbraza:
         member_of:
@@ -2776,44 +2787,6 @@ roles:
                 write:
                     - ian_prep.*.*
                     - ian_prod.*.*       
-
-    - ianschweickart:
-        member_of:
-            - decisive_data
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - ianschweickart_prep
-                - ianschweickart_prod
-            schemas:
-                - ianschweickart_prep.*
-                - ianschweickart_prod.*
-            tables:
-                - ianschweickart_prep.*.*
-                - ianschweickart_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - ianschweickart_prep
-                    - ianschweickart_prod
-                write:
-                    - ianschweickart_prep
-                    - ianschweickart_prod
-            schemas:
-                read:
-                    - ianschweickart_prep.*
-                    - ianschweickart_prod.*
-                write:
-                    - ianschweickart_prep.*
-                    - ianschweickart_prod.*
-            tables:
-                read:
-                    - ianschweickart_prep.*.*
-                    - ianschweickart_prod.*.*
-                write:
-                    - ianschweickart_prep.*.*
-                    - ianschweickart_prod.*.*
 
     - iroussos:
         member_of:
@@ -3357,6 +3330,10 @@ roles:
         member_of: []
         warehouses: []
 
+    - lvandijk:
+        warehouses:
+            - admin
+
     - marntz:
         member_of:
             - analyst_sales
@@ -3879,6 +3856,48 @@ roles:
                     - rbacovic_prep.*.*
                     - rbacovic_prod.*.*           
 
+    - rdemiri:
+        member_of:
+            - engineer
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - rdemiri_prep
+                - rdemiri_prod
+            schemas:
+                - rdemiri_prep.*
+                - rdemiri_prod.*
+            tables:
+                - rdemiri_prep.*.*
+                - rdemiri_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rdemiri_prep
+                    - rdemiri_prod
+                write:
+                    - rdemiri_prep
+                    - rdemiri_prod
+            schemas:
+                read:
+                    - rdemiri_prep.*
+                    - rdemiri_prod.*
+                write:
+                    - rdemiri_prep.*
+                    - rdemiri_prod.*
+            tables:
+                read:
+                    - rdemiri_prep.*.*
+                    - rdemiri_prod.*.*
+                write:
+                    - rdemiri_prep.*.*
+                    - rdemiri_prod.*.*           
+
     - rheannamistry:
         member_of:
             - decisive_data
@@ -4212,45 +4231,6 @@ roles:
                     - tnguyen_prep.*.*
                     - tnguyen_prod.*.*      
 
-    - trevorromero:
-        member_of:
-            - decisive_data
-            - marketing_dnc
-        warehouses:
-            - analyst_xs
-        owns:
-            databases:
-                - trevorromero_prep
-                - trevorromero_prod
-            schemas:
-                - trevorromero_prep.*
-                - trevorromero_prod.*
-            tables:
-                - trevorromero_prep.*.*
-                - trevorromero_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - trevorromero_prep
-                    - trevorromero_prod
-                write:
-                    - trevorromero_prep
-                    - trevorromero_prod
-            schemas:
-                read:
-                    - trevorromero_prep.*
-                    - trevorromero_prod.*
-                write:
-                    - trevorromero_prep.*
-                    - trevorromero_prod.*
-            tables:
-                read:
-                    - trevorromero_prep.*.*
-                    - trevorromero_prod.*.*
-                write:
-                    - trevorromero_prep.*.*
-                    - trevorromero_prod.*.*
-
     - tullylanterdd:
         member_of:
             - decisive_data
@@ -4447,6 +4427,11 @@ users:
         can_login: no
         member_of: []
 
+    - bleducmills:
+        can_login: yes
+        member_of:
+            - bleducmills
+
     - bmartin:
         can_login: yes
         member_of:
@@ -4482,6 +4467,11 @@ users:
         can_login: no
         member_of: []
  
+    - cbalane:
+        can_login: yes
+        member_of:
+            - cbalane
+
     - cbraza:
         can_login: yes
         member_of:
@@ -4631,11 +4621,6 @@ users:
     - hsharma: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
-
-    - ianschweickart:
-        can_login: yes
-        member_of:
-            - ianschweickart
 
     - ian:
         can_login: yes
@@ -4836,6 +4821,12 @@ users:
         can_login: no
         member_of: []
 
+    - lvandijk:
+        can_login: yes
+        member_of:
+            - lvandijk
+            - securityadmin
+
     - marntz:
         can_login: yes
         member_of:
@@ -5028,6 +5019,11 @@ users:
         member_of:
             - rbacovic
 
+    - rdemiri:
+        can_login: yes
+        member_of:
+            - rdemiri
+
     - rheannamistry:
         can_login: yes
         member_of:
@@ -5137,11 +5133,6 @@ users:
         can_login: yes
         member_of:
             - tnguyen
-
-    - trevorromero:
-        can_login: yes
-        member_of:
-            - trevorromero
 
     - valexieva:
         can_login: no

@@ -44,6 +44,9 @@ sources:
           error_after: {count: 30, period: day}
       - name: audit_events_external_audit_event_destinations
         identifier: gitlab_db_audit_events_external_audit_event_destinations
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 30, period: day}
       - name: award_emoji
         identifier: gitlab_db_award_emoji
       - name: banned_users
@@ -90,6 +93,8 @@ sources:
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners
         identifier: gitlab_db_ci_runners
+      - name: ci_sources_pipelines
+        identifier: gitlab_db_ci_sources_pipelines
       - name: ci_stages
         identifier: gitlab_db_ci_stages
       - name: ci_trigger_requests
@@ -139,8 +144,8 @@ sources:
       - name: dast_profiles
         identifier: gitlab_db_dast_profiles
         freshness:
-          warn_after: {count: 3, period: day}
-          error_after: {count: 4, period: day}
+          warn_after: {count: 7, period: day}
+          error_after: {count: 15, period: day}
       - name: deployments
         identifier: gitlab_db_deployments
       - name: deployment_merge_requests

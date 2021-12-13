@@ -10,6 +10,26 @@ WITH sfdc_opportunity AS (
     SELECT *
     FROM {{ref('sfdc_opportunity_stage_source')}}
 
+), sfdc_zqu_quote_source AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_zqu_quote_source') }}
+    WHERE is_deleted = FALSE
+
+), quote AS (
+
+    SELECT DISTINCT
+      sfdc_zqu_quote_source.zqu__opportunity                AS opportunity_id,
+      sfdc_zqu_quote_source.zqu__start_date::DATE           AS quote_start_date,
+      (ROW_NUMBER() OVER (PARTITION BY sfdc_zqu_quote_source.zqu__opportunity ORDER BY sfdc_zqu_quote_source.created_date DESC))
+                                                            AS record_number
+    FROM sfdc_zqu_quote_source
+    INNER JOIN sfdc_opportunity
+      ON sfdc_zqu_quote_source.zqu__opportunity = sfdc_opportunity.opportunity_id
+    WHERE stage_name IN ('Closed Won', '8-Closed Lost')
+      AND zqu__primary = TRUE
+    QUALIFY record_number = 1
+
 ), layered AS (
 
     SELECT
@@ -46,7 +66,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.deal_path,
 
       -- opportunity information
-      
+
       sfdc_opportunity.product_category,
       sfdc_opportunity.product_details,
       sfdc_opportunity.products_purchased,
@@ -85,7 +105,14 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.tam_notes,
       sfdc_opportunity.payment_schedule,
       sfdc_opportunity.comp_y2_iacv,
-      sfdc_opportunity.opportunity_term,
+      CASE
+        WHEN sfdc_opportunity.opportunity_term IS NULL THEN
+          DATEDIFF('month', quote.quote_start_date, sfdc_opportunity.subscription_end_date)
+        ELSE sfdc_opportunity.opportunity_term
+      END                                              AS opportunity_term,
+      quote.quote_start_date,
+      sfdc_opportunity.subscription_start_date,
+      sfdc_opportunity.subscription_end_date,
 
       -- Command Plan fields
       sfdc_opportunity.cp_partner,
@@ -116,13 +143,15 @@ WITH sfdc_opportunity AS (
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
+    LEFT JOIN quote
+      ON sfdc_opportunity.opportunity_id = quote.opportunity_id
 
 )
 
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@michellecooper",
+    updated_by="@iweeks",
     created_date="2020-11-20",
-    updated_date="2021-10-07"
+    updated_date="2021-12-08"
 ) }}
