@@ -62,7 +62,7 @@ config_dict_td_pgp = {
         "dag_name": "el_gitlab_com_trusted_data_extract_load",
         "dbt_name": "None",
         "env_vars": {},
-        "extract_schedule_interval": "0 4 */1 * *",
+        "extract_schedule_interval": "30 7 */1 * *",
         "secrets": [
             GITLAB_COM_DB_USER,
             GITLAB_COM_DB_PASS,
