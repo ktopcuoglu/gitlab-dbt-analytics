@@ -1129,5 +1129,5 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM notes
-        WHERE DATE(created_at) > current_date - interval '8' day
+        WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3  
