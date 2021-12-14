@@ -1,3 +1,4 @@
+/* Comment as per MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5956
 {% snapshot zuora_revenue_invoice_accounting_summary_snapshots %}
 
     {{
@@ -15,3 +16,4 @@
     QUALIFY RANK() OVER (PARTITION BY revenue_snapshot_id ORDER BY incr_updt_dt DESC) = 1
 
 {% endsnapshot %}
+*/
