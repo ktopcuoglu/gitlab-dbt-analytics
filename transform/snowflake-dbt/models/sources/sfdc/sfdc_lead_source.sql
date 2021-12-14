@@ -61,6 +61,7 @@ WITH source AS (
         region__c                                               AS region,
         largeaccount__c                                         AS is_large_account,
         outreach_stage__c                                       AS outreach_stage,
+        Sequence_Step_Number__c                                 AS outreach_step_number,
         interested_in_gitlab_ee__c                              AS is_interested_gitlab_ee,
         interested_in_hosted_solution__c                        AS is_interested_in_hosted,
         lead_assigned_datetime__c::TIMESTAMP                    AS assigned_datetime,
@@ -105,6 +106,10 @@ WITH source AS (
         pathfactory_content_list__c                             AS pathfactory_content_list,
         pathfactory_content_journey__c                          AS pathfactory_content_journey,
         pathfactory_topic_list__c                               AS pathfactory_topic_list,
+
+        --marketo sales insight
+        mkto_si__Last_Interesting_Moment_Desc__c                AS marketo_last_interesting_moment_description,
+        mkto_si__Last_Interesting_Moment_Date__c                AS marketo_last_interesting_moment_date,
 
         --gitlab internal
         bdr_lu__c                                               AS business_development_look_up,
