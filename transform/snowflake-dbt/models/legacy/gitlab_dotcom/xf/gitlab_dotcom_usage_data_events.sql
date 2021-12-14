@@ -456,7 +456,7 @@
     FROM  {{ ref('gitlab_dotcom_events') }}
     WHERE target_type IS NULL 
       AND event_action_type_id = 5
-
+      AND created_at >= dateadd(year, -2, current_date)
 
 ), action_monthly_active_users_design_management AS (
 
@@ -464,6 +464,7 @@
     FROM  {{ ref('gitlab_dotcom_events') }}
     WHERE target_type = 'DesignManagement::Design' 
       AND event_action_type_id IN (1, 2)
+      AND created_at >= dateadd(year, -2, current_date)
 
 ), action_monthly_active_users_wiki_repo AS (
 
@@ -471,6 +472,7 @@
     FROM  {{ ref('gitlab_dotcom_events') }}
     WHERE target_type = 'WikiPage::Meta' 
       AND event_action_type_id IN (1, 2)
+      AND created_at >= dateadd(year, -2, current_date)
 
 ), api_fuzzing_jobs AS (
 
@@ -514,6 +516,7 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_notes') }}
     WHERE noteable_type = 'Issue'
+      AND created_at >= dateadd(year, -2, current_date)
 
 ), issue_resource_label_events AS (
 
@@ -541,6 +544,7 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_notes') }}
     WHERE noteable_type = 'MergeRequest'
+      AND created_at >= dateadd(year, -2, current_date)
 
 ), projects_prometheus_active AS (
 
@@ -565,6 +569,7 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_events') }}
     WHERE event_action_type = 'pushed'
+      AND created_at >= dateadd(year, -2, current_date)
 
 ), group_members AS (
 
@@ -619,9 +624,7 @@
       FROM {{ event_cte.source_cte_name }}
     {% endif %}
     WHERE created_at IS NOT NULL
-      {% if is_incremental() %}
-        AND created_at >= (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
-      {% endif %}
+      AND created_at >= dateadd(year, -2, current_date)
 
 )
 
