@@ -1219,7 +1219,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['Group', 'User']
+              values: ['Group', 'User', 'Project']
 
       - name: namespace_name
         description: '{{ doc("visibility_documentation") }}'
