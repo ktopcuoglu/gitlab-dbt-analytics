@@ -547,13 +547,116 @@
     LEFT JOIN opportunity_seats
       ON opportunity_seats.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
 
+), customer_value_scores as (
+
+    SELECT
+      primary_key,
+      CASE
+        WHEN crm_account_health_score_color = 'Green'
+          THEN 1
+        WHEN crm_account_health_score_color = 'Yellow'
+          THEN
+          CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 18
+              THEN 1.5
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 12
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) <= 12
+              THEN 2.5
+          END
+        WHEN crm_account_health_score_color = 'Red'
+          THEN
+            CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 18
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 12
+              THEN 3
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) <= 12
+              THEN 4
+          END
+        ELSE 1
+      END AS urgency_score,
+      request_priority / SUM(request_priority) OVER(PARTITION BY dim_crm_account_id) AS request_priority_weighting,
+      -- a utility column to allow sum of all epics for customer reach
+      customer_reach / COUNT(1) OVER(PARTITION BY dim_epic_id, dim_crm_account_id) AS customer_epic_reach,
+      request_priority_weighting * crm_account_carr_total AS customer_value_score,
+      customer_value_score * urgency_score AS customer_value_score_with_urgency
+    FROM user_request_with_account_opp_attributes
+    WHERE issue_epic_closed_at IS NULL
+      AND (
+        link_type IN ('Zendesk Ticket', 'Account')
+        OR (
+          link_type = 'Opportunity'
+          AND crm_opp_is_closed = FALSE
+          AND (
+            crm_opp_net_arr = 0
+            OR crm_opp_order_type_grouped != '2) Growth (Growth / New - Connected / Churn / Contraction)'
+          )
+        )
+      )
+
+  ), opportunity_value_scores AS (
+
+    SELECT
+      primary_key,
+      CASE
+        WHEN crm_opp_probability > 60
+          THEN 1
+        WHEN crm_opp_probability > 39
+          THEN
+            CASE
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 6
+                THEN 1.25
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 3
+                THEN 1.5
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) <= 3
+                THEN 2
+            END
+        WHEN crm_opp_probability < 40
+          THEN 
+          CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 6
+              THEN 1.5
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 3
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) <= 3
+              THEN 2.5
+          END
+        ELSE 1
+      END AS urgency_score,
+      request_priority / SUM(request_priority) OVER(PARTITION BY dim_crm_account_id) AS request_priority_weighting,
+      request_priority_weighting * crm_opp_net_arr                                   AS opportunity_value_score,
+      opportunity_value_score * urgency_score                                        AS opportunity_value_score_with_urgency
+    FROM user_request_with_account_opp_attributes
+    WHERE issue_epic_closed_at IS NULL
+      AND link_type = 'Opportunity'
+      AND crm_opp_net_arr != 0
+      AND crm_opp_order_type_grouped = '2) Growth (Growth / New - Connected / Churn / Contraction)'
+      -- only look at open oppORtunities AS indicated by current OR future close date
+      AND crm_opp_is_closed = FALSE
+
+  ), final AS (
+
+    SELECT
+      user_request_with_account_opp_attributes.*,
+      customer_value_scores.customer_value_score,
+      customer_value_scores.customer_value_score_with_urgency,
+      opportunity_value_scores.opportunity_value_score,
+      opportunity_value_scores.opportunity_value_score_with_urgency,
+      IFNULL(customer_value_scores.customer_value_score, 0) + IFNULL(opportunity_value_score, 0) AS value_score,
+      IFNULL(customer_value_scores.customer_value_score_with_urgency, 0) + IFNULL(opportunity_value_scores.opportunity_value_score_with_urgency, 0) AS value_score_with_urgency
+    FROM user_request_with_account_opp_attributes
+    LEFT JOIN customer_value_scores
+      ON user_request_with_account_opp_attributes.primary_key = customer_value_scores.primary_key
+    LEFT JOIN opportunity_value_scores
+      ON user_request_with_account_opp_attributes.primary_key = opportunity_value_scores.primary_key
+
 )
 
-
 {{ dbt_audit(
-    cte_ref="user_request_with_account_opp_attributes",
+    cte_ref="final",
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2021-11-24",
+    updated_date="2021-12-15",
   ) }}
