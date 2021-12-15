@@ -506,20 +506,20 @@ roles:
             - snowflake_db
             - data_team_analyst
 
-    - analytics_engineer_GA:
+    - analytics_engineer_ga:
         member_of:
             - analytics_engineer_core
             - analyst_people
             - analyst_engineering
 
-    - analytics_engineer_GTM:
+    - analytics_engineer_gtm:
         member_of:
             - analytics_engineer_core
             - analyst_marketing
             - analyst_sales
             - analyst_finance
 
-    - analytics_engineer_RD:
+    - analytics_engineer_rd:
         member_of:
             - analytics_engineer_core
             - analyst_engineering
@@ -3393,8 +3393,7 @@ roles:
     - mdrussell:
         member_of:
          - data_team_analyst
-         - analytics_engineer_core
-         - analytics_engineer_RD
+         - analytics_engineer_rd
          - restricted_safe
         warehouses:
             - analyst_xs
