@@ -50,7 +50,7 @@
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
       inquiry_date_pt.first_day_of_month       AS inquiry_month_pt,      
-      inquiry_datetime_inferred.date_day       AS inquiry_inferred_datetime,
+      inquiry_inferred_datetime.date_day       AS inquiry_inferred_datetime,
       fct_crm_person.inquiry_inferred_datetime,
       inquiry_inferred_datetime_pt.date_day            
                                                AS inquiry_inferred_date_pt,
