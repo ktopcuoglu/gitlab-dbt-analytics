@@ -520,7 +520,7 @@ roles:
             - analyst_sales
             - analyst_finance
 
-    - analytics_engineer_RA:
+    - analytics_engineer_RD:
         member_of:
             - analytics_engineer_core
             - analyst_engineering
