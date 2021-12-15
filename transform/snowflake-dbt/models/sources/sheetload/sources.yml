@@ -50,6 +50,7 @@ sources:
       - name: fmm_kpi_targets
       - name: gcp_active_cud
       - name: gitlab_contributing_organizations
+      - name: gitlab_certification_tracking_dashboard
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount

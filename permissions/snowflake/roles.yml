@@ -2683,12 +2683,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - evan:
-        member_of:
-            - decisive_data
-        warehouses:
-            - analyst_xs
-
     - fivetran_role:
         warehouses:
             - fivetran_warehouse
@@ -4573,11 +4567,6 @@ users:
     - eurie: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
-
-    - evan:
-        can_login: yes
-        member_of:
-            - evan
 
     - fivetran:
         can_login: yes

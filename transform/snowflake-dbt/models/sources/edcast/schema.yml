@@ -1,0 +1,30 @@
+version: 2
+
+models:
+- name: sheetload_gitlab_certification_tracking_dashboard
+  tags: ["people", "edcast"]
+  description: '{{ doc("sheetload_gitlab_certification_tracking_dashboard") }}'
+  columns:
+  - name: user
+    meta:
+      sensitive: true
+    tests:
+    - not_null
+  - name: account
+    tests:
+    - not_null
+  - name: passed_datetime
+    tests:
+    - not_null
+  - name: certification
+    tests:
+    - not_null
+  - name: cert_date
+  - name: partner_sfdc_id
+  - name: account_owner
+  - name: region
+  - name: track
+  - name: pubsec_partner
+  - name: cert_month
+  - name: cert_quarter
+  - name: _updated_at
