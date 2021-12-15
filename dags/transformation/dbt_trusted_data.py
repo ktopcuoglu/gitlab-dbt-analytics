@@ -63,7 +63,7 @@ dag = DAG(
     schedule_interval=dag_schedule,
 )
 
-#dbt_trusted_data
+# dbt_trusted_data
 dbt_trusted_data_command = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt run --profiles-dir profile --target prod --models workspaces.workspace_data.tdf.*; ret=$?;
@@ -98,5 +98,3 @@ dbt_trusted_data = KubernetesPodOperator(
     arguments=[dbt_trusted_data_command],
     dag=dag,
 )
-
-
