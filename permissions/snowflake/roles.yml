@@ -2248,9 +2248,12 @@ roles:
         warehouses:
             - analyst_xs
 
-    - alpcohen: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - alpcohen: 
+        member_of: 
+            - xactly
+            - restricted_safe
+        warehouses: 
+            - analyst_xs
 
     - amartin:
         member_of:
@@ -2291,9 +2294,11 @@ roles:
         member_of: []
         warehouses: []
 
-    - bmishra: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []  
+    - bmishra: 
+        member_of: 
+            - analyst_core
+        warehouses:   
+            - analyst_xs
 
     - bnguyen: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -2890,9 +2895,11 @@ roles:
         member_of: []
         warehouses: []
 
-    - jordan: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - jordan: 
+        member_of:
+            - mashey
+        warehouses: 
+            - analyst_xs
 
     - jpeguero:
         member_of:
@@ -3074,9 +3081,11 @@ roles:
                     - kaguilar_prep.*.*
                     - kaguilar_prod.*.*
 
-    - kallen: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses:  []
+    - kallen:
+        member_of:
+            - bamboohr_sensitive_separations
+        warehouses:  
+            - analyst_xs           
 
     - kdietz:
         member_of:
@@ -3338,9 +3347,11 @@ roles:
                     - mcooper_prep.*.*
                     - mcooper_prod.*.*
 
-    - mdavari: # De provisioned as part of Quarterly audit and security check.
-        member_of: []
-        warehouses: []
+    - mdavari: 
+        member_of: 
+            - analyst_core
+        warehouses: 
+            - analyst_xs
 
     - mdewji:
         warehouses: []
@@ -4268,9 +4279,10 @@ users:
         member_of:
             - alcurtis
 
-    - alpcohen: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+    - alpcohen: 
+        can_login: yes
+        member_of: 
+            - alpcohen
 
     - amartin:
         can_login: yes
@@ -4303,9 +4315,10 @@ users:
         can_login: no
         member_of: []
 
-    - bmishra: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+    - bmishra: 
+        can_login: yes
+        member_of: 
+            - bmishra
 
     - bnguyen: # De provisioned as part of Quarterly audit and security check.
         can_login: no
@@ -4531,9 +4544,10 @@ users:
         can_login: no
         member_of: []
 
-    - jordan: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+    - jordan: 
+        can_login: yes
+        member_of: 
+            - jordan
 
     - jpeguero:
         can_login: yes
@@ -4592,9 +4606,10 @@ users:
         member_of:
             - kaguilar
 
-    - kallen: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+    - kallen: 
+        can_login: yes
+        member_of: 
+            - kallen
 
     - kdietz:
         can_login: yes
@@ -4681,9 +4696,10 @@ users:
         member_of:
             - mcooper
 
-    - mdavari: # De provisioned as part of Quarterly audit and security check.
-        can_login: no
-        member_of: []
+    - mdavari:
+        can_login: yes
+        member_of:
+            - mdavari 
 
     - mdewji:
         can_login: no
