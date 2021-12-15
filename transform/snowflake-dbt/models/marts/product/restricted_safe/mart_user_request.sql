@@ -510,9 +510,9 @@
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
-      IFNULL(fct_crm_opportunity.net_arr, 0)                                      AS crm_opp_net_arr,
-      IFNULL(fct_crm_opportunity.arr_basis, 0)                                    AS crm_opp_arr_basis,
-      IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats,
+      fct_crm_opportunity.net_arr                                                 AS crm_opp_net_arr,
+      fct_crm_opportunity.arr_basis                                               AS crm_opp_arr_basis,
+      opportunity_seats.quantity                                                  AS crm_opp_seats,
       fct_crm_opportunity.probability                                             AS crm_opp_probability
 
     FROM user_request
