@@ -497,7 +497,7 @@ roles:
             - zuora
             - zuora_central_sandbox
 
-    - analytics_engineer:
+    - analytics_engineer_core:
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -505,22 +505,25 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - prod
-                    - raw
-            schemas:
-                read:
-                    - prep.*
-                    - prod.*
-                    - raw.*
-            tables:
-                read:
-                    - prep.*.*
-                    - prod.*.*
-                    - raw.*.*
+
+    - analytics_engineer_ga:
+        member_of:
+            - analytics_engineer_core
+            - analyst_people
+            - analyst_engineering
+
+    - analytics_engineer_gtm:
+        member_of:
+            - analytics_engineer_core
+            - analyst_marketing
+            - analyst_sales
+            - analyst_finance
+
+    - analytics_engineer_rd:
+        member_of:
+            - analytics_engineer_core
+            - analyst_engineering
+            - analyst_growth
 
     - data_manager:
         warehouses:
@@ -3390,7 +3393,7 @@ roles:
     - mdrussell:
         member_of:
          - data_team_analyst
-         - analytics_engineer
+         - analytics_engineer_rd
          - restricted_safe
         warehouses:
             - analyst_xs
