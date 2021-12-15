@@ -511,7 +511,6 @@ roles:
             - analytics_engineer_core
             - analyst_people
             - analyst_engineering
-            -
 
     - analytics_engineer_GTM:
         member_of:
