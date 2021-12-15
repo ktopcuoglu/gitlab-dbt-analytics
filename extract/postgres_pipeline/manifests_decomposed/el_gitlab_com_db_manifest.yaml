@@ -161,6 +161,21 @@ tables:
       FROM audit_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  audit_events_external_audit_event_destinations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'audit_events_external_audit_event_destinations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , destination_url
+      , created_at
+      , updated_at
+      FROM audit_events_external_audit_event_destinations
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   authentication_events:
     export_schema: "gitlab_com"
     export_table: authentication_events
@@ -833,7 +848,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   issues:
-    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00')
+    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00','4714-11-24 00:00:00+00 BC')
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'

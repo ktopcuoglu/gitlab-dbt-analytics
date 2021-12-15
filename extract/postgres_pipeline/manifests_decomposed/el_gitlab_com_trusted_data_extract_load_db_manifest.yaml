@@ -805,6 +805,14 @@ tables:
         FROM group_custom_attributes
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_audit_events_external_audit_event_destinations' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM audit_events_external_audit_event_destinations
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
   cluster_9:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -949,14 +957,6 @@ tables:
         FROM audit_events
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2 
-        UNION ALL
-        SELECT 'gitlab_db_dast_profiles' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM dast_profiles
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
   cluster_13:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -979,6 +979,14 @@ tables:
         FROM merge_request_blocks
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3 
+        UNION ALL
+        SELECT 'gitlab_db_dast_profiles' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM dast_profiles
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
   cluster_14:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'

@@ -102,7 +102,7 @@ config_dict = {
             CUSTOMERS_DB_NAME,
         ],
         "start_date": datetime(2019, 5, 30),
-        "sync_schedule_interval": "0 3 */1 * *",
+        "sync_schedule_interval": "0 1 */1 * *",
         "task_name": "customers",
         "description": "This DAG does full extract & load of customer database(Postgres) to snowflake",
     },
