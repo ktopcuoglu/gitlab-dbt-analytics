@@ -106,7 +106,7 @@
       dim_crm_person.matched_account_account_owner_name,
       dim_crm_person.matched_account_sdr_assigned,
       dim_crm_person.matched_account_type,
-      dim_crm_person.matched_account_gtm_stragtegy,
+      dim_crm_person.matched_account_gtm_strategy,
       
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name

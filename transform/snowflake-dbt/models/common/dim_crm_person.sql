@@ -50,7 +50,7 @@ WITH crm_person AS (
       matched_account_account_owner_name,
       matched_account_sdr_assigned,
       matched_account_type,
-      matched_account_gtm_stragtegy
+      matched_account_gtm_strategy
 
     FROM crm_person
 )
