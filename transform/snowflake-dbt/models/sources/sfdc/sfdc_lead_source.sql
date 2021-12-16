@@ -68,7 +68,7 @@ WITH source AS (
         matched_account_top_list__c                             AS matched_account_top_list,
         matched_account_owner_Role__c                           AS matched_account_owner_role,
         matched_account_sdr_assigned__c                         AS matched_account_sdr_assigned,
-        matched_account_gtm_strategy__c                         AS matched_account_gtm_stragtegy,
+        matched_account_gtm_strategy__c                         AS matched_account_gtm_strategy,
         engagio__Matched_Account_Type__c                        AS matched_account_type,
         engagio__Matched_Account_Owner_Name__c                  AS matched_account_account_owner_name,
         mql_date__c                                             AS marketo_qualified_lead_date,
