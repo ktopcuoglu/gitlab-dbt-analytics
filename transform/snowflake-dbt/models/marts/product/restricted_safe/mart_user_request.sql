@@ -588,10 +588,6 @@
         OR (
           link_type = 'Opportunity'
           AND crm_opp_is_closed = FALSE
-          AND (
-            crm_opp_net_arr = 0
-            OR crm_opp_order_type_grouped != '2) Growth (Growth / New - Connected / Churn / Contraction)'
-          )
         )
       )
 
@@ -631,20 +627,37 @@
     WHERE issue_epic_closed_at IS NULL
       AND link_type = 'Opportunity'
       AND crm_opp_net_arr != 0
-      AND crm_opp_order_type_grouped = '2) Growth (Growth / New - Connected / Churn / Contraction)'
-      -- only look at open oppORtunities AS indicated by current OR future close date
       AND crm_opp_is_closed = FALSE
 
   ), final AS (
 
     SELECT
       user_request_with_account_opp_attributes.*,
-      customer_value_scores.customer_value_score,
-      customer_value_scores.customer_value_score_with_urgency,
-      opportunity_value_scores.opportunity_value_score,
-      opportunity_value_scores.opportunity_value_score_with_urgency,
-      IFNULL(customer_value_scores.customer_value_score, 0) + IFNULL(opportunity_value_score, 0) AS value_score,
-      IFNULL(customer_value_scores.customer_value_score_with_urgency, 0) + IFNULL(opportunity_value_scores.opportunity_value_score_with_urgency, 0) AS value_score_with_urgency
+      CASE
+        WHEN user_request_with_account_opp_attributes.is_request_priority_empty
+          THEN '[Input (Using 1 as Default)](' || user_request_with_account_opp_attributes.issue_epic_url || ')'
+        ELSE request_priority::TEXT
+      END                                                                            AS priority_input_url,
+      CASE
+        WHEN user_request_with_account_opp_attributes.link_type = 'Zendesk Ticket'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.ticket_link || ')'
+        WHEN user_request_with_account_opp_attributes.link_type = 'Opportunity'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.crm_opportunity_link || ')'
+        WHEN user_request_with_account_opp_attributes.link_type = 'Account'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.crm_account_link || ')'
+      END                                                                            AS user_request_link,
+      customer_value_scores.customer_value_score                                     AS link_retention_score,
+      customer_value_scores.customer_value_score_with_urgency                        AS link_retention_score_with_urgency,
+      opportunity_value_scores.opportunity_value_score                               AS link_growth_score,
+      opportunity_value_scores.opportunity_value_score_with_urgency                  AS link_growth_score_with_urgency,
+      IFNULL(customer_value_scores.customer_value_score, 0) + IFNULL(opportunity_value_score, 0)
+                                                                                     AS link_score,
+      IFNULL(customer_value_scores.customer_value_score_with_urgency, 0) + IFNULL(opportunity_value_scores.opportunity_value_score_with_urgency, 0)
+                                                                                     AS link_priority_score,
+      link_priority_score / NULLIFZERO(issue_epic_weight)                            AS link_weighted_priority_score,
+      IFF(link_weighted_priority_score IS NULL,
+        '[Effort is Empty, Input Effort Here](' || user_request_with_account_opp_attributes.issue_epic_url || ')',
+        link_weighted_priority_score::TEXT)                                          AS link_weighted_priority_score_input
     FROM user_request_with_account_opp_attributes
     LEFT JOIN customer_value_scores
       ON user_request_with_account_opp_attributes.primary_key = customer_value_scores.primary_key
