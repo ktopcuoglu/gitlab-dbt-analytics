@@ -13,7 +13,8 @@
     ('billing_accounts','dim_billing_account'),
     ('crm_accounts','dim_crm_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up'),
+    ('subscriptions_original', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , sm_paid_user_metrics AS (
@@ -28,6 +29,7 @@
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
+      subscriptions_original.subscription_status                                    AS subscription_status_original,
       subscriptions.subscription_start_date,
       subscriptions.subscription_end_date,
       monthly_sm_metrics.snapshot_date_id,
@@ -148,6 +150,10 @@
       ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions_original
+      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
 
 ), saas_paid_user_metrics AS (
 
@@ -161,6 +167,7 @@
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
+      subscriptions_original.subscription_status                                    AS subscription_status_original,
       subscriptions.subscription_start_date,
       subscriptions.subscription_end_date,
       monthly_saas_metrics.snapshot_date_id,
@@ -279,6 +286,10 @@
       ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions_original
+      ON monthly_saas_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
 
@@ -299,5 +310,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2021-12-07"
+    updated_date="2021-12-16"
 ) }}

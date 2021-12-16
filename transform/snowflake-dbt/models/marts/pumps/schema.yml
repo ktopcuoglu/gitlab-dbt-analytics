@@ -46,6 +46,8 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
       - name: snapshot_date_id
         tests:
           - not_null
@@ -256,6 +258,8 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
       - name: dim_billing_account_id
         description: Returns unknown ID (MD5(-1)) if the `account_id` from `fct_product_usage_wave_1_3_metrics_monthly` is not found in `dim_billing_account`.
         tests:
@@ -508,6 +512,8 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
       - name: snapshot_month
         description: Month from which Usage Ping and/or Seat Link data is reported (reported as the first day of the month - '2020-01-01').
         tests:
@@ -685,6 +691,8 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
       - name: dim_billing_account_id
         tests:
           - not_null
