@@ -1,12 +1,3 @@
-[sqlfluff:rules]
-max_line_length = 140
-
-
-[sqlfluff:rules:L010]
-capitalisation_policy = upper
-
-[sqlfluff:rules:L014]
-extended_capitalisation_policy = lower
 
 [sqlfluff]
 dialect = snowflake
@@ -14,8 +5,3 @@ templater = dbt
 
 [sqlfluff:templater:dbt]
 project_dir = ./
-# uncoment for local linting
-profiles_dir = ~/.dbt
-# CI linting comment out for local linting 
-#profiles_dir = ./profile/ 
-#profile =  sqlfluff
