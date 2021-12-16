@@ -21,7 +21,6 @@ sources:
     tables:
       - name: alert_management_alert_assignees
         identifier: gitlab_db_alert_management_alert_assignees
-        freshness: null
       - name: alert_management_alerts
         identifier: gitlab_db_alert_management_alerts
       - name: application_settings
@@ -54,15 +53,12 @@ sources:
         freshness: null
       - name: board_assignees
         identifier: gitlab_db_board_assignees
-        freshness: null
       - name: board_labels
         identifier: gitlab_db_board_labels
-        freshness: null
       - name: boards
         identifier: gitlab_db_boards
       - name: ci_build_trace_chunks
         identifier: gitlab_db_ci_build_trace_chunks
-        freshness: null
       - name: ci_build_trace_section_names
         identifier: gitlab_db_ci_build_trace_section_names
         description: This table pipeline is deprecated and won't be refreshed, Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
@@ -71,7 +67,6 @@ sources:
         identifier: gitlab_db_ci_builds
       - name: ci_builds_runner_session
         identifier: gitlab_db_ci_builds_runner_session
-        freshness: null
       - name: ci_group_variables
         identifier: gitlab_db_ci_group_variables
       - name: ci_job_artifacts
@@ -84,7 +79,6 @@ sources:
         identifier: gitlab_db_ci_pipeline_schedules
       - name: ci_pipeline_variables
         identifier: gitlab_db_ci_pipeline_variables
-        freshness: null
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
       - name: ci_platform_metrics
@@ -103,7 +97,6 @@ sources:
         identifier: gitlab_db_ci_triggers
       - name: ci_variables
         identifier: gitlab_db_ci_variables
-        freshness: null
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
       - name: clusters_integration_elasticstack
@@ -150,13 +143,10 @@ sources:
         identifier: gitlab_db_deployments
       - name: deployment_merge_requests
         identifier: gitlab_db_deployment_merge_requests
-        freshness: null
       - name: design_management_designs_versions
         identifier: gitlab_db_design_management_designs_versions
-        freshness: null
       - name: design_management_designs
         identifier: gitlab_db_design_management_designs
-        freshness: null
       - name: design_management_versions
         identifier: gitlab_db_design_management_versions
         freshness: null
@@ -184,10 +174,8 @@ sources:
         identifier: gitlab_db_experiment_users
       - name: experiments
         identifier: gitlab_db_experiments
-        freshness: null
       - name: gitlab_subscription_histories
         identifier: gitlab_db_gitlab_subscription_histories
-        freshness: null
       - name: gitlab_subscriptions
         identifier: gitlab_db_gitlab_subscriptions
       - name: group_group_links
@@ -202,14 +190,12 @@ sources:
         identifier: gitlab_db_issue_assignees
       - name: issue_links
         identifier: gitlab_db_issue_links
-        freshness: null
       - name: issue_metrics
         identifier: gitlab_db_issue_metrics
       - name: issues
         identifier: gitlab_db_issues
       - name: keys
         identifier: gitlab_db_keys
-        freshness: null
       - name: label_links
         identifier: gitlab_db_label_links
       - name: label_priorities
@@ -255,7 +241,6 @@ sources:
         identifier: gitlab_db_notification_settings
       - name: oauth_access_tokens
         identifier: gitlab_db_oauth_access_tokens
-        freshness: null
       - name: onboarding_progresses
         identifier: gitlab_db_onboarding_progresses
       - name: packages_packages
@@ -264,10 +249,8 @@ sources:
         identifier: gitlab_db_plans
       - name: pages_domains
         identifier: gitlab_db_pages_domains
-        freshness: null
       - name: programming_languages
         identifier: gitlab_db_programming_languages
-        freshness: null
       - name: project_authorizations
         identifier: gitlab_db_project_authorizations
         freshness:
@@ -285,16 +268,12 @@ sources:
         identifier: gitlab_db_project_group_links
       - name: project_import_data
         identifier: gitlab_db_project_import_data
-        freshness: null
       - name: project_mirror_data
         identifier: gitlab_db_project_mirror_data
-        freshness: null
       - name: project_repositories
         identifier: gitlab_db_project_repositories
-        freshness: null
       - name: project_repository_storage_moves
         identifier: gitlab_db_project_repository_storage_moves
-        freshness: null
       - name: project_statistics
         identifier: gitlab_db_project_statistics
       - name: projects
@@ -310,7 +289,6 @@ sources:
         identifier: gitlab_db_releases
       - name: repository_languages
         identifier: gitlab_db_repository_languages
-        freshness: null
       - name: requirements
         identifier: gitlab_db_requirements
       - name: resource_label_events
@@ -328,7 +306,6 @@ sources:
         identifier: gitlab_db_services
       - name: shards
         identifier: gitlab_db_shards
-        freshness: null
       - name: sprints
         identifier: gitlab_db_sprints
       - name: subscriptions
@@ -356,12 +333,10 @@ sources:
           error_after: { count: 30, period: day }
       - name: users_security_dashboard_projects
         identifier: gitlab_db_users_security_dashboard_projects
-        freshness: null
       - name: vulnerabilities
         identifier: gitlab_db_vulnerabilities
       - name: vulnerability_occurrences
         identifier: gitlab_db_vulnerability_occurrences
-        freshness: null
       - name: alert_management_http_integrations
         identifier: gitlab_db_alert_management_http_integrations
         freshness: null
@@ -370,12 +345,10 @@ sources:
         freshness: null
       - name: approval_merge_request_rule_sources
         identifier: gitlab_db_approval_merge_request_rule_sources
-        freshness: null
       - name: approval_project_rules
         identifier: gitlab_db_approval_project_rules
       - name: approval_project_rules_protected_branches
         identifier: gitlab_db_approval_project_rules_protected_branches
-        freshness: null
       - name: authentication_events
         identifier: gitlab_db_authentication_events
       - name: bulk_imports
@@ -448,19 +421,14 @@ sources:
         identifier: gitlab_db_path_locks
       - name: pool_repositories
         identifier: gitlab_db_pool_repositories
-        freshness: null
       - name: project_compliance_framework_settings
         identifier: gitlab_db_project_compliance_framework_settings
-        freshness: null
       - name: project_error_tracking_settings
         identifier: gitlab_db_project_error_tracking_settings
-        freshness: null
       - name: project_feature_usages
         identifier: gitlab_db_project_feature_usages
-        freshness: null
       - name: project_incident_management_settings
         identifier: gitlab_db_project_incident_management_settings
-        freshness: null
       - name: project_tracing_settings
         identifier: gitlab_db_project_tracing_settings
         freshness: null
@@ -475,7 +443,6 @@ sources:
         identifier: gitlab_db_security_scans
       - name: sentry_issues
         identifier: gitlab_db_sentry_issues
-        freshness: null
       - name: status_page_published_incidents
         identifier: gitlab_db_status_page_published_incidents
         freshness: null
@@ -484,7 +451,6 @@ sources:
         freshness: null
       - name: suggestions
         identifier: gitlab_db_suggestions
-        freshness: null
       - name: uploads
         identifier: gitlab_db_uploads
       - name: users_ops_dashboard_projects
@@ -499,7 +465,6 @@ sources:
           error_after: { count: 30, period: day }
       - name: user_credit_card_validations
         identifier: gitlab_db_user_credit_card_validations
-        freshness: null
       - name: boards_epic_boards
         identifier: gitlab_db_boards_epic_boards
         freshness: null
