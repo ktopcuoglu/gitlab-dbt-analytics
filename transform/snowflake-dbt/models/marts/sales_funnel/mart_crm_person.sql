@@ -107,6 +107,15 @@
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       dim_sales_segment.sales_segment_name,
       dim_sales_segment.sales_segment_grouped,
+      dim_crm_person.marketo_last_interesting_moment,
+      dim_crm_person.marketo_last_interesting_moment_date,
+      dim_crm_person.outreach_step_number,
+      dim_crm_person.matched_account_owner_role,
+      dim_crm_person.matched_account_account_owner_name,
+      dim_crm_person.matched_account_sdr_assigned,
+      dim_crm_person.matched_account_type,
+      dim_crm_person.matched_account_gtm_strategy,
+      
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
         WHEN dim_sales_segment.sales_segment_name IN ('Large', 'PubSec') THEN  'Large MQLs & Trials'

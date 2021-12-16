@@ -61,6 +61,7 @@ WITH source AS (
         leadsource                  AS lead_source,
         lead_source_type__c         AS lead_source_type,
         outreach_stage__c           AS outreach_stage,
+        Sequence_Step_Number__c     AS outreach_step_number,
         account_type__c             AS account_type,
         contact_assigned_datetime__c::TIMESTAMP
                                     AS assigned_datetime,
