@@ -231,7 +231,16 @@
       mart_crm_opportunity.count_crm_attribution_touchpoints                AS crm_attribution_touchpoints_per_opp,
       mart_crm_opportunity.weighted_linear_iacv,
       mart_crm_opportunity.count_campaigns                                  AS count_campaigns_per_opp,
-      (mart_crm_opportunity.iacv / mart_crm_opportunity.count_campaigns)    AS iacv_per_campaign
+      (mart_crm_opportunity.iacv / mart_crm_opportunity.count_campaigns)    AS iacv_per_campaign,
+
+      -- bizible influenced
+       CASE
+        WHEN  dim_campaign.budget_holder = 'fmm'
+              OR campaign_rep_role_name = 'Field Marketing Manager'
+              OR LOWER(.utm_content) LIKE '%field%'
+        THEN 1
+        ELSE 0
+      END AS is_fmm_influenced
 
     FROM fct_crm_attribution_touchpoint
     LEFT JOIN dim_crm_touchpoint
@@ -259,5 +268,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2020-11-09"
+    updated_date="2020-12-16"
 ) }}
