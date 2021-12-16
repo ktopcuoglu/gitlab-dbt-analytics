@@ -66,6 +66,11 @@ WITH source AS (
         interested_in_hosted_solution__c                        AS is_interested_in_hosted,
         lead_assigned_datetime__c::TIMESTAMP                    AS assigned_datetime,
         matched_account_top_list__c                             AS matched_account_top_list,
+        matched_account_owner_Role__c                           AS matched_account_owner_role,
+        matched_account_sdr_assigned__c                         AS matched_account_sdr_assigned,
+        matched_account_gtm_strategy__c                         AS matched_account_gtm_stragtegy,
+        engagio__Matched_Account_Type__c                        AS matched_account_type,
+        engagio__Matched_Account_Owner_Name__c                  AS matched_account_account_owner_name,
         mql_date__c                                             AS marketo_qualified_lead_date,
         mql_datetime__c                                         AS marketo_qualified_lead_datetime,
         mql_datetime_inferred__c                                AS mql_datetime_inferred,
@@ -108,7 +113,7 @@ WITH source AS (
         pathfactory_topic_list__c                               AS pathfactory_topic_list,
 
         --marketo sales insight
-        mkto_si__Last_Interesting_Moment_Desc__c                AS marketo_last_interesting_moment_description,
+        mkto_si__Last_Interesting_Moment_Desc__c                AS marketo_last_interesting_moment,
         mkto_si__Last_Interesting_Moment_Date__c                AS marketo_last_interesting_moment_date,
 
         --gitlab internal
