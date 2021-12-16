@@ -705,8 +705,9 @@
         ON gitlab_subscriptions.plan_id = plans.plan_id
       LEFT JOIN blocked_users
         ON ultimate_namespace.creator_id = blocked_users.user_id
+    WHERE {{ event_cte.event_name }}.created_at >= DATEADD(year, -2, CURRENT_DATE)
     {% if 'NULL' not in event_cte.user_column_name %}
-      WHERE {{ filter_out_blocked_users(event_cte.event_name , event_cte.user_column_name) }}
+      AND {{ filter_out_blocked_users(event_cte.event_name , event_cte.user_column_name) }}
     {% endif %}
     
         
