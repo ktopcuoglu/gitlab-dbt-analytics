@@ -237,7 +237,7 @@
        CASE
         WHEN  dim_campaign.budget_holder = 'fmm'
               OR campaign_rep_role_name = 'Field Marketing Manager'
-              OR LOWER(.utm_content) LIKE '%field%'
+              OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
         THEN 1
         ELSE 0
       END AS is_fmm_influenced
