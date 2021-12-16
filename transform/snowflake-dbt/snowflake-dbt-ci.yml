@@ -356,4 +356,4 @@ dbt_sqlfluff:
     - pip install sqlfluff-templater-dbt==0.9.0
     - export LINT_LIST=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
     - echo $LINT_LIST
-    - sqlfluff lint $LINT_LIST --config /.sqlfluff-ci
+    - sqlfluff lint $LINT_LIST --config .sqlfluff-ci
