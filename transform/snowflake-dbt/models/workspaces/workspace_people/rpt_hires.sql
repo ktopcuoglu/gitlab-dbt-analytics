@@ -3,6 +3,7 @@
     ('applications','greenhouse_applications_source'),
     ('sources','greenhouse_sources_source'),
     ('offers','greenhouse_offers_source'),
+    ('openings','greenhouse_openings_source'),
     ('job_departments','greenhouse_jobs_departments_source'),
     ('departments','wk_prep_greenhouse_departments')
 ])}}
@@ -20,8 +21,11 @@ SELECT
   sources.source_name,
   sources.source_type,
   applications.applied_at,
+  openings.job_opened_at            AS job_opening_opened_at,
+  openings.job_closed_at            AS job_opening_closed_at,
+  openings.target_start_date        AS job_opening_target_start_date,
   offers.sent_at                    AS offer_sent_at,
-  offers.resolved_at                AS offer_resloved_at,
+  offers.resolved_at                AS offer_accepted_at,
   departments.department_name       AS greenhouse_department_name,
   departments.level_1               AS greenhouse_department_level_1,
   departments.level_2               AS greenhouse_department_level_2,
@@ -38,4 +42,6 @@ LEFT JOIN sources
 LEFT JOIN offers
   ON applications.application_id = offers.application_id
   AND offers.offer_status = 'accepted'
+LEFT JOIN openings
+  ON hires.application_id = openings.hired_application_id
 
