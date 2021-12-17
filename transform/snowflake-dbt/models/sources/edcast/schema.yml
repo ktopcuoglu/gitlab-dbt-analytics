@@ -28,3 +28,6 @@ models:
   - name: cert_month
   - name: cert_quarter
   - name: _updated_at
+- name: glue_groups_g3_group_performance_data_explorer
+  tags: ["people", "edcast"]
+  description: '{{ doc("glue_groups_g3_group_performance_data_explorer") }}'
