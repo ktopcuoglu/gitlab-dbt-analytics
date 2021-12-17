@@ -1053,7 +1053,7 @@ roles:
 
     - bi_tool_eval_db:
         warehouses:
-            - engineer_xs
+            - reporting
         privileges:
             databases:
                 read:
@@ -4300,6 +4300,11 @@ users:
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - bi_tool_eval:
+        can_login: yes
+        member_of:
+            - bi_tool_eval_db
 
     - bleducmills:
         can_login: yes
