@@ -49,7 +49,7 @@ class SnowflakeManager:
 
         clone_schema_query = """create schema "{0}"."{1}" clone "{2}"."{1}"; """
 
-        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER"]
+        usage_roles = ["LOADER", "TRANSFORMER", "ENGINEER", "ANALYTICS_ENGINEER_CORE"]
         usage_grant_query_with_params = (
             """grant create schema, usage on database "{0}" to {1}"""
         )
