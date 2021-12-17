@@ -252,3 +252,21 @@ SALT_IP = Secret("env", "SALT_IP", "airflow", "SALT_IP")
 SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
+
+
+# Bizible extract
+BIZIBLE_DATABASE = Secret(
+    "env", "BIZIBLE_DATABASE", "airflow", "BIZIBLE_DATABASE"
+)
+BIZIBLE_ROLE = Secret(
+    "env", "BIZIBLE_ROLE", "airflow", "BIZIBLE_ROLE"
+)
+BIZIBLE_PASSWORD = Secret(
+    "env", "BIZIBLE_PASSWORD", "airflow", "BIZIBLE_PASSWORD"
+)
+BIZIBLE_USER = Secret(
+    "env", "BIZIBLE_USER", "airflow", "BIZIBLE_USER"
+)
+BIZIBLE_WAREHOUSE = Secret(
+    "env", "BIZIBLE_WAREHOUSE", "airflow", "BIZIBLE_WAREHOUSE"
+)
