@@ -30,6 +30,8 @@
       monthly_sm_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
       subscriptions_original.subscription_status                                    AS subscription_status_original,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,      
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
