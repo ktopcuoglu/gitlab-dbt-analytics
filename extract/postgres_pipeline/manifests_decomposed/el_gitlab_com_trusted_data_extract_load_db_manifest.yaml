@@ -1129,5 +1129,5 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM notes
-        WHERE DATE(updated_at) > current_date - interval '8' day
+        WHERE DATE(updated_at) > '2021-12-07T22:48:36'::timestamp
         GROUP BY 1,2,3  
