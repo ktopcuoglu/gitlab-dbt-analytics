@@ -1071,6 +1071,20 @@ roles:
                 write:
                     - bi_tool_eval.*.*
 
+    - bi_tool_eval_read:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - bi_tool_eval
+            schemas:
+                read:
+                    - bi_tool_eval.*
+            tables:
+                read:
+                    - bi_tool_eval.*.*
+
     - covid19:
         privileges:
             databases:
@@ -4304,7 +4318,7 @@ users:
     - bi_tool_eval:
         can_login: yes
         member_of:
-            - bi_tool_eval_db
+            - bi_tool_eval_read
 
     - bleducmills:
         can_login: yes
