@@ -2290,6 +2290,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - aperez:
+        member_of:
+            - analyst_people
+        warehouses:
+            - analyst_xs
+
     - awaller: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []      
@@ -4311,6 +4317,11 @@ users:
         can_login: yes
         member_of:
             - amihaila
+
+    - aperez:
+        can_login: yes
+        member_of:
+            - aperez           
 
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
