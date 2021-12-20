@@ -9,5 +9,6 @@ SELECT
   employee_id, 
   speciality, 
   start_date                                                                           AS speciality_start_date,
-  LEAD(DATEADD(day,-1,start_date)) OVER (PARTITION BY employee_id ORDER BY start_date) AS speciality_end_date
+  COALESCE(DATEADD('day',-1,end_date),
+  LEAD(DATEADD(day,-1,start_date)) OVER (PARTITION BY employee_id ORDER BY start_date)) AS speciality_end_date
 FROM source
