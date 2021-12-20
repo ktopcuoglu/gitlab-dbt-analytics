@@ -338,7 +338,7 @@ WITH bizible_touchpoints AS (
         OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=cdusecase%'
         OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=cdusecase%'))
         THEN 'CD Use Case' 
-       Else 'None'
+       ELSE 'None'
       END                                                                                               AS bizible_integrated_campaign_grouping,
       IFF(bizible_integrated_campaign_grouping <> 'None','Demand Gen','Other')                          AS touchpoint_segment,
       CASE
