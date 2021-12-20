@@ -261,18 +261,7 @@ WITH bizible_touchpoints AS (
             OR bizible_landing_page_raw LIKE '%webcast-gitops-multicloudapp%'
             OR bizible_referrer_page_raw LIKE '%webcast-gitops-multicloudapp%'))
             OR (dim_parent_campaign_id LIKE '%7014M000001dpmf%')
-          THEN 'GitOps GTM webcast'
-        WHEN ((bizible_touchpoint_type = 'Web Form' --added 2021-11-12 MSandP: 536
-            AND ( bizible_form_url_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_form_url_raw LIKE '%utm_content=introtomlopsdemo%'
-            OR bizible_landing_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_landing_page_raw LIKE '%utm_content=introtomlopsdemo%'
-            OR bizible_referrer_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_referrer_page_raw LIKE '%utm_content=introtomlopsdemo%'
-            ))
-            OR dim_parent_campaign_id LIKE '%7014M000001vjIn%'
-            OR dim_campaign_id LIKE '%7014M000001vjIn%'
-            
-            OR dim_parent_campaign_id LIKE '%7014M000001vjHL%'
-            OR dim_campaign_id LIKE '%7014M000001vjHL%')
-          THEN 'Technical Demo Series'    
+          THEN 'GitOps GTM webcast' 
         WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
             AND ( bizible_form_url_raw LIKE '%devopsgtm%'
             OR bizible_landing_page_raw LIKE '%devopsgtm%'
