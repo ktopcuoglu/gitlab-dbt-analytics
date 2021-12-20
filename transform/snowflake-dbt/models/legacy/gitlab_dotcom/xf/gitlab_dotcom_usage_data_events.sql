@@ -5,7 +5,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "primary_key"
-        }) 
+    })
 }}
 
 /*
@@ -636,6 +636,10 @@
 
 )
 
+{% if not loop.last %}
+UNION
+{% endif %}
+
 {% endfor -%}
 
 , data AS (
@@ -717,11 +721,7 @@
     {% if 'NULL' not in event_cte.user_column_name %}
       AND {{ filter_out_blocked_users(event_cte.event_name , event_cte.user_column_name) }}
     {% endif %}
-    
-        
-    {% if not loop.last %}
-    UNION
-    {% endif %}
+
     {% endfor -%}
 
 )
