@@ -47,11 +47,6 @@ databases:
     - dpeterson_prep:
         shared: no
 
-    - dtownsend_prod:
-        shared: no
-    - dtownsend_prep:
-        shared: no
-
     - dvanrooijen_prod:
         shared: no
     - dvanrooijen_prep:
@@ -2542,44 +2537,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - dtownsend:
-        member_of:
-            - analyst_engineering
-            - restricted_safe
-            - prometheus
-        owns:
-            databases:
-                - dtownsend_prep
-                - dtownsend_prod
-            schemas:
-                - dtownsend_prep.*
-                - dtownsend_prod.*
-            tables:
-                - dtownsend_prep.*.*
-                - dtownsend_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - dtownsend_prep
-                    - dtownsend_prod
-                write:
-                    - dtownsend_prep
-                    - dtownsend_prod
-            schemas:
-                read:
-                    - dtownsend_prep.*
-                    - dtownsend_prod.*
-                write:
-                    - dtownsend_prep.*
-                    - dtownsend_prod.*
-            tables:
-                read:
-                    - dtownsend_prep.*.*
-                    - dtownsend_prod.*.*
-                write:
-                    - dtownsend_prep.*.*
-                    - dtownsend_prod.*.*
-
     - dvanrooijen:
         member_of:
             - analyst_core
@@ -4411,11 +4368,6 @@ users:
     - dtang: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
-
-    - dtownsend:
-        can_login: yes
-        member_of:
-            - dtownsend
 
     - dvanrooijen:
         can_login: yes
