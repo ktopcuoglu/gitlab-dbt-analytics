@@ -1054,7 +1054,7 @@ roles:
 
     - bi_tool_eval_db:
         warehouses:
-            - engineer_xs
+            - reporting
         privileges:
             databases:
                 read:
@@ -1070,6 +1070,20 @@ roles:
                 read:
                     - bi_tool_eval.*.*
                 write:
+                    - bi_tool_eval.*.*
+
+    - bi_tool_eval_read:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - bi_tool_eval
+            schemas:
+                read:
+                    - bi_tool_eval.*
+            tables:
+                read:
                     - bi_tool_eval.*.*
 
     - covid19:
@@ -4301,6 +4315,11 @@ users:
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - bi_tool_eval:
+        can_login: yes
+        member_of:
+            - bi_tool_eval_read
 
     - bleducmills:
         can_login: yes
