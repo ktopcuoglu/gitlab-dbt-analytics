@@ -492,6 +492,7 @@ roles:
             - engineer_xs
             - engineer_xl
         member_of:
+            - transformer # until issue#11249
             - analyst_core
             - snowflake_db
             - data_team_analyst
