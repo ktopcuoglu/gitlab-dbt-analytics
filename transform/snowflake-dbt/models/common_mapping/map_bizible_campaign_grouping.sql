@@ -333,7 +333,7 @@ WITH bizible_touchpoints AS (
          ))
         OR dim_campaign_id LIKE '%7014M000001dqb2%'
         THEN 'DOI Webcast'
-       When (bizible_touchpoint_type = 'Web Form' -- MSandP 657
+       WHEN (bizible_touchpoint_type = 'Web Form' -- MSandP 657
         AND (BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=cdusecase%'
         OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=cdusecase%'
         OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=cdusecase%'))
