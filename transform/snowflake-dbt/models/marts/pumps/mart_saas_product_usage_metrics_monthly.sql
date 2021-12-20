@@ -22,6 +22,8 @@
       monthly_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
       subscriptions_original.subscription_status                            AS subscription_status_original,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.dim_namespace_id::VARCHAR                             AS dim_namespace_id,
@@ -141,12 +143,12 @@
     -- LEFT JOIN location_country
     --   ON monthly_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
-      ON monthly_metrics.dim_subscription_id_original = subscriptions.dim_subscription_id_original 
-      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
+      ON monthly_metrics.dim_subscription_id_original = subscriptions.dim_subscription_id_original
+      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
     LEFT JOIN subscriptions AS subscriptions_original
-      ON monthly_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original 
-      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month)) 
+      ON monthly_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
 
 )
@@ -154,7 +156,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@mdrussell",
     created_date="2021-05-26",
-    updated_date="2021-12-08"
+    updated_date="2021-12-20"
 ) }}
