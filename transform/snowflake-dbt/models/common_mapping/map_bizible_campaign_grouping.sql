@@ -332,8 +332,13 @@ WITH bizible_touchpoints AS (
         OR bizible_referrer_page_raw LIKE '%devopsgtm%')
          ))
         OR dim_campaign_id LIKE '%7014M000001dqb2%'
-        THEN 'DOI Webcast' 
-          Else 'None'
+        THEN 'DOI Webcast'
+       When (bizible_touchpoint_type = 'Web Form' -- MSandP 657
+        AND (BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=cdusecase%'
+        OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=cdusecase%'
+        OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=cdusecase%'))
+        THEN 'CD Use Case' 
+       Else 'None'
       END                                                                                               AS bizible_integrated_campaign_grouping,
       IFF(bizible_integrated_campaign_grouping <> 'None','Demand Gen','Other')                          AS touchpoint_segment,
       CASE
@@ -389,5 +394,5 @@ WITH bizible_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@degan",
     created_date="2021-03-02",
-    updated_date="2021-11-22"
+    updated_date="2021-12-20"
 ) }}
