@@ -20,7 +20,7 @@
     SELECT
       dim_subscription_id,
       subscription_start_date,
-      subscription_end_date,
+      subscription_end_date
     FROM subscriptions
     WHERE subscription_version = 1
 

@@ -528,8 +528,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
       - name: subscription_status_original
         description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: snapshot_month
         description: Month from which Usage Ping and/or Seat Link data is reported (reported as the first day of the month - '2020-01-01').
         tests:
