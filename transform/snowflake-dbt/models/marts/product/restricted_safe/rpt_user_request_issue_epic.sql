@@ -44,7 +44,6 @@ WITH mart_user_request AS (
         strategic_account_leader,
         customer_reach,
         crm_account_arr,
-        crm_account_carr_total,
         crm_account_open_opp_net_arr,
         crm_account_open_opp_net_arr_fo,
         crm_account_open_opp_net_arr_growth,
@@ -53,21 +52,22 @@ WITH mart_user_request AS (
         crm_account_lost_customer_arr,
         lost_arr,
         
-        SUM(request_priority)                                                    AS sum_request_priority,
+        SUM(request_priority)                                                   AS sum_request_priority,
+        
+        SUM(crm_opp_net_arr)                                                    AS sum_linked_crm_opp_net_arr,
+        SUM(IFF(crm_opp_is_closed = FALSE, crm_opp_net_arr, 0))                 AS sum_linked_crm_opp_open_net_arr,
+        SUM(crm_opp_seats)                                                      AS sum_linked_crm_opp_seats,
+        SUM(IFF(crm_opp_is_closed = FALSE, crm_opp_seats, 0))                   AS sum_linked_crm_opp_open_seats,
 
-        SUM(crm_opp_net_arr)                                                     AS sum_linked_crm_opp_net_arr,
-        SUM(IFF(crm_opp_is_closed = FALSE, crm_opp_net_arr, 0))                  AS sum_linked_crm_opp_open_net_arr,
-
-        SUM(crm_opp_seats)                                                       AS sum_linked_crm_opp_seats,
-        SUM(IFF(crm_opp_is_closed = FALSE, crm_opp_seats, 0))                    AS sum_linked_crm_opp_open_seats,
-
-        SUM(link_retention_score)                                                AS account_retention_score,
-        SUM(link_retention_score_with_urgency)                                   AS account_retention_score_with_urgency,
-        SUM(link_growth_score)                                                   AS account_growth_score,
-        SUM(link_growth_score_with_urgency)                                      AS account_growth_score_with_urgency,
-        SUM(link_score)                                                          AS account_score,
-        SUM(link_priority_score)                                                 AS account_priority_score,
-        account_priority_score / NULLIFZERO(issue_epic_weight)                   AS account_weighted_priority_score
+        ARRAY_AGG(DISTINCT NULLIF(dim_crm_opportunity_id, MD5(-1)))
+            WITHIN GROUP (ORDER BY NULLIF(dim_crm_opportunity_id, MD5(-1)))     AS opportunity_id_array,
+        ARRAY_AGG(DISTINCT NULLIF(dim_ticket_id, -1))
+            WITHIN GROUP (ORDER BY NULLIF(dim_ticket_id, -1))                   AS zendesk_ticket_id_array,
+        
+       SUM(link_retention_score)                                                AS account_retention_score,
+       SUM(link_growth_score)                                                   AS account_growth_score,
+       SUM(link_combined_score)                                                 AS account_combined_score,
+       SUM(link_priority_score)                                                 AS account_priority_score
 
     FROM mart_user_request
     {{ dbt_utils.group_by(n=44) }}
@@ -121,7 +121,6 @@ WITH mart_user_request AS (
 
         SUM(customer_reach)                                                                  AS sum_customer_reach,
         SUM(crm_account_arr)                                                                 AS sum_crm_account_arr,
-        SUM(crm_account_carr_total)                                                          AS sum_crm_account_carr_total,
         SUM(crm_account_open_opp_net_arr)                                                    AS sum_crm_account_open_opp_net_arr,
         SUM(crm_account_open_opp_net_arr_fo)                                                 AS sum_crm_account_open_opp_net_arr_fo,
         SUM(crm_account_open_opp_net_arr_growth)                                             AS sum_crm_account_open_opp_net_arr_growth,
@@ -138,10 +137,8 @@ WITH mart_user_request AS (
 
         -- Priority score
         SUM(account_retention_score)                                                         AS retention_score,
-        SUM(account_retention_score_with_urgency)                                            AS retention_score_with_urgency,
         SUM(account_growth_score)                                                            AS growth_score,
-        SUM(account_growth_score_with_urgency)                                               AS growth_score_with_urgency,
-        SUM(account_score)                                                                   AS score,
+        SUM(account_combined_score)                                                          AS combined_score,
         SUM(account_priority_score)                                                          AS priority_score,
         priority_score / NULLIFZERO(issue_epic_weight)                                       AS weighted_priority_score,
         IFF(weighted_priority_score IS NULL,
