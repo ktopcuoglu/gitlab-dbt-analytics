@@ -811,9 +811,10 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND oppty_final.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-          AND ((oppty_final.is_stage_1_plus = 1
-                AND oppty_final.forecast_category_name != 'Omitted')
-            OR oppty_final.is_lost = 1)
+          -- 20211222 Adjusted to remove the ommitted filter
+          AND (oppty_final.is_stage_1_plus = 1
+                OR oppty_final.is_lost = 1)
+          AND oppty_final.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
           -- 20210802 remove webpurchase deals
