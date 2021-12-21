@@ -75,7 +75,7 @@ WITH mart_user_request AS (
         account_weighted_priority_score::TEXT)                                  AS account_weighted_priority_score_input
 
     FROM mart_user_request
-    {{ dbt_utils.group_by(n=45) }}
+    {{ dbt_utils.group_by(n=44) }}
 
 )
 

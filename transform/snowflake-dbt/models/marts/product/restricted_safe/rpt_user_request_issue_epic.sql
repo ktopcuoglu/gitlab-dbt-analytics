@@ -70,7 +70,7 @@ WITH mart_user_request AS (
        SUM(link_priority_score)                                                 AS account_priority_score
 
     FROM mart_user_request
-    {{ dbt_utils.group_by(n=44) }}
+    {{ dbt_utils.group_by(n=43) }}
 
 ), prep_issue_summary AS ( -- Then we summarise at the issue/epic grain
 
