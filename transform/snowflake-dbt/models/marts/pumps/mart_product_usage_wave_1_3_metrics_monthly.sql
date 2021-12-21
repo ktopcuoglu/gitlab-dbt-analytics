@@ -33,7 +33,7 @@
       monthly_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
       subscriptions.subscription_start_date,
-      subscription.subscription_end_date,
+      subscriptions.subscription_end_date,
       subscriptions_original.subscription_status                            AS subscription_status_original,
       original_subscription_dates.subscription_start_date                   AS subscription_start_date_original,
       original_subscription_dates.subscription_end_date                     AS subscription_end_date_original,
