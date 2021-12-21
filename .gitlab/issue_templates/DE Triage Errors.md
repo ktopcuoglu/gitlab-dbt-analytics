@@ -11,7 +11,7 @@ Downstream Airflow tasks or dbt models that were skipped: <!-- None -->
   <!-- list any downstream tasks that were skipped because of this error -->
 
 ## DE Triage Guidelines
-
+ 
 * See the [handbook](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#triage-common-issues) for common triage issues.
 
 <details>
