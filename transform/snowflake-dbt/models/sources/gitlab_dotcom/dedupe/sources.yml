@@ -30,7 +30,6 @@ sources:
           error_after: { count: 30, period: day }
       - name: approval_merge_request_rules
         identifier: gitlab_db_approval_merge_request_rules
-        freshness: null
       - name: approvals
         identifier: gitlab_db_approvals
       - name: approver_groups
@@ -263,7 +262,9 @@ sources:
         freshness: null
       - name: project_features
         identifier: gitlab_db_project_features
-        freshness: null
+        freshness:
+          warn_after: { count: 2, period: day }
+          error_after: { count: 4, period: day }
       - name: project_group_links
         identifier: gitlab_db_project_group_links
       - name: project_import_data
@@ -292,8 +293,7 @@ sources:
       - name: requirements
         identifier: gitlab_db_requirements
       - name: resource_label_events
-        identifier: gitlab_db_resource_label_events
-        freshness: null        
+        identifier: gitlab_db_resource_label_events        
       - name: resource_milestone_events
         identifier: gitlab_db_resource_milestone_events
       - name: resource_weight_events
@@ -342,7 +342,9 @@ sources:
         freshness: null
       - name: analytics_cycle_analytics_group_stages
         identifier: gitlab_db_analytics_cycle_analytics_group_stages
-        freshness: null
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: approval_merge_request_rule_sources
         identifier: gitlab_db_approval_merge_request_rule_sources
       - name: approval_project_rules
@@ -363,10 +365,14 @@ sources:
           error_after: { count: 15, period: day }
       - name: cluster_agent_tokens
         identifier: gitlab_db_cluster_agent_tokens
-        freshness: null
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: cluster_agents
         identifier: gitlab_db_cluster_agents
-        freshness: null
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: cluster_providers_aws
         identifier: gitlab_db_cluster_providers_aws
         freshness: null
@@ -396,7 +402,6 @@ sources:
         identifier: gitlab_db_group_import_states
       - name: integrations
         identifier: gitlab_db_integrations
-        freshness: null
       - name: issues_prometheus_alert_events
         identifier: gitlab_db_issues_prometheus_alert_events
         freshness: null
@@ -405,7 +410,9 @@ sources:
         freshness: null
       - name: jira_imports
         identifier: gitlab_db_jira_imports
-        freshness: null
+        freshness:
+          warn_after: {count: 2, period: day}
+          error_after: {count: 4, period: day}
       - name: jira_tracker_data
         identifier: gitlab_db_jira_tracker_data
       - name: ldap_group_links
@@ -457,7 +464,6 @@ sources:
         identifier: gitlab_db_users_ops_dashboard_projects
       - name: web_hooks
         identifier: gitlab_db_web_hooks
-        freshness: null
       - name: zoom_meetings
         identifier: gitlab_db_zoom_meetings
         freshness:
@@ -467,4 +473,3 @@ sources:
         identifier: gitlab_db_user_credit_card_validations
       - name: boards_epic_boards
         identifier: gitlab_db_boards_epic_boards
-        freshness: null

@@ -261,18 +261,7 @@ WITH bizible_touchpoints AS (
             OR bizible_landing_page_raw LIKE '%webcast-gitops-multicloudapp%'
             OR bizible_referrer_page_raw LIKE '%webcast-gitops-multicloudapp%'))
             OR (dim_parent_campaign_id LIKE '%7014M000001dpmf%')
-          THEN 'GitOps GTM webcast'
-        WHEN ((bizible_touchpoint_type = 'Web Form' --added 2021-11-12 MSandP: 536
-            AND ( bizible_form_url_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_form_url_raw LIKE '%utm_content=introtomlopsdemo%'
-            OR bizible_landing_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_landing_page_raw LIKE '%utm_content=introtomlopsdemo%'
-            OR bizible_referrer_page_raw LIKE '%utm_campaign=devopsgtm%' AND bizible_referrer_page_raw LIKE '%utm_content=introtomlopsdemo%'
-            ))
-            OR dim_parent_campaign_id LIKE '%7014M000001vjIn%'
-            OR dim_campaign_id LIKE '%7014M000001vjIn%'
-            
-            OR dim_parent_campaign_id LIKE '%7014M000001vjHL%'
-            OR dim_campaign_id LIKE '%7014M000001vjHL%')
-          THEN 'Technical Demo Series'    
+          THEN 'GitOps GTM webcast' 
         WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 346
             AND ( bizible_form_url_raw LIKE '%devopsgtm%'
             OR bizible_landing_page_raw LIKE '%devopsgtm%'
@@ -332,8 +321,13 @@ WITH bizible_touchpoints AS (
         OR bizible_referrer_page_raw LIKE '%devopsgtm%')
          ))
         OR dim_campaign_id LIKE '%7014M000001dqb2%'
-        THEN 'DOI Webcast' 
-          Else 'None'
+        THEN 'DOI Webcast'
+       WHEN (bizible_touchpoint_type = 'Web Form' -- MSandP 657
+        AND (BIZIBLE_FORM_URL_RAW LIKE '%utm_campaign=cdusecase%'
+        OR BIZIBLE_LANDING_PAGE_RAW LIKE '%utm_campaign=cdusecase%'
+        OR BIZIBLE_REFERRER_PAGE_RAW LIKE '%utm_campaign=cdusecase%'))
+        THEN 'CD Use Case' 
+       ELSE 'None'
       END                                                                                               AS bizible_integrated_campaign_grouping,
       IFF(bizible_integrated_campaign_grouping <> 'None','Demand Gen','Other')                          AS touchpoint_segment,
       CASE
@@ -389,5 +383,5 @@ WITH bizible_touchpoints AS (
     created_by="@mcooperDD",
     updated_by="@degan",
     created_date="2021-03-02",
-    updated_date="2021-11-22"
+    updated_date="2021-12-20"
 ) }}
