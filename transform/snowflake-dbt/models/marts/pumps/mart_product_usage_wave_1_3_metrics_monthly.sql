@@ -15,15 +15,28 @@
     ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
+, original_subscription_dates AS (
+
+    SELECT
+      dim_subscription_id,
+      subscription_start_date,
+      subscription_end_date,
+    FROM subscriptions
+    WHERE subscription_version = 1
+
+)
+
 , joined AS (
 
     SELECT
       monthly_metrics.dim_subscription_id,
       monthly_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
-      subscriptions_original.subscription_status                            AS subscription_status_original,
       subscriptions.subscription_start_date,
-      subscriptions.subscription_end_date,
+      subscription.subscription_end_date,
+      subscriptions_original.subscription_status                            AS subscription_status_original,
+      original_subscription_dates.subscription_start_date                   AS subscription_start_date_original,
+      original_subscription_dates.subscription_end_date                     AS subscription_end_date_original,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}      AS dim_billing_account_id,
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}              AS dim_crm_account_id,
       monthly_metrics.snapshot_month,
@@ -163,6 +176,8 @@
       ON monthly_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
       AND IFNULL(monthly_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN original_subscription_dates
+      ON original_subscription_dates.dim_subscription_id = monthly_metrics.dim_subscription_id_original
 
 )
 
