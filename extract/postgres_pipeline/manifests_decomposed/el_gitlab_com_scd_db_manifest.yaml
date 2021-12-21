@@ -402,37 +402,6 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
-  packages_build_infos:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_build_infos'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , pipeline_id
-      FROM packages_build_infos
-  packages_dependencies:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_dependencies'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      , version_pattern
-      FROM packages_dependencies
-  packages_dependency_links:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_dependency_links'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , dependency_id
-      , dependency_type
-      FROM packages_dependency_links
   pages_domains:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -596,17 +565,6 @@ tables:
       , disk_path
       , project_id
       FROM project_repositories
-  project_repository_states:
-    export_schema: 'gitlab_com'
-    export_table: 'project_repository_states'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , last_repository_verification_failure
-      , last_wiki_verification_failure
-      FROM project_repository_states
   project_repository_storage_moves:
     export_schema: 'gitlab_com'
     export_table: 'project_repository_storage_moves'

@@ -185,13 +185,16 @@ models:
       - name: job_grade
       - name: cost_center
       - name: jobtitle_speciality
-        description: Started capturing on 2020.05.07
+        description: A concatenation of jobtitle_speciality_single_select and jobtitle_speciality_multi_select 
       - name: gitlab_username       
       - name: pay_frequency
         description: The number of compensation periods. Started capturing on 2020.09.10
       - name: sales_geo_differential
       - name: effective_date
-        description: The date the role is effective until a change occurs. 
+        description: The date the role is effective until a change occurs.
+      - name: unique_key
+        tests:
+          - unique 
   
   - name: bamboohr_locality
     description: This shows the locality for employees starting 2020.03.24 (the 1st date we started capturing from bamboohr) on a daily basis.

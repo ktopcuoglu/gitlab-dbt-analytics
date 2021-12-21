@@ -169,6 +169,10 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
 
+      edcast:
+        +schema: edcast
+        +tags: ["people", "edcast"]
+
       gainsight:
         +materialized: table
         +schema: gainsight
@@ -469,6 +473,8 @@ models:
 
       workspace_product:
         +tags: ["product"]
+        source_1_on_1_copy:
+          +schema: workspace_product
 
       workspace_saas_usage_ping:
         +tags: ["product"]
@@ -490,10 +496,10 @@ models:
 
       workspace_engineering:
         +schema: workspace_engineering
+        +materialized: table
 
       workspace_people:
         +schema: workspace_people
-
 
     # ------------------
     # Marts

@@ -61,6 +61,7 @@ WITH source AS (
         leadsource                  AS lead_source,
         lead_source_type__c         AS lead_source_type,
         outreach_stage__c           AS outreach_stage,
+        Sequence_Step_Number__c     AS outreach_step_number,
         account_type__c             AS account_type,
         contact_assigned_datetime__c::TIMESTAMP
                                     AS assigned_datetime,
@@ -69,6 +70,7 @@ WITH source AS (
         mql_date__c                 AS marketo_qualified_lead_date,
         mql_datetime_inferred__c    AS mql_datetime_inferred,
         inquiry_datetime__c         AS inquiry_datetime,
+        inquiry_datetime_inferred__c AS inquiry_datetime_inferred,
         accepted_datetime__c        AS accepted_datetime,
         qualifying_datetime__c      AS qualifying_datetime,
         qualified_datetime__c       AS qualified_datetime,

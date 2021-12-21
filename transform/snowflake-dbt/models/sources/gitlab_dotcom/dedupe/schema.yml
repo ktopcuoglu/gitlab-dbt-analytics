@@ -27,6 +27,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_audit_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_audit_events_external_audit_event_destinations_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_authentication_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_award_emoji_dedupe_source
@@ -68,6 +70,8 @@ models:
   - name: gitlab_dotcom_ci_runner_projects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_runners_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_ci_sources_pipelines_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_stages_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -118,6 +122,8 @@ models:
   - name: gitlab_dotcom_compliance_management_frameworks_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_csv_issue_imports_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_dast_profiles_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_geo_nodes_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -322,6 +328,8 @@ models:
   - name: gitlab_dotcom_uploads_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_details_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_users_security_dashboard_projects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_preferences_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

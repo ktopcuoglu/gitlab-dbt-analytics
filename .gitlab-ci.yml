@@ -206,7 +206,7 @@ yaml_validation:
 
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.8.0
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
   tags:
     - analytics
   only:
@@ -214,10 +214,16 @@ yaml_validation:
       - merge_requests
   allow_failure: true
 
-permifrost_manual:
+🧊⚙permifrost_run:
   <<: *permifrost
   script:
-    - permifrost grant permissions/snowflake/roles.yml --diff --dry
+    - permifrost run permissions/snowflake/roles.yml --diff --dry
+  when: manual
+
+🧊permifrost_spec_test:
+  <<: *permifrost
+  script:
+    - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
 
 # ======

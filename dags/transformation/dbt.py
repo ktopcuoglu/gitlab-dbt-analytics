@@ -48,7 +48,6 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "params": {"slack_channel_override": "#dbt-runs"},
     "retries": 0,
     "sla": timedelta(hours=8),
     "sla_miss_callback": slack_failed_task,
@@ -170,7 +169,7 @@ dbt_product_models_task = KubernetesPodOperator(
 dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
     dbt run --profiles-dir profile --target prod --full-refresh --exclude tag:datasiren common.dim_ip_to_geo; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
@@ -282,7 +281,7 @@ dbt_results = KubernetesPodOperator(
 dbt_workspaces_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_datascience.*; ret=$?;
+    dbt run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_datascience.* workspaces.workspace_data.tdf.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces = KubernetesPodOperator(

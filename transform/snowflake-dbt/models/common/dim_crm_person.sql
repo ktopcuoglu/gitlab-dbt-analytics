@@ -42,7 +42,15 @@ WITH crm_person AS (
       bizible_touchpoint_date,
       sequence_step_type,
       is_actively_being_sequenced,
-      region
+      region,
+      marketo_last_interesting_moment,
+      marketo_last_interesting_moment_date,
+      outreach_step_number,
+      matched_account_owner_role,
+      matched_account_account_owner_name,
+      matched_account_sdr_assigned,
+      matched_account_type,
+      matched_account_gtm_strategy
 
     FROM crm_person
 )
@@ -50,7 +58,7 @@ WITH crm_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jjstark",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-09-10",
-    updated_date="2021-06-29"
+    updated_date="2021-12-15"
 ) }}

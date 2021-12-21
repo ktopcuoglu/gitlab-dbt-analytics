@@ -12,6 +12,7 @@ Please add a number for days you'll be working this milestone. Engineers should 
 - @laddula:
 - @vedprakash2021:
 - @rbacovic:
+- @rigerta:
 
 **Total engineering days**: <!-- sum the above engineering days -->
 

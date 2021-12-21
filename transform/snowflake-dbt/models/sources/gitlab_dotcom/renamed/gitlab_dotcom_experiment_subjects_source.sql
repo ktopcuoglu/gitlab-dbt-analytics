@@ -21,4 +21,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-ORDER BY created_at
