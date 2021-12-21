@@ -17,7 +17,7 @@
 
 , original_subscription_dates AS (
 
-    SELECT
+    SELECT DISTINCT
       dim_subscription_id,
       subscription_start_date,
       subscription_end_date
