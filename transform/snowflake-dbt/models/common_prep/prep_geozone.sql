@@ -13,6 +13,9 @@ grouping AS (
       valid_from,
       valid_to,
       is_current,
+      /* Filling in NULLs with a value for the inequality check in the next step of the gaps and island problem
+      (finding groups based on when the factor changes and not jsut the value of the factor)
+      */
       LAG(geozone_factor, 1, 0) OVER (PARTITION BY country,state_or_province ORDER BY valid_from) AS lag_factor,
       CONDITIONAL_TRUE_EVENT(geozone_factor != lag_factor)
                              OVER (PARTITION BY country,state_or_province ORDER BY valid_from)    AS locality_group
