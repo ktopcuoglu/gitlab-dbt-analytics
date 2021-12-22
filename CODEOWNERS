@@ -16,7 +16,7 @@
 /admin/         @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @dvanrooijen2 @vedprakash2021
 /analyze/       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @dvanrooijen2 @vedprakash2021
 
-CODEOWNERS      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+CODEOWNERS      @rparker2 @iweeks @dvanrooijen2 @mlaanen
 .gitignore      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
 CONTRIBUTING.md @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
 LICENSE.md      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
