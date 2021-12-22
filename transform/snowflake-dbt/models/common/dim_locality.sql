@@ -69,7 +69,7 @@ final AS (
       {{ dbt_utils.surrogate_key(['locality']) }} AS dim_locality_id,
       locality,
       location_factor,
-      country AS locality_country,
+      country                                     AS locality_country,
       valid_from,
       valid_to,
       is_current

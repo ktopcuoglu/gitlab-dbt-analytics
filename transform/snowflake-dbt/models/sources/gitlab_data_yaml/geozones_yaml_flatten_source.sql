@@ -3,7 +3,7 @@
       jsontext,
       uploaded_at,
       LEAD(uploaded_at,1) OVER (ORDER BY uploaded_at) AS lead_uploaded_at,
-      MAX(uploaded_at) OVER () AS max_uploaded_at
+      MAX(uploaded_at) OVER ()                        AS max_uploaded_at
     FROM {{ source('gitlab_data_yaml', 'geo_zones') }}
 
   ),
