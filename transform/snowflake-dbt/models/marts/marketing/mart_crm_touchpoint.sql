@@ -45,6 +45,7 @@
       dim_crm_touchpoint.touchpoint_segment,
       dim_crm_touchpoint.gtm_motion,
       dim_crm_touchpoint.integrated_campaign_grouping,
+      dim_crm_touchpoint.utm_content,
       fct_crm_touchpoint.bizible_count_first_touch,
       fct_crm_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_touchpoint.bizible_count_u_shaped,
@@ -179,7 +180,16 @@
       dim_crm_account.crm_account_type,
       dim_crm_account.technical_account_manager,
       dim_crm_account.merged_to_account_id,
-      dim_crm_account.is_reseller
+      dim_crm_account.is_reseller,
+
+      -- bizible influenced
+       CASE
+        WHEN  dim_campaign.budget_holder = 'fmm'
+              OR campaign_rep_role_name = 'Field Marketing Manager'
+              OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+        THEN 1
+        ELSE 0
+      END AS is_fmm_influenced
 
     FROM fct_crm_touchpoint
     LEFT JOIN dim_crm_touchpoint
@@ -207,5 +217,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-02-18",
-    updated_date="2021-11-09"
+    updated_date="2021-12-16"
 ) }}
