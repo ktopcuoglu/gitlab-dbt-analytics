@@ -45,23 +45,23 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('zuora_revenue_revenue_contract_line_source') }}
-  
+
 ), mje AS (
 
-    SELECT 
+    SELECT
       *,
-      CASE 
-        WHEN debit_activity_type = 'Revenue' AND  credit_activity_type = 'Contract Liability' 
-          THEN -amount           
-        WHEN credit_activity_type = 'Revenue' AND  debit_activity_type = 'Contract Liability' 
+      CASE
+        WHEN debit_activity_type = 'Revenue' AND  credit_activity_type = 'Contract Liability'
+          THEN -amount
+        WHEN credit_activity_type = 'Revenue' AND  debit_activity_type = 'Contract Liability'
           THEN amount
-        ELSE amount                                                                             
+        ELSE amount
       END                                                                                       AS adjustment_amount
     FROM {{ ref('zuora_revenue_manual_journal_entry_source') }}
-  
+
 ), true_up_lines_dates AS (
-  
-    SELECT 
+
+    SELECT
       subscription_name,
       revenue_contract_line_attribute_16,
       MIN(revenue_start_date)               AS revenue_start_date,
@@ -71,7 +71,7 @@ WITH dim_date AS (
 
 ), true_up_lines AS (
 
-    SELECT 
+    SELECT
       revenue_contract_line_id,
       revenue_contract_id,
       zuora_account.account_id                              AS dim_billing_account_id,
@@ -95,9 +95,9 @@ WITH dim_date AS (
         AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
     WHERE revenue_contract_line.revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
       AND recognized_amount > 0
-  
+
 ), mje_summed AS (
-  
+
     SELECT
       mje.revenue_contract_line_id,
       SUM(adjustment_amount) AS adjustment
@@ -108,8 +108,9 @@ WITH dim_date AS (
     {{ dbt_utils.group_by(n=1) }}
 
 ), true_up_lines_subcription_grain AS (
-  
+
     SELECT
+      lns.revenue_contract_id,
       lns.dim_billing_account_id,
       lns.dim_crm_account_id,
       lns.dim_charge_id,
@@ -124,11 +125,12 @@ WITH dim_date AS (
     LEFT JOIN mje_summed mje
       ON lns.revenue_contract_line_id = mje.revenue_contract_line_id
     WHERE adjustment IS NOT NULL
-    {{ dbt_utils.group_by(n=7) }}
-  
+    {{ dbt_utils.group_by(n=8) }}
+
 ), manual_charges AS (
-  
-    SELECT 
+
+    SELECT
+      revenue_contract_id,
       dim_billing_account_id,
       dim_crm_account_id,
       dim_charge_id,
@@ -150,7 +152,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="manual_charges",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@iweeks",
     created_date="2021-10-28",
-    updated_date="2021-11-18",
+    updated_date="2021-12-22",
 ) }}
