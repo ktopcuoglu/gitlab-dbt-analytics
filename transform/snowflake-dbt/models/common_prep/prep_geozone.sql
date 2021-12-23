@@ -18,7 +18,8 @@ grouping AS (
       */
       LAG(geozone_factor, 1, 0) OVER (PARTITION BY country,state_or_province ORDER BY valid_from) AS lag_factor,
       CONDITIONAL_TRUE_EVENT(geozone_factor != lag_factor)
-                             OVER (PARTITION BY country,state_or_province ORDER BY valid_from)    AS locality_group
+                             OVER (PARTITION BY country,state_or_province ORDER BY valid_from)    AS locality_group,
+      LEAD(valid_from,1) OVER (PARTITION BY country,state_or_province ORDER BY valid_from)        AS next_entry
     FROM source
 ),
 final AS (
@@ -27,11 +28,13 @@ final AS (
     geozone_factor,
     geozone_locality,
     country_locality,
-    country                                                                             AS geozone_country,
-    state_or_province                                                                   AS geozone_state_or_province,
-    MIN(valid_from) OVER (PARTITION BY country,state_or_province,locality_group)::DATE  AS valid_from,
-    MAX(valid_to) OVER (PARTITION BY country,state_or_province,locality_group)::DATE    AS valid_to,
-    BOOLOR_AGG(is_current) OVER (PARTITION BY country,state_or_province,locality_group) AS is_current
+    country                                                                                                     AS geozone_country,
+    state_or_province                                                                                           AS geozone_state_or_province,
+    MIN(valid_from) OVER (PARTITION BY country,state_or_province,locality_group)::DATE                          AS first_file_date,
+    MAX(valid_to) OVER (PARTITION BY country,state_or_province,locality_group)::DATE                            AS last_file_date,
+    IFF(locality_group = 1, LEAST('2020-03-24',first_file_date),first_file_date)                                AS valid_from,
+    MAX(COALESCE(next_entry,CURRENT_DATE())) OVER (PARTITION BY country,state_or_province,locality_group)::DATE AS valid_to,
+    BOOLOR_AGG(is_current) OVER (PARTITION BY country,state_or_province,locality_group)                         AS is_current_file
   FROM grouping
 )
 

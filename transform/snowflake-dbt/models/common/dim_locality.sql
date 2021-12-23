@@ -9,9 +9,9 @@
       IFF(geozone_country = 'United States', geozone_country, NULL) AS country,
       geozone_locality,
       geozone_factor,
-      MIN(valid_from)                               AS valid_from,
-      MAX(valid_to)                                 AS valid_to,
-      BOOLAND_AGG(is_current)                       AS is_current
+      MIN(valid_from)                                               AS valid_from,
+      MAX(valid_to)                                                 AS valid_to,
+      BOOLAND_AGG(is_current_file)                                  AS is_current_file
     FROM geozones
     GROUP BY 1, 2, 3
   ),
@@ -22,7 +22,7 @@
       geozone_factor,
       MIN(valid_from)                               AS valid_from,
       MAX(valid_to)                                 AS valid_to,
-      BOOLAND_AGG(is_current)                       AS is_current
+      BOOLAND_AGG(is_current_file)                  AS is_current_file
     FROM geozones
     GROUP BY 1, 2, 3
   ),
@@ -34,7 +34,7 @@
     FROM location_factor
     UNION
     SELECT DISTINCT
-      geozone_country AS country,
+      geozone_country         AS country,
       valid_from
     FROM geozones
   ),
@@ -45,7 +45,7 @@
       COALESCE(location_factor.location_factor, geozone_countries.geozone_factor)     AS location_factor,
       COALESCE(location_factor.valid_from, geozone_countries.valid_from)              AS valid_from,
       COALESCE(location_factor.valid_to, geozone_countries.valid_to)                  AS valid_to,
-      COALESCE(location_factor.is_current, geozone_countries.is_current)              AS is_current
+      COALESCE(location_factor.is_current_file, geozone_countries.is_current_file)    AS is_current_source_file
     FROM join_spine
     LEFT JOIN geozone_countries
       ON geozone_countries.geozone_country = join_spine.country
@@ -66,13 +66,13 @@
   ),
 final AS (
     SELECT
-      {{ dbt_utils.surrogate_key(['locality']) }} AS dim_locality_id,
+      {{ dbt_utils.surrogate_key(['lower(locality)']) }} AS dim_locality_id,
       locality,
       location_factor,
-      country                                     AS locality_country,
+      country                                            AS locality_country,
       valid_from,
       valid_to,
-      is_current
+      is_current_source_file
     FROM combined
 )
 

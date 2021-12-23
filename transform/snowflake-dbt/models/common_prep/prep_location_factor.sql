@@ -42,19 +42,14 @@
         END                                                                                 AS area_clean,
         -- Adjusting factor to match what is found in the geozone source data
         COALESCE(states_or_provinces_metro_areas_factor_level_2, states_or_provinces_factor_level_2,
-                 metro_areas_factor_level_2, factor_level_1, locationfactor_level_1) * 0.01 AS factor,
-
-        COALESCE(states_or_provinces_name_level_2,metro_areas_sub_location_level_2)         AS states_or_provinces,
-        COALESCE(states_or_provinces_metro_areas_name_level_2,metro_areas_name_level_2)     AS metro_area
+                 metro_areas_factor_level_2, factor_level_1, locationfactor_level_1) * 0.01 AS factor
       FROM source
 
     ), grouping AS (
     SELECT
       country,
-      states_or_provinces,
-      metro_area,
-      area_clean               AS area,
-      area || ', ' || country  AS locality,
+      area_clean                                                                                    AS area,
+      area || ', ' || country                                                                       AS locality,
       factor,
       valid_from,
       valid_to,
@@ -62,21 +57,22 @@
       /* Filling in NULLs with a value for the inequality check in the next step of the gaps and islands problem
       (finding groups based on when the factor changes and not just the value of the factor)
       */
-      LAG(factor, 1, 0) OVER (PARTITION BY locality ORDER BY valid_from) AS lag_factor,
-      CONDITIONAL_TRUE_EVENT(factor != lag_factor) OVER (PARTITION BY locality ORDER BY valid_from) AS locality_group
+      LAG(factor, 1, 0) OVER (PARTITION BY locality ORDER BY valid_from)                            AS lag_factor,
+      CONDITIONAL_TRUE_EVENT(factor != lag_factor) OVER (PARTITION BY locality ORDER BY valid_from) AS locality_group,
+      LEAD(valid_from,1) OVER (PARTITION BY locality ORDER BY valid_from)                           AS next_entry
     FROM organized
   ),
 final AS (
   SELECT DISTINCT
-    country                                                            AS location_factor_country,
-    area                                                               AS location_factor_area,
-    states_or_provinces                                                AS location_factor_states_or_provinces,
-    metro_area                                                         AS location_factor_metro_area,
+    country                                                                                    AS location_factor_country,
+    area                                                                                       AS location_factor_area,
     locality,
-    factor                                                             AS location_factor,
-    MIN(valid_from) OVER (PARTITION BY locality,locality_group)::DATE  AS valid_from,
-    MAX(valid_to) OVER (PARTITION BY locality,locality_group)::DATE    AS valid_to,
-    BOOLOR_AGG(is_current) OVER (PARTITION BY locality,locality_group) AS is_current
+    factor                                                                                     AS location_factor,
+    MIN(valid_from) OVER (PARTITION BY locality,locality_group)::DATE                          AS first_file_date,
+    MAX(valid_to) OVER (PARTITION BY locality,locality_group)::DATE                            AS last_file_date,
+    IFF(locality_group = 1, LEAST('2020-03-24',first_file_date),first_file_date)               AS valid_from,
+    MAX(COALESCE(next_entry,CURRENT_DATE())) OVER (PARTITION BY locality,locality_group)::DATE AS valid_to,
+    BOOLOR_AGG(is_current) OVER (PARTITION BY locality,locality_group)                         AS is_current_file
   FROM grouping
   WHERE factor IS NOT NULL
 )
