@@ -125,7 +125,7 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooi
 /transform/snowflake-dbt/models/sources/zuora       @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
 /transform/snowflake-dbt/models/legacy/zuora        @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
 
-/transform/snowflake-dbt/models/marts/arr           @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/marts/arr           @jeanpeguero    @paul_armstrong  @iweeks @michellecooper
 /transform/snowflake-dbt/models/marts/sales_funnel  @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
 
 /transform/snowflake-dbt/models/workspaces/workspace_sales  @nfiguera @mvilain
