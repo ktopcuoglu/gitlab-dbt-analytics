@@ -54,7 +54,6 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_bamboo_active']") }}                                                           AS projects_bamboo_active_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jira_active']") }}                                                             AS projects_jira_active_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_drone_ci_active']") }}                                                         AS projects_drone_ci_active_all_time_event,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['issue_imports']['jira']") }}                         AS jira_imports_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_github_active']") }}                                                           AS projects_github_active_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jira_server_active']") }}                                                      AS projects_jira_server_active_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_jira_dvcs_cloud_active']") }}                                                  AS projects_jira_dvcs_cloud_active_all_time_event,

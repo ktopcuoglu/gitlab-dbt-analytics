@@ -93,17 +93,17 @@ models:
       - name: last_name
         description: Mapped to `CDB_Last_Name__c` in Marketo. Compiled from SFDC, gitlab_dotcom, customer_db, & zuora in [dim_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_marketing_contact)
       - name: responsible_for_free_tier_only
-        description: Mapped to `CDB_Responsible_for_Free_Tier_Only__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
+        description: Mapped to `CDB_Responsible_for_Free_Tier_Only__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: responsible_for_group_saas_bronze_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Bronze_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
+        description: Mapped to `CDB_Resp_for_Group_Saas_Bronze_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: responsible_for_group_saas_free_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Free_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
+        description: Mapped to `CDB_Resp_for_Group_Saas_Free_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: responsible_for_group_saas_premium_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Premium_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
+        description: Mapped to `CDB_Resp_for_Group_Saas_Premium_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: responsible_for_group_saas_trial
-        description: Mapped to `CDB_Resp_for_Group_SaaS_Trial__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
+        description: Mapped to `CDB_Resp_for_Group_SaaS_Trial__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: responsible_for_group_saas_ultimate_tier
-        description: Mapped to `CDB_Resp_for_Group_Saas_Ultimate_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact) 
+        description: Mapped to `CDB_Resp_for_Group_Saas_Ultimate_Tier__c` in Marketo. Calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: zuora_active_state
         description: Mapped to `zuora_active_state__c` in Marketo. Calculated from `created_date` and `is_deleted`.
       - name: zuora_contact_id
@@ -115,7 +115,7 @@ models:
 
   - name: pump_subscription_product_usage
     description: '{{ doc("pump_subscription_product_usage") }}'
-    
+
   - name: pump_marketing_premium_to_ultimate
     description: '{{ doc("pump_marketing_premium_to_ultimate") }}'
 
@@ -237,8 +237,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -315,4 +313,3 @@ models:
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-

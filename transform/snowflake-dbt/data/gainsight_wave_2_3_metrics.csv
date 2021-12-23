@@ -49,7 +49,6 @@ wave,metric_name
 3.1,counts.projects_bamboo_active
 3.1,counts.projects_jira_active
 3.1,counts.projects_drone_ci_active
-3.1,usage_activity_by_stage_monthly.manage.issues_imported.jira
 3.1,counts.projects_github_active
 3.1,counts.projects_jira_server_active
 3.1,counts.projects_jira_dvcs_cloud_active
