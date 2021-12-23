@@ -7,7 +7,7 @@
 Closes #
 
 ## Solution
- 
+
 Describe the solution. Include links to any related MRs and/or issues.
 
 * [ ] Provide link to CSV/GSheet data. Link: ____
