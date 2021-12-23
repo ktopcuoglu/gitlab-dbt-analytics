@@ -895,6 +895,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - transforming_4xl_10480
             - datasiren
         member_of:
             - covid19
@@ -5080,6 +5081,9 @@ warehouses:
         size: x-small
 
     - transforming_4xl:
+        size: "4-x-large"
+
+    - transforming_4xl_10480: #temp warehouse for issue 10480
         size: "4-x-large"
 
     - usage_ping:
