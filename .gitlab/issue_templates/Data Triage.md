@@ -104,7 +104,7 @@ The DRI for this incident is `@username`.
 The link to the Data Team Incident issue is <link>
 
 `CC @Jake Bielecki, @Matt Benzaquen, @Jack Brennan, @Craig Mestel`
- 
+
 #### General
 
 We have identified a delay in the `DATA SOURCE` data refresh. We are actively working on a resolution and will provide an update once data has been brought up-to-date.
