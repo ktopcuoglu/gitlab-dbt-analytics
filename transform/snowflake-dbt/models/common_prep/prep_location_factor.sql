@@ -70,6 +70,7 @@ final AS (
     factor                                                                                     AS location_factor,
     MIN(valid_from) OVER (PARTITION BY locality,locality_group)::DATE                          AS first_file_date,
     MAX(valid_to) OVER (PARTITION BY locality,locality_group)::DATE                            AS last_file_date,
+    -- Fixed date represents when location factor becan to be collected in source data.
     IFF(locality_group = 1, LEAST('2020-03-24',first_file_date),first_file_date)               AS valid_from,
     MAX(COALESCE(next_entry,CURRENT_DATE())) OVER (PARTITION BY locality,locality_group)::DATE AS valid_to,
     BOOLOR_AGG(is_current) OVER (PARTITION BY locality,locality_group)                         AS is_current_file

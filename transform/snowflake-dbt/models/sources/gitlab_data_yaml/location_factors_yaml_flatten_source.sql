@@ -77,5 +77,18 @@
                                  TRUE) AS level_2_states_or_provinces_metro_areas
     )
   SELECT
-    *
+    valid_from,
+    valid_to,
+    is_current,
+    area_level_1,
+    country_level_1,
+    locationfactor_level_1,
+    factor_level_1,
+    metro_areas_name_level_2,
+    metro_areas_factor_level_2,
+    metro_areas_sub_location_level_2,
+    states_or_provinces_name_level_2,
+    states_or_provinces_factor_level_2,
+    states_or_provinces_metro_areas_name_level_2,
+    states_or_provinces_metro_areas_factor_level_2
   FROM level_2_states_or_provinces_metro_areas
