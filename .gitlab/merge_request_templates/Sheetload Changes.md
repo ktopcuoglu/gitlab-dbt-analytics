@@ -34,7 +34,7 @@ Describe the solution. Include links to any related MRs and/or issues.
 
 * [ ] Step 5: In the same repoistory folder as the sources.yml file, you will [add the base model to sources.sheetload repository](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/sheetload). Naming the file as sheetload_file_name_sources.sql.
         This file will have the following code, but can also be restricted down to specific columns. Update data type of columns in this file (i.e converting value to decimal or varchar)
-        ```sql
+```sql
         WITH source AS (
 
         SELECT * 
@@ -43,12 +43,12 @@ Describe the solution. Include links to any related MRs and/or issues.
         )
         SELECT * 
         FROM source
-        ```
+```
 * [ ] Step 6: In the sources.sheetload repository [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/sheetload/schema.yml) to explain the source model. 
 
-* [ ] Step 7: Next we'll head to head to transform --> snowflake-dbt --> models --> staging --> sheetload--> [Add a new file for the model in staging.sheetload](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/staging/sheetload). This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update. Name the file `sheetload_file_name`
+* [ ] Step 7: Next we'll head to head to transform --> snowflake-dbt --> models --> staging --> sheetload--> [Add a new file for the model in staging.sheetload](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/legacy/sheetload). This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update. Name the file `sheetload_file_name`
 
-* [ ] Step 8: [Update staging.sheetload schema.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/sheetload/schema.yml) to add description of the staging model. 
+* [ ] Step 8: [Update staging.sheetload schema.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/legacy/sheetload/schema.yml) to add description of the staging model. 
 
 To understand the difference between source and staging models, please refer to these sources: [source models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#source-models) vs [staging models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#staging)
 </details>
@@ -59,7 +59,7 @@ To understand the difference between source and staging models, please refer to 
 <summary><i>Click to toggle Testing</i></summary>
 
 * [ ] Every model should be [tested](https://docs.getdbt.com/docs/testing-and-documentation) AND documented in a `schema.yml` file. At minimum, unique, not nullable fields, and foreign key constraints should be tested, if applicable.
-* [ ] All models should be integrated into the [trusted data framework](https://about.gitlab.com/handbook/business-ops/data-team/direction/trusted-data/)
+* [ ] All models should be integrated into the [trusted data framework](https://about.gitlab.com/handbook/business-technology/data-team/platform/#tdf)
   * [ ] If there is an associated MR in the [Data Tests](https://gitlab.com/gitlab-data/data-tests) project, be sure to pass the branch name to the manual job using the `DATA_TEST_BRANCH` environment variable.
 * [ ] If the periscope_query job failed, validate that the changes you've made don't affect the grain of the table or the expected output in Periscope.
 * [ ] If you are on the Data Team, please paste the output of `dbt test` when run locally below. Any failing tests should be fixed or explained prior to requesting a review.
