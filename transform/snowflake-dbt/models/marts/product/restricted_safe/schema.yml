@@ -36,3 +36,17 @@ models:
         description: For the CRM Account, sum of all ARR lost when the customer left GitLab.
       - name: lost_arr
         description: Sum of crm_account_lost_opp_arr and crm_account_lost_customer_arr
+  - name: rpt_user_request_crm_account_issue_epic
+    description: Aggregation of mart_user_request, which is at the issue/epic||link grain at the issue/epic||crm_account grain. 
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+  - name: rpt_user_request_issue_epic
+    description: Aggregation of mart_user_request at the issue/epic grain.
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
