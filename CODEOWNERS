@@ -53,7 +53,6 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooi
 /transform/snowflake-dbt/analysis/                  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
 /transform/snowflake-dbt/docs/                      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
 /transform/snowflake-dbt/macros/                    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/                    @mdrussell @chrissharp @michellecooper @pempey @tpoole1 @snalamaru
 
 /transform/snowflake-dbt/models/bamboohr/           @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
 /transform/snowflake-dbt/models/covid19/            @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
