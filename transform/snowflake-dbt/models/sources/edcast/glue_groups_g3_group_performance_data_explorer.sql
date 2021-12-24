@@ -11,120 +11,54 @@ WITH source AS (
 ), renamed AS (
 
   SELECT
-    group_id                            AS group_id                        ,                   --:___9625
-    group_name                          AS group_name                      ,                   --:_gitlab_learning_community
-    group_status                        AS group_status                    ,                   --:_active
-    user_id                             AS user_id                         ,                   --:_460679.0
-    card_id                             AS card_id                         ,                   --:_7089752.0
-    card_state                          AS card_state                      ,                   --_published
-    card_title                          AS card_title                      ,                   --_nurturing_psychological_safety_for_all_team_members
-    card_type                           AS card_type                       ,                   --_media
-    is_user_generated                   AS is_user_generated               ,                   --_1
-    content_structure                   AS content_structure               ,                   --_smartcard
-    card_author_id                      AS card_author_id                  ,                   --_460875.0
-    user_full_name                      AS user_full_name                  ,                   --_matt_kasa
-    content_status                      AS content_status                  ,                   --_active
-    email                               AS email                           ,                   --_mkasa@gitlab.com
-    time                                AS time                            ,                   --_2021-12-14t00    --11    --39
-    event                               AS event                           ,                   --_card_source_visited
-    shared_to_user_id                   AS shared_to_user_id               ,                   --_
-    shared_to_group_id                  AS shared_to_group_id              ,                   --_
-    platform                            AS platform                        ,                   --_web
-    performance_metric                  AS performance_metric              ,                   --_total_content_source_visits
-    comment_id                          AS comment_id                      ,                   --_
-    comment_message                     AS comment_message                 ,                   --_
-    follower_id                         AS follower_id                     ,                   --_    _followed
-    user_id                             AS user_id                         ,                   --_
-    shared_to_user_full_name            AS shared_to_user_full_name        ,                   --_
-    follower_user_full_name             AS follower_user_full_name         ,                   --_
-    shared_to_group_name                AS shared_to_group_name            ,                   --_
-    card_author_full_name               AS card_author_full_name           ,                   --_liam_mcnally
-    comment_status                      AS comment_status                  ,                   --_
-    time_account_created                AS time_account_created            ,                   --_2020-12-08t21    --10    --52
-    sign-in_count                       AS sign-in_count                   ,                   --_3
-    user_account_status                 AS user_account_status             ,                   --_active
-    excluded_from_leaderboard           AS excluded_from_leaderboard       ,                   --_false
-    card_resource_url                   AS card_resource_url               ,                   --_https    --//youtu.be/2thoaaojrtk
-    is_live_stream                      AS is_live_stream                  ,                   --_0
-    card_subtype                        AS card_subtype                    ,                   --_link
-    ecl_id                              AS ecl_id                          ,                   --_2d3774c0-4887-44e3-8677-302bbbbf55c9
-    ecl_source_name                     AS ecl_source_name                 ,                   --_user_generated_content
-    is_card_promoted                    AS is_card_promoted                ,                   --_0    _
-    is_public                           AS is_public                       ,                   --_true    _
-    duration_seconds                    AS duration_seconds                ,                   --_0    _
-    duration_hh                         AS duration_hh                     ,                   --mm    --_00    --00    _
-    assigned_content                    AS assigned_content                ,                   --_false    _
-    title                               AS title                           ,                   --_senior_backend_engineer    _
-    supervisor_email                    AS supervisor_email                ,                   --_nklick@gitlab.com    _
-    supervisor                          AS supervisor                      ,                   --_nicholas_klick    _
-    job_groups                          AS job_groups                      ,                   --_    _
-    role                                AS role                            ,                   --_individual_contributor
-    country                             AS country                         ,                   --_united_states    _
-    hire_date                           AS hire_date                       ,                   --_2019-07-22    _
-    department                          AS department                      ,                   --_development    _
-    division                            AS division                        ,                   --: "Sales"
-    group_id                            AS group_id                        ,                   --:___9625
-    group_name                          AS group_name                      ,                   --:_gitlab_learning_community
-    group_status                        AS group_status                    ,                   --:_active
-    user_id                             AS user_id                         ,                   --:_460679.0
-    card_id                             AS card_id                         ,                   --:_7089752.0
-    card_state                          AS card_state                      ,                   --_published
-    card_title                          AS card_title                      ,                   --_nurturing_psychological_safety_for_all_team_members
-    card_type                           AS card_type                       ,                   --_media
-    is_user_generated                   AS is_user_generated               ,                   --_1
-    content_structure                   AS content_structure               ,                   --_smartcard
-    card_author_id                      AS card_author_id                  ,                   --_460875.0
-    user_full_name                      AS user_full_name                  ,                   --_matt_kasa
-    content_status                      AS content_status                  ,                   --_active
-    email                               AS email                           ,                   --_mkasa@gitlab.com
-    time                                AS time                            ,                   --_2021-12-14t00    --11    --39
-    event                               AS event                           ,                   --_card_source_visited
-    shared_to_user_id                   AS shared_to_user_id               ,                   --_
-    shared_to_group_id                  AS shared_to_group_id              ,                   --_
-    platform                            AS platform                        ,                   --_web
-    performance_metric                  AS performance_metric              ,                   --_total_content_source_visits
-    comment_id                          AS comment_id                      ,                   --_
-    comment_message                     AS comment_message                 ,                   --_
-    follower_id                         AS follower_id                     ,                   --_    _followed
-    user_id                             AS user_id                         ,                   --_
-    shared_to_user_full_name            AS shared_to_user_full_name        ,                   --_
-    follower_user_full_name             AS follower_user_full_name         ,                   --_
-    shared_to_group_name                AS shared_to_group_name            ,                   --_
-    card_author_full_name               AS card_author_full_name           ,                   --_liam_mcnally
-    comment_status                      AS comment_status                  ,                   --_
-    time_account_created                AS time_account_created            ,                   --_2020-12-08t21    --10    --52
-    sign-in_count                       AS sign-in_count                   ,                   --_3
-    user_account_status                 AS user_account_status             ,                   --_active
-    excluded_from_leaderboard           AS excluded_from_leaderboard       ,                   --_false
-    card_resource_url                   AS card_resource_url               ,                   --_https    --//youtu.be/2thoaaojrtk
-    is_live_stream                      AS is_live_stream                  ,                   --_0
-    card_subtype                        AS card_subtype                    ,                   --_link
-    ecl_id                              AS ecl_id                          ,                   --_2d3774c0-4887-44e3-8677-302bbbbf55c9
-    ecl_source_name                     AS ecl_source_name                 ,                   --_user_generated_content
-    is_card_promoted                    AS is_card_promoted                ,                   --_0    _
-    is_public                           AS is_public                       ,                   --_true    _
-    duration_seconds                    AS duration_seconds                ,                   --_0    _
-    duration_hh                         AS duration_hh                     ,                   --mm    --_00    --00    _
-    assigned_content                    AS assigned_content                ,                   --_false    _
-    title                               AS title                           ,                   --_senior_backend_engineer    _
-    supervisor_email                    AS supervisor_email                ,                   --_nklick@gitlab.com    _
-    supervisor                          AS supervisor                      ,                   --_nicholas_klick    _
-    job_groups                          AS job_groups                      ,                   --_    _
-    role                                AS role                            ,                   --_individual_contributor
-    country                             AS country                         ,                   --_united_states    _
-    hire_date                           AS hire_date                       ,                   --_2019-07-22    _
-    department                          AS department                      ,                   --_development    _
-    division                            AS division                        ,                   --_engineering    _
-    region                              AS region                          ,                   --_americas    _
-    is_manager                          AS is_manager                      ,                   --_f    _
-    gitlab_internal                     AS gitlab_internal                 ,                   --_t    _
-    impartner_account                   AS impartner_account               ,                   --_    _
-    standard_card_type                  AS standard_card_type              ,                --_engineering    _
-    region                              AS region                          ,                   --_americas    _
-    is_manager                          AS is_manager                      ,                   --_f    _
-    gitlab_internal                     AS gitlab_internal                 ,                   --_t    _
-    impartner_account                   AS impartner_account               ,                   --_    _
-    standard_card_type                  AS standard_card_type,
+    assigned_content::BOOLEAN                       AS assigned_content,
+    card_author_full_name::VARCHAR                  AS card_author_full_name,
+    card_resource_url::VARCHAR                      AS card_resource_url,
+    card_state::VARCHAR                             AS card_state,
+    card_subtype::VARCHAR                           AS card_subtype,
+    card_title::VARCHAR                             AS card_title,
+    card_type::VARCHAR                              AS card_type,
+    comment_message::VARCHAR                        AS comment_message,
+    comment_status::VARCHAR                         AS comment_status,
+    content_status::VARCHAR                         AS content_status,
+    content_structure::VARCHAR                      AS content_structure,
+    country::VARCHAR                                AS country,
+    department::VARCHAR                             AS department,
+    division::VARCHAR                               AS division,
+    duration_hh_mm_::VARCHAR                        AS duration_hh_mm,
+    ecl_id::VARCHAR                                 AS ecl_id,
+    ecl_source_name::VARCHAR                        AS ecl_source_name,
+    email::VARCHAR                                  AS email,
+    event::VARCHAR                                  AS event,
+    excluded_from_leaderboard::BOOLEAN              AS excluded_from_leaderboard,
+    follower_user_full_name_::VARCHAR               AS follower_user_full_name,
+    following_user_full_name_::VARCHAR              AS following_user_full_name,
+    DECODE(gitlab_internal,'f',FALSE,TRUE)::BOOLEAN AS gitlab_internal,
+    group_name::VARCHAR                             AS group_name,
+    group_status::VARCHAR                           AS group_status,
+    NULLIF(hire_date,'')::DATE                      AS hire_date,
+    impartner_account::VARCHAR                      AS impartner_account,
+    DECODE(is_card_promoted,0,FALSE,TRUE)::BOOLEAN  AS is_card_promoted,
+    DECODE(is_live_stream,0,FALSE,TRUE)::BOOLEAN    AS is_live_stream,
+    DECODE(is_manager,'f',FALSE,TRUE)::BOOLEAN      AS is_manager,
+    is_public_::BOOLEAN                             AS is_public,
+    job_groups::VARCHAR                             AS job_groups,
+    performance_metric::VARCHAR                     AS performance_metric,
+    platform::VARCHAR                               AS platform,
+    region::VARCHAR                                 AS region,
+    role::VARCHAR                                   AS role,
+    shared_to_group_name::VARCHAR                   AS shared_to_group_name,
+    shared_to_user_full_name::VARCHAR               AS shared_to_user_full_name,
+    sign_in_count::NUMBER                           AS sign_in_count,
+    standard_card_type::VARCHAR                     AS standard_card_type,
+    supervisor::VARCHAR                             AS supervisor,
+    supervisor_email::VARCHAR                       AS supervisor_email,
+    time::TIMESTAMP                                 AS time,
+    time_account_created::TIMESTAMP                 AS time_account_created,
+    title::VARCHAR                                  AS title,
+    user_account_status::VARCHAR                    AS user_account_status,
+    user_full_name::VARCHAR                         AS user_full_name,
+    __loaded_at::TIMESTAMP                          AS __loaded_at
   FROM source
 
 )
