@@ -4,7 +4,7 @@ sources:
   - name: edcast
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     tags: ["people", "edcast"]
-    schema: edcast
+    schema: tap_edcast
     loaded_at_field: DATEADD(sec, _uploaded_at, '1970-01-01')
     loader: Airflow
     description: Extracted data transformation for EdCast. Data is extracted using tap-edcast (Meltano)
@@ -21,3 +21,5 @@ sources:
     tables:
       - name: glue_groups_g3_group_performance_data_explorer
         identifier: glue_groups_g3_group_performance_data_explorer
+      - name: datasets
+        identifier: datasets

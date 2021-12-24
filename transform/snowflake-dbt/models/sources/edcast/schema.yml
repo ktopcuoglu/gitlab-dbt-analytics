@@ -31,3 +31,107 @@ models:
 - name: glue_groups_g3_group_performance_data_explorer
   tags: ["people", "edcast"]
   description: '{{ doc("glue_groups_g3_group_performance_data_explorer") }}'
+  columns:
+  - name: assigned_content
+    tests:
+    - not_null
+  - name: card_author_full_name
+    meta:
+      sensitive: true
+  - name: card_resource_url
+  - name: card_state
+  - name: card_subtype
+  - name: card_title
+  - name: card_type
+  - name: comment_message
+  - name: comment_status
+  - name: content_status
+  - name: content_structure
+  - name: country
+  - name: department
+  - name: division
+  - name: duration_hh_mm_
+  - name: ecl_id
+    tests:
+    - not_null
+  - name: ecl_source_name
+    tests:
+    - not_null
+  - name: email
+    meta:
+      sensitive: true
+  - name: event
+  - name: excluded_from_leaderboard
+  - name: follower_user_full_name_
+  - name: following_user_full_name_
+  - name: gitlab_internal
+  - name: group_name
+  - name: group_status
+  - name: hire_date
+  - name: impartner_account
+  - name: is_card_promoted
+  - name: is_live_stream
+  - name: is_manager
+  - name: is_public_
+  - name: job_groups
+  - name: performance_metric
+  - name: platform
+  - name: region
+  - name: role
+  - name: shared_to_group_name
+  - name: shared_to_user_full_name
+  - name: sign_in_count
+  - name: standard_card_type
+  - name: supervisor
+    meta:
+      sensitive: true
+  - name: supervisor_email
+    meta:
+      sensitive: true
+  - name: time
+    tests:
+    - not_null
+  - name: time_account_created
+  - name: title
+  - name: user_account_status
+  - name: user_full_name
+    meta:
+      sensitive: true
+  - name: __loaded_at
+- name: datasets
+  tags: ["people", "edcast"]
+  description: '{{ doc("datasets") }}'
+  columns:
+  - name: id
+    tests:
+    - not_null
+  - name: name
+    tests:
+    - not_null
+  - name: number_of_columns
+    tests:
+    - not_null
+  - name: created_at
+    tests:
+    - not_null
+  - name: data_current_at
+    tests:
+    - not_null
+  - name: pdp_enabled
+    tests:
+    - not_null
+  - name: number_of_rows
+    tests:
+    - not_null
+  - name: owner_id
+    tests:
+    - not_null
+  - name: owner_name
+    tests:
+    - not_null
+  - name: updated_at
+    tests:
+    - not_null
+  - name: __loaded_at
+    tests:
+    - not_null
