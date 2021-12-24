@@ -77,7 +77,7 @@ models:
   - name: performance_metric
   - name: platform
   - name: region
-  - name: role
+  - name: role_name
   - name: shared_to_group_name
   - name: shared_to_user_full_name
   - name: sign_in_count
