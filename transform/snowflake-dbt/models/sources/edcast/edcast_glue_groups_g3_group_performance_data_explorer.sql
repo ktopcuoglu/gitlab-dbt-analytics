@@ -70,7 +70,7 @@ WITH source AS (
     NULLIF(supervisor,'')::VARCHAR                  AS supervisor,
     NULLIF(supervisor_email,'')::VARCHAR            AS supervisor_email,
     time::TIMESTAMP                                 AS time,
-    time_account_created,'')::TIMESTAMP             AS time_account_created,
+    time_account_created::TIMESTAMP                 AS time_account_created,
     NULLIF(title,'')::VARCHAR                       AS title,
     NULLIF(user_account_status,'')::VARCHAR         AS user_account_status,
     NULLIF(user_full_name,'')::VARCHAR              AS user_full_name,
