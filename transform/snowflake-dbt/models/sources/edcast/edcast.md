@@ -9,5 +9,5 @@ Dataset name (originaly) is: **GlueGroupsG3GroupPerformanceDataExplorerStreams**
 {% enddocs %}
 
 {% docs datasets %}
-Source of the list of the available datasets loaded via `RESTful API`.
+Source of the list of the available datasets loaded via `RESTful API`. 
 {% enddocs %}
