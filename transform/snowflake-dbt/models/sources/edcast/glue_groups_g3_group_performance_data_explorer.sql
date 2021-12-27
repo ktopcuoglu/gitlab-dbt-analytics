@@ -8,6 +8,22 @@ WITH source AS (
   SELECT *
   FROM {{ source('edcast', 'glue_groups_g3_group_performance_data_explorer') }}
 
+), deduplicated AS (
+
+  SELECT *
+  FROM source
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY ecl_id,
+    time,
+    group_name,
+    card_resource_url,
+    assigned_content,
+    event,
+    card_author_full_name,
+    follower_user_full_name_,
+    following_user_full_name_,
+    user_full_name,
+    __loaded_at ORDER BY __loaded_at DESC) = 1
+
 ), renamed AS (
 
   SELECT
@@ -59,7 +75,7 @@ WITH source AS (
     user_account_status::VARCHAR                    AS user_account_status,
     user_full_name::VARCHAR                         AS user_full_name,
     __loaded_at::TIMESTAMP                          AS __loaded_at
-  FROM source
+  FROM deduplicated
 
 )
 
