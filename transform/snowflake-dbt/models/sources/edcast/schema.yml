@@ -52,11 +52,7 @@ models:
   - name: division
   - name: duration_hh_mm_
   - name: ecl_id
-    tests:
-    - not_null
   - name: ecl_source_name
-    tests:
-    - not_null
   - name: email
     meta:
       sensitive: true
