@@ -1,7 +1,7 @@
 version: 2
 
 models:
-- name: sheetload_gitlab_certification_tracking_dashboard
+- name: edcast_sheetload_gitlab_certification_tracking_dashboard
   tags: ["people", "edcast"]
   description: '{{ doc("sheetload_gitlab_certification_tracking_dashboard") }}'
   columns:
@@ -28,7 +28,7 @@ models:
   - name: cert_month
   - name: cert_quarter
   - name: _updated_at
-- name: glue_groups_g3_group_performance_data_explorer
+- name: edcast_glue_groups_g3_group_performance_data_explorer
   tags: ["people", "edcast"]
   description: '{{ doc("glue_groups_g3_group_performance_data_explorer") }}'
   columns:
@@ -52,11 +52,7 @@ models:
   - name: division
   - name: duration_hh_mm_
   - name: ecl_id
-    tests:
-    - not_null
   - name: ecl_source_name
-    tests:
-    - not_null
   - name: email
     meta:
       sensitive: true
@@ -98,7 +94,7 @@ models:
     meta:
       sensitive: true
   - name: __loaded_at
-- name: datasets
+- name: edcast_datasets
   tags: ["people", "edcast"]
   description: '{{ doc("datasets") }}'
   columns:
