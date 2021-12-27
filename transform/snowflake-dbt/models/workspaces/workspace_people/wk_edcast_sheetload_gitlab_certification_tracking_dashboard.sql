@@ -5,7 +5,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('sheetload', 'gitlab_certification_tracking_dashboard') }}
+  FROM {{ source('sheetload', 'edcast_gitlab_certification_tracking_dashboard') }}
 
 ), renamed AS (
 
@@ -22,7 +22,7 @@ WITH source AS (
     pubsec_partner::BOOLEAN                             AS pubsec_partner,
     cert_month::VARCHAR                                 AS cert_month,
     cert_quarter::VARCHAR                               AS cert_quarter,
-    _updated_at::TIMESTAMP AS                           AS _updated_at
+    _updated_at::TIMESTAMP                              AS _updated_at
   FROM source
 
 )
