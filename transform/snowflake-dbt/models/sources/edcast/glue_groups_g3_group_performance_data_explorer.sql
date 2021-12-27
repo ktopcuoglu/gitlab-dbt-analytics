@@ -60,6 +60,7 @@ WITH source AS (
     user_full_name::VARCHAR                         AS user_full_name,
     __loaded_at::TIMESTAMP                          AS __loaded_at
   FROM source
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY __loaded_at ORDER BY __loaded_at DESC) = 1
 
 )
 
