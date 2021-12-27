@@ -6,7 +6,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('edcast', 'glue_groups_g3_group_performance_data_explorer') }}
+  FROM {{ source('edcast', 'edcast_glue_groups_g3_group_performance_data_explorer') }}
 
 ), renamed AS (
 
