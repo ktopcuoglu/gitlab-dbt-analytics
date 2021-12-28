@@ -5,7 +5,7 @@ sources:
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     tags: ["people", "edcast"]
     schema: tap_edcast
-    loaded_at_field: DATEADD(sec, _uploaded_at, '1970-01-01')
+    loaded_at_field: __loaded_at
     loader: Airflow
     description: Extracted data transformation for EdCast. Data is extracted using tap-edcast (Meltano)
 
