@@ -1,8 +1,10 @@
 WITH source AS (
+
     SELECT *
     FROM {{ ref('director_location_factors') }}
-),
-formated AS (
+
+), formated AS (
+
     SELECT
       country::VARCHAR                            AS country, 
       locality::VARCHAR                           AS locality, 
@@ -11,6 +13,8 @@ formated AS (
       COALESCE(valid_to, CURRENT_DATE())::DATE    AS valid_to, 
       is_current::BOOLEAN                         AS is_current
     FROM source
+
 )
+
 SELECT *
 FROM formated

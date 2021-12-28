@@ -3,8 +3,8 @@
     ('location_factor', 'prep_location_factor'),
     ('director_factors','director_location_factor_seed_source')
 ])}}
-,
- geozone_titles AS (
+, geozone_titles AS (
+
     SELECT
       IFF(geozone_country = 'United States', geozone_country, NULL) AS country,
       geozone_locality,
@@ -14,8 +14,9 @@
       BOOLAND_AGG(is_current_file)                                  AS is_current_file
     FROM geozones
     GROUP BY 1, 2, 3
-  ),
-  geozone_countries AS (
+
+), geozone_countries AS (
+
     SELECT
       geozone_country,
       country_locality,
@@ -25,9 +26,9 @@
       BOOLAND_AGG(is_current_file)                  AS is_current_file
     FROM geozones
     GROUP BY 1, 2, 3
-  ),
-  
-  join_spine AS (
+
+), join_spine AS (
+
     SELECT DISTINCT
       location_factor_country AS country,
       valid_from
@@ -37,8 +38,9 @@
       geozone_country         AS country,
       valid_from
     FROM geozones
-  ),
-  combined AS (
+
+), combined AS (
+
     SELECT DISTINCT
       join_spine.country,
       COALESCE(location_factor.locality, geozone_countries.country_locality)          AS locality,
@@ -55,16 +57,19 @@
       ON location_factor.location_factor_country = join_spine.country
       AND join_spine.valid_from >= location_factor.valid_from
       AND join_spine.valid_from < location_factor.valid_to
+
     UNION
-    SELECT
-      *
+
+    SELECT *
     FROM geozone_titles
+
     UNION
-    SELECT
-      *
+
+    SELECT *
     FROM director_factors
-  ),
-final AS (
+
+), final AS (
+
     SELECT
       {{ dbt_utils.surrogate_key(['lower(locality)']) }} AS dim_locality_id,
       locality,
@@ -74,6 +79,7 @@ final AS (
       valid_to,
       is_current_source_file
     FROM combined
+
 )
 
 {{ dbt_audit(
