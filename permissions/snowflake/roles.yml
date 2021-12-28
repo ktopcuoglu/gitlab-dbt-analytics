@@ -47,11 +47,6 @@ databases:
     - dpeterson_prep:
         shared: no
 
-    - dtownsend_prod:
-        shared: no
-    - dtownsend_prep:
-        shared: no
-
     - dvanrooijen_prod:
         shared: no
     - dvanrooijen_prep:
@@ -492,6 +487,7 @@ roles:
             - engineer_xs
             - engineer_xl
         member_of:
+            - transformer # until issue#11249
             - analyst_core
             - snowflake_db
             - data_team_analyst
@@ -899,6 +895,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - transforming_4xl_10480
             - datasiren
         member_of:
             - covid19
@@ -1053,7 +1050,7 @@ roles:
 
     - bi_tool_eval_db:
         warehouses:
-            - engineer_xs
+            - reporting
         privileges:
             databases:
                 read:
@@ -1069,6 +1066,20 @@ roles:
                 read:
                     - bi_tool_eval.*.*
                 write:
+                    - bi_tool_eval.*.*
+
+    - bi_tool_eval_read:
+        warehouses:
+            - reporting
+        privileges:
+            databases:
+                read:
+                    - bi_tool_eval
+            schemas:
+                read:
+                    - bi_tool_eval.*
+            tables:
+                read:
                     - bi_tool_eval.*.*
 
     - covid19:
@@ -2275,6 +2286,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - aperez:
+        member_of:
+            - analyst_people
+        warehouses:
+            - analyst_xs
+
     - awaller: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []      
@@ -2540,44 +2557,6 @@ roles:
     - dtang: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
-
-    - dtownsend:
-        member_of:
-            - analyst_engineering
-            - restricted_safe
-            - prometheus
-        owns:
-            databases:
-                - dtownsend_prep
-                - dtownsend_prod
-            schemas:
-                - dtownsend_prep.*
-                - dtownsend_prod.*
-            tables:
-                - dtownsend_prep.*.*
-                - dtownsend_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - dtownsend_prep
-                    - dtownsend_prod
-                write:
-                    - dtownsend_prep
-                    - dtownsend_prod
-            schemas:
-                read:
-                    - dtownsend_prep.*
-                    - dtownsend_prod.*
-                write:
-                    - dtownsend_prep.*
-                    - dtownsend_prod.*
-            tables:
-                read:
-                    - dtownsend_prep.*.*
-                    - dtownsend_prod.*.*
-                write:
-                    - dtownsend_prep.*.*
-                    - dtownsend_prod.*.*
 
     - dvanrooijen:
         member_of:
@@ -4297,9 +4276,19 @@ users:
         member_of:
             - amihaila
 
+    - aperez:
+        can_login: yes
+        member_of:
+            - aperez           
+
     - awaller: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - bi_tool_eval:
+        can_login: yes
+        member_of:
+            - bi_tool_eval_read
 
     - bleducmills:
         can_login: yes
@@ -4410,11 +4399,6 @@ users:
     - dtang: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
-
-    - dtownsend:
-        can_login: yes
-        member_of:
-            - dtownsend
 
     - dvanrooijen:
         can_login: yes
@@ -5097,6 +5081,9 @@ warehouses:
         size: x-small
 
     - transforming_4xl:
+        size: "4-x-large"
+
+    - transforming_4xl_10480: #temp warehouse for issue 10480
         size: "4-x-large"
 
     - usage_ping:
