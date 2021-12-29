@@ -9,6 +9,7 @@ import pandas as pd
 from typing import Dict, Any
 from datetime import datetime
 from os import environ as env
+# type: ignore
 
 
 class ZuoraRevProAPI:
