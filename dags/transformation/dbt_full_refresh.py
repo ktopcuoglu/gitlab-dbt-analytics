@@ -64,7 +64,9 @@ dbt_warehouse_for_full_refresh = Variable.get(
     "DBT_WAREHOUSE_TO_FULL_REFRESH", default_var="TRANSFORMING_XL"
 )
 
-logging.info(f"Running full refresh for {dbt_model_to_full_refresh} on warehouse {dbt_warehouse_for_full_refresh}")
+logging.info(
+    f"Running full refresh for {dbt_model_to_full_refresh} on warehouse {dbt_warehouse_for_full_refresh}"
+)
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
