@@ -12,7 +12,6 @@ from datetime import datetime
 from os import environ as env
 
 
-
 class ZuoraRevProAPI:
     def __init__(self, config_dict: Dict[str, str]):
         self.headers = config_dict["headers"]
