@@ -199,8 +199,8 @@ WITH dim_billing_account AS (
 
 {{ dbt_audit(
     cte_ref="final_table",
-    created_by="@msendal",
+    created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2020-09-04",
-    updated_date="2021-10-25"
+    created_date="2021-12-30",
+    updated_date="2021-12-30"
 ) }}

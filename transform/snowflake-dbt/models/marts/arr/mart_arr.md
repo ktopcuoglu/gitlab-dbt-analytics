@@ -24,7 +24,7 @@ Here is an image documenting the ERD for this table:
 
 {% docs mart_arr_jihu %}
 
-Data mart to explore ARR which INCLUDES Jihu accounts. This model will satisfy use cases that need to provide a consolidated view of ARR to include JiHu accounts. This model is built using the same logic as the Zuora UI out of the box MRR Trend Report. The report looks at the charges associated with subscriptions, along with their effective dates and subscription statuses, and calculates ARR.
+Data mart to explore ARR which INCLUDES Jihu accounts. This model will satisfy use cases that need to provide a consolidated view of ARR to include Jihu accounts. This model is built using the same logic as the Zuora UI out of the box MRR Trend Report. The report looks at the charges associated with subscriptions, along with their effective dates and subscription statuses, and calculates ARR.
 
 Here is an image documenting the ERD for this table:
 
