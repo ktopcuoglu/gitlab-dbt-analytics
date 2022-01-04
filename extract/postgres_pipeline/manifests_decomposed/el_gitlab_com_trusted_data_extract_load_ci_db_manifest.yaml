@@ -155,5 +155,5 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM ci_builds
-        WHERE updated_at > '2021-12-07T22:48:36'::timestamp
+        WHERE updated_at > current_timestamp - interval '8' day
         GROUP BY 1,2,3
