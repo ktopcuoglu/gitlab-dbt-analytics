@@ -6,7 +6,6 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
   WHERE is_deleted = 0
     AND is_edu_oss = 0
-    --AND snapshot_day_of_fiscal_quarter_normalised >= 5
 
 ), sfdc_opportunity_xf AS (
   
@@ -274,7 +273,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           OR pipe_pull.opportunity_id IS NOT NULL
           OR web.opportunity_id IS NOT NULL   
         )
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
 
 -- last day within snapshot quarter of a particular opportunity
 ), pipeline_last_day_in_snapshot_quarter AS (
