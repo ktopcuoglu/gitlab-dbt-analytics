@@ -6,6 +6,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
   FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
   WHERE is_deleted = 0
     AND is_edu_oss = 0
+    --AND snapshot_day_of_fiscal_quarter_normalised >= 5
 
 ), sfdc_opportunity_xf AS (
   
@@ -21,6 +22,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         sales_qualified_source,
         deal_category,
         deal_group,
+        opportunity_category,
         sales_team_cro_level,
         sales_team_rd_asm_level
   FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
@@ -86,6 +88,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           AND starting.snapshot_fiscal_quarter_date = starting_list.snapshot_fiscal_quarter_date
           AND starting.snapshot_day_of_fiscal_quarter_normalised = starting_list.max_snapshot_day_of_fiscal_quarter_normalised
     WHERE starting.snapshot_fiscal_quarter_date = starting.close_fiscal_quarter_date -- closing in the same quarter of the snapshot
+      AND starting_list.max_snapshot_day_of_fiscal_quarter_normalised = 5 -- exclude deals that were before day 5, unless they were at day 5
 
 ), pipeline_type_quarter_created AS (
 
@@ -94,7 +97,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         created.pipeline_created_fiscal_quarter_date,
         min(created.snapshot_date)                      AS created_snapshot_date
     FROM sfdc_opportunity_snapshot_history_xf created
-    LEFT JOIN pipeline_type_quarter_start starting
+    LEFT JOIN pipeline_type_start_ids starting
       ON starting.opportunity_id = created.opportunity_id
       AND starting.snapshot_fiscal_quarter_date = created.snapshot_fiscal_quarter_date
     LEFT JOIN pipeline_type_web_purchase_ids web
@@ -187,7 +190,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
             THEN '2. Created & Landed'
           WHEN pipe_pull.opportunity_id IS NOT NULL
             THEN '3. Pulled in'
-          ELSE Null
+          ELSE '0. Other'
         END                                                         AS pipeline_type,
 
         -- created pipe
@@ -298,6 +301,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         opty.sales_qualified_source,
         opty.deal_category,
         opty.deal_group,
+        opty.opportunity_category,
         opty.sales_team_cro_level,
         opty.sales_team_rd_asm_level,
         -- pipeline fields
@@ -355,6 +359,9 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         COALESCE(pipe.starting_stage,pipe.pipeline_created_stage)                                     AS quarter_start_stage,
         COALESCE(pipe.starting_forecast_category,pipe.pipeline_created_forecast_category)             AS quarter_start_forecast_category,
         COALESCE(pipe.starting_close_date,pipe.pipeline_created_close_date)                           AS quarter_start_close_date,
+        pipe.starting_is_open                                                                         AS quarter_start_is_open,
+        pipe.starting_is_won                                                                          AS quarter_start_is_won,
+        pipe.starting_is_lost                                                                         AS quarter_start_is_lost,       
 
         -- last day the opportunity was closing in quarter
         last_day.net_arr                  AS last_day_net_arr,                                                       
