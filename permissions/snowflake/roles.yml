@@ -718,6 +718,7 @@ roles:
                     - prep.gitlab_dotcom
                     - prod.boneyard
                     - prod.legacy
+                    - prod.workspace_data_science
                     - raw.*
                 write:
                     - prod.boneyard
@@ -727,6 +728,7 @@ roles:
                     - prep.gitlab_dotcom.*
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
+                    - prod.workspace_data_science.*
                     - raw.*.*
                 write:
                     - prod.boneyard.*
