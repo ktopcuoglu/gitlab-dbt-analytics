@@ -61,7 +61,7 @@ dbt_model_to_full_refresh = Variable.get(
 
 # Read the warehouse from the Airflow variable if passed else use XL warehouse for full refresh.
 dbt_warehouse_for_full_refresh = Variable.get(
-    "DBT_WAREHOUSE_TO_FULL_REFRESH", default_var="TRANSFORMING_XL"
+    "DBT_WAREHOUSE_FOR_FULL_REFRESH", default_var="TRANSFORMING_XL"
 )
 
 logging.info(
