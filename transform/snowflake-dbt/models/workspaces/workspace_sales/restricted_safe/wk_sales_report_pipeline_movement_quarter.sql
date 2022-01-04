@@ -161,6 +161,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         opp_snap.opportunity_id,
         opp_snap.close_fiscal_quarter_date,
         opp_snap.close_fiscal_quarter_name,
+        opp_snap.close_fiscal_year,
 
         pipe_start.starting_forecast_category,
         pipe_start.starting_net_arr,
@@ -307,6 +308,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         -- pipeline fields
         pipe.close_fiscal_quarter_date      AS report_fiscal_quarter_date,
         pipe.close_fiscal_quarter_name      AS report_fiscal_quarter_name,
+        pipe.close_fiscal_year              AS report_fiscal_year,
         pipe.pipeline_type,
 
         CASE 
