@@ -668,24 +668,6 @@ tables:
       FROM experiment_subjects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  experiment_users:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'experiment_users'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , experiment_id
-      , user_id
-      , group_type
-      , created_at
-      , updated_at
-      , converted_at
-      , context
-      FROM experiment_users
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   geo_nodes:
     export_schema: "gitlab_com"
     export_table: geo_nodes
