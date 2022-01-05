@@ -491,7 +491,6 @@
       dim_crm_account.account_owner                                               AS strategic_account_leader,
       IFNULL(arr_metrics_current_month.quantity, 0)                               AS customer_reach,
       IFNULL(arr_metrics_current_month.arr, 0)                                    AS crm_account_arr,
-      IFNULL(dim_crm_account.carr_total, 0)                                       AS crm_account_carr_total,
       IFNULL(account_open_opp_net_arr.net_arr, 0)                                 AS crm_account_open_opp_net_arr,
       IFNULL(account_open_opp_net_arr_fo.net_arr, 0)                              AS crm_account_open_opp_net_arr_fo,
       IFNULL(account_open_opp_net_arr_growth.net_arr, 0)                          AS crm_account_open_opp_net_arr_growth,
@@ -510,9 +509,9 @@
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
-      IFNULL(fct_crm_opportunity.net_arr, 0)                                      AS crm_opp_net_arr,
-      IFNULL(fct_crm_opportunity.arr_basis, 0)                                    AS crm_opp_arr_basis,
-      IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats,
+      fct_crm_opportunity.net_arr                                                 AS crm_opp_net_arr,
+      fct_crm_opportunity.arr_basis                                               AS crm_opp_arr_basis,
+      opportunity_seats.quantity                                                  AS crm_opp_seats,
       fct_crm_opportunity.probability                                             AS crm_opp_probability
 
     FROM user_request
@@ -547,13 +546,135 @@
     LEFT JOIN opportunity_seats
       ON opportunity_seats.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
 
+), customer_value_scores AS (
+
+    SELECT
+      primary_key,
+      CASE
+        WHEN crm_account_health_score_color = 'Green'
+          THEN 1
+        WHEN crm_account_health_score_color = 'Yellow'
+          THEN
+          CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 18
+              THEN 1.5
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 12
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) <= 12
+              THEN 2.5
+          END
+        WHEN crm_account_health_score_color = 'Red'
+          THEN
+            CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 18
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 12
+              THEN 3
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) <= 12
+              THEN 4
+          END
+        ELSE 1
+      END                                                                                                     AS retention_urgency_score,
+      CASE
+        WHEN crm_opp_probability > 60
+          THEN 1
+        WHEN crm_opp_probability > 39
+          THEN
+            CASE
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 6
+                THEN 1.25
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 3
+                THEN 1.5
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) <= 3
+                THEN 2
+            END
+        WHEN crm_opp_probability < 40
+          THEN 
+          CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 6
+              THEN 1.5
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 3
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) <= 3
+              THEN 2.5
+          END
+        ELSE 1
+      END                                                                                                     AS opportunity_urgency_score,
+      IFF(link_type = 'Opportunity', crm_opp_arr_basis, crm_account_arr)                                      AS arr_to_use,
+      ZEROIFNULL(crm_opp_net_arr / NULLIF(ZEROIFNULL(crm_opp_net_arr) + ZEROIFNULL(arr_to_use), 0))           AS growth_percentage,
+      ZEROIFNULL(arr_to_use / NULLIF(ZEROIFNULL(crm_opp_net_arr) + ZEROIFNULL(arr_to_use), 0))                AS retention_percentage,
+      request_priority * growth_percentage                                                                    AS growth_priority,
+      request_priority * retention_percentage                                                                 AS retention_priority,
+      -- for that account's links in that opportunity - use multiple partitions
+      ZEROIFNULL(growth_priority / NULLIF(SUM(growth_priority) OVER(PARTITION BY dim_crm_account_id, dim_crm_opportunity_id), 0))
+                                                                                                              AS growth_priority_weighting,
+      ZEROIFNULL(retention_priority / NULLIF(SUM(retention_priority) OVER(PARTITION BY dim_crm_account_id), 0))
+                                                                                                              AS retention_priority_weighting,
+      -- a utility column to allow sum of all epics for customer reach
+      customer_reach / NULLIF(COUNT(*) OVER(PARTITION BY dim_epic_id, dim_crm_account_id), 0)                 AS customer_epic_reach,
+      CASE
+        WHEN link_type = 'Opportunity'
+          THEN crm_opp_net_arr * growth_priority_weighting
+        ELSE 0
+      END                                                                                                     AS growth_score,
+      retention_priority_weighting * crm_account_arr                                                          AS retention_score,
+      growth_score + retention_score                                                                          AS combined_score,
+      combined_score * CASE
+        WHEN link_type = 'Opportunity'
+          THEN opportunity_urgency_score
+        ELSE retention_urgency_score
+      END                                                                                                     AS priority_score
+    FROM user_request_with_account_opp_attributes
+    WHERE issue_epic_closed_at IS NULL
+      AND (
+        CASE
+          WHEN link_type = 'Opportunity'
+            THEN crm_opp_is_closed = FALSE
+          ELSE TRUE
+        END
+      )
+
+), final AS (
+
+    SELECT
+      user_request_with_account_opp_attributes.*,
+      CASE
+        WHEN user_request_with_account_opp_attributes.is_request_priority_empty
+          THEN '[Input (Using 1 as Default)](' || user_request_with_account_opp_attributes.issue_epic_url || ')'
+        ELSE request_priority::TEXT
+      END                                                                            AS priority_input_url,
+      CASE
+        WHEN user_request_with_account_opp_attributes.link_type = 'Zendesk Ticket'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.ticket_link || ')'
+        WHEN user_request_with_account_opp_attributes.link_type = 'Opportunity'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.crm_opportunity_link || ')'
+        WHEN user_request_with_account_opp_attributes.link_type = 'Account'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.crm_account_link || ')'
+      END                                                                            AS user_request_link,
+      customer_value_scores.retention_percentage                                     AS link_retention_percentage,
+      customer_value_scores.growth_percentage                                        AS link_growth_percentage,
+      customer_value_scores.retention_priority                                       AS link_retention_priority,
+      customer_value_scores.growth_priority                                          AS link_growth_priority,
+      customer_value_scores.retention_priority_weighting                             AS link_retention_priority_weighting,
+      customer_value_scores.growth_priority_weighting                                AS link_growth_priority_weighting,
+      customer_value_scores.retention_score                                          AS link_retention_score,
+      customer_value_scores.growth_score                                             AS link_growth_score,
+      customer_value_scores.combined_score                                           AS link_combined_score,
+      customer_value_scores.priority_score                                           AS link_priority_score,
+      link_priority_score / NULLIFZERO(issue_epic_weight)                            AS link_weighted_priority_score,
+      IFF(link_weighted_priority_score IS NULL,
+        '[Effort is Empty, Input Effort Here](' || user_request_with_account_opp_attributes.issue_epic_url || ')',
+        link_weighted_priority_score::TEXT)                                          AS link_weighted_priority_score_input
+    FROM user_request_with_account_opp_attributes
+    LEFT JOIN customer_value_scores
+      ON user_request_with_account_opp_attributes.primary_key = customer_value_scores.primary_key
+
 )
 
-
 {{ dbt_audit(
-    cte_ref="user_request_with_account_opp_attributes",
+    cte_ref="final",
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2021-11-24",
+    updated_date="2021-12-15",
   ) }}
