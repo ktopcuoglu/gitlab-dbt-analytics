@@ -1,3 +1,9 @@
+"""
+## Info about DAG
+This DAG is designed to perform adhoc full refresh of any required number of models.
+Before running this DAG set dbt model for full refresh in Airflow Variable named DBT_MODEL_TO_FULL_REFRESH. 
+The Warehouse to run the full refresh is set by default to XL size but incase of performance testing use DBT_WAREHOUSE_FOR_FULL_REFRESH variable to change the warehouse size.
+"""
 import os
 import logging
 from datetime import datetime
@@ -51,8 +57,9 @@ dag = DAG(
     "dbt_full_refresh",
     default_args=default_args,
     schedule_interval=None,
-    description="Before running this DAG set dbt model for full refresh in Airflow Variable named DBT_MODEL_TO_FULL_REFRESH and Warehouse to run the full refresh is set by default to XL size but incase of performance testing use DBT_WAREHOUSE_TO_FULL_REFRESH variable to change the warehouse",
+    description="Adhoc DBT FULL Refresh",
 )
+dag.doc_md = __doc__
 
 # read model for full-refresh from Airflow Variable
 dbt_model_to_full_refresh = Variable.get(
