@@ -1,4 +1,8 @@
-# This DAG code is only temporary and is used only for FULL REFRESH of the +gitlab_dotcom_usage_data_events+ model as per issue https://gitlab.com/gitlab-data/analytics/-/issues/10480
+"""
+## Info about DAG
+### This DAG code is only temporary and is used only for FULL REFRESH of the +gitlab_dotcom_usage_data_events+ model as per issue https://gitlab.com/gitlab-data/analytics/-/issues/10480
+"""
+
 import os
 import logging
 from datetime import datetime
@@ -54,7 +58,7 @@ dag = DAG(
     description="This model will be running everyday  only for model +gitlab_dotcom_usage_data_events+ full refresh.",
     schedule_interval="00 10 * * MON-SUN",
 )
-
+dag.doc_md = __doc__
 logging.info(f"Running full refresh for +gitlab_dotcom_usage_data_events+")
 
 # dbt-full-refresh

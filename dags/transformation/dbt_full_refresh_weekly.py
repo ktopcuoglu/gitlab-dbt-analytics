@@ -1,3 +1,8 @@
+"""
+## Info about DAG
+This DAG perform  full refresh of all the model and will be running only on Sunday.Currently only model excluded from full refresh is +gitlab_dotcom_usage_data_events+.
+"""
+
 import os
 from datetime import datetime, timedelta
 
@@ -82,7 +87,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="45 8 * * SUN",
 )
-
+dag.doc_md = __doc__
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""

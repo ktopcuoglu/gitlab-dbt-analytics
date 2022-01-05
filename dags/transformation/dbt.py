@@ -1,3 +1,8 @@
+"""
+## Info about DAG
+This DAG is responsible for doing incremental refresh and is suppose to run MON TO SAT.
+"""
+
 import os
 from datetime import datetime, timedelta
 
@@ -83,7 +88,7 @@ dag = DAG(
     default_args=default_args,
     schedule_interval="45 8 * * MON-SAT",
 )
-
+dag.doc_md = __doc__
 
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime) -> str:
