@@ -16,6 +16,7 @@ WITH mart_user_request AS (
         issue_epic_created_at,
         issue_epic_created_date,
         issue_epic_created_month,
+        issue_epic_state_name,
         issue_epic_closed_at,
         issue_epic_closed_date,
         issue_epic_closed_month,
@@ -70,7 +71,7 @@ WITH mart_user_request AS (
        SUM(link_priority_score)                                                 AS account_priority_score
 
     FROM mart_user_request
-    {{ dbt_utils.group_by(n=43) }}
+    {{ dbt_utils.group_by(n=44) }}
 
 ), prep_issue_summary AS ( -- Then we summarise at the issue/epic grain
 
@@ -84,6 +85,7 @@ WITH mart_user_request AS (
         issue_epic_created_at,
         issue_epic_created_date,
         issue_epic_created_month,
+        issue_epic_state_name,
         issue_epic_closed_at,
         issue_epic_closed_date,
         issue_epic_closed_month,
@@ -146,7 +148,7 @@ WITH mart_user_request AS (
             weighted_priority_score::TEXT)                                                   AS weighted_priority_score_input
 
     FROM issue_account_summary
-    {{ dbt_utils.group_by(n=26)}}
+{{ dbt_utils.group_by(n=27)}}
 
 ), prep_issue_opp_zendesk_links AS (
 
@@ -187,5 +189,5 @@ WITH mart_user_request AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-12-15",
-    updated_date="2021-12-15",
+    updated_date="2022-01-05",
   ) }}
