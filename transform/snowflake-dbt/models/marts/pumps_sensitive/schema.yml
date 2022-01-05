@@ -82,6 +82,8 @@ models:
         description: Mapped to `CDB_Is_Group_Namespace_Owner__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_individual_namespace_owner
         description: Mapped to `CDB_Is_Individual_Namespace_Owner__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
+      - name: is_paid_tier
+        description: Mapped to `CDBispaidtier__c` in Marketo. Calculated based on is_saas_delivery and is_self_managed_delivery.
       - name: is_self_managed_premium_tier
         description: Mapped to `CDB_Is_Self_Managed_Premium_Tier__c` in Marketo. Compiled from gitlab_dotcom, customer_db, & zuora in [bdg_marketing_contact_role](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.bdg_marketing_contact_role) and calculated in [mart_marketing_contact](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.mart_marketing_contact)
       - name: is_self_managed_starter_tier
