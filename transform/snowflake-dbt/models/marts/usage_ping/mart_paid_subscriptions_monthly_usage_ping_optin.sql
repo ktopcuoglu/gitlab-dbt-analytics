@@ -1,8 +1,11 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi"]
 ) }}
 
--- PENDING SCHEMA MIGRATION
+{{ config({
+        "schema": "restricted_safe_legacy"
+    })
+}}
 
 WITH fct_mrr AS (
 
