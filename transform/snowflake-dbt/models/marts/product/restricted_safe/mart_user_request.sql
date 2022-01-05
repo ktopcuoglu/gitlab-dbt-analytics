@@ -347,6 +347,7 @@
       dim_issue.created_at                                                        AS issue_epic_created_at,
       dim_issue.created_at::DATE                                                  AS issue_epic_created_date,
       DATE_TRUNC('month', dim_issue.created_at::DATE)                             AS issue_epic_created_month,
+      dim_issue.state_name                                                        AS issue_epic_state_name,
       dim_issue.issue_closed_at                                                   AS issue_epic_closed_at,
       dim_issue.issue_closed_at::DATE                                             AS issue_epic_closed_date,
       DATE_TRUNC('month', dim_issue.issue_closed_at::DATE)                        AS issue_epic_closed_month,
@@ -422,6 +423,7 @@
       dim_epic.created_at                                                         AS issue_epic_created_at,
       dim_epic.created_at::DATE                                                   AS issue_epic_created_date,
       DATE_TRUNC('month', dim_epic.created_at::DATE)                              AS issue_epic_created_month,
+      dim_epic.state_name                                                         AS issue_epic_state_name,
       dim_epic.closed_at                                                          AS issue_epic_closed_at,
       dim_epic.closed_at::DATE                                                    AS issue_epic_closed_date,
       DATE_TRUNC('month', dim_epic.closed_at::DATE)                               AS issue_epic_closed_month,
@@ -625,7 +627,7 @@
         ELSE retention_urgency_score
       END                                                                                                     AS priority_score
     FROM user_request_with_account_opp_attributes
-    WHERE issue_epic_closed_at IS NULL
+    WHERE issue_epic_state_name = 'opened'
       AND (
         CASE
           WHEN link_type = 'Opportunity'
