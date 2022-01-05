@@ -1,6 +1,6 @@
 """
 ## Info about DAG
-This DAG is responsible for doing incremental refresh and is suppose to run MON TO SAT.
+This DAG is responsible for doing incremental model refresh for both product, non product model,workspace model followed by dbt-test and dbt-result from Monday to Saturday.
 """
 
 import os
@@ -84,7 +84,7 @@ secrets_list = [
 # Create the DAG
 dag = DAG(
     "dbt",
-    description="This DAG is responsible for doing incremental model refresh for both product , non product model,workspace model followed by dbt-test and dbt-result from Monday to Saturday",
+    description="This DAG is responsible for doing incremental model refresh",
     default_args=default_args,
     schedule_interval="45 8 * * MON-SAT",
 )
