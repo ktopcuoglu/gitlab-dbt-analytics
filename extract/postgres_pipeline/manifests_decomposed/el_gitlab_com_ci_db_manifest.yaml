@@ -91,7 +91,7 @@ tables:
       , file_store
       , file_format
       , file_location
-      , locked 
+      , locked
       FROM ci_job_artifacts
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
