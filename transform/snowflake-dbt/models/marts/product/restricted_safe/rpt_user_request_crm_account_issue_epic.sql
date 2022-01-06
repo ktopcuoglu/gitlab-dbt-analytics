@@ -17,6 +17,7 @@ WITH mart_user_request AS (
         issue_epic_created_at,
         issue_epic_created_date,
         issue_epic_created_month,
+        issue_epic_state_name,
         issue_epic_closed_at,
         issue_epic_closed_date,
         issue_epic_closed_month,
@@ -75,7 +76,7 @@ WITH mart_user_request AS (
         account_weighted_priority_score::TEXT)                                  AS account_weighted_priority_score_input
 
     FROM mart_user_request
-    {{ dbt_utils.group_by(n=44) }}
+    {{ dbt_utils.group_by(n=45) }}
 
 )
 
@@ -84,5 +85,5 @@ WITH mart_user_request AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-12-15",
-    updated_date="2021-12-15",
+    updated_date="2022-01-05",
   ) }}
