@@ -77,6 +77,7 @@
       sfdc_opportunity.merged_opportunity_id                                     AS merged_crm_opportunity_id,
       sfdc_opportunity.account_id                                                AS dim_crm_account_id,
       sfdc_opportunity.owner_id                                                  AS dim_crm_user_id,
+      sfdc_opportunity.probability                                               AS probability,
       sfdc_opportunity.incremental_acv                                           AS iacv,
       sfdc_opportunity.net_incremental_acv                                       AS net_iacv,
       sfdc_opportunity.net_arr,
@@ -424,7 +425,8 @@
       opportunity_fields.arr,
       linear_attribution_base.count_crm_attribution_touchpoints,
       opportunity_fields.iacv/linear_attribution_base.count_crm_attribution_touchpoints                                        AS weighted_linear_iacv,
-      campaigns_per_opp.count_campaigns
+      campaigns_per_opp.count_campaigns,
+      opportunity_fields.probability
 
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
@@ -481,5 +483,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-10-06"
+    updated_date="2021-12-02"
 ) }}

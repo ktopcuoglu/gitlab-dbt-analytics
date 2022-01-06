@@ -61,4 +61,25 @@ models:
     - name: zengrc_control_to_objective
       description: The tables list the many to many relationship between Control and Objective. Joining this table to Control or Objective directly will result in duplicate rows.
 
+    - name: wk_infradev_base
+      description: >
+        Table containing age metrics & related metadata for gitlab.com internal issues. Used for tracking internal work progress for things like Engineering Allocation & Corrective Actions
+        These metrics are available for individual issues at daily level & can be aggregated up from there
+      
+      columns: 
+        - name: daily_issue_id
+          tests:
+            - not_null
+            - unique
 
+    - name: infradev_issues_base
+      description: A model to limit GitLab.com issues to only thous relevant to infradev engineering team.    
+
+    - name: infradev_current_issue_users
+      description: A model to generate a list of current assigned users on an issue. Not explicitly limited to the infradev team. 
+
+    - name: infradev_label_history
+      description: A model identify the valid historic range of specific labels that are explicitly related to the infradev team.
+
+    - name: infradev_namespace_path
+      description: A model to concatenate the full namespace path, up to four levels deep.  Not explicitly limited to the infradev team.

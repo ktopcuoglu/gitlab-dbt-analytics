@@ -98,6 +98,26 @@
     WHERE stage_is_closed = FALSE
     GROUP BY 1 
 
+), account_open_opp_net_arr_fo AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr) AS net_arr
+    FROM opportunity_net_arr
+    WHERE stage_is_closed = FALSE
+      AND order_type_name IN ('1. New - First Order')
+    GROUP BY 1 
+
+), account_open_opp_net_arr_growth AS (
+
+    SELECT
+      dim_crm_account_id,
+      SUM(net_arr) AS net_arr
+    FROM opportunity_net_arr
+    WHERE stage_is_closed = FALSE
+      AND order_type_name IN ('2. New - Connected', '3. Growth')
+    GROUP BY 1 
+
 ), account_next_renewal_month AS (
 
     SELECT
@@ -160,7 +180,6 @@
       COALESCE(group_label, devops_label, section_label)                                                                       AS product_group_extended,
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -180,7 +199,6 @@
       COALESCE(group_label, devops_label, section_label)                                                                       AS product_group_extended,
 
       IFF(LOWER(label_links_joined.label_title) LIKE 'category:%', SPLIT_PART(label_links_joined.label_title, ':', 2), NULL)   AS category_label,
-      IFF(LOWER(label_links_joined.label_title) LIKE 'dev::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)      AS dev_label,
       IFF(LOWER(label_links_joined.label_title) LIKE 'type::%', SPLIT_PART(label_links_joined.label_title, '::', 2), NULL)     AS type_label,
       CASE
         WHEN group_label IS NOT NULL THEN 3
@@ -225,6 +243,15 @@
     FROM issue_labels
     WHERE type_label IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY type_label) = 1
+
+), issue_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
+
+    SELECT
+      dim_issue_id,
+      devops_label
+    FROM issue_labels
+    WHERE devops_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_issue_id ORDER BY devops_label) = 1
 
 ), issue_status AS ( -- Some issues for some reason had two valid workflow labels, this dedup them
 
@@ -271,6 +298,15 @@
     WHERE type_label IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY type_label) = 1
 
+), epic_devops_label AS ( -- There is a bug in the product where some scoped labels are used twice. This is a temporary fix for that for the devops::* label
+
+    SELECT
+      dim_epic_id,
+      devops_label
+    FROM epic_labels
+    WHERE devops_label IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY dim_epic_id ORDER BY devops_label) = 1
+
 ), epic_last_milestone AS ( -- Get issue milestone with the latest due dates for epics
     
     SELECT
@@ -311,6 +347,7 @@
       dim_issue.created_at                                                        AS issue_epic_created_at,
       dim_issue.created_at::DATE                                                  AS issue_epic_created_date,
       DATE_TRUNC('month', dim_issue.created_at::DATE)                             AS issue_epic_created_month,
+      dim_issue.state_name                                                        AS issue_epic_state_name,
       dim_issue.issue_closed_at                                                   AS issue_epic_closed_at,
       dim_issue.issue_closed_at::DATE                                             AS issue_epic_closed_date,
       DATE_TRUNC('month', dim_issue.issue_closed_at::DATE)                        AS issue_epic_closed_month,
@@ -325,7 +362,7 @@
       IFNULL(issue_group_extended_label.product_group_extended, 'Unknown')        AS product_group_extended,
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
-      dev_label.dev_label                                                         AS product_stage,
+      devops_label.devops_label                                                   AS product_stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -350,9 +387,8 @@
       ON category_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_group_label AS group_label
       ON group_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-    LEFT JOIN issue_labels AS dev_label
-      ON dev_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
-      AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN issue_devops_label AS devops_label
+      ON devops_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
     LEFT JOIN issue_type_label AS type_label
       ON type_label.dim_issue_id = bdg_issue_user_request.dim_issue_id
 
@@ -387,6 +423,7 @@
       dim_epic.created_at                                                         AS issue_epic_created_at,
       dim_epic.created_at::DATE                                                   AS issue_epic_created_date,
       DATE_TRUNC('month', dim_epic.created_at::DATE)                              AS issue_epic_created_month,
+      dim_epic.state_name                                                         AS issue_epic_state_name,
       dim_epic.closed_at                                                          AS issue_epic_closed_at,
       dim_epic.closed_at::DATE                                                    AS issue_epic_closed_date,
       DATE_TRUNC('month', dim_epic.closed_at::DATE)                               AS issue_epic_closed_month,
@@ -401,7 +438,7 @@
       IFNULL(epic_group_extended_label.product_group_extended, 'Unknown')         AS product_group_extended,
       group_label.group_label                                                     AS product_group,
       category_label.category_label                                               AS product_category,
-      dev_label.dev_label                                                         AS product_stage,
+      devops_label.devops_label                                                   AS product_stage,
       CASE type_label.type_label
         WHEN 'bug' THEN 'bug fix'
         WHEN 'feature' THEN 'feature request'
@@ -430,9 +467,8 @@
       ON category_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_group_label AS group_label
       ON group_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-    LEFT JOIN epic_labels AS dev_label
-      ON dev_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
-      AND dev_label.dev_label IS NOT NULL
+    LEFT JOIN epic_devops_label AS devops_label
+      ON devops_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
     LEFT JOIN epic_type_label AS type_label
       ON type_label.dim_epic_id = bdg_epic_user_request.dim_epic_id
 
@@ -458,6 +494,8 @@
       IFNULL(arr_metrics_current_month.quantity, 0)                               AS customer_reach,
       IFNULL(arr_metrics_current_month.arr, 0)                                    AS crm_account_arr,
       IFNULL(account_open_opp_net_arr.net_arr, 0)                                 AS crm_account_open_opp_net_arr,
+      IFNULL(account_open_opp_net_arr_fo.net_arr, 0)                              AS crm_account_open_opp_net_arr_fo,
+      IFNULL(account_open_opp_net_arr_growth.net_arr, 0)                          AS crm_account_open_opp_net_arr_growth,
       IFNULL(account_open_fo_opp_seats.seats, 0)                                  AS opportunity_reach,
       IFNULL(account_lost_opp_arr.net_arr, 0)                                     AS crm_account_lost_opp_net_arr,
       IFNULL(account_lost_customer_arr.arr_basis, 0)                              AS crm_account_lost_customer_arr,
@@ -466,13 +504,17 @@
       -- CRM Opportunity attributes
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
       dim_crm_opportunity.stage_is_closed                                         AS crm_opp_is_closed,
-      dim_crm_opportunity.order_type                                              AS crm_opp_order_type,
+      fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
+      dim_order_type.order_type_name                                              AS crm_opp_order_type,
+      dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
       IFF(DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
         DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
-      IFNULL(fct_crm_opportunity.net_arr, 0)                                      AS crm_opp_net_arr,
-      IFNULL(opportunity_seats.quantity, 0)                                       AS crm_opp_seats
+      fct_crm_opportunity.net_arr                                                 AS crm_opp_net_arr,
+      fct_crm_opportunity.arr_basis                                               AS crm_opp_arr_basis,
+      opportunity_seats.quantity                                                  AS crm_opp_seats,
+      fct_crm_opportunity.probability                                             AS crm_opp_probability
 
     FROM user_request
 
@@ -491,22 +533,150 @@
       ON account_lost_customer_arr.dim_crm_account_id = user_request.dim_crm_account_id
     LEFT JOIN account_open_opp_net_arr
       ON account_open_opp_net_arr.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_opp_net_arr_fo
+      ON account_open_opp_net_arr_fo.dim_crm_account_id = user_request.dim_crm_account_id
+    LEFT JOIN account_open_opp_net_arr_growth
+      ON account_open_opp_net_arr_growth.dim_crm_account_id = user_request.dim_crm_account_id
 
     -- Opportunity Joins
     LEFT JOIN fct_crm_opportunity
       ON fct_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
+    LEFT JOIN dim_order_type
+      ON dim_order_type.dim_order_type_id = fct_crm_opportunity.dim_order_type_id
     LEFT JOIN dim_crm_opportunity
       ON dim_crm_opportunity.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
     LEFT JOIN opportunity_seats
       ON opportunity_seats.dim_crm_opportunity_id = user_request.dim_crm_opportunity_id
 
+), customer_value_scores AS (
+
+    SELECT
+      primary_key,
+      CASE
+        WHEN crm_account_health_score_color = 'Green'
+          THEN 1
+        WHEN crm_account_health_score_color = 'Yellow'
+          THEN
+          CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 18
+              THEN 1.5
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 12
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) <= 12
+              THEN 2.5
+          END
+        WHEN crm_account_health_score_color = 'Red'
+          THEN
+            CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 18
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) > 12
+              THEN 3
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_account_next_renewal_month) <= 12
+              THEN 4
+          END
+        ELSE 1
+      END                                                                                                     AS retention_urgency_score,
+      CASE
+        WHEN crm_opp_probability > 60
+          THEN 1
+        WHEN crm_opp_probability > 39
+          THEN
+            CASE
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 6
+                THEN 1.25
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 3
+                THEN 1.5
+              WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) <= 3
+                THEN 2
+            END
+        WHEN crm_opp_probability < 40
+          THEN 
+          CASE
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 6
+              THEN 1.5
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) > 3
+              THEN 2
+            WHEN DATEDIFF('months', CURRENT_DATE, crm_opp_close_date) <= 3
+              THEN 2.5
+          END
+        ELSE 1
+      END                                                                                                     AS opportunity_urgency_score,
+      IFF(link_type = 'Opportunity', crm_opp_arr_basis, crm_account_arr)                                      AS arr_to_use,
+      ZEROIFNULL(crm_opp_net_arr / NULLIF(ZEROIFNULL(crm_opp_net_arr) + ZEROIFNULL(arr_to_use), 0))           AS growth_percentage,
+      ZEROIFNULL(arr_to_use / NULLIF(ZEROIFNULL(crm_opp_net_arr) + ZEROIFNULL(arr_to_use), 0))                AS retention_percentage,
+      request_priority * growth_percentage                                                                    AS growth_priority,
+      request_priority * retention_percentage                                                                 AS retention_priority,
+      -- for that account's links in that opportunity - use multiple partitions
+      ZEROIFNULL(growth_priority / NULLIF(SUM(growth_priority) OVER(PARTITION BY dim_crm_account_id, dim_crm_opportunity_id), 0))
+                                                                                                              AS growth_priority_weighting,
+      ZEROIFNULL(retention_priority / NULLIF(SUM(retention_priority) OVER(PARTITION BY dim_crm_account_id), 0))
+                                                                                                              AS retention_priority_weighting,
+      -- a utility column to allow sum of all epics for customer reach
+      customer_reach / NULLIF(COUNT(*) OVER(PARTITION BY dim_epic_id, dim_crm_account_id), 0)                 AS customer_epic_reach,
+      CASE
+        WHEN link_type = 'Opportunity'
+          THEN crm_opp_net_arr * growth_priority_weighting
+        ELSE 0
+      END                                                                                                     AS growth_score,
+      retention_priority_weighting * crm_account_arr                                                          AS retention_score,
+      growth_score + retention_score                                                                          AS combined_score,
+      combined_score * CASE
+        WHEN link_type = 'Opportunity'
+          THEN opportunity_urgency_score
+        ELSE retention_urgency_score
+      END                                                                                                     AS priority_score
+    FROM user_request_with_account_opp_attributes
+    WHERE issue_epic_state_name = 'opened'
+      AND (
+        CASE
+          WHEN link_type = 'Opportunity'
+            THEN crm_opp_is_closed = FALSE
+          ELSE TRUE
+        END
+      )
+
+), final AS (
+
+    SELECT
+      user_request_with_account_opp_attributes.*,
+      CASE
+        WHEN user_request_with_account_opp_attributes.is_request_priority_empty
+          THEN '[Input (Using 1 as Default)](' || user_request_with_account_opp_attributes.issue_epic_url || ')'
+        ELSE request_priority::TEXT
+      END                                                                            AS priority_input_url,
+      CASE
+        WHEN user_request_with_account_opp_attributes.link_type = 'Zendesk Ticket'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.ticket_link || ')'
+        WHEN user_request_with_account_opp_attributes.link_type = 'Opportunity'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.crm_opportunity_link || ')'
+        WHEN user_request_with_account_opp_attributes.link_type = 'Account'
+          THEN '[' || user_request_with_account_opp_attributes.link_type || '](' || user_request_with_account_opp_attributes.crm_account_link || ')'
+      END                                                                            AS user_request_link,
+      customer_value_scores.retention_percentage                                     AS link_retention_percentage,
+      customer_value_scores.growth_percentage                                        AS link_growth_percentage,
+      customer_value_scores.retention_priority                                       AS link_retention_priority,
+      customer_value_scores.growth_priority                                          AS link_growth_priority,
+      customer_value_scores.retention_priority_weighting                             AS link_retention_priority_weighting,
+      customer_value_scores.growth_priority_weighting                                AS link_growth_priority_weighting,
+      customer_value_scores.retention_score                                          AS link_retention_score,
+      customer_value_scores.growth_score                                             AS link_growth_score,
+      customer_value_scores.combined_score                                           AS link_combined_score,
+      customer_value_scores.priority_score                                           AS link_priority_score,
+      link_priority_score / NULLIFZERO(issue_epic_weight)                            AS link_weighted_priority_score,
+      IFF(link_weighted_priority_score IS NULL,
+        '[Effort is Empty, Input Effort Here](' || user_request_with_account_opp_attributes.issue_epic_url || ')',
+        link_weighted_priority_score::TEXT)                                          AS link_weighted_priority_score_input
+    FROM user_request_with_account_opp_attributes
+    LEFT JOIN customer_value_scores
+      ON user_request_with_account_opp_attributes.primary_key = customer_value_scores.primary_key
+
 )
 
-
 {{ dbt_audit(
-    cte_ref="user_request_with_account_opp_attributes",
+    cte_ref="final",
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-22",
-    updated_date="2021-11-16",
+    updated_date="2022-01-05",
   ) }}
