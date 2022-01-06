@@ -27,6 +27,13 @@
     FROM geozones
     GROUP BY 1, 2, 3
 
+), null_entry AS (
+
+    SELECT
+      *
+    FROM (VALUES ('unknown','unknown',-1,'9999-12-31','9999-12-31',FALSE)) 
+        AS null_entry (country, locality, factor, valid_from, valid_to)
+
 ), join_spine AS (
 
     SELECT DISTINCT
@@ -67,6 +74,11 @@
 
     SELECT *
     FROM director_factors
+
+    UNION 
+
+    SELECT *
+    FROM null_entry
 
 ), final AS (
 
