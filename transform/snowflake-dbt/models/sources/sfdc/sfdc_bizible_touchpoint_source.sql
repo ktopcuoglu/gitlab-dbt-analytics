@@ -46,6 +46,11 @@ WITH source AS (
       utm_targetsubregion__c                  AS utm_targetsubregion,
       utm_targetterritory__c                  AS utm_targetterritory,
       utm_usecase__c                          AS utm_usecase,
+      CASE 
+        WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1)IS null
+          THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_content=',2),'&',1)
+        ELSE SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1) 
+      END AS utm_content,
 
       isdeleted                               AS is_deleted
 

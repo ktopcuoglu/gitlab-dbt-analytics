@@ -94,7 +94,11 @@ models:
       - name: employee_id
       - name: employee_number
       - name: greenhouse_candidate_id
-        description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.       
+        description: Captures the id associated to the employee in Greenhouse (our recruiting platform). This will only be applicable in Greenhouse starting 2019-12-13, and will help identify which candidates were hired.
+      - name: jobtitle_speciality_multi_select
+        description: Began collecting this filed 2021-12-16  
+      - name: jobtitle_speciality_single_select
+        description: Started capturing on 2020-05-07
   - name: bamboohr_job_info_source
     description: This model shows the details (manager, department, and division) that an employee is in at a given point in time. This includes historical information.
     columns:

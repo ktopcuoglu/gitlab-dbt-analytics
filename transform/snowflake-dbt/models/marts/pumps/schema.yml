@@ -5,10 +5,10 @@ models:
     description: '{{ doc("subscription_product_usage_data") }}'
     columns:
       - name: delivery_group
-        tests: 
+        tests:
           - not_null
       - name: original_id
-        tests: 
+        tests:
           - not_null
       - name: subscription_id
         tests:
@@ -22,10 +22,10 @@ models:
     columns:
       - name: snapshot_month
         description: Month in which the product usage was reported.
-        tests: 
+        tests:
           - not_null
       - name: dim_subscription_id
-        tests: 
+        tests:
           - not_null
       - name: dim_namespace_id
       - name: uuid
@@ -46,8 +46,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
       - name: subscription_status_original
         description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: snapshot_date_id
         tests:
           - not_null
@@ -64,7 +72,7 @@ models:
       - name: iso_3_country_code
       - name: delivery_type
         description: Indicates if the product usage came from a SaaS or Self-Managed user.
-        tests: 
+        tests:
           - not_null
       - name: umau_28_days_user
         description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
@@ -244,7 +252,7 @@ models:
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-        
+
   - name: mart_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("mart_product_usage_wave_1_3_metrics_monthly") }}'
     columns:
@@ -258,8 +266,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
       - name: subscription_status_original
         description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: dim_billing_account_id
         description: Returns unknown ID (MD5(-1)) if the `account_id` from `fct_product_usage_wave_1_3_metrics_monthly` is not found in `dim_billing_account`.
         tests:
@@ -512,8 +528,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
       - name: subscription_status_original
         description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: snapshot_month
         description: Month from which Usage Ping and/or Seat Link data is reported (reported as the first day of the month - '2020-01-01').
         tests:
@@ -691,8 +715,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
       - name: subscription_status_original
         description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: dim_billing_account_id
         tests:
           - not_null

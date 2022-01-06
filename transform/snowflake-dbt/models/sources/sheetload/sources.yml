@@ -46,6 +46,12 @@ sources:
       - name: employee_location_factor
       - name: engineering_infra_prod_console_access
       - name: engineering_speciality_prior_to_capture
+        description: > 
+          This sheetload is used to retain the Engineering department Job Title specialties prior to 2020-09-30.
+          It can also be used as an override of current BambooHR data should the need arise. To use it as an override
+          add the appropriate Job Title specialty and the appropriate start and end dates that need to override.
+          If an end date is not added then the entry will default to 2020-09-30 in downstream models and will not
+          override the BambooHR data.
       - name: event_dictionary_simplified
       - name: fmm_kpi_targets
       - name: gcp_active_cud
