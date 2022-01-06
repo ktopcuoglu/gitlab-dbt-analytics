@@ -1,9 +1,8 @@
 """
 ## Info about DAG
-This DAG is designed to perform adhoc full refresh of any required number of models.
-Before running this DAG set dbt model for full refresh in Airflow Variable named DBT_MODEL_TO_FULL_REFRESH. 
-The Warehouse to run the full refresh is set by default to XL size but incase of performance testing use DBT_WAREHOUSE_FOR_FULL_REFRESH variable to change the warehouse size.
+### This DAG code is only temporary and is used only for FULL REFRESH of the +gitlab_dotcom_usage_data_events+ model as per issue https://gitlab.com/gitlab-data/analytics/-/issues/10480
 """
+
 import os
 import logging
 from datetime import datetime
@@ -49,44 +48,31 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "start_date": datetime(2019, 1, 1, 0, 0, 0),
+    "start_date": datetime(2021, 12, 24, 0, 0, 0),
 }
 
 # Create the DAG
 dag = DAG(
-    "dbt_full_refresh",
+    "dbt_full_refresh_10480",
     default_args=default_args,
-    schedule_interval=None,
-    description="Adhoc DBT FULL Refresh",
+    description="This model will be running everyday  only for model +gitlab_dotcom_usage_data_events+ full refresh.",
+    schedule_interval="00 10 * * MON-SUN",
 )
 dag.doc_md = __doc__
-
-# read model for full-refresh from Airflow Variable
-dbt_model_to_full_refresh = Variable.get(
-    "DBT_MODEL_TO_FULL_REFRESH", default_var="test"
-)
-
-# Read the warehouse from the Airflow variable if passed else use XL warehouse for full refresh.
-dbt_warehouse_for_full_refresh = Variable.get(
-    "DBT_WAREHOUSE_FOR_FULL_REFRESH", default_var="TRANSFORMING_XL"
-)
-
-logging.info(
-    f"Running full refresh for {dbt_model_to_full_refresh} on warehouse {dbt_warehouse_for_full_refresh}"
-)
+logging.info(f"Running full refresh for +gitlab_dotcom_usage_data_events+")
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
-    dbt run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL_10480" &&
+    dbt run --profiles-dir profile --target prod --models +gitlab_dotcom_usage_data_events+ --full-refresh; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-full-refresh",
-    name="dbt-full-refresh",
+    task_id="dbt_full_refresh_10480",
+    name="dbt_full_refresh_10480",
     secrets=[
         GIT_DATA_TESTS_PRIVATE_KEY,
         GIT_DATA_TESTS_CONFIG,

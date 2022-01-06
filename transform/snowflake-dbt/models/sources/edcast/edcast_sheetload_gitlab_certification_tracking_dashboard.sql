@@ -22,7 +22,7 @@ WITH source AS (
     pubsec_partner::BOOLEAN                             AS pubsec_partner,
     cert_month::VARCHAR                                 AS cert_month,
     cert_quarter::VARCHAR                               AS cert_quarter,
-    DATEADD('s', _updated_at, '1970-01-01')::TIMESTAMP AS _updated_at
+    DATEADD('s', _updated_at, '1970-01-01')::TIMESTAMP  AS _updated_at
   FROM source
 
 )
