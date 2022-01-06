@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: bizible
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: bizible
+    loader: Airflow
+    loaded_at_field: uploaded_at
+    
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      error_after: {count: 36, period: hour}
+
+    tables:
+      - name: ads
