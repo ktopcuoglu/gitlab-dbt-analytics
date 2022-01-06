@@ -56,7 +56,7 @@ dag = DAG(
     "dbt_full_refresh_10480",
     default_args=default_args,
     description="This model will be running everyday  only for model +gitlab_dotcom_usage_data_events+ full refresh.",
-    schedule_interval="00 10 * * MON-SUN",
+    schedule_interval="00 10 * * MON-FRI",
 )
 dag.doc_md = __doc__
 logging.info(f"Running full refresh for +gitlab_dotcom_usage_data_events+")
