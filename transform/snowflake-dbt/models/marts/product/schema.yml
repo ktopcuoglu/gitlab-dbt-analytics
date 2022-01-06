@@ -97,7 +97,7 @@ models:
       - name: ping_date
         description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
         description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
       - name: merge_requests_28_days_user
