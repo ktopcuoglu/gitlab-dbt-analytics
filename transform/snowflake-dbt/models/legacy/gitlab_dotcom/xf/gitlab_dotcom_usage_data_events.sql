@@ -459,36 +459,20 @@
 , action_monthly_active_users_project_repo AS (
 
     SELECT *
-<<<<<<< HEAD
-    FROM  {{ ref('gitlab_dotcom_events') }}
-    WHERE target_type IS NULL
-      AND event_action_type_id = 5
-
-=======
     FROM  {{ ref('temp_gitlab_dotcom_events_filtered') }}
     WHERE target_type IS NULL
       AND event_action_type_id = 5
->>>>>>> e644608dadee9744f271fdf69280940443f4ac14
-
 ), action_monthly_active_users_design_management AS (
 
     SELECT *
-<<<<<<< HEAD
-    FROM  {{ ref('gitlab_dotcom_events') }}
-=======
     FROM  {{ ref('temp_gitlab_dotcom_events_filtered') }}
->>>>>>> e644608dadee9744f271fdf69280940443f4ac14
     WHERE target_type = 'DesignManagement::Design'
       AND event_action_type_id IN (1, 2)
 
 ), action_monthly_active_users_wiki_repo AS (
 
     SELECT *
-<<<<<<< HEAD
-    FROM  {{ ref('gitlab_dotcom_events') }}
-=======
     FROM  {{ ref('temp_gitlab_dotcom_events_filtered') }}
->>>>>>> e644608dadee9744f271fdf69280940443f4ac14
     WHERE target_type = 'WikiPage::Meta'
       AND event_action_type_id IN (1, 2)
 
