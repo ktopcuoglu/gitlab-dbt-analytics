@@ -168,3 +168,11 @@ models:
               - not_null
           - name: is_first_day_of_last_month_of_fiscal_year
             description: Flag indicating date that is the first day of last month of fiscal year. E.g TRUE for '2021-01-01'
+          - name: snapshot_date_fpa
+            description: 8th calendar day of a month used for FP&A snapshots 
+            tests:
+              - not_null
+          - name: snapshot_date_billings
+            description: 45 calendar day after a month begins used for Billings snapshots 
+            tests:
+              - not_null

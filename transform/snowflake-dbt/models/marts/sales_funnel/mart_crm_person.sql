@@ -49,7 +49,15 @@
       inquiry_date.date_day                    AS inquiry_date,
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
-      inquiry_date_pt.first_day_of_month       AS inquiry_month_pt,
+      inquiry_date_pt.first_day_of_month       AS inquiry_month_pt,      
+      inquiry_inferred_datetime.date_day       AS inquiry_inferred_date,
+      fct_crm_person.inquiry_inferred_datetime,
+      inquiry_inferred_datetime_pt.date_day            
+                                               AS inquiry_inferred_date_pt,
+      inquiry_inferred_datetime.first_day_of_month     
+                                               AS inquiry_inferred_month,
+      inquiry_inferred_datetime.first_day_of_month  
+                                               AS inquiry_inferred_month_pt,      
       accepted_date.date_day                   AS accepted_date,
       fct_crm_person.accepted_datetime,
       fct_crm_person.accepted_datetime_pt,
@@ -99,6 +107,15 @@
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       dim_sales_segment.sales_segment_name,
       dim_sales_segment.sales_segment_grouped,
+      dim_crm_person.marketo_last_interesting_moment,
+      dim_crm_person.marketo_last_interesting_moment_date,
+      dim_crm_person.outreach_step_number,
+      dim_crm_person.matched_account_owner_role,
+      dim_crm_person.matched_account_account_owner_name,
+      dim_crm_person.matched_account_sdr_assigned,
+      dim_crm_person.matched_account_type,
+      dim_crm_person.matched_account_gtm_strategy,
+      
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
         WHEN dim_sales_segment.sales_segment_name IN ('Large', 'PubSec') THEN  'Large MQLs & Trials'
@@ -133,6 +150,10 @@
       ON fct_crm_person.inquiry_date_id = inquiry_date.date_id
     LEFT JOIN dim_date AS inquiry_date_pt
       ON fct_crm_person.inquiry_date_pt_id = inquiry_date_pt.date_id
+    LEFT JOIN dim_date AS inquiry_inferred_datetime
+      ON fct_crm_person.inquiry_inferred_datetime_id = inquiry_inferred_datetime.date_id
+    LEFT JOIN dim_date AS inquiry_inferred_datetime_pt
+      ON fct_crm_person.inquiry_inferred_datetime_pt_id = inquiry_inferred_datetime_pt.date_id
     LEFT JOIN dim_date AS mql_date_first
       ON fct_crm_person.mql_date_first_id = mql_date_first.date_id
     LEFT JOIN dim_date AS mql_date_first_pt
