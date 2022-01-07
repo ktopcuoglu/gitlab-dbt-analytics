@@ -60,7 +60,7 @@
   },
   {
     "event_name": "ci_builds",
-    "source_table_name": "gitlab_dotcom_ci_builds",
+    "source_table_name": "temp_gitlab_dotcom_ci_builds_filtered",
     "user_column_name": "ci_build_user_id",
     "key_to_parent_project": "ci_build_project_id",
     "primary_key": "ci_build_id",
@@ -453,26 +453,23 @@
 , action_monthly_active_users_project_repo AS (
 
     SELECT *
-    FROM  {{ ref('gitlab_dotcom_events') }}
+    FROM  {{ ref('temp_gitlab_dotcom_events_filtered') }}
     WHERE target_type IS NULL
       AND event_action_type_id = 5
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), action_monthly_active_users_design_management AS (
 
     SELECT *
-    FROM  {{ ref('gitlab_dotcom_events') }}
+    FROM  {{ ref('temp_gitlab_dotcom_events_filtered') }}
     WHERE target_type = 'DesignManagement::Design'
       AND event_action_type_id IN (1, 2)
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), action_monthly_active_users_wiki_repo AS (
 
     SELECT *
-    FROM  {{ ref('gitlab_dotcom_events') }}
+    FROM  {{ ref('temp_gitlab_dotcom_events_filtered') }}
     WHERE target_type = 'WikiPage::Meta'
       AND event_action_type_id IN (1, 2)
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), api_fuzzing_jobs AS (
 
@@ -514,9 +511,8 @@
 ),  issue_notes AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_notes') }}
+    FROM {{ ref('temp_gitlab_dotcom_notes_filtered') }}
     WHERE noteable_type = 'Issue'
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), issue_resource_label_events AS (
 
@@ -542,9 +538,8 @@
 ), merge_request_notes AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_notes') }}
+    FROM {{ ref('temp_gitlab_dotcom_notes_filtered') }}
     WHERE noteable_type = 'MergeRequest'
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), projects_prometheus_active AS (
 
@@ -561,9 +556,8 @@
 ), push_events AS (
 
     SELECT *
-    FROM {{ ref('gitlab_dotcom_events') }}
+    FROM {{ ref('temp_gitlab_dotcom_events_filtered') }}
     WHERE event_action_type = 'pushed'
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), group_members AS (
 
