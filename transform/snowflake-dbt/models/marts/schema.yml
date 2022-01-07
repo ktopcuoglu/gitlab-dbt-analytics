@@ -68,6 +68,74 @@ models:
       - name: dim_subscription_id
       - name: dim_subscription_id_original
 
+models:
+  - name: mart_arr_jihu
+    description: '{{ doc("mart_arr_jihu") }}'
+    columns:
+      - name: arr
+        description: "Calculated as 12 * MRR value"
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+      - name: billing_account_number
+        tests:
+          - not_null
+      - name: subscription_name_slugify
+        tests:
+          - not_null
+      - name: subscription_name
+        tests:
+          - not_null
+      - name: oldest_subscription_in_cohort
+      - name: subscription_lineage
+      - name: arr_month
+        tests:
+          - not_null
+      - name: subscription_cohort_month
+      - name: subscription_cohort_quarter
+      - name: mrr
+        tests:
+          - not_null
+      - name: months_since_subscription_cohort_start
+      - name: quarters_since_subscription_cohort_start
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: billing_account_name
+        tests:
+          - not_null
+      - name: product_tier_name
+        tests:
+          - not_null
+      - name: unit_of_measure
+      - name: quantity
+      - name: dim_crm_account_id
+      - name: crm_account_name
+      - name: ultimate_parent_account_id
+      - name: ultimate_parent_account_name
+      - name: billing_account_cohort_month
+      - name: billing_account_cohort_quarter
+      - name: crm_account_cohort_month
+      - name: crm_account_cohort_quarter
+        description: '{{ doc("mart_arr_col_parent_account_cohort_month") }}'
+      - name: parent_account_cohort_quarter
+        description: '{{ doc("mart_arr_col_parent_account_cohort_quarter") }}'
+      - name: months_since_billing_account_cohort_start
+      - name: quarters_since_billing_account_cohort_start
+      - name: months_since_crm_account_cohort_start
+      - name: quarters_since_crm_account_cohort_start
+      - name: months_since_parent_account_cohort_start
+        description: '{{ doc("mart_arr_col_months_since_parent_cohort_start") }}'
+      - name: quarters_since_parent_account_cohort_start
+        description: '{{ doc("mart_arr_col_quarters_since_parent_cohort_start") }}'
+      - name: dim_subscription_id
+      - name: dim_subscription_id_original
+
   - name: mart_arr_snapshot_bottom_up
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product. Built using the snapshotted source tables.
     columns:
@@ -385,7 +453,7 @@ models:
     description: Mart table replicating the waterfall report as seen in the Zuora Revenue UI. It shows how revenue is recognized over time for a given line item in a revenue contract. The grain of this table is as of period month - revenue contract line item - accounting segment - accounting type and can be summed to a higher grain if necessary.
     columns:
       - name: primary_key
-        description: Concatenation of several columns of the waterfall to create a composite primary primary key 
+        description: Concatenation of several columns of the waterfall to create a composite primary primary key
         tests:
           - not_null
           - unique

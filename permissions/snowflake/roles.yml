@@ -4131,6 +4131,17 @@ roles:
         member_of: []
         warehouses: []
 
+    - vagrawal:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - vbrew:
         member_of:
             - analyst_finance
@@ -4967,6 +4978,11 @@ users:
         can_login: yes
         member_of:
             - tnguyen
+
+    - vagrawal:
+        can_login: yes
+        member_of:
+            - vagrawal
 
     - valexieva:
         can_login: no
