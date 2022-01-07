@@ -23,15 +23,15 @@
 {%- set event_ctes = [
   {
     "event_name": "action_monthly_active_users_project_repo",
-    "source_table_name": "gitlab_dotcom_events",
+    "source_cte_name": "action_monthly_active_users_project_repo",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
-    "stage_name": "create", 
+    "stage_name": "create",
     "is_representative_of_stage": "True"
   }, {
     "event_name": "action_monthly_active_users_design_management",
-    "source_table_name": "gitlab_dotcom_events",
+    "source_cte_name": "action_monthly_active_users_design_management",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
@@ -39,7 +39,7 @@
     "is_representative_of_stage": "False"
   }, {
     "event_name": "action_monthly_active_users_wiki_repo",
-    "source_table_name": "gitlab_dotcom_events",
+    "source_cte_name": "action_monthly_active_users_wiki_repo",
     "user_column_name": "author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "event_id",
@@ -460,25 +460,23 @@
 
     SELECT *
     FROM  {{ ref('gitlab_dotcom_events') }}
-    WHERE target_type IS NULL 
+    WHERE target_type IS NULL
       AND event_action_type_id = 5
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
+
 
 ), action_monthly_active_users_design_management AS (
 
     SELECT *
     FROM  {{ ref('gitlab_dotcom_events') }}
-    WHERE target_type = 'DesignManagement::Design' 
+    WHERE target_type = 'DesignManagement::Design'
       AND event_action_type_id IN (1, 2)
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), action_monthly_active_users_wiki_repo AS (
 
     SELECT *
     FROM  {{ ref('gitlab_dotcom_events') }}
-    WHERE target_type = 'WikiPage::Meta' 
+    WHERE target_type = 'WikiPage::Meta'
       AND event_action_type_id IN (1, 2)
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), api_fuzzing_jobs AS (
 
@@ -511,7 +509,7 @@
 
 ), incident_labeled_issues AS (
 
-    SELECT 
+    SELECT
       *,
       issue_created_at AS created_at
     FROM {{ ref('gitlab_dotcom_issues_xf') }}
@@ -522,14 +520,13 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_notes') }}
     WHERE noteable_type = 'Issue'
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), issue_resource_label_events AS (
 
     SELECT *
     FROM {{ref('gitlab_dotcom_resource_label_events_xf')}}
     WHERE issue_id IS NOT NULL
-  
+
 ), issue_resource_milestone_events AS (
 
     SELECT *
@@ -550,13 +547,6 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_notes') }}
     WHERE noteable_type = 'MergeRequest'
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
-
-), projects_prometheus_active AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_projects_xf') }}
-    WHERE ARRAY_CONTAINS('PrometheusService'::VARIANT, active_service_types)
 
 ), projects_prometheus_active AS (
 
@@ -575,7 +565,6 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_events') }}
     WHERE event_action_type = 'pushed'
-      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
 
 ), group_members AS (
 
@@ -604,7 +593,7 @@
     WHERE service_type != 'GitlabIssueTrackerService'
 
 ), successful_ci_pipelines AS (
- 
+
     SELECT *
     FROM {{ ref('gitlab_dotcom_ci_pipelines') }}
     WHERE failure_reason IS NULL
@@ -757,7 +746,7 @@
     LEFT JOIN users
       ON data.user_id = users.user_id
     WHERE event_created_at < CURRENT_DATE()
-    
+
 )
 
 SELECT *
