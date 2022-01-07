@@ -225,7 +225,7 @@ WITH account_dims_mapping AS (
           ELSE 0
         END                                                                                                               AS is_mql,
       CASE
-        WHEN true_inquiry_date IS NOT null THEN 1
+        WHEN true_inquiry_date IS NOT NULL THEN 1
         ELSE 0
       END                                                                                                                 AS is_inquiry,
 
