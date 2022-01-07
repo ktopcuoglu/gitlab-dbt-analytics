@@ -1,23 +1,7 @@
-import json
 import logging
-import os
-import sys
-
-from pathlib import Path
-from time import time
-from typing import Any, Dict, List, Tuple
-
-import pandas as pd
-import yaml
-from snowflake.sqlalchemy import URL as snowflake_URL
-from sqlalchemy import create_engine
-from sqlalchemy.engine.base import Engine
-from yaml.loader import SafeLoader
 
 from gitlabdata.orchestration_utils import (
-    data_science_engine_factory,
     query_dataframe,
-    query_executor,
     snowflake_stage_load_copy_remove,
     snowflake_engine_factory,
 )
@@ -34,7 +18,7 @@ class BizibleSnowFlakeExtractor:
         self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
 
-    def get_latest_bizible_tables(self) -> object:
+    def get_latest_bizible_tables(self) -> list:
         """
 
         :param bizible_engine:
@@ -52,7 +36,7 @@ class BizibleSnowFlakeExtractor:
         tables_to_download = df['full_table_name'].to_list()
         return tables_to_download
 
-    def get_bizible_queries(self, bizible_tables: object) -> object:
+    def get_bizible_queries(self, bizible_tables: list) -> Dict:
         """
 
         :param bizible_tables:
