@@ -712,6 +712,7 @@
       marketing_contact.customer_db_customer_id,
       marketing_contact.customer_db_created_date,
       marketing_contact.customer_db_confirmed_date,
+      IFF(latest_pql.email IS NOT NULL, TRUE, FALSE) AS is_pql,
       latest_pql.pql_namespace_id,
       latest_pql.pql_namespace_name,
       latest_pql.pql_namespace_name_masked,
