@@ -90,6 +90,8 @@ WITH biz_person AS (
       region,
       NULL                                          AS country,
       mailing_country,
+      NULL                                          AS state,
+      mailing_state,
       last_activity_date,
 
       NULL                                          AS crm_partner_id
@@ -151,6 +153,8 @@ WITH biz_person AS (
       region,
       country,
       NULL                                      AS mailing_country,
+      state,
+      NULL                                      AS mailing_state,
       last_activity_date,
 
       crm_partner_id

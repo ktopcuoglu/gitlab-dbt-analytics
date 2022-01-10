@@ -20,6 +20,7 @@
     SELECT
       fct_crm_person.dim_crm_person_id,
       dim_crm_person.dim_crm_user_id,
+      dim_crm_person.dim_crm_account_id,
       mql_date_first.date_id                   AS mql_date_first_id,
       mql_date_first.date_day                  AS mql_date_first,
       fct_crm_person.mql_datetime_first,
@@ -99,6 +100,10 @@
       dim_crm_person.crm_partner_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.region,
+      dim_crm_person.mailing_country,
+      dim_crm_person.mailing_state,
+      dim_crm_person.country,
+      dim_crm_person.state,
       fct_crm_person.name_of_active_sequence,
       fct_crm_person.sequence_task_due_date,
       fct_crm_person.sequence_status,

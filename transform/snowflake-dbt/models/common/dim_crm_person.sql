@@ -29,6 +29,8 @@ WITH crm_person AS (
       title,
       country,
       mailing_country,
+      state,
+      mailing_state,
       has_opted_out_email,
       email_bounced_date,
       email_bounced_reason,
