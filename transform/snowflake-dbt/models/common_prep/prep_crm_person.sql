@@ -188,5 +188,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@degan",
     created_date="2020-12-08",
-    updated_date="2021-12-15"
+    updated_date="2022-01-10"
 ) }}
