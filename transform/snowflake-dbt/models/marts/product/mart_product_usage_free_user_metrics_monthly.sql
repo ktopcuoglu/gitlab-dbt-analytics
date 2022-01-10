@@ -1,4 +1,4 @@
-{# {{ config(
+{{ config(
     tags=["mnpi_exception"]
 ) }}
 
@@ -236,4 +236,4 @@
     updated_by="@ischweickartDD",
     created_date="2021-06-14",
     updated_date="2021-07-23"
-) }} #}
+) }}
