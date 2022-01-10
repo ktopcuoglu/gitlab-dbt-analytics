@@ -8,6 +8,11 @@
     })
 }}
 
+{{ config({
+        "automatic_clustering": true
+    })
+}}
+
 /*
   Each dict must have ALL of the following:
     * event_name
