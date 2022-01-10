@@ -1,5 +1,5 @@
 {{ config(
-    materialized = "incremental"
+    materialized = "incremental",
     cluster_by=['target_type', 'event_action_type_id']
 ) }}
 

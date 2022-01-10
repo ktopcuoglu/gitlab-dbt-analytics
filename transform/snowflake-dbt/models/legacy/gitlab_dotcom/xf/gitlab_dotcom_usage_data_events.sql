@@ -4,11 +4,7 @@
 
 {{ config({
         "materialized": "incremental",
-        "unique_key": "primary_key"
-    })
-}}
-
-{{ config({
+        "unique_key": "primary_key",
         "automatic_clustering": true
     })
 }}
