@@ -13,6 +13,8 @@
   ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics')
 ]) }}
 
+-------------------------- Start of PQL logic: --------------------------
+
 , namespaces AS (
   
     SELECT
@@ -28,8 +30,8 @@
     LEFT JOIN gitlab_dotcom_users_source
       ON gitlab_dotcom_users_source.user_id = dim_namespace.creator_id
     WHERE dim_namespace.namespace_is_internal = FALSE
-      AND gitlab_dotcom_users_source.state = 'active' 
-      AND dim_namespace.namespace_type = 'Group'
+      AND LOWER(gitlab_dotcom_users_source.state) = 'active'
+      AND LOWER(dim_namespace.namespace_type) = 'group'
       AND dim_namespace.ultimate_parent_namespace_id = dim_namespace.dim_namespace_id 
       AND date(dim_namespace.created_at) >= '2021-01-27'::DATE
   
@@ -37,52 +39,31 @@
 
     SELECT --flattening members table to 1 record per member_id
       members.user_id,
-      members.member_id,
       members.source_id,
       members.invite_created_at,
-      MIN(members.invite_accepted_at) AS invite_accepted_at,
-      MAX(members.expires_at)         AS expires_at,
-      COUNT(members.member_id)        AS record_count
+      MIN(members.invite_accepted_at) AS invite_accepted_at
     FROM gitlab_dotcom_members_source members
-    JOIN namespaces --limit to just namespaces we care about
+    INNER JOIN namespaces --limit to just namespaces we care about
       ON members.source_id = namespaces.dim_namespace_id --same as namespace_id for group namespaces
-    WHERE members.member_source_type = 'Namespace' --only looking at namespace invites
+    WHERE LOWER(members.member_source_type) = 'namespace' --only looking at namespace invites
       AND members.invite_created_at >= namespaces.namespace_created_at --invite created after namespace created
       AND IFNULL(members.invite_accepted_at, CURRENT_TIMESTAMP) >= members.invite_created_at --invite accepted after invite created (removes weird edge cases with imported projects, etc)
-    {{ dbt_utils.group_by(4) }}
+    {{ dbt_utils.group_by(3) }}
 
-) , invite_status AS (
+), invite_status AS (
 
     SELECT --pull in relevant namespace data, invite status, etc
       namespaces.dim_namespace_id,
-      namespaces.namespace_created_at,
-      -- basic invite info
       members.user_id,
-      members.member_id,    
-      members.invite_created_at,
-      members.invite_accepted_at,
-      IFNULL(members.expires_at, DATEADD('day', 90, members.invite_created_at)) AS invite_expires_at, --invites expire after 90 days (https://docs.gitlab.com/ee/user/project/members/#add-users-to-a-project)
-      IFF(memberships.user_id IS NOT NULL, IFNULL(members.invite_accepted_at, members.invite_created_at), NULL) 
-                                                                                AS invite_success_at, --timestamp of invite success (either acceptance or access granted)
-      users.created_at                                                          AS user_created_at,
-      CASE
-        WHEN members.invite_accepted_at IS NOT NULL AND memberships.user_id IS NOT NULL THEN 'INVITE_ACCEPTED' --invite accepted
-        WHEN members.invite_accepted_at IS NULL AND memberships.user_id IS NOT NULL THEN 'ACCESS_GRANTED' --user granted access automatically
-        WHEN invite_expires_at < CURRENT_DATE THEN 'INVITE_EXPIRED' --invites expire after 90 days      
-        ELSE 'INVITE_PENDING'
-      END                                                                       AS invite_status,
-      IFF(memberships.user_id IS NOT NULL, TRUE, FALSE)                         AS invite_was_successful --flag whether the user actually joined the namespace
+      IFF(memberships.user_id IS NOT NULL, TRUE, FALSE) AS invite_was_successful --flag whether the user actually joined the namespace
     FROM flattened_members members
     JOIN namespaces
       ON members.source_id = namespaces.dim_namespace_id --same as namespace_id for group namespaces
       AND (invite_accepted_at IS NULL OR (TIMESTAMPDIFF(minute,invite_accepted_at,namespace_created_at) NOT IN (0,1,2))) = TRUE -- this blocks namespaces created within two minutes of the namespace creator accepting their invite
-  
     LEFT JOIN gitlab_dotcom_memberships memberships --record added once invite is accepted/user has access
       ON members.user_id = memberships.user_id
       AND members.source_id = memberships.membership_source_id
       AND memberships.is_billable = TRUE
-    LEFT JOIN gitlab_dotcom_users_source users --no users record if invite to new email is pending
-      ON members.user_id = users.user_id
     WHERE members.user_id != namespaces.creator_id --not an "invite" if user created namespace
 
 ), namespaces_with_user_count AS (
@@ -127,7 +108,7 @@
       ON leads.user_id = users.user_id
     LEFT JOIN dim_namespace
       ON dim_namespace.dim_namespace_id = leads.namespace_id
-    WHERE leads.product_interaction = 'Hand Raise PQL'
+    WHERE LOWER(leads.product_interaction) = 'hand raise pql'
   
     UNION ALL
   
@@ -146,7 +127,7 @@
       ON latest_trial_by_user.gitlab_user_id = leads.user_id
     LEFT JOIN dim_namespace
       ON dim_namespace.dim_namespace_id = leads.namespace_id
-    WHERE leads.product_interaction = 'SaaS Trial'
+    WHERE LOWER(leads.product_interaction) = 'saas trial'
       AND leads.is_for_business_use = 'True'
 
 ), stages_adopted AS (
@@ -182,8 +163,8 @@
       COALESCE(pqls.dim_namespace_id,stages_adopted.dim_namespace_id)::INT AS pql_namespace_id,
       COALESCE(pqls.namespace_name,stages_adopted.namespace_name)          AS pql_namespace_name_masked,
       pqls.user_id,
-      pqls.trial_start_date,
-      stages_adopted.min_subscription_start_date,
+      pqls.trial_start_date                                                AS pql_trial_start_date,
+      stages_adopted.min_subscription_start_date                           AS pql_min_subscription_start_date,
       stages_adopted.list_of_stages                                        AS pql_list_stages,
       stages_adopted.active_stage_count                                    AS pql_nbr_stages,
       IFNULL(namespaces_with_user_count.current_member_count, 0) + 1       AS pql_nbr_namespace_users,
@@ -193,7 +174,7 @@
       ON pqls.dim_namespace_id = stages_adopted.dim_namespace_id
     LEFT JOIN namespaces_with_user_count
       ON namespaces_with_user_count.dim_namespace_id = pqls.dim_namespace_id
-    WHERE pqls.product_interaction = 'SaaS Trial'
+    WHERE LOWER(pqls.product_interaction) = 'saas trial'
       AND IFNULL(stages_adopted.min_subscription_start_date,CURRENT_DATE) >= pqls.trial_start_date
 
     UNION ALL
@@ -204,8 +185,8 @@
       COALESCE(pqls.dim_namespace_id,stages_adopted.dim_namespace_id)::INT AS pql_namespace_id,
       COALESCE(pqls.namespace_name,stages_adopted.namespace_name)          AS pql_namespace_name_masked,
       pqls.user_id,
-      pqls.trial_start_date,
-      stages_adopted.min_subscription_start_date,
+      pqls.trial_start_date                                                AS pql_trial_start_date,
+      stages_adopted.min_subscription_start_date                           AS pql_min_subscription_start_date,
       stages_adopted.list_of_stages                                        AS pql_list_stages,
       stages_adopted.active_stage_count                                    AS pql_nbr_stages,
       IFNULL(namespaces_with_user_count.current_member_count, 0) + 1       AS pql_nbr_namespace_users,
@@ -215,7 +196,7 @@
       ON pqls.dim_namespace_id = stages_adopted.dim_namespace_id
     LEFT JOIN namespaces_with_user_count
       ON namespaces_with_user_count.dim_namespace_id = pqls.dim_namespace_id
-    WHERE pqls.product_interaction = 'Hand Raise PQL'
+    WHERE LOWER(pqls.product_interaction) = 'hand raise pql'
 
 ), latest_pql AS (
 
@@ -227,7 +208,10 @@
       ON gitlab_dotcom_namespaces_source.namespace_id = pqls_with_product_information.pql_namespace_id
     QUALIFY ROW_NUMBER() OVER(PARTITION BY email ORDER BY pql_event_created_at DESC) = 1
 
-), subscription_aggregate AS (
+)
+-------------------------- End of PQL logic --------------------------
+
+, subscription_aggregate AS (
 
     SELECT 
       dim_marketing_contact_id,
@@ -735,6 +719,8 @@
       latest_pql.pql_list_stages,
       latest_pql.pql_nbr_stages,
       latest_pql.pql_nbr_namespace_users,
+      latest_pql.pql_trial_start_date,
+      latest_pql.pql_min_subscription_start_date,
       latest_pql.pql_event_created_at,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
