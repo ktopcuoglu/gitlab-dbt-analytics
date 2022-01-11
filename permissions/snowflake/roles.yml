@@ -2984,6 +2984,7 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+            - jstemmer_xl
 
     - jswain: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -5041,6 +5042,9 @@ warehouses:
 
     - grafana:
         size: x-small 
+
+    - jstemmer_xl:
+        size: x-large
 
     - loading:
         size: x-small
