@@ -618,10 +618,13 @@
       FROM {{ event_cte.source_cte_name }}
     {% endif %}
     WHERE created_at IS NOT NULL
-        AND created_at >= DATEADD(year, -2, CURRENT_DATE)
-      {% if is_incremental() %}
-        AND created_at >= (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
-      {% endif %}
+      AND created_at >= DATEADD(year, -2, CURRENT_DATE)
+      
+    {% if is_incremental() %}
+
+      AND created_at >= (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
+
+    {% endif %}
 
 )
 
