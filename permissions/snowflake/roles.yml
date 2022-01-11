@@ -734,28 +734,6 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
-    - mashey:
-        warehouses:
-            - engineer_xs
-        member_of:
-            - zoom
-            - xactly
-            - adaptive
-        privileges:
-            databases:
-                write:
-                   - raw
-            schemas:
-              write:
-                  - raw.tap_zoom
-                  - raw.tap_adaptive
-                  - raw.tap_xactly
-            tables:
-              write:
-                  - raw.tap_zoom.*
-                  - raw.tap_adaptive.*
-                  - raw.tap_xactly.*   
-
     - meltano:
         warehouses:
             - loading
@@ -2879,12 +2857,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - jordan: 
-        member_of:
-            - mashey
-        warehouses: 
-            - analyst_xs
-
     - jpeguero:
         member_of:
             - analyst_marketing
@@ -4543,11 +4515,6 @@ users:
     - jmahdi:
         can_login: no
         member_of: []
-
-    - jordan: 
-        can_login: yes
-        member_of: 
-            - jordan
 
     - jpeguero:
         can_login: yes
