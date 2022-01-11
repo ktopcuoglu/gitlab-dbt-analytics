@@ -128,6 +128,7 @@
         ELSE 'Missing sales_segment_region_mapped'
       END                                      AS sales_segment_region_mapped,
       fct_crm_person.is_mql,
+      fct_crm_person.is_inquiry,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
@@ -202,7 +203,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2022-01-10",
+    updated_date="2022-01-11",
   ) }}
