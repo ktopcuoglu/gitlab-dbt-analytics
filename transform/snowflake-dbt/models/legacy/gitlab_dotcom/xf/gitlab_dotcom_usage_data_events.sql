@@ -301,7 +301,7 @@
   },
   {
     "event_name": "notes",
-    "source_table_name": "gitlab_dotcom_notes",
+    "source_table_name": "temp_gitlab_dotcom_notes_filtered",
     "user_column_name": "note_author_id",
     "key_to_parent_project": "project_id",
     "primary_key": "note_id",
