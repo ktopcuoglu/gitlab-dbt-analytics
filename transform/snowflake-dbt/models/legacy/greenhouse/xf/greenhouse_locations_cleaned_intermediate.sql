@@ -1,3 +1,7 @@
+{{ config(
+    enabled = false
+    )
+}}
 WITH raw_application_answer AS (
   
     SELECT 

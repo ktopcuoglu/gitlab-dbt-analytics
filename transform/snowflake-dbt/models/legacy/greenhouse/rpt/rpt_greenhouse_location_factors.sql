@@ -1,3 +1,7 @@
+{{ config(
+    enabled = false
+    )
+}}
 WITH dates AS (
 
   SELECT date_actual

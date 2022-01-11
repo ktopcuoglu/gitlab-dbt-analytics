@@ -1,3 +1,7 @@
+{{ config(
+    enabled = false
+    )
+}}
 WITH location_application_answer AS (
   
     SELECT *

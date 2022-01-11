@@ -1,3 +1,7 @@
+{{ config(
+    enabled = false
+    )
+}}
 WITH location_factor_base AS (
   
   SELECT *

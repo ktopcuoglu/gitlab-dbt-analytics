@@ -1,3 +1,7 @@
+{{ config(
+    enabled = false
+    )
+}}
 WITH source AS (
 
     SELECT *
