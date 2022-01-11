@@ -1,3 +1,7 @@
+{{ config(
+     materialized = "table"
+) }}
+
 WITH usage_ping AS (
   SELECT
     *
