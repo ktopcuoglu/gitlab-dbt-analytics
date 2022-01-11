@@ -741,6 +741,7 @@ roles:
             - zoom
             - xactly
             - adaptive
+            - zendesk
         privileges:
             databases:
                 write:
@@ -750,11 +751,13 @@ roles:
                   - raw.tap_zoom
                   - raw.tap_adaptive
                   - raw.tap_xactly
+                  - raw.tap_zendesk
             tables:
               write:
                   - raw.tap_zoom.*
                   - raw.tap_adaptive.*
-                  - raw.tap_xactly.*       
+                  - raw.tap_xactly.*  
+                  - raw.tap_zendesk.*     
 
     - people_operations:
         warehouses:
@@ -2075,10 +2078,12 @@ roles:
                 read:
                     - prep.zendesk
                     - raw.zendesk_stitch
+                    - raw.tap_zendesk
             tables:
                 read:
                     - prep.zendesk.*
                     - raw.zendesk_stitch.*
+                    - raw.tap_zendesk.*
 
     - zendesk_community_relations:
           warehouses:
