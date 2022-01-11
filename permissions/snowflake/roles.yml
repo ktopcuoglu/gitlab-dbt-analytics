@@ -5033,6 +5033,9 @@ warehouses:
     - grafana:
         size: x-small 
 
+    - jstemmer_xl:
+        size: x-large
+
     - loading:
         size: x-small
 
