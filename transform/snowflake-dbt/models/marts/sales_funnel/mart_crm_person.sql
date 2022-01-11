@@ -101,10 +101,8 @@
       dim_crm_person.crm_partner_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.region,
-      dim_crm_person.mailing_country,
-      dim_crm_person.mailing_state,
-      dim_crm_person.country,
       dim_crm_person.state,
+      dim_crm_person.country,
       fct_crm_person.name_of_active_sequence,
       fct_crm_person.sequence_task_due_date,
       fct_crm_person.sequence_status,
@@ -128,7 +126,6 @@
         ELSE 'Missing sales_segment_region_mapped'
       END                                      AS sales_segment_region_mapped,
       fct_crm_person.is_mql,
-      fct_crm_person.is_inquiry,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
@@ -203,7 +200,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2022-01-11",
+    updated_date="2022-01-10",
   ) }}
