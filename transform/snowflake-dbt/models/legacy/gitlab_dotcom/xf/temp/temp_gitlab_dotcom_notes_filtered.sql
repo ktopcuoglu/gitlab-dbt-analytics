@@ -11,7 +11,7 @@ SELECT
   noteable_type
 FROM {{ ref('gitlab_dotcom_notes') }}
 WHERE created_at IS NOT NULL
-  AND created_at >= DATEADD(YEAR, -2, CURRENT_DATE)
+  AND created_at >= DATEADD(MONTH, -13, CURRENT_DATE)
   AND noteable_type IN (
     'Issue',
     'MergeRequest'
