@@ -26,7 +26,12 @@ WITH source AS (
       d.value['customGitLabUsername']::VARCHAR                        AS gitlab_username,
       d.value['customJobTitleSpeciality']::VARCHAR                    AS jobtitle_speciality_single_select,
       d.value['customJobTitleSpecialty(Multi-Select)']::VARCHAR       AS jobtitle_speciality_multi_select,
-      d.value['customLocality']::VARCHAR                              AS locality,
+      -- requiers cleaning becase of an error in the snapshoted source data
+      CASE d.value['customLocality']::VARCHAR
+        WHEN 'Canberra, Australia Capital Territory, Australia'
+            THEN 'Canberra, Australian Capital Territory, Australia'
+        ELSE d.value['customLocality']::VARCHAR
+      END                                                             AS locality,
       d.value['customNationality']::VARCHAR                           AS nationality,
       d.value['customOtherGenderOptions']::VARCHAR                    AS gender_dropdown, 
       d.value['customRegion']::VARCHAR                                AS region,
@@ -57,6 +62,8 @@ WITH source AS (
       AND LOWER(last_name) NOT LIKE '%test profile%'
       AND LOWER(last_name) != 'test-gitlab')
       AND employee_id != 42039
+    -- The same emplpyee can appear more than once in the same upload.
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_number, DATE_TRUNC(day, uploaded_at) ORDER BY uploaded_at DESC) = 1
 
 ) 
 

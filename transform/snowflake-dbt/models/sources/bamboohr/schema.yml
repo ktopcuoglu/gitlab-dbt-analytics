@@ -90,6 +90,11 @@ models:
             
   - name: bamboohr_id_employee_number_mapping_source
     description: This model is based off the custom report in bamboohr to capture additional bamboohr information. This captures a snapshot of custom fields in bamboohr everyday. Note - field names can be added at various times through this report depending on use case and it is important to understand when we started capturing these data points.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_number
+            - uploaded_at
     columns:
       - name: employee_id
       - name: employee_number
