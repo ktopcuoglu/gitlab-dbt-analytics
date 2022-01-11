@@ -983,7 +983,6 @@ roles:
                     - prep.sensitive.employee_locality
                     - prep.sensitive.employee_location_factor_snapshots
                     - prep.sensitive.bamboohr_job_role
-                    - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_sensitive_separations:
@@ -1030,7 +1029,6 @@ roles:
                     - prep.sensitive.bamboohr_headcount_intermediate
                     - prep.sensitive.bamboohr_id_employee_number_mapping
                     - prep.sensitive.bamboohr_job_role
-                    - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_missing_emergency_contact_alert
                     - prep.sensitive.bamboohr_promotions_xf
                     - prep.sensitive.bamboohr_promotion_rate
@@ -1650,8 +1648,6 @@ roles:
                     - prep.greenhouse.*
                     - prep.sensitive.greenhouse_diversity_intermediate
                     - prep.sensitive.greenhouse_hires
-                    - prep.sensitive.greenhouse_locations_cleaned_intermediate
-                    - prep.sensitive.greenhouse_location_factors
                     - prep.sensitive.greenhouse_recruiting_xf
                     - prep.sensitive.greenhouse_sourcer
                     - prep.sensitive.greenhouse_sourcer_base
