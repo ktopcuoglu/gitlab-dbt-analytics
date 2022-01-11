@@ -47,6 +47,7 @@
       contact_created_date.first_day_of_month  AS contact_created_month,
       contact_created_date_pt.first_day_of_month 
                                                AS contact_created_month_pt,
+      true_inquiry_date                        AS true_inquiry_date,
       inquiry_date.date_day                    AS inquiry_date,
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
