@@ -117,7 +117,7 @@ flattened_metrics AS (
         "PATH" AS metrics_path,
         "VALUE" AS metrics_value
     FROM sm_last_monthly_ping_per_account,
-        LATERAL(INPUT => raw_usage_data_payload, RECURSIVE => TRUE)
+        LATERAL FLATTEN(INPUT => raw_usage_data_payload, RECURSIVE => TRUE)
     WHERE metrics_path LIKE 'usage_activity_by_stage%'
         AND IS_REAL(metrics_value) = 1
         AND metrics_value > 0
