@@ -53,3 +53,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: fct_events_all
+    description: Union of gitlab_dotcom and service_ping sources with additional dim id's
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique

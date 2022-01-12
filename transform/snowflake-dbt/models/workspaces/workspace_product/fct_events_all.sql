@@ -69,8 +69,8 @@ flattened_w_subscriptiON AS (
     ON flattened_w_metrics.dim_subscription_id = dim_subscription.dim_subscription_id
 ),
 usage_ping_fact AS (
-    SELECT
-        to_varchar(dim_usage_ping_id) AS event_id,
+    SELECT top 100
+        {{ dbt_utils.surrogate_key(['dim_usage_ping_id','metrics_path']) }}   AS event_id,
         event_name,
         to_number(event_count) AS event_count,
         dim_usage_ping_id,
@@ -205,8 +205,8 @@ gitlab_dotcom_fact AS (
         to_number(null) AS minor_version,
         null AS usage_ping_delivery_type,
         'GITLAB_DOTCOM' AS source
-FROM final)
-
+FROM final),
+results as (
 SELECT *
 FROM gitlab_dotcom_fact
 
@@ -214,3 +214,12 @@ UNION ALL
 
 SELECT *
 FROM usage_ping_fact
+)
+
+{{ dbt_audit(
+    cte_ref="results",
+    created_by="@icooper-acp",
+    updated_by="@icooper-acp",
+    created_date="2022-01-12",
+    updated_date="2022-01-12"
+) }}
