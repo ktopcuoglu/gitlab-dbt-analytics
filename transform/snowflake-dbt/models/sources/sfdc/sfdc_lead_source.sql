@@ -61,14 +61,21 @@ WITH source AS (
         region__c                                               AS region,
         largeaccount__c                                         AS is_large_account,
         outreach_stage__c                                       AS outreach_stage,
+        Sequence_Step_Number__c                                 AS outreach_step_number,
         interested_in_gitlab_ee__c                              AS is_interested_gitlab_ee,
         interested_in_hosted_solution__c                        AS is_interested_in_hosted,
         lead_assigned_datetime__c::TIMESTAMP                    AS assigned_datetime,
         matched_account_top_list__c                             AS matched_account_top_list,
+        matched_account_owner_Role__c                           AS matched_account_owner_role,
+        matched_account_sdr_assigned__c                         AS matched_account_sdr_assigned,
+        matched_account_gtm_strategy__c                         AS matched_account_gtm_strategy,
+        engagio__Matched_Account_Type__c                        AS matched_account_type,
+        engagio__Matched_Account_Owner_Name__c                  AS matched_account_account_owner_name,
         mql_date__c                                             AS marketo_qualified_lead_date,
         mql_datetime__c                                         AS marketo_qualified_lead_datetime,
         mql_datetime_inferred__c                                AS mql_datetime_inferred,
         inquiry_datetime__c                                     AS inquiry_datetime,
+        inquiry_datetime_inferred__c                            AS inquiry_datetime_inferred,
         accepted_datetime__c                                    AS accepted_datetime,
         qualifying_datetime__c                                  AS qualifying_datetime,
         qualified_datetime__c                                   AS qualified_datetime,
@@ -105,6 +112,10 @@ WITH source AS (
         pathfactory_content_list__c                             AS pathfactory_content_list,
         pathfactory_content_journey__c                          AS pathfactory_content_journey,
         pathfactory_topic_list__c                               AS pathfactory_topic_list,
+
+        --marketo sales insight
+        mkto_si__Last_Interesting_Moment_Desc__c                AS marketo_last_interesting_moment,
+        mkto_si__Last_Interesting_Moment_Date__c                AS marketo_last_interesting_moment_date,
 
         --gitlab internal
         bdr_lu__c                                               AS business_development_look_up,

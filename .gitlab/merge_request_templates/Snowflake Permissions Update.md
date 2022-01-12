@@ -26,6 +26,9 @@ Closes #
 - [ ] If new schema in `PROD` or `PREP` dbs make sure to update [`grant_usage_in_schemas.sql` macro](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/warehouse/grant_usage_to_schemas.sql)
 - [ ] Confirm any new warehouses are created in Snowflake and matches size
 
+### Before merging 
+
+- [ ] Run the [permifrost_manual_spec_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#permifrost_manual_spec_test) pipeline to ensure the specifications have been defined correctly.
 
 ### ⚠ Unsupported Permissions ⚠
 

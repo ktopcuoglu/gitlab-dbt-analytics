@@ -24,6 +24,10 @@ models:
         description: CRM Account amount of seats in the current month based on Zuora subscription and charge information.
       - name: crm_account_open_opp_net_arr
         description: Sum of Net ARR for all currently open SFDC opportunities for the CRM Account.
+      - name: crm_account_open_opp_net_arr_fo
+        description: Sum of Net ARR for all currently open SFDC opportunities for the CRM Account with order type New First Order.
+      - name: crm_account_open_opp_net_arr_growth
+        description: Sum of Net ARR for all currently open SFDC opportunities for the CRM Account with order type New Connected and Growth.
       - name: opportunity_reach
         description: Count of aggregate prospect licenses from open SFDC opportunities, where prospect means New First Order opportunities. The amount of seats in the opportunity are fetched from the primary quote linked to the opportunity.
       - name: crm_account_lost_opp_net_arr
@@ -32,3 +36,17 @@ models:
         description: For the CRM Account, sum of all ARR lost when the customer left GitLab.
       - name: lost_arr
         description: Sum of crm_account_lost_opp_arr and crm_account_lost_customer_arr
+  - name: rpt_user_request_crm_account_issue_epic
+    description: Aggregation of mart_user_request, which is at the issue/epic||link grain at the issue/epic||crm_account grain. 
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+  - name: rpt_user_request_issue_epic
+    description: Aggregation of mart_user_request at the issue/epic grain.
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique

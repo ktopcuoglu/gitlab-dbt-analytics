@@ -255,6 +255,8 @@ WITH source AS (
         -- flag to identify eligible booking deals, excluding jihu - issue: https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/1805
         fp_a_master_bookings_flag__c::BOOLEAN       AS fpa_master_bookings_flag,
 
+        downgrade_reason__c                         AS downgrade_reason,
+
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
                  CURRENT_TIMESTAMP()))              AS _last_dbt_run,

@@ -44,6 +44,10 @@ sheets:
     owner: '@Kevin Dietz'
     tabs: 
       - product_usage_stages_monthly
+  - name: ptc_scores
+    owner: '@Klaudia Magda'
+    tabs:
+      - ptc_scores_20211221
   - name: pte_scores
     owner: '@Kevin Dietz'
     tabs:

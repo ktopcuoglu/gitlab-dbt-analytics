@@ -164,7 +164,8 @@ models:
     - name: milestone_status
     - name: data_team_member_gitlab_handle
     - name: data_team_member_capacity
-
+- name: sheetload_sales_capacity_kpi
+  descritpion: This is the model captures sales capacity kpis target and actual
 - name: sheetload_sales_funnel_targets_kpi_values
   description: Kpi total info
 - name: sheetload_sales_funnel_targets_opportunity
