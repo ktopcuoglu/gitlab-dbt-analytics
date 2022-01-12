@@ -171,7 +171,7 @@ UNION ALL
         uploaded_at,
         COUNT(*) AS number_of_records
     FROM final_group
-    WHERE uploaded_at = created_date+1
+    WHERE uploaded_at = updated_date+1
     GROUP BY 1,2,3,4
 
 ), comparision AS (
