@@ -55,7 +55,7 @@ sm_last_monthly_ping_per_account AS (
     WHERE usage_ping.license_md5 IS NOT NULL
         AND CAST(
             usage_ping.ping_created_at_month AS DATE
-        ) < DATE_TRUNC(month, CURRENT_DATE)
+        ) < DATE_TRUNC('month', CURRENT_DATE)
   QUALIFY ROW_NUMBER () OVER (
     PARTITION BY
       license_subscription_mapping.dim_subscription_id,
@@ -82,15 +82,17 @@ saas_last_monthly_ping_per_account AS (
     INNER JOIN dates ON saas_usage_ping.ping_date = dates.date_day
     INNER JOIN
         namespace_subscription_bridge ON
-            saas_usage_ping.dim_namespace_id = namespace_subscription_bridge.dim_namespace_id
-            AND dates.first_day_of_month = namespace_subscription_bridge.snapshot_month
+            saas_usage_ping.dim_namespace_id =
+            namespace_subscription_bridge.dim_namespace_id
+            AND dates.first_day_of_month =
+            namespace_subscription_bridge.snapshot_month
             AND namespace_subscription_bridge.namespace_order_subscription_match_status = 'Paid All Matching'
-    WHERE dim_crm_account_id IS NOT NULL
+    WHERE namespace_subscription_bridge.dim_crm_account_id IS NOT NULL
         AND namespace_subscription_bridge.snapshot_month < DATE_TRUNC(
-            month, CURRENT_DATE
+            'month', CURRENT_DATE
         )
         AND metrics_path LIKE 'usage_activity_by_stage%'
-        AND metrics_value > 0 -- - Filter out non-instances
+        AND metrics_value > 0 -- Filter out non-instances
   QUALIFY ROW_NUMBER() OVER (
     PARTITION BY
       namespace_subscription_bridge.dim_subscription_id,
@@ -115,7 +117,7 @@ flattened_metrics AS (
         "PATH" AS metrics_path,
         "VALUE" AS metrics_value
     FROM sm_last_monthly_ping_per_account,
-        lateral(INPUT => raw_usage_data_payload, RECURSIVE => TRUE)
+        LATERAL(INPUT => raw_usage_data_payload, RECURSIVE => TRUE)
     WHERE metrics_path LIKE 'usage_activity_by_stage%'
         AND IS_REAL(metrics_value) = 1
         AND metrics_value > 0
@@ -143,14 +145,16 @@ SELECT
         DISTINCT CASE
             WHEN
                 usage_ping_metrics.product_stage = 'plan'
-                AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_plan_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
                 usage_ping_metrics.product_stage = 'plan'
-                AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_plan_28days_features,
 
@@ -159,7 +163,8 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'create', 'devops::create'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_create_alltime_features,
     COUNT(
@@ -167,33 +172,42 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'create', 'devops::create'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_create_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'verify' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'verify'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_verify_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'verify' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'verify'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_verify_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'package' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'package'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_package_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'package' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'package'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_package_28days_features,
 
@@ -202,7 +216,8 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'release', 'releases'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_release_alltime_features,
     COUNT(
@@ -210,33 +225,42 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'release', 'releases'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_release_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'configure' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'configure'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_configure_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'configure' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'configure'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_configure_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'monitor' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'monitor'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_monitor_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'monitor' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'monitor'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_monitor_28days_features,
 
@@ -245,7 +269,8 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'manage', 'managed'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_manage_alltime_features,
     COUNT(
@@ -253,7 +278,8 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'manage', 'managed'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_manage_28days_features,
 
@@ -262,7 +288,8 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'secure', 'devops::secure'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_secure_alltime_features,
     COUNT(
@@ -270,59 +297,76 @@ SELECT
             WHEN
                 usage_ping_metrics.product_stage IN (
                     'secure', 'devops::secure'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_secure_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'protect' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'protect'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_protect_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'protect' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'protect'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_protect_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'ecosystem' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'ecosystem'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_ecosystem_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'ecosystem' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'ecosystem'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_ecosystem_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'growth' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'growth'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_growth_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'growth' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'growth'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_growth_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'enablement' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'enablement'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_enablement_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_stage = 'enablement' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_stage = 'enablement'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS stage_enablement_28days_features,
 
@@ -330,91 +374,119 @@ SELECT
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'dev' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'dev'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_dev_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'dev' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'dev'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_dev_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'enablement' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'enablement'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_enablement_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'enablement' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'enablement'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_enablement_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'fulfillment' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'fulfillment'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_fulfillment_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'fulfillment' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'fulfillment'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_fulfillment_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'growth' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'growth'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_growth_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'growth' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'growth'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_growth_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'ops' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'ops'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_ops_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'ops' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'ops'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_ops_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'sec' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'sec'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_sec_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'sec' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'sec'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_sec_28days_features,
 
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'seg' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'seg'
+                AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_seg_alltime_features,
     COUNT(
         DISTINCT CASE
             WHEN
-                usage_ping_metrics.product_section = 'seg' AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                usage_ping_metrics.product_section = 'seg'
+                AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS section_seg_28days_features,
 
@@ -424,7 +496,8 @@ SELECT
             WHEN
                 CONTAINS(
                     usage_ping_metrics.tier, 'free'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS tier_free_alltime_features,
     COUNT(
@@ -432,7 +505,8 @@ SELECT
             WHEN
                 CONTAINS(
                     usage_ping_metrics.tier, 'free'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS tier_free_28days_features,
 
@@ -443,7 +517,8 @@ SELECT
                     usage_ping_metrics.tier, 'premium'
                 ) AND NOT CONTAINS(
                     usage_ping_metrics.tier, 'free'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS tier_premium_alltime_features,
     COUNT(
@@ -453,7 +528,8 @@ SELECT
                     usage_ping_metrics.tier, 'premium'
                 ) AND NOT CONTAINS(
                     usage_ping_metrics.tier, 'free'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS tier_premium_28days_features,
 
@@ -464,7 +540,8 @@ SELECT
                     usage_ping_metrics.tier, 'ultimate'
                 ) AND NOT CONTAINS(
                     usage_ping_metrics.tier, 'premium'
-                ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_path
         END
     ) AS tier_ultimate_alltime_features,
     COUNT(
@@ -474,7 +551,8 @@ SELECT
                     usage_ping_metrics.tier, 'ultimate'
                 ) AND NOT CONTAINS(
                     usage_ping_metrics.tier, 'premium'
-                ) AND usage_ping_metrics.time_frame = '28d' THEN flattened_metrics.metrics_path
+                ) AND usage_ping_metrics.time_frame = '28d'
+                THEN flattened_metrics.metrics_path
         END
     ) AS tier_ultimate_28days_features,
 
@@ -483,7 +561,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'plan' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'plan'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -494,7 +574,8 @@ SELECT
                 WHEN
                     usage_ping_metrics.product_stage IN (
                         'create', 'devops::create'
-                    ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    ) AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -503,7 +584,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'verify' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'verify'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -512,7 +595,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'package' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'package'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -523,7 +608,8 @@ SELECT
                 WHEN
                     usage_ping_metrics.product_stage IN (
                         'release', 'releases'
-                    ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    ) AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -532,7 +618,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'configure' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'configure'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -541,7 +629,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'monitor' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'monitor'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -552,7 +642,8 @@ SELECT
                 WHEN
                     usage_ping_metrics.product_stage IN (
                         'manage', 'managed'
-                    ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    ) AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -563,7 +654,8 @@ SELECT
                 WHEN
                     usage_ping_metrics.product_stage IN (
                         'secure', 'devops::secure'
-                    ) AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    ) AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -572,7 +664,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'protect' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'protect'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -581,7 +675,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'ecosystem' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'ecosystem'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -590,7 +686,9 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'growth' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'growth'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
@@ -599,66 +697,88 @@ SELECT
         SUM(
             CASE
                 WHEN
-                    usage_ping_metrics.product_stage = 'enablement' AND usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                    usage_ping_metrics.product_stage = 'enablement'
+                    AND usage_ping_metrics.time_frame = 'all'
+                    THEN flattened_metrics.metrics_value
             END
         ),
         0
     ) AS stage_enablement_alltime_feature_sum,
 
-    /* If want to calculate 28 day metrics, could use the lag function. Or compute by nesting this SELECT statement in a WITH and computing after the fact
-    , STAGE_PLAN_ALLTIME_FEATURE_SUM - COALESCE(LAG(STAGE_PLAN_ALLTIME_FEATURE_SUM) OVER (PARTITION BY flattened_metrics.DIM_CRM_ACCOUNT_ID ORDER BY flattened_metrics.SNAPSHOT_MONTH), 0) as STAGE_PLAN_28DAYS_FEATURE_SUM
+    /* If want to calculate 28 day metrics, could use the lag function. Or
+       compute by nesting this SELECT statement in a WITH and computing after
+       the fact, STAGE_PLAN_ALLTIME_FEATURE_SUM -
+       COALESCE(LAG(STAGE_PLAN_ALLTIME_FEATURE_SUM)
+       OVER (PARTITION BY flattened_metrics.DIM_CRM_ACCOUNT_ID ORDER BY
+       flattened_metrics.SNAPSHOT_MONTH), 0) as STAGE_PLAN_28DAYS_FEATURE_SUM
     */
 
     -- FEATURE USE SHARE BY STAGE
     SUM(
         CASE
             WHEN
-                usage_ping_metrics.time_frame = 'all' THEN flattened_metrics.metrics_value
+                usage_ping_metrics.time_frame = 'all'
+                THEN flattened_metrics.metrics_value
         END
     ) AS all_stages_alltime_feature_sum,
     ROUND(
-        DIV0(stage_plan_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_plan_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_plan_alltime_share_pct,
     ROUND(
-        DIV0(stage_create_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_create_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_create_alltime_share_pct,
     ROUND(
-        DIV0(stage_verify_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_verify_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_verify_alltime_share_pct,
     ROUND(
-        DIV0(stage_package_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_package_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_package_alltime_share_pct,
     ROUND(
-        DIV0(stage_release_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_release_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_release_alltime_share_pct,
     ROUND(
-        DIV0(stage_configure_alltime_features_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_configure_alltime_features_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_configure_alltime_share_pct,
     ROUND(
-        DIV0(stage_monitor_alltime_features_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_monitor_alltime_features_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_monitor_alltime_share_pct,
     ROUND(
-        DIV0(stage_manage_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_manage_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_manage_alltime_share_pct,
     ROUND(
-        DIV0(stage_secure_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_secure_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_secure_alltime_share_pct,
     ROUND(
-        DIV0(stage_protect_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_protect_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_protect_alltime_share_pct,
     ROUND(
-        DIV0(stage_ecosystem_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_ecosystem_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_ecosystem_alltime_share_pct,
     ROUND(
-        DIV0(stage_growth_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_growth_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_growth_alltime_share_pct,
     ROUND(
-        DIV0(stage_enablement_alltime_feature_sum, all_stages_alltime_feature_sum), 4
+        DIV0(stage_enablement_alltime_feature_sum,
+             all_stages_alltime_feature_sum), 4
     ) AS stage_enablement_alltime_share_pct,
 
     -- MOST USED STAGE ALL TIME
     CASE GREATEST(
-        stage_plan_alltime_share_pct, stage_create_alltime_share_pct, stage_verify_alltime_share_pct
+        stage_plan_alltime_share_pct,
+        stage_create_alltime_share_pct,
+        stage_verify_alltime_share_pct
     )
         WHEN stage_plan_alltime_share_pct THEN 'plan'
         WHEN stage_create_alltime_share_pct THEN 'create'
@@ -678,7 +798,8 @@ SELECT
 
 
     -- NUMBER OF SEAT LICENSES USING EACH STAGE
-    -- Cannot get at because of the level of granuality of the usage datflattened_metrics.
+    -- Cannot get at because of the level of granuality of the usage
+    -- datflattened_metrics.
 
     -- TOTAL MONTHS USED BY STAGES
     CASE WHEN stage_plan_28days_features = 0 THEN 0
@@ -806,5 +927,5 @@ LEFT JOIN
 WHERE usage_ping_metrics.metrics_status = 'active'
       AND flattened_metrics.dim_crm_account_id IS NOT NULL
 GROUP BY
-    1,
-    2
+    flattened_metrics.dim_crm_account_id,
+    flattened_metrics.snapshot_month
