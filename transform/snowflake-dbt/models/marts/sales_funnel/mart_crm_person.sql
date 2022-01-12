@@ -116,9 +116,19 @@
       dim_crm_person.matched_account_type,
       dim_crm_person.matched_account_gtm_strategy,
       fct_crm_person.account_demographics_area,
+      fct_crm_person.account_demographics_employee_count,
       fct_crm_person.account_demographics_geo,
+      fct_crm_person.account_demographics_industry,
+      fct_crm_person.account_demographics_max_family_employee,
       fct_crm_person.account_demographics_region,
+      fct_crm_person.account_demographics_sales_segment,
+      fct_crm_person.account_demographics_sub_industry,
       fct_crm_person.account_demographics_territory,
+      fct_crm_person.account_demographics_upa_city,
+      fct_crm_person.account_demographics_upa_country,
+      fct_crm_person.account_demographics_upa_postal_code,
+      fct_crm_person.account_demographics_upa_state,
+      fct_crm_person.account_demographics_upa_street,
       
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
