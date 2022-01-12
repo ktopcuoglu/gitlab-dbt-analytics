@@ -25,7 +25,11 @@ WITH account_dims_mapping AS (
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
-      last_activity_date
+      last_activity_date,
+      account_demographics_area,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_territory,
 
     FROM {{ref('prep_crm_person')}}
 
@@ -237,6 +241,10 @@ WITH account_dims_mapping AS (
       crm_person.last_activity_date,
       crm_person.last_utm_content,
       crm_person.last_utm_campaign,
+      crm_person.account_demographics_area,
+      crm_person.account_demographics_geo,
+      crm_person.account_demographics_region,
+      crm_person.account_demographics_territory,
 
      -- additive fields
 

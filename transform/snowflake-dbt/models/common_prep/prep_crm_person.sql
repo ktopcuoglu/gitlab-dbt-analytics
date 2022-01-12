@@ -91,6 +91,10 @@ WITH biz_person AS (
       NULL                                          AS country,
       mailing_country,
       last_activity_date,
+      account_demographics_area,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_territory,
 
       NULL                                          AS crm_partner_id
 
@@ -152,7 +156,10 @@ WITH biz_person AS (
       country,
       NULL                                      AS mailing_country,
       last_activity_date,
-
+      account_demographics_area,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_territory,
       crm_partner_id
 
     FROM sfdc_leads
@@ -182,7 +189,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2021-12-15"
+    updated_date="2022-01-12"
 ) }}

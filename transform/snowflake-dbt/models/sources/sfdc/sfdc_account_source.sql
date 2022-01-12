@@ -86,6 +86,12 @@ WITH source AS (
       atam_address_street__c                        AS tsp_address_street,
       atam_address_postal_code__c                   AS tsp_address_postal_code,
 
+      -- rosetta stone fields
+      account_demographics_area__c                  AS account_demographics_area,
+      account_demographics_geo__c                   AS account_demographics_geo,
+      account_demographics_region__c                AS account_demographics_region,
+      account_demographics_territory_c              AS account_demographics_territory,
+
       -- present state info
       health__c                                     AS health_score,
       gs_health_score__c                            AS health_number,

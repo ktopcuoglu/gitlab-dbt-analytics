@@ -115,6 +115,10 @@
       dim_crm_person.matched_account_sdr_assigned,
       dim_crm_person.matched_account_type,
       dim_crm_person.matched_account_gtm_strategy,
+      fct_crm_person.account_demographics_area,
+      fct_crm_person.account_demographics_geo,
+      fct_crm_person.account_demographics_region,
+      fct_crm_person.account_demographics_territory,
       
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
@@ -198,5 +202,5 @@
     created_by="@iweeks",
     updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2021-11-05",
+    updated_date="2022-01-12",
   ) }}

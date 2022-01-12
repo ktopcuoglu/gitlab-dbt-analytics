@@ -36,6 +36,10 @@ WITH map_merged_crm_account AS (
       gtm_strategy,
       tsp_account_employees,
       tsp_max_family_employees,
+      account_demographics_area,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_territory,
       created_date,
       zi_technologies,
       zoom_info_website,
@@ -81,6 +85,10 @@ WITH map_merged_crm_account AS (
     sfdc_account.tsp_region                             AS crm_account_tsp_region,
     sfdc_account.tsp_sub_region                         AS crm_account_tsp_sub_region,
     sfdc_account.tsp_area                               AS crm_account_tsp_area,
+    sfdc_account.account_demographics_area              AS crm_account_demographics_area,
+    sfdc_account.account_demographics_geo               AS crm_account_demographics_geo,
+    sfdc_account.account_demographics_region            AS crm_account_demographics_region,
+    sfdc_account.account_demographics_territory         AS crm_account_demographics_territory,
     sfdc_account.gtm_strategy                           AS crm_account_gtm_strategy,
     CASE
       WHEN LOWER(sfdc_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
@@ -144,6 +152,11 @@ WITH map_merged_crm_account AS (
     ultimate_parent_account.tsp_region                  AS parent_crm_account_tsp_region,
     ultimate_parent_account.tsp_sub_region              AS parent_crm_account_tsp_sub_region,
     ultimate_parent_account.tsp_area                    AS parent_crm_account_tsp_area,
+    ultimate_parent_account.account_demographics_area   AS parent_crm_account_demographics_area,
+    ultimate_parent_account.account_demographics_geo    AS parent_crm_account_demographics_geo,
+    ultimate_parent_account.account_demographics_region AS parent_crm_account_demographics_region,
+    ultimate_parent_account.account_demographics_territory
+                                                        AS parent_crm_account_demographics_territory,
     ultimate_parent_account.gtm_strategy                AS parent_crm_account_gtm_strategy,
     CASE
       WHEN LOWER(ultimate_parent_account.gtm_strategy) IN ('account centric', 'account based - net new', 'account based - expand') THEN 'Focus Account'
@@ -183,7 +196,7 @@ WITH map_merged_crm_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-06-01",
-    updated_date="2021-12-02"
+    updated_date="2022-01-12"
 ) }}
