@@ -90,7 +90,7 @@ WITH source AS (
       account_demographics_area__c                  AS account_demographics_area,
       account_demographics_geo__c                   AS account_demographics_geo,
       account_demographics_region__c                AS account_demographics_region,
-      account_demographics_territory_c              AS account_demographics_territory,
+      account_demographics_territory__c              AS account_demographics_territory,
 
       -- present state info
       health__c                                     AS health_score,
