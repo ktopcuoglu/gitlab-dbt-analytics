@@ -15,7 +15,7 @@ WITH source AS (
       id::NUMBER                                AS license_id,
       company::VARCHAR                          AS company,
       users_count::NUMBER                       AS users_count,
-      REPLACE(license_file_md5::VARCHAR, '-')   AS license_md5,
+      license_file_md5::VARCHAR                 AS license_md5,
       expires_at::TIMESTAMP                     AS license_expires_at,
       plan_name::VARCHAR                        AS plan_name,
       starts_at::TIMESTAMP                      AS starts_at,
