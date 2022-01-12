@@ -124,7 +124,7 @@
       dim_crm_account.parent_crm_account_focus_account,
       dim_crm_account.parent_crm_account_sales_segment,
       dim_crm_account.parent_crm_account_zi_technologies,
-      dim_crm_account.crm_account_demographics_territory,
+      dim_crm_account.crm_account_demographics_area,
       dim_crm_account.crm_account_demographics_geo,
       dim_crm_account.crm_account_demographics_region,
       dim_crm_account.crm_account_demographics_territory,
