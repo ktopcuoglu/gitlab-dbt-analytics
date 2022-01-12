@@ -207,7 +207,10 @@ gitlab_dotcom_fact AS (
         'GITLAB_DOTCOM' AS source
 FROM final)
 
-SELECT * FROM
-    gitlab_dotcom_fact
-        UNION all
-    SELECT * FROM usage_ping_fact;
+SELECT *
+FROM gitlab_dotcom_fact
+
+UNION ALL
+
+SELECT *
+FROM usage_ping_fact
