@@ -1,5 +1,11 @@
 version: 2
 
 models:
+  - name: monthly_stage_usage_by_account
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - dim_crm_account_id
+            - snapshot_month
   - name: pte_training_model
   - name: pte_scores
