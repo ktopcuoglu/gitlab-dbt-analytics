@@ -129,7 +129,7 @@
       dim_crm_account.parent_crm_account_demographics_region,
       dim_crm_account.parent_crm_account_demographics_area,
       dim_crm_account.parent_crm_account_demographics_territory,
-      dim_crm_account.parent_crm_account_demographics_employee_count,
+      dim_crm_account.crm_account_demographics_employee_count,
       dim_crm_account.parent_crm_account_demographics_max_family_employee,
       dim_crm_account.parent_crm_account_demographics_upa_country,
       dim_crm_account.parent_crm_account_demographics_upa_state,
@@ -163,7 +163,7 @@
       dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
-      
+
       -- crm opp owner/account owner stamped fields stamped at close date
       dim_crm_opportunity.crm_opp_owner_stamped_name,
       dim_crm_opportunity.crm_account_owner_stamped_name,
@@ -175,7 +175,7 @@
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped',
         'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
                                                                            AS crm_opp_owner_sales_segment_region_stamped_grouped,
-      
+
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment,
       dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment_grouped,
