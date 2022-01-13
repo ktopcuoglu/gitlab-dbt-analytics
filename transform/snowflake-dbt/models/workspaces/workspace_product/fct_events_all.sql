@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 {{ simple_cte([
     ('dim_subscription', 'dim_subscription'),
     ('usage_ping_payload', 'prep_usage_ping_payload'),
