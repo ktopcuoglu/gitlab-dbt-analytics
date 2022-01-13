@@ -1,9 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
-
 {{ simple_cte([
     ('dim_subscription', 'dim_subscription'),
     ('usage_ping_payload', 'prep_usage_ping_payload'),
@@ -15,7 +9,6 @@
     ('namespace_order_subscription', 'bdg_namespace_order_subscription'),
     ('dim_namespace', 'dim_namespace')
     ])
-    
 }}
 
 , flattened_usage AS (
