@@ -1,5 +1,6 @@
 {{ config(
-     materialized = "table"
+     materialized = "table",
+     tags=["mnpi_exception"]
 ) }}
 
 WITH usage_ping AS (
