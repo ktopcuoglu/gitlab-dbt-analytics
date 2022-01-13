@@ -26,20 +26,18 @@ WITH account_dims_mapping AS (
       sequence_task_due_date,
       sequence_status,
       last_activity_date,
-      account_demographics_area,
-      account_demographics_employee_count,
-      account_demographics_geo,
-      account_demographics_industry,
-      account_demographics_max_family_employee,
-      account_demographics_region,
       account_demographics_sales_segment,
-      account_demographics_sub_industry,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
       account_demographics_territory,
-      account_demographics_upa_city,
+      account_demographics_employee_count,
+      account_demographics_max_family_employee,
       account_demographics_upa_country,
-      account_demographics_upa_postal_code,
-      account_demographics_upa_state,
-      account_demographics_upa_street
+      account_demographics_upa_state,  
+      account_demographics_upa_city,
+      account_demographics_upa_street,
+      account_demographics_upa_postal_code
 
     FROM {{ref('prep_crm_person')}}
 
@@ -259,7 +257,7 @@ WITH account_dims_mapping AS (
       crm_person.account_demographics_employee_count,
       crm_person.account_demographics_max_family_employee,
       crm_person.account_demographics_upa_country,
-      crm_person.account_demographics_upa_state,
+      crm_person.account_demographics_upa_state,  
       crm_person.account_demographics_upa_city,
       crm_person.account_demographics_upa_street,
       crm_person.account_demographics_upa_postal_code,
