@@ -20,6 +20,7 @@
     SELECT
       fct_crm_person.dim_crm_person_id,
       dim_crm_person.dim_crm_user_id,
+      dim_crm_person.dim_crm_account_id,
       mql_date_first.date_id                   AS mql_date_first_id,
       mql_date_first.date_day                  AS mql_date_first,
       fct_crm_person.mql_datetime_first,
@@ -46,6 +47,7 @@
       contact_created_date.first_day_of_month  AS contact_created_month,
       contact_created_date_pt.first_day_of_month 
                                                AS contact_created_month_pt,
+      true_inquiry_date                        AS true_inquiry_date,
       inquiry_date.date_day                    AS inquiry_date,
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
@@ -99,6 +101,8 @@
       dim_crm_person.crm_partner_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.region,
+      dim_crm_person.state,
+      dim_crm_person.country,
       fct_crm_person.name_of_active_sequence,
       fct_crm_person.sequence_task_due_date,
       fct_crm_person.sequence_status,
@@ -207,7 +211,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-12-07",
     updated_date="2022-01-12",
   ) }}
