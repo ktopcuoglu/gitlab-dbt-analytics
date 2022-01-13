@@ -64,9 +64,6 @@ sm_last_monthly_ping_per_account AS (
       usage_ping.host_name,
       CAST(usage_ping.ping_created_at_month AS DATE)
     ORDER BY
-      license_subscription_mapping.dim_subscription_id,
-      usage_ping.dim_instance_id,
-      usage_ping.host_name,
       usage_ping.ping_created_at DESC
   ) = 1
 ),
@@ -101,8 +98,6 @@ saas_last_monthly_ping_per_account AS (
       namespace_subscription_bridge.snapshot_month,
       saas_usage_ping.ping_name
     ORDER BY
-      namespace_subscription_bridge.dim_subscription_id,
-      namespace_subscription_bridge.dim_namespace_id,
       saas_usage_ping.ping_date DESC
   ) = 1
 ),
@@ -779,7 +774,17 @@ SELECT
     CASE GREATEST(
         stage_plan_alltime_share_pct,
         stage_create_alltime_share_pct,
-        stage_verify_alltime_share_pct
+        stage_verify_alltime_share_pct,
+        stage_package_alltime_share_pct,
+        stage_release_alltime_share_pct,
+        stage_configure_alltime_share_pct,
+        stage_monitor_alltime_share_pct,
+        stage_manage_alltime_share_pct,
+        stage_secure_alltime_share_pct,
+        stage_protect_alltime_share_pct,
+        stage_ecosystem_alltime_share_pct,
+        stage_growth_alltime_share_pct,
+        stage_enablement_alltime_share_pct
     )
         WHEN stage_plan_alltime_share_pct THEN 'plan'
         WHEN stage_create_alltime_share_pct THEN 'create'
