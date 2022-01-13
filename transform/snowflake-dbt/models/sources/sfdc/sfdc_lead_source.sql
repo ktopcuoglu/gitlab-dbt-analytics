@@ -51,7 +51,7 @@ WITH source AS (
         zi_contact_country__c                                   AS zoominfo_contact_country,
         zi_company_state__c                                     AS zoominfo_company_state,
         zi_contact_state__c                                     AS zoominfo_contact_state,
-  
+
         -- info
         requested_contact__c                                    AS requested_contact,
         company                                                 AS company,
@@ -87,7 +87,7 @@ WITH source AS (
         {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,
         status                                                  AS lead_status,
-        last_utm_campaign__c                                    AS last_utm_campaign, 
+        last_utm_campaign__c                                    AS last_utm_campaign,
         last_utm_content__c                                     AS last_utm_content,
         crm_partner_id_lookup__c                                AS crm_partner_id,
         name_of_active_sequence__c                              AS name_of_active_sequence,
@@ -104,6 +104,21 @@ WITH source AS (
         leandata_region__c                                      AS tsp_region,
         leandata_sub_region__c                                  AS tsp_sub_region,
         leandata_territory__c                                   AS tsp_territory,
+
+        -- account demographics fields
+        account_demographics_sales_segment__c                   AS account_demographics_sales_segment,
+        account_demographics_geo__c                             AS account_demographics_geo,
+        account_demographics_region__c                          AS account_demographics_region,
+        account_demographics_area__c                            AS account_demographics_area,
+        account_demographics_territory__c                       AS account_demographics_territory,
+        account_demographics_employee_count__c                  AS account_demographics_employee_count,
+        account_demographics_max_family_employe__c              AS account_demographics_max_family_employee,
+        account_demographics_upa_country__c                     AS account_demographics_upa_country,
+        account_demographics_upa_state__c                       AS account_demographics_upa_state,
+        account_demographics_upa_city__c                        AS account_demographics_upa_city,
+        account_demographics_upa_street__c                      AS account_demographics_upa_street,
+        account_demographics_upa_postal_code__c                 AS account_demographics_upa_postal_code,
+
 
         --path factory info
         pathfactory_experience_name__c                          AS pathfactory_experience_name,

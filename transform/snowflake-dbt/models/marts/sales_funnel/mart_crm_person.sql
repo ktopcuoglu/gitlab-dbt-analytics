@@ -119,7 +119,18 @@
       dim_crm_person.matched_account_sdr_assigned,
       dim_crm_person.matched_account_type,
       dim_crm_person.matched_account_gtm_strategy,
-      
+      fct_crm_person.account_demographics_sales_segment,
+      fct_crm_person.account_demographics_geo,
+      fct_crm_person.account_demographics_region,
+      fct_crm_person.account_demographics_area,
+      fct_crm_person.account_demographics_territory,
+      fct_crm_person.account_demographics_employee_count,
+      fct_crm_person.account_demographics_max_family_employee,
+      fct_crm_person.account_demographics_upa_country,
+      fct_crm_person.account_demographics_upa_state,  
+      fct_crm_person.account_demographics_upa_city,
+      fct_crm_person.account_demographics_upa_street,
+      fct_crm_person.account_demographics_upa_postal_code,
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
         WHEN dim_sales_segment.sales_segment_name IN ('Large', 'PubSec') THEN  'Large MQLs & Trials'
@@ -202,5 +213,5 @@
     created_by="@iweeks",
     updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2022-01-10",
+    updated_date="2022-01-12",
   ) }}

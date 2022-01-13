@@ -734,28 +734,6 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
-    - mashey:
-        warehouses:
-            - engineer_xs
-        member_of:
-            - zoom
-            - xactly
-            - adaptive
-        privileges:
-            databases:
-                write:
-                   - raw
-            schemas:
-              write:
-                  - raw.tap_zoom
-                  - raw.tap_adaptive
-                  - raw.tap_xactly
-            tables:
-              write:
-                  - raw.tap_zoom.*
-                  - raw.tap_adaptive.*
-                  - raw.tap_xactly.*   
-
     - meltano:
         warehouses:
             - loading
@@ -763,6 +741,7 @@ roles:
             - zoom
             - xactly
             - adaptive
+            - zendesk
         privileges:
             databases:
                 write:
@@ -772,11 +751,13 @@ roles:
                   - raw.tap_zoom
                   - raw.tap_adaptive
                   - raw.tap_xactly
+                  - raw.tap_zendesk
             tables:
               write:
                   - raw.tap_zoom.*
                   - raw.tap_adaptive.*
-                  - raw.tap_xactly.*       
+                  - raw.tap_xactly.*  
+                  - raw.tap_zendesk.*     
 
     - people_operations:
         warehouses:
@@ -2097,10 +2078,12 @@ roles:
                 read:
                     - prep.zendesk
                     - raw.zendesk_stitch
+                    - raw.tap_zendesk
             tables:
                 read:
                     - prep.zendesk.*
                     - raw.zendesk_stitch.*
+                    - raw.tap_zendesk.*
 
     - zendesk_community_relations:
           warehouses:
@@ -2879,12 +2862,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - jordan: 
-        member_of:
-            - mashey
-        warehouses: 
-            - analyst_xs
-
     - jpeguero:
         member_of:
             - analyst_marketing
@@ -3007,6 +2984,7 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+            - jstemmer_xl
 
     - jswain: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -4544,11 +4522,6 @@ users:
         can_login: no
         member_of: []
 
-    - jordan: 
-        can_login: yes
-        member_of: 
-            - jordan
-
     - jpeguero:
         can_login: yes
         member_of:
@@ -4711,6 +4684,11 @@ users:
             - mdrussell
 
     - meltano:
+        can_login: yes
+        member_of: 
+            - meltano
+
+    - meltano_dev:
         can_login: yes
         member_of: 
             - meltano
@@ -5064,6 +5042,9 @@ warehouses:
 
     - grafana:
         size: x-small 
+
+    - jstemmer_xl:
+        size: x-large
 
     - loading:
         size: x-small
