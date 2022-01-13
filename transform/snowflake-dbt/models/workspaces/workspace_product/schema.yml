@@ -55,7 +55,7 @@ models:
           - unique
 
   - name: fct_events_all
-    description: Union of gitlab_dotcom and service_ping sources with additional dim id's
+    description: ' {{ doc("fct_events_all") }} '
     columns:
       - name: event_id
         tests:
