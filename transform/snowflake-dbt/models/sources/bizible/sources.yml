@@ -1,0 +1,37 @@
+version: 2
+
+sources:
+  - name: bizible
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: bizible
+    loader: Airflow
+    loaded_at_field: uploaded_at
+    
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      error_after: {count: 36, period: hour}
+
+    tables:
+      - name: biz_accounts
+      - name: biz_ads
+      - name: biz_advertisers
+      - name: biz_ad_accounts
+      - name: biz_ad_campaigns
+      - name: biz_ad_groups
+      - name: biz_ad_providers
+      - name: biz_channels
+      - name: biz_conversion_rates
+      - name: biz_currencies
+      - name: biz_customer_events
+      - name: biz_custom_landing_pages
+      - name: biz_impressions
+      - name: biz_keywords
+      - name: biz_landing_pages
+      - name: biz_placements
+      - name: biz_sites
+      - name: biz_stage_definitions
+      - name: biz_segments
