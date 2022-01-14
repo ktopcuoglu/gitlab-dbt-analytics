@@ -1,29 +1,30 @@
 WITH source AS (
 
     SELECT
-      id                              AS id,
-      display_id                      AS display_id,
-      ad_account_unique_id            AS ad_account_unique_id,
-      ad_account_name                 AS ad_account_name,
-      advertiser_unique_id            AS advertiser_unique_id,
-      advertiser_name                 AS advertiser_name,
-      ad_group_unique_id              AS ad_group_unique_id,
-      ad_group_name                   AS ad_group_name,
-      ad_campaign_unique_id           AS ad_campaign_unique_id,
-      ad_campaign_name                AS ad_campaign_name,
-      is_active                       AS is_active,
-      is_deleted                      AS is_deleted,
-      modified_date                   AS modified_date,
-      first_imported                  AS first_imported,
-      name                            AS name,
-      needs_update                    AS needs_update,
-      grouping_key                    AS grouping_key,
-      entity_type                     AS entity_type,
-      provider_type                   AS provider_type,
-      row_key                         AS row_key,
-      _created_date                   AS _created_date,
-      _modified_date                  AS _modified_date,
-      _deleted_date                   AS _deleted_date
+
+      id                            AS id,
+      modified_date                 AS modified_date,
+      created_date                  AS created_date,
+      bizible_touch_point_date      AS bizible_touch_point_date,
+      lead_id                       AS lead_id,
+      lead_email                    AS lead_email,
+      contact_id                    AS contact_id,
+      contact_email                 AS contact_email,
+      status                        AS status,
+      has_responded                 AS has_responded,
+      first_responded_date          AS first_responded_date,
+      campaign_name                 AS campaign_name,
+      campaign_id                   AS campaign_id,
+      campaign_type                 AS campaign_type,
+      campaign_sync_type            AS campaign_sync_type,
+      lead_sync_status              AS lead_sync_status,
+      contact_sync_status           AS contact_sync_status,
+      opp_sync_status               AS opp_sync_status,
+      is_deleted                    AS is_deleted,
+      custom_properties             AS custom_properties,
+      _created_date                 AS _created_date,
+      _modified_date                AS _modified_date,
+      _deleted_date                 AS _deleted_date
 
     FROM {{ source('bizible', 'biz_advertisers') }}
     ORDER BY uploaded_at DESC

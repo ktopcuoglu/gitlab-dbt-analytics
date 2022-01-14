@@ -20,11 +20,13 @@ WITH source AS (
       grouping_key              AS grouping_key,
       entity_type               AS entity_type,
       provider_type             AS provider_type,
-      row_key                   AS row_key,
+      url_current               AS url_current,
+      url_old                   AS url_old,
+      url_requested             AS url_requested,
       _created_date             AS _created_date,
       _modified_date            AS _modified_date,
       _deleted_date             AS _deleted_date
-    FROM {{ source('bizible', 'biz_sites') }}
+    FROM {{ source('bizible', 'biz_site_links') }}
     ORDER BY uploaded_at DESC
 
 )
