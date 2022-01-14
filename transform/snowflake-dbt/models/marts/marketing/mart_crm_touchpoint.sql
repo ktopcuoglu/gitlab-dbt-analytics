@@ -187,6 +187,8 @@
         WHEN  dim_campaign.budget_holder = 'fmm'
               OR campaign_rep_role_name = 'Field Marketing Manager'
               OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+              OR LOWER(type) = 'field event'
+              OR LOWER(lead_source) = 'field event'
         THEN 1
         ELSE 0
       END AS is_fmm_influenced
