@@ -7,6 +7,7 @@ from gitlabdata.orchestration_utils import (
 )
 from typing import Dict
 
+
 class BizibleSnowFlakeExtractor:
     def __init__(self, config_dict: Dict):
         """
@@ -16,7 +17,6 @@ class BizibleSnowFlakeExtractor:
         """
         self.bizible_engine = snowflake_engine_factory(config_dict, "BIZIBLE_USER")
         self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-
 
     def get_latest_bizible_tables(self) -> list:
         """
@@ -33,7 +33,7 @@ class BizibleSnowFlakeExtractor:
         """
 
         df = query_dataframe(self.bizible_engine, bizible_tables_query)
-        tables_to_download = df['full_table_name'].to_list()
+        tables_to_download = df["full_table_name"].to_list()
         return tables_to_download
 
     def get_bizible_queries(self, bizible_tables: list) -> Dict:
@@ -46,7 +46,7 @@ class BizibleSnowFlakeExtractor:
         """
         bizible_dict = {}
         for t in bizible_tables:
-            table_name = t.split('.')[-1]
+            table_name = t.split(".")[-1]
 
             snowflake_query_max_date = f"""
                 SELECT 
@@ -56,7 +56,7 @@ class BizibleSnowFlakeExtractor:
             """
             df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
 
-            last_modified_date_list = df['last_modified_date'].to_list()
+            last_modified_date_list = df["last_modified_date"].to_list()
 
             snowflake_last_modified_date = None
 
@@ -64,7 +64,9 @@ class BizibleSnowFlakeExtractor:
                 snowflake_last_modified_date = last_modified_date_list[0]
 
             if snowflake_last_modified_date:
-                bizible_dict[table_name] = f"SELECT * FROM {t} WHERE _last_modified_date > '{snowflake_last_modified_date}'"
+                bizible_dict[
+                    table_name
+                ] = f"SELECT * FROM {t} WHERE _last_modified_date > '{snowflake_last_modified_date}'"
             else:
                 bizible_dict[table_name] = f"SELECT * FROM {t}"
         return bizible_dict
@@ -84,8 +86,8 @@ class BizibleSnowFlakeExtractor:
 
             logging.info("Writing to db")
             snowflake_stage_load_copy_remove(
-                    file_name,
-                    f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.BIZIBLE_LOAD",
-                    f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.{table_name}",
-                    self.snowflake_engine,
+                file_name,
+                f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.BIZIBLE_LOAD",
+                f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.{table_name}",
+                self.snowflake_engine,
             )

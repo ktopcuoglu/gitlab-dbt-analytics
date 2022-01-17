@@ -27,6 +27,7 @@ from kube_secrets import (
     BIZIBLE_SNOWFLAKE_WAREHOUSE,
     BIZIBLE_SNOWFLAKE_ACCOUNT,
 )
+
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 pod_env_vars = gitlab_pod_env_vars
@@ -47,9 +48,7 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG(
-    "bizible_extract", default_args=default_args, schedule_interval="0 */2 * * *"
-)
+dag = DAG("bizible_extract", default_args=default_args, schedule_interval="0 */2 * * *")
 
 # Bizible Extract
 bizible_extract_cmd = f"""
