@@ -72,6 +72,9 @@ WITH source AS (
       _modified_date                    AS _modified_date,
       _deleted_date                     AS _deleted_date
     FROM {{ source('bizible', 'biz_sessions') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
+
+
+SELECT * 
+FROM source

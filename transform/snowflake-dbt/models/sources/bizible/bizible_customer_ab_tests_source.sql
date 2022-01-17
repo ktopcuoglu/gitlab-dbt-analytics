@@ -18,8 +18,7 @@ WITH source AS (
       _deleted_date             AS _deleted_date
 
     FROM {{ source('bizible', 'biz_customer_ab_tests') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *

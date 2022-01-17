@@ -101,10 +101,9 @@ WITH source AS (
       _deleted_date                  as _deleted_date
 
     FROM {{ source('bizible', 'biz_attribution_touchpoints') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *
-FROM renamed
+FROM source
 

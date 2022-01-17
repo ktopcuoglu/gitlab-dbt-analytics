@@ -11,8 +11,7 @@ WITH source AS (
       _modified_date       AS _modified_date,
       _deleted_date        AS _deleted_date
     FROM {{ source('bizible', 'biz_account_to_emails') }}
-    ORDER BY uploaded_at DESC
-
+    
 )
 
 SELECT *

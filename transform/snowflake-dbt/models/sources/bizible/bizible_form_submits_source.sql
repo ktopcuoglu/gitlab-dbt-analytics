@@ -22,12 +22,11 @@ WITH source AS (
       form_identifier           AS form_identifier,
       row_key                   AS row_key,
       current_page_key          AS current_page_key,
-      _created_date             AS created_date,
-      _modified_date            AS modified_date,
-      _deleted_date             AS deleted_date
+      _created_date             AS _created_date,
+      _modified_date            AS _modified_date,
+      _deleted_date             AS _deleted_date
     FROM {{ source('bizible', 'biz_form_submits') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *

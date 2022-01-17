@@ -5,8 +5,7 @@ sources:
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: bizible
     loader: Airflow
-    loaded_at_field: uploaded_at
-    
+        
     quoting:
       database: true
       schema: false

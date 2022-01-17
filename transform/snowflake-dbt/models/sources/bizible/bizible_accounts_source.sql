@@ -13,11 +13,9 @@ WITH source AS (
       custom_properties       AS custom_properties,
       _created_date           AS _created_date,
       _modified_date          AS _modified_date,
-      _deleted_date           AS _deleted_date,
-      _uploaded_at            AS _uploaded_at
+      _deleted_date           AS _deleted_date      
     FROM {{ source('bizible', 'biz_accounts') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *

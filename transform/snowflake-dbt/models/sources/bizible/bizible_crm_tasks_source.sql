@@ -18,11 +18,10 @@ WITH source AS (
       _deleted_date             AS _deleted_date
 
     FROM {{ source('bizible', 'biz_crm_tasks') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *
-FROM renamed
+FROM source
 
-COLUMN_NAME
+

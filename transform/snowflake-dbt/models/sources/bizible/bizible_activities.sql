@@ -17,9 +17,8 @@ WITH source AS (
       _created_date                 AS _created_date,
       _modified_date                AS _modified_date,
       _deleted_date                 AS _deleted_date
-    FROM {{ source('bizible', 'biz_accounts') }}
-    ORDER BY uploaded_at DESC
-
+    FROM {{ source('bizible', 'biz_activities') }}
+ 
 )
 
 SELECT *

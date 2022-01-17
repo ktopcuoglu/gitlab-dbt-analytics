@@ -26,11 +26,10 @@ WITH source AS (
       _modified_date                AS _modified_date,
       _deleted_date                 AS _deleted_date
 
-    FROM {{ source('bizible', 'biz_advertisers') }}
-    ORDER BY uploaded_at DESC
-
+    FROM {{ source('bizible', 'biz_campaign_members') }}
+ 
 )
 
 SELECT *
-FROM renamed
+FROM source
 

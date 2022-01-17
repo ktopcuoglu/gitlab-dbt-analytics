@@ -26,13 +26,12 @@ WITH source AS (
       other_system_id                   AS other_system_id,
       custom_properties                 AS custom_properties,
       row_key                           AS row_key,
-      _created_date                     AS created_date,
-      _modified_date                    AS modified_date,
-      _deleted_date                     AS deleted_date
+      _created_date                     AS _created_date,
+      _modified_date                    AS _modified_date,
+      _deleted_date                     AS _deleted_date
 
     FROM {{ source('bizible', 'biz_leads') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *

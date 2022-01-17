@@ -60,10 +60,9 @@ WITH source AS (
       _deleted_date                                 AS _deleted_date
 
     FROM {{ source('bizible', 'biz_costs') }}
-    ORDER BY uploaded_at DESC
-
+ 
 )
 
 SELECT *
-FROM renamed
+FROM source
 
