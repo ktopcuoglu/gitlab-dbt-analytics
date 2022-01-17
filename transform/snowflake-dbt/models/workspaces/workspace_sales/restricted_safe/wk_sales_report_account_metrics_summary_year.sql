@@ -66,13 +66,11 @@ WITH date_details AS (
     FROM raw.salesforce_stitch.account
     --FROM {{ source('salesforce', 'account') }}
 
-
   ), sfdc_users_xf AS (
 
     SELECT *
     --FROM prod.workspace_sales.sfdc_users_xf
     FROM {{ref('wk_sales_sfdc_users_xf')}} 
-    
     
   ), report_dates AS (
   
@@ -202,9 +200,40 @@ WITH date_details AS (
             ELSE 0 END) AS ttm_channel_net_arr,
   
         SUM (CASE
-            WHEN o.is_won = 1
+            WHEN o.is_won = 1 
             THEN o.calculated_deal_count
             ELSE 0 END )   AS ttm_deal_count,
+  
+         SUM (CASE
+            WHEN (o.is_won = 1 
+                  OR (o.is_renewal = 1 AND o.is_lost = 1))
+            THEN o.calculated_deal_count
+            ELSE 0 END )   AS ttm_trx_count,
+  
+          
+          SUM (CASE
+            WHEN (o.is_won = 1 
+                  OR (o.is_renewal = 1 AND o.is_lost = 1))
+                AND ((o.is_renewal = 1 AND o.arr_basis > 5000)
+                        OR o.net_arr > 5000)
+            THEN o.calculated_deal_count
+            ELSE 0 END )   AS ttm_trx_over_5k_count,
+  
+          SUM (CASE
+            WHEN (o.is_won = 1 
+                  OR (o.is_renewal = 1 AND o.is_lost = 1))
+                AND ((o.is_renewal = 1 AND o.arr_basis > 10000)
+                        OR o.net_arr > 10000)
+            THEN o.calculated_deal_count
+            ELSE 0 END )   AS ttm_trx_over_10k_count,
+  
+          SUM (CASE
+            WHEN (o.is_won = 1 
+                  OR (o.is_renewal = 1 AND o.is_lost = 1))
+                AND ((o.is_renewal = 1 AND o.arr_basis > 50000)
+                        OR o.net_arr > 50000)
+            THEN o.calculated_deal_count
+            ELSE 0 END )   AS ttm_trx_over_50k_count,
   
           SUM (CASE
             WHEN o.is_renewal = 1
@@ -618,6 +647,12 @@ SELECT
   END                                           AS is_over_50k_customer_flag, 
   
   CASE 
+    WHEN COALESCE(arr.arr,0) > 100000
+    THEN 1
+    ELSE 0 
+  END                                           AS is_over_100k_customer_flag, 
+  
+  CASE 
     WHEN COALESCE(arr.arr,0) > 500000
     THEN 1
     ELSE 0 
@@ -642,6 +677,11 @@ SELECT
   COALESCE(net_arr_ttm.ttm_channel_deal_count,0)            AS ttm_channel_deal_count,
   COALESCE(net_arr_ttm.ttm_churn_contraction_deal_count,0)  AS ttm_churn_contraction_deal_count,
   COALESCE(net_arr_ttm.ttm_renewal_deal_count,0)            AS ttm_renewal_deal_count,
+  
+  COALESCE(net_arr_ttm.ttm_trx_count,0)                     AS ttm_trx_count,
+  COALESCE(net_arr_ttm.ttm_trx_over_10k_count,0)            AS ttm_trx_over_5k_count,
+  COALESCE(net_arr_ttm.ttm_trx_over_10k_count,0)            AS ttm_trx_over_10k_count,
+  COALESCE(net_arr_ttm.ttm_trx_over_50k_count,0)            AS ttm_trx_over_50k_count,
   
   -- fy booked net arr
   COALESCE(net_arr_fiscal.fy_net_arr,0)                     AS fy_net_arr,

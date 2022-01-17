@@ -176,6 +176,11 @@ WITH account_dims_mapping AS (
       COALESCE(sfdc_contacts.inquiry_datetime_inferred, sfdc_leads.inquiry_datetime_inferred)::DATE             AS inquiry_inferred_datetime,
       {{ get_date_id('inquiry_inferred_datetime') }}                                                            AS inquiry_inferred_datetime_id,
       {{ get_date_pt_id('inquiry_inferred_datetime') }}                                                         AS inquiry_inferred_datetime_pt_id,
+      LEAST(COALESCE(inquiry_date,'9999-01-01'),COALESCE(inquiry_inferred_datetime,'9999-01-01'))               AS prep_true_inquiry_date,
+      CASE 
+        WHEN prep_true_inquiry_date != '9999-01-01'
+        THEN prep_true_inquiry_date
+      END                                                                                                       AS true_inquiry_date,
       mqls.first_mql_date::DATE                                                                                 AS mql_date_first,
       mqls.first_mql_date                                                                                       AS mql_datetime_first,
       CONVERT_TIMEZONE('America/Los_Angeles', mqls.first_mql_date)                                              AS mql_datetime_first_pt,
@@ -220,7 +225,7 @@ WITH account_dims_mapping AS (
           ELSE 0
         END                                                                                                               AS is_mql,
       CASE
-        WHEN COALESCE(LOWER(sfdc_contacts.contact_status), LOWER(sfdc_leads.lead_status)) = 'inquiry' THEN 1
+        WHEN true_inquiry_date IS NOT NULL THEN 1
         ELSE 0
       END                                                                                                                 AS is_inquiry,
 
@@ -266,7 +271,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2021-09-29"
+    updated_date="2022-01-07"
 ) }}

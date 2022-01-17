@@ -35,6 +35,16 @@ tables:
       SELECT approval_project_rule_id
       , protected_branch_id
       FROM approval_project_rules_protected_branches
+  approval_project_rules_users:
+    export_schema: "gitlab_com"
+    export_table: approval_project_rules_users
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , approval_project_rule_id
+      , user_id
+      FROM approval_project_rules_users
   award_emoji:
     export_schema: 'gitlab_com'
     export_table: 'award_emoji'
