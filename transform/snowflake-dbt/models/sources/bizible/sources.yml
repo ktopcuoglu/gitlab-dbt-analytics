@@ -36,12 +36,14 @@ sources:
       - name: biz_currencies
       - name: biz_customer_ab_tests
       - name: biz_email_to_visitor_ids
+      - name: biz_facts
       - name: biz_form_submits
       - name: biz_keywords
       - name: biz_leads
       - name: biz_lead_stage_transitions
       - name: biz_opportunities
       - name: biz_opp_stage_transitions
+      - name: biz_page_views
       - name: biz_placements
       - name: biz_segments
       - name: biz_sessions
