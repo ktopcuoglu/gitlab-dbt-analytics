@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                             as id,
+      id                             as attribution_touchpoint_id,
       modified_date                  as modified_date,
       opportunity_id                 as opportunity_id,
       contact_id                     as contact_id,

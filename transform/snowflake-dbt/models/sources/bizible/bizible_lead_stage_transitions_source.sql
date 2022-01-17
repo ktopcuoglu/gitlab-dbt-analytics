@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                        AS id,
+      id                        AS lead_stage_transition_id,
       email                     AS email,
       lead_id                   AS lead_id,
       contact_id                AS contact_id,

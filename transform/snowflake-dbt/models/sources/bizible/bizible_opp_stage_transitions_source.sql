@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT
 
-      id                          AS id,
+      id                          AS opp_stage_transition_id,
       account_id                  AS account_id,
       opportunity_id              AS opportunity_id,
       contact_id                  AS contact_id,

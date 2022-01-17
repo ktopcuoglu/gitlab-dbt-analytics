@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                    AS id,
+      id                    AS currency_id,
       is_corporate          AS is_corporate,
       is_enabled            AS is_enabled,
       modified_date         AS modified_date,

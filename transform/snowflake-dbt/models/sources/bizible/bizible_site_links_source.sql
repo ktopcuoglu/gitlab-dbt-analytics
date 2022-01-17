@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                        AS id,
+      id                        AS site_link_id,
       display_id                AS display_id,
       ad_account_unique_id      AS ad_account_unique_id,
       ad_account_name           AS ad_account_name,

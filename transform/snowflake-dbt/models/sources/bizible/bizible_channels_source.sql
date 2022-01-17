@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                    AS id,
+      id                    AS channel_id,
       name                  AS name,
       row_key               AS row_key,
       _created_date         AS _created_date,

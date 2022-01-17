@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT
 
-      id                            AS id,
+      id                            AS campaign_member_id,
       modified_date                 AS modified_date,
       created_date                  AS created_date,
       bizible_touch_point_date      AS bizible_touch_point_date,

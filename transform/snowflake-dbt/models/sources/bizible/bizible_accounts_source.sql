@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                      AS id,
+      id                      AS account_id,
       created_date            AS created_date,
       modified_date           AS modified_date,
       name                    AS name,

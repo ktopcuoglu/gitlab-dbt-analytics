@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                            AS id,
+      id                            AS activities_id,
       lead_id                       AS lead_id,
       contact_id                    AS contact_id,
       activity_type_id              AS activity_type_id,

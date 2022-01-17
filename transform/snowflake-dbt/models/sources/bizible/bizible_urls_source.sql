@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                    AS id,
+      id                    AS url_id,
       scheme                AS scheme,
       host                  AS host,
       port                  AS port,

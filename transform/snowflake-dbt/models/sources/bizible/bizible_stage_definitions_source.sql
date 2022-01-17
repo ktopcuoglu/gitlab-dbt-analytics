@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                        AS id,
+      id                        AS stage_definition_id,
       modified_date             AS modified_date,
       stage_name                AS stage_name,
       is_inactive               AS is_inactive,

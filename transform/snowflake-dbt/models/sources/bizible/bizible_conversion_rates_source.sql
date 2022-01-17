@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id              AS id,
+      id              AS conversion_rate_id,
       currency_id     AS currency_id,
       source_iso_code AS source_iso_code,
       start_date      AS start_date,

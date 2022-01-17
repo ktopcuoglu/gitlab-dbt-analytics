@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT
 
-      id                                    AS id,
+      id                                    AS opportunity_id,
       modified_date                         AS modified_date,
       created_date                          AS created_date,
       account_id                            AS account_id,

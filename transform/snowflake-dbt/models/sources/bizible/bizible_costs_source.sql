@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT
 
-      id                                            AS id,
+      id                                            AS cost_id,
       modified_date                                 AS modified_date,
       cost_date                                     AS cost_date,
       source                                        AS source,

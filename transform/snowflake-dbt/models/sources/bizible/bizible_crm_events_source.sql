@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                        AS id,
+      id                        AS crm_event_id,
       created_date              AS created_date,
       modified_date             AS modified_date,
       lead_id                   AS lead_id,

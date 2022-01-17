@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                                            AS id,
+      id                                            AS user_touchpoint_id,
       modified_date                                 AS modified_date,
       email                                         AS email,
       session_id                                    AS session_id,

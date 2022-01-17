@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                        AS id,
+      id                        AS form_submit_id,
       cookie_id                 AS cookie_id,
       visitor_id                AS visitor_id,
       session_id                AS session_id,

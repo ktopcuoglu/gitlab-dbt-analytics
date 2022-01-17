@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT
-      id                AS id,
+      id                AS email_to_visitor_id,
       email             AS email,
       visitor_id        AS visitor_id,
       modified_date     AS modified_date,
