@@ -35,6 +35,7 @@ sources:
       - name: discount_applied_metrics
         identifier: discountappliedmetrics
         description: '{{ doc("zuora_discount_applied_metrics_source") }}'
+        freshness: null
       - name: invoice_item
         identifier: invoiceitem
         description: '{{ doc("zuora_invoice_item_source") }}'
