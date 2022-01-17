@@ -134,6 +134,9 @@ models:
         +materialized: table
         +schema: bamboohr
 
+      bizible:
+        +schema: bizible
+
       customers:
         +schema: customers
         sensitive:
