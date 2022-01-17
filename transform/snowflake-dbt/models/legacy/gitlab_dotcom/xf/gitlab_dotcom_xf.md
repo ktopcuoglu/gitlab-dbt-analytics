@@ -293,6 +293,123 @@ Currently, the following tables are included in the model:
 
 {% enddocs %}
 
+{% docs gitlab_dotcom_usage_data_pipelines %}
+
+This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
+
+The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+
+Data Team notes:
+
+The table normalizes all the gitlab_dotcom tables to always extract the same subset of column:
+* namespace_id, 
+* namespace_created_at,
+* project_created_at,
+* event_created_at
+
+Currently, the following tables are included in the model:
+
+* gitlab_dotcom_boards
+* gitlab_dotcom_ci_builds
+* gitlab_dotcom_ci_pipeline_schedules
+* gitlab_dotcom_ci_pipelines
+* gitlab_dotcom_ci_stages
+* gitlab_dotcom_ci_triggers
+* gitlab_dotcom_deployments
+* gitlab_dotcom_environments
+* gitlab_dotcom_issues
+* gitlab_dotcom_labels
+* gitlab_dotcom_lfs_objects_projects
+* gitlab_dotcom_merge_requests
+* gitlab_dotcom_milestones
+* gitlab_dotcom_notes
+* gitlab_dotcom_project_auto_devops
+* gitlab_dotcom_releases
+* gitlab_dotcom_snippets
+* gitlab_dotcom_todos
+
+{% enddocs %}
+
+{% docs gitlab_dotcom_usage_data_notes %}
+
+This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
+
+The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+
+Data Team notes:
+
+The table normalizes all the gitlab_dotcom tables to always extract the same subset of column:
+* namespace_id, 
+* namespace_created_at,
+* project_created_at,
+* event_created_at
+
+Currently, the following tables are included in the model:
+
+* gitlab_dotcom_boards
+* gitlab_dotcom_ci_builds
+* gitlab_dotcom_ci_pipeline_schedules
+* gitlab_dotcom_ci_pipelines
+* gitlab_dotcom_ci_stages
+* gitlab_dotcom_ci_triggers
+* gitlab_dotcom_deployments
+* gitlab_dotcom_environments
+* gitlab_dotcom_issues
+* gitlab_dotcom_labels
+* gitlab_dotcom_lfs_objects_projects
+* gitlab_dotcom_merge_requests
+* gitlab_dotcom_milestones
+* gitlab_dotcom_notes
+* gitlab_dotcom_project_auto_devops
+* gitlab_dotcom_releases
+* gitlab_dotcom_snippets
+* gitlab_dotcom_todos
+
+{% enddocs %}
+
+{% docs gitlab_dotcom_usage_data_issues %}
+
+This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
+
+The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+
+Data Team notes:
+
+The table normalizes all the gitlab_dotcom tables to always extract the same subset of column:
+* namespace_id, 
+* namespace_created_at,
+* project_created_at,
+* event_created_at
+
+Currently, the following tables are included in the model:
+
+* gitlab_dotcom_boards
+* gitlab_dotcom_ci_builds
+* gitlab_dotcom_ci_pipeline_schedules
+* gitlab_dotcom_ci_pipelines
+* gitlab_dotcom_ci_stages
+* gitlab_dotcom_ci_triggers
+* gitlab_dotcom_deployments
+* gitlab_dotcom_environments
+* gitlab_dotcom_issues
+* gitlab_dotcom_labels
+* gitlab_dotcom_lfs_objects_projects
+* gitlab_dotcom_merge_requests
+* gitlab_dotcom_milestones
+* gitlab_dotcom_notes
+* gitlab_dotcom_project_auto_devops
+* gitlab_dotcom_releases
+* gitlab_dotcom_snippets
+* gitlab_dotcom_todos
+
+{% enddocs %}
+
 {% docs gitlab_dotcom_usage_data_events_blocked_users %}
 
 This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables where the users account status is either Blocked or Deactivated. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
