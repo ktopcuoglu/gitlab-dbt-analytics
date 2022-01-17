@@ -4531,7 +4531,8 @@ users:
 
     - joshua:
         can_login: yes
-        member_of: joshua   
+        member_of: 
+            - joshua   
 
     - jpeguero:
         can_login: yes
