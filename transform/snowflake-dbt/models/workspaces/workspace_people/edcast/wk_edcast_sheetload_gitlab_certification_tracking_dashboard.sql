@@ -5,7 +5,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('sheetload', 'edcast_gitlab_certification_tracking_dashboard') }}
+  FROM {{ref('edcast_sheetload_gitlab_certification_tracking_dashboard')}}
 
 ), renamed AS (
 

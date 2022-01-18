@@ -6,7 +6,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ source('edcast', 'edcast_datasets') }}
+  FROM {{ref('edcast_datasets')}}
 
 ), renamed AS (
 
