@@ -3,8 +3,3 @@ version: 2
 models:
   - name: bizible_ads_source
     description: Bizible ads
-    # columns:
-    #   - name: compensation_update_id
-    #     tests:
-    #         - unique
-    #         - not_null

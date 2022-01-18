@@ -8,3 +8,42 @@ models:
       - name: git_sha
       - name: git_commit_at
       - name: git_message
+  - name: wk_bizible_account_to_emails
+  - name: wk_bizible_accounts
+  - name: wk_bizible_activities
+  - name: wk_bizible_ad_accounts
+  - name: wk_bizible_ad_campaigns
+  - name: wk_bizible_ad_groups
+  - name: wk_bizible_ad_providers
+  - name: wk_bizible_ads
+  - name: wk_bizible_advertisers
+  - name: wk_bizible_attribution_touchpoints
+  - name: wk_bizible_campaign_members
+  - name: wk_bizible_channels
+  - name: wk_bizible_contacts
+  - name: wk_bizible_conversion_rates
+  - name: wk_bizible_costs
+  - name: wk_bizible_creatives
+  - name: wk_bizible_crm_events
+  - name: wk_bizible_crm_tasks
+  - name: wk_bizible_currencies
+  - name: wk_bizible_customer_ab_tests
+  - name: wk_bizible_email_to_visitor_ids
+  - name: wk_bizible_facts
+  - name: wk_bizible_form_submits
+  - name: wk_bizible_keywords
+  - name: wk_bizible_lead_stage_transitions
+  - name: wk_bizible_leads
+  - name: wk_bizible_opp_stage_transitions
+  - name: wk_bizible_opportunities
+  - name: wk_bizible_page_views
+  - name: wk_bizible_placements
+  - name: wk_bizible_segments
+  - name: wk_bizible_sessions
+  - name: wk_bizible_site_links
+  - name: wk_bizible_sites
+  - name: wk_bizible_stage_definitions
+  - name: wk_bizible_touchpoints
+  - name: wk_bizible_urls
+  - name: wk_bizible_user_touchpoints
+  - name: wk_bizible_web_host_mappings
