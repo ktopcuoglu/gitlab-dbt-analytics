@@ -15,7 +15,7 @@
     ('namespace_order_subscription', 'bdg_namespace_order_subscription'),
     ('dim_namespace', 'dim_namespace')
     ])
-    
+
 }}
 
 , flattened_usage AS (
@@ -51,7 +51,7 @@
 
 ), flattened_w_metrics AS (
 
-    SELECT 
+    SELECT
       flattened_usage.*,
       metric.product_stage                                            AS stage_name,
       SUBSTR(metric.product_group, 8, LENGTH(metric.product_group)-7) AS group_name,
@@ -61,7 +61,7 @@
         ON flattened_usage.metrics_path = metric.metrics_path
 
 ), flattened_w_subscription AS (
-    SELECT 
+    SELECT
       flattened_w_metrics.*,
       dim_subscription.subscription_name,
       dim_subscription.dim_crm_account_id,
@@ -71,7 +71,7 @@
       namespace_id,
       namespace_name
     FROM flattened_w_metrics
-    INNER JOIN dim_subscription
+    LEFT JOIN dim_subscription
       ON flattened_w_metrics.dim_subscription_id = dim_subscription.dim_subscription_id
 
 ), usage_ping_fact AS (
@@ -109,7 +109,7 @@
 
 ), fct_events AS  (
 
-    SELECT top 100 
+    SELECT top 100
       event_primary_key,
       usage_data_events.event_name,
       namespace_id,
@@ -119,7 +119,7 @@
       event_created_at,
       plan_id_at_event_date,
       CASE
-          WHEN usage_data_events.stage_name IS NULL 
+          WHEN usage_data_events.stage_name IS NULL
             THEN gitlab_dotcom_xmau_metrics.stage_name
           ELSE usage_data_events.stage_name
          end                                                        AS stage_name,
@@ -132,22 +132,40 @@
     INNER JOIN gitlab_dotcom_xmau_metrics
       ON usage_data_events.event_name = gitlab_dotcom_xmau_metrics.event_name
 
+), deduped_namespace_bdg AS (
+
+  SELECT
+    dim_subscription_id,
+    order_id,
+    ultimate_parent_namespace_id,
+    dim_crm_account_id,
+    dim_billing_account_id,
+    product_tier_name_subscription,
+    dim_namespace_id,
+    is_subscription_active
+    FROM namespace_order_subscription
+    WHERE product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
+          AND is_subscription_active = true
+          AND is_namespace_active = true
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY order_id) = 1
+
 ), dim_namespace_w_bdg AS (
 
-    SELECT dim_namespace.dim_namespace_id,
+    SELECT
+      dim_namespace.dim_namespace_id,
       dim_namespace.dim_product_tier_id,
-      namespace_order_subscription.dim_subscription_id,
-      namespace_order_subscription.order_id,
-      namespace_order_subscription.ultimate_parent_namespace_id,
-      namespace_order_subscription.dim_crm_account_id,
-      namespace_order_subscription.dim_billing_account_id
-    FROM namespace_order_subscription -- this appears to be where at least some duplication is happening, how do I join here to not duplicate from bdg
-    INNER JOIN dim_namespace
-      ON dim_namespace.dim_namespace_id = namespace_order_subscription.dim_namespace_id
+      deduped_namespace_bdg.dim_subscription_id,
+      deduped_namespace_bdg.order_id,
+      deduped_namespace_bdg.ultimate_parent_namespace_id,
+      deduped_namespace_bdg.dim_crm_account_id,
+      deduped_namespace_bdg.dim_billing_account_id
+    FROM deduped_namespace_bdg as a
+    INNER JOIN dim_namespace as b
+      ON dim_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
 
 ), dim_all AS (
 
-    SELECT 
+    SELECT
       dim_namespace_w_bdg.dim_namespace_id,
       dim_namespace_w_bdg.dim_product_tier_id,
       dim_namespace_w_bdg.dim_subscription_id,
@@ -166,7 +184,7 @@
 
 ), final AS (
 
-    SELECT * 
+    SELECT *
     FROM fct_events
     INNER JOIN dim_namespace_w_bdg
       ON fct_events.namespace_id = dim_namespace_w_bdg.dim_namespace_id
@@ -203,7 +221,7 @@
       NULL                                    AS usage_ping_delivery_type,
       'GITLAB_DOTCOM'                         AS source
     FROM final
-    LEFT JOIN dim_date 
+    LEFT JOIN dim_date
       ON TO_DATE(event_created_at) = dim_date.date_day
 
 ), results AS (
