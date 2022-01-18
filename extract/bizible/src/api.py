@@ -50,9 +50,8 @@ class BizibleSnowFlakeExtractor:
 
             snowflake_query_max_date = f"""
                 SELECT 
-                    max(to_timestamp(d.value['_modified_date']::INT / 1000)) as last_modified_date
-                FROM "BIZIBLE_WAREHOUSE_IMPORT_RAW"."BIZIBLE".{table_name}, 
-                LATERAL FLATTEN(INPUT => PARSE_JSON(jsontext), outer => true) d
+                    max('_modified_date'] as last_modified_date
+                FROM "BIZIBLE_WAREHOUSE_IMPORT_RAW"."BIZIBLE".{table_name} 
             """
             df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
 
