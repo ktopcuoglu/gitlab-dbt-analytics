@@ -2628,3 +2628,32 @@ models:
         description: The identifier for target issue of an issue link
         tests:
           - not_null
+
+  - name: dim_locality
+    description: '{{ doc("dim_locality") }}'
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - locality
+          - valid_from
+    columns:
+      - name: dim_locality_id
+        description: The id derived from the locality that will be used to join with other tables.
+        tests:
+          - not_null
+      - name: locality
+        description: The unique location lables used in compensation calculations.
+        tests:
+          - not_null 
+      - name: location_factor
+        description: A cost of market evaluation compared to San Francisco. https://about.gitlab.com/handbook/total-rewards/compensation/compensation-calculator/#location-factor
+      - name: locality_country
+        description: The parent country of the locality
+      - name: valid_from
+        description: The date the location factor for a locality begins being applied
+        tests:
+          - not_null
+      - name: valid_to
+        description: The date the location factor for a locality stops being applied
+      - name: is_current
+        description: A flag to indicate if the location factor for the locality is from the most recent source data.
