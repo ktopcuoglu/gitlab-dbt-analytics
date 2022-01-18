@@ -6,18 +6,10 @@ WITH source AS (
 ), renamed AS(
 
     SELECT 
-      id                                      AS id,
-      created_by_id                           AS created_by_id,
-      created_date                            AS created_date,
-      end_date                                AS end_date,
+      id                                      AS order_quantity_id,
+
       invoice_owner_id                        AS invoice_owner_id,
-      start_date                              AS start_date,
       subscription_owner_id                   AS subscription_owner_id,
-      term                                    AS term,
-      updated_by_id                           AS updated_by_id,
-      updated_date                            AS updated_date,
-      value                                   AS value,
-      _fivetran_deleted                       AS _fivetran_deleted,
       sold_to_contact_id                      AS sold_to_contact_id,
       account_id                              AS account_id,
       order_action_id                         AS order_action_id,
@@ -31,8 +23,22 @@ WITH source AS (
       order_id                                AS order_id,
       rate_plan_id                            AS rate_plan_id,
       product_rate_plan_charge_id             AS product_rate_plan_charge_id,
-      _fivetran_synced                        AS _fivetran_synced,
-      amendment_id                            AS amendment_id
+      amendment_id                            AS amendment_id,
+
+      start_date                              AS start_date,
+      end_date                                AS end_date,
+      term                                    AS term,
+      value                                   AS value,
+
+       -- metadata
+      updated_by_id                           AS updated_by_id,
+      updated_date                            AS updated_date,
+      created_by_id                           AS created_by_id,
+      created_date                            AS created_date,
+      created_by_migration                    AS created_by_migration,
+      posted_by                               AS posted_by,
+
+      _FIVETRAN_DELETED                       AS is_deleted
 
     FROM source
 
