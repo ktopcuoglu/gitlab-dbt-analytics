@@ -3,9 +3,10 @@ WITH source AS (
     SELECT *
     FROM {{ source('zuora_central_sandbox', 'order') }}
 
-), renamed AS(
+), renamed AS (
 
-    SELECT 
+    SELECT
+
       id                                    AS order_id,
 
       description                           AS description,
@@ -27,7 +28,6 @@ WITH source AS (
       created_by_id                         AS created_by_id,
       created_date                          AS created_date,
       created_by_migration                  AS created_by_migration,
-      posted_by                             AS posted_by,
 
       _FIVETRAN_DELETED                     AS is_deleted
 

@@ -40,8 +40,6 @@ WITH source AS (
       updated_date                              AS updated_date,
       created_by_id                             AS created_by_id,
       created_date                              AS created_date,
-      created_by_migration                      AS created_by_migration,
-      posted_by                                 AS posted_by,
 
       _FIVETRAN_DELETED                         AS is_deleted
 
