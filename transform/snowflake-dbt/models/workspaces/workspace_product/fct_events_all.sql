@@ -1,4 +1,5 @@
-/*{{
+/*
+{{
     config(
         materialized='table'
     )
@@ -120,7 +121,7 @@
       plan_id_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
-            THEN gitlab_dotcom_xmau_metrics.stage_name
+            THEN xmau_metrics.stage_name
           ELSE usage_data_events.stage_name
          end                                                        AS stage_name,
       group_name,
@@ -129,8 +130,8 @@
       gmau,
       is_umau                                                       AS umau
     FROM usage_data_events
-    INNER JOIN gitlab_dotcom_xmau_metrics
-      ON usage_data_events.event_name = gitlab_dotcom_xmau_metrics.event_name
+    INNER JOIN xmau_metrics
+      ON usage_data_events.event_name = xmau_metrics.event_name
 
 ), deduped_namespace_bdg AS (
 
@@ -241,5 +242,5 @@
     created_by="@icooper-acp",
     updated_by="@icooper-acp",
     created_date="2022-01-12",
-    updated_date="2022-01-12"
+    updated_date="2022-01-18"
 ) }}
