@@ -4,12 +4,12 @@
 
 WITH source AS (
 
-  SELECT *
+  SELECT {{ hash_sensitive_columns('edcast_sheetload_gitlab_certification_tracking_dashboard') }}
   FROM {{ref('edcast_sheetload_gitlab_certification_tracking_dashboard')}}
 
-), renamed AS (
+)/*, renamed AS (
 
-  SELECT
+  SELECT * /*
     user::VARCHAR                                       AS user,
     account::VARCHAR                                    AS account,
     passed_datetime::TIMESTAMP                          AS passed_datetime,
@@ -22,10 +22,10 @@ WITH source AS (
     pubsec_partner::BOOLEAN                             AS pubsec_partner,
     cert_month::VARCHAR                                 AS cert_month,
     cert_quarter::VARCHAR                               AS cert_quarter,
-    _updated_at::TIMESTAMP                              AS _updated_at
+    _updated_at::TIMESTAMP                              AS _updated_at*/
   FROM source
 
 )
-
+*/
 SELECT *
-FROM renamed
+FROM source

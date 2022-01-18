@@ -5,12 +5,12 @@
 
 WITH source AS (
 
-  SELECT *
+  SELECT {{ hash_sensitive_columns('edcast_glue_groups_g3_group_performance_data_explorer') }}
   FROM {{ref('edcast_glue_groups_g3_group_performance_data_explorer')}}
 
 ), renamed AS (
 
-  SELECT
+  SELECT * /*
     assigned_content::BOOLEAN                       AS assigned_content,
     card_author_full_name::VARCHAR                  AS card_author_full_name,
     card_resource_url::VARCHAR                      AS card_resource_url,
@@ -58,7 +58,7 @@ WITH source AS (
     title::VARCHAR                                  AS title,
     user_account_status::VARCHAR                    AS user_account_status,
     user_full_name::VARCHAR                         AS user_full_name,
-    __loaded_at::TIMESTAMP                          AS __loaded_at
+    __loaded_at::TIMESTAMP                          AS __loaded_at*/
   FROM source
 
 )
