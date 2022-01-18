@@ -28,6 +28,9 @@ sources:
       - name: invoice_item
       - name: invoice_payment
       - name: order
+        identifier: ORDER
+        quoting:
+          identifier: true
       - name: order_action
       - name: order_mrr
       - name: order_quantity
