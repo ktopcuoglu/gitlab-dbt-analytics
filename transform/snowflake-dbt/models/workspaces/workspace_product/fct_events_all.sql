@@ -159,8 +159,8 @@
       deduped_namespace_bdg.ultimate_parent_namespace_id,
       deduped_namespace_bdg.dim_crm_account_id,
       deduped_namespace_bdg.dim_billing_account_id
-    FROM deduped_namespace_bdg as a
-    INNER JOIN dim_namespace as b
+    FROM deduped_namespace_bdg
+    INNER JOIN dim_namespace
       ON dim_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
 
 ), dim_all AS (
@@ -186,7 +186,7 @@
 
     SELECT *
     FROM fct_events
-    INNER JOIN dim_namespace_w_bdg
+    LEFT JOIN dim_namespace_w_bdg
       ON fct_events.namespace_id = dim_namespace_w_bdg.dim_namespace_id
 
 ), gitlab_dotcom_fact AS (
