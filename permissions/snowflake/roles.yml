@@ -2407,6 +2407,7 @@ roles:
     - david:
         member_of:
             - data_team_analyst
+            - analyst_sales
             - restricted_safe
         warehouses:
             - engineer_xs
