@@ -21,3 +21,5 @@ seeds:
     description: '{{ doc("map_saas_event_to_smau") }}'
   - name: subscription_opportunity_mapping
     description: '{{ doc("subscription_opportunity_mapping") }}'
+  - name: director_location_factors
+    description: '{{ doc("director_location_factors") }}'
