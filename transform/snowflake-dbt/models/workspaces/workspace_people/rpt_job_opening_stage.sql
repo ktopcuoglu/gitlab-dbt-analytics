@@ -2,11 +2,26 @@
     ('job_openings','rpt_greenhouse_current_openings'),
     ('application_jobs','greenhouse_applications_jobs_source'),
     ('applications','greenhouse_applications_source'),
-    ('application_stages','greenhouse_application_stages_source'),
     ('sources','greenhouse_sources_source'),
-    ('job_departments','greenhouse_jobs_departments_source'),
     ('departments','wk_prep_greenhouse_departments')
 ])}}
+
+, job_departments AS (
+
+    SELECT *
+    FROM {{ ref('greenhouse_jobs_departments_source') }}
+    -- Table is many to many (job_id to department_id) with the lowest level created first
+    QUALIFY row_number() OVER (PARTITION BY job_id ORDER BY job_department_created_at ASC) = 1
+
+), application_stages AS (
+
+    SELECT *
+    FROM {{ ref('greenhouse_application_stages_source') }}
+    -- Table can contain duplicate records
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY application_id,stage_id,stage_entered_on ORDER BY stage_entered_on) = 1
+
+)
+
 
   SELECT
     job_openings.job_id,
@@ -14,7 +29,7 @@
     application_stages.stage_entered_on          AS stage_entered_date,
     application_stages.stage_exited_on           AS stage_exited_date,
     application_stages.application_stage_name,
-    application_stages.application_id,
+    applications.application_id,
     sources.source_name,
     sources.source_type,
     departments.department_name                  AS greenhouse_department_name,

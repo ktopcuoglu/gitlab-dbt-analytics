@@ -12,7 +12,7 @@ WITH source AS (
 
   SELECT
     id::VARCHAR                AS id,
-    name                       AS name,
+    name::varchar              AS name,
     columns::NUMBER            AS number_of_columns,
     created_at::TIMESTAMP      AS created_at,
     data_current_at::TIMESTAMP AS data_current_at,

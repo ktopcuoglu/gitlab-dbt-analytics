@@ -718,6 +718,7 @@ roles:
                     - prep.gitlab_dotcom
                     - prod.boneyard
                     - prod.legacy
+                    - prod.workspace_data_science
                     - raw.*
                 write:
                     - prod.boneyard
@@ -727,32 +728,11 @@ roles:
                     - prep.gitlab_dotcom.*
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
+                    - prod.workspace_data_science.*
                     - raw.*.*
                 write:
                     - prod.boneyard.*
                     - raw.*.*
-
-    - mashey:
-        warehouses:
-            - engineer_xs
-        member_of:
-            - zoom
-            - xactly
-            - adaptive
-        privileges:
-            databases:
-                write:
-                   - raw
-            schemas:
-              write:
-                  - raw.tap_zoom
-                  - raw.tap_adaptive
-                  - raw.tap_xactly
-            tables:
-              write:
-                  - raw.tap_zoom.*
-                  - raw.tap_adaptive.*
-                  - raw.tap_xactly.*   
 
     - meltano:
         warehouses:
@@ -761,6 +741,7 @@ roles:
             - zoom
             - xactly
             - adaptive
+            - zendesk
         privileges:
             databases:
                 write:
@@ -770,11 +751,13 @@ roles:
                   - raw.tap_zoom
                   - raw.tap_adaptive
                   - raw.tap_xactly
+                  - raw.tap_zendesk
             tables:
               write:
                   - raw.tap_zoom.*
                   - raw.tap_adaptive.*
-                  - raw.tap_xactly.*       
+                  - raw.tap_xactly.*  
+                  - raw.tap_zendesk.*     
 
     - people_operations:
         warehouses:
@@ -2095,10 +2078,12 @@ roles:
                 read:
                     - prep.zendesk
                     - raw.zendesk_stitch
+                    - raw.tap_zendesk
             tables:
                 read:
                     - prep.zendesk.*
                     - raw.zendesk_stitch.*
+                    - raw.tap_zendesk.*
 
     - zendesk_community_relations:
           warehouses:
@@ -2877,9 +2862,10 @@ roles:
         member_of: []
         warehouses: []
 
-    - jordan: 
-        member_of:
-            - mashey
+    - joshua:
+        member_of: 
+            - gitlab_dotcom
+            - reporter
         warehouses: 
             - analyst_xs
 
@@ -3005,6 +2991,7 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+            - jstemmer_xl
 
     - jswain: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -4129,6 +4116,17 @@ roles:
         member_of: []
         warehouses: []
 
+    - vagrawal:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - vbrew:
         member_of:
             - analyst_finance
@@ -4531,10 +4529,10 @@ users:
         can_login: no
         member_of: []
 
-    - jordan: 
+    - joshua:
         can_login: yes
         member_of: 
-            - jordan
+            - joshua   
 
     - jpeguero:
         can_login: yes
@@ -4698,6 +4696,11 @@ users:
             - mdrussell
 
     - meltano:
+        can_login: yes
+        member_of: 
+            - meltano
+
+    - meltano_dev:
         can_login: yes
         member_of: 
             - meltano
@@ -4966,6 +4969,11 @@ users:
         member_of:
             - tnguyen
 
+    - vagrawal:
+        can_login: yes
+        member_of:
+            - vagrawal
+
     - valexieva:
         can_login: no
         member_of: []   
@@ -5046,6 +5054,9 @@ warehouses:
 
     - grafana:
         size: x-small 
+
+    - jstemmer_xl:
+        size: x-large
 
     - loading:
         size: x-small

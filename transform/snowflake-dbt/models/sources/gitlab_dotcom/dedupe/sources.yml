@@ -171,6 +171,7 @@ sources:
         identifier: gitlab_db_experiment_subjects
       - name: experiment_users
         identifier: gitlab_db_experiment_users
+        freshness: null #https://gitlab.com/gitlab-data/analytics/-/merge_requests/5998
       - name: experiments
         identifier: gitlab_db_experiments
       - name: gitlab_subscription_histories
@@ -351,6 +352,8 @@ sources:
         identifier: gitlab_db_approval_project_rules
       - name: approval_project_rules_protected_branches
         identifier: gitlab_db_approval_project_rules_protected_branches
+      - name: approval_project_rules_users
+        identifier: gitlab_db_approval_project_rules_users 
       - name: authentication_events
         identifier: gitlab_db_authentication_events
       - name: bulk_imports

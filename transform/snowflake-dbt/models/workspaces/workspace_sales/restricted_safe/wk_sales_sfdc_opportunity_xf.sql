@@ -811,9 +811,10 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND oppty_final.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-          AND ((oppty_final.is_stage_1_plus = 1
-                AND oppty_final.forecast_category_name != 'Omitted')
-            OR oppty_final.is_lost = 1)
+          -- 20211222 Adjusted to remove the ommitted filter
+          AND (oppty_final.is_stage_1_plus = 1
+                OR oppty_final.is_lost = 1)
+          AND oppty_final.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
           -- 20210802 remove webpurchase deals
@@ -924,14 +925,20 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       -- churned contraction deal count as OT
       CASE
-        WHEN ((oppty_final.is_renewal = 1
-            AND oppty_final.is_lost = 1)
-            OR oppty_final.is_won = 1 )
-            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        WHEN is_eligible_churn_contraction_flag = 1
         THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                                 AS churned_contraction_deal_count,
     
+
+        CASE
+        WHEN ((oppty_final.is_renewal = 1
+                AND oppty_final.is_lost = 1)
+              OR oppty_final.is_won = 1 )
+            AND is_eligible_churn_contraction_flag = 1
+        THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                                 AS booked_churned_contraction_deal_count,
       -----------------
       -- Net ARR
 
@@ -964,27 +971,42 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churned contraction net arr as OT
+      -- booked churned contraction net arr as OT
       CASE
-        WHEN ((oppty_final.is_renewal = 1
+        WHEN 
+          ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
             OR oppty_final.is_won = 1 )
-            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+            AND is_eligible_churn_contraction_flag = 1
+        THEN net_arr
+        ELSE 0
+      END                                                 AS booked_churned_contraction_net_arr,
+
+      -- churned contraction net arr as OT
+      CASE
+        WHEN is_eligible_churn_contraction_flag = 1
         THEN net_arr
         ELSE 0
       END                                                 AS churned_contraction_net_arr,
 
-
       CASE 
-        WHEN net_arr > -5000 
+        WHEN net_arr > -5000             
+            AND is_eligible_churn_contraction_flag = 1
           THEN '1. < 5k'
-        WHEN net_arr > -20000 AND net_arr <= -5000 
+        WHEN net_arr > -20000 
+          AND net_arr <= -5000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '2. 5k-20k'
-        WHEN net_arr > -50000 AND net_arr <= -20000 
+        WHEN net_arr > -50000 
+          AND net_arr <= -20000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '3. 20k-50k'
-        WHEN net_arr > -100000 AND net_arr <= -50000 
+        WHEN net_arr > -100000 
+          AND net_arr <= -50000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '4. 50k-100k'
         WHEN net_arr < -100000 
+          AND is_eligible_churn_contraction_flag = 1
           THEN '5. 100k+'
       END                                                 AS churn_contracton_net_arr_bucket
       

@@ -961,3 +961,13 @@ The grain of the table is the `dim_issue_link_id`. This table is easily joinable
 
 - `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
 {% enddocs %}
+
+{% docs dim_locality %}
+
+Dimensional table representing the [location_factor](https://about.gitlab.com/handbook/total-rewards/compensation/compensation-calculator/#location-factor) for a given locality and a given time range.
+
+This table is derived from data files and logic of the [compensation calculator](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator), specifically the location_factors.yml and the geo_zones.yml
+
+The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
+
+{% enddocs %}

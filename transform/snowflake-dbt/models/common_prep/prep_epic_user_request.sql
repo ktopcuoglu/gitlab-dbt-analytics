@@ -37,7 +37,7 @@
       "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,
       "{{this.database}}".{{target.schema}}.regexp_to_array(epic_description, '(?<=gitlab.zendesk.com\/agent\/tickets\/)[0-9]{1,18}')      AS zendesk_link_array,
       SPLIT_PART(REGEXP_SUBSTR(epic_description, '~"customer priority::[0-9]{1,2}'), '::', -1)::NUMBER                                     AS request_priority,
-      updated_at
+      IFNULL(epic_last_edited_at, created_at)                                                                                              AS updated_at
     FROM epic_extended
     WHERE epic_description IS NOT NULL
       AND NOT (ARRAY_SIZE(sfdc_link_array) = 0 AND ARRAY_SIZE(zendesk_link_array) = 0)
@@ -269,5 +269,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-11-16",
+    updated_date="2022-01-10"
 ) }}
