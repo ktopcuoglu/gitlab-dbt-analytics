@@ -30,6 +30,7 @@ sources:
       - name: order
       - name: order_action
       - name: order_mrr
+      - name: order_quantity
       - name: order_tcb
       - name: order_tcv
       - name: product
