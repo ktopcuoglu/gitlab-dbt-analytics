@@ -47,7 +47,7 @@ WITH postgres_counts AS (
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_{{table}}' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_date DESC) = 1 
 
       
     {% if not loop.last %}
@@ -69,7 +69,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_{{table}}' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_date DESC) = 1 
 
       
     {% if not loop.last %}
@@ -91,7 +91,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_issues_prometheus_alert_events' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_date DESC) = 1 
     UNION ALL
     SELECT snowflake.group_id,
         'gitlab_db_group_import_states'                                                       AS table_name,
@@ -101,7 +101,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_group_import_states' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY updated_date DESC) = 1 
     UNION ALL
     SELECT snowflake.issue_id,
         'gitlab_db_issues_self_managed_prometheus_alert_events'                                AS table_name,
@@ -111,7 +111,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_issues_self_managed_prometheus_alert_events' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY issue_id ORDER BY updated_date DESC) = 1 
     UNION ALL
     SELECT snowflake.project_id,
         'gitlab_db_status_page_settings'                                                       AS table_name,
@@ -121,7 +121,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_status_page_settings' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY updated_date DESC) = 1 
     UNION ALL
     SELECT snowflake.user_id,
         'gitlab_db_user_preferences'                                                           AS table_name,
@@ -131,7 +131,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_user_preferences' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY updated_date DESC) = 1 
     UNION ALL
     SELECT snowflake.project_id,
         'gitlab_db_container_expiration_policies'                                              AS table_name,
@@ -141,7 +141,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_container_expiration_policies' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY updated_date DESC) = 1 
     UNION ALL
     SELECT snowflake.namespace_id,
         'gitlab_db_namespace_settings'                                                         AS table_name,
@@ -151,7 +151,7 @@ UNION ALL
     INNER JOIN date_check
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_namespace_settings' 
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_id ORDER BY updated_at DESC) = 1 
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_id ORDER BY updated_date DESC) = 1 
 
 ), snowflake_counts AS (
 
