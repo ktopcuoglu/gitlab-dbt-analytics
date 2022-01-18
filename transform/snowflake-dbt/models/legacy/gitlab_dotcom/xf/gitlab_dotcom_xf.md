@@ -256,7 +256,7 @@ This table is populated to try to catch customized setups. It leverages tables g
 
 {% docs gitlab_dotcom_usage_data_events %}
 
-This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+This view brings the three source tables (`gitlab_dotcom_usage_data_pipelines`, `gitlab_dotcom_usage_data_notels` and `gitlab_dotcom_usage_data_issues`) together into one table. 
 
 This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
 
@@ -295,7 +295,9 @@ Currently, the following tables are included in the model:
 
 {% docs gitlab_dotcom_usage_data_pipelines %}
 
-This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+This table aggregates but does not manipulate a subset of columns from the pipeline related gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This table was split out from `gitlab_dotcom_usage_data_events` in order to allow the model to complete in a reasonable time.
 
 This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
 
@@ -313,20 +315,26 @@ Currently, the following tables are included in the model:
 
 * gitlab_dotcom_boards
 * gitlab_dotcom_ci_builds
+* gitlab_dotcom_ci_job_artifacts
 * gitlab_dotcom_ci_pipeline_schedules
 * gitlab_dotcom_ci_pipelines
 * gitlab_dotcom_ci_stages
 * gitlab_dotcom_ci_triggers
+* gitlab_dotcom_clusters_applications_helm_xf
 * gitlab_dotcom_deployments
 * gitlab_dotcom_environments
-* gitlab_dotcom_issues
+* gitlab_dotcom_epics
+* gitlab_dotcom_events
 * gitlab_dotcom_labels
-* gitlab_dotcom_lfs_objects_projects
 * gitlab_dotcom_merge_requests
 * gitlab_dotcom_milestones
-* gitlab_dotcom_notes
+* gitlab_dotcom_packages_packages
 * gitlab_dotcom_project_auto_devops
+* gitlab_dotcom_projects_xf
 * gitlab_dotcom_releases
+* gitlab_dotcom_requirements
+* gitlab_dotcom_secure_stage_ci_jobs
+* gitlab_dotcom_services
 * gitlab_dotcom_snippets
 * gitlab_dotcom_todos
 
@@ -334,7 +342,9 @@ Currently, the following tables are included in the model:
 
 {% docs gitlab_dotcom_usage_data_notes %}
 
-This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+This table aggregates but does not manipulate a subset of columns from the notes related gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This table was split out from `gitlab_dotcom_usage_data_events` in order to allow the model to complete in a reasonable time.
 
 This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
 
@@ -350,30 +360,16 @@ The table normalizes all the gitlab_dotcom tables to always extract the same sub
 
 Currently, the following tables are included in the model:
 
-* gitlab_dotcom_boards
-* gitlab_dotcom_ci_builds
-* gitlab_dotcom_ci_pipeline_schedules
-* gitlab_dotcom_ci_pipelines
-* gitlab_dotcom_ci_stages
-* gitlab_dotcom_ci_triggers
-* gitlab_dotcom_deployments
-* gitlab_dotcom_environments
-* gitlab_dotcom_issues
-* gitlab_dotcom_labels
-* gitlab_dotcom_lfs_objects_projects
-* gitlab_dotcom_merge_requests
-* gitlab_dotcom_milestones
 * gitlab_dotcom_notes
-* gitlab_dotcom_project_auto_devops
-* gitlab_dotcom_releases
-* gitlab_dotcom_snippets
-* gitlab_dotcom_todos
+* gitlab_dotcom_epic_notes_xf
 
 {% enddocs %}
 
 {% docs gitlab_dotcom_usage_data_issues %}
 
-This table aggregates but does not manipulate a subset of columns from all of the gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+This table aggregates but does not manipulate a subset of columns from the issues related gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This table was split out from `gitlab_dotcom_usage_data_events` in order to allow the model to complete in a reasonable time.
 
 This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
 
@@ -389,24 +385,11 @@ The table normalizes all the gitlab_dotcom tables to always extract the same sub
 
 Currently, the following tables are included in the model:
 
-* gitlab_dotcom_boards
-* gitlab_dotcom_ci_builds
-* gitlab_dotcom_ci_pipeline_schedules
-* gitlab_dotcom_ci_pipelines
-* gitlab_dotcom_ci_stages
-* gitlab_dotcom_ci_triggers
-* gitlab_dotcom_deployments
-* gitlab_dotcom_environments
 * gitlab_dotcom_issues
-* gitlab_dotcom_labels
-* gitlab_dotcom_lfs_objects_projects
-* gitlab_dotcom_merge_requests
-* gitlab_dotcom_milestones
-* gitlab_dotcom_notes
-* gitlab_dotcom_project_auto_devops
-* gitlab_dotcom_releases
-* gitlab_dotcom_snippets
-* gitlab_dotcom_todos
+* gitlab_dotcom_issues_xf
+* gitlab_dotcom_resource_label_events_xf
+* gitlab_dotcom_resource_milestone_events_xf
+* gitlab_dotcom_resource_weight_events_xf
 
 {% enddocs %}
 

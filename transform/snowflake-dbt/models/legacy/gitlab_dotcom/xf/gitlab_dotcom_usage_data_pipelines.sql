@@ -446,13 +446,13 @@
     FROM {{ ref('temp_gitlab_dotcom_events_filtered') }}
     WHERE event_action_type = 'pushed'
 
-), group_members AS (
+-- ), group_members AS (
 
-    SELECT
-      *,
-      invite_created_at AS created_at
-    FROM {{ ref('gitlab_dotcom_members') }}
-    WHERE member_source_type = 'Namespace'
+--     SELECT
+--       *,
+--       invite_created_at AS created_at
+--     FROM {{ ref('gitlab_dotcom_members') }}
+--     WHERE member_source_type = 'Namespace'
 
 ), sast_jobs AS (
 
