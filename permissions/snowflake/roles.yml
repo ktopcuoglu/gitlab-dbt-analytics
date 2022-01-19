@@ -2407,6 +2407,7 @@ roles:
     - david:
         member_of:
             - data_team_analyst
+            - analyst_sales
             - restricted_safe
         warehouses:
             - engineer_xs
@@ -2693,6 +2694,7 @@ roles:
     - ian:
         member_of:
             - data_team_analyst
+            - analyst_sales
             - restricted_safe
         warehouses:
             - engineer_xs
@@ -2861,6 +2863,13 @@ roles:
     - jng: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
+
+    - joshua:
+        member_of: 
+            - gitlab_dotcom
+            - reporter
+        warehouses: 
+            - analyst_xs
 
     - jpeguero:
         member_of:
@@ -4521,6 +4530,11 @@ users:
     - jmahdi:
         can_login: no
         member_of: []
+
+    - joshua:
+        can_login: yes
+        member_of: 
+            - joshua   
 
     - jpeguero:
         can_login: yes

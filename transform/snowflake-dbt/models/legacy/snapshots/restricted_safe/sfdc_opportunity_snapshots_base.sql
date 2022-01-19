@@ -1,8 +1,6 @@
 {{ config(
-    tags=["mnpi","mnpi_exception"]
+    tags=["mnpi"]
 ) }}
-
--- PENDING SCHEMA MIGRATION
 
 {{ config({
     "alias": "sfdc_opportunity_snapshots",

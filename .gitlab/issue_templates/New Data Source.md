@@ -56,8 +56,8 @@ use contact the Data Engineer assigned below for confirmation.
 ## Data Use / Acceptance Criteria 
 
 **Who should be responsible for making the data accessible and usable in the data warehouse?**
-- Analyst: <!-- please tag them -->
-- Data Engineer: <!-- please tag them -->
+- Analytics Engineer: <!-- please tag them -->
+- Data Platform Engineer: <!-- please tag them -->
 
 **Who will be using this data, and where (dashboards, snowflake UI, etc.)?**
 
