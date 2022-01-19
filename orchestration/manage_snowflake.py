@@ -241,7 +241,8 @@ class SnowflakeManager:
                  SELECT 
                      stage_schema,
                      stage_name,
-                     stage_url
+                     stage_url, 
+                     stage_type
                  FROM {database}.information_schema.stages 
                  WHERE stage_schema = '{schema.upper()}' 
              """
@@ -250,7 +251,8 @@ class SnowflakeManager:
                  SELECT 
                      stage_schema,
                      stage_name,
-                     stage_url
+                     stage_url, 
+                     stage_type
                  FROM {database}.information_schema.stages 
              """
 
@@ -265,14 +267,15 @@ class SnowflakeManager:
                 f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
             )
 
-            if stage["stage_url"] != "":
+            if stage["stage_type"] == "External Named":
 
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name} LIKE   
                     {from_stage_name}
                     """
 
-                grants_query = ""
+                grants_query = f"GRANT USAGE ON STAGE {output_stage_name} TO LOADER"
+
             else:
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name}  
@@ -287,10 +290,10 @@ class SnowflakeManager:
                 res = query_executor(self.engine, clone_stage_query)
                 logging.info(res[0])
 
-                if len(grants_query) > 0:
-                    logging.info("Granting rights on stage to LOADER")
-                    res = query_executor(self.engine, grants_query)
-                    logging.info(res[0])
+                logging.info("Granting rights on stage to LOADER")
+                res = query_executor(self.engine, grants_query)
+                logging.info(res[0])
+
             except ProgrammingError as prg:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
