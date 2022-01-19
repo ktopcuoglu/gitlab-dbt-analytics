@@ -47,6 +47,8 @@ models:
               severity: warn
   - name: zuora_api_sandbox_invoice_source
     description: Source layer for Zuora Invoices for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_api_sandbox_order_souce
+    description: Source layer for Zuora Order for cleaning and renaming. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_api_sandbox_product_rate_plan_charge_source
     description: Source layer for Zuora Product Rate Plan Charges. This is from zuora_api_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_api_sandbox_product_rate_plan_charge_tier_source
