@@ -500,7 +500,7 @@
       FROM {{ event_cte.source_cte_name }}
     {% endif %}
     WHERE created_at IS NOT NULL
-      AND created_at >= DATEADD(MONTH, -13, CURRENT_DATE)
+      AND created_at >= DATEADD(MONTH, -25, CURRENT_DATE)
       
     {% if is_incremental() %}
 

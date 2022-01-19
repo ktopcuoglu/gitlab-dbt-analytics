@@ -13,7 +13,7 @@ SELECT
   event_id
 FROM {{ ref('gitlab_dotcom_events') }}
 WHERE created_at IS NOT NULL
-  AND created_at >= DATEADD(MONTH, -13, CURRENT_DATE)
+  AND created_at >= DATEADD(MONTH, -25, CURRENT_DATE)
   AND (
     (target_type IS NULL AND event_action_type_id = 5) OR
     (target_type = 'DesignManagement::Design' AND event_action_type_id IN (1,2)) OR
