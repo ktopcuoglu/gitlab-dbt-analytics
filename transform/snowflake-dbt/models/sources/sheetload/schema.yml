@@ -333,6 +333,8 @@ models:
   description: This is the model that captures the onboarding satisfaction score survey OSAT.
 - name: sheetload_rep_quotas_full_ps_fy2020_source
   description: This is the model that captures sales data for rep quotas for professional services the full fy2020.
+- name: sheetload_sales_capacity_kpi_source
+  description: This is the model captures sales capacity kpis target and actual
 - name: sheetload_scalable_employment_values_source
   description: Source model for Scalable Employment Solution Data
   columns:

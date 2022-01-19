@@ -70,7 +70,6 @@
       dim_crm_person.person_score,
       dim_crm_person.title                                                  AS crm_person_title,
       dim_crm_person.country,
-      dim_crm_person.mailing_country,
       dim_crm_person.status                                                 AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -231,7 +230,16 @@
       mart_crm_opportunity.count_crm_attribution_touchpoints                AS crm_attribution_touchpoints_per_opp,
       mart_crm_opportunity.weighted_linear_iacv,
       mart_crm_opportunity.count_campaigns                                  AS count_campaigns_per_opp,
-      (mart_crm_opportunity.iacv / mart_crm_opportunity.count_campaigns)    AS iacv_per_campaign
+      (mart_crm_opportunity.iacv / mart_crm_opportunity.count_campaigns)    AS iacv_per_campaign,
+
+      -- bizible influenced
+       CASE
+        WHEN  dim_campaign.budget_holder = 'fmm'
+              OR campaign_rep_role_name = 'Field Marketing Manager'
+              OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+        THEN 1
+        ELSE 0
+      END AS is_fmm_influenced
 
     FROM fct_crm_attribution_touchpoint
     LEFT JOIN dim_crm_touchpoint
@@ -257,7 +265,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@iweeks",
     created_date="2020-02-18",
-    updated_date="2020-11-09"
+    updated_date="2022-01-14"
 ) }}

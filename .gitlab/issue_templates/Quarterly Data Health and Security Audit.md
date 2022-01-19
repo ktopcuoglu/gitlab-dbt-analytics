@@ -43,25 +43,14 @@ Below checklist of activities would be run once for quarter to validate security
 
    * [ ] Run below SQL script to perform the check.
 
+     `NOTE: Exclude deactivating system accounts that show up in the list when below SQL script is executed.`
+  
 
     ```sql
-     SELECT										
-       employee.employee_id,										
-       employee.first_name,										
-       employee.last_name,										
-       employee.hire_date,										
-       employee.rehire_date,										
-       snowflake.last_success_login,										
-       snowflake.created_on,										
-       employee.termination_date,										
-       snowflake.is_disabled										
-     FROM prep.sensitive.employee_directory employee										
-     INNER JOIN  prod.legacy.snowflake_show_users snowflake										
-     ON employee.first_name = snowflake.first_name										
-     AND employee.last_name = snowflake.last_name										
-     AND snowflake.is_disabled ='false'										
-     AND employee.termination_date IS NULL										
-     AND CASE WHEN snowflake.last_success_login IS null THEN snowflake.created_on ELSE snowflake.last_success_login END <= dateadd('day', -60, CURRENT_DATE());										
+     SELECT	*																			
+     FROM prod.legacy.snowflake_show_users 																			
+     WHERE CASE WHEN last_success_login IS null THEN created_on ELSE last_success_login END <= dateadd('day', -60, CURRENT_DATE())
+     AND is_disabled ='false';										
     ```
 
 

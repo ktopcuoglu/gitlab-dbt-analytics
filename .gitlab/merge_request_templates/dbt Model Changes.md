@@ -134,7 +134,7 @@ Example: You might be looking at the count of opportunities before and after, if
 
 ## Reviewer Checklist
 - [ ]  Check before setting to merge
-- [ ]  If DBT Full refresh is required?
+- [ ]  Is DBT Full refresh is required?
   - [ ] Yes. Ensure to get the issue for Full Refresh Request. 
   - [ ] No.
 

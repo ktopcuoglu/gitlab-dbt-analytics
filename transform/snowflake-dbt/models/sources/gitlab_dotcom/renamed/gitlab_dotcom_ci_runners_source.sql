@@ -3,7 +3,7 @@ WITH source AS (
   SELECT *
   FROM {{ ref('gitlab_dotcom_ci_runners_dedupe_source') }}
   WHERE created_at IS NOT NULL
-  
+
 ), renamed AS (
 
   SELECT
@@ -32,4 +32,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-ORDER BY updated_at

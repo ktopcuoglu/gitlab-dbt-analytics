@@ -13,6 +13,17 @@
     ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
+, original_subscription_dates AS (
+
+    SELECT DISTINCT
+      dim_subscription_id,
+      subscription_start_date,
+      subscription_end_date
+    FROM subscriptions
+    WHERE subscription_version = 1
+
+)
+
 , months AS (
 
     SELECT DISTINCT
@@ -188,6 +199,11 @@
       smoothed_diffs.dim_subscription_id_original,
       smoothed_diffs.dim_billing_account_id,
       subscriptions.subscription_status,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
+      subscriptions_original.subscription_status                                        AS subscription_status_original,
+      original_subscription_dates.subscription_start_date                               AS subscription_start_date_original,
+      original_subscription_dates.subscription_end_date                                 AS subscription_end_date_original,
       smoothed_diffs.snapshot_month,
       smoothed_diffs.uuid,
       smoothed_diffs.hostname,
@@ -236,16 +252,22 @@
       AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
     LEFT JOIN subscriptions
-      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
+      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions AS subscriptions_original
+      ON smoothed_diffs.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN original_subscription_dates
+      ON original_subscription_dates.dim_subscription_id = smoothed_diffs.dim_subscription_id_original
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@mdrussell",
     created_date="2021-03-04",
-    updated_date="2021-10-21"
+    updated_date="2021-12-21"
 ) }}
