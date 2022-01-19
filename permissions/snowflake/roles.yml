@@ -157,6 +157,11 @@ databases:
     - rdemiri_prep:
         shared: no  
 
+    - rkohnke_prod:
+        shared: no
+    - rkohnke_prep:
+        shared: no  
+
     - rparker_prod:
         shared: no
     - rparker_prep:
@@ -3837,6 +3842,38 @@ roles:
             - restricted_safe
         warehouses: 
             - analyst_xs
+        owns:
+            databases:
+                - rkohnke_prep
+                - rkohnke_prod
+            schemas:
+                - rkohnke_prep.*
+                - rkohnke_prod.*
+            tables:
+                - rkohnke_prep.*.*
+                - rkohnke_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rkohnke_prep
+                    - rkohnke_prod
+                write:
+                    - rkohnke_prep
+                    - rkohnke_prod
+            schemas:
+                read:
+                    - rkohnke_prep.*
+                    - rkohnke_prod.*
+                write:
+                    - rkohnke_prep.*
+                    - rkohnke_prod.*
+            tables:
+                read:
+                    - rkohnke_prep.*.*
+                    - rkohnke_prod.*.*
+                write:
+                    - rkohnke_prep.*.*
+                    - rkohnke_prod.*.* 
 
     - rparker:
         member_of:
