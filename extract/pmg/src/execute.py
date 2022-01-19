@@ -71,6 +71,8 @@ if __name__ == "__main__":
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
+    info(snowflake_engine)
+
     sql_statement = get_pmg_reporting_data_query(start_time, end_time)
     # Groups by date so we can create a file for each day
     df_by_date = bq.get_dataframe_from_sql(sql_statement).groupby("date")
