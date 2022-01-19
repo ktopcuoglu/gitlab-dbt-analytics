@@ -24,3 +24,18 @@ https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42
 An individual compliance objective, or requirement that must be met by the organization. This is the actual verbiage of the requirement from the authoritative source document and what must be satisfied by organizational controls to achieve compliance (i.e., Requirement 1.1.1 of the PCI-DSS). Because they are quite vague, interpretation of objectives can vary by company and more actionable, specific controls are often put in place to ensure that objectives are met. We define an objective as an actionable goal that serves to uphold a compliance requirement (the opposite of a risk).
 https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions
 {% enddocs %}
+
+{% docs zengrc_issues_desc %}
+A gap or finding that requires remediation or acceptance. It is used to track the remediation of an issue (finding) discovered during the assessment of a control. Information that this object should contain includes an owner, remediation plan, and due date. The status of Issue objects is tracked in Audits.
+https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions
+{% enddocs %}
+
+{% docs zengrc_requests_desc %}
+Objects used to request evidence as part of an assessment. The request object is sent to the identified assignee, who can respond to the request and upload evidence. Additionally, all communication between the assessor and the assignee will be tracked. Request status is tracked in Audits.
+https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions
+{% enddocs %}
+
+{% docs zengrc_risks_desc %}
+Objects used to track risks to the organization. Risks are identified dangers that could potentially harm the organization if not addressed. By mapping relevant controls to identified risks, an organization can identify controls that have been put in place to minimize risk. This is commonly known as a Risk and Control Matrix (RCM).
+https://reciprocitylabs.atlassian.net/wiki/spaces/ZenGRCOnboardingGuide/pages/42139682/ZenGRC+Definitions
+{% enddocs %}
