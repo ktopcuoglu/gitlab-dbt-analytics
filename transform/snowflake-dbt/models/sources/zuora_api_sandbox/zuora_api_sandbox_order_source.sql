@@ -3,7 +3,7 @@ WITH source AS (
     SELECT *
     FROM {{ source('zuora_api_sandbox', 'order') }}
 
-), renamed AS(
+), renamed AS (
 
     SELECT
 
