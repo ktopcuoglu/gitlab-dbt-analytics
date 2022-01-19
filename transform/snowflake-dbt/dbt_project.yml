@@ -299,6 +299,10 @@ models:
         +schema: zuora
         +tags: ["zuora"]
 
+      zuora_central_sandbox:
+        +schema: zuora_central_sandbox
+        +tags: [ "zuora_central_sandbox" ]
+
       zuora_revenue:
         +schema: zuora_revenue
         +tags: ["zuora_revenue"]
