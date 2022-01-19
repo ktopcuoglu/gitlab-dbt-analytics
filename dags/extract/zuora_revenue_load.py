@@ -63,7 +63,7 @@ with open(
 dag = DAG(
     "zuora_revenue_load_snow",
     default_args=default_args,
-    schedule_interval="0 6 * * *",
+    schedule_interval="0 13 * * *",
     concurrency=1,
 )
 
