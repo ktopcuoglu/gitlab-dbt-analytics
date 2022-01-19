@@ -44,6 +44,7 @@ SELECT
   is_group_namespace_member,
   is_group_namespace_owner,
   is_individual_namespace_owner,
+  is_paid_tier,
   is_self_managed_premium_tier,
   is_self_managed_starter_tier,
   is_self_managed_ultimate_tier,

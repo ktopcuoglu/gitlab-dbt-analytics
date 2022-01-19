@@ -20,6 +20,7 @@
     SELECT
       fct_crm_person.dim_crm_person_id,
       dim_crm_person.dim_crm_user_id,
+      dim_crm_person.dim_crm_account_id,
       mql_date_first.date_id                   AS mql_date_first_id,
       mql_date_first.date_day                  AS mql_date_first,
       fct_crm_person.mql_datetime_first,
@@ -46,10 +47,19 @@
       contact_created_date.first_day_of_month  AS contact_created_month,
       contact_created_date_pt.first_day_of_month 
                                                AS contact_created_month_pt,
+      true_inquiry_date                        AS true_inquiry_date,
       inquiry_date.date_day                    AS inquiry_date,
       inquiry_date_pt.date_day                 AS inquiry_date_pt,
       inquiry_date.first_day_of_month          AS inquiry_month,
-      inquiry_date_pt.first_day_of_month       AS inquiry_month_pt,
+      inquiry_date_pt.first_day_of_month       AS inquiry_month_pt,      
+      inquiry_inferred_datetime.date_day       AS inquiry_inferred_date,
+      fct_crm_person.inquiry_inferred_datetime,
+      inquiry_inferred_datetime_pt.date_day            
+                                               AS inquiry_inferred_date_pt,
+      inquiry_inferred_datetime.first_day_of_month     
+                                               AS inquiry_inferred_month,
+      inquiry_inferred_datetime.first_day_of_month  
+                                               AS inquiry_inferred_month_pt,      
       accepted_date.date_day                   AS accepted_date,
       fct_crm_person.accepted_datetime,
       fct_crm_person.accepted_datetime_pt,
@@ -91,6 +101,8 @@
       dim_crm_person.crm_partner_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.region,
+      dim_crm_person.state,
+      dim_crm_person.country,
       fct_crm_person.name_of_active_sequence,
       fct_crm_person.sequence_task_due_date,
       fct_crm_person.sequence_status,
@@ -99,12 +111,33 @@
       dim_bizible_marketing_channel_path.bizible_marketing_channel_path_name,
       dim_sales_segment.sales_segment_name,
       dim_sales_segment.sales_segment_grouped,
+      dim_crm_person.marketo_last_interesting_moment,
+      dim_crm_person.marketo_last_interesting_moment_date,
+      dim_crm_person.outreach_step_number,
+      dim_crm_person.matched_account_owner_role,
+      dim_crm_person.matched_account_account_owner_name,
+      dim_crm_person.matched_account_sdr_assigned,
+      dim_crm_person.matched_account_type,
+      dim_crm_person.matched_account_gtm_strategy,
+      fct_crm_person.account_demographics_sales_segment,
+      fct_crm_person.account_demographics_geo,
+      fct_crm_person.account_demographics_region,
+      fct_crm_person.account_demographics_area,
+      fct_crm_person.account_demographics_territory,
+      fct_crm_person.account_demographics_employee_count,
+      fct_crm_person.account_demographics_max_family_employee,
+      fct_crm_person.account_demographics_upa_country,
+      fct_crm_person.account_demographics_upa_state,  
+      fct_crm_person.account_demographics_upa_city,
+      fct_crm_person.account_demographics_upa_street,
+      fct_crm_person.account_demographics_upa_postal_code,
       CASE
         WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
         WHEN dim_sales_segment.sales_segment_name IN ('Large', 'PubSec') THEN  'Large MQLs & Trials'
         ELSE 'Missing sales_segment_region_mapped'
       END                                      AS sales_segment_region_mapped,
       fct_crm_person.is_mql,
+      fct_crm_person.is_inquiry,
       CASE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - gitlab.com%' THEN TRUE
         WHEN LOWER(dim_crm_person.lead_source) LIKE '%trial - enterprise%' THEN TRUE
@@ -133,6 +166,10 @@
       ON fct_crm_person.inquiry_date_id = inquiry_date.date_id
     LEFT JOIN dim_date AS inquiry_date_pt
       ON fct_crm_person.inquiry_date_pt_id = inquiry_date_pt.date_id
+    LEFT JOIN dim_date AS inquiry_inferred_datetime
+      ON fct_crm_person.inquiry_inferred_datetime_id = inquiry_inferred_datetime.date_id
+    LEFT JOIN dim_date AS inquiry_inferred_datetime_pt
+      ON fct_crm_person.inquiry_inferred_datetime_pt_id = inquiry_inferred_datetime_pt.date_id
     LEFT JOIN dim_date AS mql_date_first
       ON fct_crm_person.mql_date_first_id = mql_date_first.date_id
     LEFT JOIN dim_date AS mql_date_first_pt
@@ -175,7 +212,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2021-11-05",
+    updated_date="2022-01-12",
   ) }}

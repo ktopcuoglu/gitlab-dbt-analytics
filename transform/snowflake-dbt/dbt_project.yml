@@ -55,6 +55,11 @@ seeds:
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
+  
+  gitlab_snowflake:
+    director_location_factors:
+      +column_types:
+        valid_to: date # Not behaving well when the column is all null
 
 # ==================
 # Variable Configs
@@ -168,6 +173,10 @@ models:
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
+
+      edcast:
+        +schema: edcast
+        +tags: ["people", "edcast"]
 
       gainsight:
         +materialized: table
@@ -492,6 +501,7 @@ models:
 
       workspace_engineering:
         +schema: workspace_engineering
+        +materialized: table
 
       workspace_people:
         +schema: workspace_people

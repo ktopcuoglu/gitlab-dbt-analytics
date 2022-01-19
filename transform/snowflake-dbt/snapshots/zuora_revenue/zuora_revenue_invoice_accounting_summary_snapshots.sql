@@ -9,9 +9,9 @@
     }}
     
     SELECT
-        prd_id || '-' || line_id || '-' || root_line_id || '-' || rc_id || '-' || acct_type_id AS revenue_snapshot_id,
+        prd_id || '-' || line_id || '-' || root_line_id || '-' || rc_id || '-' || acct_type_id || '-' || acctg_segs|| '-' || schd_type AS revenue_snapshot_id,
         *
     FROM {{ source('zuora_revenue','zuora_revenue_invoice_accounting_summary') }}
-    QUALIFY RANK() OVER (PARTITION BY revenue_snapshot_id ORDER BY incr_updt_dt DESC) = 1
+    QUALIFY RANK() OVER (PARTITION BY revenue_snapshot_id ORDER BY updt_dt DESC) = 1
 
 {% endsnapshot %}

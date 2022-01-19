@@ -51,7 +51,7 @@ WITH source AS (
         zi_contact_country__c                                   AS zoominfo_contact_country,
         zi_company_state__c                                     AS zoominfo_company_state,
         zi_contact_state__c                                     AS zoominfo_contact_state,
-  
+
         -- info
         requested_contact__c                                    AS requested_contact,
         company                                                 AS company,
@@ -61,14 +61,21 @@ WITH source AS (
         region__c                                               AS region,
         largeaccount__c                                         AS is_large_account,
         outreach_stage__c                                       AS outreach_stage,
+        Sequence_Step_Number__c                                 AS outreach_step_number,
         interested_in_gitlab_ee__c                              AS is_interested_gitlab_ee,
         interested_in_hosted_solution__c                        AS is_interested_in_hosted,
         lead_assigned_datetime__c::TIMESTAMP                    AS assigned_datetime,
         matched_account_top_list__c                             AS matched_account_top_list,
+        matched_account_owner_Role__c                           AS matched_account_owner_role,
+        matched_account_sdr_assigned__c                         AS matched_account_sdr_assigned,
+        matched_account_gtm_strategy__c                         AS matched_account_gtm_strategy,
+        engagio__Matched_Account_Type__c                        AS matched_account_type,
+        engagio__Matched_Account_Owner_Name__c                  AS matched_account_account_owner_name,
         mql_date__c                                             AS marketo_qualified_lead_date,
         mql_datetime__c                                         AS marketo_qualified_lead_datetime,
         mql_datetime_inferred__c                                AS mql_datetime_inferred,
         inquiry_datetime__c                                     AS inquiry_datetime,
+        inquiry_datetime_inferred__c                            AS inquiry_datetime_inferred,
         accepted_datetime__c                                    AS accepted_datetime,
         qualifying_datetime__c                                  AS qualifying_datetime,
         qualified_datetime__c                                   AS qualified_datetime,
@@ -80,7 +87,7 @@ WITH source AS (
         {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,
         status                                                  AS lead_status,
-        last_utm_campaign__c                                    AS last_utm_campaign, 
+        last_utm_campaign__c                                    AS last_utm_campaign,
         last_utm_content__c                                     AS last_utm_content,
         crm_partner_id_lookup__c                                AS crm_partner_id,
         name_of_active_sequence__c                              AS name_of_active_sequence,
@@ -98,6 +105,21 @@ WITH source AS (
         leandata_sub_region__c                                  AS tsp_sub_region,
         leandata_territory__c                                   AS tsp_territory,
 
+        -- account demographics fields
+        account_demographics_sales_segment__c                   AS account_demographics_sales_segment,
+        account_demographics_geo__c                             AS account_demographics_geo,
+        account_demographics_region__c                          AS account_demographics_region,
+        account_demographics_area__c                            AS account_demographics_area,
+        account_demographics_territory__c                       AS account_demographics_territory,
+        account_demographics_employee_count__c                  AS account_demographics_employee_count,
+        account_demographics_max_family_employe__c              AS account_demographics_max_family_employee,
+        account_demographics_upa_country__c                     AS account_demographics_upa_country,
+        account_demographics_upa_state__c                       AS account_demographics_upa_state,
+        account_demographics_upa_city__c                        AS account_demographics_upa_city,
+        account_demographics_upa_street__c                      AS account_demographics_upa_street,
+        account_demographics_upa_postal_code__c                 AS account_demographics_upa_postal_code,
+
+
         --path factory info
         pathfactory_experience_name__c                          AS pathfactory_experience_name,
         pathfactory_engagement_score__c                         AS pathfactory_engagement_score,
@@ -105,6 +127,10 @@ WITH source AS (
         pathfactory_content_list__c                             AS pathfactory_content_list,
         pathfactory_content_journey__c                          AS pathfactory_content_journey,
         pathfactory_topic_list__c                               AS pathfactory_topic_list,
+
+        --marketo sales insight
+        mkto_si__Last_Interesting_Moment_Desc__c                AS marketo_last_interesting_moment,
+        mkto_si__Last_Interesting_Moment_Date__c                AS marketo_last_interesting_moment_date,
 
         --gitlab internal
         bdr_lu__c                                               AS business_development_look_up,
