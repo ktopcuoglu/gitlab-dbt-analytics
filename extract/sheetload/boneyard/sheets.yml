@@ -40,19 +40,17 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - pricing_list
-  - name: product_usage_stages_monthly
-    owner: '@Kevin Dietz'
-    tabs: 
-      - product_usage_stages_monthly
   - name: ptc_scores
-    owner: '@Klaudia Magda'
+    owner: '@kmagda'
     tabs:
       - ptc_scores_20211221
+      - ptc_scores_202202
   - name: pte_scores
-    owner: '@Kevin Dietz'
+    owner: '@kdietz'
     tabs:
       - pte_scores_20211013
       - pte_scores_20211101
+      - pte_scores_202202
   - name: q4fy2021_system_usability_scale_results
     owner: '@rbacovic'
     tabs:
