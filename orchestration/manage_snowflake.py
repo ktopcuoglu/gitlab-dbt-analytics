@@ -268,7 +268,7 @@ class SnowflakeManager:
             if stage["stage_url"] != "":
 
                 clone_stage_query = f"""
-                    CREATE OR REPLACE STAGE {output_stage_name} CLONE   
+                    CREATE OR REPLACE STAGE {output_stage_name} LIKE   
                     {from_stage_name}
                     """
 
