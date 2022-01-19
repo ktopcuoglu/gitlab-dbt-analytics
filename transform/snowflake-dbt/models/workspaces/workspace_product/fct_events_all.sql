@@ -1,8 +1,11 @@
 {{ config(
-    tags=["mnpi_exception"],
-    "materialized": "table"
+    tags=["mnpi_exception"]
 ) }}
 
+{{config({
+    "materialized": "table"
+  })
+}}
 
 {{ simple_cte([
     ('dim_subscription', 'dim_subscription'),
