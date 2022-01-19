@@ -1,14 +1,8 @@
-/*
-{{
-    config(
-        materialized='table'
-    )
-}}
-*/
-
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception"],
+    "materialized": "table"
 ) }}
+
 
 {{ simple_cte([
     ('dim_subscription', 'dim_subscription'),
@@ -27,27 +21,27 @@
 , flattened_usage AS (
 
     SELECT top 100
-      dim_usage_ping_id,
+      dim_usage_ping_id           AS dim_usage_ping_id
       path                        AS metrics_path,
-      dim_product_tier_id,
-      dim_subscription_id,
-      dim_location_country_id,
-      dim_date_id,
-      dim_instance_id,
-      ping_created_at,
-      ping_created_at_date,
-      edition,
-      product_tier,
-      major_version,
-      minor_version,
-      usage_ping_delivery_type,
-      is_internal,
-      is_staging,
-      is_trial,
-      instance_user_count,
-      host_name,
-      umau_value,
-      license_subscription_id,
+      dim_product_tier_id         AS dim_product_tier_id,
+      dim_subscription_id         AS dim_subscription_id,
+      dim_location_country_id     AS dim_location_country_id,
+      dim_date_id                 AS dim_date_id,
+      dim_instance_id             AS dim_instance_id,
+      ping_created_at             AS ping_created_at,
+      ping_created_at_date        AS ping_created_at_date,
+      edition                     AS edition,
+      product_tier                AS product_tier,
+      major_version               AS major_version,
+      minor_version               AS minor_version,
+      usage_ping_delivery_type    AS usage_ping_delivery_type,
+      is_internal                 AS is_internal,
+      is_staging                  AS is_staging,
+      is_trial                    AS is_trial,
+      instance_user_count         AS instance_user_count,
+      host_name                   AS host_name,
+      umau_value                  AS umau_value,
+      license_subscription_id     AS license_subscription_id,
       key                         AS event_name,
       value                       AS event_count
   FROM usage_ping_payload,
@@ -69,13 +63,12 @@
 ), flattened_w_subscription AS (
     SELECT
       flattened_w_metrics.*,
-      dim_subscription.subscription_name,
-      dim_subscription.dim_crm_account_id,
-      dim_billing_account_id,
-      dim_crm_opportunity_id,
-      dim_subscription_id_original,
-      namespace_id,
-      namespace_name
+      dim_subscription.subscription_name      AS subscription_name,
+      dim_subscription.dim_crm_account_id     AS dim_crm_account_id,
+      dim_billing_account_id                  AS dim_billing_account_id,
+      dim_crm_opportunity_id                  AS dim_crm_opportunity_id,
+      dim_subscription_id_original            AS dim_subscription_id_original,
+      namespace_id                            AS namespace_id
     FROM flattened_w_metrics
     LEFT JOIN dim_subscription
       ON flattened_w_metrics.dim_subscription_id = dim_subscription.dim_subscription_id
@@ -84,55 +77,54 @@
 
     SELECT top 100
         {{ dbt_utils.surrogate_key(['dim_usage_ping_id','metrics_path']) }}   AS event_id,
-        event_name,
-        TO_NUMBER(event_count) AS event_count,
-        dim_usage_ping_id,
-        metrics_path,
-        dim_product_tier_id,
-        dim_subscription_id,
-        dim_location_country_id,
-        TO_NUMBER(dim_date_id) AS dim_date_id,
-        dim_instance_id,
-        dim_crm_account_id,
-        dim_billing_account_id,
-        dim_crm_opportunity_id,
-        dim_subscription_id_original,
-        TO_NUMBER(NULL) AS dim_namespace_id,
-        TO_NUMBER(NULL) AS ultimate_parent_namespace_id,
-        license_subscription_id,
-        TO_NUMBER(NULL)  AS user_id,
-        namespace_name,
-        stage_name,
-        section_name,
-        group_name,
-        ping_created_at,
-        edition,
-        major_version,
-        minor_version,
-        usage_ping_delivery_type,
-        'SERVICE PINGS' AS source
+        event_name                                                            AS event_name,
+        TO_NUMBER(event_count)                                                AS event_count,
+        dim_usage_ping_id                                                     AS dim_usage_ping_id,
+        metrics_path                                                          AS metrics_path,
+        dim_product_tier_id                                                   AS dim_product_tier_id,
+        dim_subscription_id                                                   AS dim_subscription_id,
+        dim_location_country_id                                               AS dim_location_country_id,
+        TO_NUMBER(dim_date_id)                                                AS dim_event_date_id,
+        dim_instance_id                                                       AS dim_instance_id,
+        dim_crm_account_id                                                    AS dim_crm_account_id,
+        dim_billing_account_id                                                AS dim_billing_account_id,
+        dim_crm_opportunity_id                                                AS dim_crm_opportunity_id,
+        dim_subscription_id_original                                          AS dim_subscription_id_original,
+        TO_NUMBER(NULL)                                                       AS dim_namespace_id,
+        TO_NUMBER(NULL)                                                       AS ultimate_parent_namespace_id,
+        license_subscription_id                                               AS license_subscription_id,
+        TO_NUMBER(NULL)                                                       AS user_id,
+        stage_name                                                            AS stage_name,
+        section_name                                                          AS section_name,
+        group_name                                                            AS group_name,
+        ping_created_at                                                       AS ping_created_at,
+        edition,                                                              AS edition
+        major_version                                                         AS major_version,
+        minor_version                                                         AS minor_version,
+        usage_ping_delivery_type                                              AS usage_ping_delivery_type,
+        'SERVICE PINGS'                                                       AS source
     FROM flattened_w_subscription
 
 ), fct_events AS  (
 
     SELECT top 100
-      event_primary_key,
-      usage_data_events.event_name,
-      namespace_id,
-      user_id,
-      parent_type,
-      parent_id,
-      event_created_at,
-      plan_id_at_event_date,
+      event_primary_key                                             AS event_primary_key,
+      usage_data_events.event_name                                  AS event_name,
+      namespace_id                                                  AS namespace_id,
+      user_id                                                       AS user_id,
+      parent_type                                                   AS parent_type,
+      parent_id                                                     AS parent_id,
+      event_created_at                                              AS event_created_at,
+      plan_id_at_event_date                                         AS plan_id_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
             THEN xmau_metrics.stage_name
           ELSE usage_data_events.stage_name
          end                                                        AS stage_name,
-      group_name,
-      section_name,
-      smau,
-      gmau,
+      group_name                                                    AS group_name,
+      section_name                                                  AS section_name,
+      smau                                                          AS smau,
+      gmau                                                          AS gmau,
       is_umau                                                       AS umau
     FROM usage_data_events
     INNER JOIN xmau_metrics
@@ -141,14 +133,14 @@
 ), deduped_namespace_bdg AS (
 
   SELECT
-    dim_subscription_id,
-    order_id,
-    ultimate_parent_namespace_id,
-    dim_crm_account_id,
-    dim_billing_account_id,
-    product_tier_name_subscription,
-    dim_namespace_id,
-    is_subscription_active
+    dim_subscription_id                   AS dim_subscription_id,
+    order_id                              AS order_id,
+    ultimate_parent_namespace_id          AS ultimate_parent_namespace_id,
+    dim_crm_account_id                    AS dim_crm_account_id,
+    dim_billing_account_id                AS dim_billing_account_id,
+    product_tier_name_subscription        AS product_tier_name_subscription,
+    dim_namespace_id                      AS dim_namespace_id,
+    is_subscription_active                AS is_subscription_active
     FROM namespace_order_subscription
     WHERE product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
           AND is_subscription_active = true
@@ -158,35 +150,16 @@
 ), dim_namespace_w_bdg AS (
 
     SELECT
-      dim_namespace.dim_namespace_id,
-      dim_namespace.dim_product_tier_id,
-      deduped_namespace_bdg.dim_subscription_id,
-      deduped_namespace_bdg.order_id,
-      deduped_namespace_bdg.ultimate_parent_namespace_id,
-      deduped_namespace_bdg.dim_crm_account_id,
-      deduped_namespace_bdg.dim_billing_account_id
+      dim_namespace.dim_namespace_id                            AS dim_namespace_id,
+      dim_namespace.dim_product_tier_id                         AS dim_product_tier_id,
+      deduped_namespace_bdg.dim_subscription_id                 AS dim_subscription_id,
+      deduped_namespace_bdg.order_id                            AS order_id,
+      deduped_namespace_bdg.ultimate_parent_namespace_id        AS ultimate_parent_namespace_id,
+      deduped_namespace_bdg.dim_crm_account_id                  AS dim_crm_account_id,
+      deduped_namespace_bdg.dim_billing_account_id              AS dim_billing_account_id
     FROM deduped_namespace_bdg
     INNER JOIN dim_namespace
       ON dim_namespace.dim_namespace_id = deduped_namespace_bdg.dim_namespace_id
-
-), dim_all AS (
-
-    SELECT
-      dim_namespace_w_bdg.dim_namespace_id,
-      dim_namespace_w_bdg.dim_product_tier_id,
-      dim_namespace_w_bdg.dim_subscription_id,
-      dim_namespace_w_bdg.order_id,
-      dim_namespace_w_bdg.ultimate_parent_namespace_id,
-      dim_namespace_w_bdg.dim_crm_account_id,
-      dim_namespace_w_bdg.dim_billing_account_id,
-      dim_license.dim_license_id,
-      dim_license.dim_subscription_id_original,
-      dim_license.dim_subscription_id_previous,
-      dim_license.dim_product_tier_id,
-      dim_license.dim_environment_id
-    FROM dim_namespace_w_bdg
-    INNER JOIN dim_license
-      ON dim_namespace_w_bdg.dim_subscription_id = dim_license.dim_subscription_id
 
 ), final AS (
 
@@ -199,29 +172,28 @@
 
     SELECT
       event_primary_key                       AS event_id,
-      event_name,
+      event_name                              AS event_name,
       1                                       AS event_count,
       TO_NUMBER(NULL)                         AS dim_usage_ping_id,
-      NULL AS metrics_path, --- pretty sure not relevant
-      dim_product_tier_id,
-      dim_subscription_id,
+      NULL                                    AS metrics_path,
+      dim_product_tier_id                     AS dim_product_tier_id,
+      dim_subscription_id                     AS dim_subscription_id,
       TO_NUMBER(NULL)                         AS dim_location_country_id,
-      date_id                                 AS dim_date_id,
+      date_id                                 AS dim_event_date_id,
       NULL                                    AS dim_instance_id,
-      dim_crm_account_id,
-      dim_billing_account_id,
+      dim_crm_account_id                      AS dim_crm_account_id,
+      dim_billing_account_id                  AS dim_billing_account_id,
       NULL                                    AS dim_crm_opportunity_id,
       NULL                                    AS dim_subscription_id_original,
-      dim_namespace_id,
-      ultimate_parent_namespace_id,
+      dim_namespace_id                        AS dim_namespace_id,
+      ultimate_parent_namespace_id            AS ultimate_parent_namespace_id,
       NULL                                    AS license_subscription_id,
-      user_id,
-      NULL                                    AS namespace_name,
-      stage_name,
-      section_name,
-      group_name,
+      user_id                                 AS user_id,
+      stage_name                              AS stage_name,
+      section_name                            AS section_name,
+      group_name                              AS group_name,
       event_created_at                        AS ping_created_at,
-      NULL AS edition,
+      NULL                                    AS edition,
       TO_NUMBER(NULL)                         AS major_version,
       TO_NUMBER(NULL)                         AS minor_version,
       NULL                                    AS usage_ping_delivery_type,
