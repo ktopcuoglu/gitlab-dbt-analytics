@@ -23,7 +23,7 @@
     {{ dbt_utils.group_by(n=4)}}
 
 ), gitlab_seats AS (
-    
+
     SELECT
       gitlab_subscriptions.namespace_id,
       gitlab_subscriptions.seats,
@@ -110,7 +110,7 @@
       "counts.projects_bamboo_active"                                                           AS projects_bamboo_active_all_time_event,
       "counts.projects_jira_active"                                                             AS projects_jira_active_all_time_event,
       "counts.projects_drone_ci_active"                                                         AS projects_drone_ci_active_all_time_event,
-      "usage_activity_by_stage_monthly.manage.issues_imported.jira"                             AS jira_imports_28_days_event,
+      --"usage_activity_by_stage_monthly.manage.issues_imported.jira"                             AS jira_imports_28_days_event,
       "counts.projects_github_active"                                                           AS projects_github_active_all_time_event,
       "counts.projects_jira_server_active"                                                      AS projects_jira_server_active_all_time_event,
       "counts.projects_jira_dvcs_cloud_active"                                                  AS projects_jira_dvcs_cloud_active_all_time_event,
@@ -171,7 +171,7 @@
     LEFT JOIN gitlab_seats
       ON saas_usage_ping.dim_namespace_id = gitlab_seats.namespace_id
       AND saas_usage_ping.reporting_month = gitlab_seats.snapshot_month
-  
+
 )
 
 {{ dbt_audit(
