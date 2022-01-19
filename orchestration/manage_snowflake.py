@@ -266,12 +266,13 @@ class SnowflakeManager:
             )
 
             if stage["stage_url"] != "":
+
                 clone_stage_query = f"""
-                    CREATE OR REPLACE STAGE {output_stage_name} LIKE  
+                    CREATE OR REPLACE STAGE {output_stage_name} CLONE   
                     {from_stage_name}
                     """
 
-                grants_query = f"GRANT USAGE ON STAGE {output_stage_name} TO LOADER"
+                grants_query = ""
             else:
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name}  
@@ -286,9 +287,10 @@ class SnowflakeManager:
                 res = query_executor(self.engine, clone_stage_query)
                 logging.info(res[0])
 
-                logging.info("Granting rights on stage to LOADER")
-                res = query_executor(self.engine, grants_query)
-                logging.info(res[0])
+                if len(grants_query) > 0:
+                    logging.info("Granting rights on stage to LOADER")
+                    res = query_executor(self.engine, grants_query)
+                    logging.info(res[0])
             except ProgrammingError as prg:
                 # Catches permissions errors
                 logging.error(prg._sql_message(as_unicode=False))
