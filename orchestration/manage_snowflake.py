@@ -274,12 +274,16 @@ class SnowflakeManager:
                     {from_stage_name}
                     """
 
+                grants_query = f"GRANT USAGE ON STAGE {output_stage_name} TO LOADER"
+
             else:
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name}  
                     """
 
-            grants_query = f"GRANT READ, WRITE ON STAGE {output_stage_name} TO LOADER"
+                grants_query = (
+                    f"GRANT READ, WRITE ON STAGE {output_stage_name} TO LOADER"
+                )
 
             try:
                 logging.info(f"Creating stage {output_stage_name}")
