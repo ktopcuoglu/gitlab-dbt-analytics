@@ -8,7 +8,7 @@
     SELECT 
       bamboohr_locality.employee_number,
       bamboohr_locality.employee_id,
-      bamboohr_locality.uploaded_at       AS updated_at,
+      bamboohr_locality.uploaded_at::DATE AS updated_at,
       bamboohr_locality.locality          AS bamboo_locality,
       locality.location_factor
     FROM bamboohr_locality
