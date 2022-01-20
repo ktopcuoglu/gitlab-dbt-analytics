@@ -740,6 +740,8 @@ models:
         description: Count of projects with active integrations for Jira
       - name: projects_drone_ci_active_all_time_event
         description: Count of projects with active integrations for Drone CI
+      - name: jira_imports_28_days_event
+        description: Count of Issues imported from Jira per month. This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: Count of projects with active integrations for GitHub
       - name: projects_jira_server_active_all_time_event
@@ -1241,6 +1243,8 @@ models:
         description: Count of projects with active integrations for Jira
       - name: projects_drone_ci_active_all_time_event
         description: Count of projects with active integrations for Drone CI
+      - name: jira_imports_28_days_event
+        description: Count of Issues imported from Jira per month. This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: Count of projects with active integrations for GitHub
       - name: projects_jira_server_active_all_time_event
@@ -1393,6 +1397,8 @@ models:
         description: projects_jira_active_all_time_event
       - name: counts.projects_drone_ci_active
         description: projects_drone_ci_active_all_time_event
+      - name: usage_activity_by_stage_monthly.manage.issues_imported.jira
+        description: jira_imports_28_days_event. This metric has been deprecated but we are keeping the field around for history.
       - name: counts.projects_github_active
         description: projects_github_active_all_time_event
       - name: counts.projects_jira_server_active
