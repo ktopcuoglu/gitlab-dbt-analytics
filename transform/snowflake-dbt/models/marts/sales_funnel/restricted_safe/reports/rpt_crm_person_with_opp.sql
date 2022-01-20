@@ -58,7 +58,7 @@
     FROM mart_crm_person
     LEFT JOIN mart_crm_opportunity ON
     mart_crm_person.dim_crm_account_id=mart_crm_opportunity.dim_crm_account_id
-    LEFT JOIN common.dim_crm_user ON
+    LEFT JOIN dim_crm_user ON
     mart_crm_person.dim_crm_user_id=dim_crm_user.dim_crm_user_id
     LEFT JOIN rpt_sdr_ramp_daily ON
     mart_crm_person.dim_crm_user_id=rpt_sdr_ramp_daily.dim_crm_user_id
