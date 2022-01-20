@@ -63,13 +63,13 @@
 ), final AS (
   
     SELECT
-      dim_date.date_actual,
-      dim_date.first_day_of_month,
-      dim_date.last_day_of_month,
-      dim_date.first_day_of_week,
-      dim_date.last_day_of_week,
-      dim_date.fiscal_quarter_name_fy,
-      dim_date.last_day_of_fiscal_quarter,
+      dim_date_final.date_actual,
+      dim_date_final.first_day_of_month,
+      dim_date_final.last_day_of_month,
+      dim_date_final.first_day_of_week,
+      dim_date_final.last_day_of_week,
+      dim_date_final.fiscal_quarter_name_fy,
+      dim_date_final.last_day_of_fiscal_quarter,
       CASE
         WHEN dim_date_final.date_actual >= start_date
           AND dim_date_final.date_actual <= sdr_ramp_end_date
