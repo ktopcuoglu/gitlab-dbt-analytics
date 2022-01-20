@@ -133,7 +133,7 @@
       usage_ping.projects_bamboo_active_all_time_event,
       usage_ping.projects_jira_active_all_time_event,
       usage_ping.projects_drone_ci_active_all_time_event,
-      --usage_ping.jira_imports_28_days_event,
+      usage_ping.jira_imports_28_days_event,
       usage_ping.projects_github_active_all_time_event,
       usage_ping.projects_jira_server_active_all_time_event,
       usage_ping.projects_jira_dvcs_cloud_active_all_time_event,
