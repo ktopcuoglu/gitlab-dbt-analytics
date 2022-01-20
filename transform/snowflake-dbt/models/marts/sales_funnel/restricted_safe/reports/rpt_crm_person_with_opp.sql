@@ -147,7 +147,7 @@
       mart_crm_person.sales_segment_region_mapped,
       mart_crm_person.is_mql,
       mart_crm_person.is_inquiry,
-      mart_crm_person.is_lead_source_trial
+      mart_crm_person.is_lead_source_trial,
       mart_crm_opportunity.dim_crm_opportunity_id,
       mart_crm_opportunity.created_date AS opportunity_created_date,
       mart_crm_opportunity.sales_accepted_date,
@@ -159,10 +159,10 @@
       mart_crm_opportunity.stage_name,
       mart_crm_opportunity.is_sao,
       CASE WHEN dim_crm_user.crm_user_sales_segment = 'Other' THEN rpt_sdr_ramp_daily.sdr_segment
-          ELSE dim_crm_user.crm_user_sales_segment
+           ELSE dim_crm_user.crm_user_sales_segment
       END AS user_sales_segment,
       CASE WHEN is_first_order_available = False THEN mart_crm_opportunity.order_type
-          ELSE '1. New - First Order'
+           ELSE '1. New - First Order'
       END AS person_order_type,
       dim_crm_user.crm_user_region,
       dim_crm_user.crm_user_area,
