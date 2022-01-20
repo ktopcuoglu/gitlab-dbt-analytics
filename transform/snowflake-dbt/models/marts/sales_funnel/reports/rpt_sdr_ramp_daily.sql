@@ -79,7 +79,7 @@
           AND dim_date_final.date_actual <= emp_end_date 
           THEN 'Active'
         ELSE NULL
-       END sdr_type,
+       END AS sdr_type,
       sdr_ramp.*
     FROM sdr_ramp
     INNER JOIN dim_date_final
