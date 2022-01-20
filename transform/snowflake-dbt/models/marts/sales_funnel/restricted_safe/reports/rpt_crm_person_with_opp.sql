@@ -67,7 +67,7 @@
     LEFT JOIN upa_base ON 
     mart_crm_person.dim_crm_account_id=upa_base.dim_crm_account_id
     LEFT JOIN accounts_with_first_order_opps ON
-    upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.      dim_parent_crm_account_id
+    upa_base.dim_parent_crm_account_id = accounts_with_first_order_opps.dim_parent_crm_account_id
 
 )
 
