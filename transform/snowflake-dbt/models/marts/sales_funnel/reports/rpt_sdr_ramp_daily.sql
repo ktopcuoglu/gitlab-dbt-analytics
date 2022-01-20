@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('bamboo_job_current_division_base','bamboo_job_current_division_base'),
+    ('bamboohr_job_current_division_base','bamboohr_job_current_division_base'),
     ('sheetload_mapping_sdr_sfdc_bamboohr_source','sheetload_mapping_sdr_sfdc_bamboohr_source'),
     ('dim_crm_user','dim_crm_user'),
     ('dim_date','dim_date')
@@ -14,7 +14,7 @@
       MIN(effective_date) AS start_date,
       MAX(IFNULL(effective_end_date, '2030-12-12')) AS emp_end_date,
       MAX(termination_date) AS termination_date
-    FROM bamboo_job_current_division_base
+    FROM bamboohr_job_current_division_base
     WHERE LOWER(job_title) LIKE '%sales development representative%' OR LOWER(job_title) LIKE '%sales development team lead%'
     GROUP BY 1, 2
 
