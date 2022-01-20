@@ -6,6 +6,10 @@ models:
         meta:
           sensitive: true
   - name: bizible_accounts_source
+    columns:
+      - name: name
+        meta:
+          sensitive: true
   - name: bizible_activities_source
   - name: bizible_ad_accounts_source
   - name: bizible_ad_campaigns_source
@@ -24,6 +28,9 @@ models:
   - name: bizible_campaign_members_source
     columns:
       - name: lead_email
+        meta:
+          sensitive: true
+      - name: contact_email
         meta:
           sensitive: true
   - name: bizible_channels_source
@@ -64,6 +71,9 @@ models:
       - name: visitor_id
         meta:
           sensitive: true
+      - name: ip_address
+        meta:
+          sensitive: true
   - name: bizible_facts_source
     columns:
       - name: email
@@ -74,6 +84,10 @@ models:
       - name: email
         meta:
           sensitive: true
+      - name: ip_address
+        meta:
+          sensitive: true
+
   - name: bizible_keywords_source
   - name: bizible_lead_stage_transitions_source
     columns:
@@ -106,6 +120,10 @@ models:
   - name: bizible_placements_source
   - name: bizible_segments_source
   - name: bizible_sessions_source
+    column:
+      - name: ip_address
+        meta:
+          sensitive: true
   - name: bizible_site_links_source
   - name: bizible_sites_source
   - name: bizible_stage_definitions_source
@@ -121,4 +139,8 @@ models:
         meta:
           sensitive: true
   - name: bizible_web_host_mappings_source
+    column:
+      - name: ip_address
+        meta:
+          sensitive: true
 
