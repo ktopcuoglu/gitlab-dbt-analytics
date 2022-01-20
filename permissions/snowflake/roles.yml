@@ -157,6 +157,11 @@ databases:
     - rdemiri_prep:
         shared: no  
 
+    - rkohnke_prod:
+        shared: no
+    - rkohnke_prep:
+        shared: no  
+
     - rparker_prod:
         shared: no
     - rparker_prep:
@@ -734,28 +739,6 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
-    - mashey:
-        warehouses:
-            - engineer_xs
-        member_of:
-            - zoom
-            - xactly
-            - adaptive
-        privileges:
-            databases:
-                write:
-                   - raw
-            schemas:
-              write:
-                  - raw.tap_zoom
-                  - raw.tap_adaptive
-                  - raw.tap_xactly
-            tables:
-              write:
-                  - raw.tap_zoom.*
-                  - raw.tap_adaptive.*
-                  - raw.tap_xactly.*   
-
     - meltano:
         warehouses:
             - loading
@@ -763,6 +746,7 @@ roles:
             - zoom
             - xactly
             - adaptive
+            - zendesk
         privileges:
             databases:
                 write:
@@ -772,11 +756,13 @@ roles:
                   - raw.tap_zoom
                   - raw.tap_adaptive
                   - raw.tap_xactly
+                  - raw.tap_zendesk
             tables:
               write:
                   - raw.tap_zoom.*
                   - raw.tap_adaptive.*
-                  - raw.tap_xactly.*       
+                  - raw.tap_xactly.*  
+                  - raw.tap_zendesk.*     
 
     - people_operations:
         warehouses:
@@ -2097,10 +2083,12 @@ roles:
                 read:
                     - prep.zendesk
                     - raw.zendesk_stitch
+                    - raw.tap_zendesk
             tables:
                 read:
                     - prep.zendesk.*
                     - raw.zendesk_stitch.*
+                    - raw.tap_zendesk.*
 
     - zendesk_community_relations:
           warehouses:
@@ -2424,6 +2412,7 @@ roles:
     - david:
         member_of:
             - data_team_analyst
+            - analyst_sales
             - restricted_safe
         warehouses:
             - engineer_xs
@@ -2710,6 +2699,7 @@ roles:
     - ian:
         member_of:
             - data_team_analyst
+            - analyst_sales
             - restricted_safe
         warehouses:
             - engineer_xs
@@ -2879,9 +2869,10 @@ roles:
         member_of: []
         warehouses: []
 
-    - jordan: 
-        member_of:
-            - mashey
+    - joshua:
+        member_of: 
+            - gitlab_dotcom
+            - reporter
         warehouses: 
             - analyst_xs
 
@@ -3007,6 +2998,7 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+            - jstemmer_xl
 
     - jswain: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -3850,6 +3842,38 @@ roles:
             - restricted_safe
         warehouses: 
             - analyst_xs
+        owns:
+            databases:
+                - rkohnke_prep
+                - rkohnke_prod
+            schemas:
+                - rkohnke_prep.*
+                - rkohnke_prod.*
+            tables:
+                - rkohnke_prep.*.*
+                - rkohnke_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rkohnke_prep
+                    - rkohnke_prod
+                write:
+                    - rkohnke_prep
+                    - rkohnke_prod
+            schemas:
+                read:
+                    - rkohnke_prep.*
+                    - rkohnke_prod.*
+                write:
+                    - rkohnke_prep.*
+                    - rkohnke_prod.*
+            tables:
+                read:
+                    - rkohnke_prep.*.*
+                    - rkohnke_prod.*.*
+                write:
+                    - rkohnke_prep.*.*
+                    - rkohnke_prod.*.* 
 
     - rparker:
         member_of:
@@ -4130,6 +4154,17 @@ roles:
     - tullylanterdd: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
+
+    - vagrawal:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
     - vbrew:
         member_of:
@@ -4533,10 +4568,10 @@ users:
         can_login: no
         member_of: []
 
-    - jordan: 
+    - joshua:
         can_login: yes
         member_of: 
-            - jordan
+            - joshua   
 
     - jpeguero:
         can_login: yes
@@ -4700,6 +4735,11 @@ users:
             - mdrussell
 
     - meltano:
+        can_login: yes
+        member_of: 
+            - meltano
+
+    - meltano_dev:
         can_login: yes
         member_of: 
             - meltano
@@ -4968,6 +5008,11 @@ users:
         member_of:
             - tnguyen
 
+    - vagrawal:
+        can_login: yes
+        member_of:
+            - vagrawal
+
     - valexieva:
         can_login: no
         member_of: []   
@@ -5048,6 +5093,9 @@ warehouses:
 
     - grafana:
         size: x-small 
+
+    - jstemmer_xl:
+        size: x-large
 
     - loading:
         size: x-small

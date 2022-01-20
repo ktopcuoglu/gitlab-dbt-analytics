@@ -53,3 +53,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: fct_events_all
+    description: ' {{ doc("fct_events_all") }} '
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique

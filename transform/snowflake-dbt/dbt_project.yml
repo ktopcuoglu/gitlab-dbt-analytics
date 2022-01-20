@@ -55,6 +55,11 @@ seeds:
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
+  
+  gitlab_snowflake:
+    director_location_factors:
+      +column_types:
+        valid_to: date # Not behaving well when the column is all null
 
 # ==================
 # Variable Configs
@@ -293,6 +298,10 @@ models:
       zuora:
         +schema: zuora
         +tags: ["zuora"]
+
+      zuora_central_sandbox:
+        +schema: zuora_central_sandbox
+        +tags: [ "zuora_central_sandbox" ]
 
       zuora_revenue:
         +schema: zuora_revenue
