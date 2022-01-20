@@ -71,9 +71,6 @@
 
 )
 
-SELECT *
-FROM final
-
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",

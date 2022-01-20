@@ -87,5 +87,10 @@
   
 )
 
-SELECT *
-FROM final
+{{ dbt_audit(
+    cte_ref="final",
+    created_by="@rkohnke",
+    updated_by="@rkohnke",
+    created_date="2022-01-20",
+    updated_date="2022-01-20",
+  ) }}
