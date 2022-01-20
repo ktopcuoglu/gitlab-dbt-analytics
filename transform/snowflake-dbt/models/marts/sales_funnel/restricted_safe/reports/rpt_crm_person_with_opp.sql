@@ -18,9 +18,7 @@
 
     SELECT *
     FROM mart_crm_opportunity
-    WHERE 1=1
-    AND is_won = true
-    AND order_type = '1. New - First Order'
+    WHERE is_new_logo_first_order = true
     
   ), accounts_with_first_order_opps AS (
 
