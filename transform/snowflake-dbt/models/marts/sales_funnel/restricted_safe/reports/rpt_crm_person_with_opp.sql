@@ -56,7 +56,7 @@
       dim_crm_user.crm_user_area,
       dim_crm_user.crm_user_geo,
       '@rkohnke' AS created_by,
-      "2021-01-20" AS created_date
+      '2021-01-20' AS created_date
     FROM mart_crm_person
     LEFT JOIN mart_crm_opportunity ON
     mart_crm_person.dim_crm_account_id=mart_crm_opportunity.dim_crm_account_id
