@@ -505,6 +505,7 @@ models:
 
       workspace_people:
         +schema: workspace_people
+        +tags: ["people", "edcast"]
 
     # ------------------
     # Marts
