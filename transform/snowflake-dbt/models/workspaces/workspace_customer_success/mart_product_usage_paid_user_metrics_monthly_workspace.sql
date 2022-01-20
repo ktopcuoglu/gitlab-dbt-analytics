@@ -54,13 +54,6 @@
       subscriptions.term_end_date,
       most_recent_subscription_version.subscription_start_date,
       most_recent_subscription_version.subscription_end_date,
-      -- monthly_sm_metrics.dim_subscription_id_original,
-      -- subscriptions.subscription_status,
-      -- subscriptions.subscription_start_date,
-      -- subscriptions.subscription_end_date,
-      -- subscriptions_original.subscription_status                                     AS subscription_status_original,
-      -- original_subscription_dates.subscription_start_date                            AS subscription_start_date_original,
-      -- original_subscription_dates.subscription_end_date                              AS subscription_end_date_original,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -179,18 +172,6 @@
       ON subscriptions.dim_subscription_id = monthly_sm_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
-/*
-    LEFT JOIN subscriptions
-      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
-      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN subscriptions_original
-      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
-      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN original_subscription_dates
-      ON original_subscription_dates.dim_subscription_id = monthly_sm_metrics.dim_subscription_id_original
-*/
 
 ), saas_paid_user_metrics AS (
 
@@ -208,13 +189,6 @@
       subscriptions.term_end_date,
       most_recent_subscription_version.subscription_start_date,
       most_recent_subscription_version.subscription_end_date,
-      -- monthly_saas_metrics.dim_subscription_id_original,
-      -- subscriptions.subscription_status,
-      -- subscriptions.subscription_start_date,
-      -- subscriptions.subscription_end_date,
-      -- subscriptions_original.subscription_status                                     AS subscription_status_original,
-      -- original_subscription_dates.subscription_start_date                            AS subscription_start_date_original,
-      -- original_subscription_dates.subscription_end_date                              AS subscription_end_date_original,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
@@ -331,20 +305,6 @@
         ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
       LEFT JOIN most_recent_subscription_version
         ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
-/*
-    LEFT JOIN subscriptions
-      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id
-      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN subscriptions_original
-      ON monthly_saas_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
-      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN original_subscription_dates
-      ON original_subscription_dates.dim_subscription_id = monthly_saas_metrics.dim_subscription_id_original
-    -- LEFT JOIN location_country
-    --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
-*/
 
 ), unioned AS (
 
