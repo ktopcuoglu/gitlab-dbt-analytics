@@ -55,7 +55,7 @@ seeds:
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
-  
+
   gitlab_snowflake:
     director_location_factors:
       +column_types:
@@ -154,12 +154,12 @@ models:
       date:
         +materialized: table
         +schema: date
-      
+
       dbt:
         +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
-      
+
       demandbase:
         +materialized: table
         +schema: demandbase
@@ -267,7 +267,7 @@ models:
       snowplow:
         +tags: ["product"]
         +schema: snowplow
-      
+
       thanos:
         +materialized: table
         +schema: prometheus
@@ -289,10 +289,10 @@ models:
 
       zoominfo:
         +schema: zoominfo
-        +materialized: table 
+        +materialized: table
         sensitive:
           +schema: sensitive
-          +materialized: view 
+          +materialized: view
           secure: true
 
       zuora:
@@ -329,7 +329,7 @@ models:
         +schema: restricted_safe_common_mapping
         +tags: ["safe"]
         secure: true
-       
+
     common_prep:
       +materialized: table
       +schema: common_prep
@@ -464,6 +464,9 @@ models:
     workspaces:
       +tags: ["workspace"]
 
+      workspace_customer_success:
+        +schema: workspace_customer_success
+
       workspace_data:
         +schema: workspace_data
         tdf:
@@ -519,7 +522,7 @@ models:
       arr:
         +schema: restricted_safe_legacy
         +tags: ["safe"]
-        secure: true 
+        secure: true
 
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -532,7 +535,7 @@ models:
       finance:
         +schema: restricted_safe_common_mart_finance
         +tags: ["safe"]
-        secure: true 
+        secure: true
 
       product:
         +tags: ["product"]
@@ -542,8 +545,8 @@ models:
           +schema: restricted_safe_common_mart_product
           +tags: ["safe"]
           secure: true
-        
-      pumps: 
+
+      pumps:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps
         +materialized: table
@@ -552,7 +555,7 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps_sensitive
         +materialized: table
-      
+
       sales_funnel:
         +schema: common_mart_sales
         restricted_safe:
@@ -575,10 +578,10 @@ models:
       +schema: data_quality
       +tags: ["product"]
       +materialized: table
-    
+
     share:
       +schema: share
-      +materialized: table 
+      +materialized: table
 
     # ------------------
     # Trusted Data Framework
