@@ -28,8 +28,8 @@
       first_order_opps.dim_crm_opportunity_id,
       False AS is_first_order_available
     FROM upa_base 
-    LEFT JOIN first_order_opps ON
-    upa_base.dim_crm_account_id=first_order_opps.dim_crm_account_id
+    LEFT JOIN first_order_opps 
+      ON upa_base.dim_crm_account_id=first_order_opps.dim_crm_account_id
     WHERE dim_crm_opportunity_id IS NOT null
       
   ), final AS (
