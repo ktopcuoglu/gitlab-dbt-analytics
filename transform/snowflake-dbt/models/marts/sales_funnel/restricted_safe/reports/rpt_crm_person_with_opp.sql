@@ -54,7 +54,9 @@
       END AS person_order_type,
       dim_crm_user.crm_user_region,
       dim_crm_user.crm_user_area,
-      dim_crm_user.crm_user_geo
+      dim_crm_user.crm_user_geo,
+      '@rkohnke' AS created_by,
+      "2021-01-20" AS created_date
     FROM mart_crm_person
     LEFT JOIN mart_crm_opportunity ON
     mart_crm_person.dim_crm_account_id=mart_crm_opportunity.dim_crm_account_id
@@ -71,9 +73,7 @@
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@rkohnke",
     updated_by="@rkohnke",
-    created_date="2022-01-20",
     updated_date="2022-01-20",
   ) }}
 
