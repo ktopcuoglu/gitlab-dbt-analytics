@@ -22,6 +22,18 @@ WITH issues AS (
     SELECT *
     FROM {{ref('gitlab_dotcom_labels_xf')}}
 
+), derived_close_date AS (
+
+    SELECT
+      noteable_id AS issue_id,
+      created_at  AS derived_closed_at
+    FROM prep.sensitive.gitlab_dotcom_notes
+    WHERE noteable_type = 'Issue'
+      AND system = TRUE
+      AND (CONTAINS(note, 'closed')
+      OR CONTAINS(note, 'moved to'))
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at ASC) = 1
+
 ), agg_labels AS (
 
     SELECT
@@ -85,7 +97,11 @@ WITH issues AS (
     issues.created_at                            AS issue_created_at,
     issues.updated_at                            AS issue_updated_at,
     issue_last_edited_at,
-    issue_closed_at,
+    --issue_closed_at,
+    IFF(issue_closed_at IS NULL 
+        AND state = 'closed',
+        derived_close_date.derived_closed_at,
+        issue_closed_at)                         AS issue_closed_at,
     projects.namespace_id,
     visibility_level,
     is_confidential                              AS issue_is_confidential,
@@ -189,6 +205,8 @@ WITH issues AS (
     ON issues.issue_id = issue_metrics.issue_id
   LEFT JOIN first_events_weight
     ON issues.issue_id = first_events_weight.issue_id
+  LEFT JOIN derived_close_date
+    ON issues.issue_id = derived_close_date.issue_id
 )
 
 SELECT *
