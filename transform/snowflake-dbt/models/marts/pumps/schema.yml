@@ -879,6 +879,3 @@ models:
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-
-  - name: pump_hash_marketing_contact
-    description: '{{ doc("pump_hash_marketing_contact") }}'

@@ -117,9 +117,6 @@ models:
 
   - name: pump_subscription_product_usage
     description: '{{ doc("pump_subscription_product_usage") }}'
-    
-  - name: pump_marketing_premium_to_ultimate
-    description: '{{ doc("pump_marketing_premium_to_ultimate") }}'
 
   - name: pump_product_usage_free_user_metrics_monthly
     description: '{{ doc("pump_product_usage_free_user_metrics_monthly") }}'
