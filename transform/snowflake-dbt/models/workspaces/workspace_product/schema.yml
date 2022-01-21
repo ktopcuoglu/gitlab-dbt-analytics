@@ -54,8 +54,8 @@ models:
           - not_null
           - unique
 
-  - name: fct_events_all
-    description: ' {{ doc("fct_events_all") }} '
+  - name: fct_event_usage_metrics
+    description: ' {{ doc("fct_event_usage_metrics") }} '
     columns:
       - name: event_id
         tests:
