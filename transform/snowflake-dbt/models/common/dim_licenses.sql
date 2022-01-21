@@ -6,7 +6,7 @@
 WITH licenses AS (
 
     SELECT *
-    FROM {{ ref('customers_db_licenses_source') }}
+    FROM {{ ref('license_db_licenses_source') }}
 
 ), renamed AS (
 
@@ -15,7 +15,7 @@ WITH licenses AS (
       license_md5,
       zuora_subscription_id    AS subscription_id,
       zuora_subscription_name  AS subscription_name,
-      license_user_count,
+      users_count              AS license_user_count,
       plan_code                AS license_plan,
       is_trial,
       IFF(
@@ -23,8 +23,8 @@ WITH licenses AS (
           TRUE, FALSE
       )                        AS is_internal,
       company                  AS company,
-      license_start_date,
-      license_expire_date,
+      starts_at::DATE          AS license_start_date,
+      license_expires_at::DATE AS license_expire_date,
       created_at,
       updated_at
     FROM licenses
@@ -35,7 +35,7 @@ WITH licenses AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@derekatwood",
-    updated_by="@chrissharp",
+    updated_by="@msendal",
     created_date="2020-08-10",
-    updated_date="2022-01-18"
+    updated_date="2020-09-17"
 ) }}
