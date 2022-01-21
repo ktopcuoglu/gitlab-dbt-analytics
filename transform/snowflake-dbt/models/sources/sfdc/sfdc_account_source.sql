@@ -87,18 +87,18 @@ WITH source AS (
       atam_address_postal_code__c                   AS tsp_address_postal_code,
 
       -- account demographics fields
-        account_demographics_sales_segment__c       AS account_demographics_sales_segment,
-        account_demographics_geo__c                 AS account_demographics_geo,
-        account_demographics_region__c              AS account_demographics_region,
-        account_demographics_area__c                AS account_demographics_area,
-        account_demographics_territory__c           AS account_demographics_territory,
-        account_demographics_employee_count__c      AS account_demographics_employee_count,
-        account_demographic_max_family_employees__c AS account_demographics_max_family_employee,
-        account_demographics_upa_country__c         AS account_demographics_upa_country,
-        account_demographics_upa_state__c           AS account_demographics_upa_state,
-        account_demographics_upa_city__c            AS account_demographics_upa_city,
-        account_demographics_upa_street__c          AS account_demographics_upa_street,
-        account_demographics_upa_postal_code__c     AS account_demographics_upa_postal_code,
+      account_demographics_sales_segment__c         AS account_demographics_sales_segment,
+      account_demographics_geo__c                   AS account_demographics_geo,
+      account_demographics_region__c                AS account_demographics_region,
+      account_demographics_area__c                  AS account_demographics_area,
+      account_demographics_territory__c             AS account_demographics_territory,
+      account_demographics_employee_count__c        AS account_demographics_employee_count,
+      account_demographic_max_family_employees__c   AS account_demographics_max_family_employee,
+      account_demographics_upa_country__c           AS account_demographics_upa_country,
+      account_demographics_upa_state__c             AS account_demographics_upa_state,
+      account_demographics_upa_city__c              AS account_demographics_upa_city,
+      account_demographics_upa_street__c            AS account_demographics_upa_street,
+      account_demographics_upa_postal_code__c       AS account_demographics_upa_postal_code,
 
       -- present state info
       health__c                                     AS health_score,
@@ -157,8 +157,8 @@ WITH source AS (
       -- these three fields are used to identify accounts owned by reps within hierarchies that they do not fully own
       -- or even within different regions
 
-      locally_Managed__c                            AS is_locally_managed_account,
-      strategic__c                                  AS is_strategic_account,
+      locally_Managed__c                             AS is_locally_managed_account,
+      strategic__c                                   AS is_strategic_account,
 
       -- ************************************
       -- New SFDC Account Fields for FY22 Planning

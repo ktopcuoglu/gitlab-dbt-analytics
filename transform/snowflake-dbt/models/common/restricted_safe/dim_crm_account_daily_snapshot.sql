@@ -1,18 +1,44 @@
-WITH map_merged_crm_account AS (
+WITH snapshot_dates AS (
+
+   SELECT *
+   FROM {{ ref('dim_date') }}
+   WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+
+), map_merged_crm_account AS (
 
     SELECT *
     FROM {{ ref('map_merged_crm_account') }}
 
-), sfdc_account AS (
+), sfdc_account_base AS (
 
     SELECT *
-    FROM {{ ref('sfdc_account_source') }}
+    FROM {{ ref('sfdc_account_snapshots_source') }}
     WHERE account_id IS NOT NULL
+
+), sfdc_account AS (
+
+    SELECT
+      snapshot_dates.date_id AS snapshot_id,
+      sfdc_account_base.*
+    FROM sfdc_account_base
+    INNER JOIN snapshot_dates
+      ON snapshot_dates.date_actual >= sfdc_account_base.dbt_valid_from
+      AND snapshot_dates.date_actual < COALESCE(sfdc_account_base.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+
+), sfdc_users_base AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_user_snapshots_source') }}
 
 ), sfdc_users AS (
 
-    SELECT *
-    FROM {{ ref('sfdc_users_source') }}
+    SELECT
+      snapshot_dates.date_id AS snapshot_id,
+      sfdc_users_base.*
+    FROM sfdc_users_base
+    INNER JOIN snapshot_dates
+      ON snapshot_dates.date_actual >= sfdc_users_base.dbt_valid_from
+      AND snapshot_dates.date_actual < COALESCE( sfdc_users_base.dbt_valid_to, '9999-12-31'::TIMESTAMP)
 
 ), sfdc_record_type AS (
 
@@ -150,16 +176,19 @@ WITH map_merged_crm_account AS (
       ultimate_parent_account.zoom_info_ultimate_parent_company_zi_id     AS parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       ultimate_parent_account.zoom_info_ultimate_parent_company_name      AS parent_crm_account_zoom_info_ultimate_parent_company_name,
       {{ sfdc_account_fields() }}
-    
+  
     FROM sfdc_account
     LEFT JOIN map_merged_crm_account
       ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
+        AND sfdc_account.snapshot_id = ultimate_parent_account.snapshot_id
     LEFT OUTER JOIN sfdc_users
       ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+        AND sfdc_account.snapshot_id = sfdc_users.snapshot_id
     LEFT JOIN sfdc_users AS account_owner
       ON account_owner.user_id = sfdc_account.owner_id
+        AND account_owner.snapshot_id = sfdc_account.snapshot_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
 
@@ -167,8 +196,8 @@ WITH map_merged_crm_account AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@msendal",
+    created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2020-06-01",
+    created_date="2022-01-20",
     updated_date="2022-01-20"
 ) }}
