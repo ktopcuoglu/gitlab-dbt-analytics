@@ -250,8 +250,12 @@ class SnowflakeManager:
 
         for stage in stages:
 
-            output_stage_name = f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
-            from_stage_name = f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
+            output_stage_name = (
+                f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
+            )
+            from_stage_name = (
+                f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
+            )
 
             if stage["stage_type"] == "External Named":
 
