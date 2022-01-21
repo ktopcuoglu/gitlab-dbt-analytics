@@ -311,6 +311,7 @@ roles:
             - covid19
             - dbt_analytics
             - driveload
+            - gainsight
             - gcp_billing
             - gitlab_data_yaml
             - gitlab_dotcom
