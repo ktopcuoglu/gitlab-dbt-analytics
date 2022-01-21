@@ -46,6 +46,12 @@
        AND dim_subscription_id != '2c92a00f7579c362017588a2de19174a'
        --term dates do not align to the subscription term dates, sub_name = A-S00038937
        AND dim_subscription_id != '2c92a01177472c5201774af57f834a43'
+       --data quality, last term not entered with same pattern that fits ATR logic. Edge cases that needs to be filtered out to get to the last term version that should count for this subscription.
+       --sub_name = A-S00011774
+       AND dim_subscription_id NOT IN ('8a1298657dd7f81d017dde1bd9c03fa8','8a128b317dd7e89a017ddd38a74d3037','8a128b317dd7e89a017ddd38a6052ff0',
+                                       '8a128b317dc30baa017dc41e5b0932e9','8a128b317dc30baa017dc41e59dd32be','8a128b317dc30baa017dc41e58b43295',
+                                       '2c92a0fd7cc1ab13017cc843195f62fb','2c92a0fd7cc1ab13017cc843186f62da','2c92a0fd7cc1ab13017cc843178162b6',
+                                       '2c92a0fd7cc1ab13017cc843164d6292')
    
 ), dim_subscription_int AS (
 
@@ -942,5 +948,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-12-06",
-    updated_date="2021-12-06"
+    updated_date="2021-01-21"
 ) }}
