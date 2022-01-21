@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('bizible_opportunities_source') }}
+    FROM {{ ref('bizible_opportunities_source_pii') }}
 
 )
 
