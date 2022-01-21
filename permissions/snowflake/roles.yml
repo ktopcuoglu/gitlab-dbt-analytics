@@ -3194,6 +3194,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - zoominfo_inbound
         warehouses:
             - analyst_xs
 
