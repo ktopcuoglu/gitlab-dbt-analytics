@@ -236,36 +236,22 @@ class SnowflakeManager:
         :param database:
         :param schema:
         """
-        if schema != "":
-            stages_query = f"""
-                 SELECT 
-                     stage_schema,
-                     stage_name,
-                     stage_url, 
-                     stage_type
-                 FROM {database}.information_schema.stages 
-                 WHERE stage_schema = '{schema.upper()}' 
-             """
-        else:
-            stages_query = f"""
-                 SELECT 
-                     stage_schema,
-                     stage_name,
-                     stage_url, 
-                     stage_type
-                 FROM {database}.information_schema.stages 
+        stages_query = f"""
+             SELECT 
+                 stage_schema,
+                 stage_name,
+                 stage_url, 
+                 stage_type
+             FROM {database}.information_schema.stages
+             {f"WHERE stage_schema = '{schema.upper()}'" if schema != "" else ""}
              """
 
         stages = query_executor(self.engine, stages_query)
 
         for stage in stages:
 
-            output_stage_name = (
-                f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
-            )
-            from_stage_name = (
-                f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
-            )
+            output_stage_name = f"{create_db}.{stage['stage_schema']}.{stage['stage_name']}"
+            from_stage_name = f"{database.upper()}.{stage['stage_schema']}.{stage['stage_name']}"
 
             if stage["stage_type"] == "External Named":
 
