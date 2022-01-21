@@ -2138,6 +2138,19 @@ roles:
                     - prep.sensitive.gitlab_contact_enhance_pii
                     - zoominfo_inbound.gitlab.*
 
+    - zoominfo_inbound:
+        privileges:
+            databases:
+                read:
+                    - zoominfo_inbound
+            schemas:
+                read:
+                    - zoominfo_inbound.gitlab
+            tables:
+                read:
+                    - zoominfo_inbound.gitlab.*
+
+
     - zuora:
         warehouses:
             - analyst_xs
