@@ -12,12 +12,13 @@ WITH snapshot_dates AS (
 ), sfdc_users AS (
 
     SELECT
-      snapshot_dates.date_id AS snapshot_id,
+      {{ dbt_utils.surrogate_key(['sfdc_users_base.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
+      snapshot_dates.date_id                                                                AS snapshot_date_id,
       sfdc_users_base.*
     FROM sfdc_users_base
     INNER JOIN snapshot_dates
-    ON dim_date.date_actual >= SFDC_USER_SNAPSHOTS.dbt_valid_from
-      AND dim_date.date_actual < COALESCE( SFDC_USER_SNAPSHOTS.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+    ON snapshot_dates.date_actual >= sfdc_users_base.dbt_valid_from
+      AND snapshot_dates.date_actual < COALESCE(sfdc_users_base.dbt_valid_to, '9999-12-31'::TIMESTAMP)
 
 ), sfdc_user_roles AS (
 
@@ -27,6 +28,8 @@ WITH snapshot_dates AS (
 ), final_users AS (
 
     SELECT
+      sfdc_users.crm_user_snapshot_id,
+      sfdc_users.snapshot_date_id,
       sfdc_users.user_id                                            AS dim_crm_user_id,
       sfdc_users.employee_number,
       sfdc_users.name                                               AS user_name,

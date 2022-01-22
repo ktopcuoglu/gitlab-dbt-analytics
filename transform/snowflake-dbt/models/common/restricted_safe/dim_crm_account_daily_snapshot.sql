@@ -18,7 +18,8 @@ WITH snapshot_dates AS (
 ), sfdc_account AS (
 
     SELECT
-      snapshot_dates.date_id AS snapshot_id,
+      {{ dbt_utils.surrogate_key(['sfdc_account_base.account_id','snapshot_dates.date_id'])}}     AS crm_account_snapshot_id,
+      snapshot_dates.date_id                                                                      AS snapshot_date_id,
       sfdc_account_base.*
     FROM sfdc_account_base
     INNER JOIN snapshot_dates
@@ -33,7 +34,8 @@ WITH snapshot_dates AS (
 ), sfdc_users AS (
 
     SELECT
-      snapshot_dates.date_id AS snapshot_id,
+      {{ dbt_utils.surrogate_key(['sfdc_users_base.user_id','snapshot_dates.date_id'])}}          AS crm_user_snapshot_id,
+      snapshot_dates.date_id                                                                      AS snapshot_date_id,
       sfdc_users_base.*
     FROM sfdc_users_base
     INNER JOIN snapshot_dates
@@ -48,6 +50,8 @@ WITH snapshot_dates AS (
 ), ultimate_parent_account AS (
 
     SELECT
+      crm_account_snapshot_id,
+      snapshot_date_id,
       account_id,
       account_name,
       billing_country,
@@ -90,6 +94,8 @@ WITH snapshot_dates AS (
 
     SELECT
       --crm account informtion
+      sfdc_account.crm_account_snapshot_id,
+      sfdc_account.snapshot_date_id,
       sfdc_account.owner_id                                               AS dim_crm_user_id,
       sfdc_account.account_id                                             AS dim_crm_account_id,
       sfdc_account.account_name                                           AS crm_account_name,
@@ -182,13 +188,13 @@ WITH snapshot_dates AS (
       ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-        AND sfdc_account.snapshot_id = ultimate_parent_account.snapshot_id
+        AND sfdc_account.snapshot_date_id = ultimate_parent_account.snapshot_date_id
     LEFT OUTER JOIN sfdc_users
       ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
-        AND sfdc_account.snapshot_id = sfdc_users.snapshot_id
+        AND sfdc_account.snapshot_date_id = sfdc_users.snapshot_date_id
     LEFT JOIN sfdc_users AS account_owner
       ON account_owner.user_id = sfdc_account.owner_id
-        AND account_owner.snapshot_id = sfdc_account.snapshot_id
+        AND account_owner.snapshot_date_id = sfdc_account.snapshot_date_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
 
