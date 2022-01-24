@@ -15,8 +15,7 @@ WITH zuora_account_source AS (
  ), zuora_subscription_source AS (
 
     SELECT 
-      prep_subscription.*,
-      IFF(prep_subscription.created_by_id IN ('2c92a00f759c7a400175ae4c4351215f','2c92a0fd567e2cff01568f5d58ec336f', '2c92a0107bde3653017bf00cd8a86d5a', '2c92a0fd55822b4d015593ac264767f2'), 'Self-Service', 'Sales-Assisted') AS subscription_sales_type_update -- integration user ids from Jessica & Mark
+      prep_subscription.*
     FROM {{ ref('prep_subscription') }}
     INNER JOIN zuora_account_source
       ON prep_subscription.dim_billing_account_id = zuora_account_source.account_id
@@ -29,7 +28,7 @@ WITH zuora_account_source AS (
     FROM zuora_subscription_source
     WHERE opportunity_id IS NOT NULL
       AND (subscription_created_date >= '2021-04-12'
-        OR subscription_sales_type_update = 'Self-Service')
+        OR subscription_sales_type = 'Self-Service')
        
 ), zuora_rate_plan_source AS (
   
@@ -129,7 +128,7 @@ WITH zuora_account_source AS (
       zuora_subscription_source.dim_subscription_id                                                                                                                                                                                                                                                                                                                                     AS dim_subscription_id,
       zuora_subscription_source.dim_billing_account_id                                                                                                                                                                                                                                                                                                                                  AS dim_billing_account_id,
       zuora_subscription_source.subscription_name                                                                                                                                                                                                                                                                                                                                       AS subscription_name,
-      zuora_subscription_source.subscription_sales_type_update                                                                                                                                                                                                                                                                                                                          AS subscription_sales_type_update,
+      zuora_subscription_source.subscription_sales_type                                                                                                                                                                                                                                                                                                                          AS subscription_sales_type,
       zuora_subscription_source.dim_crm_account_id                                                                                                                                                                                                                                                                                                                                      AS subscription_account_id,
       prep_crm_account.dim_parent_crm_account_id                                                                                                                                                                                                                                                                                                                                        AS subscription_parent_account_id,
       COALESCE(invoice_opps.invoice_opp_account_id, LAG(invoice_opps.invoice_opp_account_id) IGNORE NULLS OVER (PARTITION BY zuora_subscription_source.subscription_name, zuora_subscription_source.subscription_created_date ORDER BY zuora_subscription_source.subscription_version))                                                                                                 AS invoice_opp_account_id_forward,
@@ -377,7 +376,7 @@ WITH zuora_account_source AS (
 
     SELECT *
     FROM dupes_part_2
-    WHERE subscription_sales_type_update = 'Self-Service'
+    WHERE subscription_sales_type = 'Self-Service'
       AND subscription_opp_id IS NOT NULL
     QUALIFY RANK() OVER (PARTITION BY dim_subscription_id ORDER BY invoice_opp_id_forward, invoice_opp_id_backward, invoice_opp_id_backward_term_based) = 1
 
@@ -385,7 +384,7 @@ WITH zuora_account_source AS (
 
     SELECT *
     FROM dupes_part_2
-    WHERE subscription_sales_type_update = 'Sales-Assisted'
+    WHERE subscription_sales_type = 'Sales-Assisted'
       AND COALESCE(subscription_quote_number_opp_id_forward, subscription_quote_number_opp_id_backward, subscription_quote_number_opp_id_backward_term_based) IS NOT NULL
     QUALIFY RANK() OVER (PARTITION BY dim_subscription_id ORDER BY invoice_opp_id_forward, invoice_opp_id_backward, invoice_opp_id_backward_term_based) = 1
   
@@ -481,5 +480,5 @@ LEFT JOIN short_oppty_id
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-11-10",
-    updated_date="2021-11-16"
+    updated_date="2022-01-19"
 ) }}

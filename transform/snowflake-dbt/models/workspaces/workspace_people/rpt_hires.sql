@@ -4,9 +4,17 @@
     ('sources','greenhouse_sources_source'),
     ('offers','greenhouse_offers_source'),
     ('openings','greenhouse_openings_source'),
-    ('job_departments','greenhouse_jobs_departments_source'),
     ('departments','wk_prep_greenhouse_departments')
 ])}}
+
+, job_departments AS (
+
+    SELECT *
+    FROM {{ ref('greenhouse_jobs_departments_source') }}
+    -- Table is many to many (job_id to department_id) with the lowest level created first
+    QUALIFY row_number() OVER (PARTITION BY job_id ORDER BY job_department_created_at ASC) = 1
+    
+)
 
 SELECT
   hires.unique_key,
