@@ -66,15 +66,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "ci_builds",
-    "source_table_name": "temp_gitlab_dotcom_ci_builds_filtered",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "ci_pipeline_schedules",
     "source_table_name": "gitlab_dotcom_ci_pipeline_schedules",
     "user_column_name": "owner_id",
