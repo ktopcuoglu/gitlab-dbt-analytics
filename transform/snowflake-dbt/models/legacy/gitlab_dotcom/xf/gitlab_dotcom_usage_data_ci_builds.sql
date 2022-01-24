@@ -59,10 +59,16 @@
     ('plans', 'gitlab_dotcom_plans'),
     ('projects', 'gitlab_dotcom_projects_xf'),
     ('blocked_users', 'gitlab_dotcom_users_blocked_xf'),
-    ('users', 'gitlab_dotcom_users'),
+    ('users', 'gitlab_dotcom_users')
 ]) }}
 
+, push_events_source AS (
 
+    SELECT *
+    FROM {{ ref('temp_gitlab_dotcom_events_filtered') }}
+    WHERE event_action_type = 'pushed'
+
+)
 
 {% for event_cte in event_ctes %}
 

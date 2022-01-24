@@ -174,15 +174,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "events",
-    "source_table_name": "gitlab_dotcom_events",
-    "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "event_id",
-    "stage_name": "manage",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "labels",
     "source_table_name": "gitlab_dotcom_labels",
     "user_column_name": "NULL",
@@ -253,15 +244,6 @@
     "primary_key": "project_id",
     "stage_name": "monitor",
     "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "push_events",
-    "source_cte_name": "push_events_source",
-    "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "event_id",
-    "stage_name": "create",
-    "is_representative_of_stage": "False"
   },
   {
     "event_name": "releases",
@@ -430,20 +412,6 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_projects_xf') }}
     WHERE container_registry_enabled = True
-
-), push_events_source AS (
-
-    SELECT *
-    FROM {{ ref('temp_gitlab_dotcom_events_filtered') }}
-    WHERE event_action_type = 'pushed'
-
--- ), group_members AS (
-
---     SELECT
---       *,
---       invite_created_at AS created_at
---     FROM {{ ref('gitlab_dotcom_members') }}
---     WHERE member_source_type = 'Namespace'
 
 ), sast_jobs AS (
 
