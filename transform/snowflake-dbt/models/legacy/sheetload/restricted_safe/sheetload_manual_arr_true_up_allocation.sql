@@ -1,8 +1,6 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi"]
 ) }}
-
--- NEEDS TO BE MOVED TO RESTRICTED SCHEMA FOR MNPI
 
 WITH source AS (
 

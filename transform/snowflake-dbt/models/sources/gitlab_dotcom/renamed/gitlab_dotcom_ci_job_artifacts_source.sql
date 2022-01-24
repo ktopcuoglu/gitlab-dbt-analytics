@@ -17,8 +17,8 @@ WITH source AS (
     file                  AS file,
     file_store            AS file_store,
     file_format           AS file_format,
-    file_location         AS file_location
-
+    file_location         AS file_location,
+    locked                AS locked
   FROM source
 
 )
