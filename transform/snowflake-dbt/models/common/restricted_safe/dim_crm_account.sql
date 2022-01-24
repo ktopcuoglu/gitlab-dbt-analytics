@@ -1,4 +1,14 @@
-{{ sfdc_account_fields('FALSE') }}
+WITH final AS (
+
+    SELECT 
+      {{ dbt_utils.star(
+           from=ref('prep_crm_account'), 
+           except=['CREATED_BY','UPDATED_BY','MODEL_CREATED_DATE','MODEL_UPDATED_DATE','DBT_UPDATED_AT','DBT_CREATED_AT']
+           ) 
+      }}
+    FROM {{ ref('prep_crm_account') }}
+
+)
 
 {{ dbt_audit(
     cte_ref="final",
