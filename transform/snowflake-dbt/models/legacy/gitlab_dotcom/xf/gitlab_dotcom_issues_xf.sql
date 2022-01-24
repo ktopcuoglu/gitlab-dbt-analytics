@@ -32,7 +32,7 @@ WITH issues AS (
       AND system = TRUE
       AND (CONTAINS(note, 'closed')
       OR CONTAINS(note, 'moved to'))
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at ASC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY noteable_id ORDER BY created_at DESC) = 1
 
 ), agg_labels AS (
 
