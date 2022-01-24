@@ -60,22 +60,6 @@ WITH map_merged_crm_account AS (
     FROM sfdc_account
     WHERE account_id = ultimate_parent_account_id
 
--- ), deleted_accounts AS (
-
---     SELECT *
---     FROM sfdc_account
---     WHERE is_deleted = TRUE
-
--- ), master_records AS (
-
---     SELECT
---       a.account_id,
---       COALESCE(
---       b.master_record_id, a.master_record_id) AS sfdc_master_record_id
---     FROM deleted_accounts a
---     LEFT JOIN deleted_accounts b
---       ON a.master_record_id = b.account_id
-
 ), final AS (
 
   SELECT
