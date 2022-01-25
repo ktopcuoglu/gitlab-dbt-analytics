@@ -1,6 +1,6 @@
 {{ simple_cte([
     ('bamboohr_job_info_current_division_base','bamboohr_job_info_current_division_base'),
-    ('sheetload_mapping_sdr_sfdc_bamboohr_source','sheetload_mapping_sdr_sfdc_bamboohr_source'),
+    ('sheetload_mapping_sdr_sfdc_bamboohr','sheetload_mapping_sdr_sfdc_bamboohr'),
     ('dim_crm_user','dim_crm_user'),
     ('dim_date','dim_date')
     
@@ -44,10 +44,10 @@
         ELSE NULL
       END AS sdr_ramp_end_date
     FROM sdr
-    INNER JOIN sheetload_mapping_sdr_sfdc_bamboohr_source
-      ON sdr.employee_id = sheetload_mapping_sdr_sfdc_bamboohr_source.eeid
+    INNER JOIN sheetload_mapping_sdr_sfdc_bamboohr
+      ON sdr.employee_id = sheetload_mapping_sdr_sfdc_bamboohr.eeid
     LEFT JOIN dim_crm_user
-      ON dim_crm_user.dim_crm_user_id = sheetload_mapping_sdr_sfdc_bamboohr_source.user_id
+      ON dim_crm_user.dim_crm_user_id = sheetload_mapping_sdr_sfdc_bamboohr.user_id
     LEFT JOIN dim_date AS d_1
       ON DATEADD('month', 1, sdr.start_date) = d_1.date_actual
     LEFT JOIN dim_date AS d_2
@@ -92,5 +92,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-20",
-    updated_date="2022-01-20",
+    updated_date="2022-01-25",
   ) }}
