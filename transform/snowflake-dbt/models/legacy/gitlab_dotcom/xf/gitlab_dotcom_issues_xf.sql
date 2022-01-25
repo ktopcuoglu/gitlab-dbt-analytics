@@ -27,7 +27,7 @@ WITH issues AS (
     SELECT
       noteable_id AS issue_id,
       created_at  AS derived_closed_at
-    FROM prep.sensitive.gitlab_dotcom_notes
+    FROM {{ref('gitlab_dotcom_notes')}}
     WHERE noteable_type = 'Issue'
       AND system = TRUE
       AND (CONTAINS(note, 'closed')
