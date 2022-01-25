@@ -21,7 +21,7 @@
 
 , fct_events AS  (
 
-    SELECT top 1000
+    SELECT
       event_primary_key                                             AS event_primary_key,
       usage_data_events.event_name                                  AS event_name,
       namespace_id                                                  AS namespace_id,
