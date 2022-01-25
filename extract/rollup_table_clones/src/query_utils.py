@@ -8,8 +8,9 @@ from gitlabdata.orchestration_utils import (
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import ProgrammingError
 
+
 def get_table_column_names(
-        engine: Engine, db_name: str, table_name: str
+    engine: Engine, db_name: str, table_name: str
 ) -> pd.DataFrame:
     """
 
@@ -34,7 +35,7 @@ def get_table_column_names(
 
 
 def get_existing_tables_to_roll_up(
-        engine: Engine, db_name: str, table_name: str
+    engine: Engine, db_name: str, table_name: str
 ) -> pd.Series:
     """
 
@@ -58,7 +59,7 @@ def get_existing_tables_to_roll_up(
 
 
 def get_latest_tables_to_roll_up(
-        engine: Engine, db_name: str, schema_name: str, table_name: str
+    engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> pd.DataFrame:
     """
 
@@ -101,7 +102,7 @@ def get_latest_tables_to_roll_up(
 
 
 def get_latest_rolled_up_table_name(
-        engine: Engine, db_name: str, schema_name: str, table_name: str
+    engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> str:
     """
     Retrieves the latest table name that was rolled up.
@@ -161,7 +162,11 @@ def process_row(row: pd.Series) -> str:
 
 
 def rollup_table_clone(
-        engine: Engine, db_name: str, schema_name: str, table_name: str, retried: bool = False
+    engine: Engine,
+    db_name: str,
+    schema_name: str,
+    table_name: str,
+    retried: bool = False,
 ) -> bool:
     """
     Rolls up tables, columns will always be cast to expected dtype of the final table.
@@ -215,7 +220,9 @@ def rollup_table_clone(
             except ProgrammingError as pe:
                 if "invalid identifier" in pe._message() and not retried:
                     recreate_rollup_table(engine, db_name, schema_name, table_name)
-                    rollup_table_clone(engine, db_name, schema_name, table_name, retried=True)
+                    rollup_table_clone(
+                        engine, db_name, schema_name, table_name, retried=True
+                    )
 
     logging.info("Successfully rolled up table clones")
 
@@ -223,7 +230,7 @@ def rollup_table_clone(
 
 
 def recreate_rollup_table(
-        engine: Engine, db_name: str, schema_name: str, table_name: str
+    engine: Engine, db_name: str, schema_name: str, table_name: str
 ) -> bool:
     """
         Recreates the rollup table, due to differing column data types we take the most recent table as
@@ -262,7 +269,7 @@ def recreate_rollup_table(
         create_table_statement = create_table_statement + process_row(row)
 
     create_table_statement = (
-            create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT, SNAPSHOT_DATE INT)"
+        create_table_statement[:-1] + ", ORIGINAL_TABLE_NAME TEXT, SNAPSHOT_DATE INT)"
     )
 
     query_executor(engine, create_table_statement)
