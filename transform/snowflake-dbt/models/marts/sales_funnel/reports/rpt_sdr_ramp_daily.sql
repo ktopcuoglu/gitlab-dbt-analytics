@@ -29,15 +29,15 @@
   
     SELECT
       sdr.*,
-      sheetload_mapping_sdr_sfdc_bamboohr_source.first_name,
-      sheetload_mapping_sdr_sfdc_bamboohr_source.last_name,
-      sheetload_mapping_sdr_sfdc_bamboohr_source.active,
-      sheetload_mapping_sdr_sfdc_bamboohr_source.user_id AS dim_crm_user_id,
-      sheetload_mapping_sdr_sfdc_bamboohr_source.sdr_segment,
-      sheetload_mapping_sdr_sfdc_bamboohr_source.sdr_region,
-      IFF(sheetload_mapping_sdr_sfdc_bamboohr_source.sdr_region IN ('East', 'West'), 'AMER',
-          sheetload_mapping_sdr_sfdc_bamboohr_source.sdr_region) AS sdr_region_grouped,
-      IFNULL(sheetload_mapping_sdr_sfdc_bamboohr_source.sdr_order_type, 'Other') AS sdr_order_type,
+      sheetload_mapping_sdr_sfdc_bamboohr.first_name,
+      sheetload_mapping_sdr_sfdc_bamboohr.last_name,
+      sheetload_mapping_sdr_sfdc_bamboohr.active,
+      sheetload_mapping_sdr_sfdc_bamboohr.user_id AS dim_crm_user_id,
+      sheetload_mapping_sdr_sfdc_bamboohr.sdr_segment,
+      sheetload_mapping_sdr_sfdc_bamboohr.sdr_region,
+      IFF(sheetload_mapping_sdr_sfdc_bamboohr.sdr_region IN ('East', 'West'), 'AMER',
+          sheetload_mapping_sdr_sfdc_bamboohr.sdr_region) AS sdr_region_grouped,
+      IFNULL(sheetload_mapping_sdr_sfdc_bamboohr.sdr_order_type, 'Other') AS sdr_order_type,
       CASE
         WHEN DAY(sdr.start_date) < 14 THEN d_1.last_day_of_month
         WHEN DAY(sdr.start_date) >= 14 THEN d_2.last_day_of_month
