@@ -5,3 +5,19 @@ templater = dbt
 
 [sqlfluff:templater:dbt]
 project_dir = ./
+
+[sqlfluff:rules]
+tab_space_size = 2
+max_line_length = 120
+
+[sqlfluff:rules:L010]
+# Keywords
+capitalisation_policy = upper
+
+[sqlfluff:rules:L030]
+# Function names
+capitalisation_policy = upper
+
+[sqlfluff:rules:L040]
+# Null & Boolean Literals
+capitalisation_policy = upper
