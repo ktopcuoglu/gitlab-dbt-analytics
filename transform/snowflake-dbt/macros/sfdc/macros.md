@@ -15,7 +15,7 @@ This macro applies proper formatting to sales segment data with the end result b
 {% enddocs %}
 
 {% docs sfdc_account_fields%}
-This macro stores all of the shared logic between the live and snapshot crm account models.
+This macro stores all of the shared logic between the live and snapshot crm account models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models.
 {% enddocs %}
 
 {% docs sfdc_deal_size %}
@@ -27,7 +27,7 @@ This macro is a CASE WHEN statement that groups the lead sources into new market
 {% enddocs %}
 
 {% docs sfdc_user_fields%}
-This macro stores all of the shared logic between the live and snapshot crm user models.
+This macro stores all of the shared logic between the live and snapshot crm user models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models.
 {% enddocs %}
 
 {% docs sales_funnel_text_slugify %}

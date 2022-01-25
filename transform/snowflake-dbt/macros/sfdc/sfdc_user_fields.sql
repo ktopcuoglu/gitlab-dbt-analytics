@@ -1,34 +1,40 @@
-{%- macro sfdc_user_fields(is_snapshot) %}
+{%- macro sfdc_user_fields(model_type) %}
 
 WITH sfdc_user_roles AS (
 
     SELECT *
     FROM {{ ref('sfdc_user_roles_source')}}
 
-{%- if is_snapshot == 'FALSE' %}
+{%- if model_type == 'base' %}
 
-{%- else %}
+{%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
 
     SELECT *
     FROM {{ ref('dim_date') }}
     WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+    {% if is_incremental() %}
+
+   -- this filter will only be applied on an incremental run
+   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
+
+   {% endif %}
 {%- endif %}
 
 ), sfdc_users AS (
 
     SELECT 
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
         *
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
-      snapshot_dates.date_id                                                                           AS snapshot_date_id,
+      snapshot_dates.date_id                                                                           AS snapshot_id,
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
       {{ ref('sfdc_users_source') }}
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       {{ ref('sfdc_user_snapshots_source') }}
        INNER JOIN snapshot_dates
          ON snapshot_dates.date_actual >= sfdc_user_snapshots_source.dbt_valid_from
@@ -38,11 +44,11 @@ WITH sfdc_user_roles AS (
 ), final AS (
 
     SELECT
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
   
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       sfdc_users.crm_user_snapshot_id,
-      sfdc_users.snapshot_date_id,
+      sfdc_users.snapshot_id,
       {%- endif %}
       sfdc_users.user_id                                            AS dim_crm_user_id,
       sfdc_users.employee_number,

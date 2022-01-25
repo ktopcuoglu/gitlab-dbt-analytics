@@ -1,34 +1,40 @@
-{%- macro sfdc_account_fields(is_snapshot) %}
+{%- macro sfdc_account_fields(model_type) %}
 
 WITH map_merged_crm_account AS (
 
     SELECT *
     FROM {{ ref('map_merged_crm_account') }}
 
-{%- if is_snapshot == 'FALSE' %}
+{%- if model_type == 'base' %}
 
-{%- else %}
+{%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
 
     SELECT *
     FROM {{ ref('dim_date') }}
     WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+    {% if is_incremental() %}
+
+   -- this filter will only be applied on an incremental run
+   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
+
+   {% endif %}
 {%- endif %}
 
 ), sfdc_account AS (
 
     SELECT 
-    {%- if is_snapshot == 'FALSE' %}
+    {%- if model_type == 'base' %}
         *
-    {%- else %}
+    {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
-        snapshot_dates.date_id                                                                                AS snapshot_date_id,
+        snapshot_dates.date_id                                                                                AS snapshot_id,
         sfdc_account_snapshots_source.*
      {%- endif %}
     FROM 
-    {%- if is_snapshot == 'FALSE' %}
+    {%- if model_type == 'base' %}
         {{ ref('sfdc_account_source') }}
-    {%- else %}
+    {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_account_snapshots_source') }}
          INNER JOIN snapshot_dates
            ON snapshot_dates.date_actual >= sfdc_account_snapshots_source.dbt_valid_from
@@ -39,17 +45,17 @@ WITH map_merged_crm_account AS (
 ), sfdc_users AS (
 
     SELECT 
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
         *
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
-      snapshot_dates.date_id                                                                           AS snapshot_date_id,
+      snapshot_dates.date_id                                                                           AS snapshot_id,
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
       {{ ref('sfdc_users_source') }}
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       {{ ref('sfdc_user_snapshots_source') }}
        INNER JOIN snapshot_dates
          ON snapshot_dates.date_actual >= sfdc_user_snapshots_source.dbt_valid_from
@@ -64,11 +70,11 @@ WITH map_merged_crm_account AS (
 ), ultimate_parent_account AS (
 
     SELECT
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
 
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       crm_account_snapshot_id,
-      snapshot_date_id,
+      snapshot_id,
       {%- endif %}
       account_id,
       account_name,
@@ -112,11 +118,11 @@ WITH map_merged_crm_account AS (
 
     SELECT
       --crm account informtion
-      {%- if is_snapshot == 'FALSE' %}
+      {%- if model_type == 'base' %}
   
-      {%- else %}
+      {%- elif model_type == 'snapshot' %}
       sfdc_account.crm_account_snapshot_id,
-      sfdc_account.snapshot_date_id,
+      sfdc_account.snapshot_id,
       {%- endif %}
       sfdc_account.owner_id                                               AS dim_crm_user_id,
       sfdc_account.account_id                                             AS dim_crm_account_id,
@@ -227,33 +233,28 @@ WITH map_merged_crm_account AS (
       ultimate_parent_account.zoom_info_parent_company_name              AS parent_crm_account_zoom_info_parent_company_name,
       ultimate_parent_account.zoom_info_ultimate_parent_company_zi_id    AS parent_crm_account_zoom_info_ultimate_parent_company_zi_id,
       ultimate_parent_account.zoom_info_ultimate_parent_company_name     AS parent_crm_account_zoom_info_ultimate_parent_company_name
-    {%- if is_snapshot == 'FALSE' %}
     FROM sfdc_account
     LEFT JOIN map_merged_crm_account
       ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
-    LEFT JOIN ultimate_parent_account
-      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-    LEFT OUTER JOIN sfdc_users
-      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
-    LEFT JOIN sfdc_users AS account_owner
-      ON account_owner.user_id = sfdc_account.owner_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
-    {%- else %}
-    FROM sfdc_account
-    LEFT JOIN map_merged_crm_account
-      ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
+    {%- if model_type == 'base' %}
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-        AND sfdc_account.snapshot_date_id = ultimate_parent_account.snapshot_date_id
     LEFT OUTER JOIN sfdc_users
       ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
-        AND sfdc_account.snapshot_date_id = sfdc_users.snapshot_date_id
     LEFT JOIN sfdc_users AS account_owner
       ON account_owner.user_id = sfdc_account.owner_id
-        AND account_owner.snapshot_date_id = sfdc_account.snapshot_date_id
-    LEFT JOIN sfdc_record_type
-       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
+    {%- elif model_type == 'snapshot' %}
+    LEFT JOIN ultimate_parent_account
+      ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
+        AND sfdc_account.snapshot_id = ultimate_parent_account.snapshot_id
+    LEFT OUTER JOIN sfdc_users
+      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+        AND sfdc_account.snapshot_id = sfdc_users.snapshot_id
+    LEFT JOIN sfdc_users AS account_owner
+      ON account_owner.user_id = sfdc_account.owner_id
+        AND account_owner.snapshot_id = sfdc_account.snapshot_id
     {%- endif %}
 
 )
