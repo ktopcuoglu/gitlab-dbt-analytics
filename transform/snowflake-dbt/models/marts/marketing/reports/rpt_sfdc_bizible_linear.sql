@@ -90,7 +90,6 @@
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
       mart_crm_attribution_touchpoint.gtm_motion,
-      mart_crm_attribution_touchpoint.bizible_touchpoint_position,
       SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) AS first_weight,
       SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) AS w_weight, 
       SUM(mart_crm_attribution_touchpoint.bizible_count_u_shaped) AS u_weight, 
@@ -112,7 +111,7 @@
     mart_crm_attribution_touchpoint.dim_crm_opportunity_id =      campaigns_per_opp.dim_crm_opportunity_id
     LEFT JOIN sfdc_bizible_attribution_touchpoint_xf ON
     mart_crm_attribution_touchpoint.dim_crm_touchpoint_id = sfdc_bizible_attribution_touchpoint_xf.touchpoint_id
-    GROUP BY     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53
+    GROUP BY     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52
 
 )
 
