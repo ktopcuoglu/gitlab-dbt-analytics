@@ -48,3 +48,9 @@ Preliminary results for mapping subscriptions to opportunites. This file has the
 - when a subscription version does not have an associated opportunity_id from an invoice or a quote, it has been filled in with the opportunity_id associated with an earlier version of the subscription, if one exists
 
 {% enddocs %}
+
+{% docs director_location_factors %}
+
+The director level minimum location factors are currently hardcoded into the [Compensation Calculator](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/da9d7101eb332d43cf621c70d8cfa1c002b1ed9a/app/javascript/calculator/salary.vue#L129).  If they are changed this file will have to be updated with the correct factors and dates.
+
+{% enddocs %}
