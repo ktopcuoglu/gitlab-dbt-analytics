@@ -11,7 +11,7 @@
     ('pmg_paid_digital','pmg_paid_digital')
 ]) }}
 
-WITH final AS (
+, final AS (
 
     SELECT *,
       DATE_TRUNC('month',reporting_date)::date::date AS reporting_date_month_yr,

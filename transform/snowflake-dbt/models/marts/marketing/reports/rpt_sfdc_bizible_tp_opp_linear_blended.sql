@@ -14,7 +14,7 @@
     ('dim_date','dim_date')
 ]) }}
 
-WITH unioned AS (
+, unioned AS (
   
     SELECT 
       rpt_pmg_data.reporting_date_month_yr AS bizible_touchpoint_date_month_yr,

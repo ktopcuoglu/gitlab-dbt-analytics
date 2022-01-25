@@ -12,11 +12,11 @@
     ('rpt_crm_person_with_opp','rpt_crm_person_with_opp')
 ]) }}
 
-WITH final AS (
+, final AS (
 
     SELECT
       DATE_TRUNC('month',mart_crm_touchpoint.bizible_touchpoint_date)::date AS bizible_touchpoint_date_month_yr,
-      mart_crm_touchpoint.bizible_touchpoint_date::date as bizible_touchpoint_date_normalized,
+      mart_crm_touchpoint.bizible_touchpoint_date::date AS bizible_touchpoint_date_normalized,
       mart_crm_touchpoint.bizible_touchpoint_date,
       mart_crm_touchpoint.dim_crm_touchpoint_id,
       mart_crm_touchpoint.bizible_touchpoint_type,
