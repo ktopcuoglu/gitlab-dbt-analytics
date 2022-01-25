@@ -188,7 +188,7 @@ def rollup_table_clone(
         logging.info(f"No tables to roll up for {table_name}")
     else:
         for items in tables_to_roll_up.iteritems():
-            logging.info(f"Processing {items[1]}")
+            logging.info(f"Processing insert for {items[1]}")
             column_info = get_table_column_names(engine, db_name, items[1])
 
             column_string = ", ".join((column_info)["column_name"].unique())
@@ -243,7 +243,7 @@ def recreate_rollup_table(
     big_df = latest_table_columns
 
     for items in tables_to_roll_up.iteritems():
-        logging.info(f"Processing {items[1]}")
+        logging.info(f"Processing create table for {items[1]}")
         table_column_data = get_table_column_names(engine, db_name, items[1])
         big_df = big_df.append(
             table_column_data[
