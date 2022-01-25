@@ -66,42 +66,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "ci_pipeline_schedules",
-    "source_table_name": "gitlab_dotcom_ci_pipeline_schedules",
-    "user_column_name": "owner_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_schedule_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_pipelines",
-    "source_table_name": "gitlab_dotcom_ci_pipelines",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "ci_stages",
-    "source_table_name": "gitlab_dotcom_ci_stages",
-    "user_column_name": "NULL",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_stage_id",
-    "stage_name": "configure",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_triggers",
-    "source_table_name": "gitlab_dotcom_ci_triggers",
-    "user_column_name": "owner_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_trigger_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "successful_ci_pipelines",
     "source_cte_name": "successful_ci_pipelines_source",
     "user_column_name": "user_id",
