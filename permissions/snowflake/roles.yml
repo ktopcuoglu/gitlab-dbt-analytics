@@ -2293,6 +2293,7 @@ roles:
     - aperez:
         member_of:
             - analyst_people
+            - bamboohr
         warehouses:
             - analyst_xs
 
