@@ -1,17 +1,13 @@
 {%- macro pte_base_query(model_run_type) -%}
 
-{% set period_type = 'MONTH'%}
-{% set delta_value = 3 %}
+-- Can only be set using days at the moment
+-- {% set period_type = 'days'%}
+{% set delta_value = 90 %}
 -- Prediction date offset by -1 to ensure its only predicting with complete days.
-    {% set today_date = modules.datetime.datetime.now().date() %}
-{% set prediction_date = dbt_utils.dateadd(datepart='day', interval=1, from_date_or_timestamp=' today_date ') %}
-SELECT {{ prediction_date }}
 {% set prediction_date = (modules.datetime.datetime.now() - modules.datetime.timedelta(days=1)).date()  %}
-SELECT {{ prediction_date }}
-SELECT {{ dbt_utils.current_timestamp() }}
 
 {%- if model_run_type=='training' -%}
-{% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
+{% set end_date = (prediction_date - modules.datetime.timedelta(days=delta_value)).date() %}
 {% endif %}
 {% if model_run_type=='scoring'  %}
 {% set end_date = prediction_date %}
