@@ -2944,6 +2944,10 @@ roles:
         warehouses:
             - analyst_xs 
 
+    - jrubi:
+        warehouses:
+            - admin
+
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
@@ -4598,6 +4602,12 @@ users:
         can_login: yes
         member_of:
             - jpetr
+
+    - jrubi:
+        can_login: yes
+        member_of:
+            - jrubi
+            - securityadmin
 
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         can_login: no
