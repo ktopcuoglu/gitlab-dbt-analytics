@@ -131,6 +131,9 @@ models:
   - name: bizible_urls_source
   - name: bizible_user_touchpoints_source
     columns:
+      - name: user_touchpoint_id
+        meta:
+          sensitive: true
       - name: email
         meta:
           sensitive: true
