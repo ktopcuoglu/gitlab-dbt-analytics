@@ -485,10 +485,11 @@ models:
 
       workspace_marketing:
         +schema: workspace_marketing
-        restricted_safe:
-          +schema: restricted_safe_workspace_marketing
-          +tags: ["safe"]
-          secure: true
+        bizible:
+          restricted_safe:
+            +schema: restricted_safe_workspace_marketing
+            +tags: ["safe"]
+            secure: true
 
       workspace_product:
         +tags: ["product"]
