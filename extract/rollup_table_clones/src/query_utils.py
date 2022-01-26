@@ -226,7 +226,6 @@ def rollup_table_clone(
 
         logging.info("Successfully rolled up table clones")
 
-    return True
 
 
 def recreate_rollup_table(
