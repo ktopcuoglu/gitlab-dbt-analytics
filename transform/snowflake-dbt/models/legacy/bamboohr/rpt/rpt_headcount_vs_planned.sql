@@ -44,8 +44,8 @@ WITH dim_date AS (
 ), department_name_changes AS (
 
     SELECT
-      TRIM(old_department_name) AS old_department_name,
-      TRIM(new_department_name) AS new_department_name,
+      TRIM(old_department_name) AS old_department_name, 
+      TRIM(new_department_name) AS new_department_name, 
       change_effective_date
     FROM {{ ref ('department_name_changes') }}
 
