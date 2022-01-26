@@ -44,6 +44,7 @@
     SELECT
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
+      subscriptions.dim_subcsription_id_original,
       NULL                                                                          AS dim_namespace_id,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
