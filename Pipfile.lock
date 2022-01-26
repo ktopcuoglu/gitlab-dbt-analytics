@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "98e719a501ea42eb70d8ecc15386288a9371d05e579072fd7d75e07e443c63a1"
+            "sha256": "e780840beb598cfba85ce741446d4b2838251c88d3491ed4a24802f03ba47c94"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -820,11 +820,11 @@
         },
         "proto-plus": {
             "hashes": [
-                "sha256:3434eadaed845a337d6c488d2b7d055d733aaa231c0c0d4c778ec720bb91cf87",
-                "sha256:bdf45f0e0be71510eb2ec9db4da78afde7b5fb8b0a507a36340a9b6ce8e48e58"
+                "sha256:4ca4055f7c5c1a2239ac7a12770a76a16269f58d3f01631523c20fc81dbb14a7",
+                "sha256:b21e901cee2fd27f63d7997f7f1d8c149804d59314803ebd491905da48251b91"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==1.19.8"
+            "version": "==1.19.9"
         },
         "protobuf": {
             "hashes": [
@@ -1334,19 +1334,19 @@
         },
         "sqlfluff": {
             "hashes": [
-                "sha256:1cbcd39b1c7e4f4ac831f4bfcaebdb442f456a5adac402a9eea1e961fede5856",
-                "sha256:9cd4eea7cecb3f585c1a291f311dc8989fa356785154dc6e7ad99ad3086429be"
+                "sha256:33ac3ba63dc9e4b2ee3ff1ea3051f8d05f88667e30da1c22a80a37c4038aa092",
+                "sha256:65104a19136ce3fa500784028b981f30c60991dfa2774710ab4e655a2c3080d7"
             ],
             "index": "pypi",
-            "version": "==0.9.2"
+            "version": "==0.9.3"
         },
         "sqlfluff-templater-dbt": {
             "hashes": [
-                "sha256:2f9a37a4982edce9ee84950e1f3900207a463ceaf93ad33b7b614f8db3e2feb9",
-                "sha256:f48036831e41b578ec32d1f97ed99b91ac5582ade98095ef10fedf0ae90e593f"
+                "sha256:09333061e8b661d6ab3bdf27893be93972c0a68db899df707773aaf561295c70",
+                "sha256:10951a4b0b7ee1a7c10152082158a6deca9b071f5f526f079f75328aa37b2771"
             ],
             "index": "pypi",
-            "version": "==0.9.2"
+            "version": "==0.9.3"
         },
         "sqlparse": {
             "hashes": [
