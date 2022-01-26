@@ -84,7 +84,6 @@ models:
       - name: ip_address
         meta:
           sensitive: true
-
   - name: bizible_keywords_source
   - name: bizible_lead_stage_transitions_source
     columns:

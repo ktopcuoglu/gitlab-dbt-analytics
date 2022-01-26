@@ -140,8 +140,10 @@ models:
         +schema: bamboohr
 
       bizible:
-        +materialized: table
         +schema: bizible
+        sensitive:
+          +schema: sensitive
+          secure: true
 
       customers:
         +schema: customers
