@@ -2752,6 +2752,10 @@ roles:
                     - ian_prep.*.*
                     - ian_prod.*.*       
 
+    - ianderson:
+        warehouses:
+            - admin
+
     - iroussos: # De provisioned as part of Quarterly audit and security check.
         member_of:  []
         warehouses:  []
@@ -4527,6 +4531,12 @@ users:
         can_login: yes
         member_of:
             - ian       
+
+    - ianderson:
+        can_login: yes
+        member_of:
+            - ianderson
+            - securityadmin
 
     - iroussos: # De provisioned as part of Quarterly audit and security check.
         can_login: no
