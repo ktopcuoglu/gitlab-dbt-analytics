@@ -13,18 +13,18 @@
 
 WITH dim_date AS (
 
-    SELECT DISTINCT
-      fiscal_year,
+    SELECT DISTINCT 
+      fiscal_year, 
       last_day_of_month AS month_date
     FROM {{ ref ('dim_date') }}
-
+ 
 ), headcount AS (
-
-    SELECT
-      month_date,
-      CASE WHEN breakout_type = 'kpi_breakout'
+  
+    SELECT 
+      month_date, 
+      CASE WHEN breakout_type = 'kpi_breakout' 
             THEN 'all_company_breakout'
-           WHEN breakout_type = 'department_breakout'
+           WHEN breakout_type = 'department_breakout' 
             THEN 'department_division_breakout'
            ELSE breakout_type END                                            AS breakout_type,
       IFF(breakout_type = 'kpi_breakout','all_company_breakout', department) AS department,
@@ -34,7 +34,7 @@ WITH dim_date AS (
     FROM {{ ref ('bamboohr_rpt_headcount_aggregation') }}
     WHERE breakout_type IN ('kpi_breakout','department_breakout','division_breakout')
       AND eeoc_field_name = 'no_eeoc'
-
+  
 ), hire_plan AS (
 
     SELECT *,
@@ -44,15 +44,15 @@ WITH dim_date AS (
 ), department_name_changes AS (
 
     SELECT
-      TRIM(old_department_name) AS old_department_name,
-      TRIM(new_department_name) AS new_department_name,
+      TRIM(old_department_name) AS old_department_name, 
+      TRIM(new_department_name) AS new_department_name, 
       change_effective_date
     FROM {{ ref ('department_name_changes') }}
 
 ), greenhouse_hire_type AS (
 
     SELECT *
-    FROM {{ ref ('greenhouse_hires') }}
+    FROM {{ ref ('greenhouse_hires') }} 
 
 ), hire_type_aggregated AS (
 
@@ -60,27 +60,27 @@ WITH dim_date AS (
       'department_division_breakout'                                AS breakout_type,
       division,
       department,
-      {{lines_to_repeat}}
+      {{lines_to_repeat}} 
 
-    UNION ALL
-
+    UNION ALL  
+    
     SELECT
       'division_breakout'                                           AS breakout_type,
       division,
       'division_breakout'                                           AS department,
-      {{lines_to_repeat}}
+      {{lines_to_repeat}} 
 
     UNION ALL
-
+    
     SELECT
       'all_company_breakout'                                        AS breakout_type,
       'all_company_breakout'                                        AS division,
       'all_company_breakout'                                        AS department,
-      {{lines_to_repeat}}
+      {{lines_to_repeat}} 
 
 ), joined AS (
 
-    SELECT
+    SELECT 
       dim_date.fiscal_year,
       hire_plan.month_date,
       hire_plan.breakout_type,
@@ -90,8 +90,8 @@ WITH dim_date AS (
       hire_plan.planned_hires,
       COALESCE(headcount.headcount_actual,0)                                       AS headcount_actual,
       COALESCE(headcount.hires_actual,0)                                           AS hires_actual,
-      IFF(hire_plan.planned_headcount = 0, NULL,
-        ROUND((headcount.headcount_actual/hire_plan.planned_headcount),4))         AS actual_headcount_vs_planned_headcount,
+      IFF(hire_plan.planned_headcount = 0, NULL, 
+        ROUND((headcount.headcount_actual/hire_plan.planned_headcount),4))         AS actual_headcount_vs_planned_headcount,   
 
       new_hire,
       transfers,
@@ -118,7 +118,7 @@ WITH dim_date AS (
 ), final AS (
 
     SELECT *,
-      SUM(planned_hires) OVER
+      SUM(planned_hires) OVER 
             (PARTITION BY fiscal_year, breakout_type, division, department
             ORDER BY month_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)   AS cumulative_planned_hires,
       SUM(hires_actual) OVER
