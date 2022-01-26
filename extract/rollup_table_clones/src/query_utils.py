@@ -224,7 +224,7 @@ def rollup_table_clone(
                         engine, db_name, schema_name, table_name, retried=True
                     )
 
-    logging.info("Successfully rolled up table clones")
+        logging.info("Successfully rolled up table clones")
 
     return True
 
