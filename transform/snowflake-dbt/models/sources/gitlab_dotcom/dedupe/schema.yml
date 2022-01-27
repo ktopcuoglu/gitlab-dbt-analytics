@@ -19,6 +19,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approval_project_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_approval_project_rules_groups_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'    
   - name: gitlab_dotcom_approval_project_rules_protected_branches_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approval_project_rules_users_dedupe_source
