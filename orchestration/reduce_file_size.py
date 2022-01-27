@@ -4,6 +4,7 @@ Set of routines to reduce manifest.json file
 import json
 import os
 import argparse
+import logging
 
 from typing import Dict, Any, Union
 
@@ -30,10 +31,6 @@ nodes_accepted_values = {
     "depends_on",
 }
 
-database_mapping = dict(
-    RBACOVIC_PROD="PROD", RBACOVIC_PREP="PREP", SNOWFLAKE="SNOWFLAKE"
-)
-
 
 def reduce_nodes_section(source_nodes_json: dict) -> dict:
     """
@@ -50,9 +47,7 @@ def reduce_nodes_section(source_nodes_json: dict) -> dict:
             if nodes_child_key in nodes_accepted_values:
                 # as run manifest.json from a local machine need to
                 # rename database value
-                if nodes_child_key == "database":
-                    temp_dict[nodes_child_key] = database_mapping.get(nodes_child_value)
-                elif nodes_child_key == "config":
+                if nodes_child_key == "config":
                     # exception for [config][severity],
                     # the only sub-level
                     # we need from [config] and will reduce the size
@@ -88,35 +83,37 @@ def load_json_file(source_file: str) -> dict:
     :param source_file: str
     :return: dict
     """
+    try:
+        with open(source_file, "r", encoding=ENCODING) as manifest_file:
+            json_data = json.load(manifest_file)
+            info["source"] = (
+                f"File size for {source_file} is :"
+                f" {os.path.getsize(source_file) / 1024 / 1024:.2f} MB"
+            )
 
-    with open(source_file, "r", encoding=ENCODING) as manifest_file:
-        json_data = json.load(manifest_file)
-        info["source"] = (
-            f"File size for {source_file} is :"
-            f" {os.path.getsize(source_file) / 1024 / 1024:.2f} MB"
-        )
-
-    return json_data
+        return json_data
+    except FileNotFoundError as e:
+        logging.error(f"File {source_file} doesn't exist!")
+        raise
 
 
-def reduce_manifest_file(source_file: str) -> dict:
+def reduce_manifest_file(raw_json: dict) -> dict:
     """
     Function to reduce section in use from manifest.json file
     What is interesting, are 2 sections:
         - "metadata"
         - "nodes"
-    :param source_file: str
+    :param raw_json: dict
     :return: dict
     """
+
     reduced_json = {}
 
-    json_data = load_json_file(source_file=source_file)
-
     # load everything for "metadata" key, this is a small section
-    reduced_json["metadata"] = json_data["metadata"]
+    reduced_json["metadata"] = raw_json["metadata"]
 
     # load reduced size for "nodes"
-    reduced_json["nodes"] = reduce_nodes_section(json_data["nodes"].items())
+    reduced_json["nodes"] = reduce_nodes_section(raw_json["nodes"].items())
 
     return reduced_json
 
@@ -149,7 +146,8 @@ def main():
     source_file = args.inputfile
     target_file = args.outputfile
 
-    reduced_json = reduce_manifest_file(source_file=source_file)
+    raw_json = load_json_file(source_file=target_file)
+    reduced_json = reduce_manifest_file(raw_json=raw_json)
 
     save_json_file(reduced_json=reduced_json, target_file=target_file)
 

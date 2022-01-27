@@ -2,14 +2,15 @@ import logging
 import os
 import sys
 from os import environ as env
-from reduce_file_size import reduce_manifest_file, save_json_file
+from reduce_file_size import reduce_manifest_file, save_json_file, load_json_file
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
 
-COLUMN_LIMIT_SIZE_SNOWFLAKE = 16
+COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = 16
+
 
 def get_file_name(config_name):
     if config_name == "freshness":
@@ -42,13 +43,21 @@ if __name__ == "__main__":
     snowflake_database = config_dict["SNOWFLAKE_LOAD_DATABASE"].upper()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
     if os.path.exists(file_name):
-        if config_name == 'manifest':
-            file_size_mb = os.path.getsize(file_name) / 1024 / 1024
+        if config_name == "manifest":
+            file_size_mb = os.path.getsize(file_name) / 1024 / 1024 # give me size in MBs
 
-            if file_size_mb >= COLUMN_LIMIT_SIZE_SNOWFLAKE:
-                reduced_json = reduce_manifest_file(source_file=file_name)
+            if file_size_mb >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB:
+                logging.info(f"manifest file {file_name} "
+                             f"is bigger than "
+                             f"{COLUMN_LIMIT_SIZE_SNOWFLAKE_MB}, "
+                             f"should be reduced.")
+
+                raw_json = load_json_file(source_file=file_name)
+                reduced_json = reduce_manifest_file(raw_json=raw_json)
                 save_json_file(reduced_json=reduced_json, target_file=file_name)
 
+                logging.info(f"manifest file {file_name} "
+                             f"reduced successfully.")
         snowflake_stage_load_copy_remove(
             file_name,
             f"{snowflake_database}.dbt.dbt_load",
