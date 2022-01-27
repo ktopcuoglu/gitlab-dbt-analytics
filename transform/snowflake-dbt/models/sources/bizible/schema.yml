@@ -2,6 +2,9 @@ version: 2
 models:
   - name: bizible_account_to_emails_source
     columns:
+      - name: account_to_email_id
+        meta:
+          sensitive: true
       - name: email
         meta:
           sensitive: true
@@ -120,6 +123,9 @@ models:
   - name: bizible_stage_definitions_source
   - name: bizible_touchpoints_source
     columns:
+      - name: user_touchpoint_id
+        meta:
+          sensitive: true
       - name: email
         meta:
           sensitive: true

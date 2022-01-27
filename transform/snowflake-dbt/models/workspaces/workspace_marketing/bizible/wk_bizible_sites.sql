@@ -1,7 +1,6 @@
 WITH source AS (
 
-    SELECT
-      *
+    SELECT {{ hash_sensitive_columns('bizible_sites_source') }}
     FROM {{ ref('bizible_sites_source') }}
 
 )
