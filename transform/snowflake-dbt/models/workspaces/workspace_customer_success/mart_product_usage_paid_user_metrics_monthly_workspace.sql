@@ -177,6 +177,7 @@
     SELECT
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
+      subscriptions.dim_subcsription_id_original,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
