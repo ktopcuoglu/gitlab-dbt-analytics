@@ -29,7 +29,7 @@ __init__.py     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanr
 /extract/           @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
 /load/              @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
 /orchestrate/       @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
-/permissions/       @jjstark  @paul_armstrong  @dvanrooijen2  @laddula
+/permissions/       @jjstark  @paul_armstrong  @dvanrooijen2  @laddula @vedprakash2021
 /pump/              @jjstark  @paul_armstrong @vedprakash2021
 
 Makefile            @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooijen2 @vedprakash2021

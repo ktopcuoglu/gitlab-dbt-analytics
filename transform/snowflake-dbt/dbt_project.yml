@@ -139,6 +139,12 @@ models:
         +materialized: table
         +schema: bamboohr
 
+      bizible:
+        +schema: bizible
+        sensitive:
+          +schema: sensitive
+          secure: true
+
       customers:
         +schema: customers
         sensitive:
@@ -298,6 +304,10 @@ models:
       zuora:
         +schema: zuora
         +tags: ["zuora"]
+
+      zuora_central_sandbox:
+        +schema: zuora_central_sandbox
+        +tags: [ "zuora_central_sandbox" ]
 
       zuora_revenue:
         +schema: zuora_revenue
@@ -475,6 +485,11 @@ models:
 
       workspace_marketing:
         +schema: workspace_marketing
+        bizible:
+          restricted_safe:
+            +schema: restricted_safe_workspace_marketing
+            +tags: ["safe"]
+            secure: true
 
       workspace_product:
         +tags: ["product"]
@@ -505,6 +520,7 @@ models:
 
       workspace_people:
         +schema: workspace_people
+        +tags: ["people", "edcast"]
 
     # ------------------
     # Marts

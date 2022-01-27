@@ -236,24 +236,14 @@ class SnowflakeManager:
         :param database:
         :param schema:
         """
-        if schema != "":
-            stages_query = f"""
-                 SELECT 
-                     stage_schema,
-                     stage_name,
-                     stage_url, 
-                     stage_type
-                 FROM {database}.information_schema.stages 
-                 WHERE stage_schema = '{schema.upper()}' 
-             """
-        else:
-            stages_query = f"""
-                 SELECT 
-                     stage_schema,
-                     stage_name,
-                     stage_url, 
-                     stage_type
-                 FROM {database}.information_schema.stages 
+        stages_query = f"""
+             SELECT 
+                 stage_schema,
+                 stage_name,
+                 stage_url, 
+                 stage_type
+             FROM {database}.information_schema.stages
+             {f"WHERE stage_schema = '{schema.upper()}'" if schema != "" else ""}
              """
 
         stages = query_executor(self.engine, stages_query)
@@ -274,16 +264,18 @@ class SnowflakeManager:
                     {from_stage_name}
                     """
 
-                grants_query = f"GRANT USAGE ON STAGE {output_stage_name} TO LOADER"
+                grants_query = f"""
+                    GRANT USAGE ON STAGE {output_stage_name} TO LOADER
+                    """
 
             else:
                 clone_stage_query = f"""
                     CREATE OR REPLACE STAGE {output_stage_name}  
                     """
 
-                grants_query = (
-                    f"GRANT READ, WRITE ON STAGE {output_stage_name} TO LOADER"
-                )
+                grants_query = f"""
+                    GRANT READ, WRITE ON STAGE {output_stage_name} TO LOADER
+                    """
 
             try:
                 logging.info(f"Creating stage {output_stage_name}")

@@ -1,0 +1,9 @@
+version: 2
+
+models:
+- name: edcast_sheetload_gitlab_certification_tracking_dashboard_pii
+  tags: ["people", "edcast"]
+  description: Model to join sensitive data for the original model edcast_sheetload_gitlab_certification_tracking_dashboard
+- name: edcast_glue_groups_g3_group_performance_data_explorer_pii
+  tags: ["people", "edcast"]
+  description: Model to join sensitive data for the original model edcast_glue_groups_g3_group_performance_data_explorer_pii
