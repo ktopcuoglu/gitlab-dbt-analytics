@@ -2708,6 +2708,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - hselim: 
+        member_of: 
+            - xactly
+            - restricted_safe
+        warehouses: 
+            - analyst_xs
+
     - hsharma: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
@@ -4523,6 +4530,10 @@ users:
         can_login: no
         member_of: []
 
+    - hselim: 
+        can_login: yes
+        member_of: 
+            - hselim       
     - ian:
         can_login: yes
         member_of:
