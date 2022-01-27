@@ -603,6 +603,8 @@ SELECT
     , CASE WHEN u.dim_crm_account_id IS NOT NULL THEN 1 ELSE 0 END AS has_usage_data_flag
 
 FROM period_1 p1
+LEFT JOIN target t
+    ON p1.dim_crm_account_id = t.dim_crm_account_id
 LEFT JOIN period_2 p2
     ON p1.dim_crm_account_id = p2.dim_crm_account_id
 LEFT JOIN opps o
