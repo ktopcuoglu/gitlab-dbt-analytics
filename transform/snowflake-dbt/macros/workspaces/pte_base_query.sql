@@ -82,7 +82,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH, -3, '{{ end_date }}')) THEN 1 ELSE 0 END) AS cancelled_subs_prev --added 3 months before counting active subscriptions as cancelled per Israel's feedback
     FROM mart_arr_snapshot_bottom_up
     WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot to day before our prediction window
-        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -'{{ delta_value }}', cast('{{ end_date }}' as date))) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
+        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -365, cast('{{ end_date }}' as date))) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
     GROUP BY dim_crm_account_id
 
