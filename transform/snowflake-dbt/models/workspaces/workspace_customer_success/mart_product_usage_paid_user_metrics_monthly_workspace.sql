@@ -9,7 +9,6 @@
     ('monthly_saas_metrics','fct_saas_product_usage_metrics_monthly'),
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
-    ('crm_accounts','dim_crm_account'),
     ('location_country', 'dim_location_country'),
     ('subscriptions', 'dim_subscription')
 ]) }}
@@ -49,7 +48,7 @@
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
-      {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
+      {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
       subscriptions.term_start_date,
@@ -166,8 +165,6 @@
     FROM monthly_sm_metrics
     LEFT JOIN billing_accounts
       ON monthly_sm_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
-    LEFT JOIN crm_accounts
-      ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
@@ -184,7 +181,7 @@
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
-      {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
+      {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
       subscriptions.term_start_date,
@@ -301,8 +298,6 @@
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
-    LEFT JOIN crm_accounts
-      ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
       LEFT JOIN subscriptions
         ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
       LEFT JOIN most_recent_subscription_version
