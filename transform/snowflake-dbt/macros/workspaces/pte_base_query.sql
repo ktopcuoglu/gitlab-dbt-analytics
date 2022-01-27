@@ -337,6 +337,11 @@ WITH mart_arr_snapshot_bottom_up AS (
 -- This is the final output table that creates the modeling dataset
 SELECT
     p1.dim_crm_account_id AS crm_account_id
+    --Outcome variables
+    , CASE WHEN COALESCE(p1.sum_arr, 0) != 0 AND ((COALESCE(t.future_arr,0) - COALESCE(p1.sum_arr,0)) / COALESCE(p1.sum_arr,0)) > 0.1 THEN 1 -- If there is more than a 10% increase in ARR
+         ELSE 0 
+         END AS is_expanded_flag
+    , COALESCE(t.future_arr, 0) - COALESCE(p1.sum_arr, 0) AS is_expanded_amt
 
     --Zuora Fields
     , p1.num_of_subs AS subs_cnt
