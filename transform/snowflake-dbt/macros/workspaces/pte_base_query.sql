@@ -62,6 +62,23 @@ WITH mart_arr_snapshot_bottom_up AS (
     GROUP BY dim_crm_account_id -- dim_crm_account_id is not unique at each snapshot date, hence the group by
 
 
+), target AS (
+
+    SELECT dim_crm_account_id
+        , MAX(sum_arr) as future_arr --Provides the maximum ARR that account reached during our prediction window. 
+    FROM  --For accounts with multiple subscriptions we first have to sum their ARR to the arr_month level
+        (
+        SELECT dim_crm_account_id, arr_month, sum(arr) as sum_arr
+        FROM PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_SNAPSHOT_BOTTOM_UP -- Contains Snapshot for every date from 2020-03-01 to Present
+        WHERE snapshot_date = '{{ prediction_date }}'
+            AND arr_month > '{{ end_date }}' 
+            AND arr_month <= '{{ prediction_date }}' 
+        GROUP BY dim_crm_account_id, arr_month
+        )
+
+    GROUP BY dim_crm_account_id
+
+
 --Snapshot for the set period prior to the "current" month (as specified by SNAPSHOT_DT).
 ), period_2 AS (
 
