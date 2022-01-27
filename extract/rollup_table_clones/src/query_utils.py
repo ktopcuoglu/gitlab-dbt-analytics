@@ -167,7 +167,7 @@ def rollup_table_clone(
     schema_name: str,
     table_name: str,
     retried: bool = False,
-) -> bool:
+) -> None:
     """
     Rolls up tables, columns will always be cast to expected dtype of the final table.
     :param engine:
@@ -225,7 +225,6 @@ def rollup_table_clone(
                     )
 
         logging.info("Successfully rolled up table clones")
-
 
 
 def recreate_rollup_table(
