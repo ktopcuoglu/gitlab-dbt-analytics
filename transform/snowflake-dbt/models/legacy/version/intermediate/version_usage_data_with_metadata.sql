@@ -6,7 +6,7 @@
 
 
 {{ simple_cte([
-    ('licenses', 'license_db_licenses'),
+    ('licenses', 'customers_db_licenses_source'),
     ('zuora_subscriptions', 'zuora_subscription'),
     ('zuora_accounts', 'zuora_account'),
     ('version_releases', 'version_releases')
@@ -25,8 +25,8 @@
       licenses.zuora_subscription_id,
       licenses.company,
       licenses.plan_code                      AS license_plan_code,
-      licenses.starts_at                      AS license_starts_at,
-      licenses.license_expires_at,
+      licenses.license_start_date             AS license_starts_at,
+      licenses.license_expire_date            AS license_expires_at,
       zuora_subscriptions.subscription_status AS zuora_subscription_status,
       zuora_accounts.crm_id                   AS zuora_crm_id,
       DATEDIFF('days', ping_version.release_date, usage_data.created_at)  AS days_after_version_release_date,
