@@ -196,7 +196,7 @@ WITH mart_arr_snapshot_bottom_up AS (
      , SUM(CASE WHEN event_type = 'Renewal' THEN 1 ELSE 0 END) AS renewal_event_count
      , SUM(CASE WHEN event_type IS NOT NULL THEN 1 ELSE 0 END) AS total_event_count
     FROM {{ref('sfdc_event_source')}}
-    WHERE createddate BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic event table, going off createddate
+    WHERE created_at BETWEEN DATEADD('{{ period_type }}', -'{{ delta_value }}', '{{ end_date }}') AND '{{ end_date }}'  --filter PERIOD window. Because no histroic event table, going off createddate
     GROUP BY account_id
 
 ), tasks_salesforce AS (
