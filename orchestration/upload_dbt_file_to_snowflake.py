@@ -2,12 +2,14 @@ import logging
 import os
 import sys
 from os import environ as env
+from reduce_file_size import reduce_manifest_file, save_json_file
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
 
+COLUMN_LIMIT_SIZE_SNOWFLAKE = 16
 
 def get_file_name(config_name):
     if config_name == "freshness":
@@ -40,6 +42,13 @@ if __name__ == "__main__":
     snowflake_database = config_dict["SNOWFLAKE_LOAD_DATABASE"].upper()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
     if os.path.exists(file_name):
+        if config_name == 'manifest':
+            file_size_mb = os.path.getsize(file_name) / 1024 / 1024
+
+            if file_size_mb >= COLUMN_LIMIT_SIZE_SNOWFLAKE:
+                reduced_json = reduce_manifest_file(source_file=file_name)
+                save_json_file(reduced_json=reduced_json, target_file=file_name)
+
         snowflake_stage_load_copy_remove(
             file_name,
             f"{snowflake_database}.dbt.dbt_load",
