@@ -157,7 +157,7 @@
   },
   {
     "event_name": "action_monthly_active_users_project_repo",
-    "source_cte_name": "succesful_ci_pipelines",
+    "source_cte_name": "monthly_active_users_project_repo",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
