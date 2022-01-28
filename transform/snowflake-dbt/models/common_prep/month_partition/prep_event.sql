@@ -155,6 +155,14 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_id"
   },
+  {
+    "event_name": "action_monthly_active_users_project_repo",
+    "source_cte_name": "succesful_ci_pipelines",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id"
+  },
 ]
 
 -%}
@@ -172,7 +180,7 @@
     ('prep_requirement', 'prep_requirement'),
     ('dim_project', 'dim_project'),
     ('prep_namespace', 'prep_namespace'),
-    ('prep_user', 'prep_user')
+    ('prep_user', 'prep_user'),
 ]) }}
 
 , dast_jobs AS (
@@ -250,6 +258,13 @@
     SELECT *
     FROM prep_ci_pipeline
     WHERE failure_reason IS NULL
+
+), monthly_active_users_project_repo AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE target_type IS NULL
+      AND event_action_type = 'pushed'
 
 ), data AS (
 
