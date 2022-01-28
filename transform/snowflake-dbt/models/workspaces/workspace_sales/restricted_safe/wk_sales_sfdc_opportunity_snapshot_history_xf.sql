@@ -758,8 +758,8 @@ WITH date_details AS (
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
       sfdc_opportunity_xf.report_opportunity_segment,
-      sfdc_opportunity_xf.eport_opportunity_geo,
-      sfdc_opportunity_xf.eport_opportunity_region,
+      sfdc_opportunity_xf.report_opportunity_geo,
+      sfdc_opportunity_xf.report_opportunity_region,
       sfdc_opportunity_xf.report_opportunity_area,
       
       -- using current opportunity perspective instead of historical
