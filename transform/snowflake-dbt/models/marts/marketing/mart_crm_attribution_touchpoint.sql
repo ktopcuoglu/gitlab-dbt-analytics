@@ -70,7 +70,6 @@
       dim_crm_person.person_score,
       dim_crm_person.title                                                  AS crm_person_title,
       dim_crm_person.country,
-      dim_crm_person.mailing_country,
       dim_crm_person.status                                                 AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -266,7 +265,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@iweeks",
     created_date="2020-02-18",
-    updated_date="2020-12-16"
+    updated_date="2022-01-14"
 ) }}
