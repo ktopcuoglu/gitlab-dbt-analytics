@@ -635,15 +635,14 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       -- sales_team_asm_level
 
       -- report_opportunity_segment
-      -- report_geo_stamped
-      -- report_region_stamped
-      -- report_area_stamped
+      -- report_opportunity_geo
+      -- report_opportunity_region
+      -- report_opportunity_area
 
       -- account_owner_segment_stamped
       -- account_owner_geo_stamped
       -- account_owner_region_stamped
       -- account_owner_area_stamped
-
 
       -- account_demographics_segment_stamped
       -- account_demographics_geo_stamped
@@ -657,6 +656,8 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       END                                                       AS report_opportunity_segment,
 
       CASE 
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'PubSec' -- <- NF PubSec Geo is AMER, but for reporting it makes no sense to show that
+          THEN 'PubSec'
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_geo
         ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
@@ -696,13 +697,18 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.account_owner_user_area,
       -- account_owner_subarea_stamped
 
-      sfdc_accounts_xf.account_demographics_sales_segment,
+      sfdc_accounts_xf.account_demographics_sales_segment   AS account_demographics_segment,
       sfdc_accounts_xf.account_demographics_geo,
       sfdc_accounts_xf.account_demographics_region,
       sfdc_accounts_xf.account_demographics_area,
       sfdc_accounts_xf.account_demographics_territory,
       -- account_demographics_subarea_stamped
 
+      sfdc_accounts_xf.account_demographics_sales_segment    AS upa_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
+      sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory
       -----------------------------------------------
 
       CASE

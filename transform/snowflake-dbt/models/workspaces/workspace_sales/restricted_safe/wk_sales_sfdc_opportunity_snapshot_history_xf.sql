@@ -730,18 +730,41 @@ WITH date_details AS (
       -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
       -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
       -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
+
+      /*
+
+      FY23 - NF 2022-01-28 
+
+      At this point I still think the best is to keep taking the owner / account demographics cuts from the most recent version of the opportunity object.
+
+      The snapshot history at this point is mainly used to track how current performance compares with previous quarters and years
+      and to do that effectively the patches / territories must be the same. Any error that is corrected in the future should be incorporated 
+      into the overview
+
+      */
+
       sfdc_opportunity_xf.opportunity_owner_user_segment,
       sfdc_opportunity_xf.opportunity_owner_user_region,
       sfdc_opportunity_xf.opportunity_owner_user_area,
       sfdc_opportunity_xf.opportunity_owner_user_geo,
 
       --- target fields for reporting, changing their name might help to isolate their logic from the actual field
-      -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
+      sfdc_opportunity_xf.sales_team_rd_asm_level, -- <- NF Legacy field as FY23
+      
       sfdc_opportunity_xf.sales_team_cro_level,
-      sfdc_opportunity_xf.sales_team_rd_asm_level,
+      sfdc_opportunity_xf.sales_team_vp_level,
+      sfdc_opportunity_xf.sales_team_avp_rd_level,
+      sfdc_opportunity_xf.sales_team_asm_level,
+
+      -- this fields use the opportunity owner version for current FY and account fields for previous years
+      sfdc_opportunity_xf.report_opportunity_segment,
+      sfdc_opportunity_xf.eport_opportunity_geo,
+      sfdc_opportunity_xf.eport_opportunity_region,
+      sfdc_opportunity_xf.report_opportunity_area,
       
       -- using current opportunity perspective instead of historical
-      -- NF 2020-01-26: this might change to order type live 2.1     
+      -- NF 2021-01-26: this might change to order type live 2.1    
+      -- NF 2022-01-28: Update to OT 2.3 will be stamped directly  
       sfdc_opportunity_xf.order_type_stamped,     
 
       -- top level grouping of the order type field
@@ -752,7 +775,6 @@ WITH date_details AS (
       
       -- duplicates flag
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
-
 
       -- the owner name in the opportunity is not clean.
       opportunity_owner.name AS opportunity_owner,
@@ -769,7 +791,26 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_account_id,
       upa.account_name                        AS ultimate_parent_account_name,
       sfdc_accounts_xf.ultimate_parent_id,
-      sfdc_accounts_xf.is_jihu_account        
+      sfdc_accounts_xf.is_jihu_account,
+
+      sfdc_accounts_xf.account_owner_user_segment,
+      sfdc_accounts_xf.account_owner_user_geo, 
+      sfdc_accounts_xf.account_owner_user_region,
+      sfdc_accounts_xf.account_owner_user_area,
+      -- account_owner_subarea_stamped
+
+      sfdc_accounts_xf.account_demographics_sales_segment AS account_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region,
+      sfdc_accounts_xf.account_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory,
+      -- account_demographics_subarea_stamped        
+
+      sfdc_accounts_xf.account_demographics_sales_segment    AS upa_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
+      sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory
       
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot

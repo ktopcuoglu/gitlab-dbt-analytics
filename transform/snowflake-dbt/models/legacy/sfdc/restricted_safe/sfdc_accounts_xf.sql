@@ -20,9 +20,7 @@ WITH sfdc_account AS (
 
 ), parent_account AS (
 
-    SELECT 
-      account_id      AS ultimate_parent_account_id,
-      account_name    AS ultimate_parent_account_name
+    SELECT *
     FROM {{ ref('sfdc_account') }}
 
 ), joined AS (
@@ -31,7 +29,7 @@ WITH sfdc_account AS (
       sfdc_account.*,
 
       tam_user.name                                                                   AS technical_account_manager,
-      parent_account.ultimate_parent_account_name, 
+      parent_account.account_name                                                     AS ultimate_parent_account_name, 
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -47,8 +45,8 @@ WITH sfdc_account AS (
       sfdc_record_type.record_type_modifying_object_type,
       sfdc_account_deal_size_segmentation.deal_size,
       CASE 
-        WHEN ultimate_parent_sales_segment IN ('Large', 'Strategic')
-          OR division_sales_segment IN ('Large', 'Strategic') 
+        WHEN sfdc_account.ultimate_parent_sales_segment IN ('Large', 'Strategic')
+          OR sfdc_account.division_sales_segment IN ('Large', 'Strategic') 
           THEN TRUE
         ELSE FALSE 
       END                                                                               AS is_large_and_up,
@@ -135,8 +133,13 @@ WITH sfdc_account AS (
     --account_owner.user_segment            AS account_owner_user_segment, -- coming directly from source table
     account_owner.user_geo                AS account_owner_user_geo, 
     account_owner.user_region             AS account_owner_user_region,
-    account_owner.user_area               AS account_owner_user_area
+    account_owner.user_area               AS account_owner_user_area,
 
+    parent_account.account_demographics_sales_segment    AS upa_demographics_segment,
+    parent_account.account_demographics_geo              AS upa_demographics_geo,
+    parent_account.account_demographics_region           AS upa_demographics_region,
+    parent_account.account_demographics_area             AS upa_demographics_area,
+    parent_account.account_demographics_territory        AS upa_demographics_territory
 
     FROM sfdc_account
     LEFT JOIN parent_account
