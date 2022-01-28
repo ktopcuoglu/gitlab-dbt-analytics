@@ -5,7 +5,8 @@
 WITH sfdc_opportunity AS (
 
     SELECT opportunity_id,
-          opportunity_category
+          opportunity_category,
+          product_category
     FROM {{ref('sfdc_opportunity')}}
 
 ), sfdc_users_xf AS (
@@ -14,7 +15,9 @@ WITH sfdc_opportunity AS (
 
 ), sfdc_accounts_xf AS (
 
-    SELECT * FROM {{ref('sfdc_accounts_xf')}}
+    SELECT * 
+    FROM {{ref('sfdc_accounts_xf')}}
+    
 
 ), date_details AS (
 
@@ -325,28 +328,34 @@ WITH sfdc_opportunity AS (
       -- Opportunity User fields
       -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
 
-      sfdc_opportunity_xf.user_area_stamped                                 AS opportunity_owner_user_area,
-      sfdc_opportunity_xf.user_geo_stamped                                  AS opportunity_owner_user_geo,
+   
 
       -- Team Segment / ASM - RD 
-      --  stamped field is not maintained for open deals
-      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+      --  NF 2022-01-28 Data seems clean in SFDC, but leving the fallback just in case
+      CASE 
+        WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
           THEN opportunity_owner.user_segment 
-          ELSE sfdc_opportunity_xf.user_segment_stamped
-      END                                                                    AS opportunity_owner_user_segment,
+        ELSE sfdc_opportunity_xf.user_segment_stamped
+      END                                                                   AS opportunity_owner_user_segment,
 
-      --  stamped field is not maintained for open deals
-      -- NF: 20210707 JB Asked to roll LATAM deals into EAST region
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
-            AND  opportunity_owner.user_region != 'LATAM'
-              THEN opportunity_owner.user_region
-          WHEN sfdc_opportunity_xf.user_region_stamped != 'LATAM'
-              THEN sfdc_opportunity_xf.user_region_stamped
-          WHEN (sfdc_opportunity_xf.user_region_stamped = 'LATAM'
-              OR  opportunity_owner.user_region = 'LATAM')
-                THEN 'East'
-          ELSE 'Other'
-      END                                                                    AS opportunity_owner_user_region,
+      CASE 
+        WHEN sfdc_opportunity_xf.user_geo_stamped IS NULL 
+          THEN opportunity_owner.user_geo
+        ELSE sfdc_opportunity_xf.user_geo_stamped
+      END                                                                   AS opportunity_owner_user_geo,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
+          THEN opportunity_owner.user_region
+          ELSE sfdc_opportunity_xf.user_region_stamped
+      END                                                                   AS opportunity_owner_user_region,
+
+      CASE
+        WHEN sfdc_opportunity_xf.user_area_stamped IS NULL
+          THEN opportunity_owner.user_area
+        ELSE sfdc_opportunity_xf.user_area_stamped
+      END                                                                   AS opportunity_owner_user_area,
+      -- opportunity_owner_subarea_stamped
 
 
       -- NF: 20210827 Fields for competitor analysis 
@@ -467,7 +476,8 @@ WITH sfdc_opportunity AS (
 
 
       -- fields form opportunity source
-      sfdc_opportunity.opportunity_category
+      sfdc_opportunity.opportunity_category,
+      sfdc_opportunity.product_category
     
     FROM {{ref('sfdc_opportunity_xf')}} sfdc_opportunity_xf
     -- not all fields are in opportunity xf
@@ -596,6 +606,38 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
       sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
 
+
+      -- legacy fields 
+      -- FY22
+      COALESCE(oppty_final.opportunity_owner_user_segment ,'NA')                                                       AS sales_team_cro_level,
+      COALESCE(CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region),'NA')  AS sales_team_rd_asm_level,
+
+
+      -- FY23 fields
+      -- sales_team_cro_level
+      -- sales_team_vp_level
+      -- sales_team_avp_rd_level
+      -- sales_team_asm_level
+
+      -- report_segment_stamped
+      -- report_geo_stamped
+      -- report_region_stamped
+      -- report_area_stamped
+
+      -- account_owner_segment_stamped
+      -- account_owner_geo_stamped
+      -- account_owner_region_stamped
+      -- account_owner_area_stamped
+      -- account_owner_subarea_stamped
+
+      -- account_demographics_segment_stamped
+      -- account_demographics_geo_stamped
+      -- account_demographics_region_stamped
+      -- account_demographics_area_stamped
+      -- account_demographics_subarea_stamped
+
+
+
       CASE
         WHEN sfdc_opportunity_xf.stage_name
           IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
@@ -715,9 +757,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
     SELECT 
       oppty_final.*,
-      
-      COALESCE(oppty_final.opportunity_owner_user_segment ,'NA')                                                       AS sales_team_cro_level,
-      COALESCE(CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region),'NA')  AS sales_team_rd_asm_level,
 
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------

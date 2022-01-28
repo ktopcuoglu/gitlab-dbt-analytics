@@ -172,6 +172,13 @@ WITH source AS (
       zi_ultimate_parent_company_zoominfo_id__c     AS zoom_info_ultimate_parent_company_zi_id,
       zi_ultimate_parent_company_name__c            AS zoom_info_ultimate_parent_company_name,
 
+      --*************************************
+      -- NF - 2022-01-28 Account Demographics fields
+      account_demographics_region__c                AS account_demographics_region,
+      account_demographics_sales_segment__c         AS account_demographics_segment,
+      account_demographics_geo__c                   AS account_demographics_geo,
+      account_demographics_area__c                  AS account_demographics_area,
+
       -- metadata
       createdbyid                                   AS created_by_id,
       createddate                                   AS created_date,

@@ -30,7 +30,7 @@ WITH sfdc_account AS (
     SELECT
       sfdc_account.*,
 
-      sfdc_users.name                                                                   AS technical_account_manager,
+      tam_user.name                                                                   AS technical_account_manager,
       parent_account.ultimate_parent_account_name, 
 
       -- ************************************
@@ -129,14 +129,22 @@ WITH sfdc_account AS (
         WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: BitBucket') 
           THEN 1 
         ELSE 0
-      END                                 AS zi_bit_bucket_presence_flag
+      END                                 AS zi_bit_bucket_presence_flag,
+
+    -- NF 2022-01-28 Added extra account owner demographics fields
+    account_owner.user_segment            AS account_owner_user_segment,
+    account_owner.user_geo                AS account_owner_user_geo, 
+    account_owner.user_region             AS account_owner_user_region,
+    account_owner.user_area               AS account_owner_user_area
 
 
     FROM sfdc_account
     LEFT JOIN parent_account
       ON sfdc_account.ultimate_parent_account_id = parent_account.ultimate_parent_account_id
-    LEFT OUTER JOIN sfdc_users
-      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+    LEFT JOIN sfdc_user tam_user
+      ON sfdc_account.technical_account_manager_id = tam_user.user_id
+    LEFT JOIN sfdc_user account_owner
+      ON sfdc_account.owner_id = account_owner.user_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
     LEFT JOIN sfdc_account_deal_size_segmentation
