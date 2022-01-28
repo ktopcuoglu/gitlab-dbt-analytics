@@ -180,7 +180,7 @@
     ('prep_requirement', 'prep_requirement'),
     ('dim_project', 'dim_project'),
     ('prep_namespace', 'prep_namespace'),
-    ('prep_user', 'prep_user'),
+    ('prep_user', 'prep_user')
 ]) }}
 
 , dast_jobs AS (
