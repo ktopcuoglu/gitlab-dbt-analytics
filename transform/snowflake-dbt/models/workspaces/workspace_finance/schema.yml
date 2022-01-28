@@ -540,3 +540,46 @@ models:
         description: Amount of ARR which needs to be adjusted for the true-up
         tests:
           - not_null
+  - name: dim_order_action_api_sandbox
+    columns:
+      - name: dim_order_action_id
+        description: Unique identifier of a version of an order action
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: dim_order_id
+        description: Join key for dim_order_api_sandbox
+        tests:
+          - not_null:
+              severity: warn
+      - name: dim_subscription_id
+        description: The identifier of subscription in dim_subscriptions table
+        tests:
+          - not_null:
+              severity: warn
+      - name: dim_amendment_id
+        tests:
+          - not_null:
+              severity: warn
+      - name: order_action_type
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['CreateSubscription', 'RenewSubscription', 'AddProduct', 'RemoveProduct', 'CancelSubscription', 'UpdateProduct', 'OwnerTransfer', 'TermsAndConditions']
+      - name: order_action_sequence
+      - name: is_auto_renew
+      - name: cancellation_policy
+      - name: term_type
+      - name: order_action_created_date
+      - name: customer_acceptance_date
+      - name: contract_effective_date
+      - name: service_activation_date
+      - name: current_term
+      - name: current_term_period_type
+      - name: renewal_term
+      - name: renewal_term_period_type
+      - name: renewal_setting
+      - name: term_start_date
