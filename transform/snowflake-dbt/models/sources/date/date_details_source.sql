@@ -94,8 +94,24 @@ WITH date_spine AS (
       DATE_TRUNC('month', last_day_of_fiscal_year)                                            AS last_month_of_fiscal_year,
       IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year,
       DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa,
-      DATEADD('day',44,DATEADD('month',1,first_day_of_month))                                 AS snapshot_date_billings
-
+      DATEADD('day',44,DATEADD('month',1,first_day_of_month))                                 AS snapshot_date_billings,
+      COUNT(date_actual) OVER (PARTITION BY first_day_of_month)                               AS days_in_month_count,
+      90 - DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)                             AS day_of_fiscal_quarter_normalised,
+      12-floor((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)/7))                    AS week_of_fiscal_quarter_normalised,
+      CASE 
+        WHEN  week_of_fiscal_quarter_normalised < 5
+          THEN week_of_fiscal_quarter_normalised 
+        WHEN  week_of_fiscal_quarter_normalised < 9 
+          THEN week_of_fiscal_quarter_normalised - 4
+        ELSE week_of_fiscal_quarter_normalised - 8
+      END                                                                                     AS week_of_month_normalised,
+      365 - datediff(day,date_actual,last_day_of_fiscal_year)                                 AS day_of_fiscal_year_normalised,
+      CASE 
+        WHEN ((DATEDIFF(day, date_actual, last_day_of_fiscal_quarter)-6) % 7 = 0 
+                OR date_actual = first_day_of_fiscal_quarter) 
+          THEN 1 
+        ELSE 0 
+      END                                                                                     AS is_first_day_of_fiscal_quarter_week
     FROM date_spine
 
 ), final AS (
@@ -144,7 +160,13 @@ WITH date_spine AS (
       last_month_of_fiscal_year,
       is_first_day_of_last_month_of_fiscal_year,
       snapshot_date_fpa,
-      snapshot_date_billings
+      snapshot_date_billings,
+      days_in_month_count,
+      week_of_month_normalised,
+      day_of_fiscal_quarter_normalised,
+      week_of_fiscal_quarter_normalised,
+      day_of_fiscal_year_normalised,
+      is_first_day_of_fiscal_quarter_week
     FROM calculated
 
 )
@@ -154,5 +176,5 @@ WITH date_spine AS (
     created_by="@msendal",
     updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2021-12-06"
+    updated_date="2022-01-27"
 ) }}
