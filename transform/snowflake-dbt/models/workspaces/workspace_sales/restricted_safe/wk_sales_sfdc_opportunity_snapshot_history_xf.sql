@@ -27,14 +27,27 @@ WITH date_details AS (
       is_edu_oss,
       account_owner_team_stamped, 
 
-      --sales_team_cro_level,
-      --sales_team_rd_asm_level,
-
       -- Opportunity Owner Stamped fields
       opportunity_owner_user_segment,
       opportunity_owner_user_region,
       opportunity_owner_user_area,
       opportunity_owner_user_geo,
+
+      -------------------
+      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
+      sales_team_rd_asm_level,
+      -------------------
+
+      sales_team_cro_level,
+      sales_team_vp_level,
+      sales_team_avp_rd_level,
+      sales_team_asm_level,
+
+      -- this fields use the opportunity owner version for current FY and account fields for previous years
+      report_opportunity_segment,
+      report_opportunity_geo,
+      report_opportunity_region,
+      report_opportunity_area,
 
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
@@ -975,6 +988,7 @@ WITH date_details AS (
           ELSE 0
       END                                                   AS is_eligible_age_analysis_flag,
 
+      -- TODO: This is the same as FP&A Boookings Flag
       CASE
         WHEN opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0

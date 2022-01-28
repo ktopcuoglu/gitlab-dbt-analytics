@@ -257,8 +257,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.is_stage_3_plus,
       sfdc_opportunity_xf.is_lost,
       
-      -- NF: Added the 'Duplicate' stage to the is_open definition
-      --sfdc_opportunity_xf.is_open,
+      -- NF: Excluded 'Duplicate' stage from is_open definition
       CASE 
         WHEN sfdc_opportunity_xf.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
             THEN 0
@@ -730,7 +729,8 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
-      -- temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
+      -- Temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
+      -- NF 2022-01-28 TO BE REMOVED
       CASE 
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
           THEN 'SMB'
@@ -753,7 +753,9 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         ELSE 1
       END                                                                    AS calculated_deal_count,
 
-        -- PIO Flag for PIO reporting dashboard
+      ----------------------------------------------------------------
+      -- NF 2022-01-28 This is probably TO BE DEPRECATED too, need to align with Channel ops
+      -- PIO Flag for PIO reporting dashboard
       CASE 
         WHEN sfdc_opportunity_xf.dr_partner_engagement = 'PIO' 
           THEN 1 
