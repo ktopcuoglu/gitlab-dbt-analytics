@@ -17,12 +17,20 @@ WITH sfdc_opportunity AS (
 
     SELECT * 
     FROM {{ref('sfdc_accounts_xf')}}
-    
+
 
 ), date_details AS (
 
     SELECT * 
     FROM {{ ref('wk_sales_date_details') }} 
+
+), today AS (
+
+  SELECT DISTINCT 
+    fiscal_year               AS current_fiscal_year,
+    first_day_of_fiscal_year  AS current_fiscal_year_date
+  FROM date_details 
+  WHERE date_actual = CURRENT_DATE
 
 ), sfdc_opportunity_xf AS (
 
@@ -606,20 +614,27 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
       sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
 
+      /*
+      FY23 fields
+      2022-01-28 NF
 
-      -- legacy fields 
-      -- FY22
-      COALESCE(oppty_final.opportunity_owner_user_segment ,'NA')                                                       AS sales_team_cro_level,
-      COALESCE(CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region),'NA')  AS sales_team_rd_asm_level,
+        There are different layers of reporting.
+        Account Owner -> Used to report performance of territories year over year, they are comparable across years 
+          as it will be restated for all accounts after carving
+        Opportunity Owner -> Used to report performance, the team might be different to the Account Owner due to holdovers 
+          (accounts kept by a Sales Rep for a certain amount of time)
+        Account Demographics -> The fields that would be appropiate to that account according to their address, it might not match the one
+          of the account owner
+        Report -> This will be a calculated field, using Opportunity Owner for current fiscal year opties and Account for anything before
+        Sales Team -> Same as report, but with a naming convention closer to the sales org hierarchy
 
-
-      -- FY23 fields
+      */
       -- sales_team_cro_level
       -- sales_team_vp_level
       -- sales_team_avp_rd_level
       -- sales_team_asm_level
 
-      -- report_segment_stamped
+      -- report_opportunity_segment
       -- report_geo_stamped
       -- report_region_stamped
       -- report_area_stamped
@@ -628,15 +643,67 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       -- account_owner_geo_stamped
       -- account_owner_region_stamped
       -- account_owner_area_stamped
-      -- account_owner_subarea_stamped
+
 
       -- account_demographics_segment_stamped
       -- account_demographics_geo_stamped
       -- account_demographics_region_stamped
       -- account_demographics_area_stamped
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_segment
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_segment
+      END                                                       AS report_opportunity_segment,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_geo
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
+      END                                                       AS report_opportunity_geo,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_region
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_region
+      END                                                       AS report_opportunity_region,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_area
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_area
+      END                                                       AS report_opportunity_area,
+      -- report_opportunity_subarea
+
+      -- FY22
+      -- legacy fields 
+      COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA')         AS sales_team_rd_asm_level,
+      COALESCE(sfdc_opportunity_xf.opportunity_owner_user_segment ,'NA')            AS sales_team_cro_level,
+      
+      --COALESCE(report_opportunity_segment ,'NA')                                    AS sales_team_cro_level,
+      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo),'NA')                                                            AS sales_team_vp_level,
+      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region),'NA')                              AS sales_team_avp_rd_level,
+      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region,'_',report_opportunity_area),'NA')  AS sales_team_asm_level,
+
+      -- account driven fields 
+      sfdc_accounts_xf.account_name,
+      sfdc_accounts_xf.ultimate_parent_account_id,
+      sfdc_accounts_xf.is_jihu_account,
+      
+      sfdc_accounts_xf.account_owner_user_segment,
+      sfdc_accounts_xf.account_owner_user_geo, 
+      sfdc_accounts_xf.account_owner_user_region,
+      sfdc_accounts_xf.account_owner_user_area,
+      -- account_owner_subarea_stamped
+
+      sfdc_accounts_xf.account_demographics_sales_segment,
+      sfdc_accounts_xf.account_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region,
+      sfdc_accounts_xf.account_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory,
       -- account_demographics_subarea_stamped
 
-
+      -----------------------------------------------
 
       CASE
         WHEN sfdc_opportunity_xf.stage_name
@@ -653,10 +720,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         ELSE 0
       END                                                                   AS is_stage_4_plus,
 
-      -- account driven fields 
-      sfdc_accounts_xf.account_name,
-      sfdc_accounts_xf.ultimate_parent_account_id,
-      sfdc_accounts_xf.is_jihu_account,
+
 
       -- medium level grouping of the order type field
       CASE 
@@ -744,6 +808,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       churn_metrics.churn_contraction_type_calc
 
     FROM sfdc_opportunity_xf
+    CROSS JOIN today
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
     LEFT JOIN churn_metrics 

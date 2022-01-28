@@ -132,7 +132,7 @@ WITH sfdc_account AS (
       END                                 AS zi_bit_bucket_presence_flag,
 
     -- NF 2022-01-28 Added extra account owner demographics fields
-    account_owner.user_segment            AS account_owner_user_segment,
+    --account_owner.user_segment            AS account_owner_user_segment, -- coming directly from source table
     account_owner.user_geo                AS account_owner_user_geo, 
     account_owner.user_region             AS account_owner_user_region,
     account_owner.user_area               AS account_owner_user_area
@@ -141,9 +141,9 @@ WITH sfdc_account AS (
     FROM sfdc_account
     LEFT JOIN parent_account
       ON sfdc_account.ultimate_parent_account_id = parent_account.ultimate_parent_account_id
-    LEFT JOIN sfdc_user tam_user
+    LEFT JOIN sfdc_users tam_user
       ON sfdc_account.technical_account_manager_id = tam_user.user_id
-    LEFT JOIN sfdc_user account_owner
+    LEFT JOIN sfdc_users account_owner
       ON sfdc_account.owner_id = account_owner.user_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
