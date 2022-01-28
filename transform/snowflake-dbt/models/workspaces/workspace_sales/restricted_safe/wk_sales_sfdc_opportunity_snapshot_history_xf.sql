@@ -27,8 +27,8 @@ WITH date_details AS (
       is_edu_oss,
       account_owner_team_stamped, 
 
-      sales_team_cro_level,
-      sales_team_rd_asm_level,
+      --sales_team_cro_level,
+      --sales_team_rd_asm_level,
 
       -- Opportunity Owner Stamped fields
       opportunity_owner_user_segment,
@@ -254,7 +254,6 @@ WITH date_details AS (
             AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated' 
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
-
 
       -- stage dates
             -- dates in stage fields
@@ -749,8 +748,11 @@ WITH date_details AS (
       sfdc_opportunity_xf.opportunity_owner_user_geo,
 
       --- target fields for reporting, changing their name might help to isolate their logic from the actual field
-      sfdc_opportunity_xf.sales_team_rd_asm_level, -- <- NF Legacy field as FY23
-      
+      -------------------
+      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
+      sfdc_opportunity_xf.sales_team_rd_asm_level,
+      -------------------
+
       sfdc_opportunity_xf.sales_team_cro_level,
       sfdc_opportunity_xf.sales_team_vp_level,
       sfdc_opportunity_xf.sales_team_avp_rd_level,
@@ -896,7 +898,7 @@ WITH date_details AS (
         ELSE 'Other' 
       END                                                           AS calculated_deal_size,
 
-            -- Open pipeline eligibility definition
+      -- Open pipeline eligibility definition
       CASE 
         WHEN lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
           AND opp_snapshot.is_edu_oss = 0
@@ -909,6 +911,7 @@ WITH date_details AS (
 
 
       -- Created pipeline eligibility definition
+      -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE 
         WHEN opp_snapshot.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
           AND opp_snapshot.is_edu_oss = 0
@@ -922,20 +925,24 @@ WITH date_details AS (
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
-          -- 20210802 remove webpurchase deals
-          AND opp_snapshot.is_web_portal_purchase = 0
+          -- 20220128 Updated to remove webdirect SQS deals 
+          AND opp_snapshot.sales_qualified_source  != 'Web Direct Generated'
               THEN 1
          ELSE 0
       END                                                      AS is_eligible_created_pipeline_flag,
 
+      -- SAO alignment issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2656
       CASE
         WHEN opp_snapshot.sales_accepted_date IS NOT NULL
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.is_renewal = 0
+          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             THEN 1
         ELSE 0
       END                                                     AS is_eligible_sao_flag,
 
+      -- ASP Analysis eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
@@ -944,16 +951,14 @@ WITH date_details AS (
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
           AND opp_snapshot.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
-          -- Web Purchase have no Net ARR before reconciliation, exclude those 
-          -- from ASP analysis
-          AND ((opp_snapshot.is_web_portal_purchase = 1 
-                AND net_arr > 0)
-                OR opp_snapshot.is_web_portal_purchase = 0)
+          -- Exclude Deals with nARR < 0
+          AND net_arr > 0
           -- Not JiHu
             THEN 1
           ELSE 0
       END                                                    AS is_eligible_asp_analysis_flag,
       
+      -- Age eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
@@ -979,7 +984,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                   AS is_eligible_net_arr_flag,
+      END                                                   AS is_booked_net_arr_flag,
 
       CASE
         WHEN opp_snapshot.is_edu_oss = 0

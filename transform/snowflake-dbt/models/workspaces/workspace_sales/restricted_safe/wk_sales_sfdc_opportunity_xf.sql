@@ -629,25 +629,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         Sales Team -> Same as report, but with a naming convention closer to the sales org hierarchy
 
       */
-      -- sales_team_cro_level
-      -- sales_team_vp_level
-      -- sales_team_avp_rd_level
-      -- sales_team_asm_level
-
-      -- report_opportunity_segment
-      -- report_opportunity_geo
-      -- report_opportunity_region
-      -- report_opportunity_area
-
-      -- account_owner_segment_stamped
-      -- account_owner_geo_stamped
-      -- account_owner_region_stamped
-      -- account_owner_area_stamped
-
-      -- account_demographics_segment_stamped
-      -- account_demographics_geo_stamped
-      -- account_demographics_region_stamped
-      -- account_demographics_area_stamped
 
       CASE 
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
@@ -676,9 +657,10 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       END                                                       AS report_opportunity_area,
       -- report_opportunity_subarea
 
-      -- FY22
-      -- legacy fields 
+      -------------------
+      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
       COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA')         AS sales_team_rd_asm_level,
+       -------------------
       COALESCE(sfdc_opportunity_xf.opportunity_owner_user_segment ,'NA')            AS sales_team_cro_level,
       
       --COALESCE(report_opportunity_segment ,'NA')                                    AS sales_team_cro_level,
@@ -708,7 +690,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
       sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
       sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory
+      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory,
       -----------------------------------------------
 
       CASE
@@ -718,15 +700,12 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         ELSE 0
       END                                                                   AS is_stage_1_plus,
 
-
       CASE
         WHEN sfdc_opportunity_xf.stage_name
           IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
       END                                                                   AS is_stage_4_plus,
-
-
 
       -- medium level grouping of the order type field
       CASE 
@@ -740,7 +719,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           THEN '4. Churn'
         ELSE '5. Other' 
       END                                                                   AS deal_category,
-
 
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
@@ -781,8 +759,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           THEN 1 
         ELSE 0 
       END                                                                    AS partner_engaged_opportunity_flag,
-
-      
+ 
        -- check if renewal was closed on time or not
       CASE 
         WHEN sfdc_opportunity_xf.is_renewal = 1 
@@ -793,7 +770,8 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
             THEN 'Late' 
       END                                                                       AS renewal_timing_status,
 
-      --********************************************************
+      ----------------------------------------------------------------
+      ----------------------------------------------------------------
       -- calculated fields for pipeline velocity report
       
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
@@ -916,6 +894,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
 
       -- Created pipeline eligibility definition
+      -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE 
         WHEN oppty_final.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
           AND oppty_final.is_edu_oss = 0
@@ -927,23 +906,25 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
-          -- 20210802 remove webpurchase deals
-          AND oppty_final.is_web_portal_purchase = 0
+          -- 20220128 Updated to remove webdirect SQS deals 
+          AND oppty_final.sales_qualified_source  != 'Web Direct Generated'
          THEN 1
          ELSE 0
       END                                                          AS is_eligible_created_pipeline_flag,
 
 
-      -- SAO alignment issue: https://mail.google.com/mail/u/0/#inbox/FMfcgzGkbDZKFplMhHCSFkPJSvDkTvCL
+      -- SAO alignment issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2656
       CASE
         WHEN oppty_final.sales_accepted_date IS NOT NULL
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
+          AND oppty_final.is_renewal = 0
+          AND oppty_final.stage_name NOT IN ('10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             THEN 1
         ELSE 0
       END                                                         AS is_eligible_sao_flag,
 
-
+      -- ASP Analysis eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
@@ -952,12 +933,13 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
           AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
-          -- Exclude Deals with net ARR < 0
+          -- Exclude Deals with nARR < 0
           AND net_arr > 0
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis_flag,
 
+      -- Age eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
@@ -981,7 +963,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
             THEN 1
           ELSE 0
-      END                                                           AS is_eligible_net_arr_flag,
+      END                                                           AS is_booked_net_arr_flag,
 
       CASE
         WHEN oppty_final.is_edu_oss = 0
