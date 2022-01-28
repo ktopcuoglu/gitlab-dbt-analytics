@@ -1,7 +1,6 @@
 {{
   config(
-    materialized='table',
-    tags=["mnpi_exception"]
+    materialized='table'
   )
 }}
 
