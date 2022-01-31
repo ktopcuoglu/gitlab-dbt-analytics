@@ -80,7 +80,7 @@ def get_metadata(
     Returns the google sheet name and file name
     """
     n = 0
-    while maximum_backoff_sec > (2**n):
+    while maximum_backoff_sec > (2 ** n):
         try:
             file.client.login()
             file_name = file.title
