@@ -213,9 +213,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-02-08",
-<<<<<<< HEAD
-    updated_date="2021-09-28"
-=======
     updated_date="2021-12-23"
->>>>>>> master
 ) }}

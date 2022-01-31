@@ -178,9 +178,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-<<<<<<< HEAD
-    updated_date="2021-10-12"
-=======
     updated_date="2021-12-23"
->>>>>>> master
 ) }}
