@@ -87,5 +87,4 @@ for folder in folders:
         tolerations=get_toleration(False),
         arguments=[container_cmd],
         dag=dag,
-        namespace='staging'
     )
