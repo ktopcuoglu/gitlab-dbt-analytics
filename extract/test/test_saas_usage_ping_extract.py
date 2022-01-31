@@ -1,4 +1,5 @@
 import pytest
+
 from datetime import datetime
 from extract.saas_usage_ping import usage_ping
 

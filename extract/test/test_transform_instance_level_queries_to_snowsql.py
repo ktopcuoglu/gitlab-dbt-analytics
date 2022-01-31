@@ -300,8 +300,8 @@ meta_json_result = {
 }
 
 meta_json_raw = {k: v for k, v in meta_json_result.items()}
-meta_json_raw["fake1"] = 12
-meta_json_raw["fake2"] = 13
+meta_json_raw["fake1"] = "12"
+meta_json_raw["fake2"] = "13"
 
 result_json = keep_meta_data(meta_json_raw)
 
@@ -310,5 +310,5 @@ for k, v in result_json.items():
 
 assert isinstance(result_json, dict)
 assert len(result_json.keys()) == len(META_API_COLUMNS)
-assert result_json.get('fake1', None) is None
-assert result_json.get('fake2', None) is None
+assert result_json.get("fake1", None) is None
+assert result_json.get("fake2", None) is None
