@@ -1,6 +1,3 @@
-"""
-Module is used to transform SQL syntax from Postgres to Snowflake style
-"""
 import json
 from typing import Any, Dict, List
 from logging import info
@@ -14,16 +11,6 @@ from sqlparse.tokens import Whitespace
 
 import requests
 
-meta_api_columns = [
-    "recorded_at",
-    "version",
-    "edition",
-    "recording_ce_finished_at",
-    "recording_ee_finished_at",
-]
-
-TRANSFORMED_INSTANCE_QUERIES_FILE = "transformed_instance_queries.json"
-META_DATA_INSTANCE_QUERIES_FILE = "meta_data_instance_queries.json"
 
 def get_sql_query_map(private_token: str = None) -> Dict[Any, Any]:
     """
@@ -295,64 +282,28 @@ def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
 
     sql_queries_dict_with_new_column = {
         metric_name: add_counter_name_as_column(
-            sql_metrics_name=metric_name, sql_query=sql_queries_dictionary[metric_name]
+            metric_name, sql_queries_dictionary[metric_name]
         )
         for metric_name in sql_queries_dictionary
     }
 
     transformed_sql_query_dict = {
-        metric_name: rename_query_tables(
-            sql_query=sql_queries_dict_with_new_column[metric_name]
-        )
+        metric_name: rename_query_tables(sql_queries_dict_with_new_column[metric_name])
         for metric_name in sql_queries_dict_with_new_column
     }
 
     return transformed_sql_query_dict
 
 
-def save_json_file(file_name: str, json_file: dict) -> None:
-    """
-    param file_name: str
-    param json_file: dict
-    rtype: None
-    """
-    with open(file=file_name, mode="w", encoding="utf-8") as f:
-        json.dump(json_file, f)
-
-
-def keep_meta_data(json_file: dict) -> dict:
-    """
-    Pick up meta data we want to expose in Snowflake from the original file
-
-    param json_file: json file downloaded from API
-    return: dict
-    """
-
-    meta_data = {
-        meta_api_column: json_file.get(meta_api_column, "")
-        for meta_api_column in meta_api_columns
-    }
-
-    return meta_data
-
-
 if __name__ == "__main__":
     config_dict = env.copy()
-
     json_data = get_sql_query_map(
         private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
     )
 
     info("Processed sql queries")
     final_sql_query_dict = main(json_query_list=json_data)
-
-    final_meta_data = keep_meta_data(json_data)
     info("Processed final sql queries")
 
-    save_json_file(
-        file_name=TRANSFORMED_INSTANCE_QUERIES_FILE, json_file=final_sql_query_dict
-    )
-
-    save_json_file(
-        file_name=META_DATA_INSTANCE_QUERIES_FILE, json_file=final_meta_data
-    )
+    with open(file="transformed_instance_queries.json", mode="w") as f:
+        json.dump(final_sql_query_dict, f)
