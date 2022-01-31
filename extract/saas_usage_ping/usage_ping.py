@@ -39,9 +39,7 @@ class UsagePing(object):
             self.end_date = datetime.datetime.now().date()
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
-        self.dataframe_api_columns = [
-            meta_api_column.upper() for meta_api_column in meta_api_columns
-        ]
+        self.dataframe_api_columns = meta_api_columns
 
     def _get_instance_queries(self) -> Dict:
         """
