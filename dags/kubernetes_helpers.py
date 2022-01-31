@@ -35,6 +35,10 @@ production_affinity = get_affinity_with_key_value("production", ["true"])
 
 production_tolerations = get_toleration_with_value("production")
 
+staging_affinity = get_affinity_with_key_value("staging", ["true"])
+
+staging_tolerations = get_toleration_with_value("staging")
+
 
 def is_local_test():
     return "NAMESPACE" in env and env["NAMESPACE"] == "testing"
