@@ -119,6 +119,7 @@ def test_transforming_queries():
         # compare translated query with working SQL
         assert sql_query == results_dict[sql_metric]
 
+
 ##################################################################
 # Test case: Scalar subquery :: test SELECT (SELECT 1) -> SELECT (SELECT 1) as counter_value
 ##################################################################
@@ -138,6 +139,7 @@ def test_scalar_subquery():
     for sql_metric, sql_query in final_sql_query_dict.items():
         # compare translated query with working SQL
         assert sql_query == results_dict[sql_metric]
+
 
 ##################################################################
 # Test case: regular subquery transform:
@@ -186,6 +188,7 @@ def test_regular_subquery_transform():
         # compare translated query with working SQL
         assert sql_query == results_dict_subquery[sql_metric]
 
+
 ##################################################################
 # Test case: optimize_token_size
 ##################################################################
@@ -209,6 +212,7 @@ def test_optimize_token_size():
 
     for i, test_case_list in enumerate(test_cases_list):
         assert optimize_token_size(test_case_list) == results_list[i]
+
 
 ##################################################################
 # Test case: COUNT from PG to Snowflake: translate_postgres_snowflake_count
@@ -240,6 +244,7 @@ def test_count_pg_snowflake():
             == results_list_count[i]
         )
 
+
 ##################################################################
 # Test case: find_keyword_index
 ##################################################################
@@ -262,6 +267,7 @@ def test_find_keyword_index():
     for i, test_case_parse in enumerate(test_cases_parse):
         assert find_keyword_index(test_case_parse, "FROM") == results_parse[i]
 
+
 ##################################################################
 # Test case: prepare_sql_statement
 ##################################################################
@@ -277,6 +283,7 @@ def test_prepare_sql_statement():
     for i, test_case_prepare in enumerate(test_cases_prepare):
         assert prepare_sql_statement(test_case_prepare) == results_list_prepare[i]
 
+
 ##################################################################
 # Test case: check static variables
 ##################################################################
@@ -291,6 +298,7 @@ def test_static_variables():
     ]
     assert TRANSFORMED_INSTANCE_QUERIES_FILE == "transformed_instance_queries.json"
     assert META_DATA_INSTANCE_QUERIES_FILE == "meta_data_instance_queries.json"
+
 
 ##################################################################
 # Test case: keep_meta_data
