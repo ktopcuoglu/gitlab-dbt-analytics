@@ -1,5 +1,5 @@
 from os import environ as env
-from typing import Dict, List, Union, Any
+from typing import Dict, List
 from hashlib import md5
 
 from logging import info
@@ -11,8 +11,8 @@ import sys
 import requests
 import pandas as pd
 
-from ..saas_usage_ping.transform_instance_level_queries_to_snowsql import (
-# from transform_instance_level_queries_to_snowsql import (
+
+from transform_instance_level_queries_to_snowsql import (
     META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
