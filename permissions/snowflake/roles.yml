@@ -157,6 +157,11 @@ databases:
     - rdemiri_prep:
         shared: no
 
+    - rkohnke_prod:
+        shared: no
+    - rkohnke_prep:
+        shared: no  
+
     - rparker_prod:
         shared: no
     - rparker_prep:
@@ -306,6 +311,7 @@ roles:
             - covid19
             - dbt_analytics
             - driveload
+            - gainsight
             - gcp_billing
             - gitlab_data_yaml
             - gitlab_dotcom
@@ -1301,6 +1307,7 @@ roles:
                     - prod.common_mart_product
                     - prod.common_mapping
                     - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_common_mart_product
                 write:
                     - prod.common_mart_product
             tables:
@@ -1313,6 +1320,9 @@ roles:
                     - prod.common_mart_product.mart_product_usage_paid_user_metrics_monthly
                     - prod.common_mart_product.mart_product_usage_free_user_metrics_monthly
                     - prod.restricted_safe_common_mart_sales.mart_arr
+                    - prod.restricted_safe_common_mart_product.mart_user_request
+                    - prod.restricted_safe_common_mart_product.rpt_user_request_crm_account_issue_epic
+                    - prod.restricted_safe_common_mart_product.rpt_user_request_issue_epic
 
     - gainsight:
         warehouses:
@@ -2135,6 +2145,19 @@ roles:
                     - prep.sensitive.gitlab_contact_enhance_pii
                     - zoominfo_inbound.gitlab.*
 
+    - zoominfo_inbound:
+        privileges:
+            databases:
+                read:
+                    - zoominfo_inbound
+            schemas:
+                read:
+                    - zoominfo_inbound.gitlab
+            tables:
+                read:
+                    - zoominfo_inbound.gitlab.*
+
+
     - zuora:
         warehouses:
             - analyst_xs
@@ -2276,6 +2299,7 @@ roles:
     - aperez:
         member_of:
             - analyst_people
+            - bamboohr
         warehouses:
             - analyst_xs
 
@@ -2690,6 +2714,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - hselim: 
+        member_of: 
+            - xactly
+            - restricted_safe
+        warehouses: 
+            - analyst_xs
+
     - hsharma: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
@@ -2733,6 +2764,10 @@ roles:
                 write:
                     - ian_prep.*.*
                     - ian_prod.*.*
+
+    - ianderson:
+        warehouses:
+            - admin
 
     - iroussos: # De provisioned as part of Quarterly audit and security check.
         member_of:  []
@@ -2925,6 +2960,10 @@ roles:
             - analyst_sales
         warehouses:
             - analyst_xs
+
+    - jrubi:
+        warehouses:
+            - admin
 
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
@@ -3178,6 +3217,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - zoominfo_inbound
         warehouses:
             - analyst_xs
 
@@ -3839,6 +3879,38 @@ roles:
             - restricted_safe
         warehouses:
             - analyst_xs
+        owns:
+            databases:
+                - rkohnke_prep
+                - rkohnke_prod
+            schemas:
+                - rkohnke_prep.*
+                - rkohnke_prod.*
+            tables:
+                - rkohnke_prep.*.*
+                - rkohnke_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - rkohnke_prep
+                    - rkohnke_prod
+                write:
+                    - rkohnke_prep
+                    - rkohnke_prod
+            schemas:
+                read:
+                    - rkohnke_prep.*
+                    - rkohnke_prod.*
+                write:
+                    - rkohnke_prep.*
+                    - rkohnke_prod.*
+            tables:
+                read:
+                    - rkohnke_prep.*.*
+                    - rkohnke_prod.*.*
+                write:
+                    - rkohnke_prep.*.*
+                    - rkohnke_prod.*.* 
 
     - rparker:
         member_of:
@@ -4472,10 +4544,20 @@ users:
         can_login: no
         member_of: []
 
+    - hselim: 
+        can_login: yes
+        member_of: 
+            - hselim       
     - ian:
         can_login: yes
         member_of:
             - ian
+
+    - ianderson:
+        can_login: yes
+        member_of:
+            - ianderson
+            - securityadmin
 
     - iroussos: # De provisioned as part of Quarterly audit and security check.
         can_login: no
@@ -4547,6 +4629,12 @@ users:
         can_login: yes
         member_of:
             - jpetr
+
+    - jrubi:
+        can_login: yes
+        member_of:
+            - jrubi
+            - securityadmin
 
     - jsalazar: # De provisioned as part of Quarterly audit and security check.
         can_login: no

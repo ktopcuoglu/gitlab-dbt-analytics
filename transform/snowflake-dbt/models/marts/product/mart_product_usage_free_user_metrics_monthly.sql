@@ -78,7 +78,6 @@
       free_user_metrics.projects_bamboo_active_all_time_event,
       free_user_metrics.projects_jira_active_all_time_event,
       free_user_metrics.projects_drone_ci_active_all_time_event,
-      free_user_metrics.jira_imports_28_days_event,
       free_user_metrics.projects_github_active_all_time_event,
       free_user_metrics.projects_jira_server_active_all_time_event,
       free_user_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -188,7 +187,6 @@
         'projects_bamboo_active_all_time_event',
         'projects_jira_active_all_time_event',
         'projects_drone_ci_active_all_time_event',
-        'jira_imports_28_days_event',
         'projects_github_active_all_time_event',
         'projects_jira_server_active_all_time_event',
         'projects_jira_dvcs_cloud_active_all_time_event',
@@ -233,7 +231,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2021-07-23"
+    updated_date="2021-12-23"
 ) }}

@@ -133,7 +133,6 @@
       usage_ping.projects_bamboo_active_all_time_event,
       usage_ping.projects_jira_active_all_time_event,
       usage_ping.projects_drone_ci_active_all_time_event,
-      usage_ping.jira_imports_28_days_event,
       usage_ping.projects_github_active_all_time_event,
       usage_ping.projects_jira_server_active_all_time_event,
       usage_ping.projects_jira_dvcs_cloud_active_all_time_event,
@@ -212,7 +211,11 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-02-08",
+<<<<<<< HEAD
     updated_date="2021-09-28"
+=======
+    updated_date="2021-12-23"
+>>>>>>> master
 ) }}

@@ -110,7 +110,6 @@
       "counts.projects_bamboo_active"                                                           AS projects_bamboo_active_all_time_event,
       "counts.projects_jira_active"                                                             AS projects_jira_active_all_time_event,
       "counts.projects_drone_ci_active"                                                         AS projects_drone_ci_active_all_time_event,
-      "usage_activity_by_stage_monthly.manage.issues_imported.jira"                             AS jira_imports_28_days_event,
       "counts.projects_github_active"                                                           AS projects_github_active_all_time_event,
       "counts.projects_jira_server_active"                                                      AS projects_jira_server_active_all_time_event,
       "counts.projects_jira_dvcs_cloud_active"                                                  AS projects_jira_dvcs_cloud_active_all_time_event,
@@ -177,7 +176,11 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-06-02",
+<<<<<<< HEAD
     updated_date="2021-10-12"
+=======
+    updated_date="2021-12-23"
+>>>>>>> master
 ) }}

@@ -2,11 +2,12 @@ version: 2
 
 models:
     - name: rpt_hires
-      columns: 
-        - name: unique_key
-          tests:
-            - not_null
-            - unique
+      description: This is a report specifically for talent acquisition and counts accepted offers as hires.
+      tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - candidate_id
+              - application_id
 
     - name: rpt_job_opening_interviews
       tests:
