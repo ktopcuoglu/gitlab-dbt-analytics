@@ -10,7 +10,11 @@ import os
 import sys
 import requests
 import pandas as pd
-
+from transform_instance_level_queries_to_snowsql import (
+    meta_api_columns,
+    TRANSFORMED_INSTANCE_QUERIES_FILE,
+    META_DATA_INSTANCE_QUERIES_FILE,
+)
 from fire import Fire
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
@@ -35,6 +39,9 @@ class UsagePing(object):
             self.end_date = datetime.datetime.now().date()
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
+        self.dataframe_api_columns = [
+            meta_api_column.upper() for meta_api_column in meta_api_columns
+        ]
 
     def _get_instance_queries(self) -> Dict:
         """
@@ -47,6 +54,22 @@ class UsagePing(object):
             saas_queries = json.load(f)
 
         return saas_queries
+
+    def _get_dataframe_api_values(self, input_json: dict) -> list:
+        """
+        pick up values from Json defined in dataframe_api_columns
+        and return it as a list
+
+        param input_json: dict
+        return: list
+        """
+        dataframe_api_value_list = []
+
+        for dataframe_api_column in self.dataframe_api_columns:
+            dataframe_api_value_list[dataframe_api_column] = input_json.get(
+                dataframe_api_column, ""
+            )
+        return dataframe_api_value_list
 
     def _get_md5(
         self, input_timestamp: float = datetime.datetime.utcnow().timestamp()
@@ -105,6 +128,7 @@ class UsagePing(object):
 
         ping_to_upload = pd.DataFrame(
             columns=["query_map", "run_results", "ping_date", "run_id"]
+            + self.dataframe_api_columns
         )
 
         ping_to_upload.loc[0] = [
@@ -112,7 +136,7 @@ class UsagePing(object):
             json.dumps(results_all),
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
-        ]
+        ] + self._get_dataframe_api_values(results_all)
 
         dataframe_uploader(
             ping_to_upload,
@@ -159,13 +183,15 @@ class UsagePing(object):
         )
         json_data = json.loads(response.text)
 
-        redis_data_to_upload = pd.DataFrame(columns=["jsontext", "ping_date", "run_id"])
+        redis_data_to_upload = pd.DataFrame(
+            columns=["jsontext", "ping_date", "run_id"] + self.dataframe_api_columns
+        )
 
         redis_data_to_upload.loc[0] = [
             json.dumps(json_data),
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
-        ]
+        ] + self._get_dataframe_api_values(json_data)
 
         dataframe_uploader(
             redis_data_to_upload,
