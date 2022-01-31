@@ -1,4 +1,5 @@
 tag,description
+account_snapshots, For CRM account snapshots
 arr,Annual Recurring Revenue
 arr_snapshots,For ARR Snapshots
 atr, Available to Renew
@@ -50,6 +51,7 @@ sources,Related to sources
 social,Related to social media data
 tdf,Trusted Data Framework
 thanos,Prometheus Data pipeline
+user_snapshots, For CRM user snapshots
 workspace, Related to team workspaces
 version_db,Relates to the Version Database
 zuora,Relates to Zuora data
