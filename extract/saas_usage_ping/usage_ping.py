@@ -57,8 +57,8 @@ class UsagePing(object):
 
     def _get_dataframe_api_values(self, input_json: dict) -> list:
         """
-        pick up values from Json defined in dataframe_api_columns
-        and return it as a list
+        pick up values from .json file defined in dataframe_api_columns
+        and return them as a list
 
         param input_json: dict
         return: list
@@ -92,8 +92,8 @@ class UsagePing(object):
 
     def _get_meta_data(self, file_name: str) -> dict:
         """
-        Load meta data json file from the file system
-        param file_name:
+        Load meta data from .json file from the file system
+        param file_name: str
         return: dict
         """
         with open(os.path.join(os.path.dirname(__file__), file_name)) as f:
