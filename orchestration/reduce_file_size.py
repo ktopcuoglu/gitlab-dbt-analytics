@@ -16,7 +16,7 @@ picked "nodes_accepted_values" up from 2 jobs:
 - dbt_test_source
 - dbt_model_source
 """
-nodes_accepted_values = {
+NODES_ACCEPTED_VALUES = {
     "unique_id",
     "name",
     "alias",
@@ -44,7 +44,7 @@ def reduce_nodes_section(source_nodes_json: dict) -> dict:
     for nodes_key, nodes_value in source_nodes_json:
         temp_dict: Dict[Any, Union[Union[str, None, Dict[Any, Any]], Any]] = {}
         for nodes_child_key, nodes_child_value in nodes_value.items():
-            if nodes_child_key in nodes_accepted_values:
+            if nodes_child_key in NODES_ACCEPTED_VALUES:
                 # as run manifest.json from a local machine need to
                 # rename database value
                 if nodes_child_key == "config":
@@ -92,8 +92,10 @@ def load_json_file(source_file: str) -> dict:
             )
 
         return json_data
-    except FileNotFoundError as e:
-        logging.error(f"File {source_file} doesn't exist!")
+    except FileNotFoundError as file_not_found_error:
+        logging.error(
+            f"File {source_file} doesn't exist! Error: {file_not_found_error}"
+        )
         raise
 
 
@@ -107,13 +109,10 @@ def reduce_manifest_file(raw_json: dict) -> dict:
     :return: dict
     """
 
-    reduced_json = {}
-
-    # load everything for "metadata" key, this is a small section
-    reduced_json["metadata"] = raw_json["metadata"]
-
-    # load reduced size for "nodes"
-    reduced_json["nodes"] = reduce_nodes_section(raw_json["nodes"].items())
+    reduced_json = {
+        "metadata": raw_json["metadata"],
+        "nodes": reduce_nodes_section(raw_json["nodes"].items()),
+    }
 
     return reduced_json
 
@@ -146,7 +145,7 @@ def main():
     source_file = args.inputfile
     target_file = args.outputfile
 
-    raw_json = load_json_file(source_file=target_file)
+    raw_json = load_json_file(source_file=source_file)
     reduced_json = reduce_manifest_file(raw_json=raw_json)
 
     save_json_file(reduced_json=reduced_json, target_file=target_file)
