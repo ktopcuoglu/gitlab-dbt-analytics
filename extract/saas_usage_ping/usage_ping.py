@@ -63,12 +63,11 @@ class UsagePing(object):
         param input_json: dict
         return: list
         """
-        dataframe_api_value_list: List[Union[str, Any]] = []
+        dataframe_api_value_list = [
+            input_json.get(dataframe_api_column, "")
+            for dataframe_api_column in self.dataframe_api_columns
+        ]
 
-        for dataframe_api_column in self.dataframe_api_columns:
-            dataframe_api_value_list[dataframe_api_column] = input_json.get(
-                dataframe_api_column, ""
-            )
         return dataframe_api_value_list
 
     def _get_md5(
