@@ -20,10 +20,12 @@ meta_api_columns = [
     "edition",
     "recording_ce_finished_at",
     "recording_ee_finished_at",
+    "uuid",
 ]
 
 TRANSFORMED_INSTANCE_QUERIES_FILE = "transformed_instance_queries.json"
 META_DATA_INSTANCE_QUERIES_FILE = "meta_data_instance_queries.json"
+
 
 def get_sql_query_map(private_token: str = None) -> Dict[Any, Any]:
     """
@@ -353,6 +355,4 @@ if __name__ == "__main__":
         file_name=TRANSFORMED_INSTANCE_QUERIES_FILE, json_file=final_sql_query_dict
     )
 
-    save_json_file(
-        file_name=META_DATA_INSTANCE_QUERIES_FILE, json_file=final_meta_data
-    )
+    save_json_file(file_name=META_DATA_INSTANCE_QUERIES_FILE, json_file=final_meta_data)

@@ -10,7 +10,7 @@ import os
 import sys
 import requests
 import pandas as pd
-from transform_instance_level_queries_to_snowsql import (
+from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import (
     meta_api_columns,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
