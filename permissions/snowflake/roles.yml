@@ -4151,6 +4151,7 @@ roles:
          - analyst_core
          - restricted_safe
          - bi_tool_eval_db
+         - version_db
         warehouses:
             - analyst_xs
         owns:
