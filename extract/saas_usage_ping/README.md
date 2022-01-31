@@ -40,7 +40,7 @@ graph TD;
   PGREP[Postgres replica]--Store data from Postgres-->SF_TP[Snowflake RAW.TAP_POSTGRES];
   SP_API[[Service ping API]]--Call API-->DNLD(Download data);
   DNLD--Translate syntax-->TR_SQL[Translate SQL from Postgres -> Snowflake syntax];
-  DNLD--Keep metadata-->MTD[Meta_data in .json];
+  DNLD--Keep metadata-->MTD[Store meta data in .json];
   MTD--Save meta data-->FIN_RAW;
   TR_SQL--Execute queries-->SF_TP;
   SF_TP-->ERROR_CHECK{Metrics generated?}--Yes-->FIN_RAW(Store data RAW.SAAS_USAGE_PING.INSTANCE_SQL_METRICS);
@@ -61,6 +61,8 @@ Data is stored in the table:
 ```mermaid
 graph TD;
   SP_API[[Redis API]]--Call API-->DNLD(Download data);
+  DNLD--Keep metadata-->MTD[Store meta data in .json];
+  MTD--Save meta data-->FIN_RAW;
   DNLD--Store data-->FIN_RAW(Store data RAW.SAAS_USAGE_PING.INSTANCE_REDIS_METRICS);
 ```
         
