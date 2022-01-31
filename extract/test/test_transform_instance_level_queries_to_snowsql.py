@@ -8,6 +8,10 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
     find_keyword_index,
     prepare_sql_statement,
     translate_postgres_snowflake_count,
+    keep_meta_data,
+    META_API_COLUMNS,
+    TRANSFORMED_INSTANCE_QUERIES_FILE,
+    META_DATA_INSTANCE_QUERIES_FILE,
 )
 
 ##################################################################
@@ -265,3 +269,46 @@ results_list_prepare = ["SELECT 1", "SELECT abc from def", "SELECT (SELECT 1)"]
 
 for i, test_case_prepare in enumerate(test_cases_prepare):
     assert prepare_sql_statement(test_case_prepare) == results_list_prepare[i]
+
+##################################################################
+# Test case: check static variables
+##################################################################
+assert META_API_COLUMNS == [
+    "recorded_at",
+    "version",
+    "edition",
+    "recording_ce_finished_at",
+    "recording_ee_finished_at",
+    "uuid",
+]
+assert TRANSFORMED_INSTANCE_QUERIES_FILE == "transformed_instance_queries.json"
+assert META_DATA_INSTANCE_QUERIES_FILE == "meta_data_instance_queries.json"
+
+##################################################################
+# Test case: keep_meta_data
+##################################################################
+meta_json_result = {
+    "recorded_at": "2022-01-21 09:07:46 UTC",
+    "uuid": "1234",
+    "hostname": "127.0.0.1",
+    "version": "14.7.0-pre",
+    "installation_type": "gitlab-development-kit",
+    "active_user_count": "SELECT 1",
+    "edition": "EE Free",
+    "recording_ce_finished_at": "2022-01-21 09:07:53 UTC",
+    "recording_ee_finished_at": "2022-01-21 09:07:53 UTC",
+}
+
+meta_json_raw = {k: v for k, v in meta_json_result.items()}
+meta_json_raw["fake1"] = 12
+meta_json_raw["fake2"] = 13
+
+result_json = keep_meta_data(meta_json_raw)
+
+for k, v in result_json.items():
+    assert v == meta_json_raw.get(k)
+
+assert isinstance(result_json, dict)
+assert len(result_json.keys()) == len(META_API_COLUMNS)
+assert result_json.get('fake1', None) is None
+assert result_json.get('fake2', None) is None

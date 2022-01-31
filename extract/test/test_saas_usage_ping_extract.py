@@ -1,8 +1,9 @@
 import pytest
 from datetime import datetime
-from extract.saas_usage_ping import usage_ping
+from extract.saas_usage_ping.usage_ping import UsagePing
 
-usage_ping_test = usage_ping.UsagePing
+
+usage_ping_test = UsagePing
 
 input_timestamps = [
     datetime(2021, 9, 1, 23, 10, 21).timestamp(),

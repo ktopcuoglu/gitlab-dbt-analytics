@@ -14,7 +14,7 @@ from sqlparse.tokens import Whitespace
 
 import requests
 
-meta_api_columns = [
+META_API_COLUMNS = [
     "recorded_at",
     "version",
     "edition",
@@ -288,6 +288,32 @@ def rename_query_tables(sql_query: str) -> str:
     return "".join(token_string_list)
 
 
+def keep_meta_data(json_file: dict) -> dict:
+    """
+    Pick up meta data we want to expose in Snowflake from the original file
+
+    param json_file: json file downloaded from API
+    return: dict
+    """
+
+    meta_data = {
+        meta_api_column: json_file.get(meta_api_column, "")
+        for meta_api_column in META_API_COLUMNS
+    }
+
+    return meta_data
+
+
+def save_json_file(file_name: str, json_file: dict) -> None:
+    """
+    param file_name: str
+    param json_file: dict
+    rtype: None
+    """
+    with open(file=file_name, mode="w", encoding="utf-8") as f:
+        json.dump(json_file, f)
+
+
 def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
     """
     Main input point to transform queries
@@ -310,32 +336,6 @@ def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
     }
 
     return transformed_sql_query_dict
-
-
-def save_json_file(file_name: str, json_file: dict) -> None:
-    """
-    param file_name: str
-    param json_file: dict
-    rtype: None
-    """
-    with open(file=file_name, mode="w", encoding="utf-8") as f:
-        json.dump(json_file, f)
-
-
-def keep_meta_data(json_file: dict) -> dict:
-    """
-    Pick up meta data we want to expose in Snowflake from the original file
-
-    param json_file: json file downloaded from API
-    return: dict
-    """
-
-    meta_data = {
-        meta_api_column: json_file.get(meta_api_column, "")
-        for meta_api_column in meta_api_columns
-    }
-
-    return meta_data
 
 
 if __name__ == "__main__":

@@ -10,8 +10,9 @@ import os
 import sys
 import requests
 import pandas as pd
+
 from transform_instance_level_queries_to_snowsql import (
-    meta_api_columns,
+    META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
 )
@@ -39,7 +40,7 @@ class UsagePing(object):
             self.end_date = datetime.datetime.now().date()
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
-        self.dataframe_api_columns = meta_api_columns
+        self.dataframe_api_columns = META_API_COLUMNS
 
     def _get_instance_queries(self) -> Dict:
         """
