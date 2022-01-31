@@ -2911,6 +2911,7 @@ roles:
     - jpeguero:
         member_of:
             - analyst_marketing
+            - analyst_sales
             - customers_db
             - netsuite
             - static_admin
