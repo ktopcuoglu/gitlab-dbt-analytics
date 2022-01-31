@@ -5,9 +5,8 @@ from datetime import datetime
 
 # Tweak path as due to script execution way in Airflow, can't touch the original code
 abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = abs_path[:abs_path.find('extract')] + "/extract/saas_usage_ping"
+abs_path = abs_path[: abs_path.find("extract")] + "/extract/saas_usage_ping"
 sys.path.append(abs_path)
-
 
 from extract.saas_usage_ping.usage_ping import UsagePing
 
@@ -34,4 +33,3 @@ for i, check_time in enumerate(input_timestamps):
     assert len(res) == 32  # bytes in hex representation
     # As this is one-way function, can't test it with many things - let see to we have all details with various inputs
     assert res is not None
-
