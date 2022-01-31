@@ -1,9 +1,17 @@
 import pytest
-
+import sys
+import os
 from datetime import datetime
-from extract.saas_usage_ping import usage_ping
 
-usage_ping_test = usage_ping.UsagePing
+# Tweak path as due to script execution way in Airflow, can't touch the original code
+abs_path = os.path.dirname(os.path.realpath(__file__))
+abs_path = abs_path[:abs_path.find('extract')] + "/extract/saas_usage_ping"
+sys.path.append(abs_path)
+
+
+from extract.saas_usage_ping.usage_ping import UsagePing
+
+usage_ping_test = UsagePing
 
 input_timestamps = [
     datetime(2021, 9, 1, 23, 10, 21).timestamp(),
@@ -26,3 +34,4 @@ for i, check_time in enumerate(input_timestamps):
     assert len(res) == 32  # bytes in hex representation
     # As this is one-way function, can't test it with many things - let see to we have all details with various inputs
     assert res is not None
+
