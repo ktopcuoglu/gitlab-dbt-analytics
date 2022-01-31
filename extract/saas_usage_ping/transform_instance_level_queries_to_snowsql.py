@@ -1,3 +1,6 @@
+"""
+Module is used to transform SQL syntax from Postgres to Snowflake style
+"""
 import json
 from typing import Any, Dict, List
 from logging import info
@@ -282,13 +285,15 @@ def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
 
     sql_queries_dict_with_new_column = {
         metric_name: add_counter_name_as_column(
-            metric_name, sql_queries_dictionary[metric_name]
+            sql_metrics_name=metric_name, sql_query=sql_queries_dictionary[metric_name]
         )
         for metric_name in sql_queries_dictionary
     }
 
     transformed_sql_query_dict = {
-        metric_name: rename_query_tables(sql_queries_dict_with_new_column[metric_name])
+        metric_name: rename_query_tables(
+            sql_query=sql_queries_dict_with_new_column[metric_name]
+        )
         for metric_name in sql_queries_dict_with_new_column
     }
 
@@ -305,5 +310,7 @@ if __name__ == "__main__":
     final_sql_query_dict = main(json_query_list=json_data)
     info("Processed final sql queries")
 
-    with open(file="transformed_instance_queries.json", mode="w") as f:
+    with open(
+        file="transformed_instance_queries.json", mode="w", encoding="utf-8"
+    ) as f:
         json.dump(final_sql_query_dict, f)
