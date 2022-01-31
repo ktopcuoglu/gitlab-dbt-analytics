@@ -160,7 +160,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +legacy.snapshots --exclude path:models/legacy/gitlab_dotcom/xf; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots --exclude path:models/legacy/gitlab_dotcom/xf path:models/legacy/gitlab_dotcom/source_view; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 
