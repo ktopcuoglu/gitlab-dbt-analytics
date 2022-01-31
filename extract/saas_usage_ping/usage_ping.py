@@ -1,5 +1,5 @@
 from os import environ as env
-from typing import Dict, List
+from typing import Dict, List, Union, Any
 from hashlib import md5
 
 from logging import info
@@ -49,7 +49,7 @@ class UsagePing(object):
         to generate the {ping_name: sql_query} dictionary
         """
         with open(
-            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+            os.path.join(os.path.dirname(__file__), TRANSFORMED_INSTANCE_QUERIES_FILE)
         ) as f:
             saas_queries = json.load(f)
 
@@ -63,7 +63,7 @@ class UsagePing(object):
         param input_json: dict
         return: list
         """
-        dataframe_api_value_list = []
+        dataframe_api_value_list: List[Union[str, Any]] = []
 
         for dataframe_api_column in self.dataframe_api_columns:
             dataframe_api_value_list[dataframe_api_column] = input_json.get(
@@ -90,6 +90,17 @@ class UsagePing(object):
         timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
 
         return md5(timestamp_encoded).hexdigest()
+
+    def _get_meta_data(self, file_name: str) -> dict:
+        """
+        Load meta data json file from the file system
+        param file_name:
+        return: dict
+        """
+        with open(os.path.join(os.path.dirname(__file__), file_name)) as f:
+            meta_data = json.load(f)
+
+        return meta_data
 
     def saas_instance_ping(self):
         """
@@ -136,7 +147,9 @@ class UsagePing(object):
             json.dumps(results_all),
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
-        ] + self._get_dataframe_api_values(results_all)
+        ] + self._get_dataframe_api_values(
+            self._get_meta_data(META_DATA_INSTANCE_QUERIES_FILE)
+        )
 
         dataframe_uploader(
             ping_to_upload,
