@@ -1,10 +1,12 @@
+import logging
+
+import pandas as pd
 from gitlabdata.orchestration_utils import (
     query_dataframe,
     query_executor,
 )
-import pandas as pd
 from sqlalchemy.engine.base import Engine
-import logging
+from sqlalchemy.exc import ProgrammingError
 
 
 def get_table_column_names(
@@ -160,8 +162,12 @@ def process_row(row: pd.Series) -> str:
 
 
 def rollup_table_clone(
-    engine: Engine, db_name: str, schema_name: str, table_name: str
-) -> bool:
+    engine: Engine,
+    db_name: str,
+    schema_name: str,
+    table_name: str,
+    retried: bool = False,
+) -> None:
     """
     Rolls up tables, columns will always be cast to expected dtype of the final table.
     :param engine:
@@ -187,7 +193,7 @@ def rollup_table_clone(
         logging.info(f"No tables to roll up for {table_name}")
     else:
         for items in tables_to_roll_up.iteritems():
-            logging.info(f"Processing {items[1]}")
+            logging.info(f"Processing insert for {items[1]}")
             column_info = get_table_column_names(engine, db_name, items[1])
 
             column_string = ", ".join((column_info)["column_name"].unique())
@@ -209,10 +215,16 @@ def rollup_table_clone(
                 SELECT {select_string} '{items[1]}' as ORIGINAL_TABLE_NAME, '{items[1][-8:]}'  
                 FROM {db_name}.{schema_name}.{items[1]}
                 """
-            query_executor(engine, insert_stmt)
-            logging.info("Successfully rolled up table clones")
+            try:
+                query_executor(engine, insert_stmt)
+            except ProgrammingError as pe:
+                if "invalid identifier" in pe._message() and not retried:
+                    recreate_rollup_table(engine, db_name, schema_name, table_name)
+                    rollup_table_clone(
+                        engine, db_name, schema_name, table_name, retried=True
+                    )
 
-    return True
+        logging.info("Successfully rolled up table clones")
 
 
 def recreate_rollup_table(
@@ -236,7 +248,7 @@ def recreate_rollup_table(
     big_df = latest_table_columns
 
     for items in tables_to_roll_up.iteritems():
-        logging.info(f"Processing {items[1]}")
+        logging.info(f"Processing create table for {items[1]}")
         table_column_data = get_table_column_names(engine, db_name, items[1])
         big_df = big_df.append(
             table_column_data[

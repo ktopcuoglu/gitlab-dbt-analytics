@@ -67,7 +67,7 @@ default_args = {
 }
 
 # Create the DAG
-#  Sunday at 0900 UTC
+#  Monday at 0700 UTC
 dag = DAG("saas_usage_ping", default_args=default_args, schedule_interval="0 7 * * 1")
 
 # Instance Level Usage Ping

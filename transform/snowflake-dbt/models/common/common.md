@@ -84,9 +84,18 @@ Dimensional customer table representing all existing and historical customers fr
 
 The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
 
-The grain of the table is the SalesForce Account, also referred to as CRM_ID.
+The grain of the table is the SalesForce Account, also referred to as `DIM_CRM_ACCOUNT_ID`.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_crm_account_daily_snapshot %}
+Dimensional customer table representing all existing and historical customers from SalesForce and their attributes on a given day. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account and day, also referred to as `CRM_ACCOUNT_SNAPSHOT_ID`, which is a combination of the `DIM_CRM_ACCOUNT_ID` and `DIM_DATE_ID`
 
 {% enddocs %}
 
@@ -102,6 +111,20 @@ Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% docs dim_crm_person %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+
+{% enddocs %}
+
+{% docs dim_crm_user %}
+
+Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
+
+{% docs dim_crm_user_daily_snapshot %}
+
+Dimension representing the associated user from salesforce on any day. 
+
+The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of `DIM_CRM_USER_ID` and `DIM_DATE_ID`.
 
 {% enddocs %}
 
@@ -419,12 +442,6 @@ Sales funnel targets set by the Finance team to measure performance of Partner a
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
-
-{% enddocs %}
-
-{% docs dim_crm_user %}
-
-Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 

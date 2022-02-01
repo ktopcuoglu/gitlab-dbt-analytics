@@ -1,13 +1,13 @@
 {%- macro pte_base_query(model_run_type) -%}
 
-{% set period_type = 'MONTH'%}
-{% set delta_value = 3 %}
+-- Can only be set using days at the moment
+-- {% set period_type = 'days'%}
+{% set delta_value = 90 %}
 -- Prediction date offset by -1 to ensure its only predicting with complete days.
 {% set prediction_date = (modules.datetime.datetime.now() - modules.datetime.timedelta(days=1)).date()  %}
 
-
 {%- if model_run_type=='training' -%}
-{% set end_date = modules.datetime.datetime(prediction_date.year, prediction_date.month - delta_value, prediction_date.day).date() %}
+{% set end_date = (prediction_date - modules.datetime.timedelta(days=delta_value)).date() %}
 {% endif %}
 {% if model_run_type=='scoring'  %}
 {% set end_date = prediction_date %}
@@ -62,6 +62,23 @@ WITH mart_arr_snapshot_bottom_up AS (
     GROUP BY dim_crm_account_id -- dim_crm_account_id is not unique at each snapshot date, hence the group by
 
 
+), target AS (
+
+    SELECT dim_crm_account_id
+        , MAX(sum_arr) as future_arr --Provides the maximum ARR that account reached during our prediction window. 
+    FROM  --For accounts with multiple subscriptions we first have to sum their ARR to the arr_month level
+        (
+        SELECT dim_crm_account_id, arr_month, sum(arr) as sum_arr
+        FROM PROD.RESTRICTED_SAFE_COMMON_MART_SALES.MART_ARR_SNAPSHOT_BOTTOM_UP -- Contains Snapshot for every date from 2020-03-01 to Present
+        WHERE snapshot_date = '{{ prediction_date }}'
+            AND arr_month > '{{ end_date }}' 
+            AND arr_month <= '{{ prediction_date }}' 
+        GROUP BY dim_crm_account_id, arr_month
+        )
+
+    GROUP BY dim_crm_account_id
+
+
 --Snapshot for the set period prior to the "current" month (as specified by SNAPSHOT_DT).
 ), period_2 AS (
 
@@ -82,7 +99,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , SUM(CASE WHEN subscription_status = 'Cancelled' OR (subscription_status = 'Active' AND subscription_end_date <= dateadd(MONTH, -3, '{{ end_date }}')) THEN 1 ELSE 0 END) AS cancelled_subs_prev --added 3 months before counting active subscriptions as cancelled per Israel's feedback
     FROM mart_arr_snapshot_bottom_up
     WHERE snapshot_date = '{{ end_date }}' -- limit to snapshot to day before our prediction window
-        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -'{{ delta_value }}', cast('{{ end_date }}' as date))) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
+        AND ARR_MONTH = DATE_TRUNC('MONTH', DATEADD('{{ period_type }}', -365, cast('{{ end_date }}' as date))) -- limit to customer's data for just the PERIOD prior to where the '{{ end_date }}' falls
         AND is_jihu_account != 'TRUE' -- Remove Chinese accounts like this per feedback from Melia and Israel
     GROUP BY dim_crm_account_id
 
@@ -329,7 +346,7 @@ WITH mart_arr_snapshot_bottom_up AS (
         , MAX(CAST(SUBSTRING(cleaned_version,0,CHARINDEX('.',cleaned_version)-1) AS INT)) as gitlab_version
     FROM {{ref('mart_product_usage_paid_user_metrics_monthly')}}
     WHERE PING_CREATED_AT IS NOT NULL
-        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD(MONTH, -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND cast('{{ end_date }}' as date)
+        AND SNAPSHOT_MONTH BETWEEN DATE_TRUNC(MONTH, DATEADD('{{ period_type }}', -'{{ delta_value }}', cast('{{ end_date }}' as date))) AND DATE_TRUNC(MONTH, DATEADD(MONTH, -1, cast('{{ end_date }}' as date)))
     GROUP BY dim_crm_account_id
 
 )
@@ -337,6 +354,11 @@ WITH mart_arr_snapshot_bottom_up AS (
 -- This is the final output table that creates the modeling dataset
 SELECT
     p1.dim_crm_account_id AS crm_account_id
+    --Outcome variables
+    , CASE WHEN COALESCE(p1.sum_arr, 0) != 0 AND ((COALESCE(t.future_arr,0) - COALESCE(p1.sum_arr,0)) / COALESCE(p1.sum_arr,0)) > 0.1 THEN 1 -- If there is more than a 10% increase in ARR
+         ELSE 0 
+         END AS is_expanded_flag
+    , COALESCE(t.future_arr, 0) - COALESCE(p1.sum_arr, 0) AS is_expanded_amt
 
     --Zuora Fields
     , p1.num_of_subs AS subs_cnt
@@ -603,6 +625,8 @@ SELECT
     , CASE WHEN u.dim_crm_account_id IS NOT NULL THEN 1 ELSE 0 END AS has_usage_data_flag
 
 FROM period_1 p1
+LEFT JOIN target t
+    ON p1.dim_crm_account_id = t.dim_crm_account_id
 LEFT JOIN period_2 p2
     ON p1.dim_crm_account_id = p2.dim_crm_account_id
 LEFT JOIN opps o

@@ -174,8 +174,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -417,8 +415,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -845,8 +841,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -879,6 +873,3 @@ models:
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-
-  - name: pump_hash_marketing_contact
-    description: '{{ doc("pump_hash_marketing_contact") }}'
