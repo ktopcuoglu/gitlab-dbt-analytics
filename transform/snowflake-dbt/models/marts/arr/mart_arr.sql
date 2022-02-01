@@ -92,8 +92,8 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
-      dim_crm_account.lam                                                             AS lam,
-      dim_crm_account.lam_dev_count                                                   AS lam_dev_count,
+      dim_crm_account.parent_crm_account_lam                                          AS parent_crm_account_lam,
+      dim_crm_account.parent_crm_account_lam_dev_count                                AS parent_crm_account_lam_dev_count,
 
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
