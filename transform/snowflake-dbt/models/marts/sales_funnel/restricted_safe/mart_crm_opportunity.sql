@@ -143,6 +143,7 @@
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
+      dim_crm_opportunity.sdr_or_bdr,
       dim_crm_opportunity.iqm_submitted_by_role,
       dim_crm_opportunity.sdr_pipeline_contribution,
       dim_crm_opportunity.is_web_portal_purchase,
