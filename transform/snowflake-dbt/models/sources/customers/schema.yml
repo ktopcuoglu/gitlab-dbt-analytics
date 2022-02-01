@@ -61,6 +61,30 @@ models:
           - customers_db
         tests:
           - not_null
+  - name: customers_db_leads_source
+    description: '{{ doc("customers_db_leads_source") }}'  
+    columns:
+      - name: leads_id
+        tags:
+          - tdf
+          - customers_db
+        tests:
+          - not_null
+      - name: first_name
+        meta:
+          sensitive: true
+      - name: last_name
+        meta:
+          sensitive: true
+      - name: email
+        meta:
+          sensitive: true
+      - name: phone
+        meta:
+          sensitive: true
+      - name: company_name
+        meta:
+          sensitive: true          
   - name: customers_db_license_seat_links_source
     description: '{{ doc("customers_db_license_seat_links_source") }}' 
     columns:

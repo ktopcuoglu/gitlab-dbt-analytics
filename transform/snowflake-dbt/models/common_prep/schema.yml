@@ -18,7 +18,7 @@ models:
           - not_null
           - unique
         tags: ["tdf", "common", "arr"]
-          
+
   - name: prep_audit_event_details_clean
     description: '{{ doc("prep_audit_event_details_clean") }}'
     columns:
@@ -193,7 +193,7 @@ models:
         tests:
           - not_null
           - unique
-  
+
   - name: prep_namespace_hist
     description: '{{ doc("dim_namespace_hist") }}'
     columns:
@@ -370,7 +370,7 @@ models:
         description: Default storage limit (per project reposity) for new all namespaces when no paid plan has been purchased.
         tests:
           - not_null
-          
+
   - name: prep_gitlab_dotcom_plan
     description: '{{ doc("prep_gitlab_dotcom_plan") }}'
     columns:
@@ -741,7 +741,7 @@ models:
       - name: projects_drone_ci_active_all_time_event
         description: Count of projects with active integrations for Drone CI
       - name: jira_imports_28_days_event
-        description: Count of Issues imported from Jira per month
+        description: Count of Issues imported from Jira per month. This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: Count of projects with active integrations for GitHub
       - name: projects_jira_server_active_all_time_event
@@ -1244,7 +1244,7 @@ models:
       - name: projects_drone_ci_active_all_time_event
         description: Count of projects with active integrations for Drone CI
       - name: jira_imports_28_days_event
-        description: Count of Issues imported from Jira per month
+        description: Count of Issues imported from Jira per month. This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: Count of projects with active integrations for GitHub
       - name: projects_jira_server_active_all_time_event
@@ -1398,7 +1398,7 @@ models:
       - name: counts.projects_drone_ci_active
         description: projects_drone_ci_active_all_time_event
       - name: usage_activity_by_stage_monthly.manage.issues_imported.jira
-        description: jira_imports_28_days_event
+        description: jira_imports_28_days_event. This metric has been deprecated but we are keeping the field around for history.
       - name: counts.projects_github_active
         description: projects_github_active_all_time_event
       - name: counts.projects_jira_server_active
@@ -1550,8 +1550,8 @@ models:
           - not_null
           - unique
       - name: created_date_id
-      - name: created_at 
-      - name: updated_at 
+      - name: created_at
+      - name: updated_at
       - name: ci_runner_description
       - name: contacted_at
       - name: is_active
@@ -1591,7 +1591,7 @@ models:
       - name: created_at
         tests:
           - not_null
-    
+
   - name: prep_issue
     description: '{{ doc("prep_issue") }}'
     columns:
@@ -1599,7 +1599,7 @@ models:
         tests:
           - unique
           - not_null
-          
+
   - name: prep_note
     description: '{{ doc("prep_note") }}'
     columns:
@@ -1615,7 +1615,7 @@ models:
         tests:
           - unique
           - not_null
-          
+
   - name: prep_epic
     description: '{{ doc("prep_epic") }}'
     columns:
@@ -1693,7 +1693,7 @@ models:
         - name: metrics_path
           tests:
             - not_null
-          
+
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'
     columns:
@@ -1741,7 +1741,7 @@ models:
       - name: dim_target_issue_id
         tests:
           - not_null
-          
+
   - name: prep_package
     description: '{{ doc("prep_package") }}'
     columns:
@@ -1749,7 +1749,7 @@ models:
         tests:
           - unique
           - not_null
-          
+
   - name: prep_release
     description: '{{ doc("prep_release") }}'
     columns:
@@ -1757,7 +1757,7 @@ models:
         tests:
           - unique
           - not_null
-                    
+
   - name: prep_requirement
     description: '{{ doc("prep_requirement") }}'
     columns:
@@ -1765,3 +1765,51 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: prep_geozone
+    description: '{{ doc("prep_geozone") }}'
+    columns:
+      - name: geozone_title
+        description: The label of a geographical region.
+      - name: geozone_factor
+        description: The location factor for the given geozone.
+        tests:
+          - not_null
+      - name: geozone_locality
+        description: The locality at the level of the given geozone.
+      - name: country_locality
+        description: The locality at the level of the given country.
+      - name: geozone_country
+        description: A country that is part of the given geozone.
+      - name: geozone_state_or_province
+        description: A state or province that is part of the given country
+      - name: valid_from
+        description: The date the location factor for a locality begins being applied.
+      - name: valid_to
+        description: The date the location factor for a locality stops being applied.
+      - name: is_current
+        description: A flag to indicate if the location factor for the locality is from the most recent source data.
+
+  - name: prep_location_factor
+    description: '{{ doc("prep_location_factor") }}'
+    columns:
+      - name: location_factor_country
+        description: The country of the given locality.
+      - name: location_factor_area
+        description: The combination of state or province and metro area of a given locality.
+      - name: location_factor_states_or_provinces
+        description: The state or province of a given locality.
+      - name: location_factor_metro_area
+        description: The metro area of a given locality.
+      - name: locality
+        description: The combination of area and country that uniquely defines a geographic location.
+        tests:
+          - not_null
+      - name: location_factor
+        description: The label of a geographical region.
+      - name: valid_from
+        description: The date the location factor for a locality begins being applied.
+      - name: valid_to
+        description: The date the location factor for a locality stops being applied.
+      - name: is_current
+        description: A flag to indicate if the location factor for the locality is from the most recent source data.

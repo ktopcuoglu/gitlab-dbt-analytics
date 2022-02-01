@@ -19,7 +19,11 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approval_project_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_approval_project_rules_groups_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'    
   - name: gitlab_dotcom_approval_project_rules_protected_branches_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_approval_project_rules_users_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approvals_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -27,9 +31,13 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_audit_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_audit_events_external_audit_event_destinations_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_authentication_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_award_emoji_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_banned_users_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_board_assignees_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -67,6 +75,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_runners_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_ci_sources_pipelines_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_stages_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_trigger_requests_dedupe_source
@@ -78,6 +88,10 @@ models:
   - name: gitlab_dotcom_cluster_agents_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_cluster_groups_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_clusters_integration_elasticstack_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_clusters_integration_prometheus_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_cluster_projects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -112,6 +126,8 @@ models:
   - name: gitlab_dotcom_compliance_management_frameworks_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_csv_issue_imports_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_dast_profiles_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_geo_nodes_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -198,6 +214,8 @@ models:
   - name: gitlab_dotcom_merge_requests_closing_issues_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_merge_requests_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_milestone_releases_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_milestones_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -314,6 +332,8 @@ models:
   - name: gitlab_dotcom_uploads_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_details_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_users_security_dashboard_projects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_preferences_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

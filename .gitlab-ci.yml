@@ -91,7 +91,7 @@ include:
 🥩clone_raw_full:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw
+    - manage_snowflake.py manage_clones --database raw --include_stages
 
 🥩📜clone_raw_sheetload:
   <<: *snowflake_start_clone
@@ -106,14 +106,14 @@ include:
 🥩⚙clone_raw_specific_schema:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME
+    - manage_snowflake.py manage_clones --database raw --schema $SCHEMA_NAME --include_stages
 
 👥force_clone_both:
   <<: *snowflake_start_clone
   script:
     - manage_snowflake.py manage_clones --force --database prep --empty
     - manage_snowflake.py manage_clones --force --database prod --empty
-    - manage_snowflake.py manage_clones --force --database raw
+    - manage_snowflake.py manage_clones --force --database raw --include_stages
 
 clone_stop:
   <<: *snowflake_clone_template
@@ -206,7 +206,7 @@ yaml_validation:
 
 .permifrost: &permifrost
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/permifrost:v0.8.0
+  image: registry.gitlab.com/gitlab-data/permifrost:v0.13.1
   tags:
     - analytics
   only:
@@ -214,10 +214,16 @@ yaml_validation:
       - merge_requests
   allow_failure: true
 
-permifrost_manual:
+🧊⚙permifrost_run:
   <<: *permifrost
   script:
-    - permifrost grant permissions/snowflake/roles.yml --diff --dry
+    - permifrost run permissions/snowflake/roles.yml --diff --dry
+  when: manual
+
+🧊permifrost_spec_test:
+  <<: *permifrost
+  script:
+    - permifrost spec-test permissions/snowflake/roles.yml
   when: manual
 
 # ======

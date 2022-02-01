@@ -523,7 +523,7 @@ This model transforms all_time counters stored in the usage data payload into mo
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
-Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload). 
+Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload).
 
 Those metrics sent could be of various types:
 * all_time counters (for example how many issues a specific instance has created since its inception)
@@ -531,7 +531,7 @@ Those metrics sent could be of various types:
 * 7_days counters (how many users have created at least one issue over the last 7 days)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the 7-days counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the 7-days counters (based on the mapping table in this spreadsheet) and flattens the json.
 
 The models transforms this json:
 
@@ -578,14 +578,14 @@ into this table:
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
-Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload). 
+Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload).
 
 Those metrics sent could be of various types:
 * all_time counters (for example how many issues a specific instance has created since its inception)
 * 7_days counters (how many users have created at least one issue over the last 4 weeks)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the 28-days counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the 28-days counters (based on the mapping table in this spreadsheet) and flattens the json.
 
 The models transforms this json:
 
@@ -632,14 +632,14 @@ into this table:
 
 The granularity of this model is one row per tuple (metric_name, instance_id).
 
-Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload). 
+Usage ping's data is stored in several nested jsons as shown in [this page](https://docs.gitlab.com/ee/development/telemetry/usage_ping.html#example-usage-ping-payload).
 
 Those metrics sent could be of various types:
 * all_time counters (for example how many issues a specific instance has created since its inception)
 * 28_days counters (how many users have created at least one issue over the last 4 months)
 * an instance configuration parameter (has this instance enabled saml/sso)
 
-This model extracts the all-time counters (based on the mapping table in this spreadsheet) and flattens the json. 
+This model extracts the all-time counters (based on the mapping table in this spreadsheet) and flattens the json.
 
 The models transforms this json:
 
@@ -742,4 +742,56 @@ Prep table for the dim table `dim_release` that is not yet created. It is also u
 {% docs prep_requirement %}
 
 Prep table for the dim table `dim_requirement` that is not yet created. It is also used in the `prep_event` table
+{% enddocs %}
+
+{% docs prep_geozone %}
+
+Prep table applying business logic to the geozone source data to prepare to be combined with the location factor data in the `dim_locality` table.
+
+{% enddocs %}
+
+{% docs prep_location_factor %}
+
+Prep table applying business logic to the location factor source data to prepare to be combined with the geozone data in the `dim_locality` table.
+
+The source data contains several versions of source data with different format.  This table conforms all of the formats into a single format.  The business logic contains an intermediate step that classifies each type of formatting used:
+
+| Type | Description | Example |
+| ---- | ----------- | ------- |
+| Type 1 | Format used prior to 2020-12-10 | Everywhere else, Maine |
+| Type 2 | Format used when there is a metro area under a state or province | Port Townsend, Washington |
+| Type 3 | Format used when there is a sublocation given for a metro area | Sydney, New South Wales |
+| Type 4 | Format used when a state or province is given with not metro area | Hawaii |
+| Type 5 | Format used when a metro area is given with out a state or province or a sublocation  | Paris |
+
+```yaml
+# Type 1
+- country: United States
+  area: Everywhere else, Maine
+  locationFactor: 65.0
+# Type 2
+- country: United States
+  states_or_provinces:
+    - name: Washington
+      metro_areas:
+        - name: Port Townsend
+          factor: 77.00
+# Type 3
+- country: Australia
+  metro_areas:
+    - name: Sydney
+      factor: 70.00
+      sub_location: New South Wales
+# Type 4
+- country: United States
+  states_or_provinces:
+    - name: Hawaii
+      factor: 86.00
+# Type 5
+- country: France
+  metro_areas:
+    - name: Paris
+      factor: 67.00
+```
+
 {% enddocs %}

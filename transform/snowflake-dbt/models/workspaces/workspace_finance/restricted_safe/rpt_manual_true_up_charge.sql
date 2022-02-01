@@ -45,34 +45,44 @@ WITH dim_date AS (
 
     SELECT *
     FROM {{ ref('zuora_revenue_revenue_contract_line_source') }}
-  
+
 ), mje AS (
 
-    SELECT 
+    SELECT
       *,
-      CASE 
-        WHEN debit_activity_type = 'Revenue' AND  credit_activity_type = 'Contract Liability' 
-          THEN -amount           
-        WHEN credit_activity_type = 'Revenue' AND  debit_activity_type = 'Contract Liability' 
+      CASE
+        WHEN debit_activity_type = 'Revenue' AND  credit_activity_type = 'Contract Liability'
+          THEN -amount
+        WHEN credit_activity_type = 'Revenue' AND  debit_activity_type = 'Contract Liability'
           THEN amount
-        ELSE amount                                                                             
+        ELSE amount
       END                                                                                       AS adjustment_amount
     FROM {{ ref('zuora_revenue_manual_journal_entry_source') }}
-  
+
+), true_up_lines_dates AS (
+
+    SELECT
+      subscription_name,
+      revenue_contract_line_attribute_16,
+      MIN(revenue_start_date)               AS revenue_start_date,
+      MAX(revenue_end_date)                 AS revenue_end_date
+    FROM revenue_contract_line
+    GROUP BY 1,2
+
 ), true_up_lines AS (
 
-    SELECT 
+    SELECT
       revenue_contract_line_id,
       revenue_contract_id,
-      zuora_account.account_id                              AS billing_account_id,
-      map_merged_crm_account.dim_crm_account_id             AS crm_account_id,
-      MD5(rate_plan_charge_id)                              AS rate_plan_charge_id,
-      active_zuora_subscription.subscription_id             AS subscription_id,
+      zuora_account.account_id                              AS dim_billing_account_id,
+      map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
+      MD5(rate_plan_charge_id)                              AS dim_charge_id,
+      active_zuora_subscription.subscription_id             AS dim_subscription_id,
       active_zuora_subscription.subscription_name           AS subscription_name,
       active_zuora_subscription.subscription_status         AS subscription_status,
-      product_rate_plan_charge_id                           AS product_product_details_id,
-      revenue_start_date,
-      revenue_end_date
+      product_rate_plan_charge_id                           AS dim_product_detail_id,
+      true_up_lines_dates.revenue_start_date                AS revenue_start_date,
+      true_up_lines_dates.revenue_end_date                  AS revenue_end_date
     FROM revenue_contract_line
     INNER JOIN active_zuora_subscription
       ON revenue_contract_line.subscription_name = active_zuora_subscription.subscription_name
@@ -80,11 +90,14 @@ WITH dim_date AS (
       ON revenue_contract_line.customer_number = zuora_account.account_number
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
-    WHERE revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
+    LEFT JOIN true_up_lines_dates
+      ON revenue_contract_line.subscription_name = true_up_lines_dates.subscription_name
+        AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
+    WHERE revenue_contract_line.revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
       AND recognized_amount > 0
-  
+
 ), mje_summed AS (
-  
+
     SELECT
       mje.revenue_contract_line_id,
       SUM(adjustment_amount) AS adjustment
@@ -95,15 +108,16 @@ WITH dim_date AS (
     {{ dbt_utils.group_by(n=1) }}
 
 ), true_up_lines_subcription_grain AS (
-  
+
     SELECT
-      lns.billing_account_id,
-      lns.crm_account_id,
-      lns.rate_plan_charge_id,
-      lns.subscription_id,
+      lns.revenue_contract_id,
+      lns.dim_billing_account_id,
+      lns.dim_crm_account_id,
+      lns.dim_charge_id,
+      lns.dim_subscription_id,
       lns.subscription_name,
       lns.subscription_status,
-      lns.product_product_details_id,
+      lns.dim_product_detail_id,
       SUM(mje.adjustment)               AS adjustment,
       MIN(revenue_start_date)           AS revenue_start_date,
       MAX(revenue_end_date)             AS revenue_end_date
@@ -111,25 +125,26 @@ WITH dim_date AS (
     LEFT JOIN mje_summed mje
       ON lns.revenue_contract_line_id = mje.revenue_contract_line_id
     WHERE adjustment IS NOT NULL
-    {{ dbt_utils.group_by(n=7) }}
-  
+    {{ dbt_utils.group_by(n=8) }}
+
 ), manual_charges AS (
-  
-    SELECT 
-      billing_account_id                                                                    AS dim_billing_account_id,
-      crm_account_id                                                                        AS dim_crm_account_id,
-      rate_plan_charge_id                                                                   AS dim_charge_id,
-      subscription_id                                                                       AS dim_subscription_id,
+
+    SELECT
+      revenue_contract_id,
+      dim_billing_account_id,
+      dim_crm_account_id,
+      dim_charge_id,
+      dim_subscription_id,
       subscription_name,
       subscription_status,
-      product_product_details_id                                                            AS dim_product_detail_id,
+      dim_product_detail_id,
       adjustment,
       adjustment/ROUND(MONTHS_BETWEEN(revenue_end_date::date, revenue_start_date::date),0)  AS mrr,
       NULL                                                                                  AS delta_tcv,
       'Seats'                                                                               AS unit_of_measure,
       0                                                                                     AS quantity,
       DATE_TRUNC('month',revenue_start_date::date)                                          AS effective_start_month,
-      DATE_TRUNC('month',revenue_end_date::date)                                            AS effective_end_month
+      DATE_TRUNC('month',DATEADD('day',1,revenue_end_date::date))                           AS effective_end_month
     FROM true_up_lines_subcription_grain
 
 )
@@ -137,7 +152,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="manual_charges",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@iweeks",
     created_date="2021-10-28",
-    updated_date="2021-10-28",
+    updated_date="2021-12-22",
 ) }}

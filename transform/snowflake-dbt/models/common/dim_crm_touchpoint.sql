@@ -49,6 +49,7 @@ WITH campaign_details AS (
       bizible_touchpoint_date,
       bizible_touchpoint_position,
       bizible_touchpoint_source,
+      bizible_touchpoint_source_type,
       bizible_touchpoint_type,
       bizible_ad_campaign_name,
       bizible_ad_content,
@@ -63,6 +64,7 @@ WITH campaign_details AS (
       bizible_referrer_page,
       bizible_referrer_page_raw,
       bizible_salesforce_campaign,
+      utm_content,
       '0'                           AS is_attribution_touchpoint,
       dim_campaign_id,
       dim_parent_campaign_id
@@ -78,6 +80,7 @@ WITH campaign_details AS (
       bizible_touchpoint_date,
       bizible_touchpoint_position,
       bizible_touchpoint_source,
+      bizible_touchpoint_source_type,
       bizible_touchpoint_type,
       bizible_ad_campaign_name,
       bizible_ad_content,
@@ -92,6 +95,7 @@ WITH campaign_details AS (
       bizible_referrer_page,
       bizible_referrer_page_raw,
       bizible_salesforce_campaign,
+      utm_content,
       '1'                           AS is_attribution_touchpoint,
       dim_campaign_id,
       dim_parent_campaign_id
@@ -105,6 +109,7 @@ WITH campaign_details AS (
       combined_touchpoints.bizible_touchpoint_date,
       combined_touchpoints.bizible_touchpoint_position,
       combined_touchpoints.bizible_touchpoint_source,
+      combined_touchpoints.bizible_touchpoint_source_type,
       combined_touchpoints.bizible_touchpoint_type,
       combined_touchpoints.bizible_ad_campaign_name,
       combined_touchpoints.bizible_ad_content,
@@ -119,6 +124,7 @@ WITH campaign_details AS (
       combined_touchpoints.bizible_referrer_page,
       combined_touchpoints.bizible_referrer_page_raw,
       combined_touchpoints.bizible_salesforce_campaign,
+      combined_touchpoints.utm_content,
       combined_touchpoints.is_attribution_touchpoint,
       bizible_campaign_grouping.integrated_campaign_grouping,
       bizible_campaign_grouping.bizible_integrated_campaign_grouping,
@@ -165,7 +171,7 @@ WITH campaign_details AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2021-09-29"
+    updated_date="2021-12-16"
 ) }}

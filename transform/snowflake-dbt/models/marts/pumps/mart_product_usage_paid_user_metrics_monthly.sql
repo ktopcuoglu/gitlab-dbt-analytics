@@ -13,8 +13,20 @@
     ('billing_accounts','dim_billing_account'),
     ('crm_accounts','dim_crm_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up'),
+    ('subscriptions_original', 'dim_subscription_snapshot_bottom_up')
 ]) }}
+
+, original_subscription_dates AS (
+
+    SELECT DISTINCT
+      dim_subscription_id,
+      subscription_start_date,
+      subscription_end_date
+    FROM subscriptions
+    WHERE subscription_version = 1
+
+)
 
 , sm_paid_user_metrics AS (
 
@@ -28,6 +40,11 @@
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_sm_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
+      subscriptions_original.subscription_status                                     AS subscription_status_original,
+      original_subscription_dates.subscription_start_date                            AS subscription_start_date_original,
+      original_subscription_dates.subscription_end_date                              AS subscription_end_date_original,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -95,7 +112,6 @@
       monthly_sm_metrics.projects_bamboo_active_all_time_event,
       monthly_sm_metrics.projects_jira_active_all_time_event,
       monthly_sm_metrics.projects_drone_ci_active_all_time_event,
-      monthly_sm_metrics.jira_imports_28_days_event,
       monthly_sm_metrics.projects_github_active_all_time_event,
       monthly_sm_metrics.projects_jira_server_active_all_time_event,
       monthly_sm_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -146,6 +162,12 @@
       ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions_original
+      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN original_subscription_dates
+      ON original_subscription_dates.dim_subscription_id = monthly_sm_metrics.dim_subscription_id_original
 
 ), saas_paid_user_metrics AS (
 
@@ -159,6 +181,11 @@
       {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       monthly_saas_metrics.dim_subscription_id_original,
       subscriptions.subscription_status,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
+      subscriptions_original.subscription_status                                     AS subscription_status_original,
+      original_subscription_dates.subscription_start_date                            AS subscription_start_date_original,
+      original_subscription_dates.subscription_end_date                              AS subscription_end_date_original,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
@@ -226,7 +253,6 @@
       monthly_saas_metrics.projects_bamboo_active_all_time_event,
       monthly_saas_metrics.projects_jira_active_all_time_event,
       monthly_saas_metrics.projects_drone_ci_active_all_time_event,
-      monthly_saas_metrics.jira_imports_28_days_event,
       monthly_saas_metrics.projects_github_active_all_time_event,
       monthly_saas_metrics.projects_jira_server_active_all_time_event,
       monthly_saas_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -272,9 +298,15 @@
     LEFT JOIN crm_accounts
       ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
-      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id 
+      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id
       AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions_original
+      ON monthly_saas_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN original_subscription_dates
+      ON original_subscription_dates.dim_subscription_id = monthly_saas_metrics.dim_subscription_id_original
     -- LEFT JOIN location_country
     --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
 
@@ -293,7 +325,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2021-10-21"
+    updated_date="2021-12-23"
 ) }}

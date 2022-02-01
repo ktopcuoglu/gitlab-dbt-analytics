@@ -3,6 +3,10 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - bronze_sus_responders_fy22q1
+  - name: country_lat_long
+    owner: '@nicolegalang'
+    tabs:
+      - latitude_and_longitude
   - name: crm_accounts_pricing_eoa
     owner: '@jeanpeguero'
     tabs:
@@ -36,11 +40,17 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - pricing_list
+  - name: ptc_scores
+    owner: '@kmagda'
+    tabs:
+      - ptc_scores_20211221
+      - ptc_scores_202202
   - name: pte_scores
-    owner: '@Kevin Dietz'
+    owner: '@kdietz'
     tabs:
       - pte_scores_20211013
       - pte_scores_20211101
+      - pte_scores_202202
   - name: q4fy2021_system_usability_scale_results
     owner: '@rbacovic'
     tabs:
@@ -57,3 +67,7 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - us_cities_latitude_longitude
+  - name: ptc_scores_20211221_updated
+    owner: '@Klaudia Magda'
+    tabs:
+      - ptc_scores_20211221_updated

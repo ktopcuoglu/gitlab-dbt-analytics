@@ -53,6 +53,15 @@ models:
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
 
+  - name: dim_crm_account_daily_snapshot
+    description: '{{ doc("dim_crm_account_daily_snapshot") }}'
+    columns:
+      - name: crm_account_snapshot_id
+        description: Unique identifier of a crm account in the daily snapshot models
+        tests: 
+          - unique
+          - not_null
+
   - name: dim_crm_opportunity
     description: '{{ doc("dim_crm_opportunity") }}'
     columns:
@@ -449,6 +458,15 @@ models:
           - not_null
           - unique
 
+  - name: fct_retention_crm_account
+    columns:
+    - name: fct_retention_id
+      description: A unique identifier of the retention record.
+      tests:
+        - not_null
+        - unique
+      tags: ["tdf", "mart", "arr", "retention"]
+  
   - name: fct_retention_parent_account
     description: '{{ doc("fct_retention_parent_account") }}'
     columns:

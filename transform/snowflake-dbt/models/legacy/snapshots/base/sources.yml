@@ -30,6 +30,7 @@ sources:
       - name: mart_arr_snapshot
       - name: mart_retention_parent_account_snapshot
       - name: license_db_licenses_snapshots
+      - name: customers_db_licenses_snapshots
       - name: sfdc_account_snapshots
       - name: sfdc_opportunity_snapshots
       - name: sfdc_user_snapshots
@@ -50,3 +51,4 @@ sources:
       - name: zuora_refund_snapshots
       - name: zuora_revenue_schedule_item_snapshots
       - name: zuora_subscription_snapshots
+      - name: mart_available_to_renew_snapshot

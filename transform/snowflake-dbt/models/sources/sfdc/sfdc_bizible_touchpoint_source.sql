@@ -24,6 +24,7 @@ WITH source AS (
       bizible2__touchpoint_date__c            AS bizible_touchpoint_date,
       bizible2__touchpoint_position__c        AS bizible_touchpoint_position,
       bizible2__touchpoint_source__c          AS bizible_touchpoint_source,
+      source_type__c                          AS bizible_touchpoint_source_type,
       bizible2__touchpoint_type__c            AS bizible_touchpoint_type,      
       bizible2__ad_campaign_name__c           AS bizible_ad_campaign_name,
       bizible2__ad_content__c                 AS bizible_ad_content,
@@ -45,6 +46,11 @@ WITH source AS (
       utm_targetsubregion__c                  AS utm_targetsubregion,
       utm_targetterritory__c                  AS utm_targetterritory,
       utm_usecase__c                          AS utm_usecase,
+      CASE 
+        WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1)IS null
+          THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_content=',2),'&',1)
+        ELSE SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1) 
+      END AS utm_content,
 
       isdeleted                               AS is_deleted
 

@@ -9,4 +9,5 @@ models:
   - name: bamboohr_tables_date
   - name: demandbase_tables_date
   - name: qualtrics_tables_date
+  - name: versiondb_tables_date
 

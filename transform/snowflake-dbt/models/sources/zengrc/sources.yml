@@ -26,3 +26,9 @@ sources:
         description: '{{ doc("zengrc_controls_desc") }}'
       - name: objectives
         description: '{{ doc("zengrc_objectives_desc") }}'
+      - name: issues
+        description: '{{ doc("zengrc_issues_desc") }}'
+      - name: requests
+        description: '{{ doc("zengrc_requests_desc") }}'
+      - name: risks
+        description: '{{ doc("zengrc_risks_desc") }}'

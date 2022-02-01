@@ -4,7 +4,7 @@ WITH source AS (
   FROM {{ ref('gitlab_dotcom_project_custom_attributes_dedupe_source') }}
 
 ), renamed AS (
-  
+
   SELECT
     id::NUMBER            AS project_custom_attribute_id,
     created_at::TIMESTAMP AS created_at,
@@ -18,4 +18,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-ORDER BY updated_at

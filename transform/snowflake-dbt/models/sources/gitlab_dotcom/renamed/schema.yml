@@ -268,6 +268,14 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_dast_profiles_source
+    description: Base model for Gitlab.com dast_profiles
+    columns:
+      - name: dast_profiles_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_epic_issues_source
     description: Base model for Gitlab.com epic issues
     columns:
@@ -356,6 +364,15 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_ci_sources_pipelines_source
+    description: Base model for Gitlab.com ci_sources_pipelines
+    columns:
+      - name: ci_source_pipeline_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_ci_stages_source
     description: Base model for Gitlab.com ci_stages
@@ -1198,6 +1215,12 @@ models:
           - not_null
       - name: namespace_path
         description: '{{ doc("visibility_documentation") }}'
+      - name: namespace_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group', 'User', 'Project']
+
       - name: namespace_name
         description: '{{ doc("visibility_documentation") }}'
       - name: visbility_level
@@ -1820,6 +1843,14 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: gitlab_dotcom_users_security_dashboard_projects_source
+    description: Base model for Gitlab.com users_security_dashboard_projects
+    columns:
+      - name: user_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
 
   - name: gitlab_dotcom_user_preferences_source_non_dedupe
     description: Base model for Gitlab.com user_preferences where no deduplication did take place. The field User_id is NOT unique

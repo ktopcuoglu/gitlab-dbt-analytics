@@ -62,14 +62,16 @@ default_args = {
     "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
-    "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
 
 # Create the DAG
 dag = DAG(
-    "dbt_snowplow_full_refresh", default_args=default_args, schedule_interval=None
+    "dbt_snowplow_full_refresh",
+    default_args=default_args,
+    schedule_interval=None,
+    concurrency=4,
 )
 
 
@@ -99,7 +101,7 @@ dummy_operator = DummyOperator(task_id="start", dag=dag)
 
 dbt_snowplow_combined_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run --profiles-dir profile --target prod --models staging.snowplow.combined; ret=$?;
+        dbt run --profiles-dir profile --target prod --models legacy.snowplow.combined; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 

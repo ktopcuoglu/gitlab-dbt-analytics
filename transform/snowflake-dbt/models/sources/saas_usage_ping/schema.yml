@@ -2,6 +2,7 @@ version: 2
 
 models:
     - name: saas_usage_ping_instance
+      tags: ["product", "service_ping"]
       description: '{{ doc("saas_usage_ping_instance") }}'
       columns:
         - name: saas_usage_ping_gitlab_dotcom_id
@@ -29,7 +30,24 @@ models:
           description: Date and time of when data is uploaded into Data Warehouse
           tests:
             - not_null
+    - name: instance_sql_errors
+      tags: ["product", "service_ping"]
+      description: '{{ doc("instance_sql_errors") }}'
+      columns:
+        - name: run_id
+          tests:
+            - not_null
+        - name: sql_errors
+          tests:
+            - not_null
+        - name: ping_date
+          tests:
+            - not_null
+        - name: uploaded_at
+          tests:
+            - not_null
     - name: instance_redis_metrics
+      tags: ["product", "service_ping"]
       description: '{{ doc("instance_redis_metrics") }}'
       columns:
         - name: saas_usage_ping_redis_id
@@ -54,6 +72,7 @@ models:
           tests:
             - not_null
     - name: saas_usage_ping_namespace
+      tags: ["product", "service_ping"]
       description: '{{ doc("saas_usage_ping_namespace") }}'
       columns:
         - name: saas_usage_ping_gitlab_dotcom_namespace_id

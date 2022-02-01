@@ -107,7 +107,7 @@
        WHEN namespaces.visibility_level = 'private'   THEN 'private - masked'
       END                                                                             AS namespace_path,
       namespaces.owner_id,
-      IFNULL(namespaces.namespace_type, 'Individual')                                 AS namespace_type,
+      namespaces.namespace_type                                                       AS namespace_type,
       namespaces.has_avatar,
       namespaces.namespace_created_at                                                 AS created_at,
       namespaces.namespace_updated_at                                                 AS updated_at,
@@ -171,7 +171,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@pempey",
     created_date="2021-01-14",
-    updated_date="2021-07-21"
+    updated_date="2021-11-10"
 ) }}

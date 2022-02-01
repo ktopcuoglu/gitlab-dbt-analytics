@@ -161,6 +161,21 @@ tables:
       FROM audit_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  audit_events_external_audit_event_destinations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'audit_events_external_audit_event_destinations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , destination_url
+      , created_at
+      , updated_at
+      FROM audit_events_external_audit_event_destinations
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   authentication_events:
     export_schema: "gitlab_com"
     export_table: authentication_events
@@ -488,6 +503,24 @@ tables:
       FROM csv_issue_imports
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  dast_profiles:
+    export_schema: "gitlab_com"
+    export_table: dast_profiles
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , dast_site_profile_id
+      , dast_scanner_profile_id
+      , created_at
+      , updated_at
+      , name
+      , description
+      , branch_name
+      FROM dast_profiles
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   deployments:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -633,24 +666,6 @@ tables:
       , converted_at
       , context
       FROM experiment_subjects
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  experiment_users:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'experiment_users'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , experiment_id
-      , user_id
-      , group_type
-      , created_at
-      , updated_at
-      , converted_at
-      , context
-      FROM experiment_users
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   geo_nodes:
@@ -815,7 +830,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   issues:
-    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00')
+    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00','4714-11-24 00:00:00+00 BC')
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -2122,6 +2137,8 @@ tables:
       , tab_width
       , experience_level
       , view_diffs_file_by_file
+      , id
+      , gitpod_enabled
       FROM user_preferences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

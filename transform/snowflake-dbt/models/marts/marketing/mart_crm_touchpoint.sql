@@ -26,6 +26,7 @@
       dim_crm_touchpoint.bizible_touchpoint_date,
       dim_crm_touchpoint.bizible_touchpoint_position,
       dim_crm_touchpoint.bizible_touchpoint_source,
+      dim_crm_touchpoint.bizible_touchpoint_source_type,
       dim_crm_touchpoint.bizible_touchpoint_type,
       dim_crm_touchpoint.bizible_ad_campaign_name,
       dim_crm_touchpoint.bizible_ad_content,
@@ -44,6 +45,7 @@
       dim_crm_touchpoint.touchpoint_segment,
       dim_crm_touchpoint.gtm_motion,
       dim_crm_touchpoint.integrated_campaign_grouping,
+      dim_crm_touchpoint.utm_content,
       fct_crm_touchpoint.bizible_count_first_touch,
       fct_crm_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_touchpoint.bizible_count_u_shaped,
@@ -58,7 +60,6 @@
       dim_crm_person.person_score,
       dim_crm_person.title                                                 AS crm_person_title,
       dim_crm_person.country,
-      dim_crm_person.mailing_country,
       dim_crm_person.status                                                AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -132,7 +133,7 @@
       dim_crm_user.crm_user_geo                            AS touchpoint_crm_user_geo_name_live,
       dim_crm_user.crm_user_region                         AS touchpoint_crm_user_region_name_live,
       dim_crm_user.crm_user_area                           AS touchpoint_crm_user_area_name_live,
-     
+
       -- campaign owner info
       campaign_owner.user_name                             AS campaign_rep_name,
       campaign_owner.title                                 AS campaign_rep_title,
@@ -178,7 +179,16 @@
       dim_crm_account.crm_account_type,
       dim_crm_account.technical_account_manager,
       dim_crm_account.merged_to_account_id,
-      dim_crm_account.is_reseller
+      dim_crm_account.is_reseller,
+
+      -- bizible influenced
+       CASE
+        WHEN  dim_campaign.budget_holder = 'fmm'
+              OR campaign_rep_role_name = 'Field Marketing Manager'
+              OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+        THEN 1
+        ELSE 0
+      END AS is_fmm_influenced
 
     FROM fct_crm_touchpoint
     LEFT JOIN dim_crm_touchpoint
@@ -204,7 +214,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@iweeks",
     created_date="2021-02-18",
-    updated_date="2021-10-05"
+    updated_date="2022-01-14"
 ) }}

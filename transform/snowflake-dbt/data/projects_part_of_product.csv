@@ -35,7 +35,7 @@ gitlab-org/gitlab-compose-kit,4534254
 gitlab-org/gitlab-development-kit,74823
 gitlab-org/gitlab-docs,1794617
 gitlab-org/gitlab-elasticsearch-indexer,2953390
-gitlab-org/gitlab-experiment,21250701
+gitlab-org/ruby/gems/gitlab-experiment,21250701
 gitlab-org/gitlab-exporter,1507906
 gitlab-org/gitlab-foss,13083
 gitlab-org/gitlab-gollum-lib,6043225
@@ -249,7 +249,7 @@ gitlab-org/quality/staging,7524061
 gitlab-org/quality/canary,7560116
 gitlab-org/quality/production,7560137
 gitlab-org/quality/pipeline-common,14477200
-gitlab-org/gitlab-styles,4176070
+gitlab-org/ruby/gems/gitlab-styles,4176070
 gitlab-org/quality/triage-serverless,12690061
 gitlab-org/quality/testcases,11229385
 gitlab-org/quality/insights-config,11880131
@@ -271,3 +271,4 @@ gitlab-cookbooks/cookbook-wrapper-gitlab-runner,1755701
 gitlab-org/gl-openshift/gitlab-runner-operator,22848448
 gitlab-org/gl-openshift/gitlab-operator,18899486
 gitlab-com/gl-infra/customersdot-ansible-poc,26392061
+gitlab-org/tanuki_emoji,27628435

@@ -68,7 +68,7 @@ WITH source AS (
       first_order_available__c::BOOLEAN             AS is_first_order_available,
       REPLACE(zi_technologies__c, 'The technologies that are used and not used at this account, according to ZoomInfo, after completing a scan are:', '') AS zi_technologies,
       technical_account_manager_date__c::DATE       AS technical_account_manager_date,
-      gitlab_customer_success_project__c::VARCHAR   AS gitlab_customer_success_project,            
+      gitlab_customer_success_project__c::VARCHAR   AS gitlab_customer_success_project,
 
       -- territory success planning fields
       atam_approved_next_owner__c                   AS tsp_approved_next_owner,
@@ -85,6 +85,20 @@ WITH source AS (
       atam_address_city__c                          AS tsp_address_city,
       atam_address_street__c                        AS tsp_address_street,
       atam_address_postal_code__c                   AS tsp_address_postal_code,
+
+      -- account demographics fields
+      account_demographics_sales_segment__c         AS account_demographics_sales_segment,
+      account_demographics_geo__c                   AS account_demographics_geo,
+      account_demographics_region__c                AS account_demographics_region,
+      account_demographics_area__c                  AS account_demographics_area,
+      account_demographics_territory__c             AS account_demographics_territory,
+      account_demographics_employee_count__c        AS account_demographics_employee_count,
+      account_demographic_max_family_employees__c   AS account_demographics_max_family_employee,
+      account_demographics_upa_country__c           AS account_demographics_upa_country,
+      account_demographics_upa_state__c             AS account_demographics_upa_state,
+      account_demographics_upa_city__c              AS account_demographics_upa_city,
+      account_demographics_upa_street__c            AS account_demographics_upa_street,
+      account_demographics_upa_postal_code__c       AS account_demographics_upa_postal_code,
 
       -- present state info
       health__c                                     AS health_score,
@@ -143,8 +157,8 @@ WITH source AS (
       -- these three fields are used to identify accounts owned by reps within hierarchies that they do not fully own
       -- or even within different regions
 
-      locally_Managed__c                            AS is_locally_managed_account,
-      strategic__c                                  AS is_strategic_account,
+      locally_Managed__c                             AS is_locally_managed_account,
+      strategic__c                                   AS is_strategic_account,
 
       -- ************************************
       -- New SFDC Account Fields for FY22 Planning
@@ -161,7 +175,17 @@ WITH source AS (
       partner_track__c                              AS partner_track,
       partners_partner_type__c                      AS partners_partner_type,
       gitlab_partner_programs__c                    AS gitlab_partner_program,
-      
+
+      --*************************************
+      -- Zoom Info Fields
+      zi_website__c                                 AS zoom_info_website,
+      zi_company_other_domains__c                   AS zoom_info_company_other_domains,
+      dozisf__zoominfo_id__c                        AS zoom_info_dozisf_zi_id,
+      zi_parent_company_zoominfo_id__c              AS zoom_info_parent_company_zi_id,
+      zi_parent_company_name__c                     AS zoom_info_parent_company_name,
+      zi_ultimate_parent_company_zoominfo_id__c     AS zoom_info_ultimate_parent_company_zi_id,
+      zi_ultimate_parent_company_name__c            AS zoom_info_ultimate_parent_company_name,
+
       -- metadata
       createdbyid                                   AS created_by_id,
       createddate                                   AS created_date,

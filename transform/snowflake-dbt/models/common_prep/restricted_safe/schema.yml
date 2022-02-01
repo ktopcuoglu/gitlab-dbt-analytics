@@ -148,6 +148,16 @@ models:
         tests:
           - not_null
 
+  - name: prep_mart_available_to_renew_snapshot_base
+    description: Base model for the mart_available_to_renew snapshot data
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
   - name: prep_recurring_charge
     description: '{{ doc("prep_recurring_charge") }}'
     columns:
@@ -230,6 +240,91 @@ models:
         description: Dim location country name final source column
       - name: dim_parent_location_country_name_source
         description: Dim location country name final source column
+
+  - name: prep_subscription_opportunity_mapping
+    description: '{{ doc("prep_subscription_opportunity_mapping") }}'
+    columns:
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        description: Unique identifier of a Zuora Billing account
+      - name: subscription_name
+        description: Unique name of a subscription
+      - name: subscription_sales_type
+        description: Self-Service or Sales-Assisted, as defined by the Zuora user who created the subscription
+      - name: subscription_account_id
+        description: Unique identifier of a SFDC account, as associated with the dim_subscription_id
+      - name: subscription_parent_account_id
+        description: Unique identifier of an ultimate parent SFDC account, as associated with the dim_subscription_id
+      - name: invoice_opp_account_id_forward
+        description: Unique identifier of a SFDC account, as associated with the opportunity in the subscription's invoice.
+      - name: invoice_opp_account_id_backward
+        description: Unique identifier of a SFDC account, as associated with the opportunity in the subscription's invoice, as filled in backwards based on the various filling rules.
+      - name: quote_opp_account_id_forward
+        description: Unique identifier of a SFDC account, as associated with the opportunity in the subscription's invoice, as filled in forwards based on the various filling rules.
+      - name: quote_opp_account_id_backward
+        description: Unique identifier of a SFDC account, as associated with the opportunity in the subscription's quote.
+      - name: subscription_opp_name_opp_account_id_forward
+        description: Unique identifier of a SFDC account, as associated with the opportunity in the subscription's quote, as filled in forwards based on the various filling rules.
+      - name: subscription_opp_name_opp_account_id_backward
+        description: Unique identifier of a SFDC account, as associated with the opportunity in the subscription's quote, as filled in backwards based on the various filling rules.
+      - name: subscription_version
+        description: Version of a subscription
+      - name: term_start_date
+        description: Subscription's term start date
+      - name: term_end_date
+        description: Subscription's term end date
+      - name: subscription_start_date
+        description: Date the subscription begins
+      - name: subscription_end_date
+        description: Date the subscription ends
+      - name: subscription_status
+        description: Subscription status (active, expired, etc.)
+      - name: subscription_created_date
+        description: Date the subscription was created
+      - name: subscription_source_opp_id
+        description: Opportunity_id found on the subscription object
+      - name: subscription_opp_id
+        description: Opportunity_id for self-service subscriptions only since this is considered to have high fidelity
+      - name: invoice_opp_id_forward
+        description: Unique identifier of a opportunity from subscription's invoice, as filled in forwards based on the the subscription's created_date being shared with another version of the subscription.
+      - name: invoice_opp_id_backward
+        description: Unique identifier of a opportunity from subscription's invoice, as filled in backwards based on the the subscription's created_date being shared with another version of the subscription.
+      - name: invoice_opp_id_forward_term_based
+        description: Unique identifier of a opportunity from subscription's invoice, as filled in forwards based on the the subscription's term dates being shared with another version of the subscription.
+      - name: invoice_opp_id_backward_term_based
+        description: Unique identifier of a opportunity from subscription's invoice, as filled in backwards based on the the subscription's term dates being shared with another version of the subscription.
+      - name: invoice_opp_id_forward_sub_name
+        description: Unique identifier of a opportunity from subscription's invoice, as filled in forwards based on the the subscription's name being shared with another version of the subscription.
+      - name: unfilled_invoice_opp_id
+        description: Unique identifier of a opportunity from subscription's invoice.
+      - name: quote_opp_id_forward
+        description: Unique identifier of a opportunity from subscription's quote, as filled in forwards based on the the subscription's created_date being shared with another version of the subscription.
+      - name: quote_opp_id_backward
+        description: Unique identifier of a opportunity from subscription's quote, as filled in backwards based on the the subscription's created_date being shared with another version of the subscription.
+      - name: quote_opp_id_forward_term_based
+        description: Unique identifier of a opportunity from subscription's quote, as filled in forwards based on the the subscription's term dates being shared with another version of the subscription.
+      - name: quote_opp_id_backward_term_based
+        description: Unique identifier of a opportunity from subscription's quote, as filled in backwards based on the the subscription's term dates being shared with another version of the subscription.
+      - name: quote_opp_id_forward_sub_name
+        description: Unique identifier of a opportunity from subscription's quote, as filled in forwards based on the the subscription's name being shared with another version of the subscription.
+      - name: unfilled_quote_opp_id
+        description: Unique identifier of a opportunity from subscription's quote.
+      - name: subscription_quote_number_opp_id_forward
+        description: Unique identifier of a opportunity from subscription's quote_number on the subscription object, as filled in forwards based on the the subscription's created_date being shared with another version of the subscription.
+      - name: subscription_quote_number_opp_id_backward
+        description: Unique identifier of a opportunity from subscription's quote_number on the subscription object, as filled in backwards based on the the subscription's created_date being shared with another version of the subscription.
+      - name: subscription_quote_number_opp_id_forward_term_based
+        description: Unique identifier of a opportunity from subscription's quote_number on the subscription object, as filled in forwards based on the the subscription's term dates being shared with another version of the subscription.
+      - name: subscription_quote_number_opp_id_backward_term_based
+        description: Unique identifier of a opportunity from subscription's quote_number on the subscription object, as filled in backwards based on the the subscription's term dates being shared with another version of the subscription.
+      - name: subscription_quote_number_opp_id_forward_sub_name
+        description: Unique identifier of a opportunity from subscription's quote_number on the subscription object, as filled in forwards based on the the subscription's name being shared with another version of the subscription.
+      - name: unfilled_subscription_quote_number_opp_id
+        description: Unique identifier of a opportunity from subscription's quote_number on the subscription object.
+      - name: combined_opportunity_id
+        description: Taking all of the potential opportunity ids, choose the best fit based on rules approved by the Data Team and Enterprise Apps.
 
   - name: prep_mart_retention_parent_account_snapshot_base
     description: Base model for the fct_retention snapshot data

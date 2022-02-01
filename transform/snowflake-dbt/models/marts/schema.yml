@@ -68,6 +68,74 @@ models:
       - name: dim_subscription_id
       - name: dim_subscription_id_original
 
+models:
+  - name: mart_arr_jihu
+    description: '{{ doc("mart_arr_jihu") }}'
+    columns:
+      - name: arr
+        description: "Calculated as 12 * MRR value"
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
+      - name: is_reseller
+        description: Identify whether a crm_account is a reseller.
+      - name: subscription_sales_type
+        description: Identifies whether a subscription is Sales-Assisted or Self-Service / Web Direct.
+      - name: billing_account_number
+        tests:
+          - not_null
+      - name: subscription_name_slugify
+        tests:
+          - not_null
+      - name: subscription_name
+        tests:
+          - not_null
+      - name: oldest_subscription_in_cohort
+      - name: subscription_lineage
+      - name: arr_month
+        tests:
+          - not_null
+      - name: subscription_cohort_month
+      - name: subscription_cohort_quarter
+      - name: mrr
+        tests:
+          - not_null
+      - name: months_since_subscription_cohort_start
+      - name: quarters_since_subscription_cohort_start
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: billing_account_name
+        tests:
+          - not_null
+      - name: product_tier_name
+        tests:
+          - not_null
+      - name: unit_of_measure
+      - name: quantity
+      - name: dim_crm_account_id
+      - name: crm_account_name
+      - name: ultimate_parent_account_id
+      - name: ultimate_parent_account_name
+      - name: billing_account_cohort_month
+      - name: billing_account_cohort_quarter
+      - name: crm_account_cohort_month
+      - name: crm_account_cohort_quarter
+        description: '{{ doc("mart_arr_col_parent_account_cohort_month") }}'
+      - name: parent_account_cohort_quarter
+        description: '{{ doc("mart_arr_col_parent_account_cohort_quarter") }}'
+      - name: months_since_billing_account_cohort_start
+      - name: quarters_since_billing_account_cohort_start
+      - name: months_since_crm_account_cohort_start
+      - name: quarters_since_crm_account_cohort_start
+      - name: months_since_parent_account_cohort_start
+        description: '{{ doc("mart_arr_col_months_since_parent_cohort_start") }}'
+      - name: quarters_since_parent_account_cohort_start
+        description: '{{ doc("mart_arr_col_quarters_since_parent_cohort_start") }}'
+      - name: dim_subscription_id
+      - name: dim_subscription_id_original
+
   - name: mart_arr_snapshot_bottom_up
     description: Daily snapshots of MRR/ARR by month values per customer, subscription and product. Built using the snapshotted source tables.
     columns:
@@ -76,7 +144,6 @@ models:
           - unique
           - not_null
         tags: ["tdf", "mart", "arr"]
-
   - name: mart_arr_snapshot_model
     description: Simpler incremental version of the mart_arr snapshot model
     columns:
@@ -84,6 +151,115 @@ models:
           tests:
             - not_null
           tags: [ "tdf", "mart", "arr" ]
+
+  - name: mart_available_to_renew
+    description: This model generates a list of subscriptions which will be available to renew in a given time period based on existing charges and term dates. It also has logic built in to identify multi-year bookings which is not yet avilable in the source data.
+    columns:
+      - name: primary_key
+        description: Composite key for the model combining the unique identifier of the charge as well as the month the charge is effective in the term.
+        tests:
+          - not_null
+          - unique
+      - name: fiscal_year
+        description: Fiscal year when the subscription will be available to renew.
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "atr"]
+      - name: fiscal_quarter_name_fy
+        description: Fiscal quarter when the subscription will be available to renew.
+      - name: first_day_of_fiscal_quarter
+        description: Calendar date of first day of fiscal quarter.
+      - name: close_month
+        description: Month when the opportunity associated with the subscription closed based on its `close_date`.
+      - name: dim_charge_id
+        description: Unique identifier of a rate plan charge associated with the subscription.
+      - name: dim_crm_opportunity_id
+        description: Unique identifier of the crm opportunity associated with the subscription.
+      - name: dim_crm_account_id
+        description: Unique identifier of the crm account associated with the subscription.
+      - name: dim_billing_account_id
+        description: Unique identifier of the billing account associated with the subscription.
+      - name: dim_subscription_id
+        description: Unique identifier of a subscription.
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "atr"]
+      - name: dim_product_detail_id
+        description: Unique identifier of a product rate plan charge associated with the subscription.
+      - name: subscription_name
+        description: Name applied to the subscription.
+      - name: subscription_start_month
+        description: Month when the subscription is set to begin.
+      - name: subscription_end_month
+        description: Month when the subscription is set to end.
+      - name: term_start_month
+        description: Month when a subscription term begins.
+      - name: renewal_month
+        description: Month when a subscription term ends.
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "atr"]
+      - name: bookings_term_end_month
+        description: Similar to the term end month but calculates intermediate term end months for multi year subscriptions with terms greater than 12 months. These end months do not exist in the Zuora billing system. This allows us to get a view of all subscriptions renewing on a yearly basis.
+      - name: multi-year_booking_subscription_end_month
+        description: Month when the final subscription in a multi-year booking is set to end.
+      - name: last_paid_month_in_term
+        description: Last month charge is applied for a charge's term.
+      - name: current_term
+        description: Duration of the subscription's current term.
+      - name: zuora_renewal_subscription_name
+        description: Name of a renewal subscription associated with the current subscription.
+      - name: renewal_subscription_end_month
+        description: End month of the renewal subscription associated with the current subscription.
+      - name: parent_crm_account_name
+        description: Name of the ultimate parent crm account associated with the subscription.
+      - name: crm_account_name
+        description: Name of the crm account associated with the subscription.
+      - name: parent_crm_account_sales_segment
+        description: Segment of the ultimate parent crm account associated with the subscription.
+      - name: dim_crm_user_id
+        description: Unique identifier of the account owner associated with the subscription.
+      - name: user_name
+        description: Name of the account owner associated with the subscription.
+      - name: user_role_id
+        description: Unique identifier of the role of the account owner associated with the subscription.
+      - name: crm_user_sales_segment
+        description: Segment of the account owner associated with the subscription.
+      - name: crm_user_geo
+        description: Geo of the account owner associated with the subscription.
+      - name: crm_user_region
+        description: Region of the account owner associated with the subscription.
+      - name: crm_user_area
+        description: Area of the account owner associated with the subscription.
+      - name: product_tier_name
+        description: Tier of the product on the charge.
+      - name: product_delivery_type
+        description: Delivery type of the product on the charge.
+      - name: renewal_type
+        description: Type of renewal (multi-year_booking or not)
+      - name: is_multi_year_booking
+        description: Flag indicating if a subscription is multi-year or not.
+      - name: is_multi_year_booking_with_multi_subs
+        description: Flag indicating if a subscription is multi-year with multiple associated subscriptions.
+      - name: subscription_term
+        description: Current term of the subscription.
+      - name: estimated_total_future_billings
+        description: Estimate of total amount to be billed in the future for a given charge.
+      - name: is_available_to_renew
+        description: Flag indicating if the subscription is available to renew in the period.
+      - name: opportunity_term_group
+        description: Duration of the opportunity in years based on the opportunity's term.
+      - name: arr
+        description: Annual recurring revenue associated with the subscription.
+
+  - name: mart_available_to_renew_snapshot_model
+    description: Snapshot model for `mart_available_to_renew` expanded to the daily grain. This models shows the state of what was available to renew on any given day based on snapshot data from the base `mart_available_to_renew` model.
+    columns:
+        - name: primary_key
+          tests:
+            - not_null
+          tags: [ "tdf", "mart", "atr" ]
+
   - name: mart_charge
     description: Model combining Subscription related objects such as product details and rate plan charge details into a mart.
     columns:
@@ -92,6 +268,7 @@ models:
         tests:
           - not_null
           - unique
+
   - name: mart_crm_attribution_touchpoint
     description: Model containing Bizible attribution touchpoints along with contact, lead, account, campaign, and opportunity details.
     columns:
@@ -268,3 +445,57 @@ models:
           - not_null
           - unique
         tags: ["tdf", "mart", "arr"]
+
+  - name: mart_retention_crm_account
+    description: "Mart table to support drillable retention analysis by the CRM account grain."
+
+  - name: mart_waterfall
+    description: Mart table replicating the waterfall report as seen in the Zuora Revenue UI. It shows how revenue is recognized over time for a given line item in a revenue contract. The grain of this table is as of period month - revenue contract line item - accounting segment - accounting type and can be summed to a higher grain if necessary.
+    columns:
+      - name: primary_key
+        description: Concatenation of several columns of the waterfall to create a composite primary primary key
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "mart", "zuora_revenue"]
+      - name: as_of_period_id
+        description: The waterfall can be seen as of a certain time period. This column allows you to filter the waterfall report to how it appeared in a given month.
+        tests:
+          - not_null
+      - name: book_name
+        description: The unique identifier of an accounting book
+      - name: organization_name
+        description: The unique identifier of an organization in Zuora Revenue
+      - name: revenue_contract_id
+        description: The unique identifier of a revenue contract
+        tests:
+          - not_null
+      - name: revenue_contract_performance_obligation_name
+        description: The unique identifier of one of the performance obligations attached to a revenue contract
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "zuora_revenue"]
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "zuora_revenue"]
+      - name: revenue_contract_customer_name
+        description: The name of the customer for a given revenue contract line item
+        tests:
+          - not_null
+        tags: ["tdf", "mart", "zuora_revenue"]
+      - name: sales_order_number
+        description: The unique identifier of a sales order.
+      - name: sales_order_line_number
+        description: The unique identifier of a line item in a sales order.
+      - name: customer_number
+        description: The unique identifier of a customer in both Zuora Revenue and Zuora Billing
+      - name: accounting_segment
+        description: The unique identifier of an accounting segment.
+      - name: accounting_type_id
+        description: The unique identifier of an accounting type
+
+  - name: rpt_available_to_renew_8th_calendar_day
+    description: Snapshot of the daily available to renew model taken on the 8th calendar day after month-end close.
+
+  - name: rpt_available_to_renew_45th_calendar_day
+    description: Snapshot of the daily available to renew model taken on the 45th calendar day after month-end close.

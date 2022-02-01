@@ -76,7 +76,7 @@
                 AND table_schema IN ('SNAPSHOTS')
                 AND data_type NOT IN {{data_types}}
                 AND LOWER(column_name) NOT IN {{exclude_columns}}
-                AND (lower(table_name) like ('gitlab_dotcom_%') or lower(table_name) like ('customers_db_%') or lower(table_name) like ('license_db_%'))
+                AND LOWER(table_name) LIKE ('gitlab_dotcom_%')
             GROUP BY 1
         
         ), non_email_columns AS (
@@ -91,7 +91,7 @@
               AND LOWER(column_name) NOT IN {{exclude_columns}}
               AND LOWER(column_name) NOT LIKE '%id%'
               AND LOWER(column_name) NOT IN {{exclude_columns}}
-              AND (lower(table_name) like ('gitlab_dotcom_%') or lower(table_name) like ('customers_db_%') or lower(table_name) like ('license_db_%'))
+              AND LOWER(table_name) LIKE ('gitlab_dotcom_%')
             GROUP BY 1
 
         )
