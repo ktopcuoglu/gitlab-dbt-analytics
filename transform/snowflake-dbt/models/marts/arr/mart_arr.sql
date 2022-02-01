@@ -92,6 +92,8 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                              AS health_score_color,
       dim_crm_account.health_number                                                   AS health_number,
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
+      dim_crm_account.lam                                                             AS lam,
+      dim_crm_account.lam_dev_count                                                   AS lam_dev_count,
 
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
@@ -201,7 +203,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-09-04",
-    updated_date="2021-10-25"
+    updated_date="2022-02-01"
 ) }}
