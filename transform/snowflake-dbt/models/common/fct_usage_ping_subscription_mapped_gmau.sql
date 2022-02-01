@@ -58,7 +58,7 @@
       gmau_monthly.compliance_compliance_total_unique_counts_monthly,                                               /* Manage:Compliance */
       --gmau_monthly.knowledge_action_monthly_active_users_design_management,                                       /*  */
       gmau_monthly.import_usage_activity_by_stage_monthly_manage_unique_users_all_imports,                          /* Manage:Import */
-      gmau_monthly.portfolio_management_epic_creation_users_28_days,                                                /* Plan:Product Planning */
+      gmau_monthly.portfolio_management_redis_hll_counters_epics_usage_epics_usage_total_unique_counts_monthly,     /* Plan:Product Planning */
       gmau_monthly.project_management_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,       /* Plan:Project Management */
       gmau_monthly.source_code_repo_writes,                                                                         /* Create:Source Code */
       gmau_monthly.editor_ide_edit_users_28_days,                                                                   /* Create:Editor  */
@@ -99,7 +99,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@chrissharp",
     created_date="2021-03-15",
-    updated_date="2021-06-10"
+    updated_date="2021-12-16"
 ) }}
