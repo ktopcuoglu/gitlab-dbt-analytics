@@ -60,8 +60,7 @@
 ), sfdc_opportunity AS (
 
     SELECT *
-    FROM {{ ref('sfdc_opportunity_source')}}
-    WHERE is_deleted = 'FALSE'
+    FROM {{ ref('prep_crm_opportunity')}}
 
 ), attribution_touchpoints AS (
 
@@ -73,10 +72,10 @@
 
     SELECT
 
-      sfdc_opportunity.opportunity_id                                            AS dim_crm_opportunity_id,
+      sfdc_opportunity.dim_crm_opportunity_id,
       sfdc_opportunity.merged_opportunity_id                                     AS merged_crm_opportunity_id,
-      sfdc_opportunity.account_id                                                AS dim_crm_account_id,
-      sfdc_opportunity.owner_id                                                  AS dim_crm_user_id,
+      sfdc_opportunity.dim_crm_account_id,
+      sfdc_opportunity.dim_crm_user_id,
       sfdc_opportunity.probability                                               AS probability,
       sfdc_opportunity.incremental_acv                                           AS iacv,
       sfdc_opportunity.net_incremental_acv                                       AS net_iacv,
@@ -91,27 +90,27 @@
       sfdc_opportunity.subscription_start_date,
       sfdc_opportunity.subscription_end_date,
       sfdc_opportunity.created_date::DATE                                        AS created_date,
-      {{ get_date_id('sfdc_opportunity.created_date') }}                         AS created_date_id,
+      sfdc_opportunity.created_date_id,
       sfdc_opportunity.sales_accepted_date::DATE                                 AS sales_accepted_date,
-      {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                  AS sales_accepted_date_id,
+      sfdc_opportunity.sales_accepted_date_id,
       sfdc_opportunity.close_date::DATE                                          AS close_date,
-      {{ get_date_id('sfdc_opportunity.close_date') }}                           AS close_date_id,
+      sfdc_opportunity.close_date_id,
       sfdc_opportunity.stage_0_pending_acceptance_date::DATE                     AS stage_0_pending_acceptance_date,
-      {{ get_date_id('sfdc_opportunity.stage_0_pending_acceptance_date') }}      AS stage_0_pending_acceptance_date_id,
+      sfdc_opportunity.stage_0_pending_acceptance_date_id,
       sfdc_opportunity.stage_1_discovery_date::DATE                              AS stage_1_discovery_date,
-      {{ get_date_id('sfdc_opportunity.stage_1_discovery_date') }}               AS stage_1_discovery_date_id,
+      sfdc_opportunity.stage_1_discovery_date_id,
       sfdc_opportunity.stage_2_scoping_date::DATE                                AS stage_2_scoping_date,
-      {{ get_date_id('sfdc_opportunity.stage_2_scoping_date') }}                 AS stage_2_scoping_date_id,
+      sfdc_opportunity.stage_2_scoping_date_id,
       sfdc_opportunity.stage_3_technical_evaluation_date::DATE                   AS stage_3_technical_evaluation_date,
-      {{ get_date_id('sfdc_opportunity.stage_3_technical_evaluation_date') }}    AS stage_3_technical_evaluation_date_id,
+      sfdc_opportunity.stage_3_technical_evaluation_date_id,
       sfdc_opportunity.stage_4_proposal_date::DATE                               AS stage_4_proposal_date,
-      {{ get_date_id('sfdc_opportunity.stage_4_proposal_date') }}                AS stage_4_proposal_date_id,
+      sfdc_opportunity.stage_4_proposal_date_id,
       sfdc_opportunity.stage_5_negotiating_date::DATE                            AS stage_5_negotiating_date,
-      {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}             AS stage_5_negotiating_date_id,
+      sfdc_opportunity.stage_5_negotiating_date_id,
       sfdc_opportunity.stage_6_closed_won_date::DATE                             AS stage_6_closed_won_date,
-      {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}              AS stage_6_closed_won_date_id,
+      sfdc_opportunity.stage_6_closed_won_date_id,
       sfdc_opportunity.stage_6_closed_lost_date::DATE                            AS stage_6_closed_lost_date,
-      {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}             AS stage_6_closed_lost_date_id,
+      sfdc_opportunity.stage_6_closed_lost_date_id,
       sfdc_opportunity.days_in_0_pending_acceptance,
       sfdc_opportunity.days_in_1_discovery,
       sfdc_opportunity.days_in_2_scoping,
@@ -127,10 +126,9 @@
       sfdc_opportunity.is_web_portal_purchase,
       sfdc_opportunity.fpa_master_bookings_flag,
       sfdc_opportunity.deal_path,
-      sfdc_opportunity.order_type_stamped                                        AS order_type,
+      sfdc_opportunity.order_type,
       sfdc_opportunity.sales_segment,
-      {{ sales_qualified_source_cleaning('sfdc_opportunity.sales_qualified_source') }} AS sales_qualified_source,
-
+      sfdc_opportunity.sales_qualified_source,
       sfdc_opportunity.growth_type,
       sfdc_opportunity.opportunity_deal_size,
       sfdc_opportunity.days_in_sao,
@@ -160,7 +158,15 @@
       sfdc_opportunity.partner_discount,
       sfdc_opportunity.partner_discount_calc,
       sfdc_opportunity.comp_channel_neutral,
-      sfdc_opportunity.lead_source
+      sfdc_opportunity.lead_source,
+      sfdc_opportunity.is_sao,
+      sfdc_opportunity.is_sdr_sao,
+      sfdc_opportunity.is_net_arr_closed_deal,
+      sfdc_opportunity.is_new_logo_first_order,
+      sfdc_opportunity.is_net_arr_pipeline_created,
+      sfdc_opportunity.is_win_rate_calc,
+      sfdc_opportunity.is_closed_won,
+      sfdc_opportunity.closed_buckets
 
     FROM sfdc_opportunity
     LEFT JOIN sfdc_account AS fulfillment_partner
@@ -181,111 +187,6 @@
       COUNT(DISTINCT attribution_touchpoints.campaign_id)   AS count_campaigns
     FROM attribution_touchpoints
     GROUP BY 1
-
-), is_sao AS (
-
-    SELECT
-
-      opportunity_id,
-      CASE
-        WHEN sfdc_opportunity.sales_accepted_date IS NOT NULL
-          AND is_edu_oss = 0
-          AND stage_name != '10-Duplicate'
-            THEN TRUE
-      	ELSE FALSE
-      END                                                                         AS is_sao
-
-    FROM sfdc_opportunity
-
-), is_sdr_sao AS (
-
-    SELECT
-
-      opportunity_id,
-      CASE
-        WHEN opportunity_id in (select opportunity_id from is_sao where is_sao = true)
-          AND sales_qualified_source IN (
-                                        'SDR Generated'
-                                        , 'BDR Generated'
-                                        )
-            THEN TRUE
-        ELSE FALSE
-      END                                                                         AS is_sdr_sao
-
-    FROM sfdc_opportunity
-
-), is_net_arr_closed_deal AS (
-
-    SELECT
-
-      opportunity_id,
-      fpa_master_bookings_flag                                                    AS is_net_arr_closed_deal
-
-    FROM sfdc_opportunity
-
-), is_new_logo_first_order AS (
-
-    SELECT
-
-      opportunity_id,
-      CASE
-        WHEN is_won = 'TRUE'
-          AND is_closed = 'TRUE'
-          AND is_edu_oss = 0
-          AND order_type_stamped = '1. New - First Order'
-            THEN TRUE
-        ELSE FALSE
-      END                                                                         AS is_new_logo_first_order
-
-    FROM sfdc_opportunity
-
-), is_net_arr_pipeline_created AS (
-
-    SELECT
-
-      opportunity_id,
-      CASE
-        WHEN is_edu_oss = 0
-          AND stage_name NOT IN (
-                                '00-Pre Opportunity'
-                                , '10-Duplicate'
-                                )
-            THEN TRUE
-        ELSE FALSE
-      END                                                                         AS is_net_arr_pipeline_created
-
-    FROM sfdc_opportunity
-
-), is_win_rate_calc AS (
-
-    SELECT
-
-      opportunity_id,
-      CASE
-        WHEN stage_name IN ('Closed Won', '8-Closed Lost')
-          AND amount >= 0
-          AND (reason_for_loss IS NULL OR reason_for_loss != 'Merged into another opportunity')
-          AND is_edu_oss = 0
-            THEN TRUE
-        ELSE FALSE
-      END                                                                         AS is_win_rate_calc
-
-    FROM sfdc_opportunity
-
-), is_closed_won AS (
-
-    SELECT
-
-      opportunity_id,
-      CASE
-        WHEN is_won = 'TRUE'
-          AND is_closed = 'TRUE'
-          AND is_edu_oss = 0
-            THEN TRUE
-        ELSE FALSE
-      END                                                                         AS is_closed_won
-
-    FROM sfdc_opportunity
 
 ), final_opportunities AS (
 
@@ -329,16 +230,7 @@
       opportunity_fields.days_in_4_proposal,
       opportunity_fields.days_in_5_negotiating,
       opportunity_fields.days_in_sao,
-      CASE
-        WHEN opportunity_fields.days_in_sao < 0                  THEN '1. Closed in < 0 days'
-        WHEN opportunity_fields.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
-        WHEN opportunity_fields.days_in_sao BETWEEN 31 AND 60    THEN '3. Closed in 31-60 days'
-        WHEN opportunity_fields.days_in_sao BETWEEN 61 AND 90    THEN '4. Closed in 61-90 days'
-        WHEN opportunity_fields.days_in_sao BETWEEN 91 AND 180   THEN '5. Closed in 91-180 days'
-        WHEN opportunity_fields.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
-        WHEN opportunity_fields.days_in_sao > 270                THEN '7. Closed in > 270 days'
-        ELSE NULL
-      END                                                                                                                   AS closed_buckets,
+      opportunity_fields.closed_buckets,
       opportunity_fields.subscription_start_date,
       opportunity_fields.subscription_end_date,
 
@@ -379,13 +271,13 @@
       opportunity_fields.is_edu_oss,
       opportunity_fields.is_web_portal_purchase,
       opportunity_fields.fpa_master_bookings_flag,
-      is_sao.is_sao,
-      is_sdr_sao.is_sdr_sao,
-      is_net_arr_closed_deal.is_net_arr_closed_deal,
-      is_new_logo_first_order.is_new_logo_first_order,
-      is_net_arr_pipeline_created.is_net_arr_pipeline_created,
-      is_win_rate_calc.is_win_rate_calc,
-      is_closed_won.is_closed_won,
+      opportunity_fields.is_sao,
+      opportunity_fields.is_sdr_sao,
+      opportunity_fields.is_net_arr_closed_deal,
+      opportunity_fields.is_new_logo_first_order,
+      opportunity_fields.is_net_arr_pipeline_created,
+      opportunity_fields.is_win_rate_calc,
+      opportunity_fields.is_closed_won,
 
       opportunity_fields.primary_solution_architect,
       opportunity_fields.product_details,
@@ -441,20 +333,6 @@
       ON opportunity_fields.deal_path = deal_path.deal_path_name
     LEFT JOIN sales_segment
       ON opportunity_fields.sales_segment = sales_segment.sales_segment_name
-    LEFT JOIN is_sao
-      ON opportunity_fields.dim_crm_opportunity_id = is_sao.opportunity_id
-    LEFT JOIN is_sdr_sao
-      ON opportunity_fields.dim_crm_opportunity_id = is_sdr_sao.opportunity_id
-    LEFT JOIN is_net_arr_closed_deal
-      ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_closed_deal.opportunity_id
-    LEFT JOIN is_new_logo_first_order
-      ON opportunity_fields.dim_crm_opportunity_id = is_new_logo_first_order.opportunity_id
-    LEFT JOIN is_net_arr_pipeline_created
-      ON opportunity_fields.dim_crm_opportunity_id = is_net_arr_pipeline_created.opportunity_id
-    LEFT JOIN is_win_rate_calc
-      ON opportunity_fields.dim_crm_opportunity_id = is_win_rate_calc.opportunity_id
-    LEFT JOIN is_closed_won
-      ON opportunity_fields.dim_crm_opportunity_id = is_closed_won.opportunity_id
     LEFT JOIN user_hierarchy_stamped_sales_segment
       ON opportunity_fields.crm_opp_owner_sales_segment_stamped = user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped
     LEFT JOIN user_hierarchy_stamped_geo
@@ -481,7 +359,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2021-12-02"
+    updated_date="2022-02-01"
 ) }}

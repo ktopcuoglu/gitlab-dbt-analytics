@@ -16,7 +16,7 @@ WITH source AS (
         WHEN stagename = '6-Awaiting Signature'     THEN x6_awaiting_signature_date__c
       END                                                                                   AS calculation_days_in_stage_date,
       DATEDIFF(days,calculation_days_in_stage_date::DATE,CURRENT_DATE::DATE) + 1            AS days_in_stage
-    FROM {{ source('salesforce', 'opportunity') }}  AS opportunity
+    FROM {{ source('snapshots', 'sfdc_opportunity_snapshots') }}  AS opportunity
 
 ), renamed AS (
 
@@ -260,7 +260,13 @@ WITH source AS (
                          CURRENT_DATE)              AS days_since_last_activity,
         isdeleted                                   AS is_deleted,
         lastactivitydate                            AS last_activity_date,
-        recordtypeid                                AS record_type_id
+        recordtypeid                                AS record_type_id,
+
+        -- snapshot metadata
+        dbt_scd_id,
+        dbt_updated_at,
+        dbt_valid_from,
+        dbt_valid_to
 
       FROM source
   )
