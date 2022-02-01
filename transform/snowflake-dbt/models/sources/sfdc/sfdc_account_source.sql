@@ -154,7 +154,7 @@ WITH source AS (
 
       -- ************************************
       -- NF: 2020-12-17
-      -- these three fields are used to identify accounts owned by reps within hierarchies that they do not fully own
+      -- these two fields are used to identify accounts owned by reps within hierarchies that they do not fully own
       -- or even within different regions
 
       locally_Managed__c                             AS is_locally_managed_account,
