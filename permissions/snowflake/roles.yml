@@ -3420,6 +3420,17 @@ roles:
         warehouses:
             - analyst_xs
 
+    - mhanks:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - michellecooper:
         member_of: []
         warehouses: []
@@ -4803,6 +4814,11 @@ users:
         can_login: yes
         member_of:
             - mfleisher
+
+    - mhanks:
+        can_login: yes
+        member_of:
+            - mhanks
 
     - michellecooper:
         can_login: no
