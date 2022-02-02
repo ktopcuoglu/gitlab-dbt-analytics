@@ -245,7 +245,7 @@
       - merge_request
   allow_failure: false
 
-safe_model_script:
+🚫safe_model_script:
   <<: *safe_models_check
   script:
     - dbt deps $CI_PROFILE_TARGET
@@ -328,7 +328,7 @@ safe_model_script:
       - merge_request
   allow_failure: true
 
-dbt_sqlfluff:
+🛃dbt_sqlfluff:
   <<: *dbt_sql_lint
   script:
     - dbt deps $CI_PROFILE_TARGET
