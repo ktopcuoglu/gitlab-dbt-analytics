@@ -14,7 +14,6 @@ WITH source AS (
       trial_start_date::TIMESTAMP     AS trial_start_date,
       namespace_id::NUMBER            AS namespace_id,
       user_id::NUMBER                 AS user_id,
-      trial_users_count::NUMBER       AS trial_users_count,
       opt_in::BOOLEAN                 AS opt_in,
       currently_in_trial::BOOLEAN     AS currently_in_trial,
       is_for_business_use::BOOLEAN    AS is_for_business_use,
@@ -30,7 +29,8 @@ WITH source AS (
       provider::VARCHAR               AS provider,
       comment_capture::VARCHAR        AS comment_capture,
       glm_content::VARCHAR            AS glm_content,
-      glm_source::VARCHAR             AS glm_source
+      glm_source::VARCHAR             AS glm_source,
+      sent_at::TIMESTAMP              AS sent_at
 
     FROM source  
 

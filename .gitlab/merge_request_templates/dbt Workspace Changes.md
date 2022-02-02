@@ -16,6 +16,7 @@ Closes #
 - [ ] Do you need any CODEOWNERS for this?
 - [ ] Do you want any tests added? Not necessary for workspace models but could be a good validation.
 - [ ] If the model is being materialized in a new schema, update the `dbt_analytics` role in the roles.yml file to include read access to the schema and all tables in it
+- [ ] If there are any new schema's added, or changes to the `permissions.yml` file ensure the [permifrost_spec_test](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#-permifrost_spec_test) pipeline has been run.
 
 ## Submission Checklist
 - [ ] Branch set to delete. (Leave commits unsquashed)

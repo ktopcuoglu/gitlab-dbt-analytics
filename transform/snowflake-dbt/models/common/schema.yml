@@ -290,7 +290,7 @@ models:
           - not_null
           - unique
       - name: email_hash
-        description: A salted SHA2 hash of the person's email address. 
+        description: A salted SHA2 hash of the person's email address.
       - name: email_domain
         description: The domain name of the person's email address (@example.com or @sub.example.com).
       - name: email_domain_type
@@ -298,7 +298,7 @@ models:
       - name: master_record_id
         description: A internal Salesforce generated field. [From the Salesforce doc](https://help.salesforce.com/s/articleView?id=000320023&type=1) "When performing a query or export a record from an API tool, a field called MasterRecordId appear [...]."
       - name: owner_id
-        description: The Salesforce id ([dim_crm_user_id](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_crm_user)) of the user who owns the person record. 
+        description: The Salesforce id ([dim_crm_user_id](https://dbt.gitlabdata.com/#!/model/model.gitlab_snowflake.dim_crm_user)) of the user who owns the person record.
       - name: record_type_id
         description: The sub-type of the [contact](https://gitlab.my.salesforce.com/ui/setup/rectype/RecordTypes?type=Contact&setupid=ContactRecords&retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DContact) or [lead](https://gitlab.my.salesforce.com/ui/setup/rectype/RecordTypes?type=Lead&setupid=LeadRecords&) defined in Salesforce, joinable to PROD.LEGACY.SFDC_RECORD_TYPE.
       - name: dim_crm_account_id
@@ -320,7 +320,7 @@ models:
       - name: email_bounced_reason
         description: A hidden Salesforce field recording why the email first bounced through SFDC, [not Marketo.](https://nation.marketo.com/t5/marketo-whisperer-blogs/special-salesforce-fields-tokens-in-marketo-deep-dive/ba-p/247573)
       - name: status
-        description: A [Salesforce picklist field](https://gitlab.my.salesforce.com/00N6100000HymiA) as [defined in the handbook.](https://about.gitlab.com/handbook/marketing/marketing-operations/#lead-and-contact-statuses) 
+        description: A [Salesforce picklist field](https://gitlab.my.salesforce.com/00N6100000HymiA) as [defined in the handbook.](https://about.gitlab.com/handbook/marketing/marketing-operations/#lead-and-contact-statuses)
       - name: lead_source
         description: A built-in salesforce picklist shown as initial Source in SFDC.
       - name: lead_source_type
@@ -341,6 +341,29 @@ models:
         description: A boolean Salesforce field on the [lead](https://gitlab.my.salesforce.com/00N4M00000Ib1VK) and [contact](https://gitlab.my.salesforce.com/00N4M00000Ib1VP) denoting if the contact is going through an [Outreach](https://about.gitlab.com/handbook/marketing/marketing-operations/outreach/) sequence.
       - name: region
         description: A picklist field on the [lead](https://gitlab.my.salesforce.com/00N61000009n0Sl) and [contact](https://gitlab.my.salesforce.com/00N6100000ELkLu?) object in Salesforce. Currently one of `AMER, APAC, EMEA, LATAM.`
+
+  - name: dim_crm_user
+    description: '{{ doc("dim_crm_user") }}'
+    columns:
+      - name: dim_crm_user_id
+        description: Primary key for Salesforce users and the primary key for this dimension
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
+      - name: is_active
+        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
+        tags: [ "tdf", "common" ]
+
+  - name: dim_crm_user_daily_snapshot
+    description: '{{ doc("dim_crm_user_daily_snapshot") }}'
+    columns:
+      - name: crm_user_snapshot_id
+        description: Primary key for Salesforce users in the daily snapshot and the primary key for this dimension
+        tests:
+          - unique
+          - not_null
+        tags: [ "tdf", "common" ]
 
   - name: dim_crm_user_hierarchy_live
     description: '{{ doc("dim_crm_user_hierarchy_live") }}'
@@ -763,6 +786,7 @@ models:
         description: How a product is delivered to the customer; SaaS or Self-Managed (or Other).
       - name: product_ranking
         description: Numeric product pricing tier, independent of delivery type.
+
   - name: dim_project
     description: '{{ doc("dim_project") }}'
     columns:
@@ -777,18 +801,6 @@ models:
           - not_null
       - name: dim_user_id_creator
         description: ID of the user who created the project
-  - name: dim_crm_user
-    description: '{{ doc("dim_crm_user") }}'
-    columns:
-      - name: dim_crm_user_id
-        description: Primary key for Salesforce users and the primary key for this dimension
-        tests:
-          - unique
-          - not_null
-        tags: [ "tdf", "common" ]
-      - name: is_active
-        description: A boolean column that flags if the user is active in salesforce, which means that the user can login and use salesforce.
-        tags: [ "tdf", "common" ]
 
   - name: dim_revenue_contract
     description: '{{ doc("dim_revenue_contract") }}'
@@ -1156,7 +1168,7 @@ models:
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
       - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
+        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira)). This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -1383,7 +1395,7 @@ models:
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
       - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
+        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira)). This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -1607,7 +1619,7 @@ models:
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
       - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
+        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira)). This metric has been deprecated but we are keeping the field around for history.
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -2628,3 +2640,32 @@ models:
         description: The identifier for target issue of an issue link
         tests:
           - not_null
+
+  - name: dim_locality
+    description: '{{ doc("dim_locality") }}'
+    tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - locality
+          - valid_from
+    columns:
+      - name: dim_locality_id
+        description: The id derived from the locality that will be used to join with other tables.
+        tests:
+          - not_null
+      - name: locality
+        description: The unique location lables used in compensation calculations.
+        tests:
+          - not_null
+      - name: location_factor
+        description: A cost of market evaluation compared to San Francisco. https://about.gitlab.com/handbook/total-rewards/compensation/compensation-calculator/#location-factor
+      - name: locality_country
+        description: The parent country of the locality
+      - name: valid_from
+        description: The date the location factor for a locality begins being applied
+        tests:
+          - not_null
+      - name: valid_to
+        description: The date the location factor for a locality stops being applied
+      - name: is_current
+        description: A flag to indicate if the location factor for the locality is from the most recent source data.

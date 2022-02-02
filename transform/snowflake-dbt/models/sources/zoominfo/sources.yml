@@ -13,9 +13,9 @@ sources:
 
     tables:
       - name: global
-        identifier: zi_comp_with_linkages_20211001_global         
+        identifier: zi_comp_with_linkages_20220101_global         
         description: International table, data ingested from Zoominfo inbound share.
-
+     
       - name: techs
         identifier: reference_techs         
         description: Technograph table,  data ingested from Zoominfo inbound share.

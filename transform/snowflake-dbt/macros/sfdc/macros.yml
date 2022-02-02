@@ -7,10 +7,14 @@ macros:
     description: '{{ doc("sales_qualified_source_cleaning") }}'
   - name: sales_segment_cleaning
     description: '{{ doc("sales_segment_cleaning") }}'
+  - name: sfdc_account_fields
+    description: '{{ doc("sfdc_account_fields") }}'
   - name: sfdc_deal_size
     description: '{{ doc("sfdc_deal_size") }}'
   - name: sfdc_source_buckets
     description: '{{ doc("sfdc_source_buckets") }}'
+  - name: sfdc_user_fields
+    description: '{{ doc("sfdc_user_fields") }}'
   - name: sales_hierarchy_sales_segment_cleaning
     description: '{{ doc("sales_hierarchy_sales_segment_cleaning") }}'
   - name: sales_funnel_text_slugify

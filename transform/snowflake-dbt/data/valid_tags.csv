@@ -1,6 +1,9 @@
 tag,description
+account_snapshots, For CRM account snapshots
 arr,Annual Recurring Revenue
 arr_snapshots,For ARR Snapshots
+atr, Available to Renew
+atr_snapshots, For ATR snapshots
 bamboohr,Related to bamboohr data source
 billing_account,For billing accounts
 common,For the common schema
@@ -13,6 +16,7 @@ datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
 demandbase,Relates to demandbase data
 discourse,Relates to Discourse data
+edcast, Relates to the EdCast data source.
 edm_snapshot, Models which create snapshots on upper-layer portions of the EDM
 gainsight,Relates to Customer Product Usage data
 geo,Relates to geo data
@@ -30,6 +34,7 @@ order_type, For identifying types or order data
 on-run-end,dbt built-in
 on-run-start,dbt built-in
 opportunity, Relates to customer opportunity data.
+people, Related to the People team data.
 poc,Proof of concept
 product,For large product analytics data
 purchase_channel, Related to identifying types of purchase channel data
@@ -46,6 +51,7 @@ sources,Related to sources
 social,Related to social media data
 tdf,Trusted Data Framework
 thanos,Prometheus Data pipeline
+user_snapshots, For CRM user snapshots
 workspace, Related to team workspaces
 version_db,Relates to the Version Database
 zuora,Relates to Zuora data

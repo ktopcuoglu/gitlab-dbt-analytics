@@ -34,7 +34,7 @@ models:
             - unique
 
     - name: zengrc_program
-      description: This table is derived from the `zengrc_audits_source` table until the program is explicitly brought into the data warehouse.
+      description: This table is derived from the `zengrc_audits_source`, `zengrc_issue_source`, and `zengrc_request_source` table until the program is explicitly brought into the data warehouse.
       columns: 
         - name: program_id
           tests:
@@ -42,7 +42,7 @@ models:
             - unique
 
     - name: zengrc_person
-      description: This table is derived from the `zengrc_audit_source` and `zengrc_assessment_source` tables until the person object is explicitly brought into the data warehouse.
+      description: This table is derived from the `zengrc_audit_source`, `zengrc_assessment_source`, and `zengrc_requests_source` tables until the person object is explicitly brought into the data warehouse.
       columns: 
         - name: person_id
           tests:
@@ -61,4 +61,71 @@ models:
     - name: zengrc_control_to_objective
       description: The tables list the many to many relationship between Control and Objective. Joining this table to Control or Objective directly will result in duplicate rows.
 
+    - name: zengrc_issue
+      description: '{{ doc("zengrc_issues_desc") }}'
+      columns: 
+        - name: issue_id
+          tests:
+            - not_null
+            - unique
 
+    - name: zengrc_issue_to_audit
+      description: The tables list the many to many relationship between Issue and Audit. Joining this table to Issue or Audit directly will result in duplicate rows.
+      
+    - name: zengrc_issue_to_control
+      description: The tables list the many to many relationship between Issue and Control. Joining this table to Issue or Control directly will result in duplicate rows.
+      
+    - name: zengrc_issue_to_program
+      description: The tables list the many to many relationship between Issue and Program. Joining this table to Issue or Program directly will result in duplicate rows.
+      
+    - name: zengrc_request
+      description: '{{ doc("zengrc_requests_desc") }}'
+      columns: 
+        - name: request_id
+          tests:
+            - not_null
+            - unique
+      
+    - name: zengrc_request_to_assignees
+      description: This table lists the many to many relationship between Person, the assignee, and an request.  Joining this table to Request directly will result in duplicate rows.
+      
+    - name: zengrc_request_to_control
+      description: The tables list the many to many relationship between Request and Control. Joining this table to Request or Control directly will result in duplicate rows.
+      
+    - name: zengrc_request_to_issue
+      description: The tables list the many to many relationship between Request and Issue. Joining this table to Request or Issue directly will result in duplicate rows.
+      
+    - name: zengrc_request_to_requestors
+      description: This table lists the many to many relationship between Person, the requestor, and an request.  Joining this table to Request directly will result in duplicate rows.
+      
+    - name: zengrc_risk
+      description: '{{ doc("zengrc_risks_desc") }}'
+      columns: 
+        - name: risk_id
+          tests:
+            - not_null
+            - unique
+      
+
+    - name: wk_infradev_base
+      description: >
+        Table containing age metrics & related metadata for gitlab.com internal issues. Used for tracking internal work progress for things like Engineering Allocation & Corrective Actions
+        These metrics are available for individual issues at daily level & can be aggregated up from there
+      
+      columns: 
+        - name: daily_issue_id
+          tests:
+            - not_null
+            - unique
+
+    - name: infradev_issues_base
+      description: A model to limit GitLab.com issues to only thous relevant to infradev engineering team.    
+
+    - name: infradev_current_issue_users
+      description: A model to generate a list of current assigned users on an issue. Not explicitly limited to the infradev team. 
+
+    - name: infradev_label_history
+      description: A model identify the valid historic range of specific labels that are explicitly related to the infradev team.
+
+    - name: infradev_namespace_path
+      description: A model to concatenate the full namespace path, up to four levels deep.  Not explicitly limited to the infradev team.

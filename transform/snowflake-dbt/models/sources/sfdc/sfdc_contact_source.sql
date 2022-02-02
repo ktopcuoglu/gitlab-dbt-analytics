@@ -61,6 +61,7 @@ WITH source AS (
         leadsource                  AS lead_source,
         lead_source_type__c         AS lead_source_type,
         outreach_stage__c           AS outreach_stage,
+        Sequence_Step_Number__c     AS outreach_step_number,
         account_type__c             AS account_type,
         contact_assigned_datetime__c::TIMESTAMP
                                     AS assigned_datetime,
@@ -69,6 +70,7 @@ WITH source AS (
         mql_date__c                 AS marketo_qualified_lead_date,
         mql_datetime_inferred__c    AS mql_datetime_inferred,
         inquiry_datetime__c         AS inquiry_datetime,
+        inquiry_datetime_inferred__c AS inquiry_datetime_inferred,
         accepted_datetime__c        AS accepted_datetime,
         qualifying_datetime__c      AS qualifying_datetime,
         qualified_datetime__c       AS qualified_datetime,
@@ -79,7 +81,7 @@ WITH source AS (
         web_portal_purchase_datetime__c AS web_portal_purchase_datetime,
         mkto_si__last_interesting_moment__c AS marketo_last_interesting_moment,
         mkto_si__last_interesting_moment_date__c AS marketo_last_interesting_moment_date,
-        last_utm_campaign__c        AS last_utm_campaign, 
+        last_utm_campaign__c        AS last_utm_campaign,
         last_utm_content__c         AS last_utm_content,
         region__c                   AS region,
         sequence_step_type2__c      AS sequence_step_type,
@@ -90,6 +92,21 @@ WITH source AS (
         actively_being_sequenced__c::BOOLEAN
                                     AS is_actively_being_sequenced,
         {{  sfdc_source_buckets('leadsource') }}
+
+
+        -- account demographics fields
+        account_demographics_sales_segment__c      AS account_demographics_sales_segment,
+        account_demographics_geo__c                AS account_demographics_geo,
+        account_demographics_region__c             AS account_demographics_region,
+        account_demographics_area__c               AS account_demographics_area,
+        account_demographics_territory__c          AS account_demographics_territory,
+        account_demographic_employee_count__c      AS account_demographics_employee_count,
+        account_demographics_max_family_employe__c AS account_demographics_max_family_employee,
+        account_demographics_upa_country__c        AS account_demographics_upa_country,
+        account_demographics_upa_state__c          AS account_demographics_upa_state,
+        account_demographics_upa_city__c           AS account_demographics_upa_city,
+        account_demographics_upa_street__c         AS account_demographics_upa_street,
+        account_demographics_upa_postal_code__c    AS account_demographics_upa_postal_code,
 
         --path factory info
         pathfactory_experience_name__c

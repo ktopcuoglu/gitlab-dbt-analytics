@@ -56,6 +56,11 @@ seeds:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
 
+  gitlab_snowflake:
+    director_location_factors:
+      +column_types:
+        valid_to: date # Not behaving well when the column is all null
+
 # ==================
 # Variable Configs
 # ==================
@@ -134,6 +139,12 @@ models:
         +materialized: table
         +schema: bamboohr
 
+      bizible:
+        +schema: bizible
+        sensitive:
+          +schema: sensitive
+          secure: true
+
       customers:
         +schema: customers
         sensitive:
@@ -149,12 +160,12 @@ models:
       date:
         +materialized: table
         +schema: date
-      
+
       dbt:
         +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
-      
+
       demandbase:
         +materialized: table
         +schema: demandbase
@@ -168,6 +179,10 @@ models:
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
+
+      edcast:
+        +schema: edcast
+        +tags: ["people", "edcast"]
 
       gainsight:
         +materialized: table
@@ -258,7 +273,7 @@ models:
       snowplow:
         +tags: ["product"]
         +schema: snowplow
-      
+
       thanos:
         +materialized: table
         +schema: prometheus
@@ -280,15 +295,19 @@ models:
 
       zoominfo:
         +schema: zoominfo
-        +materialized: table 
+        +materialized: table
         sensitive:
           +schema: sensitive
-          +materialized: view 
+          +materialized: view
           secure: true
 
       zuora:
         +schema: zuora
         +tags: ["zuora"]
+
+      zuora_central_sandbox:
+        +schema: zuora_central_sandbox
+        +tags: [ "zuora_central_sandbox" ]
 
       zuora_revenue:
         +schema: zuora_revenue
@@ -316,7 +335,7 @@ models:
         +schema: restricted_safe_common_mapping
         +tags: ["safe"]
         secure: true
-       
+
     common_prep:
       +materialized: table
       +schema: common_prep
@@ -451,6 +470,9 @@ models:
     workspaces:
       +tags: ["workspace"]
 
+      workspace_customer_success:
+        +schema: workspace_customer_success
+
       workspace_data:
         +schema: workspace_data
         tdf:
@@ -466,9 +488,16 @@ models:
 
       workspace_marketing:
         +schema: workspace_marketing
+        bizible:
+          restricted_safe:
+            +schema: restricted_safe_workspace_marketing
+            +tags: ["safe"]
+            secure: true
 
       workspace_product:
         +tags: ["product"]
+        source_1_on_1_copy:
+          +schema: workspace_product
 
       workspace_saas_usage_ping:
         +tags: ["product"]
@@ -490,10 +519,11 @@ models:
 
       workspace_engineering:
         +schema: workspace_engineering
+        +materialized: table
 
       workspace_people:
         +schema: workspace_people
-
+        +tags: ["people", "edcast"]
 
     # ------------------
     # Marts
@@ -504,7 +534,7 @@ models:
       arr:
         +schema: restricted_safe_legacy
         +tags: ["safe"]
-        secure: true 
+        secure: true
 
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -517,7 +547,7 @@ models:
       finance:
         +schema: restricted_safe_common_mart_finance
         +tags: ["safe"]
-        secure: true 
+        secure: true
 
       product:
         +tags: ["product"]
@@ -527,8 +557,8 @@ models:
           +schema: restricted_safe_common_mart_product
           +tags: ["safe"]
           secure: true
-        
-      pumps: 
+
+      pumps:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps
         +materialized: table
@@ -537,7 +567,7 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps_sensitive
         +materialized: table
-      
+
       sales_funnel:
         +schema: common_mart_sales
         restricted_safe:
@@ -560,10 +590,10 @@ models:
       +schema: data_quality
       +tags: ["product"]
       +materialized: table
-    
+
     share:
       +schema: share
-      +materialized: table 
+      +materialized: table
 
     # ------------------
     # Trusted Data Framework
