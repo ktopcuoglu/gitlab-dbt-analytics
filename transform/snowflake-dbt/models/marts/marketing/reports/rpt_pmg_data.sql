@@ -1,7 +1,3 @@
-{{ config(
-    tags=["mnpi_exception"]
-) }}
-
 {{config({
     "schema": "common_mart_marketing"
   })
@@ -89,7 +85,7 @@
         WHEN integrated_campaign_grouping='GitOps Use Case' THEN 'GitOps'
       ELSE NULL 
       END AS gtm_motion
-      FROM pmg_paid_digital
+    FROM pmg_paid_digital
 
 )
 
@@ -98,5 +94,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-01-25"
+    updated_date="2022-02-02"
 ) }}

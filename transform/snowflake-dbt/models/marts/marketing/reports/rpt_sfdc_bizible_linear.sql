@@ -8,8 +8,7 @@
 }}
 
 {{ simple_cte([
-    ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint'),
-    ('sfdc_bizible_attribution_touchpoint_xf','sfdc_bizible_attribution_touchpoint_xf')
+    ('mart_crm_attribution_touchpoint','mart_crm_attribution_touchpoint')
 ]) }}
 
 , linear_base AS ( --the number of touches a given opp has in total
@@ -68,13 +67,13 @@
         WHEN mart_crm_attribution_touchpoint.bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI' THEN 'Sponsorship'
         ELSE mart_crm_attribution_touchpoint.bizible_marketing_channel_path
       END AS marketing_channel_path, 
-      sfdc_bizible_attribution_touchpoint_xf.pipe_name,
+      mart_crm_attribution_touchpoint.pipe_name,
       mart_crm_attribution_touchpoint.bizible_medium, 
       mart_crm_attribution_touchpoint.lead_source,
       mart_crm_attribution_touchpoint.opportunity_created_date::date AS opp_created_date,
       mart_crm_attribution_touchpoint.sales_accepted_date::date AS sales_accepted_date,
       mart_crm_attribution_touchpoint.opportunity_close_date::date AS close_date, 
-      sfdc_bizible_attribution_touchpoint_xf.sales_type,
+      mart_crm_attribution_touchpoint.sales_type,
       mart_crm_attribution_touchpoint.stage_name,
       mart_crm_attribution_touchpoint.is_won,
       mart_crm_attribution_touchpoint.is_sao,
@@ -109,9 +108,7 @@
     mart_crm_attribution_touchpoint.dim_crm_opportunity_id = linear_base.dim_crm_opportunity_id
     LEFT JOIN  campaigns_per_opp ON 
     mart_crm_attribution_touchpoint.dim_crm_opportunity_id =      campaigns_per_opp.dim_crm_opportunity_id
-    LEFT JOIN sfdc_bizible_attribution_touchpoint_xf ON
-    mart_crm_attribution_touchpoint.dim_crm_touchpoint_id = sfdc_bizible_attribution_touchpoint_xf.touchpoint_id
-    GROUP BY     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52
+    {{ dbt_utils.group_by(n=52) }}
 
 )
 
@@ -120,5 +117,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-01-25"
+    updated_date="2022-02-02"
 ) }}

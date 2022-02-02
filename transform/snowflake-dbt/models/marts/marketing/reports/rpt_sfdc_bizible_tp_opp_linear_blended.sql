@@ -99,7 +99,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_pmg_data 
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37
+    {{ dbt_utils.group_by(n=37) }}
     UNION ALL
     SELECT 
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_month_yr,
@@ -187,7 +187,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_sfdc_bizible_tp_person_lifecycle
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37
+    {{ dbt_utils.group_by(n=37) }}
     UNION ALL
     SELECT
       rpt_sfdc_bizible_linear.bizible_touchpoint_date_month_yr AS opp_touchpoint_mo_yr, 
@@ -347,7 +347,7 @@
         ELSE 0 
       END AS won_linear_net_arr
     FROM rpt_sfdc_bizible_linear
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37
+    {{ dbt_utils.group_by(n=37) }}
 
 ), final AS (
 
@@ -368,5 +368,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-01-25"
+    updated_date="2022-02-02"
 ) }}
