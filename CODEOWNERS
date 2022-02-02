@@ -29,7 +29,7 @@ __init__.py     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanr
 /extract/           @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
 /load/              @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
 /orchestrate/       @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
-/permissions/       @jjstark  @paul_armstrong  @dvanrooijen2  @laddula
+/permissions/       @jjstark  @paul_armstrong  @dvanrooijen2  @laddula @vedprakash2021
 /pump/              @jjstark  @paul_armstrong @vedprakash2021
 
 Makefile            @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooijen2 @vedprakash2021
@@ -127,8 +127,8 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooi
 /transform/snowflake-dbt/models/marts/arr           @jeanpeguero    @paul_armstrong  @iweeks @michellecooper
 /transform/snowflake-dbt/models/marts/sales_funnel  @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
 
-transform/snowflake-dbt/models/marts/pumps/              @jjstark @paul_armstrong @dparker @Karuna16 
-transform/snowflake-dbt/models/marts/pumps_sensitive/    @jjstark @paul_armstrong @dparker @Karuna16 
+transform/snowflake-dbt/models/marts/pumps/              @jjstark @paul_armstrong @dparker @Karuna16
+transform/snowflake-dbt/models/marts/pumps_sensitive/    @jjstark @paul_armstrong @dparker @Karuna16
 
 /transform/snowflake-dbt/models/workspaces/workspace_sales  @nfiguera @mvilain
 
@@ -137,6 +137,8 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/    @jjstark @paul_armstron
 /transform/snowflake-dbt/models/workspaces/workspace_engineering  @ken_aguilar @pempey @jjstark @paul_armstrong @iweeks @snalamaru @dvanrooijen2 @vedprakash2021 @meks @davis_townsend
 
 /transform/snowflake-dbt/models/workspaces/workspace_people  @ken_aguilar @pempey @jjstark  @iweeks  @dvanrooijen2
+
+/transform/snowflake-dbt/models/workspaces/workspace_customer_success @mdrussell @snalamaru @jjstark
 
 # ======
 # dbt data file Overwrites

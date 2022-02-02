@@ -625,6 +625,94 @@ models:
           - not_null
       - name: is_blocked_namespace
         description: boolean flag set to TRUE if the creator of the namespace is a blocked user
+  - name: gitlab_dotcom_usage_data_pipelines
+    description: '{{ doc("gitlab_dotcom_usage_data_pipelines") }}'
+    columns:
+      - name: event_primary_key
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_representative_of_stage
+        tests:
+          - not_null
+        description: This column represents whether or not this action represents being active for the entire stage. One action per stage has this designation.
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        description: boolean flag set to TRUE if the creator of the namespace is a blocked user
+  - name: gitlab_dotcom_usage_data_ci_builds
+    description: '{{ doc("gitlab_dotcom_usage_data_ci_builds") }}'
+    columns:
+      - name: event_primary_key
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_representative_of_stage
+        tests:
+          - not_null
+        description: This column represents whether or not this action represents being active for the entire stage. One action per stage has this designation.
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        description: boolean flag set to TRUE if the creator of the namespace is a blocked user
+  - name: gitlab_dotcom_usage_data_notes
+    description: '{{ doc("gitlab_dotcom_usage_data_notes") }}'
+    columns:
+      - name: event_primary_key
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_representative_of_stage
+        tests:
+          - not_null
+        description: This column represents whether or not this action represents being active for the entire stage. One action per stage has this designation.
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        description: boolean flag set to TRUE if the creator of the namespace is a blocked user
+  - name: gitlab_dotcom_usage_data_issues
+    description: '{{ doc("gitlab_dotcom_usage_data_issues") }}'
+    columns:
+      - name: event_primary_key
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_representative_of_stage
+        tests:
+          - not_null
+        description: This column represents whether or not this action represents being active for the entire stage. One action per stage has this designation.
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: is_blocked_namespace
+        description: boolean flag set to TRUE if the creator of the namespace is a blocked user
   - name: gitlab_dotcom_usage_data_events_blocked_users
     description: '{{ doc("gitlab_dotcom_usage_data_events_blocked_users") }}'
     columns:

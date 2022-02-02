@@ -42,6 +42,18 @@ models:
               severity: warn
   - name: zuora_central_sandbox_invoice_source
     description: Source layer for Zuora Invoices for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_central_sandbox_order_action_source
+    description: Source layer for Zuora Order Action for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_central_sandbox_order_mrr_source
+    description: Source layer for Zuora Order MRR for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_central_sandbox_order_quantity_source
+    description: Source layer for Order Quantity for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_central_sandbox_order_source
+    description: Source layer for Zuora Order for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_central_sandbox_order_tcb_source
+    description: Source layer for Zuora Order TCB for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
+  - name: zuora_central_sandbox_order_tcv_source
+    description: Source layer for Zuora Order TCV for cleaning and renaming. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_central_sandbox_product_rate_plan_charge_source
     description: Source layer for Zuora Product Rate Plan Charges. This is from zuora_central_sandbox used to UAT changes to the Zuora Program.
   - name: zuora_central_sandbox_product_rate_plan_charge_tier_source
