@@ -296,7 +296,7 @@ safe_model_script:
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.24
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -332,8 +332,6 @@ dbt_sqlfluff:
   <<: *dbt_sql_lint
   script:
     - dbt deps $CI_PROFILE_TARGET
-    - pip install sqlfluff==0.9.3
-    - pip install sqlfluff-templater-dbt==0.9.3
     - export LINT_LIST=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
     - echo $LINT_LIST
     - sqlfluff lint $LINT_LIST --config .sqlfluff-ci
