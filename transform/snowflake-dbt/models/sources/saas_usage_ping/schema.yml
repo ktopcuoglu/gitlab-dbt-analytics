@@ -26,6 +26,18 @@ models:
           description: Unique identifier of the run
           tests:
             - not_null
+        - name: recorded_at
+          description: Timestamp when original file is recorded (from the original .json file)
+        - name: version
+          description: App version (from the original .json file)
+        - name: edition
+          description: Edition type (from the original .json file)
+        - name: recording_ce_finished_at
+          description: Timestamp when CE recording is finished (from the original .json file)
+        - name: recording_ee_finished_at
+          description: Timestamp when EE recording is finished (from the original .json file)
+        - name: uuid
+          description: unique number from API (from the original .json file)
         - name: _uploaded_at
           description: Date and time of when data is uploaded into Data Warehouse
           tests:
@@ -67,6 +79,18 @@ models:
           description: Unique identifier for running job acquiring the data
           tests:
             - not_null
+        - name: recorded_at
+          description: Timestamp when original file is recorded (from the original .json file)
+        - name: version
+          description: App version (from the original .json file)
+        - name: edition
+          description: Edition type (from the original .json file)
+        - name: recording_ce_finished_at
+          description: Timestamp when CE recording is finished (from the original .json file)
+        - name: recording_ee_finished_at
+          description: Timestamp when EE recording is finished (from the original .json file)
+        - name: uuid
+          description: unique number from API (from the original .json file)
         - name: _uploaded_at
           description: Date and time when data is uploaded into Snowflake
           tests:
