@@ -1,6 +1,37 @@
 {%- macro sfdc_opportunity_fields(model_type) %}
 
-WITH sfdc_opportunity_stage AS (
+WITH first_contact  AS (
+
+    SELECT
+      opportunity_id,                                                             -- opportunity_id
+      contact_id                                                                  AS sfdc_contact_id,
+      md5(cast(coalesce(cast(contact_id as varchar), '') as varchar))             AS dim_crm_person_id,
+      ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
+    FROM {{ ref('sfdc_opportunity_contact_role_source')}}
+
+), attribution_touchpoints AS (
+
+    SELECT *
+    FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
+    WHERE is_deleted = 'FALSE'
+
+), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
+    --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
+    SELECT
+     opportunity_id                                         AS dim_crm_opportunity_id,
+     COUNT(DISTINCT attribution_touchpoints.touchpoint_id)  AS count_crm_attribution_touchpoints
+    FROM  attribution_touchpoints
+    GROUP BY 1
+
+), campaigns_per_opp as (
+
+    SELECT
+      opportunity_id                                        AS dim_crm_opportunity_id,
+      COUNT(DISTINCT attribution_touchpoints.campaign_id)   AS count_campaigns
+    FROM attribution_touchpoints
+    GROUP BY 1
+
+), sfdc_opportunity_stage AS (
 
     SELECT *
     FROM {{ref('sfdc_opportunity_stage_source')}}
@@ -30,10 +61,14 @@ WITH sfdc_opportunity_stage AS (
       order_type_stamped                                                 AS order_type,
       opportunity_term                                                   AS opportunity_term_base,
       {{ sales_qualified_source_cleaning('sales_qualified_source') }}    AS sales_qualified_source,
+      user_segment_stamped                                               AS crm_opp_owner_sales_segment_stamped,
+      user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
+      user_region_stamped                                                AS crm_opp_owner_region_stamped,
+      user_area_stamped                                                  AS crm_opp_owner_area_stamped,
     {%- if model_type == 'base' %}
         {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT"])}}
     {%- elif model_type == 'snapshot' %}
-        {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
+        {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
         snapshot_dates.date_id                                                                                        AS snapshot_id,
         {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT"])}}
      {%- endif %}
@@ -68,6 +103,27 @@ WITH sfdc_opportunity_stage AS (
     WHERE stage_name IN ('Closed Won', '8-Closed Lost')
       AND zqu__primary = TRUE
     QUALIFY record_number = 1
+
+), sfdc_account AS (
+
+    SELECT 
+    {%- if model_type == 'base' %}
+        *
+    {%- elif model_type == 'snapshot' %}
+        {{ dbt_utils.surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
+        snapshot_dates.date_id                                                                                AS snapshot_id,
+        sfdc_account_snapshots_source.*
+     {%- endif %}
+    FROM 
+    {%- if model_type == 'base' %}
+        {{ ref('sfdc_account_source') }}
+    {%- elif model_type == 'snapshot' %}
+        {{ ref('sfdc_account_snapshots_source') }}
+         INNER JOIN snapshot_dates
+           ON snapshot_dates.date_actual >= sfdc_account_snapshots_source.dbt_valid_from
+           AND snapshot_dates.date_actual < COALESCE(sfdc_account_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+    {%- endif %}
+    WHERE account_id IS NOT NULL
 
 ), final AS (
 
@@ -152,6 +208,10 @@ WITH sfdc_opportunity_stage AS (
         ELSE NULL
       END                                                                             AS closed_buckets,
 
+      -- alliance type fields
+      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+
       -- date ids
       {{ get_date_id('sfdc_opportunity.created_date') }}                              AS created_date_id,
       {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                       AS sales_accepted_date_id,
@@ -166,13 +226,34 @@ WITH sfdc_opportunity_stage AS (
       {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                  AS stage_6_closed_lost_date_id,
 
       --  quote information
-      quote.quote_start_date
+      quote.quote_start_date,
+
+      -- contact information
+      first_contact.dim_crm_person_id,
+      first_contact.sfdc_contact_id,
+
+      -- attribution information
+      linear_attribution_base.count_crm_attribution_touchpoints,
+      campaigns_per_opp.count_campaigns,
+      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints      AS weighted_linear_iacv
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
     LEFT JOIN quote
       ON sfdc_opportunity.dim_crm_opportunity_id = quote.dim_crm_opportunity_id
+    LEFT JOIN sfdc_account AS fulfillment_partner
+      ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
+    LEFT JOIN linear_attribution_base
+      ON sfdc_opportunity.dim_crm_opportunity_id = linear_attribution_base.dim_crm_opportunity_id
+    LEFT JOIN campaigns_per_opp
+      ON sfdc_opportunity.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
+    LEFT JOIN first_contact
+      ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
+    {%- if model_type == 'base' %}
+    {%- elif model_type == 'snapshot' %}
+        AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+    {%- endif %}
 
 )
 

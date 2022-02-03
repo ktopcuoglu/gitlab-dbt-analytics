@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ ref('prep_crm_account') }}
+    FROM {{ ref('prep_crm_opportunity') }}
 
 ), result AS (
 
