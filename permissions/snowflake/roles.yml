@@ -82,6 +82,11 @@ databases:
     - jstark_prep:
         shared: no
 
+    - judume_prod:
+        shared: no
+    - judume_prep:
+        shared: no       
+
     - kaguilar_prod:
         shared: no
     - kaguilar_prep:
@@ -3040,6 +3045,49 @@ roles:
         member_of: []
         warehouses: []
 
+    - judume:
+        member_of:
+            - engineer
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+            - loading
+            - reporting
+        owns:
+            databases:
+                - judume_prep
+                - judume_prod
+            schemas:
+                - judume_prep.*
+                - judume_prod.*
+            tables:
+                - judume_prep.*.*
+                - judume_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - judume_prep
+                    - judume_prod
+                write:
+                    - judume_prep
+                    - judume_prod
+            schemas:
+                read:
+                    - judume_prep.*
+                    - judume_prod.*
+                write:
+                    - judume_prep.*
+                    - judume_prod.*
+            tables:
+                read:
+                    - judume_prep.*.*
+                    - judume_prod.*.*
+                write:
+                    - judume_prep.*.*
+                    - judume_prod.*.*
+
+
     - jurbanc:
         warehouses: []
 
@@ -4677,6 +4725,11 @@ users:
     - jswain: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - judume:
+        can_login: yes
+        member_of:
+            - judume
 
     - jurbanc:
         can_login: no
