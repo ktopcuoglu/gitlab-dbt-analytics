@@ -65,7 +65,7 @@ models:
   - name: mart_event_metric_namespace
     description: ' {{ doc("mart_event_metric_namespace") }} '
     columns:
-      - name: event_id
+      - name: usage_id
         tests:
           - not_null
           - unique
