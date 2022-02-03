@@ -22,7 +22,7 @@ models:
         description: Metric value
         tests:
           - not_null
-      - name: metrics_status
+      - name: metric_status
         description: Metrics status -lookup from dim_usage_ping_metric
       - name: recorded_at
         description: Value for the metric `recorded_at` in TIMESTAMP format
@@ -55,7 +55,7 @@ models:
         description: Metric value
         tests:
           - not_null
-      - name: metrics_status
+      - name: metric_status
         description: Metrics status -lookup from dim_usage_ping_metric
       - name: recorded_at
         description: Value for the metric `recorded_at` in TIMESTAMP format

@@ -4,7 +4,9 @@
 }}
 
 {{ simple_cte([
-    ('instance_redis_metrics', 'instance_redis_metrics')
+    ('instance_redis_metrics', 'instance_redis_metrics'),
+    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+
 ]) }}
 
 , flattened AS (
@@ -27,7 +29,26 @@
     -- -3 is for non redis metrics so we exclude them from the model
     WHERE TRY_TO_NUMBER(value::TEXT) <> -3
 
+), joined AS (
+
+    SELECT
+      flattened.saas_usage_ping_redis_id         AS saas_usage_ping_redis_id,
+      flattened.ping_date                        AS ping_date,
+      flattened.metric_path                      AS metric_path,
+      flattened.metric_value                     AS metric_value,
+      dim_usage_ping_metric.metrics_status       AS metric_status,
+      flattened.recorded_at                      AS recorded_at,
+      flattened.version                          AS version,
+      flattened.edition                          AS edition,
+      flattened.recording_ce_finished_at         AS recording_ce_finished_at,
+      flattened.recording_ee_finished_at         AS recording_ee_finished_at,
+      flattened.uuid                             AS uuid,
+      flattened._uploaded_at                     AS _uploaded_at
+    FROM flattened
+    LEFT JOIN dim_usage_ping_metric
+    ON flattened.metric_path = dim_usage_ping_metric.metrics_path
+
 )
 SELECT *
-FROM flattened
+FROM joined
 
