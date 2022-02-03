@@ -9,6 +9,8 @@ gitlabdata = "==0.3.5"
 pandas = "==0.25.3"
 requests = "==2.22.0"
 urllib3 = "==1.24.0"
+sqlfluff = "==0.9.3"
+sqlfluff-templater-dbt = "==0.9.3"
 
 [requires]
 python_version = "3.8"

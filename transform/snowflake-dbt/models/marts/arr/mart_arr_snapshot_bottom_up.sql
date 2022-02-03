@@ -16,6 +16,11 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_crm_account') }}
 
+), dim_crm_account_daily_snapshot AS (
+
+    SELECT *
+    FROM {{ ref('dim_crm_account_daily_snapshot') }}
+
 ), dim_date AS (
 
     SELECT *
@@ -113,6 +118,10 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                                    AS health_score_color,
       dim_crm_account.health_number                                                         AS health_number,
       dim_crm_account.is_jihu_account                                                       AS is_jihu_account,
+      dim_crm_account.parent_crm_account_lam                                                AS parent_crm_account_lam,
+      dim_crm_account.parent_crm_account_lam_dev_count                                      AS parent_crm_account_lam_dev_count,
+      dim_crm_account_daily_snapshot.parent_crm_account_lam                                 AS parent_crm_account_lam_historical,
+      dim_crm_account_daily_snapshot.parent_crm_account_lam_dev_count                       AS parent_crm_account_lam_dev_count_historical,
 
       --subscription info
       dim_subscription.dim_subscription_id                                                  AS dim_subscription_id,
@@ -170,6 +179,9 @@ WITH dim_billing_account AS (
     INNER JOIN dim_billing_account
       ON dim_billing_account.dim_billing_account_id = fct_mrr_snapshot_bottom_up.dim_billing_account_id
       AND dim_billing_account.snapshot_id = fct_mrr_snapshot_bottom_up.snapshot_id
+    LEFT JOIN dim_crm_account_daily_snapshot
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account_daily_snapshot.dim_crm_account_id
+      AND dim_billing_account.snapshot_id = dim_crm_account_daily_snapshot.snapshot_id
     LEFT JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_mrr_snapshot_bottom_up.dim_product_detail_id
     LEFT JOIN dim_date AS arr_month
@@ -232,7 +244,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2021-10-25"
+    updated_date="2022-02-01"
 ) }}

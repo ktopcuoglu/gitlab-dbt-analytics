@@ -5,6 +5,8 @@ This model is at the granularity of a row per counter name, tuple (instance, hos
 * How many users are running CI Pipelines with Gitlab Products ?
 * How many users on a paid instance are interacting with Merge Requests?
 
+License data comes from the Customer Portal source.
+
 A lot of dimensions are currently added to the model such as:
 
 * Subscription Dimensions

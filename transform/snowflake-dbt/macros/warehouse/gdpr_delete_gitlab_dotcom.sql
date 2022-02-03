@@ -20,7 +20,7 @@
                 LISTAGG(column_name,',') AS email_column_names
             FROM "RAW"."INFORMATION_SCHEMA"."COLUMNS"
             WHERE LOWER(column_name) LIKE '%email%'
-                AND table_schema IN ('TAP_POSTGRES','LICENSE_DB')
+                AND table_schema IN ('TAP_POSTGRES')
                 AND data_type NOT IN {{data_types}}
             GROUP BY 1
         

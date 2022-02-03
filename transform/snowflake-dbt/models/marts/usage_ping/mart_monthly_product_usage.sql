@@ -34,10 +34,10 @@ WITH dim_billing_account AS (
     SELECT *
     FROM {{ ref('dim_instances') }}
 
-), dim_licenses AS (
+), dim_license AS (
 
     SELECT *
-    FROM {{ ref('dim_licenses') }}
+    FROM {{ ref('dim_license') }}
 
 ), dim_location AS (
 
@@ -105,10 +105,10 @@ WITH dim_billing_account AS (
 ), license_subscriptions AS (
 
     SELECT DISTINCT
-      dim_date.date_day                                                           AS reporting_month,
-      license_id,
-      dim_licenses.license_md5,
-      dim_licenses.company                                                         AS license_company_name,
+      dim_date.date_day                                                            AS reporting_month,
+      dim_license_id                                                               AS license_id,
+      dim_license.license_md5,
+      dim_license.company                                                          AS license_company_name,
       subscription_source.subscription_id                                          AS original_linked_subscription_id,
       subscription_source.account_id,
       subscription_source.subscription_name_slugify,
@@ -135,9 +135,9 @@ WITH dim_billing_account AS (
         WITHIN GROUP (ORDER BY product_rate_plan_name ASC)                          AS product_rate_plan_name_array,
       SUM(quantity)                                                                 AS quantity,
       SUM(mrr * 12)                                                                 AS arr
-    FROM dim_licenses
+    FROM dim_license
     INNER JOIN subscription_source
-      ON dim_licenses.subscription_id = subscription_source.subscription_id
+      ON dim_license.dim_subscription_id = subscription_source.subscription_id
     LEFT JOIN dim_subscription
       ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
     LEFT JOIN subscription_source AS all_subscriptions
