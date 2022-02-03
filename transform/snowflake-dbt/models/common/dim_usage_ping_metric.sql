@@ -6,8 +6,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('usage_ping_metrics_source') }}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY metrics_path ORDER BY snapshot_date DESC) =1 
-
+    QUALIFY MAX(uploaded_at) OVER() = uploaded_at
 
 )
 
