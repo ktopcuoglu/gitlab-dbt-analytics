@@ -22,6 +22,20 @@ models:
         description: Metric value
         tests:
           - not_null
+      - name: metrics_status
+        description: Metrics status -lookup from dim_usage_ping_metric
+      - name: recorded_at
+        description: Value for the metric `recorded_at` in TIMESTAMP format
+      - name: version
+        description: App version (from the original .json file)
+      - name: edition
+        description: Edition type (from the original .json file)
+      - name: recording_ce_finished_at
+        description: Timestamp when CE recording is finished (from the original .json file)
+      - name: recording_ee_finished_at
+        description: Timestamp when EE recording is finished (from the original .json file)
+      - name: uuid
+        description: unique number from API (from the original .json file)
   - name: wk_saas_usage_ping_instance_redis_metrics
     description: '{{ doc("wk_saas_usage_ping_instance_redis_metrics") }}'
     columns:
@@ -41,7 +55,19 @@ models:
         description: Metric value
         tests:
           - not_null
+      - name: metrics_status
+        description: Metrics status -lookup from dim_usage_ping_metric
       - name: recorded_at
-        description: Value for the metric `recording_ce_finished_at` in DATE format
+        description: Value for the metric `recorded_at` in TIMESTAMP format
         tests:
           - not_null
+      - name: version
+        description: App version (from the original .json file)
+      - name: edition
+        description: Edition type (from the original .json file)
+      - name: recording_ce_finished_at
+        description: Timestamp when CE recording is finished (from the original .json file)
+      - name: recording_ee_finished_at
+        description: Timestamp when EE recording is finished (from the original .json file)
+      - name: uuid
+        description: unique number from API (from the original .json file)

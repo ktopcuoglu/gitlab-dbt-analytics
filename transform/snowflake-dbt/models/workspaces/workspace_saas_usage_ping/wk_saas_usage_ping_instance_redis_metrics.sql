@@ -4,8 +4,7 @@
 }}
 
 {{ simple_cte([
-    ('instance_redis_metrics', 'instance_redis_metrics'),
-    ('dim_date', 'dim_date')
+    ('instance_redis_metrics', 'instance_redis_metrics')
 ]) }}
 
 , flattened AS (
@@ -15,7 +14,13 @@
       ping_date                                           AS ping_date,
       COALESCE(TRY_PARSE_JSON(path)[0]::TEXT, path::TEXT) AS metric_path,
       value::TEXT                                         AS metric_value,
-      response['recording_ce_finished_at']::DATE          AS recorded_at
+      recorded_at                                         AS recorded_at,
+      version                                             AS version,
+      edition                                             AS edition,
+      recording_ce_finished_at                            AS recording_ce_finished_at,
+      recording_ee_finished_at                            AS recording_ee_finished_at,
+      uuid                                                AS uuid,
+      _uploaded_at                                        AS _uploaded_at
     FROM instance_redis_metrics,
     LATERAL FLATTEN(INPUT => response,
     RECURSIVE => TRUE) AS r
