@@ -136,16 +136,16 @@ WITH first_contact  AS (
           OR sfdc_opportunity.pushed_count > 0)
           THEN TRUE
           ELSE FALSE
-      END                                                                                 AS is_risky,
+      END                                                                                         AS is_risky,
       CASE
         WHEN sfdc_opportunity.opportunity_term_base IS NULL THEN
           DATEDIFF('month', quote.quote_start_date, sfdc_opportunity.subscription_end_date)
         ELSE sfdc_opportunity.opportunity_term_base
-      END                                                                                 AS opportunity_term,
+      END                                                                                         AS opportunity_term,
       -- opportunity stage information 
-      sfdc_opportunity_stage.is_active                                                    AS stage_is_active,
-      sfdc_opportunity_stage.is_closed                                                    AS stage_is_closed,
-      sfdc_opportunity_stage.is_won                                                       AS is_won,
+      sfdc_opportunity_stage.is_active                                                            AS stage_is_active,
+      sfdc_opportunity_stage.is_closed                                                            AS stage_is_closed,
+      sfdc_opportunity_stage.is_won                                                               AS is_won,
 
      -- flags
       CASE
@@ -154,7 +154,7 @@ WITH first_contact  AS (
           AND sfdc_opportunity.stage_name != '10-Duplicate'
             THEN TRUE
         ELSE FALSE
-      END                                                                               AS is_sao,
+      END                                                                                         AS is_sao,
       CASE
         WHEN is_sao = TRUE
           AND sfdc_opportunity.sales_qualified_source IN (
@@ -163,8 +163,8 @@ WITH first_contact  AS (
                                         )
             THEN TRUE
         ELSE FALSE
-      END                                                                             AS is_sdr_sao,
-      sfdc_opportunity.fpa_master_bookings_flag                                       AS is_net_arr_closed_deal,
+      END                                                                                         AS is_sdr_sao,
+      sfdc_opportunity.fpa_master_bookings_flag                                                   AS is_net_arr_closed_deal,
       CASE
         WHEN sfdc_opportunity_stage.is_won = 'TRUE'
           AND sfdc_opportunity.is_closed = 'TRUE'
@@ -172,7 +172,7 @@ WITH first_contact  AS (
           AND sfdc_opportunity.order_type = '1. New - First Order'
             THEN TRUE
         ELSE FALSE
-      END                                                                             AS is_new_logo_first_order, 
+      END                                                                                         AS is_new_logo_first_order, 
       CASE
         WHEN sfdc_opportunity.is_edu_oss = 0
           AND sfdc_opportunity.stage_name NOT IN (
@@ -181,7 +181,7 @@ WITH first_contact  AS (
                                 )
             THEN TRUE
         ELSE FALSE
-      END                                                                             AS is_net_arr_pipeline_created,
+      END                                                                                         AS is_net_arr_pipeline_created,
       CASE
         WHEN sfdc_opportunity.stage_name IN ('Closed Won', '8-Closed Lost')
           AND sfdc_opportunity.amount >= 0
@@ -189,14 +189,14 @@ WITH first_contact  AS (
           AND sfdc_opportunity.is_edu_oss = 0
             THEN TRUE
         ELSE FALSE
-      END                                                                             AS is_win_rate_calc,
+      END                                                                                         AS is_win_rate_calc,
       CASE
         WHEN sfdc_opportunity_stage.is_won = 'TRUE'
           AND sfdc_opportunity.is_closed = 'TRUE'
           AND sfdc_opportunity.is_edu_oss = 0
             THEN TRUE
         ELSE FALSE
-      END                                                                             AS is_closed_won,
+      END                                                                                         AS is_closed_won,
       CASE
         WHEN sfdc_opportunity.days_in_sao < 0                  THEN '1. Closed in < 0 days'
         WHEN sfdc_opportunity.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
@@ -206,26 +206,27 @@ WITH first_contact  AS (
         WHEN sfdc_opportunity.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
         WHEN sfdc_opportunity.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
-      END                                                                             AS closed_buckets,
+      END                                                                                         AS closed_buckets,
 
       -- alliance type fields
       {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
       {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
 
       -- date ids
-      {{ get_date_id('sfdc_opportunity.created_date') }}                              AS created_date_id,
-      {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                       AS sales_accepted_date_id,
-      {{ get_date_id('sfdc_opportunity.close_date') }}                                AS close_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_0_pending_acceptance_date') }}           AS stage_0_pending_acceptance_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_1_discovery_date') }}                    AS stage_1_discovery_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_2_scoping_date') }}                      AS stage_2_scoping_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_3_technical_evaluation_date') }}         AS stage_3_technical_evaluation_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_4_proposal_date') }}                     AS stage_4_proposal_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}                  AS stage_5_negotiating_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}                   AS stage_6_closed_won_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                  AS stage_6_closed_lost_date_id,
+      {{ get_date_id('sfdc_opportunity.created_date') }}                                          AS created_date_id,
+      {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                                   AS sales_accepted_date_id,
+      {{ get_date_id('sfdc_opportunity.close_date') }}                                            AS close_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_0_pending_acceptance_date') }}                       AS stage_0_pending_acceptance_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_1_discovery_date') }}                                AS stage_1_discovery_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_2_scoping_date') }}                                  AS stage_2_scoping_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_3_technical_evaluation_date') }}                     AS stage_3_technical_evaluation_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_4_proposal_date') }}                                 AS stage_4_proposal_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}                              AS stage_5_negotiating_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}                               AS stage_6_closed_won_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
 
       --  quote information
+      quote.dim_quote_id,
       quote.quote_start_date,
 
       -- contact information
@@ -235,7 +236,10 @@ WITH first_contact  AS (
       -- attribution information
       linear_attribution_base.count_crm_attribution_touchpoints,
       campaigns_per_opp.count_campaigns,
-      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints      AS weighted_linear_iacv
+      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv,
+
+      -- Noel's fields
+
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage

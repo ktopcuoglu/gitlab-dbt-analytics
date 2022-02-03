@@ -5,30 +5,12 @@
     ('deal_path', 'prep_deal_path'),
     ('sales_rep', 'prep_crm_user'),
     ('sales_segment', 'prep_sales_segment'),
-    ('sfdc_campaigns', 'prep_campaign'),
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
     ('alliance_type', 'prep_alliance_type'),
     ('channel_type', 'prep_channel_type'),
     ('sfdc_opportunity', 'prep_crm_opportunity')
 
 ]) }}
-
--- , sfdc_account AS (
-
---     SELECT *
---     FROM {{ ref('sfdc_account_source') }}
---     WHERE account_id IS NOT NULL
-
--- , first_contact  AS (
-
---     SELECT
-
---       opportunity_id,                                                             -- opportunity_id
---       contact_id                                                                  AS sfdc_contact_id,
---       md5(cast(coalesce(cast(contact_id as varchar), '') as varchar))             AS dim_crm_person_id,
---       ROW_NUMBER() OVER (PARTITION BY opportunity_id ORDER BY created_date ASC)   AS row_num
-
---     FROM {{ ref('sfdc_opportunity_contact_role_source')}}
 
 , user_hierarchy_stamped_sales_segment AS (
 
@@ -57,28 +39,6 @@
       dim_crm_opp_owner_area_stamped_id,
       crm_opp_owner_area_stamped
     FROM {{ ref('prep_crm_user_hierarchy_stamped') }}
-
--- ), attribution_touchpoints AS (
-
---     SELECT *
---     FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
---     WHERE is_deleted = 'FALSE'
-
--- ), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
---     --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
---     SELECT
---      opportunity_id                                         AS dim_crm_opportunity_id,
---      COUNT(DISTINCT attribution_touchpoints.touchpoint_id)  AS count_crm_attribution_touchpoints
---     FROM  attribution_touchpoints
---     GROUP BY 1
-
--- ), campaigns_per_opp as (
-
---     SELECT
---       opportunity_id                                        AS dim_crm_opportunity_id,
---       COUNT(DISTINCT attribution_touchpoints.campaign_id)   AS count_campaigns
---     FROM attribution_touchpoints
---     GROUP BY 1
 
 ), final_opportunities AS (
 
@@ -125,7 +85,6 @@
       sfdc_opportunity.closed_buckets,
       sfdc_opportunity.subscription_start_date,
       sfdc_opportunity.subscription_end_date,
-
 
       -- common dimension keys
       {{ get_keyed_nulls('sfdc_opportunity.dim_crm_user_id') }}                                                             AS dim_crm_user_id,
