@@ -124,7 +124,7 @@ WITH dim_date AS (
     LEFT JOIN mje_summed mje
       ON lns.revenue_contract_line_id = mje.revenue_contract_line_id
     WHERE adjustment IS NOT NULL
-      AND ABS(adjustment) > 0
+      AND ABS(ROUND(adjustment,5)) > 0
     {{ dbt_utils.group_by(n=8) }}
 
 ), manual_charges AS (
