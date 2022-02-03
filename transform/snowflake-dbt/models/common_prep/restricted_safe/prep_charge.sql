@@ -388,5 +388,5 @@ WITH map_merged_crm_account AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2021-04-28",
-    updated_date="2021-11-15"
+    updated_date="2022-02-03"
 ) }}

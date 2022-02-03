@@ -152,7 +152,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="manual_charges",
     created_by="@michellecooper",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2021-10-28",
-    updated_date="2021-12-22",
+    updated_date="2022-02-03",
 ) }}
