@@ -5,10 +5,16 @@ WITH base AS (
 
 ), partitioned AS (
 
-    SELECT jsontext     AS jsontext,
-           ping_date    AS ping_date,
-           run_id       AS run_id,
-           _uploaded_at AS _uploaded_at
+    SELECT jsontext                 AS jsontext,
+           ping_date                AS ping_date,
+           run_id                   AS run_id,
+           recorded_at              AS recorded_at,
+           version                  AS version,
+           edition                  AS edition,
+           recording_ce_finished_at AS recording_ce_finished_at,
+           recording_ee_finished_at AS recording_ee_finished_at,
+           uuid                     AS uuid,
+           _uploaded_at             AS _uploaded_at
       FROM base
       QUALIFY ROW_NUMBER() OVER (PARTITION BY ping_date ORDER BY ping_date DESC) = 1
 
@@ -19,6 +25,12 @@ WITH base AS (
       TRY_PARSE_JSON(jsontext)                              AS response,
       ping_date::TIMESTAMP                                  AS ping_date,
       run_id                                                AS run_id,
+      recorded_at::TIMESTAMP                                AS recorded_at,
+      version                                               AS version,
+      edition                                               AS edition,
+      recording_ce_finished_at::TIMESTAMP                   AS recording_ce_finished_at,
+      recording_ee_finished_at::TIMESTAMP                   AS recording_ee_finished_at,
+      uuid                                                  AS uuid,
       DATEADD('s', _uploaded_at, '1970-01-01')::TIMESTAMP   AS _uploaded_at
     FROM partitioned
 
