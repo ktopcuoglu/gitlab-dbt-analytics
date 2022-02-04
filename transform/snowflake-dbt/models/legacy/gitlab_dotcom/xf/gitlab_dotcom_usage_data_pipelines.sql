@@ -4,7 +4,7 @@
 
 {{ config({
         "materialized": "incremental",
-        "primary_key": "event_primary_key",
+        "unique_key": "event_primary_key",
         "automatic_clustering": true
     })
 }}
