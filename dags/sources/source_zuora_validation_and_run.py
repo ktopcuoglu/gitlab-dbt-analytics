@@ -132,7 +132,7 @@ model_run = KubernetesPodOperator(
 # Test all source models
 model_test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +sources.{data_source}; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +sources.{data_source} --exclude staging.gitlab_com; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 model_test = KubernetesPodOperator(

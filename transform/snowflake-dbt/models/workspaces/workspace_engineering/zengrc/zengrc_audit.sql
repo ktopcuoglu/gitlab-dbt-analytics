@@ -21,5 +21,17 @@ SELECT
   audit_title,
   zengrc_object_type,
   audit_uploaded_at,
-  audit_loaded_at
+  audit_loaded_at,
+  audit_category,
+  audit_completion_date,
+  delegated_testing_owner,
+  documentation_due_date,
+  escalation_date,
+  gitlab_assignee,
+  inherent_risk,
+  period_completed,
+  period_created,
+  residual_risk,
+  system_effectiveness_rating,
+  system_tier_level
 FROM source
