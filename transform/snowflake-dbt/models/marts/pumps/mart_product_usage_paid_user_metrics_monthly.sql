@@ -1,31 +1,41 @@
-{{ config(
+{{
+  config(
     tags=["mnpi_exception"]
-) }}
-
-{{config({
-    "schema": "common_mart_product"
-  })
+  )
 }}
 
 {{ simple_cte([
     ('monthly_saas_metrics','fct_saas_product_usage_metrics_monthly'),
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
-    ('crm_accounts','dim_crm_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription_snapshot_bottom_up'),
-    ('subscriptions_original', 'dim_subscription_snapshot_bottom_up')
+    ('subscriptions', 'dim_subscription')
 ]) }}
 
-, original_subscription_dates AS (
 
-    SELECT DISTINCT
-      dim_subscription_id,
+, most_recent_subscription_version AS (
+    SELECT
+      subscription_name,
+      subscription_status,
       subscription_start_date,
-      subscription_end_date
+      subscription_end_date,
+      ROW_NUMBER() OVER(
+        PARTITION BY
+          subscription_name
+        ORDER BY
+          subscription_version DESC
+      )
     FROM subscriptions
-    WHERE subscription_version = 1
-
+    WHERE subscription_status IN (
+      'Active',
+      'Cancelled'
+    )
+    QUALIFY ROW_NUMBER() OVER(
+      PARTITION BY
+        subscription_name
+      ORDER BY
+        subscription_version DESC
+    ) = 1
 )
 
 , sm_paid_user_metrics AS (
@@ -33,18 +43,19 @@
     SELECT
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
-      NULL                                                                          AS dim_namespace_id,
+      subscriptions.dim_subscription_id_original,
+      NULL                                                                         AS dim_namespace_id,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
-      {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
-      monthly_sm_metrics.dim_subscription_id_original,
+      {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
+      subscriptions.subscription_name,
       subscriptions.subscription_status,
-      subscriptions.subscription_start_date,
-      subscriptions.subscription_end_date,
-      subscriptions_original.subscription_status                                     AS subscription_status_original,
-      original_subscription_dates.subscription_start_date                            AS subscription_start_date_original,
-      original_subscription_dates.subscription_end_date                              AS subscription_end_date_original,
+      most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
+      subscriptions.term_start_date,
+      subscriptions.term_end_date,
+      most_recent_subscription_version.subscription_start_date,
+      most_recent_subscription_version.subscription_end_date,
       monthly_sm_metrics.snapshot_date_id,
       monthly_sm_metrics.ping_created_at,
       monthly_sm_metrics.dim_usage_ping_id,
@@ -112,6 +123,7 @@
       monthly_sm_metrics.projects_bamboo_active_all_time_event,
       monthly_sm_metrics.projects_jira_active_all_time_event,
       monthly_sm_metrics.projects_drone_ci_active_all_time_event,
+      monthly_sm_metrics.jira_imports_28_days_event,
       monthly_sm_metrics.projects_github_active_all_time_event,
       monthly_sm_metrics.projects_jira_server_active_all_time_event,
       monthly_sm_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -154,38 +166,31 @@
     FROM monthly_sm_metrics
     LEFT JOIN billing_accounts
       ON monthly_sm_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
-    LEFT JOIN crm_accounts
-      ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN location_country
       ON monthly_sm_metrics.dim_location_country_id = location_country.dim_location_country_id
     LEFT JOIN subscriptions
-      ON monthly_sm_metrics.dim_subscription_id = subscriptions.dim_subscription_id
-      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN subscriptions_original
-      ON monthly_sm_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
-      AND IFNULL(monthly_sm_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_sm_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN original_subscription_dates
-      ON original_subscription_dates.dim_subscription_id = monthly_sm_metrics.dim_subscription_id_original
+      ON subscriptions.dim_subscription_id = monthly_sm_metrics.dim_subscription_id
+    LEFT JOIN most_recent_subscription_version
+      ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
 
 ), saas_paid_user_metrics AS (
 
     SELECT
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
+      subscriptions.dim_subscription_id_original,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
-      {{ get_keyed_nulls('crm_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
-      monthly_saas_metrics.dim_subscription_id_original,
+      {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
+      subscriptions.subscription_name,
       subscriptions.subscription_status,
-      subscriptions.subscription_start_date,
-      subscriptions.subscription_end_date,
-      subscriptions_original.subscription_status                                     AS subscription_status_original,
-      original_subscription_dates.subscription_start_date                            AS subscription_start_date_original,
-      original_subscription_dates.subscription_end_date                              AS subscription_end_date_original,
+      most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
+      subscriptions.term_start_date,
+      subscriptions.term_end_date,
+      most_recent_subscription_version.subscription_start_date,
+      most_recent_subscription_version.subscription_end_date,
       monthly_saas_metrics.snapshot_date_id,
       monthly_saas_metrics.ping_created_at,
       NULL                                                                          AS dim_usage_ping_id,
@@ -253,6 +258,7 @@
       monthly_saas_metrics.projects_bamboo_active_all_time_event,
       monthly_saas_metrics.projects_jira_active_all_time_event,
       monthly_saas_metrics.projects_drone_ci_active_all_time_event,
+      monthly_saas_metrics.jira_imports_28_days_event,
       monthly_saas_metrics.projects_github_active_all_time_event,
       monthly_saas_metrics.projects_jira_server_active_all_time_event,
       monthly_saas_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -295,20 +301,10 @@
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
-    LEFT JOIN crm_accounts
-      ON billing_accounts.dim_crm_account_id = crm_accounts.dim_crm_account_id
     LEFT JOIN subscriptions
-      ON monthly_saas_metrics.dim_subscription_id = subscriptions.dim_subscription_id
-      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN subscriptions_original
-      ON monthly_saas_metrics.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
-      AND IFNULL(monthly_saas_metrics.ping_created_at::DATE, DATEADD('day', -1, monthly_saas_metrics.snapshot_month))
-      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
-    LEFT JOIN original_subscription_dates
-      ON original_subscription_dates.dim_subscription_id = monthly_saas_metrics.dim_subscription_id_original
-    -- LEFT JOIN location_country
-    --   ON monthly_saas_metrics.dim_location_country_id = location_country.dim_location_country_id
+      ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
+      LEFT JOIN most_recent_subscription_version
+        ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
 
 ), unioned AS (
 
@@ -327,5 +323,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2021-12-23"
+    updated_date="2022-02-04"
 ) }}
