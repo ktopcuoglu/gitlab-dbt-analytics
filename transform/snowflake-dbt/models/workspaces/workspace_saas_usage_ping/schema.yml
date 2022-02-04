@@ -33,7 +33,7 @@ models:
       - name: recording_ce_finished_at
         description: Timestamp when CE recording is finished (from the original .json file)
       - name: recording_ee_finished_at
-        description: Timestamp when EE recording is finished (from the original .json file)
+        description: Timestamp when EE recording is finished (from the original .json file) 
       - name: uuid
         description: unique number from API (from the original .json file)
   - name: wk_saas_usage_ping_instance_redis_metrics
