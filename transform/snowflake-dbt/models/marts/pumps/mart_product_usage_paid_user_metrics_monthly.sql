@@ -1,7 +1,7 @@
 {{
   config(
     tags=["mnpi_exception"],
-    schema='common_mart_product'
+    schema="common_mart_product"
   )
 }}
 
