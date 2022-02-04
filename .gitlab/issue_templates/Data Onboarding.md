@@ -217,7 +217,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
 - Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
 - Install Data Grip (from JetBrains) for interfacing with databases
-    - Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
+    - Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/other-apps/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
     - Change your formatting preferences in Data Grip by going to Preferences > Editor > Code Style > HTML. You should have:
         - Use tab character: unchecked
         - Tab size: 4

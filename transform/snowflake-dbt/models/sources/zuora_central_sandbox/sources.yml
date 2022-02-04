@@ -27,6 +27,15 @@ sources:
       - name: invoice
       - name: invoice_item
       - name: invoice_payment
+      - name: order
+        identifier: ORDER
+        quoting:
+          identifier: true
+      - name: order_action
+      - name: order_mrr
+      - name: order_quantity
+      - name: order_tcb
+      - name: order_tcv
       - name: product
       - name: product_rate_plan
       - name: product_rate_plan_charge

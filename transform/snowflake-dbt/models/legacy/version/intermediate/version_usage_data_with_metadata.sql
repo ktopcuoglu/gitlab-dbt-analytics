@@ -6,7 +6,7 @@
 
 
 {{ simple_cte([
-    ('licenses', 'license_db_licenses'),
+    ('licenses', 'customers_db_licenses_source'),
     ('zuora_subscriptions', 'zuora_subscription'),
     ('zuora_accounts', 'zuora_account'),
     ('version_releases', 'version_releases')
@@ -24,11 +24,11 @@
       licenses.license_id,
       licenses.zuora_subscription_id,
       licenses.company,
-      licenses.plan_code                      AS license_plan_code,
-      licenses.starts_at                      AS license_starts_at,
-      licenses.license_expires_at,
-      zuora_subscriptions.subscription_status AS zuora_subscription_status,
-      zuora_accounts.crm_id                   AS zuora_crm_id,
+      licenses.plan_code                                                  AS license_plan_code,
+      licenses.license_start_date                                         AS license_starts_at,
+      licenses.license_expire_date                                        AS license_expires_at,
+      zuora_subscriptions.subscription_status                             AS zuora_subscription_status,
+      zuora_accounts.crm_id                                               AS zuora_crm_id,
       DATEDIFF('days', ping_version.release_date, usage_data.created_at)  AS days_after_version_release_date,
       latest_version.major_minor_version                                  AS latest_version_available_at_ping_creation,
       latest_version.version_row_number - ping_version.version_row_number AS versions_behind_latest
@@ -58,9 +58,9 @@
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' THEN 'SaaS'
         ELSE 'Self-Managed'
-      END                                                                             AS ping_source,
+      END                                                                  AS ping_source,
       CASE WHEN LOWER(edition) LIKE '%ee%' THEN 'EE'
-        ELSE 'CE' END                                                                 AS main_edition,
+        ELSE 'CE' END                                                      AS main_edition,
       CASE 
           WHEN edition LIKE '%CE%' THEN 'Core'
           WHEN edition LIKE '%EES%' THEN 'Starter'
@@ -68,8 +68,8 @@
           WHEN edition LIKE '%EEU%' THEN 'Ultimate'
           WHEN edition LIKE '%EE Free%' THEN 'Core'
           WHEN edition LIKE '%EE%' THEN 'Starter'
-        ELSE NULL END                                                                 AS edition_type,
-      usage_activity_by_stage_monthly['manage']['events'] AS monthly_active_users_last_28_days
+        ELSE NULL END                                                      AS edition_type,
+      usage_activity_by_stage_monthly['manage']['events']                  AS monthly_active_users_last_28_days
 
     FROM joined
 

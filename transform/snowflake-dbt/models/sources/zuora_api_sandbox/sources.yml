@@ -34,7 +34,8 @@ sources:
         identifier: invoiceitem
       - name: invoice_payment
         identifier: invoicepayment
-      - name: order
+      - name: order_action
+        identifier: orderaction
       - name: product
         freshness: null
       - name: product_rate_plan

@@ -329,16 +329,23 @@ WITH bizible_touchpoints AS (
         THEN 'CD Use Case' 
        ELSE 'None'
       END                                                                                               AS bizible_integrated_campaign_grouping,
-      IFF(bizible_integrated_campaign_grouping <> 'None','Demand Gen','Other')                          AS touchpoint_segment,
       CASE
         WHEN bizible_integrated_campaign_grouping IN ('CI Build & Test Auto','CI Use Case','CI Use Case - FR','CI Use Case - DE','CI/CD Seeing is Believing','Jenkins Take Out','OctoCat','Premium to Ultimate','20210512_ISSAWebcast') 
           THEN 'CI/CD'
+        WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion = 'CI (CI/CD)' -- override for TechDemo Series
+          THEN 'CI/CD'
         WHEN bizible_integrated_campaign_grouping IN ('Deliver Better Products Faster','DevSecOps Use Case','Reduce Security and Compliance Risk','Simplify DevOps', 'DevOps GTM', 'Cloud Partner Campaign', 'GitLab 14 webcast','DOI Webcast','FY22 GitHub Competitive Campaign') 
+          THEN 'DevOps'
+        WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion = 'DevOps Platform' -- override for TechDemo Series
           THEN 'DevOps'
         WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  
           THEN 'GitOps'
+        WHEN dim_parent_campaign_id = '7014M000001vm9KQAQ' AND campaign.gtm_motion = 'GITOPS' -- override for TechDemo Series
+          THEN 'GitOps'
         ELSE NULL
       END                                                                                               AS gtm_motion,
+      IFF(bizible_integrated_campaign_grouping <> 'None' or dim_parent_campaign_id = '7014M000001vm9KQAQ','Demand Gen','Other') -- override for TechDemo Series
+                                                                                                        AS touchpoint_segment,
       CASE
         WHEN touchpoint_id ILIKE 'a6061000000CeS0%' -- Specific touchpoint overrides
           THEN 'Field Event'
