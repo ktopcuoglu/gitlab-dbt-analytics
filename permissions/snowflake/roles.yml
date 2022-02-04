@@ -2315,8 +2315,8 @@ roles:
         warehouses: []
 
     - bmishra: # De provisioned as part of Quarterly audit and security check.
-        member_of: : []
-        warehouses: : []
+        member_of: []
+        warehouses: []
 
     - bnguyen: # De provisioned as part of Quarterly audit and security check.
         member_of: []
