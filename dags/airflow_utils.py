@@ -262,8 +262,8 @@ clone_repo_cmd = f"""
         else
         export REPO="{SSH_REPO}";
     fi &&
-    echo "git clone -b {GIT_BRANCH} --single-branch --depth 1 $REPO" &&
-    git clone -b {GIT_BRANCH} --single-branch --depth 1 $REPO &&
+    echo "git clone -b airflow_upgrade_testing --single-branch --depth 1 $REPO" &&
+    git clone -b airflow_upgrade_testing --single-branch --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
     cd analytics &&
     git checkout $GIT_COMMIT &&
