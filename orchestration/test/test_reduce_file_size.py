@@ -87,7 +87,7 @@ def test_reduce_manifest_file():
 
     assert "test_key" not in valid_keys
 
-    assert len(valid_keys) == 2 # expect only 2 sections in dict
+    assert len(valid_keys) == 2  # expect only 2 sections in dict
 
 
 def main():

@@ -63,6 +63,7 @@ if __name__ == "__main__":
                 save_json_file(reduced_json=reduced_json, target_file=file_name)
 
                 logging.info(f"manifest file {file_name} " f"reduced successfully.")
+
         snowflake_stage_load_copy_remove(
             file_name,
             f"{snowflake_database}.dbt.dbt_load",
