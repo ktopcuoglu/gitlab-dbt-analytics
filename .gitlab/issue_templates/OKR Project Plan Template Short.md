@@ -31,14 +31,14 @@ Design artifacts where developers can meet in the middle and develop designs and
 
 ## Deliverables 
 
-### Dashboards
+### Dashboard Development
 <!-- Develop preliminary dashboard design-->
 
 |MVC | Priority | Deliverable Name | Deliverable Description | Milestone |
 |-----|-----|-----|-----|-----|
 |     |     |     |     |     |
 
-### Data Model Design
+### Data Model Development
 <!-- Develop preliminary data model design-->
 
 |MVC | Priority | Deliverable Name | Deliverable Description | Milestone |
@@ -51,18 +51,17 @@ Design artifacts where developers can meet in the middle and develop designs and
 #### Handbook 
 <!-- This section should contain links to the handbook, the handbook MR, and the DRI. -->
 
-#### docs.gitlab.com 
-<!-- This section should contain links to the docs.gitlab.com, the associated MR, and the DRI. -->
-
 #### ReadMes 
 <!-- This section should contain links to the ReadMe, the associated MR, and the DRI. -->
 
 ## Roles and Responsibilities 
 
-| Group Role            | Person                | Role Description & Responsibilitiy | Deliverables | 
-|-----------------------|-----------------------|------------------------------------|--------------|
-| Project Lead          | `Name`                |                                    |              |
-| Visualization DRI     | `Name`                |                                    |              |
-| Sisense Admin DRI     | `Name`                |                                    |              |
-| dbt DRI               | `Name`                |                                    |              |
-| Business DRI          | `Name`                |                                    |              |
+| Group Role               | Person   | Role Description & Responsibility                  | Deliverables | 
+|--------------------------|----------|----------------------------------------------------|--------------|
+| Data Team DRI            | `Name`   | Overall results, project planning, technical lead  |              |
+| Data Team EDM DRI        | `Name`   | Review and approve architecture design in EDM      |              |
+| Data Model Developer     | `Name`   | Develop Trusted Data Models                        |              |
+| Dashboard Developer      | `Name`   | Develop Trusted Data Dashboards                    |              |
+| Data Pipeline Developer  | `Name`   | Extract new data sources towards Snowflake         |              |
+| Business DRI             | `Name`   | Provide Business Requirements and Target Outcome   |              |
+| Functional Data Analyst  | `Name`   | Testing, QA, Validation, Ownership of data product |              |
