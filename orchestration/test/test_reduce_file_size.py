@@ -89,6 +89,10 @@ def test_reduce_manifest_file():
 
     assert len(valid_keys) == 2  # expect only 2 sections in dict
 
+    assert True == isinstance(test_json_dict, dict)
+
+    assert True == isinstance(reduced_json, dict)
+
 
 def main():
     test_load_json_file_not_existing_file()
