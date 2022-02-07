@@ -14,7 +14,7 @@ WHERE IS_OBJECT(f.value) = FALSE
 -- error when listed items pops up. 
 -- more details in the issues:
 --   https://gitlab.com/gitlab-data/analytics/-/issues/10749
---   https://gitlab.com/gitlab-data/analytics/-/issues/11524
+--   https://gitlab.com/gitlab-data/analytics/-/issues/11524 
 -- This is a temporary solution and this hard-coded values should be removed.
 AND full_ping_name NOT IN ('groups_bugdb_active',
                            'groups_shimo_active',
