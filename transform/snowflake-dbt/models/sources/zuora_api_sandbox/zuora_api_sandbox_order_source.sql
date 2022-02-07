@@ -16,7 +16,7 @@ WITH source AS (
       defaultpaymentmethodid                AS default_payment_method_id,
 
       -- account_info
-      orderdate::TIMESTAMP_TZ               AS order_date,
+      orderdate::DATE               AS order_date,
       ordernumber                           AS order_number,
       description                           AS order_description,
       state                                 AS order_state,
@@ -25,10 +25,10 @@ WITH source AS (
       
       -- metadata
       createdbyid                           AS order_created_by_id,
-      createddate                           AS order_created_date,
+      createddate::DATE                           AS order_created_date,
       deleted                               AS is_deleted,
       updatedbyid                           AS update_by_id,
-      updateddate                           AS updated_date
+      updateddate::DATE                           AS updated_date
 
     FROM source
 
