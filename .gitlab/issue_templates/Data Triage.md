@@ -60,6 +60,9 @@ In addition to these tasks, the Data Engineer on triage should be focused on res
 
 * [ ] Clean up the dbt-test failure logs and put them into a table in the comments of this issue, use the below format as an example: 
 
+<details>
+<summary>instructions</summary>
+
 ``` 
 dbt-test errors: <Link to airflow log> 
 
@@ -89,6 +92,8 @@ Completed with x errors and x warnings:
      2. Removes extra date and nonsense strings
      3. Removes end of string
      4. Removes empty lines
+
+</details>
 
 ### Data Notification Templates
 
