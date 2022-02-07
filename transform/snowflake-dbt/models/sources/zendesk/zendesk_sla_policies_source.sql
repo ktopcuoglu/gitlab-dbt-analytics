@@ -20,8 +20,8 @@ WITH source AS (
     policy_metrics.value['priority']::VARCHAR        AS policy_metrics_priority,
     policy_metrics.value['target']::VARCHAR          AS policy_metrics_target
   FROM source,
-    LATERAL FLATTEN(INPUT => parse_json(filter['all']), outer => true) filter_all,
-    LATERAL FLATTEN(INPUT => parse_json(filter['any']), outer => true) filter_any,
+    LATERAL FLATTEN(INPUT => parse_json(filter__all), outer => true) filter_all,
+    LATERAL FLATTEN(INPUT => parse_json(filter__any), outer => true) filter_any,
     LATERAL FLATTEN(INPUT => parse_json(policy_metrics), outer => true) policy_metrics
 
 ), keyed AS (
