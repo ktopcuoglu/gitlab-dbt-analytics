@@ -42,8 +42,10 @@ if __name__ == "__main__":
     config_name = sys.argv[1]
     file_name = get_file_name(config_name)
     config_dict = env.copy()
+
     snowflake_database = config_dict["SNOWFLAKE_LOAD_DATABASE"].upper()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
     if os.path.exists(file_name):
         if config_name == "manifest":
             file_size_mb = (
