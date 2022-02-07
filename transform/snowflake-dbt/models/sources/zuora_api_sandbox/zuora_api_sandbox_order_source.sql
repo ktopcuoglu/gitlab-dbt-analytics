@@ -7,10 +7,9 @@ WITH source AS (
 
     SELECT
 
-      accountid AS account_id,
+      id                                    AS dim_order_id,
       
       -- keys
-      id                                    AS dim_order_id,
       parentaccountid                       AS parent_account_id,
       billtocontactid                       AS bill_to_contact_id,
       soldtocontactid                       AS sold_to_contact_id,
