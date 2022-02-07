@@ -7,7 +7,7 @@
 WITH licenses AS (
  
   SELECT *
-  FROM {{ ref('license_db_licenses') }}
+  FROM {{ ref('customers_db_licenses_source') }}
   WHERE license_md5 IS NOT NULL
     AND is_trial = False
     -- Remove internal test licenses
@@ -40,7 +40,7 @@ WITH licenses AS (
     MAX(usage_data.created_at)                                   AS max_usage_data_created_at
   FROM week_spine
     LEFT JOIN licenses
-      ON week_spine.week BETWEEN licenses.starts_at AND {{ coalesce_to_infinity("licenses.license_expires_at") }}
+      ON week_spine.week BETWEEN licenses.license_start_date AND {{ coalesce_to_infinity("licenses.license_expire_date") }}
     LEFT JOIN usage_data
       ON licenses.license_md5 = usage_data.license_md5
       AND week_spine.week = DATE_TRUNC('week', usage_data.created_at)

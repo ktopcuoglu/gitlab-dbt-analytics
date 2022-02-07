@@ -1,18 +1,16 @@
 {% docs pump_marketing_contact %}
 
-a copy of mart_marketing_contact for sending to Marketo for use in email campaigns
+A copy of mart_marketing_contact for sending to Marketo for use in email campaigns. New user cohorts should be added by creating a flag in mart_marketing_contact and then adding the flag to this pump_marketing_contact model.
+
+User Cohorts Included:
+
+PQL Users via is_pql = TRUE flag in mart_marketing_contact.
 
 {% enddocs %}
 
 {% docs pump_subscription_product_usage %}
 
 A copy of `subscription_product_usage_data` model for sending to Salesforce
-
-{% enddocs %}
-
-{% docs pump_marketing_premium_to_ultimate %}
-
-A subset of pump_marketing_contact, with all of the same columns, that supports the premium to ultimate email marketing campaign and is the proof of concept pump for the email marketing data pump.
 
 {% enddocs %}
 
