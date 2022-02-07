@@ -593,3 +593,22 @@ models:
           - unique:
               severity: warn
       - name: order_description
+      - name: order_created_date
+      - name: order_date
+      - name: order_number
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: order_state
+        tests:
+          - not_null:
+              severity: warn
+          - accepted_values:
+              values: ['Complete', 'Executing']
+      - name: order_status
+        tests:
+          - not_null:
+            severity: warn
+      - name: is_created_by_migration
