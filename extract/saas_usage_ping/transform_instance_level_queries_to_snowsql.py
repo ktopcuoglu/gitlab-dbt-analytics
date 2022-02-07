@@ -305,8 +305,6 @@ def keep_meta_data(json_file: dict) -> dict:
     return meta_data
 
 
-<<<<<<< HEAD
-=======
 def save_json_file(file_name: str, json_file: dict) -> None:
     """
     param file_name: str
