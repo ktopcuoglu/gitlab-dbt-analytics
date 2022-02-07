@@ -17,7 +17,18 @@
 
 ### References 
 
-Below is a list of quick links and information for ease of reference. 
+Below is a list of quick links and information for ease of reference.
+
+<details> <summary>Reference Code Snippet</summary>
+
+Insert Reference Code Snippet Here:
+
+```
+SELECT *
+FROM table
+```
+
+</details>
 
 ### Integration Artifacts
 
