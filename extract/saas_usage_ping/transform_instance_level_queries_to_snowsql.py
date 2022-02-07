@@ -14,7 +14,6 @@ from sqlparse.tokens import Whitespace
 
 import requests
 
-
 META_API_COLUMNS = [
     "recorded_at",
     "version",
@@ -338,20 +337,22 @@ def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
 
     return transformed_sql_query_dict
 
+
 if __name__ == "__main__":
     config_dict = env.copy()
+
     json_data = get_sql_query_map(
         private_token=config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"]
     )
 
     info("Processed sql queries")
     final_sql_query_dict = main(json_query_list=json_data)
-    info("Processed final sql queries")
 
+    final_meta_data = keep_meta_data(json_data)
+    info("Processed final sql queries")
 
     save_json_file(
         file_name=TRANSFORMED_INSTANCE_QUERIES_FILE, json_file=final_sql_query_dict
     )
 
     save_json_file(file_name=META_DATA_INSTANCE_QUERIES_FILE, json_file=final_meta_data)
-
