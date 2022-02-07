@@ -16,7 +16,7 @@ WITH source AS (
       defaultpaymentmethodid                AS default_payment_method_id,
 
       -- account_info
-      orderdate                             AS order_date,
+      orderdate::TIMESTAMP_TZ               AS order_date,
       ordernumber                           AS order_number,
       description                           AS order_description,
       state                                 AS order_state,

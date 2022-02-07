@@ -583,3 +583,13 @@ models:
       - name: renewal_term_period_type
       - name: renewal_setting
       - name: term_start_date
+  - name: dim_order_api_sandbox
+    columns:
+      - name: dim_order_id
+        description: Unique identifier of an order
+        tests:
+          - not_null:
+              severity: warn
+          - unique:
+              severity: warn
+      - name: order_description
