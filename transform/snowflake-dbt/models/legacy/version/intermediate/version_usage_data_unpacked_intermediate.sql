@@ -26,6 +26,32 @@ WITH usage_data AS (
 
     {% endif %}
     
+), pivoted AS (
+
+    SELECT 
+        id,
+        {{-
+            dbt_utils.pivot(
+                column='full_ping_name',
+                values=dbt_utils.get_column_values(table=ref ('version_usage_stats_list'), column='full_ping_name', default=['']),
+                agg='MAX',
+                then_value='IFF(ping_value = -1 ,NULL, ping_value)',
+                else_value='NULL',
+                quote_identifiers=false
+            )
+        -}}
+    FROM stats_used_unpacked
+    GROUP BY id
+
+), pivoted_v2 AS (
+
+    SELECT 
+        *        
+    FROM stats_used_unpacked
+        PIVOT (MAX(IFF(ping_value = -1 ,NULL, ping_value))
+            FOR full_ping_name IN ({{ '\'' + version_usage_stats_list|join('\',\n \'') + '\'' }}))
+            AS pioved_table (id, {{ '\n' + version_usage_stats_list|join(',\n') }})
+
 ), unpacked AS (
 
     SELECT
@@ -36,7 +62,7 @@ WITH usage_data AS (
 
     FROM usage_data
     LEFT JOIN stats_used_unpacked
-      ON usage_data .id = stats_used_unpacked.id
+      ON usage_data.id = stats_used_unpacked.id
 
 ), final AS (
 
