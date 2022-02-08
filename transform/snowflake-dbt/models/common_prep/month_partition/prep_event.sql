@@ -180,7 +180,8 @@
     ('prep_requirement', 'prep_requirement'),
     ('dim_project', 'dim_project'),
     ('prep_namespace', 'prep_namespace'),
-    ('prep_user', 'prep_user')
+    ('prep_user', 'prep_user'),
+    ('prep_plan', 'prep_gitlab_dotcom_plan')
 ]) }}
 
 , dast_jobs AS (
@@ -278,6 +279,7 @@
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id,
+      prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
       {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
@@ -320,6 +322,8 @@
     LEFT JOIN prep_user 
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
     {% endif %}
+    LEFT JOIN prep_plan
+      ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
     {% if not loop.last %}
