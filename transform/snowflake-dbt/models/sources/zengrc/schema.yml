@@ -32,3 +32,27 @@ models:
           tests:
             - not_null
             - unique
+
+    - name: zengrc_issue_source
+      description: '{{ doc("zengrc_issues_desc") }}'
+      columns: 
+        - name: issue_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_request_source
+      description: '{{ doc("zengrc_requests_desc") }}'
+      columns: 
+        - name: request_id
+          tests:
+            - not_null
+            - unique
+
+    - name: zengrc_risk_source
+      description: '{{ doc("zengrc_risks_desc") }}'
+      columns: 
+        - name: risk_id
+          tests:
+            - not_null
+            - unique

@@ -1,7 +1,3 @@
-{{ config(
-    tags=["people", "edcast"]
-) }}
-
 
 WITH source AS (
 

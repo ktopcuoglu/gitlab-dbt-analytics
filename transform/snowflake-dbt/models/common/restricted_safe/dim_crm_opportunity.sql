@@ -127,9 +127,11 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.sao_crm_opp_owner_stamped_name,
       sfdc_opportunity.sao_crm_account_owner_stamped_name,
       sfdc_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       sfdc_opportunity.sao_crm_opp_owner_geo_stamped,
       sfdc_opportunity.sao_crm_opp_owner_region_stamped,
       sfdc_opportunity.sao_crm_opp_owner_area_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
 
       -- ************************************
       -- channel reporting
@@ -151,7 +153,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-11-20",
-    updated_date="2021-12-08"
+    updated_date="2021-02-08"
 ) }}

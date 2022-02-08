@@ -67,5 +67,7 @@ WITH source AS (
 
 ) 
 
+
+
 SELECT * 
 FROM final

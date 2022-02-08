@@ -105,7 +105,6 @@
       monthly_metrics.projects_bamboo_active_all_time_event,
       monthly_metrics.projects_jira_active_all_time_event,
       monthly_metrics.projects_drone_ci_active_all_time_event,
-      monthly_metrics.jira_imports_28_days_event,
       monthly_metrics.projects_github_active_all_time_event,
       monthly_metrics.projects_jira_server_active_all_time_event,
       monthly_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -173,5 +172,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-05-26",
-    updated_date="2021-12-20"
+    updated_date="2021-12-23"
 ) }}

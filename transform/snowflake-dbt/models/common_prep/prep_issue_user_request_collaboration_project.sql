@@ -54,10 +54,10 @@ WITH gitlab_dotcom_projects AS (
 
     SELECT
       collaboration_projects.*,
-      gitlab_dotcom_project_routes.project_id AS collaboration_project_id,
+      gitlab_dotcom_project_routes.project_id                              AS collaboration_project_id,
       gitlab_issues.issue_id,
       gitlab_issues.issue_description,
-      gitlab_issues.updated_at
+      IFNULL(gitlab_issues.issue_last_edited_at, gitlab_issues.created_at) AS updated_at
     FROM collaboration_projects
     LEFT JOIN gitlab_dotcom_project_routes
       ON gitlab_dotcom_project_routes.complete_path = collaboration_projects.gitlab_customer_success_project
@@ -195,6 +195,6 @@ WITH gitlab_dotcom_projects AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-11-16",
+    updated_date="2022-01-10"
 ) }}
 

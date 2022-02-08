@@ -63,7 +63,6 @@
       projects_bamboo_active_all_time_event,
       projects_jira_active_all_time_event,
       projects_drone_ci_active_all_time_event,
-      jira_imports_28_days_event,
       projects_github_active_all_time_event,
       projects_jira_server_active_all_time_event,
       projects_jira_dvcs_cloud_active_all_time_event,

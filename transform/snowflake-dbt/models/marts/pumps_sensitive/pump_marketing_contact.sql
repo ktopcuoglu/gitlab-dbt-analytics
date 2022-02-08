@@ -59,9 +59,13 @@ SELECT
   zuora_active_state,
   zuora_contact_id,
   zuora_created_date,
+  pql_list_stages,
+  pql_nbr_stages,
+  pql_nbr_namespace_users,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed
 
 FROM {{ ref('mart_marketing_contact' )}}
 WHERE rlike(email_address, '^[A-Z0-9.+_%-]+@[A-Z0-9.-]+\\.[A-Z]+$','i')
+  AND is_pql = TRUE

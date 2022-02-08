@@ -7,6 +7,10 @@ sheets:
     owner: '@nicolegalang'
     tabs:
       - latitude_and_longitude
+  - name: credit_card_adoption_rate_by_country
+    owner: '@nraisinghani'
+    tabs:
+      - credit_card_adoption_rate     
   - name: crm_accounts_pricing_eoa
     owner: '@jeanpeguero'
     tabs:
@@ -40,19 +44,17 @@ sheets:
     owner: '@Jean Peguero'
     tabs:
       - pricing_list
-  - name: product_usage_stages_monthly
-    owner: '@Kevin Dietz'
-    tabs: 
-      - product_usage_stages_monthly
   - name: ptc_scores
-    owner: '@Klaudia Magda'
+    owner: '@kmagda'
     tabs:
       - ptc_scores_20211221
+      - ptc_scores_202202
   - name: pte_scores
-    owner: '@Kevin Dietz'
+    owner: '@kdietz'
     tabs:
       - pte_scores_20211013
       - pte_scores_20211101
+      - pte_scores_202202
   - name: q4fy2021_system_usability_scale_results
     owner: '@rbacovic'
     tabs:
@@ -69,3 +71,11 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - us_cities_latitude_longitude
+  - name: ptc_scores_20211221_updated
+    owner: '@Klaudia Magda'
+    tabs:
+      - ptc_scores_20211221_updated
+  - name: ptc_scores_20211209
+    owner: '@kmagda1'
+    tabs:
+      - ptc_scores_20211209     
