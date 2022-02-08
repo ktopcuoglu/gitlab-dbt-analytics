@@ -288,6 +288,7 @@ WITH date_details AS (
       snapshot_date.fiscal_quarter_name_fy                        AS snapshot_fiscal_quarter_name,
       snapshot_date.first_day_of_fiscal_quarter                   AS snapshot_fiscal_quarter_date,
       snapshot_date.day_of_fiscal_quarter_normalised              AS snapshot_day_of_fiscal_quarter_normalised,
+      snapshot_date.day_of_fiscal_year_normalised                 AS snapshot_day_of_fiscal_year_normalised,
       
       close_date_detail.first_day_of_month                        AS close_date_month,
       close_date_detail.fiscal_year                               AS close_fiscal_year,

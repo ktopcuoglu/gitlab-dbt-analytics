@@ -658,7 +658,12 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       -------------------
       --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
-      COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA')         AS sales_team_rd_asm_level,
+      CASE 
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Large'
+          AND sfdc_opportunity_xf.opportunity_owner_user_geo = 'EMEA'
+            THEN 'Large_EMEA'
+        ELSE COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA') 
+      END                                                                           AS sales_team_rd_asm_level,
        -------------------
       COALESCE(sfdc_opportunity_xf.opportunity_owner_user_segment ,'NA')            AS sales_team_cro_level,
       
