@@ -58,6 +58,8 @@ WITH source AS (
       billingcountry                                AS billing_country,
       billingpostalcode                             AS billing_postal_code,
       sdr_target_account__c::BOOLEAN                AS is_sdr_target_account,
+      lam__c                                        AS lam,
+      lam_dev_count__c                              AS lam_dev_count,
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
       partners_signed_contract_date__c              AS partners_signed_contract_date,

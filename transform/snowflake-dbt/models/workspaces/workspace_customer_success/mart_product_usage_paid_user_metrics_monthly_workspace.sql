@@ -17,6 +17,7 @@
 , most_recent_subscription_version AS (
     SELECT
       subscription_name,
+      subscription_status,
       subscription_start_date,
       subscription_end_date,
       ROW_NUMBER() OVER(
@@ -51,6 +52,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
+      most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
       subscriptions.term_start_date,
       subscriptions.term_end_date,
       most_recent_subscription_version.subscription_start_date,
@@ -185,6 +187,7 @@
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
+      most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
       subscriptions.term_start_date,
       subscriptions.term_end_date,
       most_recent_subscription_version.subscription_start_date,
@@ -299,8 +302,8 @@
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
-      LEFT JOIN subscriptions
-        ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
+    LEFT JOIN subscriptions
+      ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
       LEFT JOIN most_recent_subscription_version
         ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
 
@@ -321,5 +324,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-01-14"
+    updated_date="2022-02-04"
 ) }}

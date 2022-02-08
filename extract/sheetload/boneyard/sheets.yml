@@ -7,6 +7,10 @@ sheets:
     owner: '@nicolegalang'
     tabs:
       - latitude_and_longitude
+  - name: credit_card_adoption_rate_by_country
+    owner: '@nraisinghani'
+    tabs:
+      - credit_card_adoption_rate     
   - name: crm_accounts_pricing_eoa
     owner: '@jeanpeguero'
     tabs:
@@ -71,3 +75,7 @@ sheets:
     owner: '@Klaudia Magda'
     tabs:
       - ptc_scores_20211221_updated
+  - name: ptc_scores_20211209
+    owner: '@kmagda1'
+    tabs:
+      - ptc_scores_20211209     

@@ -884,7 +884,6 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
-            - transforming_4xl_10480
             - datasiren
         member_of:
             - covid19
@@ -3420,6 +3419,17 @@ roles:
         warehouses:
             - analyst_xs
 
+    - mhanks:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - michellecooper:
         member_of: []
         warehouses: []
@@ -4804,6 +4814,11 @@ users:
         member_of:
             - mfleisher
 
+    - mhanks:
+        can_login: yes
+        member_of:
+            - mhanks
+
     - michellecooper:
         can_login: no
         member_of: []
@@ -5186,9 +5201,6 @@ warehouses:
         size: x-small
 
     - transforming_4xl:
-        size: "4-x-large"
-
-    - transforming_4xl_10480: #temp warehouse for issue 10480
         size: "4-x-large"
 
     - usage_ping:

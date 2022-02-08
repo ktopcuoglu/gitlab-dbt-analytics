@@ -102,7 +102,6 @@ WITH map_merged_crm_account AS (
       ON revenue_contract_line.subscription_name = true_up_lines_dates.subscription_name
         AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
     WHERE revenue_contract_line.revenue_contract_line_attribute_16 LIKE '%True-up ARR Allocation%'
-      AND recognized_amount > 0
   
 ), mje_summed AS (
   
@@ -134,6 +133,7 @@ WITH map_merged_crm_account AS (
     LEFT JOIN mje_summed mje
       ON lns.revenue_contract_line_id = mje.revenue_contract_line_id
     WHERE adjustment IS NOT NULL
+      AND ABS(ROUND(adjustment,5)) > 0
     {{ dbt_utils.group_by(n=7) }}
 
 ), non_manual_charges AS (
@@ -388,5 +388,5 @@ WITH map_merged_crm_account AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2021-04-28",
-    updated_date="2021-11-15"
+    updated_date="2022-02-03"
 ) }}

@@ -30,6 +30,8 @@
       parent_id                                                     AS parent_id,
       event_created_at                                              AS event_created_at,
       plan_id_at_event_date                                         AS plan_id_at_event_date,
+      plan_name_at_event_date                                       AS plan_name_at_event_date,
+      plan_was_paid_at_event_date                                   AS plan_was_paid_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
             THEN xmau_metrics.stage_name
@@ -41,8 +43,8 @@
       gmau                                                          AS gmau,
       is_umau                                                       AS umau
     FROM usage_data_events
-    INNER JOIN xmau_metrics
-      ON usage_data_events.event_name = xmau_metrics.event_name
+    LEFT JOIN xmau_metrics
+      ON usage_data_events.event_name = xmau_metrics.events_to_include
 
 ), deduped_namespace_bdg AS (
 
@@ -87,30 +89,20 @@
     SELECT
       event_primary_key                       AS event_id,
       event_name                              AS event_name,
-      1                                       AS event_count,
-      TO_NUMBER(NULL)                         AS dim_usage_ping_id,
-      NULL                                    AS metrics_path,
       dim_product_tier_id                     AS dim_product_tier_id,
       dim_subscription_id                     AS dim_subscription_id,
-      TO_NUMBER(NULL)                         AS dim_location_country_id,
       date_id                                 AS dim_event_date_id,
-      NULL                                    AS dim_instance_id,
       dim_crm_account_id                      AS dim_crm_account_id,
       dim_billing_account_id                  AS dim_billing_account_id,
-      NULL                                    AS dim_crm_opportunity_id,
-      NULL                                    AS dim_subscription_id_original,
       dim_namespace_id                        AS dim_namespace_id,
-      ultimate_parent_namespace_id            AS ultimate_parent_namespace_id,
-      NULL                                    AS license_subscription_id,
       user_id                                 AS user_id,
       stage_name                              AS stage_name,
       section_name                            AS section_name,
       group_name                              AS group_name,
-      event_created_at                        AS ping_created_at,
-      NULL                                    AS edition,
-      TO_NUMBER(NULL)                         AS major_version,
-      TO_NUMBER(NULL)                         AS minor_version,
-      NULL                                    AS usage_ping_delivery_type,
+      event_created_at                        AS event_created_at,
+      plan_id_at_event_date                   AS plan_id_at_event_date,
+      plan_name_at_event_date                 AS plan_name_at_event_date,
+      plan_was_paid_at_event_date             AS plan_was_paid_at_event_date,
       'GITLAB_DOTCOM'                         AS source
     FROM final
     LEFT JOIN dim_date
@@ -121,7 +113,6 @@
     SELECT *
     FROM gitlab_dotcom_fact
 
-
 )
 
 {{ dbt_audit(
@@ -129,5 +120,5 @@
     created_by="@icooper-acp",
     updated_by="@icooper-acp",
     created_date="2022-01-20",
-    updated_date="2022-01-20"
+    updated_date="2022-01-24"
 ) }}
