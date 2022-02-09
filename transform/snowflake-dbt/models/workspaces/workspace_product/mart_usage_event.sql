@@ -10,30 +10,26 @@
     ])
 }}
 
-, fact_table_source AS (
-    SELECT *
-    FROM fct_event_usage_metrics
-
-), fact_with_date AS (
+, fact_with_date AS (
 
     SELECT
-      fact.event_id,
-      CAST(fact.event_created_at AS DATE)                          AS event_date,
-      fact.user_id,
-      fact.event_name,
-      fact.dim_product_tier_id,
-      fact.dim_subscription_id,
-      fact.dim_crm_account_id,
-      fact.dim_billing_account_id,
-      fact.stage_name,
-      fact.section_name,
-      fact.group_name,
-      fact.source,
-      fact.plan_id_at_event_date,
-      fact.plan_name_at_event_date,
-      fact.plan_was_paid_at_event_date,
-      fact.dim_namespace_id
-    FROM fact_table_source AS fact
+      event_id,
+      CAST(event_created_at AS DATE)                               AS event_date,
+      user_id,
+      event_name,
+      dim_product_tier_id,
+      dim_subscription_id,
+      dim_crm_account_id,
+      dim_billing_account_id,
+      stage_name,
+      section_name,
+      group_name,
+      source,
+      plan_id_at_event_date,
+      plan_name_at_event_date,
+      plan_was_paid_at_event_date,
+      dim_namespace_id
+    FROM fct_event_usage_metrics
 
 ), fact_with_namespace AS (
 
@@ -60,12 +56,6 @@
     SELECT *
     FROM fact_with_xmau_flags
 
-), results AS (
-
-  SELECT
-    *
-  FROM fact_with_xmau_flags
-
 )
 
 {{ dbt_audit(
@@ -73,5 +63,5 @@
     created_by="@dihle",
     updated_by="@dihle",
     created_date="2022-01-28",
-    updated_date="2022-02-07"
+    updated_date="2022-02-09"
 ) }}
