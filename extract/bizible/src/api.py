@@ -50,7 +50,7 @@ class BizibleSnowFlakeExtractor:
 
             snowflake_query_max_date = f"""
                 SELECT 
-                    max('_modified_date'] as last_modified_date
+                    max('_modified_date') as last_modified_date
                 FROM "BIZIBLE_WAREHOUSE_IMPORT_RAW"."BIZIBLE".{table_name} 
             """
             df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
@@ -81,7 +81,7 @@ class BizibleSnowFlakeExtractor:
             logging.info(f"Running {table_name} query")
             df = query_dataframe(self.bizible_engine, bizible_queries[table_name])
             logging.info(f"Creating {file_name}")
-            df.to_json(file_name, orient="records")
+            df.to_csv(file_name, index=False, sep="|")
 
             logging.info("Writing to db")
             snowflake_stage_load_copy_remove(
@@ -89,4 +89,6 @@ class BizibleSnowFlakeExtractor:
                 f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.BIZIBLE_LOAD",
                 f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.{table_name}",
                 self.snowflake_engine,
+                'csv',
+                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None"
             )
