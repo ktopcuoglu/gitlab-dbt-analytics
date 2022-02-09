@@ -82,7 +82,7 @@ class GoogleSheetsClient:
 
     def wait_exponential_backoff(self, n):
         # Start for waiting at least
-        wait_sec = (2 ** n) + (random.randint(0, 1000) / 1000)
+        wait_sec = (2**n) + (random.randint(0, 1000) / 1000)
         info(
             f"Received API rate limit error. Wait for {wait_sec} seconds before trying again."
         )
