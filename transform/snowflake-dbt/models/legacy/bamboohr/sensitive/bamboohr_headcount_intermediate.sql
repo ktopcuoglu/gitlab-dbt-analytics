@@ -131,8 +131,8 @@ WITH dates AS (
       IFF(dates.end_date = date_actual 
         AND employees.department_modified != 'Sales Development', 1,0)              AS headcount_end_excluding_sdr,
       IFF(is_hire_date = True, 1,0)                                                 AS hire_count,
-      IFF(termination_type = 'Voluntary',1,0)                                       AS voluntary_separation,
-      IFF(termination_type = 'Involuntary',1,0)                                     AS involuntary_separation,
+      IFF(termination_type = 'Resignation (Voluntary)',1,0)                         AS voluntary_separation,
+      IFF(termination_type = 'Termination (Involuntary)',1,0)                       AS involuntary_separation,
       voluntary_separation + involuntary_separation                                 AS separation_count,
 
       IFF(dates.start_date = date_actual 

@@ -993,6 +993,14 @@ models:
           - unique
         tags: ["tdf", "common"]
 
+  - name: dim_usage_ping_metric
+    description: '{{ doc("dim_usage_ping_metric") }}'
+    columns:
+      - name: metrics_path
+        tests:
+          - not_null
+          -  unique
+
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
     columns:

@@ -195,17 +195,6 @@ models:
       - name: unique_key
         tests:
           - unique 
-  
-  - name: bamboohr_locality
-    description: This shows the locality for employees starting 2020.03.24 (the 1st date we started capturing from bamboohr) on a daily basis.
-    columns: 
-        - name: employee_number
-        - name: employee_id
-        - name: first_name
-        - name: last_name
-        - name: hire_date
-        - name: locality
-        - name: updated_at
 
   - name: bamboohr_work_email
     description: This shows employee work emails as applicable to the valid_from_date and valid_to_date
