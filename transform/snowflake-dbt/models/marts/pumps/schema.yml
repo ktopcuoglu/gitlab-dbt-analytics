@@ -77,13 +77,13 @@ models:
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
-        description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: merge_requests_28_days_user
-        description: Monthly count of unique users making merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests))
+        description: '{{ doc("merge_requests_28_days_user_desc") }}'
       - name: projects_with_repositories_enabled_28_days_user
-        description: Monthly count of unique users that created projects with repositories enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateprojects_with_repositories_enabled))
+        description: '{{ doc("projects_with_repositories_enabled_28_days_user_desc") }}'
       - name: commit_comment_all_time_event
-        description: All-time count commit comments ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countscommit_comment))
+        description: '{{ doc("commit_comment_all_time_event_desc") }}'
       - name: source_code_pushes_all_time_event
         description: All-time count of source code pushes ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssource_code_pushes))
       - name: ci_pipelines_28_days_user
