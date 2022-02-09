@@ -89,6 +89,6 @@ class BizibleSnowFlakeExtractor:
                 f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.BIZIBLE_LOAD",
                 f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.{table_name}",
                 self.snowflake_engine,
-                'csv',
-                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None"
+                "csv",
+                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
