@@ -28,6 +28,11 @@
       user_id                                                       AS user_id,
       parent_type                                                   AS parent_type,
       parent_id                                                     AS parent_id,
+      CASE
+        WHEN usage_data_events.parent_type = 'project'
+          THEN usage_data_events.dim_project_id
+        ELSE usage_data_events.namespace_id
+      END                                                           AS parent_id,
       event_created_at                                              AS event_created_at,
       plan_id_at_event_date                                         AS plan_id_at_event_date,
       plan_name_at_event_date                                       AS plan_name_at_event_date,
@@ -51,12 +56,9 @@
   SELECT
     dim_subscription_id                   AS dim_subscription_id,
     order_id                              AS order_id,
-    ultimate_parent_namespace_id          AS ultimate_parent_namespace_id,
     dim_crm_account_id                    AS dim_crm_account_id,
     dim_billing_account_id                AS dim_billing_account_id,
-    product_tier_name_subscription        AS product_tier_name_subscription,
-    dim_namespace_id                      AS dim_namespace_id,
-    is_subscription_active                AS is_subscription_active
+    dim_namespace_id                      AS dim_namespace_id
     FROM namespace_order_subscription
     WHERE product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
           AND is_subscription_active = true
@@ -94,7 +96,7 @@
       date_id                                 AS dim_event_date_id,
       dim_crm_account_id                      AS dim_crm_account_id,
       dim_billing_account_id                  AS dim_billing_account_id,
-      dim_namespace_id                        AS dim_namespace_id,
+      namespace_id                            AS dim_namespace_id,
       user_id                                 AS user_id,
       stage_name                              AS stage_name,
       section_name                            AS section_name,
