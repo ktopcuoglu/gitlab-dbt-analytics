@@ -85,17 +85,17 @@ models:
       - name: commit_comment_all_time_event
         description: '{{ doc("commit_comment_all_time_event_desc") }}'
       - name: source_code_pushes_all_time_event
-        description: All-time count of source code pushes ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssource_code_pushes))
+        description: '{{ doc("source_code_pushes_all_time_event_desc") }}'
       - name: ci_pipelines_28_days_user
-        description: Monthly count of unique users triggering pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_pipelines))
+        description: '{{ doc("ci_pipelines_28_days_user_desc") }}'
       - name: ci_internal_pipelines_28_days_user
-        description: Monthly count of unique users triggering pipelines in GitLab repositories ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_internal_pipelines))
+        description: '{{ doc("ci_internal_pipelines_28_days_user_desc") }}'
       - name: ci_builds_28_days_user
-        description: Monthly count of unique users running CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_builds))
+        description: '{{ doc("ci_builds_28_days_user_desc") }}'
       - name: ci_builds_all_time_user
-        description: All-time count of unique users running CI builds ([source]()https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_builds)
+        description: '{{ doc("ci_builds_all_time_user_desc") }}'
       - name: ci_builds_all_time_event
-        description: All-time count of CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_builds))
+        description: '{{ doc("ci_builds_all_time_event_desc") }}'
       - name: ci_runners_all_time_event
         description: All-time count of CI Runners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_runners))
       - name: auto_devops_enabled_all_time_event

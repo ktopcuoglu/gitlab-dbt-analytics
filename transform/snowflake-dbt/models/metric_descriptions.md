@@ -17,3 +17,27 @@ Count of users creating projects that have a matching Git repository, result of 
 {% docs commit_comment_all_time_event_desc %}
 Count of total unique commit comments. Does not include MR diff comments.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216182004_commit_comment.yml)
 {% enddocs %}
+
+{% docs source_code_pushes_all_time_event_desc %}
+Count of total Git push operations.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216182006_source_code_pushes.yml)
+{% enddocs %}
+
+{% docs ci_pipelines_28_days_user_desc %}
+Distinct users triggering pipelines in a month.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175554_ci_pipelines.yml)
+{% enddocs %}
+
+{% docs ci_internal_pipelines_28_days_user_desc %}
+Total pipelines in GitLab repositories in a month.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175546_ci_internal_pipelines.yml)
+{% enddocs %}
+
+{% docs ci_builds_28_days_user_desc %}
+Unique monthly builds in project.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175542_ci_builds.yml)
+{% enddocs %}
+
+{% docs ci_builds_all_time_user_desc %}
+Unique count of builds in project.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216175525_ci_builds.yml)
+{% enddocs %}
+
+{% docs ci_builds_all_time_event_desc %}
+Unique builds in project.[link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216175510_ci_builds.yml)
+{% enddocs %}
