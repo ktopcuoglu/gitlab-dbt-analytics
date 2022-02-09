@@ -1,14 +1,217 @@
-WITH marketing_contact AS (
+{{ simple_cte ([
+  ('marketing_contact', 'dim_marketing_contact'),
+  ('marketing_contact_order', 'bdg_marketing_contact_order'),
+  ('dim_namespace', 'dim_namespace'),
+  ('gitlab_dotcom_namespaces_source', 'gitlab_dotcom_namespaces_source'),
+  ('gitlab_dotcom_users_source', 'gitlab_dotcom_users_source'),
+  ('gitlab_dotcom_members_source', 'gitlab_dotcom_members_source'),
+  ('gitlab_dotcom_memberships', 'gitlab_dotcom_memberships'),
+  ('customers_db_charges_xf', 'customers_db_charges_xf'),
+  ('customers_db_trials', 'customers_db_trials'),
+  ('customers_db_leads', 'customers_db_leads_source'),
+  ('gitlab_dotcom_daily_usage_data_events', 'gitlab_dotcom_daily_usage_data_events'),
+  ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics')
+]) }}
 
-    SELECT * 
-    FROM {{ref('dim_marketing_contact')}}
+-------------------------- Start of PQL logic: --------------------------
 
-), marketing_contact_order AS (
+, namespaces AS (
   
-    SELECT * 
-    FROM {{ref('bdg_marketing_contact_order')}}
+    SELECT
+      gitlab_dotcom_users_source.email,
+      dim_namespace.dim_namespace_id,
+      dim_namespace.namespace_name,
+      dim_namespace.created_at              AS namespace_created_at,
+      dim_namespace.created_at::DATE        AS namespace_created_at_date,
+      dim_namespace.gitlab_plan_title       AS plan_title,
+      dim_namespace.creator_id,
+      dim_namespace.current_member_count    AS member_count
+    FROM dim_namespace
+    LEFT JOIN gitlab_dotcom_users_source
+      ON gitlab_dotcom_users_source.user_id = dim_namespace.creator_id
+    WHERE dim_namespace.namespace_is_internal = FALSE
+      AND LOWER(gitlab_dotcom_users_source.state) = 'active'
+      AND LOWER(dim_namespace.namespace_type) = 'group'
+      AND dim_namespace.ultimate_parent_namespace_id = dim_namespace.dim_namespace_id 
+      AND date(dim_namespace.created_at) >= '2021-01-27'::DATE
+  
+), flattened_members AS (
 
-), subscription_aggregate AS (
+    SELECT --flattening members table to 1 record per member_id
+      members.user_id,
+      members.source_id,
+      members.invite_created_at,
+      MIN(members.invite_accepted_at) AS invite_accepted_at
+    FROM gitlab_dotcom_members_source members
+    INNER JOIN namespaces --limit to just namespaces we care about
+      ON members.source_id = namespaces.dim_namespace_id --same as namespace_id for group namespaces
+    WHERE LOWER(members.member_source_type) = 'namespace' --only looking at namespace invites
+      AND members.invite_created_at >= namespaces.namespace_created_at --invite created after namespace created
+      AND IFNULL(members.invite_accepted_at, CURRENT_TIMESTAMP) >= members.invite_created_at --invite accepted after invite created (removes weird edge cases with imported projects, etc)
+    {{ dbt_utils.group_by(3) }}
+
+), invite_status AS (
+
+    SELECT --pull in relevant namespace data, invite status, etc
+      namespaces.dim_namespace_id,
+      members.user_id,
+      IFF(memberships.user_id IS NOT NULL, TRUE, FALSE) AS invite_was_successful --flag whether the user actually joined the namespace
+    FROM flattened_members members
+    JOIN namespaces
+      ON members.source_id = namespaces.dim_namespace_id --same as namespace_id for group namespaces
+      AND (invite_accepted_at IS NULL OR (TIMESTAMPDIFF(minute,invite_accepted_at,namespace_created_at) NOT IN (0,1,2))) = TRUE -- this blocks namespaces created within two minutes of the namespace creator accepting their invite
+    LEFT JOIN gitlab_dotcom_memberships memberships --record added once invite is accepted/user has access
+      ON members.user_id = memberships.user_id
+      AND members.source_id = memberships.membership_source_id
+      AND memberships.is_billable = TRUE
+    WHERE members.user_id != namespaces.creator_id --not an "invite" if user created namespace
+
+), namespaces_with_user_count AS (
+
+    SELECT
+      dim_namespace_id,
+      COUNT(DISTINCT user_id) AS current_member_count
+    FROM invite_status
+    WHERE invite_was_successful = TRUE
+    GROUP BY 1
+
+), subscriptions AS (
+  
+    SELECT 
+      charges.current_gitlab_namespace_id::INT                      AS namespace_id, 
+      MIN(charges.subscription_start_date)                          AS min_subscription_start_date
+    FROM customers_db_charges_xf charges
+    INNER JOIN namespaces 
+      ON charges.current_gitlab_namespace_id = namespaces.dim_namespace_id
+    WHERE charges.current_gitlab_namespace_id IS NOT NULL
+      AND charges.product_category IN ('SaaS - Ultimate','SaaS - Premium') -- changing to product category field, used by the charges table
+    GROUP BY 1
+  
+), latest_trial_by_user AS (
+  
+    SELECT *
+    FROM customers_db_trials
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY gitlab_user_id ORDER BY trial_start_date DESC) = 1
+
+), pqls AS (
+  
+    SELECT DISTINCT
+      leads.product_interaction,
+      leads.user_id,
+      users.email,
+      leads.namespace_id           AS dim_namespace_id,
+      dim_namespace.namespace_name,
+      leads.trial_start_date::DATE AS trial_start_date,
+      leads.created_at             AS pql_event_created_at
+    FROM customers_db_leads leads
+    LEFT JOIN gitlab_dotcom_users_source AS users
+      ON leads.user_id = users.user_id
+    LEFT JOIN dim_namespace
+      ON dim_namespace.dim_namespace_id = leads.namespace_id
+    WHERE LOWER(leads.product_interaction) = 'hand raise pql'
+  
+    UNION ALL
+  
+    SELECT DISTINCT 
+      leads.product_interaction,
+      leads.user_id,
+      users.email,
+      latest_trial_by_user.gitlab_namespace_id    AS dim_namespace_id,
+      dim_namespace.namespace_name,
+      latest_trial_by_user.trial_start_date::DATE AS trial_start_date,
+      leads.created_at                            AS pql_event_created_at
+    FROM customers_db_leads AS leads
+    LEFT JOIN gitlab_dotcom_users_source AS users
+      ON leads.user_id = users.user_id
+    LEFT JOIN latest_trial_by_user
+      ON latest_trial_by_user.gitlab_user_id = leads.user_id
+    LEFT JOIN dim_namespace
+      ON dim_namespace.dim_namespace_id = leads.namespace_id
+    WHERE LOWER(leads.product_interaction) = 'saas trial'
+      AND leads.is_for_business_use = 'True'
+
+), stages_adopted AS (
+  
+    SELECT 
+      namespaces.dim_namespace_id,
+      namespaces.namespace_name,
+      namespaces.email,
+      namespaces.creator_id,
+      namespaces.member_count,
+      'SaaS Trial or Free'                       AS product_interaction,
+      subscriptions.min_subscription_start_date,
+      ARRAYAGG(DISTINCT events.stage_name)       AS list_of_stages,
+      COUNT(DISTINCT events.stage_name)          AS active_stage_count
+    FROM gitlab_dotcom_daily_usage_data_events   AS events
+    INNER JOIN namespaces 
+      ON namespaces.dim_namespace_id = events.namespace_id 
+    LEFT JOIN gitlab_dotcom_xmau_metrics AS xmau 
+      ON xmau.events_to_include = events.event_name
+    LEFT JOIN subscriptions 
+      ON subscriptions.namespace_id = namespaces.dim_namespace_id
+    WHERE days_since_namespace_creation BETWEEN 0 AND 365
+      AND events.plan_name_at_event_date IN ('trial','free', 'ultimate_trial') --Added in to only use events from a free or trial namespace (which filters based on the selection chose for the `free_or_trial` filter
+      AND xmau.smau = TRUE
+      AND events.event_date BETWEEN namespaces.namespace_created_at_date AND IFNULL(subscriptions.min_subscription_start_date,CURRENT_DATE)
+    {{ dbt_utils.group_by(7) }}
+  
+), pqls_with_product_information AS (
+
+    SELECT
+      pqls.email,
+      pqls.product_interaction                                             AS pql_product_interaction,
+      COALESCE(pqls.dim_namespace_id,stages_adopted.dim_namespace_id)::INT AS pql_namespace_id,
+      COALESCE(pqls.namespace_name,stages_adopted.namespace_name)          AS pql_namespace_name_masked,
+      pqls.user_id,
+      pqls.trial_start_date                                                AS pql_trial_start_date,
+      stages_adopted.min_subscription_start_date                           AS pql_min_subscription_start_date,
+      stages_adopted.list_of_stages                                        AS pql_list_stages,
+      stages_adopted.active_stage_count                                    AS pql_nbr_stages,
+      IFNULL(namespaces_with_user_count.current_member_count, 0) + 1       AS pql_nbr_namespace_users,
+      pqls.pql_event_created_at
+    FROM pqls
+    LEFT JOIN stages_adopted 
+      ON pqls.dim_namespace_id = stages_adopted.dim_namespace_id
+    LEFT JOIN namespaces_with_user_count
+      ON namespaces_with_user_count.dim_namespace_id = pqls.dim_namespace_id
+    WHERE LOWER(pqls.product_interaction) = 'saas trial'
+      AND IFNULL(stages_adopted.min_subscription_start_date,CURRENT_DATE) >= pqls.trial_start_date
+
+    UNION ALL
+
+    SELECT 
+      pqls.email,
+      pqls.product_interaction                                             AS pql_product_interaction,
+      COALESCE(pqls.dim_namespace_id,stages_adopted.dim_namespace_id)::INT AS pql_namespace_id,
+      COALESCE(pqls.namespace_name,stages_adopted.namespace_name)          AS pql_namespace_name_masked,
+      pqls.user_id,
+      pqls.trial_start_date                                                AS pql_trial_start_date,
+      stages_adopted.min_subscription_start_date                           AS pql_min_subscription_start_date,
+      stages_adopted.list_of_stages                                        AS pql_list_stages,
+      stages_adopted.active_stage_count                                    AS pql_nbr_stages,
+      IFNULL(namespaces_with_user_count.current_member_count, 0) + 1       AS pql_nbr_namespace_users,
+      pqls.pql_event_created_at
+    FROM pqls
+    LEFT JOIN stages_adopted
+      ON pqls.dim_namespace_id = stages_adopted.dim_namespace_id
+    LEFT JOIN namespaces_with_user_count
+      ON namespaces_with_user_count.dim_namespace_id = pqls.dim_namespace_id
+    WHERE LOWER(pqls.product_interaction) = 'hand raise pql'
+
+), latest_pql AS (
+
+    SELECT
+      pqls_with_product_information.*,
+      gitlab_dotcom_namespaces_source.namespace_name                        AS pql_namespace_name
+    FROM pqls_with_product_information
+    LEFT JOIN gitlab_dotcom_namespaces_source
+      ON gitlab_dotcom_namespaces_source.namespace_id = pqls_with_product_information.pql_namespace_id
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY email ORDER BY pql_event_created_at DESC) = 1
+
+)
+-------------------------- End of PQL logic --------------------------
+
+, subscription_aggregate AS (
 
     SELECT 
       dim_marketing_contact_id,
@@ -509,6 +712,17 @@ WITH marketing_contact AS (
       marketing_contact.customer_db_customer_id,
       marketing_contact.customer_db_created_date,
       marketing_contact.customer_db_confirmed_date,
+      IFF(latest_pql.email IS NOT NULL, TRUE, FALSE) AS is_pql,
+      latest_pql.pql_namespace_id,
+      latest_pql.pql_namespace_name,
+      latest_pql.pql_namespace_name_masked,
+      latest_pql.pql_product_interaction,
+      latest_pql.pql_list_stages,
+      latest_pql.pql_nbr_stages,
+      latest_pql.pql_nbr_namespace_users,
+      latest_pql.pql_trial_start_date,
+      latest_pql.pql_min_subscription_start_date,
+      latest_pql.pql_event_created_at,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
@@ -566,6 +780,8 @@ WITH marketing_contact AS (
       ON paid_subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN usage_metrics
       ON usage_metrics.dim_marketing_contact_id = prep.dim_marketing_contact_id
+    LEFT JOIN latest_pql
+      ON latest_pql.email = marketing_contact.email_address
 
 )
 
@@ -632,6 +848,9 @@ WITH marketing_contact AS (
       'zuora_contact_id',
       'zuora_created_date',
       'zuora_active_state',
+      'pql_list_stages',
+      'pql_nbr_stages',
+      'pql_nbr_namespace_users',
       'wip_is_valid_email_address',
       'wip_invalid_email_address_reason',
       'smau_manage_analytics_total_unique_counts_monthly',
@@ -679,9 +898,9 @@ WITH marketing_contact AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-02-09",
-    updated_date="2021-10-14"
+    updated_date="2022-01-21"
 ) }}
 
 

@@ -14,7 +14,6 @@ WITH source AS (
       trial_start_date::TIMESTAMP     AS trial_start_date,
       namespace_id::NUMBER            AS namespace_id,
       user_id::NUMBER                 AS user_id,
-      trial_users_count::NUMBER       AS trial_users_count,
       opt_in::BOOLEAN                 AS opt_in,
       currently_in_trial::BOOLEAN     AS currently_in_trial,
       is_for_business_use::BOOLEAN    AS is_for_business_use,

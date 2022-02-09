@@ -53,7 +53,7 @@ container_cmd = f"""
 
 # Create the DAG
 dag = DAG(
-    "gainsight_extract", default_args=default_args, schedule_interval="0 10 * * 0"
+    "gainsight_extract", default_args=default_args, schedule_interval="0 10 * * *"
 )
 
 # Task 1

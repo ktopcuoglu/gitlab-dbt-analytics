@@ -64,10 +64,10 @@ WITH gitlab_dotcom_namespaces AS (
 
     SELECT
       collaboration_projects.*,
-      gitlab_dotcom_project_routes.project_id AS collaboration_project_id,
+      gitlab_dotcom_project_routes.project_id                              AS collaboration_project_id,
       gitlab_issues.issue_id,
       gitlab_issues.issue_description,
-      gitlab_issues.updated_at
+      IFNULL(gitlab_issues.issue_last_edited_at, gitlab_issues.created_at) AS updated_at
     FROM collaboration_projects
     LEFT JOIN gitlab_dotcom_project_routes
       ON gitlab_dotcom_project_routes.complete_path = collaboration_projects.gitlab_customer_success_project
@@ -86,7 +86,7 @@ WITH gitlab_dotcom_namespaces AS (
 
     SELECT
       collaboration_projects_issue_descriptions.*,
-      f.value AS user_request_issue_path,
+      f.value                                                                      AS user_request_issue_path,
       REPLACE(REPLACE(f.value, 'gitlab-ee', 'gitlab'), 'gitlab-ce', 'gitlab-foss') AS user_request_epic_path_fixed,
       SPLIT_PART(f.value, '/', -1)::NUMBER                                         AS user_request_epic_internal_id,
       RTRIM(SPLIT_PART(f.value, '/epics', 1), '/-')                                AS user_request_namespace_path
@@ -172,6 +172,6 @@ WITH gitlab_dotcom_namespaces AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-10-12",
-    updated_date="2021-11-16",
+    updated_date="2022-01-10",
 ) }}
 

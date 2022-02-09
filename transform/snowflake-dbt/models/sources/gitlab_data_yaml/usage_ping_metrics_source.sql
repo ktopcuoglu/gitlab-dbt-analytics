@@ -7,13 +7,14 @@ WITH source AS (
 
     SELECT
       d.value                                 AS data_by_row,
+      uploaded_at,
       date_trunc('day', uploaded_at)::date    AS snapshot_date
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
 
 ), renamed AS (
 
-     SELECT 
+     SELECT
       data_by_row['key_path']::TEXT                          AS metrics_path,
       data_by_row['data_source']::TEXT                       AS data_source,
       data_by_row['description']::TEXT                       AS description,
@@ -27,7 +28,8 @@ WITH source AS (
       data_by_row['tier']                                    AS tier,
       data_by_row['time_frame']::TEXT                        AS time_frame,
       data_by_row['value_type']::TEXT                        AS value_type,
-      snapshot_date
+      snapshot_date,
+      uploaded_at
     FROM intermediate
 
 )

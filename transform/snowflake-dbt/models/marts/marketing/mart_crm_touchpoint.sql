@@ -60,7 +60,6 @@
       dim_crm_person.person_score,
       dim_crm_person.title                                                 AS crm_person_title,
       dim_crm_person.country,
-      dim_crm_person.mailing_country,
       dim_crm_person.status                                                AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -134,7 +133,7 @@
       dim_crm_user.crm_user_geo                            AS touchpoint_crm_user_geo_name_live,
       dim_crm_user.crm_user_region                         AS touchpoint_crm_user_region_name_live,
       dim_crm_user.crm_user_area                           AS touchpoint_crm_user_area_name_live,
-     
+
       -- campaign owner info
       campaign_owner.user_name                             AS campaign_rep_name,
       campaign_owner.title                                 AS campaign_rep_title,
@@ -215,7 +214,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@iweeks",
     created_date="2021-02-18",
-    updated_date="2021-12-16"
+    updated_date="2022-01-14"
 ) }}

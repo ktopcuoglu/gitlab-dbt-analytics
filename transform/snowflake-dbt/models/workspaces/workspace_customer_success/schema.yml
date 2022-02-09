@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: mart_product_usage_paid_user_metrics_monthly_workspace
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - snapshot_month
+            - dim_subscription_id
+            - delivery_type
+            - uuid
+            - hostname
+            - dim_namespace_id

@@ -16,9 +16,10 @@ WITH dates AS (
 
     SELECT 
       COUNT(*)                                                      AS row_count,
-      DATEADD('day', -1, DATE_TRUNC('day',{{ created_column }}))    AS the_day
+      DATE_TRUNC('day', {{ created_column }})                       AS the_day
     FROM source
-    WHERE the_day IN (SELECT DATE_ACTUAL FROM dates)
+    WHERE the_day = current_date-1
+      AND the_day IN (SELECT DATE_ACTUAL FROM dates)
     {% if where_clause != None %}
       AND {{ where_clause }}
     {% endif %}

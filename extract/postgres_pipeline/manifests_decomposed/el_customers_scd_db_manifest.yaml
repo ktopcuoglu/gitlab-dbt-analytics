@@ -83,7 +83,6 @@ tables:
       , trial_start_date
       , namespace_id
       , user_id
-      , trial_users_count
       , opt_in
       , currently_in_trial
       , is_for_business_use

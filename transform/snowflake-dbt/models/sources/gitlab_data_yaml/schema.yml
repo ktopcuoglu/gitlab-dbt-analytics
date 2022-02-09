@@ -110,3 +110,68 @@ models:
   - name: usage_ping_metrics_source
     description: Layer for extracting and cleaning data from [unified usage ping metrics file](https://gitlab.com/api/v4/usage_data/metric_definitions).
 
+  - name: geozones_yaml_flatten_source
+    description: Source layer reducing flattening data from [geo_zones.yml](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/main/data/geo_zones.yml)
+    columns:
+      - name: valid_from
+        description: The earliest date the localities and factors were is in a source file.
+      - name: valid_to
+        description: The latest date the localities and factors were is in a source file.
+      - name: is_current
+        description: A flag to indicate if the row is from the most recent loaded file.
+      - name: geozone_title
+        description: The top level grouping from the source file
+      - name: geozone_factor
+        description: The factor from the top level of the source file
+      - name: country
+        description: The second level grouping from the source file representing the countries within a geozone
+      - name: state_or_province
+        description: The third level grouping from the source file representing the states or provinces within a geozone
+
+  - name: location_factors_yaml_flatten_source
+    description: Source layer reducing flattening data from [location_factors.yml](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/main/data/location_factors.yml)
+    columns:
+      - name: valid_from
+        description: The earliest date the localities and factors were is in a source file.
+      - name: valid_to
+        description: The latest date the localities and factors were is in a source file.
+      - name: is_current
+        description: A flag to indicate if the row is from the most recent loaded file.
+      - name: area_level_1
+        description: The area from the top level of the grouping within the file. Not used in source file after 2020-12-10.
+      - name: country_level_1
+        description: The country from the top level of the grouping within the file
+      - name: locationfactor_level_1
+        description: The location factor from the top level of the grouping within the file. Not used in source file after 2020-12-10.
+      - name: factor_level_1
+        description: The factor from the top level of the grouping within the file.
+      - name: metro_areas_name_level_2
+        description: A second level grouping from with the file represents metro areas within a country.
+      - name: metro_areas_factor_level_2
+        description: The factor from the second level grouping from with in the file for same level metro area.
+      - name: metro_areas_sub_location_level_2
+        description: An attribute of the metro area, typically representing a state or province.
+      - name: states_or_provinces_name_level_2
+        description: A second level grouping from within the file representing a state or province within a country.
+      - name: states_or_provinces_factor_level_2
+        description: The factor from the second level grouping from within the file for the same level state or province.
+      - name: states_or_provinces_metro_areas_name_level_2
+        description: A third level grouping from within the file representing a metro area within a state or province.
+      - name: states_or_provinces_metro_areas_factor_level_2
+        description: The factor from the third level grouping from within the file for the same level metro area of a state or province.
+
+  - name: director_location_factor_seed_source
+    description: Source layer cleaning flattening data from director_location_factors.csv
+    columns:
+      - name: country
+        description: The parent country of the locality.
+      - name: locality
+        description: The director locality.
+      - name: factor
+        description: The factor for the given locality and validity range
+      - name: valid_from
+        description: The earliest date the localities and factors were is in a source file.
+      - name: valid_to
+        description: The earliest date the localities and factors were is in a source file.
+      - name: is_current
+        description: The earliest date the localities and factors were is in a source file.

@@ -22,6 +22,8 @@ models:
   - name: cert_date
   - name: partner_sfdc_id
   - name: account_owner
+    meta:
+      sensitive: true
   - name: region
   - name: track
   - name: pubsec_partner

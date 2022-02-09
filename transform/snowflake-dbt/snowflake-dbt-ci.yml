@@ -245,7 +245,7 @@
       - merge_request
   allow_failure: false
 
-safe_model_script:
+🚫safe_model_script:
   <<: *safe_models_check
   script:
     - dbt deps $CI_PROFILE_TARGET
@@ -289,3 +289,49 @@ safe_model_script:
     - touch comparison.txt
     - python3 transform/periscope_check.py
     - if (( $(cat comparison.txt | wc -l | tr -d ' ') > 0 )); then echo "Check these!" && cat comparison.txt && exit 1; else echo "All good" && exit 0; fi;
+
+
+# ======
+# Lint dbt SQL
+# ======
+.dbt_sql_lint: &dbt_sql_lint
+  stage: 🛠 dbt Misc
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.24
+  before_script:
+    - cd transform/snowflake-dbt/
+    - echo $BRANCH_NAME
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PREP_DATABASE="PREP"; else export SNOWFLAKE_PREP_DATABASE="${CI_COMMIT_REF_NAME^^}_PREP"; fi
+    - if [ $BRANCH_NAME = "master" ]; then export SNOWFLAKE_PROD_DATABASE="PROD"; else export SNOWFLAKE_PROD_DATABASE="${CI_COMMIT_REF_NAME^^}_PROD"; fi
+    - echo $SNOWFLAKE_PREP_DATABASE
+    - echo $SNOWFLAKE_PROD_DATABASE
+    - export SNOWFLAKE_LOAD_DATABASE="RAW" # dbt pulls from RAW
+    - echo $SNOWFLAKE_LOAD_DATABASE
+    - export SNOWFLAKE_TRANSFORM_WAREHOUSE=$SNOWFLAKE_MR_XS_WAREHOUSE
+    - echo $SNOWFLAKE_TRANSFORM_WAREHOUSE
+    - export SNOWFLAKE_SNAPSHOT_DATABASE="SNOWFLAKE"
+    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - export CI_PROFILE_TARGET="--profiles-dir profile --target ci"
+    - echo $CI_PROFILE_TARGET
+    - mkdir -p ~/.ssh
+    - touch ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh
+    - echo "$GIT_DATA_TESTS_SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa # decodes key from base64
+    - chmod 0400 ~/.ssh/id_rsa # Makes key read only
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config # Adds gitlab.com as known host
+  tags:
+    - analytics
+  when: manual
+  only:
+    changes:
+      - "transform/snowflake-dbt/models/**/*.sql"
+    refs:
+      - merge_request
+  allow_failure: true
+
+🛃dbt_sqlfluff:
+  <<: *dbt_sql_lint
+  script:
+    - dbt deps $CI_PROFILE_TARGET
+    - export LINT_LIST=$(git diff origin/master...HEAD --name-only -- '*.sql'  | awk -F 'transform/snowflake-dbt/' '{print tolower($NF)}' | sort | uniq )
+    - echo $LINT_LIST
+    - sqlfluff lint $LINT_LIST --config .sqlfluff-ci
