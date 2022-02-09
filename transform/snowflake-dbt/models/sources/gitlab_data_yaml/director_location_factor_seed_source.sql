@@ -6,12 +6,12 @@ WITH source AS (
 ), formated AS (
 
     SELECT
-      country::VARCHAR                            AS country, 
-      locality::VARCHAR                           AS locality, 
-      factor::NUMBER(6, 3)                        AS factor, 
-      valid_from::DATE                            AS valid_from, 
-      COALESCE(valid_to, CURRENT_DATE())::DATE    AS valid_to, 
-      is_current::BOOLEAN                         AS is_current
+      country::VARCHAR                                   AS country, 
+      locality::VARCHAR                                  AS locality, 
+      factor::NUMBER(6, 3)                               AS factor, 
+      valid_from::DATE                                   AS valid_from, 
+      COALESCE(valid_to, {{ var('tomorrow') }})::DATE    AS valid_to, 
+      is_current::BOOLEAN                                AS is_current
     FROM source
 
 )
