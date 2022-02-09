@@ -25,7 +25,7 @@ class GoogleSheetsClient:
         Returns the dataframe.
         """
         n = 0
-        while maximum_backoff_sec > (2 ** n):
+        while maximum_backoff_sec > (2**n):
             try:
                 sheets_client = self.get_client(key_file)
                 sheet = (
