@@ -31,7 +31,7 @@
 
     SELECT
       *
-    FROM (VALUES ('unknown','unknown',-1,'9999-12-31','9999-12-31',FALSE)) 
+    FROM (VALUES ('unknown','unknown',-1,{{ var('infinity_past') }},{{ var('infinity_future') }},FALSE)) 
         AS null_entry (country, locality, factor, valid_from, valid_to)
 
 ), join_spine AS (
