@@ -12,10 +12,10 @@
 
 , fact_with_date AS (
 
-    SELECT
+    SELECT TOP 100
       event_id,
-      CAST(event_created_at AS DATE)                               AS event_date,
-      user_id,
+      TO_DATE(event_created_at)                                    AS event_date,
+      user_id                                                      AS dim_user_id,
       event_name,
       dim_product_tier_id,
       dim_subscription_id,
@@ -35,7 +35,7 @@
 
     SELECT
         fact.*,
-        CAST(namespace.created_at AS DATE)                         AS namespace_created_at,
+        TO_DATE(namespace.created_at)                              AS namespace_created_at,
         DATEDIFF(day, namespace_created_at,GETDATE())              AS days_since_namespace_created
     FROM fact_with_date as fact
     LEFT JOIN dim_namespace as namespace
