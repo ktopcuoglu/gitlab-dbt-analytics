@@ -129,3 +129,11 @@ models:
 
     - name: infradev_namespace_path
       description: A model to concatenate the full namespace path, up to four levels deep.  Not explicitly limited to the infradev team.
+
+    - name: internal_note_awards
+      description: A model to expose the awards at the note level.  This table is limited to Issues and Merge Requests that are a part of internal GitLab projects.
+      tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - note_id
+              - award_emoji_id
