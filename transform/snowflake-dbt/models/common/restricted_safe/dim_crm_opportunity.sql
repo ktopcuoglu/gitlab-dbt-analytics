@@ -57,15 +57,15 @@ WITH sfdc_opportunity AS (
       CASE
         WHEN sfdc_opportunity.created_date < '2022-02-01' 
           THEN 'Legacy'
-        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT null AND sfdc_opportunity.opportunity_business_development_representative iS NOT null
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL AND sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
           THEN 'SDR & BDR'
-        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT null
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL
           THEN 'SDR'
-        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT null
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
           THEN 'BDR'
-        WHEN sfdc_opportunity.opportunity_business_development_representative IS null AND sfdc_opportunity.opportunity_sales_development_representative IS null
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NULL AND sfdc_opportunity.opportunity_sales_development_representative IS NULL
           THEN 'No XDR Assigned'
-      END AS sdr_or_bdr,
+      END                                               AS sdr_or_bdr,
       sfdc_opportunity.iqm_submitted_by_role,
       sfdc_opportunity.sdr_pipeline_contribution,
       sfdc_opportunity.stage_name,
@@ -165,7 +165,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-11-20",
-    updated_date="2021-02-08"
+    updated_date="2021-02-10"
 ) }}
