@@ -324,7 +324,6 @@
     LEFT JOIN prep_user 
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
     {% endif %}
-    LEFT
     LEFT JOIN prep_plan
       ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
