@@ -42,6 +42,18 @@ Further Usage Help:
   - See [the sheetload dag](https://gitlab.com/gitlab-data/analytics/blob/master/dags/extract/sheetload.py) for a real world example of usage
   - Run the following command(s) for additional usage info `python3 sheetload.py <csv|sheets|gcs> -- --help`
 
+
+### Driveload 
+
+Loading a CSV from any Google Drive. 
+
+ - Create a Google Drive Folder, duplicate folder names can be a problem so try and name the folder something unique. 
+ - Share **folder** with the required service account - [Email Address to share with](https://docs.google.com/document/d/1m8kky3DPv2yvH63W4NDYFURrhUwRiMKHI-himxn1r7k/edit?usp=sharing) (GitLab Internal)
+ - Add the new folder and table name to the `drives.yml` file. 
+   - If append is set to 1, the process will append the data to the existing table. After doing this it will create a folder called `Archived` and move the files here after processing. To add more data new files need to be dropped in the directory. This can cause duplicates if the same file is placed in the folder twice. 
+   - If append is set to 0 the data will be read in from the file and the raw table will be replaced with the data from the file, similar to how the existing sheetload process operates.
+ - After adding the table information the table will be created in the RAW database in the next run of the [the driveload dag](https://gitlab.com/gitlab-data/analytics/blob/master/dags/extract/driveload.py)
+
 ### Behavior
 
 Read more [in the handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/#using-sheetload).
