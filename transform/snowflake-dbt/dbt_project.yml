@@ -505,7 +505,7 @@ models:
           +schema: workspace_product
 
       workspace_saas_usage_ping:
-        +tags: ["product"]
+        +tags: ["product", "service_ping"]
 
       workspace_sales:
         +materialized: table
