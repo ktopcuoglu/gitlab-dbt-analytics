@@ -2651,6 +2651,13 @@ roles:
         member_of: []
         warehouses: []
 
+    - eneuberger:
+        member_of:
+            - analyst_growth
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - eurie: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
@@ -4505,6 +4512,11 @@ users:
     - ekastelein:
         can_login: no
         member_of: []
+
+    - eneuberger:
+        can_login: yes
+        member_of:
+            - eneuberger       
 
     - eurie: # De provisioned as part of Quarterly audit and security check.
         can_login: no
