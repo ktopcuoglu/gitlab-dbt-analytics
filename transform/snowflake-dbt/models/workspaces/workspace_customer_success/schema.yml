@@ -11,3 +11,25 @@ models:
             - uuid
             - hostname
             - dim_namespace_id
+    columns:
+      - name: snapshot_month
+        tests:
+          - not_null
+      - name: dim_subscription_id
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        tests:
+          - not_null
+      - name: dim_crm_account_id
+        tests:
+          - not_null
+      - name: dim_subscription_id_original
+        tests:
+          - not_null
+      - name: snapshot_date_id
+        tests:
+          - not_null
+      - name: delivery_type
+        tests:
+          - not_null
