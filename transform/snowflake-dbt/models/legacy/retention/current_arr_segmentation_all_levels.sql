@@ -3,19 +3,20 @@
                   'parent_account_id'] %}
 
 WITH base AS (
-    SELECT oldest_subscription_in_cohort as zuora_subscription_id,
-            ultimate_parent_account_id as parent_account_id,
-          {{ dbt_utils.star(from=ref('mrr_totals_levelled'), 
-            except=["oldest_subscription_in_cohort", "ultimate_parent_account_id"]) }}
-    FROM {{ref('mrr_totals_levelled')}}
+    SELECT dim_subscription_id as zuora_subscription_id,
+            dim_parent_crm_account_id as parent_account_id,
+            dim_crm_account_id as sfdc_account_id
+          {{ dbt_utils.star(from=ref('mart_arr'), 
+            except=["dim_subscription_id", "dim_parent_crm_account_id", "dim_crm_account_id"]) }}
+    FROM {{ref('mart_arr')}}
 
 {% for level in levels -%} 
 ), {{level}}_max_month as (
 
-    SELECT max(mrr_month) as most_recent_mrr_month,
+    SELECT max(arr_month) as most_recent_mrr_month,
               {{ level }}  AS id
     FROM base
-    WHERE mrr_month < dateadd(month, -1, CURRENT_DATE)
+    WHERE arr_month < dateadd(month, -1, CURRENT_DATE)
     GROUP BY 2
 
 ), {{level}}_get_mrr as(
@@ -25,7 +26,7 @@ WITH base AS (
     LEFT JOIN base
         ON {{level}}_max_month.id =
               base.{{level}}
-        AND {{level}}_max_month.most_recent_mrr_month = base.mrr_month
+        AND {{level}}_max_month.most_recent_mrr_month = base.arr_month
     GROUP BY 1, 2
 
 ), {{level}}_get_segmentation as (
