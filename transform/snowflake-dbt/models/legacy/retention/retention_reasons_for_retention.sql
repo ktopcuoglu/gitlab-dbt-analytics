@@ -1,28 +1,28 @@
 WITH raw_mrr_totals_levelled AS (
 
     SELECT *
-    FROM {{ref('mrr_totals_levelled')}}
-    WHERE product_category != 'Trueup'
+    FROM {{ref('mart_arr')}}
+    WHERE product_tier_name != 'Trueup'
 
 ), mrr_totals_levelled AS (
 
     SELECT 
         subscription_name,
         subscription_name_slugify,
-        sfdc_account_id,
-        oldest_subscription_in_cohort,
-        lineage,
-        mrr_month,
-        zuora_subscription_cohort_month,
-        zuora_subscription_cohort_quarter,
-        months_since_zuora_subscription_cohort_start,
-        quarters_since_zuora_subscription_cohort_start,
+        dim_crm_account_id                                                                                              AS sfdc_account_id,
+        dim_subscription_id                                                                                             AS oldest_subscription_in_cohort,
+        subscription_lineage                                                                                            AS lineage,
+        arr_month                                                                                                       AS mrr_month,
+        subscription_cohort_month                                                                                       AS zuora_subscription_cohort_month,
+        subscription_cohort_quarter                                                                                     AS zuora_subscription_cohort_quarter,
+        months_since_subscription_cohort_start                                                                          AS months_since_zuora_subscription_cohort_start,
+        quarters_since_subscription_cohort_start                                                                        AS quarters_since_zuora_subscription_cohort_start,
 
-        ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC) AS original_product_category,
-        ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                 AS original_delivery,
-        ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure ASC)   AS original_unit_of_measure,
+        ARRAY_AGG(DISTINCT product_tier_name) WITHIN GROUP (ORDER BY product_tier_name ASC)                             AS original_product_category,
+        ARRAY_AGG(DISTINCT product_delivery_type) WITHIN GROUP (ORDER BY product_delivery_type ASC)                     AS original_delivery,
+        ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure ASC)                                 AS original_unit_of_measure,
         
-        MAX(DECODE(product_category,   --Need to account for the 'other' categories
+        MAX(DECODE(product_tier_name,   --Need to account for the 'other' categories
         'Bronze', 1,
         'Silver', 2,
         'Gold', 3,
@@ -32,9 +32,9 @@ WITH raw_mrr_totals_levelled AS (
         'Ultimate', 3,
 
         0
-        ))                                                                                AS original_product_ranking,
-        SUM(quantity)                                                                     AS original_quantity,
-        SUM(mrr)                                                                          AS original_mrr
+        ))                                                                                                              AS original_product_ranking,
+        SUM(quantity)                                                                                                   AS original_quantity,
+        SUM(mrr)                                                                                                        AS original_mrr
     FROM raw_mrr_totals_levelled
     {{ dbt_utils.group_by(n=10) }}
 
