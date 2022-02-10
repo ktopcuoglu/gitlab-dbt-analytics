@@ -17,9 +17,9 @@ WITH source AS (
       area::VARCHAR                                       AS area,
       REPLACE(allocated_target, ',', '')::FLOAT           AS allocated_target,
       user_segment::VARCHAR                               AS user_segment,
-      user_geo                                            AS user_geo,
-      user_region                                         AS user_region,
-      user_area                                           AS user_area,
+      user_geo::VARCHAR                                   AS user_geo,
+      user_region::VARCHAR                                AS user_region,
+      user_area::VARCHAR                                  AS user_area,
       TO_TIMESTAMP(TO_NUMERIC("_UPDATED_AT"))::TIMESTAMP  AS last_updated_at
     FROM source
 

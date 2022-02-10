@@ -15,7 +15,7 @@ WITH source AS (
       user_segment,
       user_geo,
       user_region,
-      user_area,
+      user_area
     FROM source
 
 )
@@ -23,7 +23,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@michellecooper,
+    updated_by="@michellecooper",
     created_date="2020-11-18",
     updated_date="2022-02-10"
 ) }}
