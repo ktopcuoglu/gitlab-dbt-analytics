@@ -2,7 +2,12 @@ import logging
 import os
 import sys
 from os import environ as env
-from reduce_file_size import reduce_manifest_file, save_json_file, load_json_file
+from reduce_file_size import (
+    reduce_manifest_file,
+    save_json_file,
+    load_json_file,
+    get_file_size,
+)
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -40,24 +45,6 @@ def get_table_name(config_name, snowflake_database):
         return f'"{snowflake_database}".dbt.run_results'
 
 
-def reduce_manifest_file(source_file: str) -> dict:
-    """
-    param source_file: file to be reduced, need to define file path
-    return: dict: return reduced file
-    """
-    raw_json = load_json_file(source_file=source_file)
-
-    return reduce_manifest_file(raw_json=raw_json)
-
-def get_file_size(file_to_measure: str) -> float:
-    """
-
-    param file_name: file name is input
-    return: file size in MBs
-    """
-    return os.path.getsize(file_to_measure) / 1024 / 1024
-
-
 if __name__ == "__main__":
     config_name = sys.argv[1]
     file_name = get_file_name(config_name)
@@ -67,8 +54,11 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     if os.path.exists(file_name):
-        if config_name == "manifest_reduce" and get_file_size(
-                file_to_measure=file_name) >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB:
+        if (
+            config_name == "manifest_reduce"
+            and get_file_size(file_to_measure=file_name)
+            >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB
+        ):
             logging.info(
                 f"manifest file {file_name} "
                 f"is bigger than "
@@ -76,7 +66,8 @@ if __name__ == "__main__":
                 f"should be reduced."
             )
 
-            reduced_json = reduce_manifest_file(source_file=file_name)
+            raw_json = load_json_file(source_file=file_name)
+            reduced_json = reduce_manifest_file(raw_json=raw_json)
             save_json_file(reduced_json=reduced_json, target_file=file_name)
 
             logging.info(f"manifest file {file_name} " f"reduced successfully.")

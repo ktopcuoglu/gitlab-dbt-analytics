@@ -117,6 +117,14 @@ def reduce_manifest_file(raw_json: dict) -> dict:
     return reduced_json
 
 
+def get_file_size(file_to_measure: str) -> float:
+    """
+    param file_name: file name is input
+    return: file size in MBs
+    """
+    return os.path.getsize(file_to_measure) / 1024 / 1024
+
+
 def main():
     """
     Standalone main function to test routine if needed

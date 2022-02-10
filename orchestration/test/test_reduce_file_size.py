@@ -1,16 +1,18 @@
 """
 Main test file for reduce_file_size.py
 """
-import pytest
 import os
+import pytest
 from orchestration.reduce_file_size import (
     load_json_file,
     save_json_file,
     reduce_manifest_file,
     reduce_nodes_section,
+    get_file_size,
 )
 
-test_json_dict = {
+
+TEST_JSON_DICT = {
     "metadata": {"adapter_type": "snowflake", "user_id": "null"},
     "test_key": "test_value",
     "nodes": {
@@ -31,41 +33,46 @@ test_json_dict = {
         }
     },
 }
-target_file = "test_file.json"
+TARGET_FILE = "test_file.json"
 
 
-def clean_up_file(file_name):
+def clean_up_file(file_name) -> None:
+    """
+    Routine to delete temp file for testing
+    param file_name: file name to be deleted
+    return: None
+    """
     if os.path.exists(file_name):
         os.remove(file_name)
 
 
 def test_load_json_file_not_existing_file():
     with pytest.raises(FileNotFoundError):
-        non_existing_json = load_json_file("THIS_DOES_NOT_EXITS.json")
+        _ = load_json_file("THIS_DOES_NOT_EXITS.json")
 
 
 def test_load_json_file_existing_file():
 
-    save_json_file(reduced_json=test_json_dict, target_file=target_file)
+    save_json_file(reduced_json=TEST_JSON_DICT, target_file=TARGET_FILE)
 
-    existing_json = load_json_file(target_file)
+    existing_json = load_json_file(TARGET_FILE)
 
-    assert existing_json == test_json_dict
+    assert existing_json == TEST_JSON_DICT
 
-    clean_up_file(target_file)
+    clean_up_file(TARGET_FILE)
 
 
 def test_save_json_file():
 
-    save_json_file(reduced_json=test_json_dict, target_file=target_file)
+    save_json_file(reduced_json=TEST_JSON_DICT, target_file=TARGET_FILE)
 
-    assert os.path.exists(target_file)
+    assert os.path.exists(TARGET_FILE)
 
-    clean_up_file(target_file)
+    clean_up_file(TARGET_FILE)
 
 
 def test_reduce_nodes_section():
-    node_json = reduce_nodes_section(source_nodes_json=test_json_dict["nodes"].items())
+    node_json = reduce_nodes_section(source_nodes_json=TEST_JSON_DICT["nodes"].items())
 
     assert len(node_json["test_metric"]["config"]) == 1
 
@@ -73,7 +80,7 @@ def test_reduce_nodes_section():
 
 
 def test_reduce_manifest_file():
-    reduced_json = reduce_manifest_file(raw_json=test_json_dict)
+    reduced_json = reduce_manifest_file(raw_json=TEST_JSON_DICT)
 
     valid_keys = reduced_json.keys()
 
@@ -89,13 +96,20 @@ def test_reduce_manifest_file():
 
     assert len(valid_keys) == 2  # expect only 2 sections in dict
 
-    assert True == isinstance(test_json_dict, dict)
+    assert isinstance(TEST_JSON_DICT, dict) is True
 
-    assert True == isinstance(reduced_json, dict)
+    assert isinstance(reduced_json, dict) is True
 
 
-def test_function_reduce_manifest_file():
-    pass
+def test_get_file_size():
+    save_json_file(reduced_json=TEST_JSON_DICT, target_file=TARGET_FILE)
+
+    file_size = get_file_size(TARGET_FILE)
+
+    clean_up_file(TARGET_FILE)
+
+    assert file_size > 0
+
 
 def main():
     test_load_json_file_not_existing_file()
@@ -103,7 +117,7 @@ def main():
     test_save_json_file()
     test_reduce_nodes_section()
     test_reduce_manifest_file()
-    test_function_reduce_manifest_file()
+    test_get_file_size()
 
 
 if __name__ == "__main__":
