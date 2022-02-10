@@ -46,12 +46,19 @@ def clean_up_file(file_name) -> None:
         os.remove(file_name)
 
 
-def test_load_json_file_not_existing_file():
+def test_load_json_file_not_existing_file() -> None:
+    """
+    return: None
+    """
+
     with pytest.raises(FileNotFoundError):
         _ = load_json_file("THIS_DOES_NOT_EXITS.json")
 
 
-def test_load_json_file_existing_file():
+def test_load_json_file_existing_file() -> None:
+    """
+    return: None
+    """
 
     save_json_file(reduced_json=TEST_JSON_DICT, target_file=TARGET_FILE)
 
@@ -62,7 +69,10 @@ def test_load_json_file_existing_file():
     clean_up_file(TARGET_FILE)
 
 
-def test_save_json_file():
+def test_save_json_file() -> None:
+    """
+    return: None
+    """
 
     save_json_file(reduced_json=TEST_JSON_DICT, target_file=TARGET_FILE)
 
@@ -71,7 +81,11 @@ def test_save_json_file():
     clean_up_file(TARGET_FILE)
 
 
-def test_reduce_nodes_section():
+def test_reduce_nodes_section() -> None:
+    """
+    return: None
+    """
+
     node_json = reduce_nodes_section(source_nodes_json=TEST_JSON_DICT["nodes"].items())
 
     assert len(node_json["test_metric"]["config"]) == 1
@@ -79,14 +93,20 @@ def test_reduce_nodes_section():
     assert node_json["test_metric"]["config"]["severity"] == "ERROR"
 
 
-def test_reduce_manifest_file():
+def test_reduce_manifest_file() -> None:
+    """
+    return: None
+    """
+
     reduced_json = reduce_manifest_file(raw_json=TEST_JSON_DICT)
 
     valid_keys = reduced_json.keys()
 
-    assert len(reduced_json["nodes"]["test_metric"]["config"]) == 1
+    config_value = reduced_json["nodes"]["test_metric"]["config"]
+    assert len(config_value) == 1
 
-    assert reduced_json["nodes"]["test_metric"]["config"]["severity"] == "ERROR"
+    severity_value = reduced_json["nodes"]["test_metric"]["config"]["severity"]
+    assert severity_value == "ERROR"
 
     assert "metadata" in valid_keys
 
@@ -101,7 +121,11 @@ def test_reduce_manifest_file():
     assert isinstance(reduced_json, dict) is True
 
 
-def test_get_file_size():
+def test_get_file_size() -> None:
+    """
+    return: None
+    """
+
     save_json_file(reduced_json=TEST_JSON_DICT, target_file=TARGET_FILE)
 
     file_size = get_file_size(TARGET_FILE)
@@ -111,7 +135,11 @@ def test_get_file_size():
     assert file_size > 0
 
 
-def main():
+def main() -> None:
+    """
+    Main routine to run test cases
+    """
+
     test_load_json_file_not_existing_file()
     test_load_json_file_existing_file()
     test_save_json_file()
