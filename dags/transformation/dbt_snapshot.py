@@ -19,7 +19,7 @@ from airflow_utils import (
     slack_failed_task,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
-    run_command_test_exclude
+    run_command_test_exclude,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
