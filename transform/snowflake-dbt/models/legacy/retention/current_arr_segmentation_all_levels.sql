@@ -7,7 +7,7 @@ WITH base AS (
             dim_parent_crm_account_id as parent_account_id,
             dim_crm_account_id as sfdc_account_id,
           {{ dbt_utils.star(from=ref('mart_arr'), 
-            except=["dim_subscription_id", "dim_parent_crm_account_id"]) }}
+            except=["dim_subscription_id", "dim_parent_crm_account_id", "dim_crm_account_id"]) }}
     FROM {{ref('mart_arr')}}
 
 {% for level in levels -%} 
