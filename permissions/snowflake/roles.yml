@@ -1305,6 +1305,7 @@ roles:
                     - prod.common_mapping
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_common_mart_product
+                    - prod.workspace_customer_success
                 write:
                     - prod.common_mart_product
             tables:
@@ -1320,6 +1321,7 @@ roles:
                     - prod.restricted_safe_common_mart_product.mart_user_request
                     - prod.restricted_safe_common_mart_product.rpt_user_request_crm_account_issue_epic
                     - prod.restricted_safe_common_mart_product.rpt_user_request_issue_epic
+                    - prod.workspace_customer_success.mart_product_usage_paid_user_metrics_monthly_workspace
 
     - gainsight:
         warehouses:
