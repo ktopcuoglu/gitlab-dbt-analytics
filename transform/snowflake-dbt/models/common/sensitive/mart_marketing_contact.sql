@@ -848,6 +848,9 @@
       'zuora_contact_id',
       'zuora_created_date',
       'zuora_active_state',
+      'pql_list_stages',
+      'pql_nbr_stages',
+      'pql_nbr_namespace_users',
       'wip_is_valid_email_address',
       'wip_invalid_email_address_reason',
       'smau_manage_analytics_total_unique_counts_monthly',
@@ -895,9 +898,9 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-02-09",
-    updated_date="2022-01-10"
+    updated_date="2022-01-21"
 ) }}
 
 
