@@ -17,7 +17,7 @@ models:
       columns:
       - name: ticket_custom_field_id
         tests:
-          - not_null
+          - not_null:
               severity: warn
     - name: zendesk_ticket_metrics
       description: This is the base model for Zendesk ticket metrics.
