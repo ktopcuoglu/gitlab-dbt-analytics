@@ -19,6 +19,7 @@ from airflow_utils import (
     slack_failed_task,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
+    run_command_test_exclude
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -160,7 +161,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +legacy.snapshots --exclude staging.gitlab_com; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots {run_command_test_exclude}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 
