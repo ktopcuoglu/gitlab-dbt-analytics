@@ -12,7 +12,8 @@ WITH source AS (
       created_at,
       updated_at,
       plan_name,
-      plan_title
+      plan_title,
+      plan_is_paid
 
     FROM source
 
