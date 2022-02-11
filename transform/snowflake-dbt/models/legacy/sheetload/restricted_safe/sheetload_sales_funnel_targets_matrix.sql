@@ -12,10 +12,11 @@ WITH source AS (
       order_type,
       area,
       allocated_target,
-      user_segment,
-      user_geo,
-      user_region,
-      user_area
+      kpi_total,
+      month_percentage,
+      opportunity_source_percentage,
+      order_type_percentage,
+      area_percentage
     FROM source
 
 )
@@ -25,5 +26,5 @@ WITH source AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-11-18",
-    updated_date="2022-02-10"
+    updated_date="2020-11-18"
 ) }}
