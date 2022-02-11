@@ -19,3 +19,8 @@
 
   SELECT *
   FROM {{ ref('gitlab_dotcom_usage_data_notes') }}
+
+  UNION ALL
+
+  SELECT *
+  FROM {{ ref('gitlab_dotcom_usage_data_ci_builds') }}

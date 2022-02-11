@@ -4,8 +4,8 @@ models:
   - name: zi_comp_with_linkages_global_source
     description: International table, data ingested from Zoominfo inbound share.
     columns:
-      - name: zi_c_id
-      - name: zi_c_hq_id
+      - name: zi_c_location_id
+      - name: zi_c_company_id
       - name: zi_c_is_hq
       - name: zi_es_ecid
       - name: zi_es_location_id
@@ -51,25 +51,25 @@ models:
       - name: zi_c_is_b2c
       - name: zi_es_hq_ecid
       - name: zi_es_hq_location_id
-      - name: zi_c_hq_name
-      - name: zi_c_hq_url
-      - name: zi_c_hq_street
-      - name: zi_c_hq_street_2
-      - name: zi_c_hq_city
-      - name: zi_c_hq_state
-      - name: zi_c_hq_zip
-      - name: zi_c_hq_country
-      - name: zi_c_hq_cbsa_name
-      - name: zi_c_hq_county
-      - name: zi_c_hq_latitude
-      - name: zi_c_hq_longitude
-      - name: zi_c_hq_verified_address
-      - name: zi_c_hq_employee_range
-      - name: zi_c_hq_employees
-      - name: zi_c_hq_revenue_range
-      - name: zi_c_hq_revenue
-      - name: zi_c_hq_phone
-      - name: zi_c_hq_fax
+      - name: zi_c_company_name
+      - name: zi_c_company_url
+      - name: zi_c_company_street
+      - name: zi_c_company_street_2
+      - name: zi_c_company_city
+      - name: zi_c_company_state
+      - name: zi_c_company_zip
+      - name: zi_c_company_country
+      - name: zi_c_company_cbsa_name
+      - name: zi_c_company_county
+      - name: zi_c_company_latitude
+      - name: zi_c_company_longitude
+      - name: zi_c_company_verified_address
+      - name: zi_c_company_employee_range
+      - name: zi_c_company_employees
+      - name: zi_c_company_revenue_range
+      - name: zi_c_company_revenue
+      - name: zi_c_company_phone
+      - name: zi_c_company_fax
       - name: zi_c_linkedin_url
       - name: zi_c_facebook_url
       - name: zi_c_twitter_url
@@ -142,7 +142,7 @@ models:
       - name: zi_c_hierarchy_code
       - name: zi_c_hierarchy_level
       - name: zi_c_parent_child_confidence_score
-      - name: zi_c_immediate_parent_id
+      - name: zi_c_immediate_parent_company_id
       - name: zi_es_immediate_parent_ecid
       - name: zi_es_immediate_parent_location_id
       - name: zi_c_immediate_parent_name
@@ -153,7 +153,7 @@ models:
       - name: zi_c_immediate_parent_zip
       - name: zi_c_immediate_parent_state
       - name: zi_c_immediate_parent_country
-      - name: zi_c_domestic_parent_id
+      - name: zi_c_domestic_parent_company_id
       - name: zi_es_domestic_parent_ecid
       - name: zi_es_domestic_parent_location_id
       - name: zi_c_domestic_parent_name
@@ -164,7 +164,7 @@ models:
       - name: zi_c_domestic_parent_zip
       - name: zi_c_domestic_parent_state
       - name: zi_c_domestic_parent_country
-      - name: zi_c_global_parent_id
+      - name: zi_c_global_parent_company_id
       - name: zi_es_global_parent_ecid
       - name: zi_es_global_parent_location_id
       - name: zi_c_global_parent_name
@@ -175,7 +175,7 @@ models:
       - name: zi_c_global_parent_zip
       - name: zi_c_global_parent_state
       - name: zi_c_global_parent_country
-      - name: zi_c_franchisor_id
+      - name: zi_c_franchisor_company_id
       - name: zi_es_franchisor_ecid
       - name: zi_es_franchisor_location_id
       - name: zi_c_franchisor_name

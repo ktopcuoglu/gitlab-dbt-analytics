@@ -21,7 +21,7 @@ flattened AS (
       flat_events.value['id']                     AS audit_event_id
 
     FROM source,
-    LATERAL FLATTEN(INPUT => events, OUTER => false) flat_events
+    LATERAL FLATTEN(INPUT => parse_json(events), OUTER => false) flat_events
     -- currently scoped to only sla_policy and priority
     WHERE flat_events.value['field_name'] IN ('sla_policy', 'priority', 'is_public')
 
