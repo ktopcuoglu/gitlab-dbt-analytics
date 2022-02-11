@@ -15,7 +15,7 @@
     SELECT TOP 100
       event_id,
       TO_DATE(event_created_at)                                    AS event_date,
-      user_id                                                      AS dim_user_id,
+      dim_user_id,
       event_name,
       dim_product_tier_id,
       dim_subscription_id,
