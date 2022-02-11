@@ -22,17 +22,17 @@
 , fct_events AS  (
 
     SELECT
-      event_primary_key                                             AS event_primary_key,
-      usage_data_events.event_name                                  AS event_name,
-      namespace_id                                                  AS namespace_id,
-      user_id                                                       AS user_id,
-      parent_type                                                   AS parent_type,
-      parent_id                                                     AS parent_id,
+      event_primary_key                                               AS event_primary_key,
+      usage_data_events.event_name                                    AS event_name,
+      namespace_id                                                    AS namespace_id,
+      user_id                                                         AS user_id,
+      parent_type                                                     AS parent_type,
+      parent_id                                                       AS parent_id,
       IFF(usage_data_events.parent_type = 'project', parent_id, NULL) AS project_id,
-      event_created_at                                              AS event_created_at,
-      plan_id_at_event_date                                         AS plan_id_at_event_date,
-      plan_name_at_event_date                                       AS plan_name_at_event_date,
-      plan_was_paid_at_event_date                                   AS plan_was_paid_at_event_date,
+      event_created_at                                                AS event_created_at,
+      plan_id_at_event_date                                           AS plan_id_at_event_date,
+      plan_name_at_event_date                                         AS plan_name_at_event_date,
+      plan_was_paid_at_event_date                                     AS plan_was_paid_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
             THEN xmau_metrics.stage_name
@@ -93,6 +93,7 @@
       dim_crm_account_id                      AS dim_crm_account_id,
       dim_billing_account_id                  AS dim_billing_account_id,
       namespace_id                            AS dim_namespace_id,
+      project_id                              AS dim_project_id,
       user_id                                 AS dim_user_id,
       stage_name                              AS stage_name,
       section_name                            AS section_name,
