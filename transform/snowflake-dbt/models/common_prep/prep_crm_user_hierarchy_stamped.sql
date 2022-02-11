@@ -73,7 +73,8 @@
   
 ), unioned AS (
 /*
-  Filter the spined slowly changing dimension to only the last user hierarchy and user area in a given fiscal year. Union with the distinct
+  Filter the spined slowly changing dimension to only the last user hierarchy and user area in a given fiscal year. Union with the distinct user-segment-geo-region-area combinations
+  from the target spreadsheet to ensure fidelity with the targets.
 */
 
     SELECT 

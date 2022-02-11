@@ -62,7 +62,24 @@ WITH date AS (
 
 ), unioned_targets AS (
 
-    SELECT *
+    SELECT
+      target_matrix.kpi_name,
+      target_matrix.first_day_of_month,
+      target_matrix.dim_sales_qualified_source_id,
+      target_matrix.opportunity_source,
+      target_matrix.dim_order_type_id,
+      target_matrix.order_type, 
+      target_matrix.fiscal_year,
+      target_matrix.allocated_target,
+      fy22_user_hierarchy.dim_crm_user_hierarchy_stamped_id,
+      fy22_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
+      fy22_user_hierarchy.crm_opp_owner_sales_segment_stamped,
+      fy22_user_hierarchy.dim_crm_opp_owner_geo_stamped_id,
+      fy22_user_hierarchy.crm_opp_owner_geo_stamped,
+      fy22_user_hierarchy.dim_crm_opp_owner_region_stamped_id,
+      fy22_user_hierarchy.crm_opp_owner_region_stamped,
+      fy22_user_hierarchy.dim_crm_opp_owner_area_stamped_id,
+      fy22_user_hierarchy.crm_opp_owner_area_stamped
     FROM target_matrix
     LEFT JOIN fy22_user_hierarchy
       ON target_matrix.area = fy22_user_hierarchy.crm_opp_owner_area_stamped
@@ -70,7 +87,24 @@ WITH date AS (
 
     UNION ALL
 
-    SELECT *
+    SELECT
+      target_matrix.kpi_name,
+      target_matrix.first_day_of_month,
+      target_matrix.dim_sales_qualified_source_id,
+      target_matrix.opportunity_source,
+      target_matrix.dim_order_type_id,
+      target_matrix.order_type, 
+      target_matrix.fiscal_year,
+      target_matrix.allocated_target,
+      fy23_and_beyond_user_hierarchy.dim_crm_user_hierarchy_stamped_id,
+      fy23_and_beyond_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
+      fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_stamped,
+      fy23_and_beyond_user_hierarchy.dim_crm_opp_owner_geo_stamped_id,
+      fy23_and_beyond_user_hierarchy.crm_opp_owner_geo_stamped,
+      fy23_and_beyond_user_hierarchy.dim_crm_opp_owner_region_stamped_id,
+      fy23_and_beyond_user_hierarchy.crm_opp_owner_region_stamped,
+      fy23_and_beyond_user_hierarchy.dim_crm_opp_owner_area_stamped_id,
+      fy23_and_beyond_user_hierarchy.crm_opp_owner_area_stamped
     FROM target_matrix
     LEFT JOIN fy23_and_beyond_user_hierarchy
       ON target_matrix.area = fy23_and_beyond_user_hierarchy.crm_opp_owner_user_segment_geo_region_area_stamped
