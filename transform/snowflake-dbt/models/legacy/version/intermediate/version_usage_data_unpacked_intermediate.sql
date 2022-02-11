@@ -36,7 +36,7 @@ WITH usage_data AS (
     FROM stats_used_unpacked
         PIVOT (MAX(ping_value)
             FOR full_ping_name IN ({{ '\'' + version_usage_stats_list|join('\',\n \'') + '\'' }}))
-            AS pioved_table (id, {{ '\n' + version_usage_stats_list|join(',\n') }})
+            AS pivoted_table (id, {{ '\n' + version_usage_stats_list|join(',\n') }})
 
 ), final AS (
 
