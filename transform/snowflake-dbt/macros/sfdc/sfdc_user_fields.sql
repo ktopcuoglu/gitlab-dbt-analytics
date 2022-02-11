@@ -70,6 +70,7 @@ WITH sfdc_user_roles AS (
       sfdc_users.user_region                                        AS crm_user_region,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}       AS dim_crm_user_area_id,
       sfdc_users.user_area                                          AS crm_user_area,
+      sfdc_users.user_segment_geo_region_area                       AS crm_user_segment_geo_region_area,
       sfdc_users.user_segment_region_grouped                        AS crm_user_sales_segment_region_grouped,
       created_date
     FROM sfdc_users

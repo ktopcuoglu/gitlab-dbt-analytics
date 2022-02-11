@@ -26,6 +26,7 @@ WITH source AS (
       user_geo__c                                                       AS user_geo,
       user_region__c                                                    AS user_region,
       user_area__c                                                      AS user_area,
+      user_segment_geo_region_area__c                                   AS user_segment_geo_region_area,
       CASE 
         WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
         ELSE user_segment
