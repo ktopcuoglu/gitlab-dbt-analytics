@@ -1,7 +1,7 @@
 WITH mrr_totals_levelled AS (
 
     SELECT *
-    FROM {{ ref('mrr_totals_levelled') }}
+    FROM {{ ref('mart_arr') }}
 
 ), sfdc_accounts_xf AS (
 
@@ -11,18 +11,18 @@ WITH mrr_totals_levelled AS (
 ), monthly_arr AS (--Create a base data set of ARR and Customer Attributes to be used for the model
 
     SELECT
-      mrr_month                                                                          AS arr_month,
-      months_since_sfdc_account_cohort_start,
-      quarters_since_sfdc_account_cohort_start,
-      sfdc_account_cohort_quarter,
-      sfdc_account_cohort_month,
-      ultimate_parent_account_name,
-      ultimate_parent_account_id,
-      sfdc_account_name,
-      sfdc_account_id,
-      ARRAY_AGG(DISTINCT product_category) WITHIN GROUP (ORDER BY product_category ASC) AS product_category,
-      ARRAY_AGG(DISTINCT delivery) WITHIN GROUP (ORDER BY delivery ASC)                 AS delivery,
-      MAX(DECODE(product_category,   --Need to account for the 'other' categories
+      arr_month                                                                                                   AS arr_month,
+      months_since_account_cohort_start                                                                           AS months_since_sfdc_account_cohort_start,
+      quarters_since_account_cohort_start                                                                         AS quarters_since_sfdc_account_cohort_start,
+      crm_account_cohort_quarter                                                                                  AS sfdc_account_cohort_quarter,
+      crm_account_cohort_month                                                                                    AS sfdc_account_cohort_month,
+      parent_crm_account_name                                                                                     AS ultimate_parent_account_name,
+      dim_parent_crm_account_id                                                                                   AS ultimate_parent_account_id,
+      crm_account_name                                                                                            AS sfdc_account_name,
+      dim_crm_account_id                                                                                          AS sfdc_account_id,
+      ARRAY_AGG(DISTINCT product_tier_name) WITHIN GROUP (ORDER BY product_tier_name ASC)                         AS product_category,
+      ARRAY_AGG(DISTINCT product_delivery_type) WITHIN GROUP (ORDER BY product_delivery_type ASC)                 AS delivery,
+      MAX(DECODE(product_tier_name,   --Need to account for the 'other' categories
           'Bronze', 1,
           'Silver', 2,
           'Gold', 3,
