@@ -8,7 +8,7 @@ WITH sfdc_user AS (
 
     SELECT DISTINCT
 
-      {{ dbt_utils.surrogate_key(['COALESCE(crm_user_segment_geo_region_area,CONCAT(user_segment,'-' , user_geo, '-', user_region, '-', user_area))']) }}   AS dim_crm_user_hierarchy_live_id,
+      {{ dbt_utils.surrogate_key(['crm_user_segment_geo_region_area']) }}   AS dim_crm_user_hierarchy_live_id,
       dim_crm_user_sales_segment_id,
       crm_user_sales_segment,
       crm_user_sales_segment_grouped,
@@ -18,7 +18,7 @@ WITH sfdc_user AS (
       crm_user_region,
       dim_crm_user_area_id,
       crm_user_area,
-      COALESCE(crm_user_segment_geo_region_area,CONCAT(user_segment,'-' , user_geo, '-', user_region, '-', user_area))                                      AS crm_user_segment_geo_region_area,
+      crm_user_segment_geo_region_area,
       crm_user_sales_segment_region_grouped
 
     FROM sfdc_user

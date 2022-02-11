@@ -33,14 +33,14 @@ WITH date AS (
       date.first_day_of_month,
       date.fiscal_year,
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}   AS dim_sales_qualified_source_id,
-      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                           AS dim_order_type_id,
+      {{ get_keyed_nulls('order_type.dim_order_type_id') }}                           AS dim_order_type_id
     FROM {{ ref('sheetload_sales_funnel_targets_matrix_source' )}}
     LEFT JOIN date
-      ON {{ sales_funnel_text_slugify("target_matrix.month") }} = {{ sales_funnel_text_slugify("date.fiscal_month_name_fy") }}
+      ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_targets_matrix_source.month") }} = {{ sales_funnel_text_slugify("date.fiscal_month_name_fy") }}
     LEFT JOIN sales_qualified_source
-      ON {{ sales_funnel_text_slugify("target_matrix.opportunity_source") }} = {{ sales_funnel_text_slugify("sales_qualified_source.sales_qualified_source_name") }}
+      ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_targets_matrix_source.opportunity_source") }} = {{ sales_funnel_text_slugify("sales_qualified_source.sales_qualified_source_name") }}
     LEFT JOIN order_type
-      ON {{ sales_funnel_text_slugify("target_matrix.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
+      ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_targets_matrix_source.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
 
 ), fy22_user_hierarchy AS (
 
@@ -53,7 +53,7 @@ WITH date AS (
 
     SELECT *
     FROM sfdc_user_hierarchy_stamped
-    WHERe fiscal_year > 2022
+    WHERE fiscal_year > 2022
       AND (
             is_last_user_hierarchy_in_fiscal_year = 1
               OR 
@@ -86,19 +86,19 @@ WITH date AS (
                                  'unioned_targets.dim_sales_qualified_source_id',
                                  'unioned_targets.dim_order_type_id', 
                                  'unioned_targets.dim_crm_user_hierarchy_stamped_id',
-                                 'unioned_targets.dim_crm_user_sales_segment_stamped_id',
-                                 'unioned_targets.dim_crm_user_geo_stamped_id', 
-                                 'unioned_targets.dim_crm_user_region_stamped_id', 
-                                 'unioned_targets.dim_crm_user_area_stamped_id'
+                                 'unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id',
+                                 'unioned_targets.dim_crm_opp_owner_geo_stamped_id', 
+                                 'unioned_targets.dim_crm_opp_owner_region_stamped_id', 
+                                 'unioned_targets.dim_crm_opp_owner_area_stamped_id'
                                  ]) 
      }}
                                                                                      AS sales_funnel_target_id,
-     target_matrix.kpi_name,
-     date.first_day_of_month,
-     target_matrix.opportunity_source                                                AS sales_qualified_source,
-     {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}   AS dim_sales_qualified_source_id,
-     target_matrix.order_type,
-     order_type.dim_order_type_id,
+     unioned_targets.kpi_name,
+     unioned_targets.first_day_of_month,
+     unioned_targets.opportunity_source                                              AS sales_qualified_source,
+     unioned_targets.dim_sales_qualified_source_id,
+     unioned_targets.order_type,
+     unioned_targets.dim_order_type_id,
      sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id,
      sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id,
      sfdc_user_hierarchy_live.dim_crm_user_geo_id,
@@ -109,19 +109,19 @@ WITH date AS (
      unioned_targets.dim_crm_opp_owner_geo_stamped_id,
      unioned_targets.dim_crm_opp_owner_region_stamped_id,
      unioned_targets.dim_crm_opp_owner_area_stamped_id,
-     SUM(target_matrix.allocated_target)                                             AS allocated_target
+     SUM(unioned_targets.allocated_target)                                             AS allocated_target
 
     FROM unioned_targets
     LEFT JOIN sfdc_user_hierarchy_live
-      ON unioned_targets.dim_crm_user_hierarchy_stamped_id = s  
+      ON unioned_targets.dim_crm_user_hierarchy_stamped_id = sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id
     {{ dbt_utils.group_by(n=17) }}
 
 )
 
 {{ dbt_audit(
-    cte_ref="final_targets",
+    cte_ref="unioned_targets",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2020-12-18",
-    updated_date="2021-05-06"
+    updated_date="2022-02-11"
 ) }}

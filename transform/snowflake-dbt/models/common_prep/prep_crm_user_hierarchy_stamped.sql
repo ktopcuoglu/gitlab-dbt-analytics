@@ -108,7 +108,7 @@
 
     SELECT 
       {{ dbt_utils.surrogate_key(['user_segment_geo_region_area']) }}   AS dim_crm_user_hierarchy_stamped_id,
-      {{ dbt_utils.surrogate_key(['user_segment']) }}                   AS dim_crm_opp_owner_sales_segment_stamped_id
+      {{ dbt_utils.surrogate_key(['user_segment']) }}                   AS dim_crm_opp_owner_sales_segment_stamped_id,
       user_segment                                                      AS crm_opp_owner_sales_segment_stamped,
       {{ dbt_utils.surrogate_key(['user_geo']) }}                       AS dim_crm_opp_owner_geo_stamped_id,
       user_geo                                                          AS crm_opp_owner_geo_stamped,
