@@ -43,7 +43,8 @@
       section_name                                                  AS section_name,
       smau                                                          AS smau,
       gmau                                                          AS gmau,
-      is_umau                                                       AS umau
+      is_umau                                                       AS umau,
+      project_is_learn_gitlab                                       AS project_is_learn_gitlab
     FROM usage_data_events
     LEFT JOIN xmau_metrics
       ON usage_data_events.event_name = xmau_metrics.events_to_include
@@ -104,6 +105,7 @@
       plan_id_at_event_date                   AS plan_id_at_event_date,
       plan_name_at_event_date                 AS plan_name_at_event_date,
       plan_was_paid_at_event_date             AS plan_was_paid_at_event_date,
+      project_is_learn_gitlab                 AS project_is_learn_gitlab,
       'GITLAB_DOTCOM'                         AS source
     FROM final
     LEFT JOIN dim_date
