@@ -71,7 +71,6 @@
       dim_namespace.dim_product_tier_id                         AS dim_product_tier_id,
       deduped_namespace_bdg.dim_subscription_id                 AS dim_subscription_id,
       deduped_namespace_bdg.order_id                            AS order_id,
-      deduped_namespace_bdg.ultimate_parent_namespace_id        AS ultimate_parent_namespace_id,
       deduped_namespace_bdg.dim_crm_account_id                  AS dim_crm_account_id,
       deduped_namespace_bdg.dim_billing_account_id              AS dim_billing_account_id
     FROM deduped_namespace_bdg
