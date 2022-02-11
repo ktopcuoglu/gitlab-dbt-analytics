@@ -1,20 +1,20 @@
 with raw_mrr_totals_levelled AS (
 
-       SELECT * FROM {{ref('mrr_totals_levelled')}}
+       SELECT * FROM {{ref('mart_arr')}}
 
 ), mrr_totals_levelled AS (
 
       SELECT subscription_name, 
               subscription_name_slugify,
-              sfdc_account_id,
-              oldest_subscription_in_cohort,
-              lineage,
-              mrr_month,
-              zuora_subscription_cohort_month,
-              zuora_subscription_cohort_quarter,
-              months_since_zuora_subscription_cohort_start,
-              quarters_since_zuora_subscription_cohort_start,
-              sum(mrr) as mrr
+              dim_crm_account_id                                        AS sfdc_account_id,
+              dim_subscription_id                                       AS oldest_subscription_in_cohort,
+              subscription_lineage                                      AS lineage,
+              arr_month                                                 AS mrr_month,
+              subscription_cohort_month                                 AS zuora_subscription_cohort_month,
+              subscription_cohort_quarter                               AS zuora_subscription_cohort_quarter,
+              months_since_subscription_cohort_start                    AS months_since_zuora_subscription_cohort_start,
+              quarters_since_subscription_cohort_start                  AS quarters_since_zuora_subscription_cohort_start,
+              sum(mrr)                                                  AS mrr
       FROM raw_mrr_totals_levelled
       {{ dbt_utils.group_by(n=10) }}
 
