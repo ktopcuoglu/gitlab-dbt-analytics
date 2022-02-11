@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
-    ('fct_event_usage_metrics', 'fct_event_usage_metrics'),
+    ('fct_usage_event', 'fct_usage_event'),
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ])
 }}
@@ -29,7 +29,7 @@
       plan_name_at_event_date,
       plan_was_paid_at_event_date,
       dim_namespace_id
-    FROM fct_event_usage_metrics
+    FROM fct_usage_event
 
 ), fact_with_namespace AS (
 
