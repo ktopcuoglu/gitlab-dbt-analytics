@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
-    ('fct_event_usage_metrics', 'fct_event_usage_metrics'),
+    ('fct_usage_event', 'fct_usage_event'),
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ])
 }}
@@ -15,7 +15,7 @@
     SELECT TOP 100
       event_id,
       TO_DATE(event_created_at)                                    AS event_date,
-      user_id                                                      AS dim_user_id,
+      dim_user_id,
       event_name,
       dim_product_tier_id,
       dim_subscription_id,
@@ -29,7 +29,7 @@
       plan_name_at_event_date,
       plan_was_paid_at_event_date,
       dim_namespace_id
-    FROM fct_event_usage_metrics
+    FROM fct_usage_event
 
 ), fact_with_namespace AS (
 
