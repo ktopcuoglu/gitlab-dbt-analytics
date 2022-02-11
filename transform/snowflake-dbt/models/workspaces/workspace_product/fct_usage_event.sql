@@ -14,6 +14,7 @@
     ('dim_license', 'dim_license'),
     ('dim_date', 'dim_date'),
     ('namespace_order_subscription', 'bdg_namespace_order_subscription'),
+    ('dim_subscription', 'dim_subscription'),
     ('dim_namespace', 'dim_namespace')
     ])
 
@@ -50,16 +51,17 @@
 ), deduped_namespace_bdg AS (
 
   SELECT
-    dim_subscription_id                   AS dim_subscription_id,
-    order_id                              AS order_id,
-    dim_crm_account_id                    AS dim_crm_account_id,
-    dim_billing_account_id                AS dim_billing_account_id,
-    dim_namespace_id                      AS dim_namespace_id
-    FROM namespace_order_subscription
+    bdg.dim_subscription_id                   AS dim_subscription_id,
+    bdg.order_id                              AS order_id,
+    bdg.dim_crm_account_id                    AS dim_crm_account_id,
+    bdg.dim_billing_account_id                AS dim_billing_account_id,
+    bdg.dim_namespace_id                      AS dim_namespace_id
+        FROM namespace_order_subscription AS bdg
+    INNER JOIN
+        dim_subscription AS ds
+    ON bdg.dim_subscription_id = ds.dim_subscription_id
     WHERE product_tier_name_subscription IN ('SaaS - Bronze', 'SaaS - Ultimate', 'SaaS - Premium')
-          AND is_subscription_active = true
-          AND is_namespace_active = true
-        QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY order_id) = 1
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY subscription_version DESC) = 1
 
 ), dim_namespace_w_bdg AS (
 
