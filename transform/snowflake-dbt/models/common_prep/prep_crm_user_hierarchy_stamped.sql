@@ -60,22 +60,22 @@
       sheetload_sales_funnel_targets_matrix_source.user_region,
       sheetload_sales_funnel_targets_matrix_source.user_area,
       CONCAT(sheetload_sales_funnel_targets_matrix_source.user_segment, 
+             '-',
              sheetload_sales_funnel_targets_matrix_source.user_geo, 
+             '-', 
              sheetload_sales_funnel_targets_matrix_source.user_region, 
-             sheetload_sales_funnel_targets_matrix_source.user_area)        AS user_segment_geo_region_area,
-      1                                                                     AS is_last_user_hierarchy_in_fiscal_year,
-      1                                                                     AS is_last_user_area_in_fiscal_year
+             '-', 
+             sheetload_sales_funnel_targets_matrix_source.user_area)        AS user_segment_geo_region_area
     FROM sheetload_sales_funnel_targets_matrix_source
     INNER JOIN fiscal_months
       ON sheetload_sales_funnel_targets_matrix_source.month = fiscal_months.fiscal_month_name_fy
     WHERE sheetload_sales_funnel_targets_matrix_source.user_area != 'N/A'
+      AND sheetload_sales_funnel_targets_matrix_source.user_segment IS NOT NULL
+      AND sheetload_sales_funnel_targets_matrix_source.user_geo IS NOT NULL
+      AND sheetload_sales_funnel_targets_matrix_source.user_region IS NOT NULL
       AND sheetload_sales_funnel_targets_matrix_source.user_area IS NOT NULL
-  
-), unioned AS (
-/*
-  Filter the spined slowly changing dimension to only the last user hierarchy and user area in a given fiscal year. Union with the distinct user-segment-geo-region-area combinations
-  from the target spreadsheet to ensure fidelity with the targets.
-*/
+
+), final_scd AS (
 
     SELECT 
       user_segment,
@@ -89,21 +89,38 @@
     FROM base_scd_spined
     WHERE is_last_user_hierarchy_in_fiscal_year = 1 
       OR is_last_user_area_in_fiscal_year = 1 
+  
+), unioned AS (
+/*
+  Filter the spined slowly changing dimension to only the last user hierarchy and user area in a given fiscal year. Union with the distinct user-segment-geo-region-area combinations
+  from the target spreadsheet to ensure fidelity with the targets.
+*/
+
+    SELECT 
+      final_scd.user_segment,
+      final_scd.user_geo,
+      final_scd.user_region,
+      final_scd.user_area,
+      final_scd.user_segment_geo_region_area,
+      final_scd.fiscal_year,
+      final_scd.is_last_user_hierarchy_in_fiscal_year,
+      final_scd.is_last_user_area_in_fiscal_year
+    FROM final_scd
 
     UNION
 
     SELECT 
-      user_segment,
-      user_geo,
-      user_region,
-      user_area,
-      user_segment_geo_region_area,
-      fiscal_year,
-      is_last_user_hierarchy_in_fiscal_year,
-      is_last_user_area_in_fiscal_year
+      user_hierarchy_sheetload.user_segment,
+      user_hierarchy_sheetload.user_geo,
+      user_hierarchy_sheetload.user_region,
+      user_hierarchy_sheetload.user_area,
+      user_hierarchy_sheetload.user_segment_geo_region_area,
+      user_hierarchy_sheetload.fiscal_year,
+      final_scd.is_last_user_hierarchy_in_fiscal_year,
+      final_scd.is_last_user_area_in_fiscal_year
     FROM user_hierarchy_sheetload
-    WHERE is_last_user_hierarchy_in_fiscal_year = 1 
-      OR is_last_user_area_in_fiscal_year = 1 
+    LEFT JOIN final_scd
+      ON user_hierarchy_sheetload.user_segment_geo_region_area = final_scd.user_segment_geo_region_area
 
 ), final AS (
 
