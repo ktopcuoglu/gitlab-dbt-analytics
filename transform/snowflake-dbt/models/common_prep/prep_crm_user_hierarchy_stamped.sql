@@ -125,16 +125,21 @@
 ), final AS (
 
     SELECT 
-      {{ dbt_utils.surrogate_key(['user_segment_geo_region_area']) }}   AS dim_crm_user_hierarchy_stamped_id,
-      {{ dbt_utils.surrogate_key(['user_segment']) }}                   AS dim_crm_opp_owner_sales_segment_stamped_id,
-      user_segment                                                      AS crm_opp_owner_sales_segment_stamped,
-      {{ dbt_utils.surrogate_key(['user_geo']) }}                       AS dim_crm_opp_owner_geo_stamped_id,
-      user_geo                                                          AS crm_opp_owner_geo_stamped,
-      {{ dbt_utils.surrogate_key(['user_region']) }}                    AS dim_crm_opp_owner_region_stamped_id,
-      user_region                                                       AS crm_opp_owner_region_stamped,
-      {{ dbt_utils.surrogate_key(['user_area']) }}                      AS dim_crm_opp_owner_area_stamped_id,
-      user_area                                                         AS crm_opp_owner_area_stamped,
-      user_segment_geo_region_area                                      AS crm_opp_owner_user_segment_geo_region_area_stamped,
+      {{ dbt_utils.surrogate_key(['user_segment_geo_region_area','fiscal_year']) }}   AS dim_crm_user_hierarchy_stamped_id,
+      {{ dbt_utils.surrogate_key(['user_segment']) }}                                 AS dim_crm_opp_owner_sales_segment_stamped_id,
+      user_segment                                                                    AS crm_opp_owner_sales_segment_stamped,
+      {{ dbt_utils.surrogate_key(['user_geo']) }}                                     AS dim_crm_opp_owner_geo_stamped_id,
+      user_geo                                                                        AS crm_opp_owner_geo_stamped,
+      {{ dbt_utils.surrogate_key(['user_region']) }}                                  AS dim_crm_opp_owner_region_stamped_id,
+      user_region                                                                     AS crm_opp_owner_region_stamped,
+      {{ dbt_utils.surrogate_key(['user_area']) }}                                    AS dim_crm_opp_owner_area_stamped_id,
+      user_area                                                                       AS crm_opp_owner_area_stamped,
+      user_segment_geo_region_area                                                    AS crm_opp_owner_user_segment_geo_region_area_stamped,
+      CASE
+          WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
+          ELSE user_segment
+        END                                                                           AS crm_opp_owner_sales_segment_stamped_grouped,
+      {{ sales_segment_region_grouped('user_segment', 'user_region') }}               AS crm_opp_owner_sales_segment_region_stamped_grouped,
       fiscal_year,
       is_last_user_hierarchy_in_fiscal_year,
       is_last_user_area_in_fiscal_year
