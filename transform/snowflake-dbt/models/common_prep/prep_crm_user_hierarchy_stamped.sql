@@ -5,7 +5,8 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('sfdc_user_snapshots_source', 'sfdc_user_snapshots_source'),
-    ('sheetload_sales_funnel_targets_matrix_source', 'sheetload_sales_funnel_targets_matrix_source')
+    ('sheetload_sales_funnel_targets_matrix_source', 'sheetload_sales_funnel_targets_matrix_source'),
+    ('sfdc_opportunity_source', 'sfdc_opportunity_source')
 ])}}
 
 , fiscal_months AS (
@@ -54,7 +55,25 @@
         AND dim_date.date_actual < base_scd.valid_to
     WHERE user_area IS NOT NULL
 
+), final_scd AS (
+
+    SELECT 
+      user_segment,
+      user_geo,
+      user_region,
+      user_area,
+      user_segment_geo_region_area,
+      fiscal_year,
+      is_last_user_hierarchy_in_fiscal_year,
+      is_last_user_area_in_fiscal_year
+    FROM base_scd_spined
+    WHERE is_last_user_hierarchy_in_fiscal_year = 1 
+      OR is_last_user_area_in_fiscal_year = 1 
+
 ), user_hierarchy_sheetload AS (
+/*
+  To get a complete picture of the hierarchy and to ensure fidelity with the TOPO model, we will union in the distinct hierarchy values from the file.
+*/
 
     SELECT DISTINCT 
       fiscal_months.fiscal_year,
@@ -78,20 +97,24 @@
       AND sheetload_sales_funnel_targets_matrix_source.user_region IS NOT NULL
       AND sheetload_sales_funnel_targets_matrix_source.user_area IS NOT NULL
 
-), final_scd AS (
+), user_hierarchy_stamped_opportunity AS (
+/*
+  To get a complete picture of the hierarchy and to ensure fidelity with the stamped opportunities, we will union in the distinct hierarchy values from the stamped opportunities.
+*/
 
-    SELECT 
-      user_segment,
-      user_geo,
-      user_region,
-      user_area,
-      user_segment_geo_region_area,
-      fiscal_year,
-      is_last_user_hierarchy_in_fiscal_year,
-      is_last_user_area_in_fiscal_year
-    FROM base_scd_spined
-    WHERE is_last_user_hierarchy_in_fiscal_year = 1 
-      OR is_last_user_area_in_fiscal_year = 1 
+    SELECT DISTINCT
+      dim_date.fiscal_year,
+      sfdc_opportunity_source.user_segment_stamped                AS user_segment,
+      sfdc_opportunity_source.user_geo_stamped                    AS user_geo,
+      sfdc_opportunity_source.user_region_stamped                 AS user_region,
+      sfdc_opportunity_source.user_area_stamped                   AS user_area,
+      CONCAT(sfdc_opportunity_source.user_segment_stamped, '-', 
+         sfdc_opportunity_source.user_geo_stamped, '-', 
+         sfdc_opportunity_source.user_region_stamped, '-', 
+         sfdc_opportunity_source.user_area_stamped)               AS user_segment_geo_region_area
+    FROM sfdc_opportunity_source
+    INNER JOIN dim_date
+      ON sfdc_opportunity_source.close_date = dim_date.date_actual
   
 ), unioned AS (
 /*
@@ -119,11 +142,28 @@
       user_hierarchy_sheetload.user_area,
       user_hierarchy_sheetload.user_segment_geo_region_area,
       user_hierarchy_sheetload.fiscal_year,
-      final_scd.is_last_user_hierarchy_in_fiscal_year,
-      final_scd.is_last_user_area_in_fiscal_year
+      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, 1)  AS is_last_user_hierarchy_in_fiscal_year,
+      COALESCE(final_scd.is_last_user_area_in_fiscal_year, 0)       AS is_last_user_area_in_fiscal_year
     FROM user_hierarchy_sheetload
     LEFT JOIN final_scd
       ON user_hierarchy_sheetload.user_segment_geo_region_area = final_scd.user_segment_geo_region_area
+        AND user_hierarchy_sheetload.fiscal_year = final_scd.fiscal_year
+
+    UNION
+
+    SELECT 
+      user_hierarchy_stamped_opportunity.user_segment,
+      user_hierarchy_stamped_opportunity.user_geo,
+      user_hierarchy_stamped_opportunity.user_region,
+      user_hierarchy_stamped_opportunity.user_area,
+      user_hierarchy_stamped_opportunity.user_segment_geo_region_area,
+      user_hierarchy_stamped_opportunity.fiscal_year,
+      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, 1)  AS is_last_user_hierarchy_in_fiscal_year,
+      COALESCE(final_scd.is_last_user_area_in_fiscal_year, 0)       AS is_last_user_area_in_fiscal_year
+    FROM user_hierarchy_stamped_opportunity
+    LEFT JOIN final_scd
+      ON user_hierarchy_stamped_opportunity.user_segment_geo_region_area = final_scd.user_segment_geo_region_area
+        AND user_hierarchy_stamped_opportunity.fiscal_year = final_scd.fiscal_year
 
 ), final AS (
 

@@ -114,6 +114,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
     FROM target_matrix
     LEFT JOIN fy23_and_beyond_user_hierarchy
       ON {{ sales_funnel_text_slugify("target_matrix.area") }} = {{ sales_funnel_text_slugify("fy23_and_beyond_user_hierarchy.crm_opp_owner_user_segment_geo_region_area_stamped") }}
+        AND target_matrix.fiscal_year = fy23_and_beyond_user_hierarchy.fiscal_year
     WHERE target_matrix.fiscal_year > 2022 
 
 ), final_targets AS (
