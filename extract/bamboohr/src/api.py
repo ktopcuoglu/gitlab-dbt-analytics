@@ -5,7 +5,6 @@ from typing import Dict, Any
 import requests
 
 
-
 class BambooAPI:
     """
     Initialized with subdomain and an API key. Currently just allows for fetching from the directory
