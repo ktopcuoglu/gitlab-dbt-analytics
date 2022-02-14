@@ -11,7 +11,7 @@ WITH mrr_totals_levelled AS (
 ), monthly_arr AS (--Create a base data set of ARR and Customer Attributes to be used for the model
 
     SELECT
-      arr_month                                                                                                   AS arr_month,
+      mrr_month                                                                                                   AS arr_month,
       months_since_crm_account_cohort_start                                                                       AS months_since_sfdc_account_cohort_start,
       quarters_since_crm_account_cohort_start                                                                     AS quarters_since_sfdc_account_cohort_start,
       crm_account_cohort_quarter                                                                                  AS sfdc_account_cohort_quarter,
