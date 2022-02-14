@@ -75,6 +75,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       target_matrix.order_type, 
       target_matrix.fiscal_year,
       target_matrix.allocated_target,
+      fy22_user_hierarchy.crm_opp_owner_user_segment_geo_region_area_stamped,
       fy22_user_hierarchy.dim_crm_user_hierarchy_stamped_id,
       fy22_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
       fy22_user_hierarchy.crm_opp_owner_sales_segment_stamped,
@@ -100,6 +101,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       target_matrix.order_type, 
       target_matrix.fiscal_year,
       target_matrix.allocated_target,
+      fy23_and_beyond_user_hierarchy.crm_opp_owner_user_segment_geo_region_area_stamped,
       fy23_and_beyond_user_hierarchy.dim_crm_user_hierarchy_stamped_id,
       fy23_and_beyond_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
       fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_stamped,
@@ -118,25 +120,21 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
 
      SELECT
 
-     {{ dbt_utils.surrogate_key([
-                                 'unioned_targets.kpi_name',
+     {{ dbt_utils.surrogate_key(['unioned_targets.crm_opp_owner_user_segment_geo_region_area_stamped', 
+                                 'unioned_targets.fiscal_year', 
+                                 'unioned_targets.kpi_name', 
                                  'unioned_targets.first_day_of_month', 
-                                 'unioned_targets.dim_sales_qualified_source_id',
-                                 'unioned_targets.dim_order_type_id', 
-                                 'unioned_targets.dim_crm_user_hierarchy_stamped_id',
-                                 'unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id',
-                                 'unioned_targets.dim_crm_opp_owner_geo_stamped_id', 
-                                 'unioned_targets.dim_crm_opp_owner_region_stamped_id', 
-                                 'unioned_targets.dim_crm_opp_owner_area_stamped_id'
-                                 ]) 
-     }}
-                                                                                                                                    AS sales_funnel_target_id,
+                                 'unioned_targets.opportunity_source',
+                                 'unioned_targets.order_type',
+                                 ]) }}                           AS sales_funnel_target_id,
      unioned_targets.kpi_name,
      unioned_targets.first_day_of_month,
+     unioned_targets.fiscal_year,
      unioned_targets.opportunity_source                                                                                             AS sales_qualified_source,
      unioned_targets.dim_sales_qualified_source_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
+     unioned_targets.crm_opp_owner_user_segment_geo_region_area_stamped                                                             AS crm_user_segment_geo_region_area,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)           AS dim_crm_user_hierarchy_live_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)   AS dim_crm_user_sales_segment_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                       AS dim_crm_user_geo_id,
@@ -152,7 +150,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
     FROM unioned_targets
     LEFT JOIN sfdc_user_hierarchy_live
       ON unioned_targets.dim_crm_user_hierarchy_stamped_id = sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id
-    {{ dbt_utils.group_by(n=17) }}
+    {{ dbt_utils.group_by(n=19) }}
 
 )
 

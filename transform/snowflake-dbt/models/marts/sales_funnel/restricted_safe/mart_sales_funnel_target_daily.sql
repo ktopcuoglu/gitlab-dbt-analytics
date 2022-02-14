@@ -30,15 +30,10 @@
     LEFT JOIN dim_order_type
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_user_hierarchy_stamped
-      ON fct_sales_funnel_target.dim_crm_opp_owner_sales_segment_stamped_id = dim_crm_user_hierarchy_stamped.dim_crm_opp_owner_sales_segment_stamped_id
-      AND fct_sales_funnel_target.dim_crm_opp_owner_geo_stamped_id = dim_crm_user_hierarchy_stamped.dim_crm_opp_owner_geo_stamped_id
-      AND fct_sales_funnel_target.dim_crm_opp_owner_region_stamped_id = dim_crm_user_hierarchy_stamped.dim_crm_opp_owner_region_stamped_id
-      AND fct_sales_funnel_target.dim_crm_opp_owner_area_stamped_id = dim_crm_user_hierarchy_stamped.dim_crm_opp_owner_area_stamped_id
+     ON fct_sales_funnel_target.crm_user_segment_geo_region_area = dim_crm_user_hierarchy_stamped.crm_opp_owner_user_segment_geo_region_area_stamped
+        AND fct_sales_funnel_target.fiscal_year = dim_crm_user_hierarchy_stamped.fiscal_year
     LEFT JOIN dim_crm_user_hierarchy_live
-      ON fct_sales_funnel_target.dim_crm_user_sales_segment_id = dim_crm_user_hierarchy_live.dim_crm_user_sales_segment_id
-      AND fct_sales_funnel_target.dim_crm_user_geo_id = dim_crm_user_hierarchy_live.dim_crm_user_geo_id
-      AND fct_sales_funnel_target.dim_crm_user_region_id = dim_crm_user_hierarchy_live.dim_crm_user_region_id
-      AND fct_sales_funnel_target.dim_crm_user_area_id = dim_crm_user_hierarchy_live.dim_crm_user_area_id
+      ON fct_sales_funnel_target.crm_user_segment_geo_region_area = dim_crm_user_hierarchy_live.crm_user_segment_geo_region_area
 
 ), monthly_targets_daily AS (
 

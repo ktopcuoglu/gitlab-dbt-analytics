@@ -26,7 +26,10 @@
       user_geo, 
       user_region, 
       user_area, 
-      COALESCE(user_segment_geo_region_area,CONCAT(user_segment,'-' , user_geo, '-', user_region, '-', user_area)) AS user_segment_geo_region_area,
+      COALESCE(
+                user_segment_geo_region_area,
+                CONCAT(IFNULL(user_segment,'No User Segment'),'-' , IFNULL(user_geo, 'No User Geo'), '-', IFNULL(user_region, 'No User Region'), '-', IFNULL(user_area, 'No user_area'))
+                )           AS user_segment_geo_region_area,
       MIN(dbt_valid_from)   AS valid_from, 
       MAX(dbt_valid_to)     AS valid_to
     FROM sfdc_user_snapshots_source
