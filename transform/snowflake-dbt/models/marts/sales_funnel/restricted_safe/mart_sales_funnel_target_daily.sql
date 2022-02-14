@@ -55,6 +55,7 @@
         'crm_user_area', 'order_type_name', 'sales_qualified_source_name']) }}                                                    AS primary_key,
       date_day                                                                                                                    AS target_date,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
+      first_day_of_week,
       target_month,
       fiscal_quarter_name,
       fiscal_year,
