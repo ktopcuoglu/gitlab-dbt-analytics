@@ -437,6 +437,16 @@ roles:
             - zendesk_community_relations
             - zuora
             - zuora_central_sandbox
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.mart_marketing_contact
 
     - analyst_people:
         warehouses:
