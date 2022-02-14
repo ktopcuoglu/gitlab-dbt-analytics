@@ -217,6 +217,8 @@ WITH source AS (
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
+        VartopiaDRS__DR_Deal_Reg_Id__c              AS dr_deal_id,
+        VartopiaDRS__Primary_Registration__c        AS dr_primary_registration,
         {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                     AS channel_type,
         impartnerprm__partneraccount__c             AS partner_account,
