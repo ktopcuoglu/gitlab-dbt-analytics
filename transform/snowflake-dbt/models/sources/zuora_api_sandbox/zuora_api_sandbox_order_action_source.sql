@@ -21,9 +21,9 @@ WITH source AS (
       cancellationpolicy                 AS cancellation_policy,
       termtype                           AS term_type,
   
-      customeracceptancedate             AS customer_acceptance_date,
-      contracteffectivedate              AS contract_effective_date,
-      serviceactivationdate              AS service_activation_date,
+      customeracceptancedate::DATE       AS customer_acceptance_date,
+      contracteffectivedate::DATE        AS contract_effective_date,
+      serviceactivationdate::DATE        AS service_activation_date,
       
       currentterm                        AS current_term,
       currenttermperiodtype              AS current_term_period_type,
@@ -32,12 +32,12 @@ WITH source AS (
       renewaltermperiodtype              AS renewal_term_period_type,
       renewsetting                       AS renewal_setting,
       
-      termstartdate                      AS term_start_date,
+      termstartdate::DATE                AS term_start_date,
 
       -- metadata
-      createddate                        AS order_action_created_date,
+      createddate::DATE                  AS order_action_created_date,
       createdbyid                        AS order_action_created_by_id,
-      updateddate                        AS updated_date,
+      updateddate::DATE                  AS updated_date,
       updatedbyid                        AS updated_by_id,
       deleted                            AS is_deleted
 

@@ -107,9 +107,6 @@ models:
     - name: percent_of_hires_sourced     
       description: Identifies of the hires for a specific month, how many were sourced by a recruiter.
 
-    - name: rpt_greenhouse_location_factors
-      description: This model provides the average location factor for screened applicants in our recruiting process. The breakdown provided is by division, and department and month.
-
   - name: greenhouse_sourcer_scorecard
     description: This data model provides recruiting metrics by sourcer and month, as well as what the percentile baselines are for each recruiting metric based on performance for the 3 previous months and removing the bottom 10% of outliers.
     columns:
