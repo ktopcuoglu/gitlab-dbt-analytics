@@ -5,7 +5,7 @@
 WITH base AS (
     SELECT dim_subscription_id as zuora_subscription_id,
             dim_parent_crm_account_id as parent_account_id,
-            dim_crm_account_id as afdc_account_id,
+            dim_crm_account_id as sfdc_account_id,
           {{ dbt_utils.star(from=ref('mart_arr'), 
             except=["dim_subscription_id", "dim_parent_crm_account_id", "dim_crm_account_id"]) }}
     FROM {{ref('mart_arr')}}
