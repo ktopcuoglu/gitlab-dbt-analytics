@@ -1,17 +1,20 @@
-WITH order_type AS (
+{{ simple_cte([
+      ('dim_crm_user_hierarchy_live', 'dim_crm_user_hierarchy_live'),
+      ('dim_crm_user_hierarchy_stamped', 'dim_crm_user_hierarchy_stamped'),
+      ('sales_qualified_source', 'prep_sales_qualified_source'),
+      ('order_type', 'prep_order_type'),
+      ('alliance_type', 'prep_alliance_type'),
+      ('channel_type', 'prep_channel_type'),
+      ('date_details_source', 'date_details_source')
+])}}
 
-    SELECT *
-    FROM {{ ref('prep_order_type') }}
+, date AS (
 
-), sfdc_user_hierarchy_live AS (
-
-    SELECT *
-    FROM {{ ref('prep_crm_user_hierarchy_live') }}
-
-), sfdc_user_hierarchy_stamped AS (
-
-    SELECT *
-    FROM {{ ref('prep_crm_user_hierarchy_stamped') }}
+   SELECT DISTINCT
+     fiscal_month_name_fy,
+     fiscal_year,
+     first_day_of_month
+   FROM date_details_source
 
 ), sheetload_sales_funnel_partner_alliance_targets_matrix_source AS (
 
@@ -19,29 +22,6 @@ WITH order_type AS (
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.*,
       {{ channel_type('sheetload_sales_funnel_partner_alliance_targets_matrix_source.sqs_bucket_engagement', 'sheetload_sales_funnel_partner_alliance_targets_matrix_source.order_type') }}   AS channel_type
     FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
-
-), alliance_type AS (
-
-    SELECT *
-    FROM {{ ref('prep_alliance_type') }}
-
-), sales_qualified_source AS (
-
-    SELECT *
-    FROM {{ ref('prep_sales_qualified_source') }}
-
-), channel_type AS (
-
-    SELECT *
-    FROM {{ ref('prep_channel_type') }}
-
-), date AS (
-
-   SELECT DISTINCT
-     fiscal_month_name_fy,
-     fiscal_year,
-     first_day_of_month
-   FROM {{ ref('date_details_source') }}
 
 ), target_matrix AS (
 
