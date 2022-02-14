@@ -67,7 +67,7 @@
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --exclude $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - dbt --partial-parse run $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
@@ -79,7 +79,7 @@
     - *l_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --exclude $DBT_MODELS || FAILED=true
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
@@ -90,7 +90,7 @@
     - *xl_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --exclude $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --exclude $DBT_MODELS || FAILED=true
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --exclude $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
@@ -100,7 +100,7 @@
   script:
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
@@ -110,7 +110,7 @@
     - *l_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $DBT_MODELS || FAILED=true
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
@@ -132,7 +132,7 @@
     - *deps_and_seed
     - *clone_raw # Reads from raw clone 
     - echo $DBT_MODELS
-    - dbt run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
+    - dbt run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
 
