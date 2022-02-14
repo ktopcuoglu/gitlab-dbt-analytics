@@ -12,8 +12,8 @@ WITH mrr_totals_levelled AS (
 
     SELECT
       arr_month                                                                                                   AS arr_month,
-      months_since_crm_account_cohort_start                                                                           AS months_since_sfdc_account_cohort_start,
-      quarters_since_crm_account_cohort_start                                                                         AS quarters_since_sfdc_account_cohort_start,
+      months_since_crm_account_cohort_start                                                                       AS months_since_sfdc_account_cohort_start,
+      quarters_since_crm_account_cohort_start                                                                     AS quarters_since_sfdc_account_cohort_start,
       crm_account_cohort_quarter                                                                                  AS sfdc_account_cohort_quarter,
       crm_account_cohort_month                                                                                    AS sfdc_account_cohort_month,
       parent_crm_account_name                                                                                     AS ultimate_parent_account_name,
