@@ -24,11 +24,11 @@
           ---------
           -- 2022-02-01 NF Deprecated, this should be removed once the Q1 clean up exercise is done
           CASE 
-            WHEN funnel_target.crm_user_segment = 'Large'
+            WHEN funnel_target.crm_user_sales_segment = 'Large'
               AND funnel_target.crm_user_geo = 'EMEA'
                 THEN 'Large_EMEA'
-            ELSE COALESCE(CONCAT(funnel_target.crm_user_segment,'_',funnel_target.crm_user_region),'NA') 
-          END                                                                                         AS sales_team_rd_asm_level,                                                         AS sales_team_rd_asm_level,
+            ELSE COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_region),'NA') 
+          END                                                                                         AS sales_team_rd_asm_level,
           ---------
           COALESCE(funnel_target.crm_user_sales_segment ,'NA')                                        AS sales_team_cro_level,
           COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_geo),'NA')  AS sales_team_vp_level,
@@ -38,7 +38,7 @@
             '_',funnel_target.crm_user_region,'_',funnel_target.crm_user_area),'NA')                  AS sales_team_asm_level,
 
           -- 20220214 NF: Temporary keys, until the SFDC key is exposed
-          LOWER(CONTACT(funnel_target.crm_user_sales_segment,'-',funnel_target.crm_user_geo,'-',funnel_target.crm_user_region,'-',funnel_target.crm_user_area))   AS report_user_segment_geo_region_area,
+          LOWER(CONCAT(funnel_target.crm_user_sales_segment,'-',funnel_target.crm_user_geo,'-',funnel_target.crm_user_region,'-',funnel_target.crm_user_area))   AS report_user_segment_geo_region_area,
       
           CASE 
             WHEN funnel_target.order_type_name = '3. Growth' 
