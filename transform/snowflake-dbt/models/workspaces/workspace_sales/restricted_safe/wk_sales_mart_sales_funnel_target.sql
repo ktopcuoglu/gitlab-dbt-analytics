@@ -37,6 +37,9 @@
           COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_geo,
             '_',funnel_target.crm_user_region,'_',funnel_target.crm_user_area),'NA')                  AS sales_team_asm_level,
 
+          -- 20220214 NF: Temporary keys, until the SFDC key is exposed
+          LOWER(CONTACT(funnel_target.crm_user_sales_segment,'-',funnel_target.crm_user_geo,'-',funnel_target.crm_user_region,'-',funnel_target.crm_user_area))   AS report_user_segment_geo_region_area,
+
           CASE 
             WHEN funnel_target.order_type_name = '3. Growth' 
                 THEN '2. Growth'

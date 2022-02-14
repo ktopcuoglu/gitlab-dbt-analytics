@@ -672,6 +672,10 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region),'NA')                              AS sales_team_avp_rd_level,
       COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region,'_',report_opportunity_area),'NA')  AS sales_team_asm_level,
 
+      -- 20220214 NF: Temporary keys, until the SFDC key is exposed
+      LOWER(CONTACT(sfdc_opportunity_xf.opportunity_owner_user_segment,'-',sfdc_opportunity_xf.opportunity_owner_user_geo,'-',sfdc_opportunity_xf.opportunity_owner_user_region,'-',sfdc_opportunity_xf.opportunity_owner_user_area)) AS opportunity_user_segment_geo_region_area,
+      LOWER(CONTACT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area)) AS report_user_segment_geo_region_area,
+
       -- account driven fields 
       sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.ultimate_parent_account_id,
