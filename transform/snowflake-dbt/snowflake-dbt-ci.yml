@@ -121,7 +121,7 @@
     - *xl_warehouse
     - *deps_and_seed
     - echo $DBT_MODELS
-    - dbt --partial-parse run $CI_PROFILE_TARGET --full-refresh --models $DBT_MODELS || FAILED=true
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $DBT_MODELS || FAILED=true
     - *xs_warehouse
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
     - if [ $FAILED ]; then exit 1; fi
