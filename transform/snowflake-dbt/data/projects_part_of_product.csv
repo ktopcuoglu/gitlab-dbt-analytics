@@ -19,6 +19,7 @@ gitlab-org/cluster-integration/auto-deploy-image,11688089
 gitlab-org/cluster-integration/helm-install-image,9184510
 gitlab-org/cookbook-omnibus-gitlab,95156
 gitlab-org/customers-gitlab-com,2670515
+gitlab-org/database-team/gitlab-com-database-testing,23345837
 gitlab-org/discourse-omniauth-gitlab,150440
 gitlab-org/distribution/gitlab-configurator,13682597
 gitlab-org/distribution/gitlab-provisioner,6047528
