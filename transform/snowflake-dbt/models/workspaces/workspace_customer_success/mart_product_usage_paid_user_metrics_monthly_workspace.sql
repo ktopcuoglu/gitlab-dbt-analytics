@@ -44,12 +44,12 @@
     SELECT
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
-      subscriptions.dim_subscription_id_original,
       NULL                                                                         AS dim_namespace_id,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
+      monthly_sm_metrics.dim_subscription_id_original,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
       most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
@@ -179,12 +179,12 @@
     SELECT
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
-      subscriptions.dim_subscription_id_original,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,
+      monthly_saas_metrics.dim_subscription_id_original,
       subscriptions.subscription_name,
       subscriptions.subscription_status,
       most_recent_subscription_version.subscription_status AS subscription_status_most_recent_version,
@@ -324,5 +324,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-02-04"
+    updated_date="2022-02-09"
 ) }}

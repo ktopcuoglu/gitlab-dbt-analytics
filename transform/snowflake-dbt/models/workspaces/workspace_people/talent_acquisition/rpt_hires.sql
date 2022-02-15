@@ -5,7 +5,9 @@
     ('offers','greenhouse_offers_source'),
     ('openings','greenhouse_openings_source'),
     ('departments','wk_prep_greenhouse_departments'),
-    ('application_jobs','greenhouse_applications_jobs_source')
+    ('application_jobs','greenhouse_applications_jobs_source'),
+    ('jobs','greenhouse_jobs_source'),
+    ('candidates','greenhouse_candidates_source')
 ])}}
 
 , job_departments AS (
@@ -21,6 +23,9 @@ SELECT
   applications.candidate_id,
   applications.application_id,
   bamboohr_mapping.region,
+  jobs.job_id,
+  jobs.job_name,
+  candidates.candidate_recruiter,
   sources.source_name,
   sources.source_type,
   applications.applied_at,
@@ -48,5 +53,9 @@ LEFT JOIN job_departments
   ON application_jobs.job_id = job_departments.job_id
 LEFT JOIN departments
   ON job_departments.department_id = departments.department_id
+LEFT JOIN jobs
+  ON application_jobs.job_id = jobs.job_id
+LEFT JOIN candidates
+  ON applications.candidate_id = candidates.candidate_id
 WHERE offers.offer_status = 'accepted'
 

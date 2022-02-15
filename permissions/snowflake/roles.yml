@@ -437,6 +437,16 @@ roles:
             - zendesk_community_relations
             - zuora
             - zuora_central_sandbox
+        privileges:
+            databases:
+                read:
+                    - prep
+            schemas:
+                read:
+                    - prep.sensitive
+            tables:
+                read:
+                    - prep.sensitive.mart_marketing_contact
 
     - analyst_people:
         warehouses:
@@ -969,7 +979,6 @@ roles:
                     - prep.sensitive.employee_locality
                     - prep.sensitive.employee_location_factor_snapshots
                     - prep.sensitive.bamboohr_job_role
-                    - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_headcount_intermediate
 
     - bamboohr_sensitive_separations:
@@ -1016,7 +1025,6 @@ roles:
                     - prep.sensitive.bamboohr_headcount_intermediate
                     - prep.sensitive.bamboohr_id_employee_number_mapping
                     - prep.sensitive.bamboohr_job_role
-                    - prep.sensitive.bamboohr_locality
                     - prep.sensitive.bamboohr_missing_emergency_contact_alert
                     - prep.sensitive.bamboohr_promotions_xf
                     - prep.sensitive.bamboohr_promotion_rate
@@ -1307,6 +1315,7 @@ roles:
                     - prod.common_mapping
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_common_mart_product
+                    - prod.workspace_customer_success
                 write:
                     - prod.common_mart_product
             tables:
@@ -1322,6 +1331,7 @@ roles:
                     - prod.restricted_safe_common_mart_product.mart_user_request
                     - prod.restricted_safe_common_mart_product.rpt_user_request_crm_account_issue_epic
                     - prod.restricted_safe_common_mart_product.rpt_user_request_issue_epic
+                    - prod.workspace_customer_success.mart_product_usage_paid_user_metrics_monthly_workspace
 
     - gainsight:
         warehouses:
@@ -1642,8 +1652,6 @@ roles:
                     - prep.greenhouse.*
                     - prep.sensitive.greenhouse_diversity_intermediate
                     - prep.sensitive.greenhouse_hires
-                    - prep.sensitive.greenhouse_locations_cleaned_intermediate
-                    - prep.sensitive.greenhouse_location_factors
                     - prep.sensitive.greenhouse_recruiting_xf
                     - prep.sensitive.greenhouse_sourcer
                     - prep.sensitive.greenhouse_sourcer_base
@@ -2654,6 +2662,13 @@ roles:
     - eeastwood:
         member_of: []
         warehouses: []
+
+    - eneuberger:
+        member_of:
+            - analyst_growth
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
     - eurie: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -4509,6 +4524,11 @@ users:
     - ekastelein:
         can_login: no
         member_of: []
+
+    - eneuberger:
+        can_login: yes
+        member_of:
+            - eneuberger       
 
     - eurie: # De provisioned as part of Quarterly audit and security check.
         can_login: no

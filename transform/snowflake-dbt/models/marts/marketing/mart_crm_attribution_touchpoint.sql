@@ -225,6 +225,7 @@
       mart_crm_opportunity.source_buckets                                   AS opportunity_source_buckets,
       mart_crm_opportunity.opportunity_sales_development_representative,
       mart_crm_opportunity.opportunity_business_development_representative,
+      mart_crm_opportunity.sdr_or_bdr,
       mart_crm_opportunity.opportunity_development_representative,
       mart_crm_opportunity.is_web_portal_purchase,
       mart_crm_opportunity.count_crm_attribution_touchpoints                AS crm_attribution_touchpoints_per_opp,
