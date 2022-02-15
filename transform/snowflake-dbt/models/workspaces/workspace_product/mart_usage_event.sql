@@ -12,7 +12,7 @@
 
 , fact_with_date AS (
 
-    SELECT TOP 100
+    SELECT 
       event_id,
       TO_DATE(event_created_at)                                    AS event_date,
       dim_user_id,
