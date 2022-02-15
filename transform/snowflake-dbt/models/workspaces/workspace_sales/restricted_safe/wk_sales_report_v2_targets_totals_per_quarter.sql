@@ -37,6 +37,9 @@ WITH date_details AS (
     sales_team_vp_level,
     sales_team_avp_rd_level,
     sales_team_asm_level,
+
+    sales_team_rd_asm_level,
+    report_user_segment_geo_region_area,
     -------------------------
     sales_qualified_source,
     deal_group,
@@ -56,7 +59,7 @@ WITH date_details AS (
            ELSE 0 
         END)                        AS target_pipe_generation_net_arr
   FROM mart_sales_funnel_target
-  GROUP BY 1,2,3,4,5,6,7,8
+  GROUP BY 1,2,3,4,5,6,7,8,9,10
 
 ), totals_per_quarter AS (
   
@@ -69,6 +72,9 @@ WITH date_details AS (
         opp_snapshot.sales_team_vp_level,
         opp_snapshot.sales_team_avp_rd_level,
         opp_snapshot.sales_team_asm_level,
+
+        opp_snapshot.sales_team_rd_asm_level,
+        opp_snapshot.report_user_segment_geo_region_area,
         -------------------------
         opp_snapshot.sales_qualified_source,
         opp_snapshot.deal_group,
@@ -111,7 +117,7 @@ WITH date_details AS (
    WHERE opp_snapshot.is_excluded_flag = 0
      AND opp_snapshot.is_deleted = 0
      AND opp_snapshot.snapshot_day_of_fiscal_quarter_normalised = 90
-   GROUP BY 1,2,3,4,5,6,7,8
+   GROUP BY 1,2,3,4,5,6,7,8,9,10
 
 ), base_fields AS (
 
@@ -123,7 +129,9 @@ WITH date_details AS (
         sales_team_avp_rd_level,
         sales_team_asm_level,
         sales_qualified_source,
-        deal_group
+        deal_group,
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area
   FROM funnel_targets_per_quarter
   UNION
   SELECT 
@@ -134,7 +142,9 @@ WITH date_details AS (
         sales_team_avp_rd_level,
         sales_team_asm_level,
         sales_qualified_source,
-        deal_group
+        deal_group,
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area
   FROM totals_per_quarter
   
 ), consolidated_targets_totals AS (
@@ -150,6 +160,9 @@ WITH date_details AS (
      base.sales_team_asm_level,
      base.sales_qualified_source,
      base.deal_group,
+
+     base.sales_team_rd_asm_level,
+     base.report_user_segment_geo_region_area,
      -----
      
      report_date.fiscal_year    AS close_fiscal_year,
@@ -187,17 +200,25 @@ WITH date_details AS (
     ON report_date.date_actual = base.close_fiscal_quarter_date
   LEFT JOIN funnel_targets_per_quarter target
      ON target.target_fiscal_quarter_date = base.close_fiscal_quarter_date
-      AND target.sales_team_asm_level = base.sales_team_asm_level
       AND target.sales_team_cro_level = base.sales_team_cro_level
+      AND target.sales_team_vp_level = base.sales_team_vp_level
+      AND target.sales_team_avp_rd_level = base.sales_team_avp_rd_level
+      AND target.sales_team_asm_level = base.sales_team_asm_level
       AND target.sales_qualified_source = base.sales_qualified_source
       AND target.deal_group = base.deal_group
+      AND target.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+      AND target.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
   -- quarterly total
   LEFT JOIN totals_per_quarter total
      ON total.close_fiscal_quarter_date = base.close_fiscal_quarter_date
-      AND total.sales_team_asm_level = base.sales_team_asm_level
       AND total.sales_team_cro_level = base.sales_team_cro_level
+      AND total.sales_team_vp_level = base.sales_team_vp_level
+      AND total.sales_team_avp_rd_level = base.sales_team_avp_rd_level
+      AND total.sales_team_asm_level = base.sales_team_asm_level
       AND total.sales_qualified_source = base.sales_qualified_source
       AND total.deal_group = base.deal_group
+      AND total.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+      AND total.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
   
 )
 SELECT * 

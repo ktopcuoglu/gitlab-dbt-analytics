@@ -44,10 +44,12 @@ WITH date_details AS (
       sales_team_asm_level,
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
-      report_opportunity_segment,
-      report_opportunity_geo,
-      report_opportunity_region,
-      report_opportunity_area,
+      report_opportunity_user_segment,
+      report_opportunity_user_geo,
+      report_opportunity_user_region,
+      report_opportunity_user_area,
+
+      report_user_segment_geo_region_area,
 
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
@@ -773,10 +775,12 @@ WITH date_details AS (
       sfdc_opportunity_xf.sales_team_asm_level,
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
-      sfdc_opportunity_xf.report_opportunity_segment,
-      sfdc_opportunity_xf.report_opportunity_geo,
-      sfdc_opportunity_xf.report_opportunity_region,
-      sfdc_opportunity_xf.report_opportunity_area,
+      sfdc_opportunity_xf.report_opportunity_user_segment,
+      sfdc_opportunity_xf.report_opportunity_user_geo,
+      sfdc_opportunity_xf.report_opportunity_user_region,
+      sfdc_opportunity_xf.report_opportunity_user_area,
+
+      sfdc_opportunity_xf.report_user_segment_geo_region_area,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    

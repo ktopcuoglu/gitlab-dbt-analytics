@@ -57,6 +57,9 @@ WITH report_pipeline_velocity_quarter AS (
      base.sales_team_vp_level,
      base.sales_team_avp_rd_level,
      base.sales_team_asm_level,
+
+     base.sales_team_rd_asm_level,
+     base.report_user_segment_geo_region_area,
      -------------------------
      base.sales_qualified_source,
      base.deal_group,
@@ -80,6 +83,9 @@ WITH report_pipeline_velocity_quarter AS (
       pv.sales_team_vp_level,
       pv.sales_team_avp_rd_level,
       pv.sales_team_asm_level,
+
+      pv.sales_team_rd_asm_level,
+      pv.report_user_segment_geo_region_area,
       -------------------------
       COALESCE(pv.sales_qualified_source,'NA')  AS sales_qualified_source,
       COALESCE(pv.deal_group,'NA')              AS deal_group,
@@ -94,7 +100,7 @@ WITH report_pipeline_velocity_quarter AS (
   WHERE pv.close_fiscal_year >= 2020
      AND (pv.close_day_of_fiscal_quarter_normalised != pv.current_day_of_fiscal_quarter_normalised
           OR pv.close_fiscal_quarter_date != pv.current_fiscal_quarter_date)
-  GROUP BY 1, 2,3,4,5,6,7,8,9
+  GROUP BY 1, 2,3,4,5,6,7,8,9,10,11
   UNION
    -- to have the same current values as in X-Ray
   SELECT 
@@ -108,6 +114,9 @@ WITH report_pipeline_velocity_quarter AS (
       o.sales_team_vp_level,
       o.sales_team_avp_rd_level,
       o.sales_team_asm_level,
+
+      o.sales_team_rd_asm_level,
+      o.report_user_segment_geo_region_area,
       -------------------------
       o.sales_qualified_source,
       o.deal_group,
@@ -120,7 +129,7 @@ WITH report_pipeline_velocity_quarter AS (
   
   FROM sfdc_opportunity_xf o
   WHERE o.close_fiscal_quarter_name = o.current_fiscal_quarter_name
-  GROUP BY 1, 2,3,4,5,6,7,8,9
+  GROUP BY 1, 2,3,4,5,6,7,8,9,10,11
 
 ), pipeline_velocity_with_targets_per_day AS (
   
@@ -136,6 +145,9 @@ WITH report_pipeline_velocity_quarter AS (
     base.sales_team_vp_level,
     base.sales_team_avp_rd_level,
     base.sales_team_asm_level,
+
+    base.sales_team_rd_asm_level,
+    base.report_user_segment_geo_region_area,
     -------------------------
     base.sales_qualified_source,
     base.deal_group,
@@ -157,35 +169,51 @@ WITH report_pipeline_velocity_quarter AS (
      SELECT close_fiscal_quarter_name,
         close_fiscal_quarter_date,
         close_day_of_fiscal_quarter_normalised,
-        sales_team_rd_asm_level,
         sales_team_cro_level,
+        sales_team_vp_level,
+        sales_team_avp_rd_level,
+        sales_team_asm_level,
         sales_qualified_source,
-        deal_group
+        deal_group,
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area
       FROM pipeline_summary
       UNION
       SELECT close_fiscal_quarter_name,
         close_fiscal_quarter_date,
         close_day_of_fiscal_quarter_normalised,
-        sales_team_rd_asm_level,
         sales_team_cro_level,
+        sales_team_vp_level,
+        sales_team_avp_rd_level,
+        sales_team_asm_level,
         sales_qualified_source,
-        deal_group
+        deal_group,
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area
       FROM consolidated_targets_totals
       CROSS JOIN (SELECT DISTINCT close_day_of_fiscal_quarter_normalised
                 FROM pipeline_summary) close_day) base
   LEFT JOIN  consolidated_targets_totals target  
     ON target.close_fiscal_quarter_name = base.close_fiscal_quarter_name
-    AND target.sales_team_rd_asm_level = base.sales_team_rd_asm_level
     AND target.sales_team_cro_level = base.sales_team_cro_level
+    AND target.sales_team_vp_level = base.sales_team_vp_level
+    AND target.sales_team_avp_rd_level = base.sales_team_avp_rd_level
+    AND target.sales_team_asm_level = base.sales_team_asm_level
     AND target.sales_qualified_source = base.sales_qualified_source
     AND target.deal_group = base.deal_group
+    AND target.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+    AND target.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
   LEFT JOIN  pipeline_summary ps  
     ON base.close_fiscal_quarter_name = ps.close_fiscal_quarter_name
-    AND base.sales_team_rd_asm_level = ps.sales_team_rd_asm_level
     AND base.sales_team_cro_level = ps.sales_team_cro_level
+    AND base.sales_team_vp_level = ps.sales_team_vp_level
+    AND base.sales_team_avp_rd_level = ps.sales_team_avp_rd_level
+    AND base.sales_team_asm_level = ps.sales_team_asm_level
     AND base.sales_qualified_source = ps.sales_qualified_source
     AND base.deal_group = ps.deal_group
     AND base.close_day_of_fiscal_quarter_normalised = ps.close_day_of_fiscal_quarter_normalised
+    AND base.sales_team_rd_asm_level = ps.sales_team_rd_asm_level
+    AND base.report_user_segment_geo_region_area = ps.report_user_segment_geo_region_area
   -- only consider quarters we have data in the snapshot history
   WHERE base.close_fiscal_quarter_date >= '2019-08-01'::DATE
   AND base.close_day_of_fiscal_quarter_normalised <= 90
