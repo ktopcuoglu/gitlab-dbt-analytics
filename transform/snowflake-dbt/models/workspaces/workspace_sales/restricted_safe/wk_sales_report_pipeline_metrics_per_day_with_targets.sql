@@ -139,6 +139,8 @@ WITH date_details AS (
         SUM(total_pipe_generation_net_arr)                  AS total_pipe_generation_net_arr,
         SUM(total_pipe_generation_deal_count)               AS total_pipe_generation_deal_count,
         SUM(total_created_and_booked_same_quarter_net_arr)  AS total_created_and_booked_same_quarter_net_arr,
+        SUM(total_sao_generation_net_arr)                   AS total_sao_generation_net_arr,
+        SUM(total_sao_generation_deal_count)                AS total_sao_generation_deal_count,
   
         SUM(calculated_target_net_arr)              AS calculated_target_net_arr, 
         SUM(calculated_target_deal_count)           AS calculated_target_deal_count,  
@@ -343,6 +345,8 @@ WITH date_details AS (
         COALESCE(targets.total_pipe_generation_net_arr,0)                   AS total_pipe_generation_net_arr,
         COALESCE(targets.total_pipe_generation_deal_count,0)                AS total_pipe_generation_deal_count,
         COALESCE(targets.total_created_and_booked_same_quarter_net_arr,0)   AS total_created_and_booked_same_quarter_net_arr,
+        COALESCE(targets.total_sao_generation_net_arr,0)                    AS total_sao_generation_net_arr,
+        COALESCE(targets.total_sao_generation_deal_count,0)                 AS total_sao_generation_deal_count,
   
         COALESCE(targets.calculated_target_net_arr,0)             AS calculated_target_net_arr, 
         COALESCE(targets.calculated_target_deal_count,0)          AS calculated_target_deal_count,  
