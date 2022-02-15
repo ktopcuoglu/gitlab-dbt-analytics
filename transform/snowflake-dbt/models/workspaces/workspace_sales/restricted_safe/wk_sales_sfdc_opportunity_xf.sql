@@ -288,7 +288,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_accepted_fiscal_year,
-      sfdc_opportunity_xf.sales_accepted_date_month,
+      sfdc_opportunity_xf.sales_accepted_date_month AS sales_accepted_month,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_qualified_fiscal_year,

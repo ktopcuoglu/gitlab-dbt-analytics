@@ -322,10 +322,10 @@ WITH date_details AS (
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
-      sales_accepted_date.first_day_of_month                     AS sales_accepted_date_month,
-      sales_accepted_date.fiscal_year                            AS sales_accepted_date_fiscal_year,
-      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_date_fiscal_quarter_name,
-      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_date_fiscal_quarter_date,
+      sales_accepted_date.first_day_of_month                     AS sales_accepted_month,
+      sales_accepted_date.fiscal_year                            AS sales_accepted_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_fiscal_quarter_date,
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
