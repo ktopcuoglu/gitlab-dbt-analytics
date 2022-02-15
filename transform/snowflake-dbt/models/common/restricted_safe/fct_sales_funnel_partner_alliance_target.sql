@@ -1,6 +1,6 @@
 {{ simple_cte([
-      ('dim_crm_user_hierarchy_live', 'dim_crm_user_hierarchy_live'),
-      ('dim_crm_user_hierarchy_stamped', 'dim_crm_user_hierarchy_stamped'),
+      ('sfdc_user_hierarchy_live', 'prep_crm_user_hierarchy_live'),
+      ('sfdc_user_hierarchy_stamped', 'prep_crm_user_hierarchy_stamped'),
       ('sales_qualified_source', 'prep_sales_qualified_source'),
       ('order_type', 'prep_order_type'),
       ('alliance_type', 'prep_alliance_type'),

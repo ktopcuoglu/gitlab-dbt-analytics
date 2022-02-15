@@ -1,30 +1,20 @@
-WITH date AS (
+{{ simple_cte([
+      ('sfdc_user_hierarchy_live', 'prep_crm_user_hierarchy_live'),
+      ('sfdc_user_hierarchy_stamped', 'prep_crm_user_hierarchy_stamped'),
+      ('sales_qualified_source', 'prep_sales_qualified_source'),
+      ('order_type', 'prep_order_type'),
+      ('alliance_type', 'prep_alliance_type'),
+      ('channel_type', 'prep_channel_type'),
+      ('date_details_source', 'date_details_source')
+])}}
+
+, date AS (
 
    SELECT DISTINCT
      fiscal_month_name_fy,
      fiscal_year,
      first_day_of_month
-   FROM {{ ref('date_details_source') }}
-
-), sales_qualified_source AS (
-
-    SELECT *
-    FROM {{ ref('prep_sales_qualified_source') }}
-
-), order_type AS (
-
-    SELECT *
-    FROM {{ ref('prep_order_type') }}
-
-), sfdc_user_hierarchy_live AS (
-
-    SELECT *
-    FROM {{ ref('prep_crm_user_hierarchy_live') }}
-
-), sfdc_user_hierarchy_stamped AS (
-
-    SELECT *
-    FROM {{ ref('prep_crm_user_hierarchy_stamped') }}
+   FROM date_details_source
 
 ), target_matrix AS (
 
