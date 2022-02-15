@@ -9,8 +9,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id",
-    "stage_name": "manage"
+    "primary_key": "dim_action_id"
   },
   {
     "event_name": "dast_build_run",
@@ -18,8 +17,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "dependency_scanning_build_run",
@@ -27,8 +25,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "deployment_creation",
@@ -36,8 +33,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_deployment_id",
-    "stage_name": "release"
+    "primary_key": "dim_deployment_id"
   },
   {
     "event_name": "issue_creation",
@@ -45,8 +41,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_issue_id",
-    "stage_name": "plan"
+    "primary_key": "dim_issue_id"
   },
   {
     "event_name": "issue_note_creation",
@@ -54,8 +49,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_note_id",
-    "stage_name": "plan"
+    "primary_key": "dim_note_id"
   },
   {
     "event_name": "license_scanning_build_run",
@@ -63,8 +57,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "merge_request_creation",
@@ -72,8 +65,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_merge_request_id",
-    "stage_name": "create"
+    "primary_key": "dim_merge_request_id"
   },
   {
     "event_name": "merge_request_note_creation",
@@ -81,8 +73,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_note_id",
-    "stage_name": "create"
+    "primary_key": "dim_note_id"
   },
   {
     "event_name": "ci_pipeline_creation",
@@ -90,8 +81,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_pipeline_id",
-    "stage_name": "verify"
+    "primary_key": "dim_ci_pipeline_id"
   },
   {
     "event_name": "package_creation",
@@ -99,8 +89,7 @@
     "user_column_name": "creator_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_package_id",
-    "stage_name": "package"
+    "primary_key": "dim_package_id"
   },
   {
     "event_name": "protect_ci_build_creation",
@@ -108,8 +97,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "protect"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "push_action",
@@ -117,8 +105,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id",
-    "stage_name": "create"
+    "primary_key": "dim_action_id"
   },
   {
     "event_name": "release_creation",
@@ -126,8 +113,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_release_id",
-    "stage_name": "release"
+    "primary_key": "dim_release_id"
   },
   {
     "event_name": "requirement_creation",
@@ -135,8 +121,7 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_requirement_id",
-    "stage_name": "plan"
+    "primary_key": "dim_requirement_id"
   },
   {
     "event_name": "sast_build_run",
@@ -144,8 +129,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "secret_detection_build_run",
@@ -153,8 +137,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "secure_ci_build_creation",
@@ -162,8 +145,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "primary_key": "dim_ci_build_id"
   },
   {
     "event_name": "succesful_ci_pipeline_creation",
@@ -171,8 +153,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_pipeline_id",
-    "stage_name": "verify"
+    "primary_key": "dim_ci_pipeline_id"
   },
   {
     "event_name": "action_monthly_active_users_project_repo",
@@ -180,8 +161,7 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id",
-    "stage_name": "create"
+    "primary_key": "dim_action_id"
   },
 ]
 
@@ -299,7 +279,6 @@
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
-      '{{ event_cte.stage_name }}'                                                                             AS stage_name,
       {{ event_cte.source_cte_name}}.dim_plan_id,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
       COALESCE(prep_plan.plan_is_paid, FALSE)                                                                  AS plan_was_paid_at_event_date,
