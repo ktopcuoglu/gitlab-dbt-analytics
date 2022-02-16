@@ -12,7 +12,7 @@
 
 , fact_with_date AS (
 
-    SELECT 
+    SELECT
       event_id,
       TO_DATE(event_created_at)                                    AS event_date,
       dim_user_id,
@@ -28,7 +28,8 @@
       plan_id_at_event_date,
       plan_name_at_event_date,
       plan_was_paid_at_event_date,
-      dim_namespace_id
+      dim_namespace_id,
+      dim_instance_id
     FROM fct_usage_event
 
 ), fact_with_namespace AS (

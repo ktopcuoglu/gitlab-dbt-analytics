@@ -69,3 +69,28 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: mart_usage_namespace
+    description: ' {{ doc("mart_usage_namespace") }} '
+    columns:
+      - name: usage_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_usage_instance
+    description: ' {{ doc("mart_usage_instance") }} '
+    columns:
+      - name: usage_id
+        tests:
+          - not_null
+          - unique
+
+- name: mart_usage_event_daily
+    description: ' {{ doc("mart_usage_event_daily") }} '
+    columns:
+      - name: mart_usage_event_daily_id
+        tests:
+          - not_null
+          - unique
+        

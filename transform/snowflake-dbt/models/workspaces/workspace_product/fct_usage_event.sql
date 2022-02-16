@@ -26,6 +26,7 @@
       event_primary_key                                               AS event_primary_key,
       usage_data_events.event_name                                    AS event_name,
       namespace_id                                                    AS namespace_id,
+      'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'                          AS dim_instance_id,
       user_id                                                         AS user_id,
       parent_type                                                     AS parent_type,
       parent_id                                                       AS parent_id,
