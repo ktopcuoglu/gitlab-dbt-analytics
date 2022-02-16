@@ -16,6 +16,7 @@ from airflow_utils import (
 from kube_secrets import (
     BAMBOOHR_API_TOKEN,
     SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -61,6 +62,7 @@ bamboohr_extract = KubernetesPodOperator(
     secrets=[
         BAMBOOHR_API_TOKEN,
         SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
