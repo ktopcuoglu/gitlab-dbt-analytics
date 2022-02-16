@@ -9,9 +9,7 @@ WITH prep_user AS (
       created_at,
       updated_at,
       is_admin,
-      CASE WHEN user_state in ('blocked', 'banned')
-        THEN TRUE
-        ELSE FALSE END                              AS is_blocked_user
+      is_blocked_user
     FROM {{ ref('prep_user') }}
 
 )

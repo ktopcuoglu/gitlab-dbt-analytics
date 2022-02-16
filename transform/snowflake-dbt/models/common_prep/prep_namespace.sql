@@ -132,9 +132,7 @@
       namespaces.project_creation_level,
       namespaces.push_rule_id,
       IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
-      CASE
-       WHEN users.user_state in ('blocked', 'banned') THEN TRUE
-       ELSE FALSE END                                                                 AS namespace_creator_is_blocked,
+      users.is_blocked_user                                                           AS namespace_creator_is_blocked,
       namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
