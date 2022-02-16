@@ -758,12 +758,14 @@ roles:
                   - raw.tap_adaptive
                   - raw.tap_xactly
                   - raw.tap_zendesk
+                  - raw.tap_zendesk__community_relations
             tables:
               write:
                   - raw.tap_zoom.*
                   - raw.tap_adaptive.*
                   - raw.tap_xactly.*
                   - raw.tap_zendesk.*
+                  - raw.tap_zendesk__community_relations.*
 
     - people_operations:
         warehouses:
@@ -2086,11 +2088,13 @@ roles:
                     - prep.zendesk
                     - raw.zendesk_stitch
                     - raw.tap_zendesk
+                    - raw.tap_zendesk__community_relations
             tables:
                 read:
                     - prep.zendesk.*
                     - raw.zendesk_stitch.*
                     - raw.tap_zendesk.*
+                    - raw.tap_zendesk__community_relations.*
 
     - zendesk_community_relations:
           warehouses:
