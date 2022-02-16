@@ -148,9 +148,15 @@ WITH source AS (
         sao_opportunity_owner__c                    AS sao_crm_opp_owner_stamped_name,
         sao_account_owner__c                        AS sao_crm_account_owner_stamped_name,
         sao_user_segment__c                         AS sao_crm_opp_owner_sales_segment_stamped,
+        CASE
+          WHEN sao_crm_opp_owner_sales_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
+          ELSE sao_crm_opp_owner_sales_segment_stamped
+        END                                         AS sao_crm_opp_owner_sales_segment_stamped_grouped,
         sao_user_geo__c                             AS sao_crm_opp_owner_geo_stamped,
         sao_user_region__c                          AS sao_crm_opp_owner_region_stamped,
         sao_user_area__c                            AS sao_crm_opp_owner_area_stamped,
+        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_region_stamped') }}
+                                                    AS sao_crm_opp_owner_segment_region_stamped_grouped,
         opportunity_category__c                     AS opportunity_category,
         opportunity_health__c                       AS opportunity_health,
         risk_type__c                                AS risk_type,
