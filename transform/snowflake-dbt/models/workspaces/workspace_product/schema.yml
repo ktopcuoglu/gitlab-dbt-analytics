@@ -73,7 +73,7 @@ models:
   - name: mart_usage_namespace
     description: ' {{ doc("mart_usage_namespace") }} '
     columns:
-      - name: usage_id
+      - name: mart_usage_namespace_id
         tests:
           - not_null
           - unique
@@ -81,7 +81,7 @@ models:
   - name: mart_usage_instance
     description: ' {{ doc("mart_usage_instance") }} '
     columns:
-      - name: usage_id
+      - name: mart_usage_instance_id
         tests:
           - not_null
           - unique
@@ -93,4 +93,3 @@ models:
         tests:
           - not_null
           - unique
-        
