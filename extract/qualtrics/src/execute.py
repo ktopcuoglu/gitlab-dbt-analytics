@@ -37,8 +37,8 @@ def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:
             json.dump(surveys_to_write, out_file)
         snowflake_stage_load_copy_remove(
             "surveys.json",
-            "qualtrics.qualtrics_load",
-            "qualtrics.survey",
+            "raw.qualtrics.qualtrics_load",
+            "raw.qualtrics.survey",
             snowflake_engine,
         )
     return [survey["id"] for survey in surveys_to_write]

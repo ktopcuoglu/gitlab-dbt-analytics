@@ -8,7 +8,6 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
     dataframe_uploader,
 )
-from logging import info
 
 config_dict = env.copy()
 
@@ -70,8 +69,6 @@ if __name__ == "__main__":
     end_time = config_dict["END_TIME"][0:10]
 
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-
-    info(snowflake_engine)
 
     sql_statement = get_pmg_reporting_data_query(start_time, end_time)
     # Groups by date so we can create a file for each day

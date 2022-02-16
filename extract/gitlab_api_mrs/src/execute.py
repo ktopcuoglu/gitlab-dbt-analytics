@@ -36,7 +36,7 @@ def verify_mr_information(
     """
     count_query = f"""
         SELECT count(distinct id) 
-        FROM TAP_POSTGRES.GITLAB_DB_MERGE_REQUESTS 
+        FROM RAW.TAP_POSTGRES.GITLAB_DB_MERGE_REQUESTS 
         WHERE updated_at BETWEEN '{start}' AND '{end}'
         AND target_project_id = {project_id}
     """
