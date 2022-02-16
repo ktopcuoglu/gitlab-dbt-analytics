@@ -2093,7 +2093,6 @@ roles:
                     - prep.zendesk.*
                     - raw.zendesk_stitch.*
                     - raw.tap_zendesk.*
-                    - raw.tap_zendesk__community_relations.*
 
     - zendesk_community_relations:
           warehouses:
