@@ -94,6 +94,7 @@ WITH first_contact  AS (
 
     SELECT DISTINCT
       sfdc_zqu_quote_source.zqu__opportunity                AS dim_crm_opportunity_id,
+      sfdc_zqu_quote_source.quote_id                        AS dim_quote_id,
       sfdc_zqu_quote_source.zqu__start_date::DATE           AS quote_start_date,
       (ROW_NUMBER() OVER (PARTITION BY sfdc_zqu_quote_source.zqu__opportunity ORDER BY sfdc_zqu_quote_source.created_date DESC))
                                                             AS record_number
@@ -207,6 +208,18 @@ WITH first_contact  AS (
         WHEN sfdc_opportunity.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
       END                                                                                         AS closed_buckets,
+      CASE
+        WHEN sfdc_opportunity.created_date < '2022-02-01' 
+          THEN 'Legacy'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL AND sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'SDR & BDR'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL
+          THEN 'SDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'BDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NULL AND sfdc_opportunity.opportunity_sales_development_representative IS NULL
+          THEN 'No XDR Assigned'
+      END                                               AS sdr_or_bdr,
 
       -- alliance type fields
       {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
@@ -236,7 +249,7 @@ WITH first_contact  AS (
       -- attribution information
       linear_attribution_base.count_crm_attribution_touchpoints,
       campaigns_per_opp.count_campaigns,
-      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv,
+      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv
 
       -- Noel's fields
 
