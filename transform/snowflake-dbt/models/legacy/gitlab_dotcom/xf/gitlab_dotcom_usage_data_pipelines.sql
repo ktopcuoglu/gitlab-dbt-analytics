@@ -307,7 +307,8 @@
     ('namespaces', 'gitlab_dotcom_namespaces_xf'),
     ('plans', 'gitlab_dotcom_plans'),
     ('projects', 'gitlab_dotcom_projects_xf'),
-    ('blocked_users', 'gitlab_dotcom_users_blocked_xf')
+    ('blocked_users', 'gitlab_dotcom_users_blocked_xf'),
+    ('user_details','gitlab_dotcom_users')
 ]) }}
 
 
@@ -525,7 +526,7 @@
 , final AS (
     SELECT
       data.*,
-      users.created_at                                    AS user_created_at,
+      user_details.created_at                             AS user_created_at,
       FLOOR(
       DATEDIFF('hour',
               namespace_created_at,
@@ -551,8 +552,8 @@
                 user_created_at,
                 event_created_at)/(24 * 7))               AS weeks_since_user_creation
     FROM data
-    LEFT JOIN users
-      ON data.user_id = users.user_id
+    LEFT JOIN user_details
+      ON data.user_id = user_details.user_id
     WHERE event_created_at < CURRENT_DATE()
 
 )
