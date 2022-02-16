@@ -2,12 +2,14 @@
     materialized='table',
     tags=["mnpi_exception"]
 ) }}
+
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
     ('fct_usage_event', 'fct_event_usage_metrics'),
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ])
 }}
+
 , fact_with_date AS (
     SELECT
       event_id,
@@ -28,9 +30,12 @@
       source,
       plan_name_at_event_date,
       plan_was_paid_at_event_date,
-      dim_namespace_id
+      dim_namespace_id,
+      dim_instance_id
     FROM fct_usage_event AS fact
+
 ), fact_with_namespace AS (
+
     SELECT
       fact.*,
       CAST(namespace.created_at AS DATE)                                  AS namespace_created_at,
@@ -39,7 +44,9 @@
     FROM fact_with_date AS fact
     LEFT JOIN dim_namespace AS namespace
         ON fact.dim_namespace_id = namespace.dim_namespace_id
+
 ), fact_with_xmau_flags AS (
+
     SELECT
       fact.*,
       xmau.smau                                                           AS is_smau,
@@ -48,12 +55,15 @@
     FROM fact_with_namespace AS fact
     LEFT JOIN xmau_metrics AS xmau
         ON fact.event_name = xmau.events_to_include
+
 ), results AS (
+
     SELECT
       mart_usage_event_daily_id,
       event_date,
       dim_user_id,
       dim_namespace_id,
+      dim_instance_id,
       plan_id_at_event_date,
       event_name,
       dim_product_tier_id,
@@ -74,8 +84,10 @@
       is_umau,
       COUNT(*)                                                            AS event_count
     FROM fact_with_xmau_flags
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
+
 )
+
 {{ dbt_audit(
     cte_ref="results",
     created_by="@dihle",
