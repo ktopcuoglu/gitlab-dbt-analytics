@@ -65,7 +65,7 @@ models:
   - name: mart_usage_event
     description: ' {{ doc("mart_usage_event") }} '
     columns:
-      - name: usage_id
+      - name: event_id
         tests:
           - not_null
           - unique
