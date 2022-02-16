@@ -662,6 +662,22 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Large'
           AND sfdc_opportunity_xf.opportunity_owner_user_geo = 'EMEA'
             THEN 'Large_EMEA'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Mid-Market'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) LIKE '%west%'
+            THEN 'Mid-Market_West'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Mid-Market'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) NOT LIKE '%west%'
+            THEN 'Mid-Market_East'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'SMB'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) LIKE '%west%'
+            THEN 'SMB_West'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'SMB'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) NOT LIKE '%west%'
+            THEN 'SMB_East'
         ELSE COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA') 
       END                                                                           AS sales_team_rd_asm_level,
        -------------------
