@@ -86,10 +86,10 @@ models:
           - not_null
           - unique
 
-- name: mart_usage_event_daily
-    description: ' {{ doc("mart_usage_event_daily") }} '
-    columns:
-      - name: mart_usage_event_daily_id
-        tests:
-          - not_null
-          - unique
+  - name: mart_usage_event_daily
+      description: ' {{ doc("mart_usage_event_daily") }} '
+      columns:
+        - name: mart_usage_event_daily_id
+          tests:
+            - not_null
+            - unique
