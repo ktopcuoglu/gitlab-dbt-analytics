@@ -2088,7 +2088,6 @@ roles:
                     - prep.zendesk
                     - raw.zendesk_stitch
                     - raw.tap_zendesk
-                    - raw.tap_zendesk__community_relations
             tables:
                 read:
                     - prep.zendesk.*
@@ -2108,10 +2107,12 @@ roles:
                   read:
                       - prep.zendesk_community_relations
                       - raw.zendesk_community_relations_stitch
+                      - raw.tap_zendesk__community_relations
               tables:
                   read:
                       - prep.zendesk_community_relations.*
                       - raw.zendesk_community_relations_stitch.*
+                      - raw.tap_zendesk__community_relations.*
 
     - zoom:
         warehouses:
