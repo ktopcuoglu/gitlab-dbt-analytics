@@ -84,9 +84,18 @@ Dimensional customer table representing all existing and historical customers fr
 
 The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
 
-The grain of the table is the SalesForce Account, also referred to as CRM_ID.
+The grain of the table is the SalesForce Account, also referred to as `DIM_CRM_ACCOUNT_ID`.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_crm_account_daily_snapshot %}
+Dimensional customer table representing all existing and historical customers from SalesForce and their attributes on a given day. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account and day, also referred to as `CRM_ACCOUNT_SNAPSHOT_ID`, which is a combination of the `DIM_CRM_ACCOUNT_ID` and `DIM_DATE_ID`
 
 {% enddocs %}
 
@@ -102,6 +111,20 @@ Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% docs dim_crm_person %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+
+{% enddocs %}
+
+{% docs dim_crm_user %}
+
+Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
+
+{% docs dim_crm_user_daily_snapshot %}
+
+Dimension representing the associated user from salesforce on any day.
+
+The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of `DIM_CRM_USER_ID` and `DIM_DATE_ID`.
 
 {% enddocs %}
 
@@ -130,7 +153,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_hold %}
 
-There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract. 
+There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract.
 
 {% enddocs %}
 
@@ -389,13 +412,13 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% docs fct_retention_parent_account %}
 
-Fact table representing retentions months, currently based on the highest possible level (Parent account). 
+Fact table representing retentions months, currently based on the highest possible level (Parent account).
 
 {% enddocs %}
 
 {% docs fct_revenue_contract_hold %}
 
-Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way. 
+Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way.
 
 {% enddocs %}
 
@@ -419,12 +442,6 @@ Sales funnel targets set by the Finance team to measure performance of Partner a
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
-
-{% enddocs %}
-
-{% docs dim_crm_user %}
-
-Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 
@@ -511,7 +528,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 Main foreign key that can help to build easily joins:
 
-- dim_license_id 
+- dim_license_id
 - dim_subscription_id
 - dim_date_id
 
@@ -640,7 +657,7 @@ The grain of this table is one row per namespace. The Primary Key is `dim_namesp
 
 {% docs dim_namespace_plan_hist %}
 
-Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
+Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions.
 
 Easily to join with the following tables:
 
@@ -969,5 +986,11 @@ Dimensional table representing the [location_factor](https://about.gitlab.com/ha
 This table is derived from data files and logic of the [compensation calculator](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator), specifically the location_factors.yml and the geo_zones.yml
 
 The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
+
+{% enddocs %}
+
+{% docs dim_usage_ping_metric %}
+
+This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
 
 {% enddocs %}

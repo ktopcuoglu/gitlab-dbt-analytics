@@ -251,7 +251,7 @@ models:
         description: Unique identifier of a Zuora Billing account
       - name: subscription_name
         description: Unique name of a subscription
-      - name: subscription_sales_type_update
+      - name: subscription_sales_type
         description: Self-Service or Sales-Assisted, as defined by the Zuora user who created the subscription
       - name: subscription_account_id
         description: Unique identifier of a SFDC account, as associated with the dim_subscription_id

@@ -20,9 +20,9 @@
       uuid,
       hostname,
       snapshot_month,
-      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,                   
+      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,
       {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
-      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user, 
+      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user,
       {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
       {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
     FROM smau
@@ -89,7 +89,6 @@
       sm_free_users.projects_bamboo_active_all_time_event,
       sm_free_users.projects_jira_active_all_time_event,
       sm_free_users.projects_drone_ci_active_all_time_event,
-      sm_free_users.jira_imports_28_days_event,
       sm_free_users.projects_github_active_all_time_event,
       sm_free_users.projects_jira_server_active_all_time_event,
       sm_free_users.projects_jira_dvcs_cloud_active_all_time_event,
@@ -208,7 +207,6 @@
       "counts.projects_bamboo_active"                                                           AS projects_bamboo_active_all_time_event,
       "counts.projects_jira_active"                                                             AS projects_jira_active_all_time_event,
       "counts.projects_drone_ci_active"                                                         AS projects_drone_ci_active_all_time_event,
-      "usage_activity_by_stage_monthly.manage.issues_imported.jira"                             AS jira_imports_28_days_event,
       "counts.projects_github_active"                                                           AS projects_github_active_all_time_event,
       "counts.projects_jira_server_active"                                                      AS projects_jira_server_active_all_time_event,
       "counts.projects_jira_dvcs_cloud_active"                                                  AS projects_jira_dvcs_cloud_active_all_time_event,
@@ -266,7 +264,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2021-09-28"
+    updated_date="2021-12-23"
 ) }}

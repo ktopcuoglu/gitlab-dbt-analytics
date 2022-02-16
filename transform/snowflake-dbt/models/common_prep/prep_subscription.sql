@@ -49,7 +49,7 @@ WITH date_details AS (
       zuora_subscription.renewal_term,
       zuora_subscription.renewal_term_period_type,
       zuora_subscription.eoa_starter_bronze_offer_accepted,
-      IFF(zuora_subscription.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
+      IFF(zuora_subscription.created_by_id IN ('2c92a0107bde3653017bf00cd8a86d5a','2c92a0fd55822b4d015593ac264767f2'), -- All Self-Service / Web direct subscriptions are identified by these created_by_ids
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
       zuora_subscription.namespace_name,
       zuora_subscription.namespace_id,
@@ -96,7 +96,7 @@ WITH date_details AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@michellecooper",
     created_date="2021-01-07",
-    updated_date="2021-09-06"
+    updated_date="2022-01-19"
 ) }}

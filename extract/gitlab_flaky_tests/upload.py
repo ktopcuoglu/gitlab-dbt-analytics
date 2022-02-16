@@ -19,7 +19,7 @@ if __name__ == "__main__":
     UPDATE_TESTS_METADATA_JOB_NAME = "update-tests-metadata"
     RSPEC_FLAKY_REPORT_ARTIFACT = "rspec_flaky/report-suite.json"
     RSPEC_FLAKY_REPORT_URL = (
-        "https://gitlab-org.gitlab.io/gitlab/rspec_flaky/report-suite.json"
+        "https://gitlab-org.gitlab.io/gitlab/rspec/flaky/report-suite.json"
     )
 
     logging.basicConfig(stream=sys.stdout, level=20)

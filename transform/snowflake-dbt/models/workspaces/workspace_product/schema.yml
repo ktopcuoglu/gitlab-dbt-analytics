@@ -53,3 +53,19 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: fct_usage_event
+    description: ' {{ doc("fct_usage_event") }} '
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_usage_event
+    description: ' {{ doc("mart_usage_event") }} '
+    columns:
+      - name: usage_id
+        tests:
+          - not_null
+          - unique
