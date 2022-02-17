@@ -3,9 +3,9 @@ version: 2
 sources:
   - name: zendesk_community_relations
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
-    schema: zendesk_community_relations_stitch
-    loader: Stitch
-    loaded_at_field: _sdc_batched_at
+    schema: tap_zendesk__community_relations
+    loader: Meltano
+    loaded_at_field: __loaded_at
 
     quoting:
       database: true

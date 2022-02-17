@@ -41,6 +41,7 @@
       date_day,
       monthly_targets.*,
       DATEDIFF('day', first_day_of_month, last_day_of_month) + 1  AS days_of_month,
+      first_day_of_week,
       fiscal_quarter_name,
       fiscal_year,
       allocated_target / days_of_month                            AS daily_allocated_target
@@ -55,6 +56,7 @@
         'crm_user_area', 'order_type_name', 'sales_qualified_source_name']) }}                                                    AS primary_key,
       date_day                                                                                                                    AS target_date,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
+      first_day_of_week,
       target_month,
       fiscal_quarter_name,
       fiscal_year,
@@ -72,6 +74,8 @@
       allocated_target                                                                                                            AS monthly_allocated_target,
       daily_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
+                             crm_user_area, order_type_name, sales_qualified_source_name, first_day_of_week ORDER BY date_day)    AS wtd_allocated_target,
+      SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
                              crm_user_area, order_type_name, sales_qualified_source_name, target_month ORDER BY date_day)         AS mtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
                              crm_user_area, order_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)  AS qtd_allocated_target,
@@ -87,5 +91,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-02-18",
-    updated_date="2021-04-26",
+    updated_date="2022-02-14",
   ) }}
