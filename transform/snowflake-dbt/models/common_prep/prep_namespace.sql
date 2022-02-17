@@ -132,7 +132,7 @@
       namespaces.project_creation_level,
       namespaces.push_rule_id,
       IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
-      users.is_blocked_user                                                           AS namespace_creator_is_blocked,
+      IFNULL(users.is_blocked_user, FALSE)                                            AS namespace_creator_is_blocked,
       namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
@@ -154,7 +154,7 @@
     LEFT JOIN creators
       ON namespaces.dim_namespace_id = creators.group_id
     LEFT JOIN users
-      ON IFNULL(creators.creator_id, namespaces.owner_id) = users.dim_user_id
+      ON creators.creator_id = users.dim_user_id
     LEFT JOIN map_namespace_internal
       ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
     LEFT JOIN product_tiers saas_product_tiers
