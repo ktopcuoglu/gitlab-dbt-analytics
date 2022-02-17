@@ -66,6 +66,7 @@
       rpt_crm_person_with_opp.is_edu_oss,
       rpt_crm_person_with_opp.stage_name,
       rpt_crm_person_with_opp.is_sao,
+      rpt_crm_person_with_opp.user_sales_segment, 
       mart_crm_touchpoint.crm_account_name,
       mart_crm_touchpoint.dim_crm_account_id,
       mart_crm_touchpoint.crm_account_gtm_strategy,
