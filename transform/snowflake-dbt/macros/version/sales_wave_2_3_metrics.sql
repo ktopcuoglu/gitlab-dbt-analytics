@@ -96,8 +96,8 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['protected_branches']") }}                            AS protected_branches_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['analytics']['p_analytics_ci_cd_lead_time_monthly']") }}                     AS ci_cd_lead_time_usage_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['analytics']['p_analytics_ci_cd_deployment_frequency_monthly']") }}          AS ci_cd_deployment_frequency_usage_28_days_event,
-    --{{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['create']['projects_with_repositories_enabled']") }}                  AS projects_with_repositories_enabled_all_time_event, -- Miles look into (unclear users or events)
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_api_fuzzing_jobs']") }}                         AS api_fuzzing_jobs_usage_28_days_event,  --Miles look into (description, user?)
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['create']['projects_with_repositories_enabled']") }}                    AS projects_with_repositories_enabled_all_time_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_api_fuzzing_jobs']") }}                         AS api_fuzzing_jobs_usage_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['coverage_fuzzing_pipeline']") }}                     AS coverage_fuzzing_pipeline_usage_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['api_fuzzing_pipeline']") }}                          AS api_fuzzing_pipeline_usage_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['container_scanning_pipeline']") }}                   AS container_scanning_pipeline_usage_28_days_event,
@@ -110,7 +110,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['feature_flags']") }}                                                                    AS feature_flags_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['successful_deployments']") }}                                                   AS successful_deployments_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['failed_deployments']") }}                                                       AS failed_deployments_28_days_event,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['projects_with_compliance_framework']") }}            AS projects_compliance_framework_28_days_event, --Miles look into (all timeframe?)
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['projects_with_compliance_framework']") }}            AS projects_compliance_framework_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['pipeline_authoring']['o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly']") }}  AS commit_ci_config_file_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['compliance_unique_visits']['g_compliance_audit_events']") }}                                      AS view_audit_all_time_event
 
