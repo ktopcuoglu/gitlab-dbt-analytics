@@ -640,17 +640,9 @@ WITH date_details AS (
       COALESCE(pipeline_gen.pipe_gen_count,0)                             AS pipe_gen_count,
       COALESCE(pipeline_gen.pipe_gen_net_arr,0)                           AS pipe_gen_net_arr,
 
-      -- one year ago pipe gen
-      COALESCE(minus_1_year_pipe_gen.pipe_gen_net_arr,0)                AS minus_1_year_pipe_gen_net_arr,
-      COALESCE(minus_1_year_pipe_gen.pipe_gen_count,0)                  AS minus_1_year_pipe_gen_deal_count,
-
-      -- sao gen
+       -- sao gen
       COALESCE(sao_gen.sao_deal_count,0)                                  AS sao_deal_count,
       COALESCE(sao_gen.sao_net_arr,0)                                     AS sao_net_arr,
-
-      -- one year ago sao gen
-      COALESCE(minus_1_year_sao_gen.sao_net_arr,0)                      AS minus_1_year_sao_net_arr,
-      COALESCE(minus_1_year_sao_gen.sao_deal_count,0)                   AS minus_1_year_sao_deal_count,
 
       -- TIMESTAMP
       current_timestamp                                                 AS dbt_last_run_at
@@ -708,20 +700,7 @@ WITH date_details AS (
       AND pipeline_gen.close_fiscal_quarter_date = base_fields.close_fiscal_quarter_date
       AND pipeline_gen.sales_team_rd_asm_level = base_fields.sales_team_rd_asm_level
       AND pipeline_gen.report_user_segment_geo_region_area = base_fields.report_user_segment_geo_region_area
-
-    -- One Year Ago  pipeline generation
-    LEFT JOIN pipeline_gen  minus_1_year_pipe_gen
-      ON minus_1_year_pipe_gen.sales_team_cro_level = base_fields.sales_team_cro_level
-      AND minus_1_year_pipe_gen.sales_team_asm_level = base_fields.sales_team_asm_level
-      AND minus_1_year_pipe_gen.deal_category = base_fields.deal_category
-      AND minus_1_year_pipe_gen.close_day_of_fiscal_quarter_normalised = base_fields.close_day_of_fiscal_quarter_normalised        
-      AND minus_1_year_pipe_gen.sales_qualified_source = base_fields.sales_qualified_source
-      AND minus_1_year_pipe_gen.deal_group = base_fields.deal_group
-      AND minus_1_year_pipe_gen.owner_id = base_fields.owner_id
-      AND minus_1_year_pipe_gen.close_fiscal_quarter_date = DATEADD(month, -12, base_fields.close_fiscal_quarter_date)
-      AND minus_1_year_pipe_gen.sales_team_rd_asm_level = base_fields.sales_team_rd_asm_level
-      AND minus_1_year_pipe_gen.report_user_segment_geo_region_area = base_fields.report_user_segment_geo_region_area
-   
+ 
     -- Sales Accepted Opportunity Generation
     LEFT JOIN sao_gen
       ON sao_gen.sales_team_cro_level = base_fields.sales_team_cro_level
@@ -734,20 +713,6 @@ WITH date_details AS (
       AND sao_gen.close_fiscal_quarter_date = base_fields.close_fiscal_quarter_date
       AND sao_gen.sales_team_rd_asm_level = base_fields.sales_team_rd_asm_level
       AND sao_gen.report_user_segment_geo_region_area = base_fields.report_user_segment_geo_region_area
-    
-    -- One Year Ago Sales Accepted Opportunity Generation
-    LEFT JOIN sao_gen minus_1_year_sao_gen
-      ON minus_1_year_sao_gen.sales_team_cro_level = base_fields.sales_team_cro_level
-      AND minus_1_year_sao_gen.sales_team_asm_level = base_fields.sales_team_asm_level
-      AND minus_1_year_sao_gen.deal_category = base_fields.deal_category
-      AND minus_1_year_sao_gen.close_day_of_fiscal_quarter_normalised = base_fields.close_day_of_fiscal_quarter_normalised        
-      AND minus_1_year_sao_gen.sales_qualified_source = base_fields.sales_qualified_source
-      AND minus_1_year_sao_gen.deal_group = base_fields.deal_group
-      AND minus_1_year_sao_gen.owner_id = base_fields.owner_id
-      AND minus_1_year_sao_gen.close_fiscal_quarter_date = DATEADD(month, -12, base_fields.close_fiscal_quarter_date)
-      AND minus_1_year_sao_gen.sales_team_rd_asm_level = base_fields.sales_team_rd_asm_level
-      AND minus_1_year_sao_gen.report_user_segment_geo_region_area = base_fields.report_user_segment_geo_region_area
-
 
 )
 

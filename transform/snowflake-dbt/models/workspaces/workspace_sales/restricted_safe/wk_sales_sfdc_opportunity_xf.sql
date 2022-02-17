@@ -656,36 +656,34 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       END                                                       AS report_opportunity_user_area,
       -- report_opportunity_subarea
 
-      -------------------
-      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
-      CASE 
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Large'
-          AND sfdc_opportunity_xf.opportunity_owner_user_geo = 'EMEA'
-            THEN 'Large_EMEA'
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Mid-Market'
-          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
-          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) LIKE '%west%'
-            THEN 'Mid-Market_West'
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Mid-Market'
-          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
-          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) NOT LIKE '%west%'
-            THEN 'Mid-Market_East'
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'SMB'
-          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
-          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) LIKE '%west%'
-            THEN 'SMB_West'
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'SMB'
-          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
-          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) NOT LIKE '%west%'
-            THEN 'SMB_East'
-        ELSE COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA') 
-      END                                                                           AS sales_team_rd_asm_level,
        -------------------
-      COALESCE(sfdc_opportunity_xf.opportunity_owner_user_segment ,'NA')            AS sales_team_cro_level,
-      
-      --COALESCE(report_opportunity_segment ,'NA')                                    AS sales_team_cro_level,
-      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo),'NA')                                                            AS sales_team_vp_level,
-      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region),'NA')                              AS sales_team_avp_rd_level,
+      COALESCE(report_opportunity_user_segment ,'NA')                                    AS sales_team_cro_level,
+      -- NF: This code replicates the reporting structured of FY22, to keep current tools working
+      CASE 
+        WHEN report_opportunity_user_segment = 'Large'
+          AND report_opportunity_user_geo = 'EMEA'
+            THEN 'Large_EMEA'
+        WHEN report_opportunity_user_segment = 'Mid-Market'
+          AND report_opportunity_user_region = 'AMER'
+          AND lower(report_opportunity_user_area) LIKE '%west%'
+            THEN 'Mid-Market_West'
+        WHEN report_opportunity_user_segment = 'Mid-Market'
+          AND report_opportunity_user_region = 'AMER'
+          AND lower(report_opportunity_user_area) NOT LIKE '%west%'
+            THEN 'Mid-Market_East'
+        WHEN report_opportunity_user_segment = 'SMB'
+          AND report_opportunity_user_region = 'AMER'
+          AND lower(report_opportunity_user_area) LIKE '%west%'
+            THEN 'SMB_West'
+        WHEN report_opportunity_user_segment = 'SMB'
+          AND report_opportunity_user_region = 'AMER'
+          AND lower(report_opportunity_user_area) NOT LIKE '%west%'
+            THEN 'SMB_East'
+        ELSE COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_region),'NA') 
+      END                                                                           AS sales_team_rd_asm_level,
+
+      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo),'NA')                                                                      AS sales_team_vp_level,
+      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region),'NA')                                   AS sales_team_avp_rd_level,
       COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region,'_',report_opportunity_user_area),'NA')  AS sales_team_asm_level,
 
       -- 20220214 NF: Temporary keys, until the SFDC key is exposed

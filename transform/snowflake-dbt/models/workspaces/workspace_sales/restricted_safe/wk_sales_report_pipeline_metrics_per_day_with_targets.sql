@@ -91,16 +91,9 @@ WITH date_details AS (
         SUM(pipe_gen_count)                     AS pipe_gen_count,
         SUM(pipe_gen_net_arr)                   AS pipe_gen_net_arr,
 
-        -- yoy pipe gen
-        SUM(minus_1_year_pipe_gen_net_arr)      AS minus_1_year_pipe_gen_net_arr,
-        SUM(minus_1_year_pipe_gen_deal_count)   AS minus_1_year_pipe_gen_deal_count,
-
         -- sao deal count
         SUM(sao_deal_count)                     AS sao_deal_count,
-        SUM(sao_net_arr)                        AS sao_net_arr,
-        
-        SUM(minus_1_year_sao_net_arr)           AS minus_1_year_sao_net_arr,
-        SUM(minus_1_year_sao_deal_count)        AS minus_1_year_sao_deal_count
+        SUM(sao_net_arr)                        AS sao_net_arr
 
 
     FROM report_pipeline_metrics_day
@@ -311,17 +304,9 @@ WITH date_details AS (
         metrics.pipe_gen_count,
         metrics.pipe_gen_net_arr,
 
-        -- one year ago pipe gen
-        metrics.minus_1_year_pipe_gen_net_arr,
-        metrics.minus_1_year_pipe_gen_deal_count,
-
         -- sao gen
         metrics.sao_deal_count,
         metrics.sao_net_arr,
-
-        -- one year ago sao
-        metrics.minus_1_year_sao_net_arr,
-        metrics.minus_1_year_sao_deal_count,
 
         -- reported quarter + 1
         metrics.rq_plus_1_open_1plus_net_arr,
@@ -367,12 +352,6 @@ WITH date_details AS (
         COALESCE(rq_plus_two.target_deal_count,0)                 AS rq_plus_2_target_deal_count,
         COALESCE(rq_plus_two.calculated_target_net_arr,0)         AS rq_plus_2_calculated_target_net_arr,
         COALESCE(rq_plus_two.calculated_target_deal_count,0)      AS rq_plus_2_calculated_target_deal_count,
-
-        -- totals one year ago
-        COALESCE(year_minus_one.total_booked_net_arr,0)             AS minus_1_year_total_booked_net_arr,
-        COALESCE(year_minus_one.total_booked_deal_count,0)          AS minus_1_year_total_booked_deal_count,
-        COALESCE(year_minus_one.total_pipe_generation_net_arr,0)    AS minus_1_year_total_pipe_generation_net_arr,
-        COALESCE(year_minus_one.total_pipe_generation_deal_count,0) AS minus_1_year_total_pipe_generation_deal_count,
 
         COALESCE(qtd_target.qtd_target_net_arr,0)                   AS qtd_target_net_arr,
         COALESCE(qtd_target.qtd_target_deal_count,0)                AS qtd_target_deal_count,
@@ -421,16 +400,6 @@ WITH date_details AS (
         AND rq_plus_two.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
         AND rq_plus_two.sales_team_rd_asm_level = base.sales_team_rd_asm_level
         AND rq_plus_two.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
-    -- one year ago totals
-    LEFT JOIN consolidated_targets_per_day year_minus_one
-      ON year_minus_one.sales_team_cro_level = base.sales_team_cro_level
-        AND year_minus_one.sales_team_asm_level = base.sales_team_asm_level
-        AND year_minus_one.sales_qualified_source = base.sales_qualified_source
-        AND year_minus_one.deal_group = base.deal_group
-        AND year_minus_one.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
-        AND year_minus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-        AND year_minus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_level
-        AND year_minus_one.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
     -- qtd allocated targets
     LEFT JOIN funnel_allocated_targets_qtd qtd_target
       ON qtd_target.sales_team_cro_level = base.sales_team_cro_level
