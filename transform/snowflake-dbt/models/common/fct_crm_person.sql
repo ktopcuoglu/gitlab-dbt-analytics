@@ -26,6 +26,7 @@ WITH account_dims_mapping AS (
       sequence_task_due_date,
       sequence_status,
       last_activity_date,
+      partner_prospect_id,
       account_demographics_sales_segment,
       account_demographics_geo,
       account_demographics_region,
@@ -249,6 +250,7 @@ WITH account_dims_mapping AS (
       crm_person.last_activity_date,
       crm_person.last_utm_content,
       crm_person.last_utm_campaign,
+      crm_person.partner_prospect_id,
       crm_person.account_demographics_sales_segment,
       crm_person.account_demographics_geo,
       crm_person.account_demographics_region,
@@ -295,7 +297,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-12-01",
-    updated_date="2022-01-07"
+    updated_date="2022-02-17"
 ) }}
