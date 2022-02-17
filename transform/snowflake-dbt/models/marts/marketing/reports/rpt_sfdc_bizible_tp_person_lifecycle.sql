@@ -75,7 +75,7 @@
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.crm_person_title,
       mart_crm_touchpoint.bizible_touchpoint_position,
-      UPPER(mart_crm_touchpoint.country) as person_country,
+      UPPER(mart_crm_touchpoint.crm_person_country) as person_country,
       mart_crm_touchpoint.last_utm_campaign,
       mart_crm_touchpoint.last_utm_content,
       1 AS touchpoint_count,
@@ -144,5 +144,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-01-25"
+    updated_date="2022-02-17"
 ) }}
