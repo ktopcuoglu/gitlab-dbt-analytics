@@ -72,7 +72,6 @@ WITH fct_mrr AS (
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      mrr*12                                                                                                            AS arr,
       quantity,
       MAX(fct_payload.dim_subscription_id) IS NOT NULL                                                                     AS has_sent_payloads,
       COUNT(DISTINCT fct_payload.dim_usage_ping_id)                                                                        AS monthly_payload_counts,
@@ -119,7 +118,7 @@ WITH fct_mrr AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-10-16",
-    updated_date="2020-01-21"
+    updated_date="2022-02-17"
 ) }}
