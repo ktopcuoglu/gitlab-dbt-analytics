@@ -4757,11 +4757,6 @@ users:
         member_of:
             - meltano
 
-    - meltano_dev:
-        can_login: yes
-        member_of:
-            - meltano
-
     - mfleisher:
         can_login: yes
         member_of:
