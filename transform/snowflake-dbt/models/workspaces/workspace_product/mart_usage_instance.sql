@@ -8,9 +8,9 @@
     ])
 }}
 
-WITH usage_events AS (
+, usage_events AS (
     SELECT
-        {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_instance_id','plan_was_paid_at_event_date']) }}       AS mart_usage_instance_id,
+        {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_instance_id']) }}       AS mart_usage_instance_id,
         event_date,
         event_name,
         source,

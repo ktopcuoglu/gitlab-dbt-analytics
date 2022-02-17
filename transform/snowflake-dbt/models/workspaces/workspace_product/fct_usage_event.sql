@@ -90,6 +90,7 @@
     SELECT
       event_primary_key                       AS event_id,
       event_name                              AS event_name,
+      dim_instance_id                         AS dim_instance_id,
       dim_product_tier_id                     AS dim_product_tier_id,
       dim_subscription_id                     AS dim_subscription_id,
       date_id                                 AS dim_event_date_id,
