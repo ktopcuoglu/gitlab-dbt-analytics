@@ -10,7 +10,8 @@
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription')
+    ('subscriptions', 'dim_subscription'),
+    ('namespaces', 'dim_namespace')
 ]) }}
 
 
@@ -45,6 +46,7 @@
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
+      NULL                                                                         AS namespace_name,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -180,6 +182,7 @@
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
+      namespaces.namespace_name,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -304,8 +307,9 @@
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN subscriptions
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
-      LEFT JOIN most_recent_subscription_version
-        ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN most_recent_subscription_version
+      ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN namespaces ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
