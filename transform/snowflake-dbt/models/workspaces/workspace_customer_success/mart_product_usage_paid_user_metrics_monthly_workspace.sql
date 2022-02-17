@@ -309,7 +309,8 @@
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
-    LEFT JOIN namespaces ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN namespaces 
+      ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 

@@ -122,7 +122,8 @@
     FROM free_user_metrics
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
-    LEFT JOIN namespaces ON namespaces.dim_namespace_id = free_user_metrics.dim_namespace_id
+    LEFT JOIN namespaces 
+      ON namespaces.dim_namespace_id = free_user_metrics.dim_namespace_id
 
 )
 
