@@ -25,7 +25,7 @@
     SELECT
       event_primary_key                                               AS event_primary_key,
       usage_data_events.event_name                                    AS event_name,
-      namespace_id                                                    AS namespace_id,
+      namespace_id                                                    AS namespace_id, -- make empty namespace = null
       'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'                          AS dim_instance_id,
       user_id                                                         AS user_id,
       parent_type                                                     AS parent_type,
@@ -34,7 +34,6 @@
       event_created_at                                                AS event_created_at,
       plan_id_at_event_date                                           AS plan_id_at_event_date,
       plan_name_at_event_date                                         AS plan_name_at_event_date,
-      plan_was_paid_at_event_date                                     AS plan_was_paid_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
             THEN xmau_metrics.stage_name
