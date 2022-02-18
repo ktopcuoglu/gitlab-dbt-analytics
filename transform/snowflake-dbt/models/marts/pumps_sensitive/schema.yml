@@ -312,3 +312,21 @@ models:
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
+
+  - name: pump_disaster_relief_fund
+    description: '{{ doc("pump_disaster_relief_fund") }}'
+    columns:
+      - name: "Fund"
+        description: A field requested by the recipient of the data
+      - name: "First Name"
+        description: The first name of the employee
+      - name: "Last Name"
+        description: The last name of the employee
+      - name: "Employee ID"
+        description: The employee id of the employee
+      - name: "Email"
+        description: The work email for the employee
+      - name: "Action"
+        description: A field indicating if the employee is the be added or removed representing Hires and Terminations.
+      - name: report_date
+        description: The date the report table was created
