@@ -195,6 +195,8 @@
       fct_crm_opportunity.partner_account,
       fct_crm_opportunity.dr_status,
       fct_crm_opportunity.distributor,
+      fct_crm_opportunity.dr_deal_id,
+      fct_crm_opportunity.dr_primary_registration,
       fct_crm_opportunity.influence_partner,
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
@@ -260,7 +262,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2022-02-08",
+    updated_date="2022-02-14",
   ) }}

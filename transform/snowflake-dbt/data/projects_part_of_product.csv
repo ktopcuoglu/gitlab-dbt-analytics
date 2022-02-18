@@ -19,6 +19,7 @@ gitlab-org/cluster-integration/auto-deploy-image,11688089
 gitlab-org/cluster-integration/helm-install-image,9184510
 gitlab-org/cookbook-omnibus-gitlab,95156
 gitlab-org/customers-gitlab-com,2670515
+gitlab-org/database-team/gitlab-com-database-testing,23345837
 gitlab-org/discourse-omniauth-gitlab,150440
 gitlab-org/distribution/gitlab-configurator,13682597
 gitlab-org/distribution/gitlab-provisioner,6047528
@@ -99,6 +100,8 @@ gitlab-org/security-products/codequality,5498087
 gitlab-org/ci-cd/codequality,17035255
 gitlab-org/ci-cd/accessibility,17166102
 gitlab-org/security-products/dast,9762266
+gitlab-org/security-products/dast-runner-validation,26751150
+gitlab-org/security-products/dast-cwe-checks,27060148
 gitlab-org/security-products/analyzers/browserker,21351796
 gitlab-org/security-products/dependency-scanning,5779760
 gitlab-org/security-products/gemnasium-db,12006272
@@ -272,4 +275,5 @@ gitlab-org/gl-openshift/gitlab-runner-operator,22848448
 gitlab-org/gl-openshift/gitlab-operator,18899486
 gitlab-com/gl-infra/customersdot-ansible-poc,26392061
 gitlab-org/tanuki_emoji,27628435
+gitlab-org/growth/product-intelligence/snowplow-pseudonymization,28496898
 gitlab-org/opstrace/opstrace,32149347

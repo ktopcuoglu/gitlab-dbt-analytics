@@ -27,10 +27,15 @@ WITH date_details AS (
     SELECT 
         ---------------------------
         -- Keys
-        sales_team_cro_level, 
-        sales_team_rd_asm_level,
+        sales_team_cro_level,
+        sales_team_vp_level,
+        sales_team_avp_rd_level,
+        sales_team_asm_level,
         deal_group,
         sales_qualified_source,
+
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area,
         -----------------------------
 
         close_fiscal_quarter_date,
@@ -45,7 +50,7 @@ WITH date_details AS (
         SUM(booked_deal_count)              AS booked_deal_count,
         SUM(churned_contraction_deal_count) AS churned_contraction_deal_count,
 
-        SUM(created_in_quarter_count)       AS created_in_quarter_count,
+
 
         -- reported quarter + 1
         SUM(rq_plus_1_open_1plus_deal_count)    AS rq_plus_1_open_1plus_deal_count,
@@ -71,7 +76,6 @@ WITH date_details AS (
         SUM(open_4plus_net_arr)                 AS open_4plus_net_arr, 
 
         SUM(created_and_won_same_quarter_net_arr)       AS created_and_won_same_quarter_net_arr,
-        SUM(created_in_quarter_net_arr)                 AS created_in_quarter_net_arr,
 
         -- reported quarter + 1
         SUM(rq_plus_1_open_1plus_net_arr)       AS rq_plus_1_open_1plus_net_arr,
@@ -81,20 +85,42 @@ WITH date_details AS (
         -- reported quarter + 2
         SUM(rq_plus_2_open_1plus_net_arr)       AS rq_plus_2_open_1plus_net_arr,
         SUM(rq_plus_2_open_3plus_net_arr)       AS rq_plus_2_open_3plus_net_arr,
-        SUM(rq_plus_2_open_4plus_net_arr)       AS rq_plus_2_open_4plus_net_arr
+        SUM(rq_plus_2_open_4plus_net_arr)       AS rq_plus_2_open_4plus_net_arr,
+
+        -- pipe gen
+        SUM(pipe_gen_count)                     AS pipe_gen_count,
+        SUM(pipe_gen_net_arr)                   AS pipe_gen_net_arr,
+
+        -- yoy pipe gen
+        SUM(minus_1_year_pipe_gen_net_arr)      AS minus_1_year_pipe_gen_net_arr,
+        SUM(minus_1_year_pipe_gen_deal_count)   AS minus_1_year_pipe_gen_deal_count,
+
+        -- sao deal count
+        SUM(sao_deal_count)                     AS sao_deal_count,
+        SUM(sao_net_arr)                        AS sao_net_arr,
+        
+        SUM(minus_1_year_sao_net_arr)           AS minus_1_year_sao_net_arr,
+        SUM(minus_1_year_sao_deal_count)        AS minus_1_year_sao_deal_count
+
+
     FROM report_pipeline_metrics_day
     WHERE close_day_of_fiscal_quarter_normalised > 0
-    GROUP BY 1,2,3,4,5,6,7
+    GROUP BY 1,2,3,4,5,6,7,8,9,10,11
   
 ), consolidated_targets AS (
 
     SELECT
         ---------------------------
         -- Keys
-        sales_team_cro_level, 
-        sales_team_rd_asm_level,
+        sales_team_cro_level,
+        sales_team_vp_level,
+        sales_team_avp_rd_level,
+        sales_team_asm_level,
         deal_group,
         sales_qualified_source,
+        
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area,
         -----------------------------
 
         close_fiscal_quarter_name,
@@ -113,12 +139,14 @@ WITH date_details AS (
         SUM(total_pipe_generation_net_arr)                  AS total_pipe_generation_net_arr,
         SUM(total_pipe_generation_deal_count)               AS total_pipe_generation_deal_count,
         SUM(total_created_and_booked_same_quarter_net_arr)  AS total_created_and_booked_same_quarter_net_arr,
+        SUM(total_sao_generation_net_arr)                   AS total_sao_generation_net_arr,
+        SUM(total_sao_generation_deal_count)                AS total_sao_generation_deal_count,
   
         SUM(calculated_target_net_arr)              AS calculated_target_net_arr, 
         SUM(calculated_target_deal_count)           AS calculated_target_deal_count,  
         SUM(calculated_target_pipe_generation)      AS calculated_target_pipe_generation
   FROM report_targets_totals_per_quarter
-  GROUP BY 1,2,3,4,5,6,7
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11
 
 ), consolidated_targets_per_day AS (
   
@@ -139,10 +167,20 @@ WITH date_details AS (
   SELECT 
     target_fiscal_quarter_date                AS close_fiscal_quarter_date,
     target_day_of_fiscal_quarter_normalised   AS close_day_of_fiscal_quarter_normalised,
-    sales_team_rd_asm_level,
+    
+    --------------------------
     sales_team_cro_level,
+    sales_team_vp_level,
+    sales_team_avp_rd_level,
+    sales_team_asm_level,
     sales_qualified_source,
     deal_group,
+    
+    sales_team_rd_asm_level,
+    report_user_segment_geo_region_area,
+       
+    --------------------------
+
     SUM(CASE 
           WHEN kpi_name = 'Net ARR' 
             THEN qtd_allocated_target
@@ -159,24 +197,34 @@ WITH date_details AS (
            ELSE 0 
         END)                        AS qtd_target_pipe_generation_net_arr
   FROM mart_sales_funnel_target_daily
-  GROUP BY 1,2,3,4,5,6
+  GROUP BY 1,2,3,4,5,6,7,8,9,10
 
 ), key_fields AS (
     
   SELECT         
-        sales_team_cro_level, 
-        sales_team_rd_asm_level,
+        sales_team_cro_level,
+        sales_team_vp_level,
+        sales_team_avp_rd_level,
+        sales_team_asm_level,
         deal_group,
         sales_qualified_source,
-        close_fiscal_quarter_date
+        close_fiscal_quarter_date,
+        ------------ 
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area
   FROM consolidated_targets
   UNION
   SELECT         
-        sales_team_cro_level, 
-        sales_team_rd_asm_level,
+        sales_team_cro_level,
+        sales_team_vp_level,
+        sales_team_avp_rd_level,
+        sales_team_asm_level,
         deal_group,
         sales_qualified_source,
-        close_fiscal_quarter_date
+        close_fiscal_quarter_date,
+        ------------ 
+        sales_team_rd_asm_level,
+        report_user_segment_geo_region_area
     FROM consolidated_metrics
   
 ), base_fields AS (
@@ -205,10 +253,15 @@ WITH date_details AS (
 
         --------------------------
         -- keys
-        base.sales_team_cro_level, 
-        base.sales_team_rd_asm_level,
+        base.sales_team_cro_level,
+        base.sales_team_vp_level,
+        base.sales_team_avp_rd_level,
+        base.sales_team_asm_level,
         base.deal_group,
         base.sales_qualified_source,
+
+        base.sales_team_rd_asm_level,
+        base.report_user_segment_geo_region_area,
         --------------------------
   
         base.close_fiscal_quarter_date,
@@ -230,8 +283,6 @@ WITH date_details AS (
         metrics.open_4plus_deal_count, 
         metrics.booked_deal_count,
         metrics.churned_contraction_deal_count,
-
-        metrics.created_in_quarter_count,
 
         -- reported quarter + 1
         metrics.rq_plus_1_open_1plus_deal_count,
@@ -255,8 +306,22 @@ WITH date_details AS (
         metrics.open_3plus_net_arr, 
         metrics.open_4plus_net_arr, 
 
+        -- pipe gen
         metrics.created_and_won_same_quarter_net_arr,
-        metrics.created_in_quarter_net_arr,
+        metrics.pipe_gen_count,
+        metrics.pipe_gen_net_arr,
+
+        -- one year ago pipe gen
+        metrics.minus_1_year_pipe_gen_net_arr,
+        metrics.minus_1_year_pipe_gen_deal_count,
+
+        -- sao gen
+        metrics.sao_deal_count,
+        metrics.sao_net_arr,
+
+        -- one year ago sao
+        metrics.minus_1_year_sao_net_arr,
+        metrics.minus_1_year_sao_deal_count,
 
         -- reported quarter + 1
         metrics.rq_plus_1_open_1plus_net_arr,
@@ -280,6 +345,8 @@ WITH date_details AS (
         COALESCE(targets.total_pipe_generation_net_arr,0)                   AS total_pipe_generation_net_arr,
         COALESCE(targets.total_pipe_generation_deal_count,0)                AS total_pipe_generation_deal_count,
         COALESCE(targets.total_created_and_booked_same_quarter_net_arr,0)   AS total_created_and_booked_same_quarter_net_arr,
+        COALESCE(targets.total_sao_generation_net_arr,0)                    AS total_sao_generation_net_arr,
+        COALESCE(targets.total_sao_generation_deal_count,0)                 AS total_sao_generation_deal_count,
   
         COALESCE(targets.calculated_target_net_arr,0)             AS calculated_target_net_arr, 
         COALESCE(targets.calculated_target_deal_count,0)          AS calculated_target_deal_count,  
@@ -302,10 +369,10 @@ WITH date_details AS (
         COALESCE(rq_plus_two.calculated_target_deal_count,0)      AS rq_plus_2_calculated_target_deal_count,
 
         -- totals one year ago
-        COALESCE(year_minus_one.total_booked_net_arr,0)             AS year_minus_one_total_booked_net_arr,
-        COALESCE(year_minus_one.total_booked_deal_count,0)          AS year_minus_one_total_booked_deal_count,
-        COALESCE(year_minus_one.total_pipe_generation_net_arr,0)    AS year_minus_one_total_pipe_generation_net_arr,
-        COALESCE(year_minus_one.total_pipe_generation_deal_count,0) AS year_minus_one_total_pipe_generation_deal_count,
+        COALESCE(year_minus_one.total_booked_net_arr,0)             AS minus_1_year_total_booked_net_arr,
+        COALESCE(year_minus_one.total_booked_deal_count,0)          AS minus_1_year_total_booked_deal_count,
+        COALESCE(year_minus_one.total_pipe_generation_net_arr,0)    AS minus_1_year_total_pipe_generation_net_arr,
+        COALESCE(year_minus_one.total_pipe_generation_deal_count,0) AS minus_1_year_total_pipe_generation_deal_count,
 
         COALESCE(qtd_target.qtd_target_net_arr,0)                   AS qtd_target_net_arr,
         COALESCE(qtd_target.qtd_target_deal_count,0)                AS qtd_target_deal_count,
@@ -317,51 +384,63 @@ WITH date_details AS (
     FROM base_fields base 
     LEFT JOIN consolidated_metrics metrics
     ON metrics.sales_team_cro_level = base.sales_team_cro_level
-      AND metrics.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+      AND metrics.sales_team_asm_level = base.sales_team_asm_level
       AND metrics.sales_qualified_source = base.sales_qualified_source
       AND metrics.deal_group = base.deal_group
       AND metrics.close_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND metrics.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+      AND metrics.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+      AND metrics.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
     -- current quarter
     LEFT JOIN consolidated_targets_per_day targets 
       ON targets.sales_team_cro_level = base.sales_team_cro_level
-        AND targets.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND targets.sales_team_asm_level = base.sales_team_asm_level
         AND targets.sales_qualified_source = base.sales_qualified_source
         AND targets.deal_group = base.deal_group
         AND targets.close_fiscal_quarter_date = base.close_fiscal_quarter_date
         AND targets.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+        AND targets.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+        AND targets.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
     -- quarter plus 1 targets
     LEFT JOIN consolidated_targets_per_day rq_plus_one
       ON rq_plus_one.sales_team_cro_level = base.sales_team_cro_level
-        AND rq_plus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND rq_plus_one.sales_team_asm_level = base.sales_team_asm_level
         AND rq_plus_one.sales_qualified_source = base.sales_qualified_source
         AND rq_plus_one.deal_group = base.deal_group
         AND rq_plus_one.close_fiscal_quarter_date = base.rq_plus_1_close_fiscal_quarter_date
         AND rq_plus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+        AND rq_plus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+        AND rq_plus_one.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
     -- quarter plus 2 targets
     LEFT JOIN consolidated_targets_per_day rq_plus_two
       ON rq_plus_two.sales_team_cro_level = base.sales_team_cro_level
-        AND rq_plus_two.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND rq_plus_two.sales_team_asm_level = base.sales_team_asm_level
         AND rq_plus_two.sales_qualified_source = base.sales_qualified_source
         AND rq_plus_two.deal_group = base.deal_group
         AND rq_plus_two.close_fiscal_quarter_date = base.rq_plus_2_close_fiscal_quarter_date
         AND rq_plus_two.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+        AND rq_plus_two.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+        AND rq_plus_two.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
     -- one year ago totals
     LEFT JOIN consolidated_targets_per_day year_minus_one
       ON year_minus_one.sales_team_cro_level = base.sales_team_cro_level
-        AND year_minus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND year_minus_one.sales_team_asm_level = base.sales_team_asm_level
         AND year_minus_one.sales_qualified_source = base.sales_qualified_source
         AND year_minus_one.deal_group = base.deal_group
         AND year_minus_one.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
         AND year_minus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+        AND year_minus_one.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+        AND year_minus_one.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
     -- qtd allocated targets
     LEFT JOIN funnel_allocated_targets_qtd qtd_target
       ON qtd_target.sales_team_cro_level = base.sales_team_cro_level
-        AND qtd_target.sales_team_rd_asm_level = base.sales_team_rd_asm_leveL
+        AND qtd_target.sales_team_asm_level = base.sales_team_asm_level
         AND qtd_target.sales_qualified_source = base.sales_qualified_source
         AND qtd_target.deal_group = base.deal_group
         AND qtd_target.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
         AND qtd_target.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+        AND qtd_target.sales_team_rd_asm_level = base.sales_team_rd_asm_level
+        AND qtd_target.report_user_segment_geo_region_area = base.report_user_segment_geo_region_area
    
 
 )
