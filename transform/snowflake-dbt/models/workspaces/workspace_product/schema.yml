@@ -70,16 +70,16 @@ models:
           - not_null
           - unique
 
-  - name: mart_usage_namespace
-    description: ' {{ doc("mart_usage_namespace") }} '
+  - name: mart_usage_namespace_daily
+    description: ' {{ doc("mart_usage_namespace_daily") }} '
     columns:
       - name: mart_usage_namespace_id
         tests:
           - not_null
           - unique
 
-  - name: mart_usage_instance
-    description: ' {{ doc("mart_usage_instance") }} '
+  - name: mart_usage_instance_daily
+    description: ' {{ doc("mart_usage_instance_daily") }} '
     columns:
       - name: mart_usage_instance_id
         tests:

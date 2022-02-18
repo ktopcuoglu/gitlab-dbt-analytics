@@ -14,7 +14,7 @@ This table contains all gitlab.com events with additional dimensions and other f
 {% enddocs %}
 
 
-{% docs mart_usage_namespace %}
+{% docs mart_usage_namespace_daily %}
 
 GitLab.com Namespace-Level mart - Sourced from fct_event_usage_metrics
 
@@ -23,7 +23,7 @@ This table contains all gitlab.com events with additional dimensions and other f
 {% enddocs %}
 
 
-{% docs mart_usage_instance %}
+{% docs mart_usage_instance_daily %}
 
 GitLab.com Event-Level mart - Sourced from fct_event_usage_metrics
 
