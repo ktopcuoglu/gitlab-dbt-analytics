@@ -106,7 +106,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['secret_detection_pipeline']") }}                     AS secret_detection_pipeline_usage_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['dast_pipeline']") }}                                 AS dast_pipeline_usage_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_coverage_fuzzing_jobs']") }}                    AS coverage_fuzzing_jobs_28_days_user,
-    {{ null_negative_numbers("raw_usage_data_payload['counts']['environments']") }}                                                                     AS events_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['environments']") }}                                                                     AS environments_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['feature_flags']") }}                                                                    AS feature_flags_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['successful_deployments']") }}                                                   AS successful_deployments_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['failed_deployments']") }}                                                       AS failed_deployments_28_days_event,
