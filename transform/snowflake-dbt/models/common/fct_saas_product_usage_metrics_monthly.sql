@@ -148,6 +148,27 @@
       "redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly"                AS ci_templates_usage_28_days_event,
       "redis_hll_counters.issues_edit.g_project_management_issue_milestone_changed_monthly"     AS project_management_issue_milestone_changed_28_days_user,
       "redis_hll_counters.issues_edit.g_project_management_issue_iteration_changed_monthly"     AS project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      "usage_activity_by_stage_monthly.create.protected_branches"                               AS protected_branches_28_days_user,
+      "redis_hll_counters.analytics.p_analytics_ci_cd_lead_time_monthly"                        AS ci_cd_lead_time_usage_28_days_event,
+      "redis_hll_counters.analytics.p_analytics_ci_cd_deployment_frequency_monthly"             AS ci_cd_deployment_frequency_usage_28_days_event,
+      "usage_activity_by_stage.create.projects_with_repositories_enabled"                       AS projects_with_repositories_enabled_all_time_user,
+      "usage_activity_by_stage_monthly.secure.user_api_fuzzing_jobs"                            AS api_fuzzing_jobs_usage_28_days_user,
+      "usage_activity_by_stage_monthly.secure.coverage_fuzzing_pipeline"                        AS coverage_fuzzing_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.api_fuzzing_pipeline"                             AS api_fuzzing_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.container_scanning_pipeline"                      AS container_scanning_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.dependency_scanning_pipeline"                     AS dependency_scanning_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.sast_pipeline"                                    AS sast_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.secret_detection_pipeline"                        AS secret_detection_pipeline_usage_28_days_event
+      "usage_activity_by_stage_monthly.secure.dast_pipeline"                                    AS dast_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.user_coverage_fuzzing_jobs"                       AS coverage_fuzzing_jobs_28_days_user,
+      "counts.environments"                                                                     AS 
+      "counts.feature_flags"
+      "counts_monthly.successful_deployments"
+      "counts_monthly.failed_deployments"
+      "usage_activity_by_stage_monthly.manage.projects_with_compliance_framework"
+      "redis_hll_counters.pipeline_authoring.o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly"
+      "compliance_unique_visits.g_compliance_audit_events"
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
