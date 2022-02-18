@@ -763,12 +763,14 @@ roles:
                   - raw.tap_adaptive
                   - raw.tap_xactly
                   - raw.tap_zendesk
+                  - raw.tap_zendesk__community_relations
             tables:
               write:
                   - raw.tap_zoom.*
                   - raw.tap_adaptive.*
                   - raw.tap_xactly.*
                   - raw.tap_zendesk.*
+                  - raw.tap_zendesk__community_relations.*
 
     - people_operations:
         warehouses:
@@ -2111,10 +2113,12 @@ roles:
                   read:
                       - prep.zendesk_community_relations
                       - raw.zendesk_community_relations_stitch
+                      - raw.tap_zendesk__community_relations
               tables:
                   read:
                       - prep.zendesk_community_relations.*
                       - raw.zendesk_community_relations_stitch.*
+                      - raw.tap_zendesk__community_relations.*
 
     - zoom:
         warehouses:
@@ -4249,7 +4253,17 @@ roles:
         warehouses:
             - analyst_xs
 
-
+    - zzhang:
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
 # ==========================================
 # Users
@@ -5070,6 +5084,11 @@ users:
         can_login: yes
         member_of:
             - ysun
+
+    - zzhang:
+        can_login: yes
+        member_of:
+            - zzhang
 
 # ==========================================
 # Warehouses

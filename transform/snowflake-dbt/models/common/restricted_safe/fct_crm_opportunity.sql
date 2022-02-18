@@ -149,6 +149,8 @@
       sfdc_opportunity.channel_type,
       sfdc_opportunity.partner_account,
       sfdc_opportunity.dr_status,
+      sfdc_opportunity.dr_deal_id,
+      sfdc_opportunity.dr_primary_registration,
       sfdc_opportunity.distributor,
       sfdc_opportunity.influence_partner,
       sfdc_opportunity.fulfillment_partner,
@@ -400,6 +402,8 @@
       opportunity_fields.dr_partner_engagement,
       opportunity_fields.partner_account,
       opportunity_fields.dr_status,
+      opportunity_fields.dr_deal_id,
+      opportunity_fields.dr_primary_registration,
       opportunity_fields.distributor,
       opportunity_fields.influence_partner,
       opportunity_fields.fulfillment_partner,
@@ -481,7 +485,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-11-30",
-    updated_date="2021-12-02"
+    updated_date="2022-02-14"
 ) }}

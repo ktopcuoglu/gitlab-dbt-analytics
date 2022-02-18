@@ -25,10 +25,26 @@
           -- 2022-02-01 NF Deprecated, this should be removed once the Q1 clean up exercise is done
           CASE 
             WHEN funnel_target.crm_user_sales_segment = 'Large'
-              AND funnel_target.crm_user_geo = 'EMEA'
+              AND funnel_target.crm_user_geo  = 'EMEA'
                 THEN 'Large_EMEA'
+            WHEN funnel_target.crm_user_sales_segment = 'Mid-Market'
+              AND funnel_target.crm_user_region  = 'AMER'
+              AND lower(funnel_target.crm_user_area) LIKE '%west%'
+                THEN 'Mid-Market_West'
+            WHEN funnel_target.crm_user_sales_segment = 'Mid-Market'
+              AND funnel_target.crm_user_region = 'AMER'
+              AND lower(funnel_target.crm_user_area) NOT LIKE '%west%'
+                THEN 'Mid-Market_East'
+            WHEN funnel_target.crm_user_sales_segment = 'SMB'
+              AND funnel_target.crm_user_region = 'AMER'
+              AND lower(funnel_target.crm_user_area) LIKE '%west%'
+                THEN 'SMB_West'
+            WHEN funnel_target.crm_user_sales_segment = 'SMB'
+              AND funnel_target.crm_user_region = 'AMER'
+              AND lower(funnel_target.crm_user_area) NOT LIKE '%west%'
+                THEN 'SMB_East'
             ELSE COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_region),'NA') 
-          END                                                                                         AS sales_team_rd_asm_level,
+        END                                                                                           AS sales_team_rd_asm_level,
           ---------
           COALESCE(funnel_target.crm_user_sales_segment ,'NA')                                        AS sales_team_cro_level,
           COALESCE(CONCAT(funnel_target.crm_user_sales_segment,'_',funnel_target.crm_user_geo),'NA')  AS sales_team_vp_level,
