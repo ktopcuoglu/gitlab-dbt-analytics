@@ -14,7 +14,7 @@
     SELECT
       event_id,
       CAST(event_created_at AS DATE)                                      AS event_date,
-      user_id                                                             AS dim_user_id,
+      dim_user_id                                                         AS dim_user_id,
       event_name,
       plan_id_at_event_date,
       {{ dbt_utils.surrogate_key(['event_date', 'dim_user_id',

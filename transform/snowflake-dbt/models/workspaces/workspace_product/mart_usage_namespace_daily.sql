@@ -34,7 +34,7 @@
         COUNT(*) AS event_count,
         COUNT(DISTINCT(dim_user_id)) AS distinct_user_count
     FROM mart_usage_event
-        {{ dbt_utils.group_by(n=22) }}
+        {{ dbt_utils.group_by(n=21) }}
 ), results AS (
 
     SELECT *
