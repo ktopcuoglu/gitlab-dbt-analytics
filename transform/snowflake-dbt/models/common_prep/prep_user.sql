@@ -18,9 +18,10 @@ WITH source AS (
       updated_at::TIMESTAMP                                            AS updated_at,
       admin::BOOLEAN                                                   AS is_admin,
       state::VARCHAR                                                   AS user_state,
-      CASE WHEN state in ('blocked', 'banned')
-        THEN TRUE
-        ELSE FALSE END                                                 AS is_blocked_user
+      CASE 
+        WHEN state in ('blocked', 'banned') THEN TRUE
+        ELSE FALSE 
+      END                                                              AS is_blocked_user
     FROM source
     
 )
