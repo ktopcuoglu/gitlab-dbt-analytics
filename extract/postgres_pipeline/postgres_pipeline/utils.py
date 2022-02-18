@@ -270,7 +270,7 @@ def chunk_and_upload(
 
     if rows_uploaded > 0:
         trigger_snowflake_upload(
-            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=False
+            target_engine, target_table, upload_file_name + "[.]\\\\d*", purge=True
         )
         logging.info(f"Uploaded {rows_uploaded} total rows to table {target_table}.")
 
