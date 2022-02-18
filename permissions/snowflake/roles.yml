@@ -4253,7 +4253,17 @@ roles:
         warehouses:
             - analyst_xs
 
-
+    - zzhang:
+        member_of:
+            - adaptive
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
 
 # ==========================================
 # Users
@@ -5074,6 +5084,11 @@ users:
         can_login: yes
         member_of:
             - ysun
+
+    - zzhang:
+        can_login: yes
+        member_of:
+            - zzhang
 
 # ==========================================
 # Warehouses

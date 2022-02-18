@@ -37,7 +37,7 @@
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
       mart_crm_attribution_touchpoint.sfdc_record_id, 
-      mart_crm_attribution_touchpoint.country AS country, --5
+      mart_crm_attribution_touchpoint.crm_person_country AS country, --5
       mart_crm_attribution_touchpoint.crm_person_title,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
       mart_crm_attribution_touchpoint.campaign_name,
