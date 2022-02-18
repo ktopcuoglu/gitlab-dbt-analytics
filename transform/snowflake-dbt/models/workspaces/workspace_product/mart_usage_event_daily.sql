@@ -86,7 +86,7 @@
       is_umau,
       COUNT(*)                                                            AS event_count
     FROM fact_with_xmau_flags
-    {{ dbt_utils.group_by(n=23) }}
+    {{ dbt_utils.group_by(n=24) }}
 
 )
 
