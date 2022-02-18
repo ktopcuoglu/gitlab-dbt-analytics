@@ -9,6 +9,19 @@ WITH source AS (
     SELECT *
     FROM {{ source('gitlab_dotcom', 'ci_pipelines') }}
 
+), partitioned AS (
+
+    SELECT *
+    FROM source
+
+    {% if is_incremental() %}
+
+    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+
+    {% endif %}
+
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+
 ), renamed AS (
 
     SELECT
@@ -35,20 +48,9 @@ WITH source AS (
       iid                      AS iid,
       merge_request_id::NUMBER AS merge_request_id,
       _uploaded_at             AS _uploaded_at
-    FROM source
-
-), partitioned AS (
-
-    SELECT *
-    FROM renamed
-    {% if is_incremental() %}
-
-    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
-
-    {% endif %}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+    FROM partitioned
 
 )
 
 SELECT *
-FROM partitioned
+FROM renamed

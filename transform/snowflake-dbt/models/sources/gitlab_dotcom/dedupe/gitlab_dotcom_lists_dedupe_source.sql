@@ -9,6 +9,19 @@ WITH source AS (
     SELECT *
     FROM {{ source('gitlab_dotcom', 'lists') }}
 
+), partitioned AS (
+
+    SELECT *
+    FROM source
+
+    {% if is_incremental() %}
+
+    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+
+    {% endif %}
+
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+
 ), renamed AS (
 
     SELECT
@@ -25,20 +38,9 @@ WITH source AS (
       max_issue_weight AS max_issue_weight,
       limit_metric     AS limit_metric,
       _uploaded_at     AS _uploaded_at
-    FROM source
-
-), partitioned AS (
-
-    SELECT *
-    FROM renamed
-    {% if is_incremental() %}
-
-    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
-
-    {% endif %}
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY id ORDER BY updated_at DESC) = 1
+    FROM partitioned
 
 )
 
 SELECT *
-FROM partitioned
+FROM renamed
