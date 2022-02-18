@@ -103,7 +103,7 @@
     SELECT *
     FROM fct_events_w_plan_was_paid
     LEFT JOIN dim_namespace_w_bdg
-      ON fct_events.namespace_id = dim_namespace_w_bdg.dim_namespace_id
+      ON fct_events_w_plan_was_paid.namespace_id = dim_namespace_w_bdg.dim_namespace_id
 
 ), gitlab_dotcom_fact AS (
 
