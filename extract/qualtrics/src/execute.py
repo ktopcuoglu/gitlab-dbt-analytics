@@ -78,8 +78,8 @@ def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
 
                 snowflake_stage_load_copy_remove(
                     "distributions.json",
-                    "qualtrics.qualtrics_load",
-                    "qualtrics.distribution",
+                    "raw.qualtrics.qualtrics_load",
+                    "raw.qualtrics.distribution",
                     snowflake_engine,
                 )
     return all_distributions
@@ -100,8 +100,8 @@ def get_and_write_contacts(distributions: List[Dict[Any, Any]]) -> List[Dict[Any
 
         snowflake_stage_load_copy_remove(
             "contacts.json",
-            "qualtrics.qualtrics_load",
-            "qualtrics.contact",
+            "raw.qualtrics.qualtrics_load",
+            "raw.qualtrics.contact",
             snowflake_engine,
         )
     return contacts_to_write
