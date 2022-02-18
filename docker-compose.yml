@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     airflow_webserver:
-        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.26
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:airflow_upgrade_test_latest
         restart: always
         ports:
           - "8080:8080"
@@ -10,7 +10,7 @@ services:
           - airflow_scheduler
         environment:
           AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
-          NAMESPACE: testing
+          NAMESPACE: default
           IN_CLUSTER: "False"
           GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
           GIT_BRANCH: ${GIT_BRANCH}
@@ -34,36 +34,36 @@ services:
             read_only: True
 
     airflow_scheduler:
-       image: registry.gitlab.com/gitlab-data/data-image/airflow-image:v0.0.26
-        restart: always
-        ports:
-          - "8793:8793"
-        depends_on:
-          - airflow_db
-        environment:
-          AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
-          NAMESPACE: testing
-          IN_CLUSTER: "False"
-          GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
-          GIT_BRANCH: ${GIT_BRANCH}
-          AIRFLOW__WEBSERVER__SECRET_KEY: 83a1e32380af3a62d159ca9461aa3e30436b4978c8dd66f907a02528b662
-          AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow_db
-        command: bash -c "airflow scheduler"
-        volumes:
-          - type: bind
-            source: ${HOME}/.kube/config
-            target: /root/.kube/config
-          - type: bind
-            source: ${GOOGLE_APPLICATION_CREDENTIALS}
-            target: /root/gcp_service_creds.json
-            read_only: True
-          - type: volume
-            source: airflow_logs
-            target: /usr/local/airflow/logs
-          - type: bind
-            source: .
-            target: /usr/local/airflow/analytics
-            read_only: True
+       image: registry.gitlab.com/gitlab-data/data-image/airflow-image:airflow_upgrade_test_latest
+       restart: always
+       ports:
+         - "8793:8793"
+       depends_on:
+         - airflow_db
+       environment:
+         AIRFLOW__CORE__DAGS_FOLDER: /usr/local/airflow/analytics/dags/
+         NAMESPACE: default
+         IN_CLUSTER: "False"
+         GOOGLE_APPLICATION_CREDENTIALS: /root/gcp_service_creds.json
+         GIT_BRANCH: ${GIT_BRANCH}
+         AIRFLOW__WEBSERVER__SECRET_KEY: 83a1e32380af3a62d159ca9461aa3e30436b4978c8dd66f907a02528b662
+         AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://postgres:postgres@airflow_db
+       command: bash -c "airflow scheduler"
+       volumes:
+         - type: bind
+           source: ${HOME}/.kube/config
+           target: /root/.kube/config
+         - type: bind
+           source: ${GOOGLE_APPLICATION_CREDENTIALS}
+           target: /root/gcp_service_creds.json
+           read_only: True
+         - type: volume
+           source: airflow_logs
+           target: /usr/local/airflow/logs
+         - type: bind
+           source: .
+           target: /usr/local/airflow/analytics
+           read_only: True
 
     airflow_db:
       image: postgres:11
