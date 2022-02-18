@@ -51,10 +51,12 @@ WITH current_employees AS (
     WHERE  (CASE
              WHEN DAYOFMONTH(report_date) <= 15
                AND DAYOFMONTH(event_date) > 15
-               AND DATE_TRUNC('month', DATEADD('month', -1, report_date)) = DATE_TRUNC('month', event_date) THEN TRUE
+               AND DATE_TRUNC('month', DATEADD('month', -1, report_date)) = DATE_TRUNC('month', event_date) 
+             THEN TRUE
              WHEN DAYOFMONTH(report_date) > 15
                AND DAYOFMONTH(event_date) <= 15
-               AND DATE_TRUNC('month', report_date) = DATE_TRUNC('month', event_date) THEN TRUE
+               AND DATE_TRUNC('month', report_date) = DATE_TRUNC('month', event_date) 
+             THEN TRUE
              ELSE FALSE
            END) = TRUE
 
