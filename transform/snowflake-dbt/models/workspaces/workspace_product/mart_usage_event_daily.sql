@@ -40,6 +40,7 @@
       fact.*,
       CAST(namespace.created_at AS DATE)                                  AS namespace_created_at,
       DATEDIFF(DAY, namespace_created_at,GETDATE())                       AS days_since_namespace_created,
+      DATEDIFF(DAY, namespace_created_at, event_date)                     AS days_since_namespace_creation_at_event_date,
       namespace.namespace_is_internal                                     AS namespace_is_internal
     FROM fact_with_date AS fact
     LEFT JOIN dim_namespace AS namespace
@@ -79,6 +80,7 @@
       namespace_is_internal,
       namespace_created_at,
       days_since_namespace_created,
+      days_since_namespace_creation_at_event_date,
       is_smau,
       is_gmau,
       is_umau,

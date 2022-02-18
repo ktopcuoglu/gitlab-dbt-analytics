@@ -8,16 +8,17 @@
     ])
 }}
 
-WITH usage_events AS (
+, usage_events AS (
     SELECT
         {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_instance_id','plan_was_paid_at_event_date']) }}       AS mart_usage_instance_id,
         event_date,
         event_name,
         source,
         dim_instance_id,
-        COUNT(*) AS event_count
+        COUNT(*) AS event_count,
+        COUNT(DISTINCT(dim_user_id)) AS distinct_user_count
     FROM mart_usage_event
-        GROUP BY 1,2,3,4,5
+        {{ dbt_utils.group_by(n=6) }}
 ), results AS (
 
     SELECT *
