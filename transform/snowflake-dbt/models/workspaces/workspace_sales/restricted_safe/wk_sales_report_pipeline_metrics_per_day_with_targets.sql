@@ -21,7 +21,6 @@ WITH date_details AS (
   FROM {{ref('wk_sales_mart_sales_funnel_target_daily')}}
 
 -- make sure the aggregation works at the level we want it
--- make sure the aggregation works at the level we want it
 ), consolidated_metrics AS (
 
     SELECT 
