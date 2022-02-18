@@ -315,18 +315,30 @@ models:
 
   - name: pump_disaster_relief_fund
     description: '{{ doc("pump_disaster_relief_fund") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - Employee ID
+            - Action
+          quote_columns: true
     columns:
-      - name: "Fund"
+      - name: Fund
+        quote: true
         description: A field requested by the recipient of the data
-      - name: "First Name"
+      - name: First Name
+        quote: true
         description: The first name of the employee
-      - name: "Last Name"
+      - name: Last Name
+        quote: true
         description: The last name of the employee
-      - name: "Employee ID"
+      - name: Employee ID
+        quote: true
         description: The employee id of the employee
-      - name: "Email"
+      - name: Email
+        quote: true
         description: The work email for the employee
-      - name: "Action"
+      - name: Action
+        quote: true
         description: A field indicating if the employee is the be added or removed representing Hires and Terminations.
       - name: report_date
         description: The date the report table was created
