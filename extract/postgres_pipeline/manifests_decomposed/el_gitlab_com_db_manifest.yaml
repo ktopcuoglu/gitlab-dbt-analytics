@@ -1067,7 +1067,7 @@ tables:
       , position
       , created_at
       , updated_at
-      , user_id
+      , user_id::INTEGER as user_id
       , milestone_id
       , max_issue_count
       , max_issue_weight
