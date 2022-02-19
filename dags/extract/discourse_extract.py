@@ -71,7 +71,7 @@ kubernetes_operator = KubernetesPodOperator(
     env_vars={
         **pod_env_vars,
         **{
-            "START_DATE": "{{ execution_date.isoformat() }}",
+            "START_DATE": "{{ logical_date.isoformat() }}",
             "END_DATE": "{{ next_execution_date.isoformat() }}",
         },
     },

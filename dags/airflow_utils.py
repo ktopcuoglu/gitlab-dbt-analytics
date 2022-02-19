@@ -4,7 +4,6 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
@@ -228,7 +227,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 gitlab_pod_env_vars = {
     "CI_PROJECT_DIR": "/analytics",
-    "EXECUTION_DATE": "{{ next_execution_date }}",
+    "EXECUTION_DATE": "{{ data_interval_end }}",
     "SNOWFLAKE_PREPARATION_SCHEMA": "preparation",
     "SNOWFLAKE_SNAPSHOT_DATABASE": "RAW"
     if GIT_BRANCH == "master"
