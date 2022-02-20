@@ -668,33 +668,6 @@ tables:
       FROM experiment_subjects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  geo_nodes:
-    export_schema: "gitlab_com"
-    export_table: geo_nodes
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , oauth_application_id
-      , enabled
-      , access_key
-      , clone_url_prefix
-      , files_max_capacity
-      , repos_max_capacity
-      , url
-      , selective_sync_type
-      , selective_sync_shards
-      , verification_max_capacity
-      , minimum_reverification_interval
-      , internal_url
-      , name
-      , container_repositories_max_capacity
-      , created_at
-      , updated_at
-      , sync_object_storage
-      FROM geo_nodes
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   grafana_integrations:
     export_schema: "gitlab_com"
     export_table: grafana_integrations
@@ -708,22 +681,6 @@ tables:
       , grafana_url
       , enabled
       FROM grafana_integrations
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  group_custom_attributes:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'group_custom_attributes'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , group_id
-      , key
-      , value
-      FROM group_custom_attributes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   group_import_states:
