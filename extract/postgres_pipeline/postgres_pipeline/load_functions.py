@@ -59,7 +59,7 @@ def load_incremental(
         last_load_time = get_last_load_time()
 
         hours_looking_back = int(env["HOURS"])
-
+        logging.info(env["EXECUTION_DATE"])
         try:
             execution_date = datetime.datetime.strptime(
                 env["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
