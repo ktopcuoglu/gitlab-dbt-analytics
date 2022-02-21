@@ -280,7 +280,7 @@
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
-      COALESCE(prep_plan.plan_is_paid, FALSE)                                                                  AS plan_was_paid_at_event_date,
+      IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
       {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
