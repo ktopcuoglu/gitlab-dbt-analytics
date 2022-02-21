@@ -1231,9 +1231,11 @@ roles:
               schemas:
                   read:
                       - prod.workspace_data_science
+                      - prod.restricted_safe_common_mart_sales
               tables:
                   read:
                       - prod.workspace_data_science.*
+                      - prod.restricted_safe_common_mart_sales.*
 
 
     - demandbase:
