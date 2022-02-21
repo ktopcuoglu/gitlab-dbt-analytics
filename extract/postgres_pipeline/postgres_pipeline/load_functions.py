@@ -21,6 +21,8 @@ from utils import (
 
 def get_last_load_time() -> Optional[datetime.datetime]:
     last_load_tstamp = os.environ["LAST_LOADED"]
+    logging.info(f"last_load_tstamp: {last_load_tstamp}")
+
     if last_load_tstamp != "":
         return datetime.datetime.strptime(last_load_tstamp, "%Y-%m-%dT%H:%M:%S%z")
     else:
