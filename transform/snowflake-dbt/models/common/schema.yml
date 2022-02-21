@@ -999,7 +999,7 @@ models:
       - name: metrics_path
         tests:
           - not_null
-          -  unique
+          - unique
 
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
