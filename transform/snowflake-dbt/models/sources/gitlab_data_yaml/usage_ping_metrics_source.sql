@@ -31,7 +31,8 @@ WITH source AS (
       ARRAY_CONTAINS( 'smau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_smau,
       ARRAY_CONTAINS( 'paid_gmau'::VARIANT , data_by_row['performance_indicator_type']) AS is_paid_gmau,
       ARRAY_CONTAINS( 'umau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_umau,
-      snapshot_date
+      snapshot_date,
+      uploaded_at
     FROM intermediate
 
 )
