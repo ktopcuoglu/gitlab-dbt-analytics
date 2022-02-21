@@ -351,9 +351,8 @@ WITH date_details AS (
     LEFT JOIN agg_demo_keys
       ON base.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
     LEFT JOIN consolidated_metrics metrics
-      ON close_fiscal_quarter_date = base.close_fiscal_quarter_date
+      ON metrics.close_fiscal_quarter_date = base.close_fiscal_quarter_date
       AND metrics.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
-      AND metrics.sales_team_rd_asm_level = base.sales_team_rd_asm_level
       AND metrics.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- current quarter
     LEFT JOIN consolidated_targets_per_day targets 

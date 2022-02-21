@@ -61,8 +61,7 @@ WITH report_pipeline_velocity_quarter AS (
      -- keys
      base.report_user_segment_geo_region_area_sqs_ot,
      -------------------------
-     base.sales_qualified_source,
-     base.deal_group,
+
      base.target_net_arr,
      base.total_churned_contraction_net_arr,
      base.total_churned_contraction_deal_count,
@@ -115,6 +114,26 @@ WITH report_pipeline_velocity_quarter AS (
   WHERE o.close_fiscal_quarter_name = o.current_fiscal_quarter_name
   GROUP BY 1, 2,3,4
 
+), base_keys AS (
+
+
+  SELECT 
+    pipeline_summary.close_fiscal_quarter_name,
+    pipeline_summary.close_fiscal_quarter_date,
+    pipeline_summary.close_day_of_fiscal_quarter_normalised,
+    pipeline_summary.report_user_segment_geo_region_area_sqs_ot
+  FROM pipeline_summary
+  UNION
+  SELECT 
+    consolidated_targets_totals.close_fiscal_quarter_name,
+    consolidated_targets_totals.close_fiscal_quarter_date,
+    close_day.close_day_of_fiscal_quarter_normalised,
+    consolidated_targets_totals.report_user_segment_geo_region_area_sqs_ot
+  FROM consolidated_targets_totals
+  CROSS JOIN (SELECT DISTINCT close_day_of_fiscal_quarter_normalised
+            FROM pipeline_summary) close_day
+
+
 ), pipeline_velocity_with_targets_per_day AS (
   
   SELECT
@@ -141,20 +160,7 @@ WITH report_pipeline_velocity_quarter AS (
     ps.won_net_arr,
     ps.churned_contraction_net_arr
     
-  FROM (
-     SELECT close_fiscal_quarter_name,
-        close_fiscal_quarter_date,
-        close_day_of_fiscal_quarter_normalised,
-        report_user_segment_geo_region_area_sqs_ot
-      FROM pipeline_summary
-      UNION
-      SELECT close_fiscal_quarter_name,
-        close_fiscal_quarter_date,
-        close_day_of_fiscal_quarter_normalised,
-        report_user_segment_geo_region_area_sqs_ot
-      FROM consolidated_targets_totals
-      CROSS JOIN (SELECT DISTINCT close_day_of_fiscal_quarter_normalised
-                FROM pipeline_summary) close_day) base
+  FROM base_keys base
   LEFT JOIN  consolidated_targets_totals target  
     ON target.close_fiscal_quarter_name = base.close_fiscal_quarter_name
     AND target.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
