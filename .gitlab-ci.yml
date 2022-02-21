@@ -147,7 +147,7 @@ clone_stop:
 python_black:
   <<: *python_check
   script:
-    - pip install black
+    - pip install black==22.1.0
     - black --check .
 
 python_mypy:

@@ -7,6 +7,7 @@ WITH source AS (
 
     SELECT
       d.value                                 AS data_by_row,
+      uploaded_at,
       date_trunc('day', uploaded_at)::date    AS snapshot_date
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d

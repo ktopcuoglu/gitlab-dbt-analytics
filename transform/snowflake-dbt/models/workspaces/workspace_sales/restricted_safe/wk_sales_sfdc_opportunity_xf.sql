@@ -288,7 +288,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_accepted_fiscal_year,
-      sfdc_opportunity_xf.sales_accepted_date_month,
+      sfdc_opportunity_xf.sales_accepted_date_month AS sales_accepted_month,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_qualified_fiscal_year,
@@ -633,7 +633,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_segment
         ELSE sfdc_opportunity_xf.opportunity_owner_user_segment
-      END                                                       AS report_opportunity_segment,
+      END                                                       AS report_opportunity_user_segment,
 
       CASE 
         WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'PubSec' -- <- NF PubSec Geo is AMER, but for reporting it makes no sense to show that
@@ -641,31 +641,56 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_geo
         ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
-      END                                                       AS report_opportunity_geo,
+      END                                                       AS report_opportunity_user_geo,
 
       CASE 
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_region
         ELSE sfdc_opportunity_xf.opportunity_owner_user_region
-      END                                                       AS report_opportunity_region,
+      END                                                       AS report_opportunity_user_region,
 
       CASE 
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_area
         ELSE sfdc_opportunity_xf.opportunity_owner_user_area
-      END                                                       AS report_opportunity_area,
+      END                                                       AS report_opportunity_user_area,
       -- report_opportunity_subarea
 
       -------------------
       --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
-      COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA')         AS sales_team_rd_asm_level,
+      CASE 
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Large'
+          AND sfdc_opportunity_xf.opportunity_owner_user_geo = 'EMEA'
+            THEN 'Large_EMEA'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Mid-Market'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) LIKE '%west%'
+            THEN 'Mid-Market_West'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'Mid-Market'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) NOT LIKE '%west%'
+            THEN 'Mid-Market_East'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'SMB'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) LIKE '%west%'
+            THEN 'SMB_West'
+        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'SMB'
+          AND sfdc_opportunity_xf.opportunity_owner_user_region = 'AMER'
+          AND lower(sfdc_opportunity_xf.opportunity_owner_user_area) NOT LIKE '%west%'
+            THEN 'SMB_East'
+        ELSE COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA') 
+      END                                                                           AS sales_team_rd_asm_level,
        -------------------
       COALESCE(sfdc_opportunity_xf.opportunity_owner_user_segment ,'NA')            AS sales_team_cro_level,
       
       --COALESCE(report_opportunity_segment ,'NA')                                    AS sales_team_cro_level,
-      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo),'NA')                                                            AS sales_team_vp_level,
-      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region),'NA')                              AS sales_team_avp_rd_level,
-      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region,'_',report_opportunity_area),'NA')  AS sales_team_asm_level,
+      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo),'NA')                                                            AS sales_team_vp_level,
+      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region),'NA')                              AS sales_team_avp_rd_level,
+      COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region,'_',report_opportunity_user_area),'NA')  AS sales_team_asm_level,
+
+      -- 20220214 NF: Temporary keys, until the SFDC key is exposed
+      LOWER(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'-',sfdc_opportunity_xf.opportunity_owner_user_geo,'-',sfdc_opportunity_xf.opportunity_owner_user_region,'-',sfdc_opportunity_xf.opportunity_owner_user_area)) AS opportunity_user_segment_geo_region_area,
+      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area)) AS report_user_segment_geo_region_area,
 
       -- account driven fields 
       sfdc_accounts_xf.account_name,

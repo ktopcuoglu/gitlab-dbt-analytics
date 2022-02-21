@@ -54,6 +54,18 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_sales_development_representative,
       sfdc_opportunity.opportunity_business_development_representative,
       sfdc_opportunity.opportunity_development_representative,
+      CASE
+        WHEN sfdc_opportunity.created_date < '2022-02-01' 
+          THEN 'Legacy'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL AND sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'SDR & BDR'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL
+          THEN 'SDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'BDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NULL AND sfdc_opportunity.opportunity_sales_development_representative IS NULL
+          THEN 'No XDR Assigned'
+      END                                               AS sdr_or_bdr,
       sfdc_opportunity.iqm_submitted_by_role,
       sfdc_opportunity.sdr_pipeline_contribution,
       sfdc_opportunity.stage_name,
@@ -127,9 +139,11 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.sao_crm_opp_owner_stamped_name,
       sfdc_opportunity.sao_crm_account_owner_stamped_name,
       sfdc_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       sfdc_opportunity.sao_crm_opp_owner_geo_stamped,
       sfdc_opportunity.sao_crm_opp_owner_region_stamped,
       sfdc_opportunity.sao_crm_opp_owner_area_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
 
       -- ************************************
       -- channel reporting
@@ -151,7 +165,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@degan",
     created_date="2020-11-20",
-    updated_date="2021-12-08"
+    updated_date="2021-02-10"
 ) }}

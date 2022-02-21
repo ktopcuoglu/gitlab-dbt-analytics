@@ -48,8 +48,11 @@ WITH source AS (
         manager_current__c                          AS opportunity_owner_manager,
         sales_market__c                             AS opportunity_owner_department,
         SDR_LU__c                                   AS opportunity_sales_development_representative,
-        BDR_LU__c                                   AS opportunity_business_development_representative,
+        business_development_representative__c      AS opportunity_business_development_representative,
+        BDR_LU__c                                   AS opportunity_business_development_representative_lookup,
         BDR_SDR__c                                  AS opportunity_development_representative,
+
+
         account_owner_team_o__c                     AS account_owner_team_stamped,
 
         sales_accepted_date__c                      AS sales_accepted_date,
@@ -152,9 +155,15 @@ WITH source AS (
         sao_opportunity_owner__c                    AS sao_crm_opp_owner_stamped_name,
         sao_account_owner__c                        AS sao_crm_account_owner_stamped_name,
         sao_user_segment__c                         AS sao_crm_opp_owner_sales_segment_stamped,
+        CASE
+          WHEN sao_crm_opp_owner_sales_segment_stamped IN ('Large', 'PubSec') THEN 'Large'
+          ELSE sao_crm_opp_owner_sales_segment_stamped
+        END                                         AS sao_crm_opp_owner_sales_segment_stamped_grouped,
         sao_user_geo__c                             AS sao_crm_opp_owner_geo_stamped,
         sao_user_region__c                          AS sao_crm_opp_owner_region_stamped,
         sao_user_area__c                            AS sao_crm_opp_owner_area_stamped,
+        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_region_stamped') }}
+                                                    AS sao_crm_opp_owner_segment_region_stamped_grouped,
         opportunity_category__c                     AS opportunity_category,
         opportunity_health__c                       AS opportunity_health,
         risk_type__c                                AS risk_type,
@@ -211,6 +220,8 @@ WITH source AS (
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
+        vartopiadrs__dr_deal_reg_id__c              AS dr_deal_id,
+        vartopiadrs__primary_registration__c        AS dr_primary_registration,
         {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                     AS channel_type,
         impartnerprm__partneraccount__c             AS partner_account,

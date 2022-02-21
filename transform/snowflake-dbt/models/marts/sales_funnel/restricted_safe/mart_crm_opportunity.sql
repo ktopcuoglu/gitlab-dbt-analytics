@@ -143,6 +143,7 @@
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
+      dim_crm_opportunity.sdr_or_bdr,
       dim_crm_opportunity.iqm_submitted_by_role,
       dim_crm_opportunity.sdr_pipeline_contribution,
       dim_crm_opportunity.is_web_portal_purchase,
@@ -160,9 +161,11 @@
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
       dim_crm_opportunity.sao_crm_account_owner_stamped_name,
       dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_stamped_grouped,
       dim_crm_opportunity.sao_crm_opp_owner_geo_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
 
       -- crm opp owner/account owner stamped fields stamped at close date
       dim_crm_opportunity.crm_opp_owner_stamped_name,
@@ -192,6 +195,8 @@
       fct_crm_opportunity.partner_account,
       fct_crm_opportunity.dr_status,
       fct_crm_opportunity.distributor,
+      fct_crm_opportunity.dr_deal_id,
+      fct_crm_opportunity.dr_primary_registration,
       fct_crm_opportunity.influence_partner,
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
@@ -257,7 +262,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2022-01-12",
+    updated_date="2022-02-14",
   ) }}

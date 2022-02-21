@@ -136,9 +136,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: dim_crm_user_area_id
-        tests:
-          - unique
 
   - name: prep_crm_user
     description: '{{ doc("prep_crm_user") }}'
