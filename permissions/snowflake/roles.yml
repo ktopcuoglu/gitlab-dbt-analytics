@@ -3759,6 +3759,7 @@ roles:
         member_of:
             - engineer
             - restricted_safe
+            - loader
         warehouses:
             - engineer_xs
             - engineer_xl
