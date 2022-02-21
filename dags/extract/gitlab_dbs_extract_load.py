@@ -447,7 +447,7 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_LOADED": config["dag_name"],
+                        "LAST_LOADED": get_last_loaded(config["dag_name"]),
                     },
                     affinity=get_affinity(False),
                     tolerations=get_toleration(False),
