@@ -316,7 +316,7 @@ for source_name, config in config_dict.items():
         schedule_interval=config["extract_schedule_interval"],
     )
 
-    with extract_dag:
+    with extract_dag: 
 
         # dbt tasks
         dbt_name = f"{config['dbt_name']}"
