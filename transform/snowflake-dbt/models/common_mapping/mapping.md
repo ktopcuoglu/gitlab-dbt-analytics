@@ -28,6 +28,33 @@ Table mapping current crm account ids to accounts merged in the past.
 
 {% enddocs %}
 
+{% docs map_moved_duplicated_issue %}
+
+Table mapping issues to the latest issue they were moved and / or duplicated to.
+
+Example:
+
+`Issue A` is moved to `Issue B`, `Issue B` is closed as duplicate of `Issue C`, `Issue C` is moved to `Issue D`
+
+Then in our mapping table we would have:
+
+| issue_id | dim_issue_id |
+| -- | -- |
+| Issue A | Issue D |
+| Issue B | Issue D |
+| Issue C | Issue D |
+| Issue D | Issue D |
+
+{% enddocs %}
+
+{% docs map_namespace_lineage %}
+
+Table containing GitLab namespace lineages. The primary goal of this table is to determine the ultimate parent namespace for all namespaces. Additionally, this table provides plan (GitLab subscription) information for both the given namespace and its ultimate parent namespace.
+
+The grain of this table is one row per namespace. The Primary Key is `dim_namespace_id`.
+
+{% enddocs %}
+
 {% docs map_product_tier %}
 
  Table for mapping Zuora Product Rate Plans to Product Tier, Delivery Type, and Ranking.
@@ -56,5 +83,11 @@ More info about [CI Runners here](https://docs.gitlab.com/ee/ci/runners/)
 Mapping table used to link a usage ping (dim_usage_ping_id) to an active zuora subscription at the ping creation date (dim_subscription_id).
 
 This table is needed to identify how many active subscriptions send us on a month M sent us at least 1 usage ping. 
+{% enddocs %}
+
+{% docs map_subscription_opportunity %}
+
+The distinct combination of subscriptions and opportunities generated through the rules defined in `prep_subscription_opportunity_mapping`. A flag has been created to indicate the subscription-opportunty mappings filled in by taking the most recent opportunity_id associated with a version of the subscription with the same subscription_name which we believe to have the lowest level of fidelity.
+
 {% enddocs %}
 

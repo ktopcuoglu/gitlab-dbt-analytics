@@ -63,4 +63,4 @@ The logical execution of data loading looks like the following:
 #### Tests
 
 Tests are run in CI using `pytest`. `Snowflake` access and `postgres` access are both required, as they rely on the actual data sources for end-to-end testing.
-The test file is located at `postgres_pipeline/test_postgres_pipeline.py`
+

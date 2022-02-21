@@ -3,7 +3,7 @@ import random
 from logging import error, info, basicConfig, getLogger
 from os import environ as env
 from typing import List
-from yaml import load
+from yaml import load, FullLoader
 
 import gspread
 import pandas as pd
@@ -25,7 +25,7 @@ class GoogleSheetsClient:
         Returns the dataframe.
         """
         n = 0
-        while maximum_backoff_sec > (2 ** n):
+        while maximum_backoff_sec > (2**n):
             try:
                 sheets_client = self.get_client(key_file)
                 sheet = (
@@ -52,7 +52,7 @@ class GoogleSheetsClient:
             "https://spreadsheets.google.com/feeds",
             "https://www.googleapis.com/auth/drive",
         ]
-        keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"])
+        keyfile = load(gapi_keyfile or env["GCP_SERVICE_CREDS"], Loader=FullLoader)
         return gspread.authorize(
             ServiceAccountCredentials.from_json_keyfile_dict(keyfile, scope)
         )
@@ -82,7 +82,7 @@ class GoogleSheetsClient:
 
     def wait_exponential_backoff(self, n):
         # Start for waiting at least
-        wait_sec = (2 ** n) + (random.randint(0, 1000) / 1000)
+        wait_sec = (2**n) + (random.randint(0, 1000) / 1000)
         info(
             f"Received API rate limit error. Wait for {wait_sec} seconds before trying again."
         )

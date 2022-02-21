@@ -22,22 +22,13 @@ Here is an image documenting the ERD for this table:
 
 {% enddocs %}
 
-{% docs mart_arr_snapshots %}
+{% docs mart_arr_jihu %}
 
-Keeps daily snapshots of mart_arr. This allows to query ARR from a historical perspective.
+Data mart to explore ARR which INCLUDES Jihu accounts. This model will satisfy use cases that need to provide a consolidated view of ARR to include Jihu accounts. This model is built using the same logic as the Zuora UI out of the box MRR Trend Report. The report looks at the charges associated with subscriptions, along with their effective dates and subscription statuses, and calculates ARR.
 
-The below query will pull ARR by month as observed on selected snapshot_date.
+Here is an image documenting the ERD for this table:
 
-SELECT
-  arr_month,
-  SUM(arr)  AS arr
-FROM "PROD"."LEGACY"."MART_ARR_SNAPSHOTS"
-WHERE arr_month < DATE_TRUNC('month',CURRENT_DATE)
-GROUP BY 1
-ORDER BY 1 DESC
-WHERE snapshot_date = '2020-08-01'
-
-{% enddocs %}
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/998dbbae-f04e-4310-9d85-0c360a40a018" id="T0XuoGn786sQ"></iframe></div>
 
 {% enddocs %}
 

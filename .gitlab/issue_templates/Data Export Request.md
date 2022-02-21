@@ -25,7 +25,7 @@ please describe what you will be doing with this data (where is it going, how wi
 * [ ]  Select the type of format you would like the data exported in: 
   - [ ] TSV (tab-separated values)
   - [ ] CSV (comma-separated values)
-* [ ]  Does this data contain `RED` or `ORANGE` data as defined in [GitLab's data classification policy?](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels)
+* [ ]  Does this data contain `RED` or `ORANGE` data as defined in [GitLab's data classification policy?](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels#data-classification-levels)
   - [ ] Yes (You will need to already have [approved access](https://about.gitlab.com/handbook/business-ops/it-ops-team/access-requests/) to this data) 
   - [ ] No (I verify that this data that will be extracted does not contain sensitive information.)
 * [ ]  Add a due date to the issue for when the data is desired by.

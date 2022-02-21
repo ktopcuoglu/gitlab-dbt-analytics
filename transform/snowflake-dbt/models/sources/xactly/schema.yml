@@ -1,0 +1,71 @@
+version: 2
+
+models:
+    - name: xactly_credit_source
+      columns:
+        - name: participant_name
+          meta:
+            sensitive: true
+        - name: position_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_hierarchy_hist_source
+      columns:
+        - name: from_pos_name
+          meta:
+            sensitive: true
+        - name: to_pos_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_part_assignment_source
+      columns:
+        - name: participant_name
+          meta:
+            sensitive: true
+        - name: position_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_part_assignment_hist_source
+      columns:
+        - name: participant_name
+          meta:
+            sensitive: true
+        - name: position_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_relations_source
+      columns:
+        - name: from_pos_name
+          meta:
+            sensitive: true
+        - name: to_pos_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_relations_hist_source
+      columns:
+        - name: from_pos_name
+          meta:
+            sensitive: true
+        - name: to_pos_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_title_assignment_source
+      columns:
+        - name: position_name
+          meta:
+            sensitive: true
+    - name: xactly_pos_title_assignment_hist_source
+      columns:
+        - name: position_name
+          meta:
+            sensitive: true
+    - name: xactly_quota_assignment_source
+      columns:
+        - name: assignment_name
+          meta:
+            sensitive: true
+    - name: xactly_quota_assignment_hist_source
+      columns:
+        - name: assignment_name
+          meta:
+            sensitive: true

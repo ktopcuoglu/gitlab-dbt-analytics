@@ -8,11 +8,12 @@ WITH source AS (
     SELECT
       --Keys
       visit_id::FLOAT                               AS visit_id, 
-      visitor_id::VARCHAR                           AS visitor_id, 
+      visitor_id::VARCHAR                           AS visitor_id,
+      visit_start_time::TIMESTAMP_TZ                AS visit_start_time, 
 
       --Info
       date::DATE                                    AS session_date,
-      visit_start_time::TIMESTAMP_TZ                AS visit_start_time,
+      client_id::VARCHAR                            AS client_id,      
       visit_number::FLOAT                           AS visit_number,
       total_visits::FLOAT                           AS total_visits,
       total_pageviews::FLOAT                        AS total_pageviews,

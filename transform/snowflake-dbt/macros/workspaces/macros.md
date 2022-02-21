@@ -30,3 +30,8 @@ For all these metrics the actual, full quarter target, percentage of actual vs f
 For MQLs and Trials the quarter to date target and percentage of actual vs quarter to date target is also added.
 
 {% enddocs %}
+{% docs pte_base_query %}
+Contains the bulk of the query which is used to estimate a customers likely to expand. 
+
+Created with parameters to specify the model run type, the options being "training" or "scoring". The only difference in the output based on this parameter is in the end dates used to create the data set. 
+{% enddocs %}

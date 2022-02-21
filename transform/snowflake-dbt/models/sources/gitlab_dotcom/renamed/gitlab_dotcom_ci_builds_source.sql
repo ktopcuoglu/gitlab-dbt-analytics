@@ -51,4 +51,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-ORDER BY updated_at

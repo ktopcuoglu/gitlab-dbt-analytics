@@ -2,7 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ ref('gitlab_dotcom_merge_requests_dedupe_source') }}
-  
+
 ), renamed AS (
 
     SELECT
@@ -36,7 +36,8 @@ WITH source AS (
       allow_maintainer_to_push::BOOLEAN                          AS does_allow_maintainer_to_push,
       created_at::TIMESTAMP                                      AS created_at,
       updated_at::TIMESTAMP                                      AS updated_at,
-      last_edited_at::TIMESTAMP                                  AS merge_request_last_edited_at
+      last_edited_at::TIMESTAMP                                  AS merge_request_last_edited_at,
+      description::VARCHAR                                       AS merge_request_description
 
       --merge_params // hidden for privacy
 
@@ -46,4 +47,3 @@ WITH source AS (
 
 SELECT  *
 FROM renamed
-ORDER BY updated_at

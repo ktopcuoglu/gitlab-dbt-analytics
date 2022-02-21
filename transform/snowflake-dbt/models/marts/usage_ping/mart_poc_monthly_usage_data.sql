@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH fct_monthly_usage_data AS (
 
     SELECT *

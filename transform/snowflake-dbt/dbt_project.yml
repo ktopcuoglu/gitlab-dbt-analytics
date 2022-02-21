@@ -56,10 +56,20 @@ seeds:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
     +schema: tdf
 
+  gitlab_snowflake:
+    director_location_factors:
+      +column_types:
+        valid_to: date # Not behaving well when the column is all null
+
 # ==================
 # Variable Configs
 # ==================
 vars:
+
+  infinity_future: TO_DATE('9999-12-31', 'YYYY-MM-DD')
+  infinity_past: TO_DATE('1970-01-01', 'YYYY-MM-DD')
+  tomorrow: DATEADD('day',1,CURRENT_DATE())
+
 
   datasiren:
     'datasiren:schema_name': 'datasiren'
@@ -67,7 +77,7 @@ vars:
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
-  snowplow:pass_through_columns: ['glm_source','gsc_environment','gsc_extra','gsc_namespace_id','gsc_plan','gsc_project_id','gsc_source','cf_formid','cf_elementid','cf_nodename','cf_type','cf_elementclasses','cf_value','sf_formid','sf_formclasses','sf_elements','ff_formid','ff_elementid','ff_nodename','ff_elementtype','ff_elementclasses','ff_value','lc_elementid','lc_elementclasses','lc_elementtarget','lc_targeturl','lc_elementcontent','tt_category','tt_variable','tt_timing','tt_label']
+  snowplow:pass_through_columns: ['glm_source','gsc_environment','gsc_extra','gsc_namespace_id','gsc_plan','gsc_google_analytics_client_id','gsc_project_id','gsc_pseudonymized_user_id','gsc_source','cf_formid','cf_elementid','cf_nodename','cf_type','cf_elementclasses','cf_value','sf_formid','sf_formclasses','sf_elements','ff_formid','ff_elementid','ff_nodename','ff_elementtype','ff_elementclasses','ff_value','lc_elementid','lc_elementclasses','lc_elementtarget','lc_targeturl','lc_elementcontent','tt_category','tt_variable','tt_timing','tt_label']
   snowplow:page_view_lookback_days: 7
 
   snowplow:
@@ -134,6 +144,12 @@ models:
         +materialized: table
         +schema: bamboohr
 
+      bizible:
+        +schema: bizible
+        sensitive:
+          +schema: sensitive
+          secure: true
+
       customers:
         +schema: customers
         sensitive:
@@ -149,12 +165,12 @@ models:
       date:
         +materialized: table
         +schema: date
-      
+
       dbt:
         +materialized: incremental
         +schema: dbt
         +tags: ["dbt"]
-      
+
       demandbase:
         +materialized: table
         +schema: demandbase
@@ -168,6 +184,10 @@ models:
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
+
+      edcast:
+        +schema: edcast
+        +tags: ["people", "edcast"]
 
       gainsight:
         +materialized: table
@@ -212,6 +232,9 @@ models:
       marketing_dnc:
         +schema: marketing_dnc
 
+      marketo:
+        +schema: marketo
+
       netsuite:
         +schema: netsuite
         sensitive:
@@ -235,7 +258,7 @@ models:
 
       saas_usage_ping:
         +schema: saas_usage_ping
-        +tags: ["product"]
+        +tags: ["product", "service_ping"]
 
       sfdc:
         +schema: sfdc
@@ -255,7 +278,7 @@ models:
       snowplow:
         +tags: ["product"]
         +schema: snowplow
-      
+
       thanos:
         +materialized: table
         +schema: prometheus
@@ -272,9 +295,24 @@ models:
       zendesk_community_relations:
         +schema: zendesk_community_relations
 
+      zengrc:
+        +schema: zengrc
+
+      zoominfo:
+        +schema: zoominfo
+        +materialized: table
+        sensitive:
+          +schema: sensitive
+          +materialized: view
+          secure: true
+
       zuora:
         +schema: zuora
         +tags: ["zuora"]
+
+      zuora_central_sandbox:
+        +schema: zuora_central_sandbox
+        +tags: [ "zuora_central_sandbox" ]
 
       zuora_revenue:
         +schema: zuora_revenue
@@ -290,17 +328,30 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: sensitive
         secure: true
+      restricted_safe:
+        +schema: restricted_safe_common
+        +tags: ["safe"]
+        secure: true
 
     common_mapping:
       +materialized: table
       +schema: common_mapping
-       
+      restricted_safe:
+        +schema: restricted_safe_common_mapping
+        +tags: ["safe"]
+        secure: true
+
     common_prep:
       +materialized: table
       +schema: common_prep
       month_partition:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
         +schema: "dotcom_usage_events_{{ var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) }}_{{ var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) }}"
+      restricted_safe:
+        +schema: restricted_safe_common_prep
+        +tags: ["safe"]
+        secure: true
+
 
     # ------------------
     # Legacy (formerly Staging)
@@ -312,6 +363,12 @@ models:
         sensitive:
           +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
           +schema: sensitive
+          secure: true
+
+      customers:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
           secure: true
 
       datasiren:
@@ -355,12 +412,41 @@ models:
       license:
         +materialized: view
 
+      netsuite:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
       poc:
         +tags: ["poc", "product"]
         +enabled: true
 
+      retention:
+        +schema: restricted_safe_legacy
+        +tags: ["safe"]
+        secure: true
+
+      sfdc:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
+      sheetload:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
       smau_events:
         +tags: ["product"]
+
+      snapshots:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
 
       snowflake:
         +materialized: view
@@ -377,39 +463,83 @@ models:
       trusted_data_framework:
         +tags: ["tdf"]
 
+      zuora:
+        restricted_safe:
+          +schema: restricted_safe_legacy
+          +tags: ["safe"]
+          secure: true
+
     # ------------------
     # Workspaces
     # ------------------
     workspaces:
       +tags: ["workspace"]
 
+      workspace_customer_success:
+        +schema: workspace_customer_success
+
       workspace_data:
         +schema: workspace_data
+        tdf:
+          +materialized: table
 
         dbt:
           +tags: ["dbt"]
 
+      workspace_data_science:
+        +schema: workspace_data_science
+        pte:
+          +materialized: table
+
       workspace_marketing:
         +schema: workspace_marketing
+        bizible:
+          restricted_safe:
+            +schema: restricted_safe_workspace_marketing
+            +tags: ["safe"]
+            secure: true
 
       workspace_product:
         +tags: ["product"]
+        source_1_on_1_copy:
+          +schema: workspace_product
 
       workspace_saas_usage_ping:
-        +tags: ["product"]
+        +tags: ["product", "service_ping"]
 
       workspace_sales:
         +materialized: table
         +schema: workspace_sales
+        restricted_safe:
+          +schema: restricted_safe_workspace_sales
+          +tags: ["safe"]
+          secure: true
 
       workspace_finance:
         +schema: workspace_finance
+        restricted_safe:
+          +schema: restricted_safe_workspace_finance
+          +tags: ["safe"]
+          secure: true
+
+      workspace_engineering:
+        +schema: workspace_engineering
+        +materialized: table
+
+      workspace_people:
+        +schema: workspace_people
+        +tags: ["people", "edcast"]
 
     # ------------------
     # Marts
     # ------------------
     marts:
       +materialized: table
+
+      arr:
+        +schema: restricted_safe_legacy
+        +tags: ["safe"]
+        secure: true
 
       exports:
         +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -419,10 +549,21 @@ models:
         users_emails:
           enabled: false
 
+      finance:
+        +schema: restricted_safe_common_mart_finance
+        +tags: ["safe"]
+        secure: true
+
       product:
         +tags: ["product"]
-        
-      pumps: 
+        mart_ci_runner_activity_monthly:
+          +enabled: true
+        restricted_safe:
+          +schema: restricted_safe_common_mart_product
+          +tags: ["safe"]
+          secure: true
+
+      pumps:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps
         +materialized: table
@@ -431,7 +572,14 @@ models:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
         +schema: pumps_sensitive
         +materialized: table
-      
+
+      sales_funnel:
+        +schema: common_mart_sales
+        restricted_safe:
+          +schema: restricted_safe_common_mart_sales
+          +tags: ["safe"]
+          secure: true
+
       usage_ping:
         +tags: ["product"]
 
@@ -442,6 +590,15 @@ models:
 
     covid19:
       +schema: covid19
+
+    data_quality:
+      +schema: data_quality
+      +tags: ["product"]
+      +materialized: table
+
+    share:
+      +schema: share
+      +materialized: table
 
     # ------------------
     # Trusted Data Framework
@@ -489,3 +646,6 @@ snapshots:
 
     zuora:
       +tags: ["daily", "zuora"]
+
+    zuora_revenue:
+      +tags: [ "daily", "zuora_revenue" ]

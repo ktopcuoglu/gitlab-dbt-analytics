@@ -115,7 +115,7 @@ WITH promotions AS (
       field_value,
       headcount_end,
       COUNT(employee_id)                            AS total_promotions,
-      total_promotions/headcount_end                AS promotion_rate,
+      total_promotions/NULLIFZERO(headcount_end)    AS promotion_rate,
       IFF(total_promotions <= 3, NULL, 
             AVG(percent_change_in_comp))            AS average_percent_change_in_comp,
       IFF(total_promotions <= 3, NULL, 

@@ -72,13 +72,37 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      marketo_last_interesting_moment,
+      marketo_last_interesting_moment_date,
+      outreach_step_number,
+      NULL                                          AS matched_account_owner_role,
+      NULL                                          AS matched_account_account_owner_name,
+      NULL                                          AS matched_account_sdr_assigned,
+      NULL                                          AS matched_account_type,
+      NULL                                          AS matched_account_gtm_strategy,
+      last_utm_content,
+      last_utm_campaign,
       sequence_step_type,
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
       region,
+      mailing_country                               AS country,
+      mailing_state                                 AS state,
       last_activity_date,
+      account_demographics_sales_segment,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
+      account_demographics_territory,
+      account_demographics_employee_count,
+      account_demographics_max_family_employee,
+      account_demographics_upa_country,
+      account_demographics_upa_state,
+      account_demographics_upa_city,
+      account_demographics_upa_street,
+      account_demographics_upa_postal_code,
 
       NULL                                          AS crm_partner_id
 
@@ -121,14 +145,37 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      marketo_last_interesting_moment,
+      marketo_last_interesting_moment_date,
+      outreach_step_number,
+      matched_account_owner_role,
+      matched_account_account_owner_name,
+      matched_account_sdr_assigned,
+      matched_account_type,
+      matched_account_gtm_strategy,
+      last_utm_content,
+      last_utm_campaign,
       sequence_step_type,
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
       is_actively_being_sequenced,
       region,
+      country,
+      state,
       last_activity_date,
-
+      account_demographics_sales_segment,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
+      account_demographics_territory,
+      account_demographics_employee_count,
+      account_demographics_max_family_employee,
+      account_demographics_upa_country,
+      account_demographics_upa_state,
+      account_demographics_upa_city,
+      account_demographics_upa_street,
+      account_demographics_upa_postal_code,
       crm_partner_id
 
     FROM sfdc_leads
@@ -136,12 +183,29 @@ WITH biz_person AS (
       ON sfdc_leads.lead_id = biz_person_with_touchpoints.bizible_lead_id
     WHERE is_converted = 'FALSE'
 
+), duplicates AS (
+
+    SELECT 
+      dim_crm_person_id
+    FROM crm_person_final
+    GROUP BY 1
+    HAVING COUNT(*) > 1
+
+), final AS (
+
+    SELECT *
+    FROM crm_person_final
+    WHERE dim_crm_person_id NOT IN (
+                                    SELECT *
+                                    FROM duplicates
+                                      )
+
 )
 
 {{ dbt_audit(
-    cte_ref="crm_person_final",
+    cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-08",
-    updated_date="2021-06-23"
+    updated_date="2022-01-12"
 ) }}

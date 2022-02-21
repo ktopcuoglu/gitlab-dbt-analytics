@@ -1,6 +1,10 @@
 -- grain: one record per host per metric per month
 -- curently missing host_id 
 
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
         "materialized": "table",
         "schema": "common_mart_product"
@@ -11,7 +15,6 @@
                 ('dim_crm_account', 'dim_crm_account'),
                 ('dim_date', 'dim_date'),
                 ('dim_instances', 'dim_instances'),
-                ('dim_licenses', 'dim_licenses'),
                 ('dim_product_detail', 'dim_product_detail')
                 ]
                 )}}
@@ -232,7 +235,7 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@mpeychet",
-    updated_by="@mpeychet",
+    updated_by="@chrissharp",
     created_date="2021-06-17",
-    updated_date="2021-06-17"
+    updated_date="2022-01-20"
 ) }}

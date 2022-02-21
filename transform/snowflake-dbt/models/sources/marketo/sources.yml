@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: marketo
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: marketo
+    loader: fivetran
+    loaded_at_field: _FIVETRAN_SYNCED
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 36, period: hour}
+
+    tables:
+      - name: lead

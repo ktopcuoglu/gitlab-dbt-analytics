@@ -49,6 +49,8 @@ WITH source AS (
       --billtocontact                   as bill_to_contact,
       parent__c                                              AS sfdc_parent,
 
+      sspchannel__c                                          AS ssp_channel,
+      porequired__c                                          AS po_required,
 
       -- financial info
       lastinvoicedate                                        AS last_invoice_date,

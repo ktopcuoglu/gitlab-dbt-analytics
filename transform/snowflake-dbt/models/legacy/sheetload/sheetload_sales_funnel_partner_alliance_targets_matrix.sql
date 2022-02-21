@@ -8,7 +8,7 @@ WITH source AS (
     SELECT
       kpi_name,
       month,
-      partner_engagement_type,
+      sales_qualified_source,
       alliance_partner,
       order_type,
       area,
@@ -22,5 +22,5 @@ WITH source AS (
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-04-05",
-    updated_date="2021-04-05"
+    updated_date="2021-09-10"
 ) }}

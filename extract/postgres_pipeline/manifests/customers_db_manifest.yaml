@@ -88,6 +88,37 @@ tables:
       , license_starts_on
       , zuora_subscription_name
       FROM license_seat_links
+  licenses:
+    advanced_metadata: true
+    export_db: EXPORT_DB
+    export_schema: 'customers'
+    export_table: 'licenses'
+    export_table_primary_key: id
+    import_db: CUSTOMERS_DB
+    import_query: |-
+      SELECT id
+      , name
+      , company
+      , users_count
+      , email
+      , license_file
+      , expires_at
+      , created_at
+      , updated_at
+      , plan_name
+      , starts_at
+      , zuora_subscription_id
+      , notes
+      , previous_users_count
+      , trueup_quantity
+      , trueup_from
+      , trueup_to
+      , plan_code
+      , trial
+      , zuora_subscription_name
+      , license_file_md5
+      , creator_id
+      FROM licenses
   orders:
     advanced_metadata: true
     export_db: EXPORT_DB

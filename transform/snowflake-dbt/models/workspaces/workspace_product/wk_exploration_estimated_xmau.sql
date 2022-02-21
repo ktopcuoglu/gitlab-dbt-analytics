@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('mart_monthly_product_usage','mart_monthly_product_usage'),
     ('mart_usage_ping_counters_statistics','mart_usage_ping_counters_statistics'),

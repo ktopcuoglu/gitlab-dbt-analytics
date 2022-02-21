@@ -35,11 +35,13 @@ models:
       - name: ping_product_tier
         description: '{{ doc("ping_product_tier") }}'
         tests:
-            - not_null
+            - not_null:
+                severity: warn
       - name: ping_main_edition_product_tier
         description: '{{ doc("ping_main_edition_product_tier") }}'
         tests:
-            - not_null
+            - not_null:
+                severity: warn
       - name: major_version
         description: '{{ doc("major_version") }}'
       - name: minor_version
@@ -179,11 +181,13 @@ models:
       - name: ping_product_tier
         description: '{{ doc("ping_product_tier") }}'
         tests:
-            - not_null
+            - not_null:
+                severity: warn
       - name: ping_main_edition_product_tier
         description: '{{ doc("ping_main_edition_product_tier") }}'
         tests:
-            - not_null
+            - not_null:
+                severity: warn
       - name: major_version
         description: '{{ doc("major_version") }}'
       - name: minor_version

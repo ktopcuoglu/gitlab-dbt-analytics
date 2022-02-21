@@ -1,24 +1,36 @@
+from os import environ as env
+from typing import Dict, List
+from hashlib import md5
+
+from logging import info
 import datetime
 import json
 import logging
 import os
 import sys
-from os import environ as env
-from typing import Dict, List
-
+import requests
 import pandas as pd
 
+
+from transform_instance_level_queries_to_snowsql import (
+    META_API_COLUMNS,
+    TRANSFORMED_INSTANCE_QUERIES_FILE,
+    META_DATA_INSTANCE_QUERIES_FILE,
+)
 from fire import Fire
 from gitlabdata.orchestration_utils import (
     dataframe_uploader,
-    dataframe_enricher,
     snowflake_engine_factory,
 )
 from sqlalchemy.exc import SQLAlchemyError
-from logging import error, info, basicConfig, getLogger, warning
 
 
 class UsagePing(object):
+    """
+    Usage ping class represent as an umbrella
+    to sort out service ping data import
+    """
+
     def __init__(self, ping_date=None):
         self.config_vars = env.copy()
         self.loader_engine = snowflake_engine_factory(self.config_vars, "LOADER")
@@ -29,6 +41,7 @@ class UsagePing(object):
             self.end_date = datetime.datetime.now().date()
 
         self.start_date_28 = self.end_date - datetime.timedelta(28)
+        self.dataframe_api_columns = META_API_COLUMNS
 
     def _get_instance_queries(self) -> Dict:
         """
@@ -36,11 +49,57 @@ class UsagePing(object):
         to generate the {ping_name: sql_query} dictionary
         """
         with open(
-            os.path.join(os.path.dirname(__file__), "transformed_instance_queries.json")
+            os.path.join(os.path.dirname(__file__), TRANSFORMED_INSTANCE_QUERIES_FILE)
         ) as f:
             saas_queries = json.load(f)
 
         return saas_queries
+
+    def _get_dataframe_api_values(self, input_json: dict) -> list:
+        """
+        pick up values from .json file defined in dataframe_api_columns
+        and return them as a list
+
+        param input_json: dict
+        return: list
+        """
+        dataframe_api_value_list = [
+            input_json.get(dataframe_api_column, "")
+            for dataframe_api_column in self.dataframe_api_columns
+        ]
+
+        return dataframe_api_value_list
+
+    def _get_md5(
+        self, input_timestamp: float = datetime.datetime.utcnow().timestamp()
+    ) -> str:
+        """
+        Convert input datetime into md5 hash.
+        Result is returned as a string.
+        Example:
+
+            Input (datetime): datetime.utcnow().timestamp()
+            Output (str): md5 hash
+
+            -----------------------------------------------------------
+            current timestamp: 1629986268.131019
+            md5 timestamp: 54da37683078de0c1360a8e76d942227
+        """
+        encoding = "utf-8"
+        timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
+
+        return md5(timestamp_encoded).hexdigest()
+
+    def _get_meta_data(self, file_name: str) -> dict:
+        """
+        Load meta data from .json file from the file system
+        param file_name: str
+        return: dict
+        """
+        with open(os.path.join(os.path.dirname(__file__), file_name)) as f:
+            meta_data = json.load(f)
+
+        return meta_data
 
     def saas_instance_ping(self):
         """
@@ -52,36 +111,106 @@ class UsagePing(object):
         connection = self.loader_engine.connect()
 
         results_all = {}
+        errors_data_all = {}
 
         for key, query in saas_queries.items():
-            logging.info(f"Running ping {key}...")
+            logging.info(f"Running ping: {key}...")
             try:
+                data_to_write = error_data_to_write = None
                 results = pd.read_sql(sql=query, con=connection)
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
-            except SQLAlchemyError as e:
-                error = str(e.__dict__["orig"])
-                data_to_write = error
             except KeyError as k:
-                error = "Empty dataframe"
-                data_to_write = error
+                data_to_write = "0"
+            except SQLAlchemyError as e:
+                error_data_to_write = str(e.__dict__["orig"])
 
-            results_all[key] = data_to_write
+            if data_to_write:
+                results_all[key] = data_to_write
+
+            if error_data_to_write:
+                errors_data_all[key] = error_data_to_write
 
         info("Processed queries")
         connection.close()
         self.loader_engine.dispose()
 
-        ping_to_upload = pd.DataFrame(columns=["query_map", "run_results", "ping_date"])
-
-        ping_to_upload.loc[0] = [saas_queries, json.dumps(results_all), self.end_date]
-
-        dataframe_uploader(
-            ping_to_upload, self.loader_engine, "gitlab_dotcom", "saas_usage_ping"
+        ping_to_upload = pd.DataFrame(
+            columns=["query_map", "run_results", "ping_date", "run_id"]
+            + self.dataframe_api_columns
         )
 
+        ping_to_upload.loc[0] = [
+            saas_queries,
+            json.dumps(results_all),
+            self.end_date,
+            self._get_md5(datetime.datetime.utcnow().timestamp()),
+        ] + self._get_dataframe_api_values(
+            self._get_meta_data(META_DATA_INSTANCE_QUERIES_FILE)
+        )
+
+        dataframe_uploader(
+            ping_to_upload,
+            self.loader_engine,
+            "instance_sql_metrics",
+            "saas_usage_ping",
+        )
+
+        """
+        Handling error data part to load data into table: raw.saas_usage_ping.instance_sql_errors
+        """
+        if errors_data_all:
+            error_data_to_upload = pd.DataFrame(
+                columns=["run_id", "sql_errors", "ping_date"]
+            )
+
+            error_data_to_upload.loc[0] = [
+                self._get_md5(datetime.datetime.utcnow().timestamp()),
+                json.dumps(errors_data_all),
+                self.end_date,
+            ]
+
+            dataframe_uploader(
+                error_data_to_upload,
+                self.loader_engine,
+                "instance_sql_errors",
+                "saas_usage_ping",
+            )
+
         self.loader_engine.dispose()
+
+    def saas_instance_redis_metrics(self):
+
+        """
+        Call the Non SQL Metrics API and store the results in Snowflake RAW database
+        """
+        config_dict = env.copy()
+        headers = {
+            "PRIVATE-TOKEN": config_dict["GITLAB_ANALYTICS_PRIVATE_TOKEN"],
+        }
+
+        response = requests.get(
+            "https://gitlab.com/api/v4/usage_data/non_sql_metrics", headers=headers
+        )
+        json_data = json.loads(response.text)
+
+        redis_data_to_upload = pd.DataFrame(
+            columns=["jsontext", "ping_date", "run_id"] + self.dataframe_api_columns
+        )
+
+        redis_data_to_upload.loc[0] = [
+            json.dumps(json_data),
+            self.end_date,
+            self._get_md5(datetime.datetime.utcnow().timestamp()),
+        ] + self._get_dataframe_api_values(json_data)
+
+        dataframe_uploader(
+            redis_data_to_upload,
+            self.loader_engine,
+            "instance_redis_metrics",
+            "saas_usage_ping",
+        )
 
     def _get_namespace_queries(self) -> List[Dict]:
         """
@@ -97,8 +226,8 @@ class UsagePing(object):
         """
         with open(
             os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
-        ) as f:
-            saas_queries = json.load(f)
+        ) as namespace_file:
+            saas_queries = json.load(namespace_file)
 
         return saas_queries
 
@@ -168,6 +297,9 @@ class UsagePing(object):
         self.loader_engine.dispose()
 
     def backfill(self):
+        """
+        Routine to backfilling data for namespace ping
+        """
         filter = lambda query_dict: query_dict.get("time_window_query", False)
         self.saas_namespace_ping(filter)
 

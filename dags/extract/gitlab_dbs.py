@@ -365,7 +365,6 @@ for source_name, config in config_dict.items():
                 tolerations=get_toleration(False),
                 arguments=[incremental_cmd],
                 do_xcom_push=True,
-                xcom_push=True,
             )
             if short_circuit is not None:
                 (
@@ -433,7 +432,6 @@ for source_name, config in config_dict.items():
                     tolerations=get_toleration(False),
                     arguments=[sync_cmd],
                     do_xcom_push=True,
-                    xcom_push=True,
                 )
 
     globals()[
@@ -492,7 +490,6 @@ for source_name, config in config_dict.items():
                     affinity=get_affinity(True),
                     tolerations=get_toleration(True),
                     do_xcom_push=True,
-                    xcom_push=True,
                 )
                 if short_circuit is not None:
                     (
@@ -584,7 +581,6 @@ for source_name, config in config_dict_td_pgp.items():
                 affinity=get_affinity(True),
                 tolerations=get_toleration(True),
                 do_xcom_push=True,
-                xcom_push=True,
             )
             td_pgp_extract
 

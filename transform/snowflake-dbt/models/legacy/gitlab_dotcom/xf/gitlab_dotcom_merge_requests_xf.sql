@@ -61,7 +61,7 @@ WITH merge_requests AS (
 
     SELECT *
     FROM {{ref('gitlab_dotcom_namespaces_xf')}}
-    WHERE namespace_type = 'Individual'
+    WHERE namespace_type = 'User'
 
 ), gitlab_subscriptions AS (
 
@@ -73,28 +73,31 @@ WITH merge_requests AS (
     SELECT
       merge_requests.*, 
       IFF(projects.visibility_level != 'public' AND projects.namespace_is_internal = FALSE,
-        'content masked', milestones.milestone_title)         AS milestone_title,
+        'content masked', milestones.milestone_title)                                       AS milestone_title,
       IFF(projects.visibility_level != 'public' AND projects.namespace_is_internal = FALSE,
-        'content masked', milestones.milestone_description)   AS milestone_description,
+        'content masked', milestones.milestone_description)                                 AS milestone_description,
       projects.namespace_id,
       projects.ultimate_parent_id,
       projects.ultimate_parent_plan_id,
       projects.ultimate_parent_plan_title,
       projects.ultimate_parent_plan_is_paid,
       projects.namespace_is_internal,
-      author_namespaces.namespace_path                        AS author_namespace_path,
-      ARRAY_TO_STRING(agg_labels.labels,'|')                  AS masked_label_title,
+      author_namespaces.namespace_path                                                      AS author_namespace_path,
+      ARRAY_TO_STRING(agg_labels.labels,'|')                                                AS masked_label_title,
       agg_labels.labels,
       merge_request_metrics.merged_at,
       IFF(merge_requests.target_project_id IN ({{is_project_included_in_engineering_metrics()}}),
-        TRUE, FALSE)                                          AS is_included_in_engineering_metrics,
+        TRUE, FALSE)                                                                        AS is_included_in_engineering_metrics,
       IFF(merge_requests.target_project_id IN ({{is_project_part_of_product()}}),
-        TRUE, FALSE)                                          AS is_part_of_product,
+        TRUE, FALSE)                                                                        AS is_part_of_product,
       IFF(projects.namespace_is_internal IS NOT NULL
           AND ARRAY_CONTAINS('community contribution'::variant, agg_labels.labels),
-        TRUE, FALSE)                                          AS is_community_contributor_related,
+        TRUE, FALSE)                                                                        AS is_community_contributor_related,
       TIMESTAMPDIFF(HOURS, merge_requests.merge_request_created_at,
-        merge_request_metrics.merged_at)                      AS hours_to_merged_status,
+        merge_request_metrics.merged_at)                                                    AS hours_to_merged_status,
+      regexp_count(merge_requests.merge_request_description,'([-+*]|[\d+\.]) [\[]( |[xX])[\]]',1,'m') AS total_checkboxes,
+      regexp_count(merge_requests.merge_request_description,'([-+*]|[\d+\.]) [\[][xX][\]]',1,'m')     AS completed_checkboxes,
+      -- Original regex, (?:(?:>\s{0,4})*)(?:\s*(?:[-+*]|(?:\d+\.)))+\s+(\[\s\]|\[[xX]\])(\s.+), found in https://gitlab.com/gitlab-org/gitlab/-/blob/master/app/models/concerns/taskable.rb
 
     CASE
       WHEN gitlab_subscriptions.is_trial

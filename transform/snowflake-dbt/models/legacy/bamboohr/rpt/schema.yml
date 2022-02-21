@@ -7,6 +7,9 @@ models:
 
   - name: bamboohr_promotion_rate
     description: Displays promotion rate aggregated at the department, division, and company overall level.
+    tests:
+        - dbt_utils.expression_is_true:
+                expression: 'headcount_end > 0'
     columns:
     - name: month_date
       description: The month for which the rolling metrics apply

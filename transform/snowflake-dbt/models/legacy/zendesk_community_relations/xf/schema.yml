@@ -23,8 +23,8 @@ models:
             tests:
               - not_null
               - relationships:
-                 to: ref('zendesk_community_relations_users_source')
-                 field: user_id
+                  to: ref('zendesk_community_relations_users_source')
+                  field: user_id
           - name: submitter_id
             tests:
               - not_null
@@ -50,7 +50,3 @@ models:
           - name: sfdc_account_id
           - name: ticket_priority_at_first_reply
             description: This is the priority of the ticket at first reply or resolution of the ticket.
-          - name: organization_market_segment
-            tests:
-              - accepted_values:
-                  values: ['unknown', 'strategic', 'smb', 'mid-market', 'large']

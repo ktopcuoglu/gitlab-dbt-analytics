@@ -2,7 +2,7 @@ WITH source AS (
 
   SELECT *
   FROM {{ ref('gitlab_dotcom_notes_dedupe_source') }}
-  
+
 ), renamed AS (
 
     SELECT
@@ -37,4 +37,3 @@ FROM renamed
 WHERE note_id NOT IN (
   203215238 --https://gitlab.com/gitlab-data/analytics/merge_requests/1423
 )
-ORDER BY created_at

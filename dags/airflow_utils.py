@@ -2,21 +2,24 @@
 import os
 import urllib.parse
 from datetime import date, timedelta
-from typing import List
+from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
 
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
-DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.15"
+DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
-PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.8.0"
+PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.25"
+
+DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
+DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 
-def split_date_parts(day: date, partition: str) -> List[dict]:
+def split_date_parts(day: date, partition: str) -> Dict:
 
     if partition == "month":
         split_dict = {
@@ -79,7 +82,8 @@ def slack_defaults(context, task_type):
     """
     Function to handle switching between a task failure and success.
     """
-    base_url = "https://airflow.gitlabdata.com"
+    # base_url = "https://airflow.gitlabdata.com"
+    base_url = "http://35.233.169.210:8080"
     execution_date = context["ts"]
     dag_context = context["dag"]
     dag_name = dag_context.dag_id
@@ -87,12 +91,10 @@ def slack_defaults(context, task_type):
     task_name = context["task"].task_id
     task_id = context["task_instance"].task_id
     execution_date_value = context["execution_date"]
-    execution_date_str = str(execution_date_value)
     execution_date_epoch = execution_date_value.strftime("%s")
     execution_date_pretty = execution_date_value.strftime(
         "%a, %b %d, %Y at %-I:%M %p UTC"
     )
-    task_instance = str(context["task_instance_key_str"])
 
     # Generate the link to the logs
     log_params = urllib.parse.urlencode(
@@ -148,24 +150,17 @@ def slack_defaults(context, task_type):
 def slack_snapshot_failed_task(context):
     """
     Function to be used as a callable for on_failure_callback for dbt-snapshots
-    Send a Slack alert to #dbt-runs and #analytics-pipelines
+    Send a Slack alert to #analytics-pipelines
     """
     multi_channel_alert = MultiSlackChannelOperator(
-        channels=["#dbt-runs", "#analytics-pipelines"], context=context
+        channels=["#analytics-pipelines"], context=context
     )
 
     return multi_channel_alert.execute()
 
 
 def slack_webhook_conn(slack_channel):
-    if slack_channel == "#analytics-pipelines":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-    elif slack_channel == "#dbt-runs":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-    elif slack_channel == "#data-lounge":
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-    else:
-        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+    slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
 
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
     return airflow_http_con_id, slack_webhook
@@ -232,7 +227,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 gitlab_pod_env_vars = {
     "CI_PROJECT_DIR": "/analytics",
-    "EXECUTION_DATE": "{{ next_execution_date }}",
+    "EXECUTION_DATE": "{{ data_interval_end }}",
     "SNOWFLAKE_PREPARATION_SCHEMA": "preparation",
     "SNOWFLAKE_SNAPSHOT_DATABASE": "RAW"
     if GIT_BRANCH == "master"
@@ -314,6 +309,23 @@ dbt_install_deps_nosha_cmd = f"""
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
+
+clone_data_science_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATA_SCIENCE_HTTP_REPO}";
+        else
+        export REPO="{DATA_SCIENCE_SSH_REPO}";
+    fi &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd data-science &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
 
 
 def number_of_dbt_threads_argument(number_of_threads):

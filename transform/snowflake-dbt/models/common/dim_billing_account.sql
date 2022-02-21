@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
     ('zuora_contact','zuora_contact_source')
@@ -15,7 +19,7 @@
 
     SELECT
       zuora_account.account_id                              AS dim_billing_account_id,
-      map_merged_crm_account.dim_crm_account_id            AS dim_crm_account_id,
+      map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
       zuora_account.account_number                          AS billing_account_number,
       zuora_account.account_name                            AS billing_account_name,
       zuora_account.status                                  AS account_status,
@@ -23,6 +27,12 @@
       zuora_account.sfdc_account_code,
       zuora_account.currency                                AS account_currency,
       zuora_contact.country                                 AS sold_to_country,
+      zuora_account.ssp_channel,
+      CASE
+        WHEN zuora_account.po_required = '' THEN 'NO'
+        WHEN zuora_account.po_required IS NULL THEN 'NO'
+        ELSE zuora_account.po_required
+      END                                                   AS po_required,
       zuora_account.is_deleted,
       zuora_account.batch
     FROM zuora_account
@@ -38,5 +48,5 @@
     created_by="@msendal",
     updated_by="@iweeks",
     created_date="2020-07-20",
-    updated_date="2021-07-29"
+    updated_date="2021-12-22"
 ) }}

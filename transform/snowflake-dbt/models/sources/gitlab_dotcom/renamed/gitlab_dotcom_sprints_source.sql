@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_sprints_dedupe_source') }}
-        
+
 ), parsed_columns AS (
 
     SELECT
@@ -26,4 +26,3 @@ WITH source AS (
 
 SELECT *
 FROM parsed_columns
-ORDER BY UPDATED_AT

@@ -4,6 +4,22 @@ A fact table bridging opportunities with contacts. One opportunity can have mult
 
 {% enddocs %}
 
+{% docs bdg_epic_user_request %}
+
+A bridge table that connects epics user requests, these epics being in the `Gitlab-org` group, with SFDC Opportunities / Accounts and Zendesk tickets links. It also picks the priorities that have been assigned to the epic request.
+
+This table combines the requests that were done directly in the `Gitlab-org` group by pasting the SFDC / Zendesk links directly in the epic description / notes (`prep_epic_user_request`), with the requests that were done by pasting the epic links in the customer collaboration projects (`prep_epic_user_request_collaboration_project`). If the combination of epic and link is found in both the `Gitlab-org` group and the customer collaboration project, the `Gitlab-org` will take precedence. If the request is only in the customer collaboration project then the flag `is_user_request_only_in_collaboration_project` will be equal to `True`.
+
+{% enddocs %}
+
+{% docs bdg_issue_user_request %}
+
+A bridge table that connects issues user requests, these issues being in the `Gitlab-org` group, with SFDC Opportunities / Accounts and Zendesk tickets links. It also picks the priorities that have been assigned to the issue request.
+
+This table combines the requests that were done directly in the `Gitlab-org` group by pasting the SFDC / Zendesk links directly in the issue description / notes (`prep_issue_user_request`), with the requests that were done by pasting the issue links in the customer collaboration projects (`prep_issue_user_request_collaboration_project`). If the combination of issue and link is found in both the `Gitlab-org` group and the customer collaboration project, the `Gitlab-org` will take precedence. If the request is only in the customer collaboration project then the flag `is_user_request_only_in_collaboration_project` will be equal to `True`.
+
+{% enddocs %}
+
 {% docs bdg_namespace_order_subscription_monthly %}
 
 The purpose of this table is three-fold:
@@ -68,9 +84,18 @@ Dimensional customer table representing all existing and historical customers fr
 
 The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
 
-The grain of the table is the SalesForce Account, also referred to as CRM_ID.
+The grain of the table is the SalesForce Account, also referred to as `DIM_CRM_ACCOUNT_ID`.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
+{% docs dim_crm_account_daily_snapshot %}
+Dimensional customer table representing all existing and historical customers from SalesForce and their attributes on a given day. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account and day, also referred to as `CRM_ACCOUNT_SNAPSHOT_ID`, which is a combination of the `DIM_CRM_ACCOUNT_ID` and `DIM_DATE_ID`
 
 {% enddocs %}
 
@@ -86,6 +111,20 @@ Model for all dimensional opportunity columns from salesforce opportunity object
 
 {% docs dim_crm_person %}
 Dimension that combines demographic data from salesforce leads and salesforce contacts. They are combined with a union and a filter on leads excluding converted leads and leads where there is a corresponding contact.
+
+{% enddocs %}
+
+{% docs dim_crm_user %}
+
+Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
+
+{% enddocs %}
+
+{% docs dim_crm_user_daily_snapshot %}
+
+Dimension representing the associated user from salesforce on any day.
+
+The grain of this table is `DIM_CRM_USER_SNAPSHOT_ID` which is a combination of `DIM_CRM_USER_ID` and `DIM_DATE_ID`.
 
 {% enddocs %}
 
@@ -114,7 +153,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_hold %}
 
-There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract. 
+There are multiple kinds of holds which can be applied to a transaction in the accounting process. This dimension lists the distinct types of holds which may be applied in a revenue contract.
 
 {% enddocs %}
 
@@ -373,13 +412,13 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% docs fct_retention_parent_account %}
 
-Fact table representing retentions months, currently based on the highest possible level (Parent account). 
+Fact table representing retentions months, currently based on the highest possible level (Parent account).
 
 {% enddocs %}
 
 {% docs fct_revenue_contract_hold %}
 
-Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way. 
+Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way.
 
 {% enddocs %}
 
@@ -403,12 +442,6 @@ Sales funnel targets set by the Finance team to measure performance of Partner a
 {% docs fct_sales_funnel_target %}
 
 Sales funnel targets set by the Finance team to measure performance of important KPIs against goals, broken down by sales hierarchy, and order attributes.
-
-{% enddocs %}
-
-{% docs dim_crm_user %}
-
-Dimension representing the associated user from salesforce. Most often this will be the record owner, which is a ubiquitous field in salesforce.
 
 {% enddocs %}
 
@@ -486,15 +519,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_usage_ping_payloads %}
-Factual table with metadata on usage ping payloads received.
-
-The grain of the table is a usage_ping_id.
-
-Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 
@@ -504,7 +528,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 Main foreign key that can help to build easily joins:
 
-- dim_license_id 
+- dim_license_id
 - dim_subscription_id
 - dim_date_id
 
@@ -556,7 +580,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs dim_host_instance_type %}
 
-Dimension table providing instance type for a given UUID/Host Name pair.
+Dimension table providing instance type for a given UUID/HostName pair or Namespace Id for Self-Managed and SaaS data respectively.
 
 {% enddocs %}
 
@@ -633,7 +657,7 @@ The grain of this table is one row per namespace. The Primary Key is `dim_namesp
 
 {% docs dim_namespace_plan_hist %}
 
-Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions. 
+Slowly Changing Dimension Type 2 that records changes into namespace's plan subscriptions.
 
 Easily to join with the following tables:
 
@@ -941,5 +965,32 @@ Some examples of analysis that were done with the legacy table `gitlab_dotcom_da
 1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
 1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
 1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
+
+{% enddocs %}
+
+{% docs dim_issue_links %}
+
+Dimensional table representing links between GitLab Issues recorded by the Events API. [More info about issue links can be found here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
+
+Issue Links are created when relationships are defined between issues. This table has slowly changing dimensions, as issue links/relationships can be removed over time
+
+The grain of the table is the `dim_issue_link_id`. This table is easily joinable with:
+
+- `dim_issue` through `dim_issue_id` on `dim_source_issue_id` & `dim_target_issue_id`
+{% enddocs %}
+
+{% docs dim_locality %}
+
+Dimensional table representing the [location_factor](https://about.gitlab.com/handbook/total-rewards/compensation/compensation-calculator/#location-factor) for a given locality and a given time range.
+
+This table is derived from data files and logic of the [compensation calculator](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator), specifically the location_factors.yml and the geo_zones.yml
+
+The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
+
+{% enddocs %}
+
+{% docs dim_usage_ping_metric %}
+
+This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
 
 {% enddocs %}

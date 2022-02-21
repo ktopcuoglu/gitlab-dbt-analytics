@@ -18,7 +18,8 @@ WITH category_handbook_engineering_merge_requests_count AS (
       SUM(mr_count_infrastructure)                    AS mr_count_infrastructure,
       SUM(mr_count_development)                       AS mr_count_development,
       SUM(mr_count_quality)                           AS mr_count_quality,
-      SUM(mr_count_support)                           AS mr_count_support
+      SUM(mr_count_support)                           AS mr_count_support,
+      SUM(mr_count_incubation)                        AS mr_count_incubation
     FROM category_handbook_engineering_merge_requests_count
     WHERE merge_request_state = 'merged'
       AND merge_request_merged_at IS NOT NULL

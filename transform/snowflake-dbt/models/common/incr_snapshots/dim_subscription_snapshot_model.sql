@@ -22,7 +22,7 @@ WITH snapshot_dates AS (
 
     SELECT
       *
-    FROM {{ ref('dim_subscription_snapshot_base') }}
+    FROM {{ ref('prep_dim_subscription_snapshot_base') }}
 
 ),  dim_subscription_spined AS (
 

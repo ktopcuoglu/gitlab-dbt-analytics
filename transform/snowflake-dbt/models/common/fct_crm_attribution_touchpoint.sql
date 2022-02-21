@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH bizible_attribution_touchpoints AS (
 
     SELECT *
@@ -38,7 +42,7 @@ WITH bizible_attribution_touchpoints AS (
       opportunity_dimensions.dim_account_sales_territory_id,
       opportunity_dimensions.dim_account_industry_id,
       opportunity_dimensions.dim_account_location_country_id,
-      opportunity_dimensions.dim_account_location_region_id
+      opportunity_dimensions.dim_account_location_region_id,
 
       -- attribution counts
       bizible_count_first_touch,
@@ -66,7 +70,7 @@ WITH bizible_attribution_touchpoints AS (
 {{ dbt_audit(
     cte_ref="final_attribution_touchpoint",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2021-01-21",
-    updated_date="2021-04-22"
+    updated_date="2021-11-02"
 ) }}

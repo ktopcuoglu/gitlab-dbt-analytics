@@ -26,6 +26,12 @@ from kube_secrets import (
 # Load the env vars into a dict and set env vars
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
+pod_env_vars = {
+    "SNOWFLAKE_LOAD_DATABASE": "RAW"
+    if GIT_BRANCH == "master"
+    else f"{GIT_BRANCH.upper()}_RAW",
+    "CI_PROJECT_DIR": "/analytics",
+}
 
 # tomorrow_ds -  the day after the execution date as YYYY-MM-DD
 # ds - the execution date as YYYY-MM-DD
@@ -61,8 +67,8 @@ default_args = {
 }
 
 # Create the DAG
-#  Sunday at 0900 UTC
-dag = DAG("saas_usage_ping", default_args=default_args, schedule_interval="0 9 * * 0")
+#  Monday at 0700 UTC
+dag = DAG("saas_usage_ping", default_args=default_args, schedule_interval="0 7 * * 1")
 
 # Instance Level Usage Ping
 instance_cmd = f"""
@@ -70,6 +76,12 @@ instance_cmd = f"""
     cd analytics/extract/saas_usage_ping/ &&
     python3 transform_instance_level_queries_to_snowsql.py &&
     python3 usage_ping.py saas_instance_ping
+"""
+
+instance_redis_metrics_cmd = f"""
+    {clone_repo_cmd} &&
+    cd analytics/extract/saas_usage_ping/ &&
+    python3 usage_ping.py saas_instance_redis_metrics
 """
 
 instance_ping = KubernetesPodOperator(
@@ -83,6 +95,16 @@ instance_ping = KubernetesPodOperator(
     dag=dag,
 )
 
+instance_redis_metrics = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id="saas-instance-usage-ping-redis-metrics",
+    name="saas-instance-usage-ping-redis-metrics",
+    secrets=secrets,
+    env_vars=pod_env_vars,
+    arguments=[instance_redis_metrics_cmd],
+    dag=dag,
+)
 # Namespace, Group, Project, User Level Usage Ping
 namespace_cmd = f"""
     {clone_repo_cmd} &&

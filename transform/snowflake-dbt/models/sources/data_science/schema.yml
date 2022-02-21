@@ -1,0 +1,6 @@
+version: 2
+
+models:
+    - name: pte_scores_source
+      description: '{{ doc("pte_scores_source") }}'
+

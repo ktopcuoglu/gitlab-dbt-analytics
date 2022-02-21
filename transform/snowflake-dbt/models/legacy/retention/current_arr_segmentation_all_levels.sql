@@ -1,8 +1,3 @@
-{{ config({
-    "schema": "legacy"
-    })
-}}
-
 {% set levels = ['zuora_subscription_id',
                   'sfdc_account_id',
                   'parent_account_id'] %}

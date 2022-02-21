@@ -2,7 +2,7 @@
         "materialized": "incremental",
         "unique_key": "primary_key",
         "tags": ["arr_snapshots"],
-        "schema": "common_mart_sales"
+        "schema": "restricted_safe_common_mart_sales"
     })
 }}
 
@@ -15,6 +15,11 @@ WITH dim_billing_account AS (
 
     SELECT *
     FROM {{ ref('dim_crm_account') }}
+
+), dim_crm_account_daily_snapshot AS (
+
+    SELECT *
+    FROM {{ ref('dim_crm_account_daily_snapshot') }}
 
 ), dim_date AS (
 
@@ -87,6 +92,8 @@ WITH dim_billing_account AS (
       dim_billing_account.sold_to_country                                                   AS sold_to_country,
       dim_billing_account.billing_account_name                                              AS billing_account_name,
       dim_billing_account.billing_account_number                                            AS billing_account_number,
+      dim_billing_account.ssp_channel                                                       AS ssp_channel,
+      dim_billing_account.po_required                                                       AS po_required,
 
       -- crm account info
       dim_crm_account.dim_crm_account_id                                                    AS dim_crm_account_id,
@@ -111,6 +118,10 @@ WITH dim_billing_account AS (
       dim_crm_account.health_score_color                                                    AS health_score_color,
       dim_crm_account.health_number                                                         AS health_number,
       dim_crm_account.is_jihu_account                                                       AS is_jihu_account,
+      dim_crm_account.parent_crm_account_lam                                                AS parent_crm_account_lam,
+      dim_crm_account.parent_crm_account_lam_dev_count                                      AS parent_crm_account_lam_dev_count,
+      dim_crm_account_daily_snapshot.parent_crm_account_lam                                 AS parent_crm_account_lam_historical,
+      dim_crm_account_daily_snapshot.parent_crm_account_lam_dev_count                       AS parent_crm_account_lam_dev_count_historical,
 
       --subscription info
       dim_subscription.dim_subscription_id                                                  AS dim_subscription_id,
@@ -123,18 +134,24 @@ WITH dim_billing_account AS (
       dim_subscription.subscription_lineage                                                 AS subscription_lineage,
       dim_subscription.subscription_cohort_month                                            AS subscription_cohort_month,
       dim_subscription.subscription_cohort_quarter                                          AS subscription_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_month,
-      MIN(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_billing_account.dim_billing_account_id)                          AS billing_account_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_month,
-      MIN(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_crm_account.dim_crm_account_id)                                  AS crm_account_cohort_quarter,
-      MIN(dim_subscription.subscription_cohort_month) OVER (
-          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_month,
-      MIN(dim_subscription.subscription_cohort_quarter) OVER (
-          PARTITION BY dim_crm_account.dim_parent_crm_account_id)                           AS parent_account_cohort_quarter,
+      MIN(arr_month.date_actual) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id, snapshot_dates.date_actual)
+                                                                                            AS billing_account_cohort_month,
+      MIN(arr_month.first_day_of_fiscal_quarter) OVER (
+          PARTITION BY dim_billing_account.dim_billing_account_id, snapshot_dates.date_actual)
+                                                                                            AS billing_account_cohort_quarter,
+      MIN(arr_month.date_actual) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id, snapshot_dates.date_actual)
+                                                                                            AS crm_account_cohort_month,
+      MIN(arr_month.first_day_of_fiscal_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_crm_account_id, snapshot_dates.date_actual)
+                                                                                            AS crm_account_cohort_quarter,
+      MIN(arr_month.date_actual) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id, snapshot_dates.date_actual)
+                                                                                            AS parent_account_cohort_month,
+      MIN(arr_month.first_day_of_fiscal_quarter) OVER (
+          PARTITION BY dim_crm_account.dim_parent_crm_account_id, snapshot_dates.date_actual)
+                                                                                            AS parent_account_cohort_quarter,
       dim_subscription.turn_on_cloud_licensing                                              AS turn_on_cloud_licensing,
       dim_subscription.turn_on_operational_metrics                                          AS turn_on_operational_metrics,
       dim_subscription.contract_operational_metrics                                         AS contract_operational_metrics,
@@ -162,6 +179,9 @@ WITH dim_billing_account AS (
     INNER JOIN dim_billing_account
       ON dim_billing_account.dim_billing_account_id = fct_mrr_snapshot_bottom_up.dim_billing_account_id
       AND dim_billing_account.snapshot_id = fct_mrr_snapshot_bottom_up.snapshot_id
+    LEFT JOIN dim_crm_account_daily_snapshot
+      ON dim_billing_account.dim_crm_account_id = dim_crm_account_daily_snapshot.dim_crm_account_id
+      AND dim_billing_account.snapshot_id = dim_crm_account_daily_snapshot.snapshot_id
     LEFT JOIN dim_product_detail
       ON dim_product_detail.dim_product_detail_id = fct_mrr_snapshot_bottom_up.dim_product_detail_id
     LEFT JOIN dim_date AS arr_month
@@ -170,6 +190,7 @@ WITH dim_billing_account AS (
       ON snapshot_dates.date_id = fct_mrr_snapshot_bottom_up.snapshot_id
     LEFT JOIN dim_crm_account
       ON dim_billing_account.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+    WHERE dim_crm_account.is_jihu_account != 'TRUE'
 
 ), cohort_diffs AS (
 
@@ -223,7 +244,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2021-08-09"
+    updated_date="2022-02-01"
 ) }}

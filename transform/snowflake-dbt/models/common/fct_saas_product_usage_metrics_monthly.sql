@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ simple_cte([
     ('saas_usage_ping', 'prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics'),
     ('zuora_subscriptions', 'bdg_subscription_product_rate_plan'),
@@ -19,7 +23,7 @@
     {{ dbt_utils.group_by(n=4)}}
 
 ), gitlab_seats AS (
-    
+
     SELECT
       gitlab_subscriptions.namespace_id,
       gitlab_subscriptions.seats,
@@ -28,7 +32,7 @@
       dates.first_day_of_month                                                          AS snapshot_month
     FROM gitlab_subscriptions
     INNER JOIN dates
-      ON dates.date_actual BETWEEN gitlab_subscriptions.valid_from
+      ON dates.date_actual BETWEEN TO_DATE(gitlab_subscriptions.valid_from)
                             AND IFNULL(gitlab_subscriptions.valid_to, CURRENT_DATE)
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
@@ -48,6 +52,7 @@
       {{ get_date_id('saas_subscriptions.snapshot_month') }}                            AS snapshot_date_id,
       saas_usage_ping.ping_date                                                         AS ping_created_at,
       {{ get_date_id('saas_usage_ping.ping_date') }}                                    AS ping_created_date_id,
+      saas_usage_ping.instance_type,
       -- Wave 1
       gitlab_seats.seats                                                                AS subscription_seats,
       gitlab_seats.seats_in_use                                                         AS billable_user_count,
@@ -105,7 +110,6 @@
       "counts.projects_bamboo_active"                                                           AS projects_bamboo_active_all_time_event,
       "counts.projects_jira_active"                                                             AS projects_jira_active_all_time_event,
       "counts.projects_drone_ci_active"                                                         AS projects_drone_ci_active_all_time_event,
-      "usage_activity_by_stage_monthly.manage.issues_imported.jira"                             AS jira_imports_28_days_event,
       "counts.projects_github_active"                                                           AS projects_github_active_all_time_event,
       "counts.projects_jira_server_active"                                                      AS projects_jira_server_active_all_time_event,
       "counts.projects_jira_dvcs_cloud_active"                                                  AS projects_jira_dvcs_cloud_active_all_time_event,
@@ -166,13 +170,13 @@
     LEFT JOIN gitlab_seats
       ON saas_usage_ping.dim_namespace_id = gitlab_seats.namespace_id
       AND saas_usage_ping.reporting_month = gitlab_seats.snapshot_month
-  
+
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2021-06-10"
+    updated_date="2021-12-23"
 ) }}

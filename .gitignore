@@ -27,3 +27,4 @@ config.json
 !excluded.csv
 .ipynb_checkpoints/*
 /transform/snowflake-dbt/*.ipynb
+/transform/safe_models.json

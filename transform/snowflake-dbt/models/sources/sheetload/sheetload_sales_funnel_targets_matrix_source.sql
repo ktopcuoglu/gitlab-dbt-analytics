@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi"]
+) }}
+
 WITH source AS (
 
     SELECT *
@@ -12,11 +16,10 @@ WITH source AS (
       order_type::VARCHAR                                 AS order_type,
       area::VARCHAR                                       AS area,
       REPLACE(allocated_target, ',', '')::FLOAT           AS allocated_target,
-      kpi_total::FLOAT                                    AS kpi_total,
-      month_percentage::FLOAT                             AS month_percentage,
-      opportunity_source_percentage::FLOAT                AS opportunity_source_percentage,
-      order_type_percentage::FLOAT                        AS order_type_percentage,
-      area_percentage::FLOAT                              AS area_percentage,
+      user_segment::VARCHAR                               AS user_segment,
+      user_geo::VARCHAR                                   AS user_geo,
+      user_region::VARCHAR                                AS user_region,
+      user_area::VARCHAR                                  AS user_area,
       TO_TIMESTAMP(TO_NUMERIC("_UPDATED_AT"))::TIMESTAMP  AS last_updated_at
     FROM source
 

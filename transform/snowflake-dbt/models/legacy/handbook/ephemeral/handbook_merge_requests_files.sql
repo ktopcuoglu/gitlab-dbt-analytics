@@ -18,6 +18,7 @@ WITH base AS (
     FROM base
     INNER JOIN TABLE(FLATTEN(INPUT => file_diffs, outer => true)) AS file_diffs
     WHERE LOWER(file_diffs.value:file_path) LIKE '%/handbook/%'
+    OR LOWER(file_diffs.value:file_path) LIKE '%data/performance_indicators%'
 
 )
 SELECT * 

@@ -35,7 +35,11 @@ models:
     - name: version_usage_stats_list
       columns:
           - name: ping_name
+            tests:
+                - not_null
           - name: full_ping_name
+            tests:
+                - not_null
 
     - name: version_version_checks
       columns:

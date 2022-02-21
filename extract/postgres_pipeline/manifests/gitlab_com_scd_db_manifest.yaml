@@ -96,17 +96,6 @@ tables:
   #     FROM ci_build_trace_sections
   #     WHERE date_end BETWEEN '{EXECUTION_DATE}'::timestamp - interval '{HOURS} hours'
   #       AND '{EXECUTION_DATE}'::timestamp
-  ci_build_trace_section_names:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_build_trace_section_names
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , name
-      FROM ci_build_trace_section_names
   ci_builds_runner_session:
     export_schema: 'gitlab_com'
     export_table: ci_builds_runner_session

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH self_managed_active_subscriptions AS (
 
     SELECT

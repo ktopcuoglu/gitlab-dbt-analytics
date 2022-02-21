@@ -33,6 +33,8 @@ macros:
     description: '{{ doc("distinct_source") }}'
   - name: generate_schema_name
     description: '{{ doc("generate_schema_name") }}'
+  - name: get_column_values_ordered
+    description: '{{ doc("get_column_values_ordered") }}'
   - name: get_date_id
     description: '{{ doc("get_date_id") }}'
   - name: get_date_pt_id
@@ -92,4 +94,6 @@ macros:
       - name: where_clause
         type: string
         description: Optional where clause, first condition can be passed through without a predicate. Subsequent conditions can be passed in the string if including additional AND 's
+  - name: convert_variant_to_number_field
+    description: '{{ doc("convert_variant_to_number_field") }}'
 

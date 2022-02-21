@@ -86,7 +86,7 @@
                saas_billing_account.dim_namespace_id)                                         AS dim_namespace_id,
       gitlab_namespaces.namespace_path,
       CASE 
-        WHEN namespace_lineage.namespace_type = 'Individual' 
+        WHEN namespace_lineage.namespace_type = 'User' 
           THEN 1 
         ELSE 0 
       END                                                                                     AS is_individual_namespace,
@@ -169,6 +169,7 @@
         ELSE 0 
       END                                                                                     AS is_saas_trial,    
       CURRENT_DATE - CAST(saas_namespace.saas_trial_expired_on AS DATE)                       AS days_since_saas_trial_ended,
+      {{ days_buckets('days_since_saas_trial_ended') }}                                      AS days_since_saas_trial_ended_bucket,
       CASE 
         WHEN saas_customer.order_is_trial 
           THEN CAST(saas_customer.order_end_date AS DATE)
@@ -179,6 +180,7 @@
         WHEN trial_end_date IS NOT NULL AND CURRENT_DATE <= trial_end_date
           THEN trial_end_date - CURRENT_DATE
       END                                                                                     AS days_until_saas_trial_ends,
+      {{ days_buckets('days_until_saas_trial_ends') }}                                       AS days_until_saas_trial_ends_bucket,
       CASE 
         WHEN saas_product_tier = 'SaaS - Free' 
           THEN 1
@@ -285,7 +287,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@ischweickartDD",
+    updated_by="@pempey",
     created_date="2021-02-04",
-    updated_date="2021-04-06"
+    updated_date="2021-11-10"
 ) }}

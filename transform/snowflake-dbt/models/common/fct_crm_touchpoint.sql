@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH account_dimensions AS (
 
     SELECT *
@@ -22,6 +26,7 @@ WITH account_dimensions AS (
 
       -- shared dimension keys
       crm_person.dim_crm_person_id,
+      crm_person.dim_crm_user_id,
       campaign_id                                       AS dim_campaign_id,
       account_dimensions.dim_crm_account_id,
       account_dimensions.dim_parent_crm_account_id,
@@ -51,7 +56,7 @@ WITH account_dimensions AS (
 {{ dbt_audit(
     cte_ref="final_touchpoint",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@rkohnke",
     created_date="2021-01-21",
-    updated_date="2021-03-04"
+    updated_date="2021-10-05"
 ) }}

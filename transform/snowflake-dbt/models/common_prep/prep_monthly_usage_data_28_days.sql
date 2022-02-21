@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
     "materialized": "incremental",
     "unique_key": "primary_key"

@@ -95,6 +95,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_award_emoji_source
+    description: Base model for Gitlab.com award emojis.
+    columns:
+      - name: award_emoji_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_board_assignees_source
     description: Base model for Gitlab.com Board Assignees
     columns:
@@ -159,7 +168,7 @@ models:
           - not_null
 
   - name: gitlab_dotcom_ci_build_trace_section_names_source
-    description: Base model for Gitlab.com ci_builds
+    description: This table pipeline is deprecated and won't be refreshed, Ref MR https://gitlab.com/gitlab-data/analytics/-/merge_requests/5334.
     columns:
       - name: ci_build_id
         tags: ["tdf","gitlab_dotcom"]
@@ -259,6 +268,14 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_dast_profiles_source
+    description: Base model for Gitlab.com dast_profiles
+    columns:
+      - name: dast_profiles_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
   - name: gitlab_dotcom_epic_issues_source
     description: Base model for Gitlab.com epic issues
     columns:
@@ -347,6 +364,15 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+
+  - name: gitlab_dotcom_ci_sources_pipelines_source
+    description: Base model for Gitlab.com ci_sources_pipelines
+    columns:
+      - name: ci_source_pipeline_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
 
   - name: gitlab_dotcom_ci_stages_source
     description: Base model for Gitlab.com ci_stages
@@ -1018,6 +1044,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_merge_request_blocks_source
+    description: Base model for GitLab.com merge request blocks table
+    columns: 
+      - name: merge_request_blocks_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_merge_request_diffs_source
     description: Base model for Gitlab.com request diffs
     columns:
@@ -1153,6 +1188,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_namespace_settings_source
+    description: Base model for Gitlab.com namespace settings
+    columns:
+      - name: namespace_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_namespaces_source
     description: Base model for Gitlab.com namespaces
     columns:
@@ -1171,6 +1215,12 @@ models:
           - not_null
       - name: namespace_path
         description: '{{ doc("visibility_documentation") }}'
+      - name: namespace_type
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Group', 'User', 'Project']
+
       - name: namespace_name
         description: '{{ doc("visibility_documentation") }}'
       - name: visbility_level
@@ -1598,6 +1648,15 @@ models:
           - not_null
           - unique
 
+  - name: gitlab_dotcom_routes_source
+    description: Base model for Gitlab.com paths for namespaces and projects which can be used to link to the actual URLs.
+    columns:
+      - name: route_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_saml_providers_source
     description: Base model for Gitlab.com gitlab_dotcom_saml_providers
     columns:
@@ -1784,6 +1843,14 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: gitlab_dotcom_users_security_dashboard_projects_source
+    description: Base model for Gitlab.com users_security_dashboard_projects
+    columns:
+      - name: user_id
+        tags: ["tdf", "gitlab_dotcom"]
+        tests:
+          - not_null
 
   - name: gitlab_dotcom_user_preferences_source_non_dedupe
     description: Base model for Gitlab.com user_preferences where no deduplication did take place. The field User_id is NOT unique

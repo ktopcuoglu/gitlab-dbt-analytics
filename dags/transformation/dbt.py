@@ -1,10 +1,13 @@
+"""
+## Info about DAG
+This DAG is responsible for doing incremental model refresh for both product, non product model,workspace model followed by dbt-test and dbt-result from Monday to Saturday.
+"""
+
 import os
 from datetime import datetime, timedelta
-import json
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.python_operator import BranchPythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
@@ -49,7 +52,6 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "params": {"slack_channel_override": "#dbt-runs"},
     "retries": 0,
     "sla": timedelta(hours=8),
     "sla_miss_callback": slack_failed_task,
@@ -58,11 +60,38 @@ default_args = {
     "dagrun_timeout": timedelta(hours=6),
 }
 
+# Define all the  required secret
+secrets_list = [
+    GIT_DATA_TESTS_PRIVATE_KEY,
+    GIT_DATA_TESTS_CONFIG,
+    SALT,
+    SALT_EMAIL,
+    SALT_IP,
+    SALT_NAME,
+    SALT_PASSWORD,
+    SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_USER,
+    SNOWFLAKE_PASSWORD,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
+    SNOWFLAKE_TRANSFORM_ROLE,
+    SNOWFLAKE_TRANSFORM_WAREHOUSE,
+    SNOWFLAKE_TRANSFORM_SCHEMA,
+]
+
 # Create the DAG
-dag = DAG("dbt", default_args=default_args, schedule_interval="45 8 * * *")
+dag = DAG(
+    "dbt",
+    description="This DAG is responsible for doing incremental model refresh",
+    default_args=default_args,
+    schedule_interval="45 8 * * MON-SAT",
+)
+dag.doc_md = __doc__
 
 # BranchPythonOperator functions
-def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
+def dbt_run_or_refresh(timestamp: datetime) -> str:
     """
     Use the current date to determine whether to do a full-refresh or a
     normal run.
@@ -73,30 +102,27 @@ def dbt_run_or_refresh(timestamp: datetime, dag: DAG) -> str:
     """
 
     ## TODO: make this not hardcoded
-    SCHEDULE_INTERVAL_HOURS = 8
     current_weekday = timestamp.isoweekday()
-    current_seconds = timestamp.hour * 3600
-    dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
 
     # run a full-refresh once per week (on sunday early AM)
-    if current_weekday == 7:  # and dag_interval > current_seconds:
+    if current_weekday == 7:
         return "dbt-full-refresh"
     else:
         return "dbt-non-product-models-run"
 
 
-branching_dbt_run = BranchPythonOperator(
-    task_id="branching-dbt-run",
-    python_callable=lambda: dbt_run_or_refresh(datetime.now(), dag),
-    dag=dag,
-)
+# branching_dbt_run = BranchPythonOperator(
+#    task_id="branching-dbt-run",
+#    python_callable=lambda: dbt_run_or_refresh(datetime.now()),
+#    dag=dag,
+# )
 
 # run non-product models on small warehouse
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -105,25 +131,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
     image=DBT_IMAGE,
     task_id="dbt-non-product-models-run",
     name="dbt-non-product-models-run",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ],
+    secrets=secrets_list,
     env_vars=pod_env_vars,
     arguments=[dbt_non_product_models_command],
     dag=dag,
@@ -134,8 +142,8 @@ dbt_non_product_models_task = KubernetesPodOperator(
 dbt_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target prod --models tag:product; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
+    dbt run --profiles-dir profile --target prod --models tag:product --exclude workspaces.* ; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -144,74 +152,19 @@ dbt_product_models_task = KubernetesPodOperator(
     image=DBT_IMAGE,
     task_id="dbt-product-models-run",
     name="dbt-product-models-run",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ],
+    secrets=secrets_list,
     env_vars=pod_env_vars,
     arguments=[dbt_product_models_command],
     dag=dag,
 )
 
 
-# dbt-full-refresh
-dbt_full_refresh_cmd = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target prod --full-refresh --exclude common.dim_ip_to_geo mart_arr_snapshots; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-dbt_full_refresh = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id="dbt-full-refresh",
-    name="dbt-full-refresh",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-    ],
-    env_vars=pod_env_vars,
-    arguments=[dbt_full_refresh_cmd],
-    dag=dag,
-)
-
 # dbt-test
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; $ret
+    dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; 
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
@@ -220,25 +173,7 @@ dbt_test = KubernetesPodOperator(
     task_id="dbt-test",
     name="dbt-test",
     trigger_rule="all_done",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-    ],
+    secrets=secrets_list,
     env_vars=pod_env_vars,
     arguments=[dbt_test_cmd],
     dag=dag,
@@ -257,37 +192,76 @@ dbt_results = KubernetesPodOperator(
     task_id="dbt-results",
     name="dbt-results",
     trigger_rule="all_done",
-    secrets=[
-        GIT_DATA_TESTS_PRIVATE_KEY,
-        GIT_DATA_TESTS_CONFIG,
-        SALT,
-        SALT_EMAIL,
-        SALT_IP,
-        SALT_NAME,
-        SALT_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_ROLE,
-        SNOWFLAKE_TRANSFORM_WAREHOUSE,
-        SNOWFLAKE_TRANSFORM_SCHEMA,
-    ],
+    secrets=secrets_list,
     env_vars=pod_env_vars,
     arguments=[dbt_results_cmd],
     dag=dag,
 )
 
-# Branching for run
-(
-    branching_dbt_run
-    >> dbt_non_product_models_task
-    >> dbt_product_models_task
-    >> dbt_test
-    >> dbt_results
+# dbt-workspaces
+dbt_workspaces_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_datascience.* workspaces.workspace_data.tdf.*; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_workspaces = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspaces",
+    name="dbt-workspaces",
+    trigger_rule="all_done",
+    secrets=secrets_list,
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspaces_command],
+    dag=dag,
 )
 
-branching_dbt_run >> dbt_full_refresh >> dbt_test >> dbt_results
+# dbt-workspaces-xl
+dbt_workspaces_xl_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
+    dbt run --profiles-dir profile --target prod --models workspaces.workspace_datascience.* ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+dbt_workspaces_xl = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspaces-xl",
+    name="dbt-workspaces-xl",
+    trigger_rule="all_done",
+    secrets=secrets_list,
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspaces_xl_command],
+    dag=dag,
+)
+
+# dbt-workspaces
+dbt_workspaces_test_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    dbt test --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+"""
+dbt_workspaces_test = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE,
+    task_id="dbt-workspaces-test",
+    name="dbt-workspaces-test",
+    trigger_rule="all_done",
+    secrets=secrets_list,
+    env_vars=pod_env_vars,
+    arguments=[dbt_workspaces_test_command],
+    dag=dag,
+)
+
+(
+    dbt_non_product_models_task
+    >> dbt_product_models_task
+    >> dbt_test
+    >> dbt_workspaces
+    >> dbt_workspaces_xl
+    >> dbt_workspaces_test
+    >> dbt_results
+)

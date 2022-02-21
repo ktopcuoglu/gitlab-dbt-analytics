@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH manage_snowplow_smau_pageviews_events AS (
 
   SELECT

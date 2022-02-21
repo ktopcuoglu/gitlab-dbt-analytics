@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH account_dims_mapping AS (
 
   SELECT *
@@ -13,13 +17,27 @@ WITH account_dims_mapping AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      last_utm_content,
+      last_utm_campaign,
       dim_crm_account_id,
       dim_crm_user_id,
       person_score,
       name_of_active_sequence,
       sequence_task_due_date,
       sequence_status,
-      last_activity_date
+      last_activity_date,
+      account_demographics_sales_segment,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
+      account_demographics_territory,
+      account_demographics_employee_count,
+      account_demographics_max_family_employee,
+      account_demographics_upa_country,
+      account_demographics_upa_state,  
+      account_demographics_upa_city,
+      account_demographics_upa_street,
+      account_demographics_upa_postal_code
 
     FROM {{ref('prep_crm_person')}}
 
@@ -59,6 +77,13 @@ WITH account_dims_mapping AS (
     SELECT *
     FROM {{ ref('sfdc_lead_source') }}
     WHERE is_deleted = 'FALSE'
+
+), sfdc_lead_converted AS (
+
+    SELECT *
+    FROM sfdc_leads
+    WHERE is_converted
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY converted_contact_id ORDER BY converted_date DESC) = 1
 
 ) , marketing_qualified_leads AS(
 
@@ -145,12 +170,29 @@ WITH account_dims_mapping AS (
       {{ get_keyed_nulls('bizible_marketing_channel_path.dim_bizible_marketing_channel_path_id') }}            AS dim_bizible_marketing_channel_path_id,
 
      -- important person dates
-      COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)::DATE                                       AS created_date,
-      {{ get_date_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                        AS created_date_id,
-      {{ get_date_pt_id('COALESCE(sfdc_contacts.created_date, sfdc_leads.created_date)') }}                     AS created_date_pt_id,
+      COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date, sfdc_contacts.created_date)::DATE
+                                                                                                                AS created_date,
+      {{ get_date_id('COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date, sfdc_contacts.created_date)') }}
+                                                                                                                AS created_date_id,
+      {{ get_date_pt_id('COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date, sfdc_contacts.created_date)') }}
+                                                                                                                AS created_date_pt_id,
+      COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date)::DATE                                 AS lead_created_date,
+      {{ get_date_id('COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date)::DATE') }}            AS lead_created_date_id,
+      {{ get_date_pt_id('COALESCE(sfdc_leads.created_date, sfdc_lead_converted.created_date)::DATE') }}         AS lead_created_date_pt_id,
+      sfdc_contacts.created_date::DATE                                                                          AS contact_created_date,
+      {{ get_date_id('sfdc_contacts.created_date::DATE') }}                                                     AS contact_created_date_id,
+      {{ get_date_pt_id('sfdc_contacts.created_date::DATE') }}                                                  AS contact_created_date_pt_id,
       COALESCE(sfdc_contacts.inquiry_datetime, sfdc_leads.inquiry_datetime)::DATE                               AS inquiry_date,
       {{ get_date_id('inquiry_date') }}                                                                         AS inquiry_date_id,
       {{ get_date_pt_id('inquiry_date') }}                                                                      AS inquiry_date_pt_id,
+      COALESCE(sfdc_contacts.inquiry_datetime_inferred, sfdc_leads.inquiry_datetime_inferred)::DATE             AS inquiry_inferred_datetime,
+      {{ get_date_id('inquiry_inferred_datetime') }}                                                            AS inquiry_inferred_datetime_id,
+      {{ get_date_pt_id('inquiry_inferred_datetime') }}                                                         AS inquiry_inferred_datetime_pt_id,
+      LEAST(COALESCE(inquiry_date,'9999-01-01'),COALESCE(inquiry_inferred_datetime,'9999-01-01'))               AS prep_true_inquiry_date,
+      CASE 
+        WHEN prep_true_inquiry_date != '9999-01-01'
+        THEN prep_true_inquiry_date
+      END                                                                                                       AS true_inquiry_date,
       mqls.first_mql_date::DATE                                                                                 AS mql_date_first,
       mqls.first_mql_date                                                                                       AS mql_datetime_first,
       CONVERT_TIMEZONE('America/Los_Angeles', mqls.first_mql_date)                                              AS mql_datetime_first_pt,
@@ -161,6 +203,15 @@ WITH account_dims_mapping AS (
       CONVERT_TIMEZONE('America/Los_Angeles', mqls.last_mql_date)                                               AS mql_datetime_latest_pt,
       {{ get_date_id('last_mql_date') }}                                                                        AS mql_date_latest_id,
       {{ get_date_pt_id('last_mql_date') }}                                                                     AS mql_date_latest_pt_id,
+      COALESCE(sfdc_contacts.marketo_qualified_lead_datetime, sfdc_leads.marketo_qualified_lead_datetime)::DATE 
+                                                                                                                AS mql_sfdc_date,
+      COALESCE(sfdc_contacts.marketo_qualified_lead_datetime, sfdc_leads.marketo_qualified_lead_datetime)       AS mql_sfdc_datetime,
+      {{ get_date_id('mql_sfdc_date') }}                                                                        AS mql_sfdc_date_id,
+      {{ get_date_pt_id('mql_sfdc_date') }}                                                                     AS mql_sfdc_date_pt_id,
+      COALESCE(sfdc_contacts.mql_datetime_inferred, sfdc_leads.mql_datetime_inferred)::DATE                     AS mql_inferred_date,
+      COALESCE(sfdc_contacts.mql_datetime_inferred, sfdc_leads.mql_datetime_inferred)                           AS mql_inferred_datetime,
+      {{ get_date_id('mql_inferred_date') }}                                                                    AS mql_inferred_date_id,
+      {{ get_date_pt_id('mql_inferred_date') }}                                                                 AS mql_inferred_date_pt_id,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                             AS accepted_date,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)                                   AS accepted_datetime,
       CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime))
@@ -173,9 +224,12 @@ WITH account_dims_mapping AS (
       COALESCE(sfdc_contacts.qualified_datetime, sfdc_leads.qualified_datetime)::DATE                           AS qualified_date,
       {{ get_date_id('qualified_date') }}                                                                       AS qualified_date_id,
       {{ get_date_pt_id('qualified_date') }}                                                                    AS qualified_date_pt_id,
-      sfdc_leads.converted_date::DATE                                                                           AS converted_date,
-      {{ get_date_id('converted_date') }}                                                                       AS converted_date_id,
-      {{ get_date_pt_id('converted_date') }}                                                                    AS converted_date_pt_id,
+      sfdc_lead_converted.converted_date::DATE                                                                  AS converted_date,
+      {{ get_date_id('sfdc_lead_converted.converted_date') }}                                                   AS converted_date_id,
+      {{ get_date_pt_id('sfdc_lead_converted.converted_date') }}                                                AS converted_date_pt_id,
+      COALESCE(sfdc_contacts.worked_datetime, sfdc_leads.worked_datetime)::DATE                                 AS worked_date,
+      {{ get_date_id('worked_date') }}                                                                          AS worked_date_id,
+      {{ get_date_pt_id('worked_date') }}                                                                       AS worked_date_pt_id,
 
      -- flags
       CASE
@@ -183,7 +237,7 @@ WITH account_dims_mapping AS (
           ELSE 0
         END                                                                                                               AS is_mql,
       CASE
-        WHEN COALESCE(LOWER(sfdc_contacts.contact_status), LOWER(sfdc_leads.lead_status)) = 'inquiry' THEN 1
+        WHEN true_inquiry_date IS NOT NULL THEN 1
         ELSE 0
       END                                                                                                                 AS is_inquiry,
 
@@ -193,6 +247,20 @@ WITH account_dims_mapping AS (
       crm_person.sequence_task_due_date,
       crm_person.sequence_status,
       crm_person.last_activity_date,
+      crm_person.last_utm_content,
+      crm_person.last_utm_campaign,
+      crm_person.account_demographics_sales_segment,
+      crm_person.account_demographics_geo,
+      crm_person.account_demographics_region,
+      crm_person.account_demographics_area,
+      crm_person.account_demographics_territory,
+      crm_person.account_demographics_employee_count,
+      crm_person.account_demographics_max_family_employee,
+      crm_person.account_demographics_upa_country,
+      crm_person.account_demographics_upa_state,  
+      crm_person.account_demographics_upa_city,
+      crm_person.account_demographics_upa_street,
+      crm_person.account_demographics_upa_postal_code,
 
      -- additive fields
 
@@ -205,6 +273,8 @@ WITH account_dims_mapping AS (
       ON crm_person.sfdc_record_id = sfdc_leads.lead_id
     LEFT JOIN sfdc_contacts
       ON crm_person.sfdc_record_id = sfdc_contacts.contact_id
+    LEFT JOIN sfdc_lead_converted
+      ON crm_person.sfdc_record_id = sfdc_lead_converted.converted_contact_id
     LEFT JOIN mqls
       ON crm_person.dim_crm_person_id = mqls.crm_person_id
     LEFT JOIN account_dims_mapping
@@ -225,7 +295,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-01",
-    updated_date="2021-07-28"
+    updated_date="2022-01-07"
 ) }}

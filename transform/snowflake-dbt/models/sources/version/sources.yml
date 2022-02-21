@@ -13,8 +13,8 @@ sources:
       identifier: false
 
     freshness:
-      warn_after: {count: 15, period: day}
-      error_after: {count: 31, period: day}
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
 
     tables:
       - name: conversational_development_indices
@@ -61,8 +61,10 @@ sources:
           - name: updated_at
             tests:
               - not_null
-      - name: users  
       - name: version_checks
+        freshness:
+          warn_after: {count: 2, period: day}
+          error_after: {count: 4, period: day}
         columns:
           - name: id
             tests:
@@ -74,6 +76,9 @@ sources:
             tests:
               - not_null
       - name: versions
+        freshness:
+          warn_after: {count: 14, period: day}
+          error_after: {count: 21, period: day}
         columns:
           - name: id
             tests:

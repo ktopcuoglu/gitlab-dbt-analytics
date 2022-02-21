@@ -152,9 +152,9 @@ WITH filtered_source as (
       v_tracker,
       uploaded_at,
       'GitLab' AS infra_source
-    {% if target.name not in ("prod") -%}
+    {% if target.name not in ("prod") -%} 
 
-    FROM {{ ref('snowplow_gitlab_good_events_sample_source') }}
+    FROM {{ ref('snowplow_gitlab_good_events_sample_source') }} -- The sample is not always from the current month so given then WHERE conditions this may be a blank tabel
 
     {%- else %}
 
@@ -263,7 +263,9 @@ WITH filtered_source as (
       events_with_standard_context.extra AS gsc_extra,
       events_with_standard_context.namespace_id AS gsc_namespace_id,
       events_with_standard_context.plan AS gsc_plan,
+      events_with_standard_context.google_analytics_client_id AS gsc_google_analytics_client_id,
       events_with_standard_context.project_id AS gsc_project_id,
+      events_with_standard_context.pseudonymized_user_id AS gsc_pseudonymized_user_id,
       events_with_standard_context.source AS gsc_source,
       base.event_name,
       base.event_vendor,

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 WITH smau_only AS (
 
     SELECT DISTINCT stage_name

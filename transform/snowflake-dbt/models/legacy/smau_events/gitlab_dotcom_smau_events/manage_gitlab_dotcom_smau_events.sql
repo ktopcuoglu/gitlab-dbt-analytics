@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{ config({
     "unique_key": "event_surrogate_key"
     })

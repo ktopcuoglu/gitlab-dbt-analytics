@@ -1,5 +1,5 @@
 {{ config(
-    tags=["product"]
+    tags=["product", "mnpi_exception"]
 ) }}
 
 WITH unioned AS (

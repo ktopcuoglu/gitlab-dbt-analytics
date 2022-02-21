@@ -45,3 +45,32 @@ DELETE FROM db.schema.table WHERE SHA2(TRIM(LOWER("COLUMNAME"))) =  'your_sha_he
 | -------------------- |
 |                    0 |
 {% enddocs %}
+
+{% docs gdpr_delete_gitlab_dotcom %}
+This macro is intended to be run as a dbt run-operation and only applies on GitLab.com data sources. The command to do this at the command line is:
+
+`dbt run-operation gdpr_delete_gitlab_dotcom --args '{email_sha: your_sha_here, run_queries: True}'`
+
+The sha can be generated separately on the command line as well by doing the following:
+
+`echo -n email@redacted.com | shasum -a 256`
+
+The macro gathers all of the columns within the RAW database that match `email` anywhere in the name and delete the rows if they're not in the `snapshots` schema. If the columns are in the snapshot schema it will first update the columns that don't match `email` and also don't match `id`. It will then update all of the email columns to the sha256 value as well.
+
+The output from the run operation can be stored in a file by appending `>> file.txt` on the command line:
+
+`dbt run-operation gdpr_delete_gitlab_dotcom --args '{email_sha: your_sha_here}' >> file.txt`
+
+The output can also be split between standard out and a file by using the `tee` command. If you're running this command multiple times in a row, adding `--partial-parse` to the operation will help it run faster so everything won't have to compile each time. A complete example command:
+
+`dbt --partial-parse run-operation gdpr_delete_gitlab_dotcom --args '{email_sha: your_sha_here, run_queries: True}' | tee file.txt`
+
+Output will look like this:
+
+DELETE FROM db.schema.table WHERE SHA2(TRIM(LOWER("COLUMNAME"))) =  'your_sha_here';
+            
+| number of rows de... |
+| -------------------- |
+|                    0 |
+{% enddocs %}
+

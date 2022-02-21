@@ -1,0 +1,12 @@
+version: 2
+
+models:
+- name: wk_edcast_sheetload_gitlab_certification_tracking_dashboard
+  tags: ["people", "edcast"]
+  description: '{{ doc("wk_edcast_sheetload_gitlab_certification_tracking_dashboard") }}'
+- name: wk_edcast_glue_groups_g3_group_performance_data_explorer
+  tags: ["people", "edcast"]
+  description: '{{ doc("wk_edcast_glue_groups_g3_group_performance_data_explorer") }}'
+- name: wk_edcast_datasets
+  tags: ["people", "edcast"]
+  description: '{{ doc("wk_edcast_datasets") }}'

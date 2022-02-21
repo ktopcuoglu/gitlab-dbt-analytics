@@ -23,7 +23,8 @@ WITH date_details AS (
           THEN 1 
           ELSE 0 
       END                                                                   AS is_first_day_of_fiscal_quarter_week_flag,
-      DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter)              AS quarter_number 
+      DENSE_RANK() OVER (ORDER BY first_day_of_fiscal_quarter)              AS quarter_number,
+      365 - datediff(day,date_actual,last_day_of_fiscal_year)               AS day_of_fiscal_year_normalised 
 
     FROM {{ ref('date_details') }} 
     ORDER BY 1 DESC

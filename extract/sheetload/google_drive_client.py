@@ -1,12 +1,13 @@
-from typing import Dict, List
+from io import BytesIO
+from logging import info
+from os import environ as env
+from typing import Dict, List, Any
 
+import pandas as pd
+from apiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
-from os import environ as env
-from yaml import load, safe_load, YAMLError
-from io import BytesIO
-from apiclient.http import MediaIoBaseDownload
-import pandas as pd
+from yaml import safe_load
 
 
 class GoogleDriveClient:
@@ -21,7 +22,7 @@ class GoogleDriveClient:
             "drive", "v3", credentials=credentials, cache_discovery=False
         )
 
-    def get_data_frame_from_file_id(self, file_id) -> pd.DataFrame:
+    def get_data_frame_from_file_id(self, file_id: str) -> pd.DataFrame:
         """
         Google drive does not allow direct csv reading from the urls, so we need to
         download the file using their API method, create a df and then delete the local file
@@ -34,13 +35,14 @@ class GoogleDriveClient:
         done = False
         while not done:
             status, done = downloader.next_chunk()
-            print("Download %d%%." % int(status.progress() * 100))
 
         bytes_data = fh.getvalue()
         df = pd.read_csv(BytesIO(bytes_data))
         return df
 
-    def get_item_id(self, item_name, in_folder_id=None, is_folder=None) -> str:
+    def get_item_id(
+        self, item_name: str, in_folder_id: str = None, is_folder: bool = None
+    ) -> str:
         """
         Retrieves the unique identifier for a folder or file available in Google Drive.
         The folder / file must have been shared with whatever account is running this script
@@ -89,14 +91,14 @@ class GoogleDriveClient:
 
         return archive_folder_id
 
-    def create_folder(self, folder_name, in_folder_id) -> str:
+    def create_folder(self, folder_name: str, in_folder_id: str) -> str:
         """
 
         :param folder_name:
         :param in_folder_id:
         :return: folder_id of folder which was created.
         """
-        file_metadata = {
+        file_metadata: Dict[str, Any] = {
             "name": folder_name,
             "mimeType": "application/vnd.google-apps.folder",
         }
@@ -107,13 +109,13 @@ class GoogleDriveClient:
         created_folder = (
             self.service.files().create(body=file_metadata, fields="id").execute()
         )
-        print(f"Folder {folder_name} created successfully")
+        info(f"Folder {folder_name} created successfully")
 
         folder_id = created_folder.get("id")
 
         return folder_id
 
-    def get_files_in_folder(self, folder_id, file_type) -> List[Dict]:
+    def get_files_in_folder(self, folder_id: str, file_type: str) -> List[Dict]:
         """
             Retrieves a list of all files of a specific type available in a specific folder
 
@@ -130,25 +132,47 @@ class GoogleDriveClient:
         if file_type:
             query = f"{query} and mimeType='{file_type}'"
 
-        # Call the Drive v3 API
-        results = (
-            self.service.files()
-            .list(
-                # fields returned are specified below.
-                q=query,
-                pageSize=10,
-                fields="nextPageToken, files(id, name, mimeType)",
-            )
-            .execute()
-        )
-        items: List[Dict] = results.get("files", [])
+        page_token = None
+        all_results: List[Dict] = []
 
-        if not items:
-            return []
-        else:
-            return items
+        while True:
+            if page_token:
 
-    def move_file_to_folder(self, file_id, to_folder_id) -> bool:
+                results = (
+                    self.service.files()
+                    .list(
+                        pageToken=page_token,
+                        q=query,
+                        pageSize=10,
+                        fields="nextPageToken, files(id, name, mimeType)",
+                    )
+                    .execute()
+                )
+
+            else:
+
+                results = (
+                    self.service.files()
+                    .list(
+                        q=query,
+                        pageSize=10,
+                        fields="nextPageToken, files(id, name, mimeType)",
+                    )
+                    .execute()
+                )
+
+                items: List[Dict] = results.get("files", [])
+
+                if items:
+                    all_results = all_results[:] + items[:]
+
+            page_token = results.get("nextPageToken")
+            if not page_token:
+                break
+
+        return all_results
+
+    def move_file_to_folder(self, file_id: str, to_folder_id: str) -> bool:
         """
 
         :param self:
@@ -169,6 +193,6 @@ class GoogleDriveClient:
             fields="id, parents",
         ).execute()
 
-        print(f"{file_id} moved to {to_folder_id}")
+        info(f"{file_id} moved to {to_folder_id}")
 
         return True

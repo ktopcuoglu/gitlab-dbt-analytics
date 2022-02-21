@@ -31,9 +31,8 @@ WITH source AS (
       view_diffs_file_by_file::BOOLEAN    AS view_diffs_file_by_file
 
     FROM source
-    
+
 )
 
 SELECT  *
 FROM renamed
-ORDER BY updated_at

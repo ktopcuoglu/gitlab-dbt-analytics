@@ -1,3 +1,9 @@
+"""
+## Info about DAG
+This DAG is designed to perform adhoc full refresh of any required number of models.
+Before running this DAG set dbt model for full refresh in Airflow Variable named DBT_MODEL_TO_FULL_REFRESH. 
+The Warehouse to run the full refresh is set by default to XL size but incase of performance testing use DBT_WAREHOUSE_FOR_FULL_REFRESH variable to change the warehouse size.
+"""
 import os
 import logging
 from datetime import datetime
@@ -42,7 +48,6 @@ default_args = {
     "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
-    "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
@@ -52,20 +57,28 @@ dag = DAG(
     "dbt_full_refresh",
     default_args=default_args,
     schedule_interval=None,
-    description="Before running this DAG set dbt model for full refresh in Airflow Variable named DBT_MODEL_TO_FULL_REFRESH",
+    description="Adhoc DBT FULL Refresh",
 )
+dag.doc_md = __doc__
 
 # read model for full-refresh from Airflow Variable
 dbt_model_to_full_refresh = Variable.get(
     "DBT_MODEL_TO_FULL_REFRESH", default_var="test"
 )
 
-logging.info(f"Running full refresh for {dbt_model_to_full_refresh}")
+# Read the warehouse from the Airflow variable if passed else use XL warehouse for full refresh.
+dbt_warehouse_for_full_refresh = Variable.get(
+    "DBT_WAREHOUSE_FOR_FULL_REFRESH", default_var="TRANSFORMING_XL"
+)
+
+logging.info(
+    f"Running full refresh for {dbt_model_to_full_refresh} on warehouse {dbt_warehouse_for_full_refresh}"
+)
 
 # dbt-full-refresh
 dbt_full_refresh_cmd = f"""
     {dbt_install_deps_and_seed_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_4XL" &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE={dbt_warehouse_for_full_refresh} &&
     dbt run --profiles-dir profile --target prod --models {dbt_model_to_full_refresh} --full-refresh; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """

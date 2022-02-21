@@ -22,7 +22,7 @@ WITH prep_epic AS (
       epic_last_edited_at,
       created_at,
       updated_at,
-      -- epic_title, PII masked
+      epic_title,
       -- epic_description, PII masked
       closed_at,
       state_id,
@@ -33,7 +33,10 @@ WITH prep_epic AS (
       is_confidential,
       state_name,
       epic_title_length,
-      epic_description_length
+      epic_description_length,
+      epic_url,
+      labels,
+      upvote_count
     FROM {{ ref('prep_epic') }}
 
 )
@@ -41,7 +44,7 @@ WITH prep_epic AS (
 {{ dbt_audit(
     cte_ref="prep_epic",
     created_by="@mpeychet_",
-    updated_by="@ischweickartDD",
+    updated_by="@jpeguero",
     created_date="2021-06-22",
-    updated_date="2021-07-13"
+    updated_date="2021-10-24"
 ) }}

@@ -1,3 +1,7 @@
+{{ config(
+    tags=["mnpi_exception"]
+) }}
+
 {{
     config({
         "materialized": "incremental",
@@ -44,6 +48,7 @@ WITH usage_pings_with_license_md5 AS (
       usage_pings_with_license_md5.is_internal,
       usage_pings_with_license_md5.is_staging,
       usage_pings_with_license_md5.dim_location_country_id,
+      usage_pings_with_license_md5.license_user_count,
       map_license_subscription_account.dim_license_id,
       map_license_subscription_account.dim_subscription_id,
       map_license_subscription_account.is_license_mapped_to_subscription,
@@ -53,14 +58,14 @@ WITH usage_pings_with_license_md5 AS (
       IFF(map_license_subscription_account.dim_license_id IS NULL, FALSE, TRUE)   AS is_usage_ping_license_in_licenseDot
     FROM usage_pings_with_license_md5
     LEFT JOIN map_license_subscription_account
-      ON usage_pings_with_license_md5.license_md5 = map_license_subscription_account.license_md5
+      ON usage_pings_with_license_md5.license_md5 = REPLACE(map_license_subscription_account.license_md5, '-')
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@kathleentam",
-    updated_by="@michellecooper",
+    updated_by="@chrissharp",
     created_date="2021-01-10",
-    updated_date="2021-04-27"
+    updated_date="2021-09-30"
 ) }}
