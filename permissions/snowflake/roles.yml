@@ -2380,9 +2380,11 @@ roles:
         warehouses: []
 
     - cmeddaugh:
-        can_login: yes
         member_of:
-            - cmeddaugh
+            - reporter
+            - restricted_safe
+        warehouses:
+            - analyst_xs  
 
     - cmestel: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -4407,11 +4409,9 @@ users:
         member_of: []
 
     - cmeddaugh:
+        can_login: yes
         member_of:
-            - reporter
-            - restricted_safe
-        warehouses:
-            - analyst_xs       
+            - cmeddaugh     
 
     - cmestel: # De provisioned as part of Quarterly audit and security check.
         can_login: no
