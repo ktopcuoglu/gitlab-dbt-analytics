@@ -8,8 +8,19 @@ WITH sfdc_account_xf AS (
 ), sfdc_opportunity_xf AS ( 
 
     SELECT 
-        
-        opportunity.*,
+
+        LOWER(opportunity.user_segment_stamped)       AS report_opportunity_user_segment,
+        LOWER(opportunity.user_geo_stamped)           AS report_opportunity_user_geo,
+        LOWER(opportunity.user_region_stamped)        AS report_opportunity_user_region,
+        LOWER(opportunity.user_area_stamped)          AS report_opportunity_user_area,
+        LOWER(opportunity.order_type_stamped)         AS order_type_stamped,
+  
+        CASE
+          WHEN opportunity.sales_qualified_source = 'BDR Generated'
+              THEN 'SDR Generated'
+          ELSE COALESCE(opportunity.sales_qualified_source,'NA')
+        END                                                           AS sales_qualified_source,
+
         -- medium level grouping of the order type field
         CASE 
           WHEN opportunity.order_type_stamped = '1. New - First Order' 
@@ -38,28 +49,28 @@ WITH sfdc_account_xf AS (
   
     FROM {{ref('sfdc_opportunity_xf')}} opportunity
     INNER JOIN sfdc_account_xf account
-        ON   account.account_id = opportunity.account_id
+        ON account.account_id = opportunity.account_id
 
 
 ), eligible AS (
 
   SELECT         
-        LOWER(user_segment_stamped)       AS report_opportunity_user_segment,
-        LOWER(user_geo_stamped)           AS report_opportunity_user_geo,
-        LOWER(user_region_stamped)        AS report_opportunity_user_region,
-        LOWER(user_area_stamped)          AS report_opportunity_user_area,
+        report_opportunity_user_segment,
+        report_opportunity_user_geo,
+        report_opportunity_user_region,
+        report_opportunity_user_area,
         
-        LOWER(sales_qualified_source)     AS sales_qualified_source,
-        LOWER(order_type_stamped)         AS order_type_stamped,
+        sales_qualified_source,
+        order_type_stamped,
   
-        LOWER(deal_category)              AS deal_category,
-        LOWER(deal_group)                 AS deal_group,
+        deal_category,
+        deal_group,
   
-        LOWER(CONCAT(user_segment_stamped, '-',user_geo_stamped, '-',user_region_stamped, '-',user_area_stamped))                                                          AS report_user_segment_geo_region_area,
-        LOWER(CONCAT(user_segment_stamped, '-',user_geo_stamped, '-',user_region_stamped, '-',user_area_stamped, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot
+        LOWER(CONCAT(report_opportunity_user_segment, '-',report_opportunity_user_geo, '-',report_opportunity_user_region, '-',report_opportunity_user_area))                                                          AS report_user_segment_geo_region_area,
+        LOWER(CONCAT(report_opportunity_user_segment, '-',report_opportunity_user_geo, '-',report_opportunity_user_region, '-',report_opportunity_user_area, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot
   FROM sfdc_opportunity_xf
   
-  UNION
+  UNION ALL
   
   SELECT         
         LOWER(account_owner_user_segment)       AS report_opportunity_user_segment,
@@ -99,7 +110,7 @@ WITH sfdc_account_xf AS (
         -- Segment - Geo - Region - Area - Order Type Group 
         -- Segment - Geo - Region - Area - Sales Qualified Source
 
-        *,
+        eligible.*,
 
         report_opportunity_user_segment   AS key_segment,
         sales_qualified_source            AS key_sqs,
@@ -119,40 +130,54 @@ WITH sfdc_account_xf AS (
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group                 AS key_segment_geo_region_area_ot,
 
 
-        COALESCE(report_opportunity_user_segment ,'NA')                                    AS sales_team_cro_level,
+        COALESCE(report_opportunity_user_segment ,'other')                                    AS sales_team_cro_level,
      
         -- NF: This code replicates the reporting structured of FY22, to keep current tools working
         CASE 
-          WHEN report_opportunity_user_segment = 'Large'
-            AND report_opportunity_user_geo = 'EMEA'
-              THEN 'Large_EMEA'
-          WHEN report_opportunity_user_segment = 'Mid-Market'
-            AND report_opportunity_user_region = 'AMER'
+          WHEN report_opportunity_user_segment = 'large'
+            AND report_opportunity_user_geo = 'emea'
+              THEN 'large_emea'
+          WHEN report_opportunity_user_segment = 'mid-market'
+            AND report_opportunity_user_region = 'amer'
             AND lower(report_opportunity_user_area) LIKE '%west%'
-              THEN 'Mid-Market_West'
-          WHEN report_opportunity_user_segment = 'Mid-Market'
-            AND report_opportunity_user_region = 'AMER'
+              THEN 'mid-market_west'
+          WHEN report_opportunity_user_segment = 'mid-market'
+            AND report_opportunity_user_region = 'amer'
             AND lower(report_opportunity_user_area) NOT LIKE '%west%'
-              THEN 'Mid-Market_East'
-          WHEN report_opportunity_user_segment = 'SMB'
-            AND report_opportunity_user_region = 'AMER'
+              THEN 'mid-market_east'
+          WHEN report_opportunity_user_segment = 'smb'
+            AND report_opportunity_user_region = 'amer'
             AND lower(report_opportunity_user_area) LIKE '%west%'
-              THEN 'SMB_West'
-          WHEN report_opportunity_user_segment = 'SMB'
-            AND report_opportunity_user_region = 'AMER'
+              THEN 'smb_west'
+          WHEN report_opportunity_user_segment = 'smb'
+            AND report_opportunity_user_region = 'amer'
             AND lower(report_opportunity_user_area) NOT LIKE '%west%'
-              THEN 'SMB_East'
-          ELSE COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_region),'NA') 
+              THEN 'smb_east'
+          WHEN report_opportunity_user_segment = 'smb'
+            AND report_opportunity_user_region = 'latam'
+              THEN 'smb_east'
+          WHEN (report_opportunity_user_segment IS NULL
+                OR report_opportunity_user_region IS NULL)
+              THEN 'other'
+          WHEN CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_region) like '%other%'
+            THEN 'other'
+          ELSE CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_region)
         END                                                                           AS sales_team_rd_asm_level,
 
-        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo),'NA')                                                                      AS sales_team_vp_level,
-        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region),'NA')                                   AS sales_team_avp_rd_level,
-        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region,'_',report_opportunity_user_area),'NA')  AS sales_team_asm_level
+        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo),'other')                                                                      AS sales_team_vp_level,
+        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region),'other')                                   AS sales_team_avp_rd_level,
+        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region,'_',report_opportunity_user_area),'other')  AS sales_team_asm_level,
+
+        CASE 
+          WHEN LOWER(report_opportunity_user_segment) NOT IN ('jihu','other')
+            AND LOWER(deal_group) != '3. other'
+            AND LOWER(sales_qualified_source) NOT IN ('na','other')
+            THEN 1
+            ELSE 0 
+        END                              AS is_valid_key_flag
+
 
   FROM eligible
-  WHERE LOWER(report_opportunity_user_segment) NOT IN ('jihu','other')
-      AND LOWER(deal_group) != '3. other'
-      AND LOWER(sales_qualified_source) NOT IN ('na','other')
   
  )
  

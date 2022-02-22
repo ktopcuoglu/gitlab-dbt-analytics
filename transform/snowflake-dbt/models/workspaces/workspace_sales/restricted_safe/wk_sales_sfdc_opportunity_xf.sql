@@ -643,8 +643,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       END                                                       AS report_opportunity_user_segment,
 
       CASE 
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'PubSec' -- <- NF PubSec Geo is AMER, but for reporting it makes no sense to show that
-          THEN 'PubSec'
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_geo
         ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
@@ -1128,14 +1126,14 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         COALESCE(agg_demo_keys.key_segment_geo_region_area_sqs,'other') AS key_segment_geo_region_area_sqs,
         COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
 
-        COALESCE(agg_demo_keys.report_opportunity_user_segment ,'NA')   AS sales_team_cro_level,
+        COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')   AS sales_team_cro_level,
      
         -- NF: This code replicates the reporting structured of FY22, to keep current tools working
-        COALESCE(agg_demo_keys.sales_team_rd_asm_level,'NA')  AS sales_team_rd_asm_level,
+        COALESCE(agg_demo_keys.sales_team_rd_asm_level,'other')  AS sales_team_rd_asm_level,
 
-        COALESCE(agg_demo_keys.sales_team_vp_level,'NA')      AS sales_team_vp_level,
-        COALESCE(agg_demo_keys.sales_team_avp_rd_level,'NA')  AS sales_team_avp_rd_level,
-        COALESCE(agg_demo_keys.sales_team_asm_level,'NA')     AS sales_team_asm_level
+        COALESCE(agg_demo_keys.sales_team_vp_level,'other')      AS sales_team_vp_level,
+        COALESCE(agg_demo_keys.sales_team_avp_rd_level,'other')  AS sales_team_avp_rd_level,
+        COALESCE(agg_demo_keys.sales_team_asm_level,'other')     AS sales_team_asm_level
 
       
     FROM oppty_final

@@ -31,6 +31,10 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       report_user_segment_geo_region_area_sqs_ot,
       -------------------------
   
+      -------------------
+      -- NF 2022-02-20 I have the feeling all these fields could be removed from the model
+      -- They were originally added to support Fred's reporting needs but I don't think they are leveraged now
+      /*
       stage_name_3plus,
       stage_name_4plus,
       is_stage_1_plus,
@@ -43,7 +47,8 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       is_excluded_flag,
       stage_name,
       forecast_category_name,
-      
+      */
+
       SUM(open_1plus_net_arr)             AS open_1plus_net_arr,
       SUM(open_3plus_net_arr)             AS open_3plus_net_arr,
       SUM(open_4plus_net_arr)             AS open_4plus_net_arr,
@@ -60,7 +65,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       snapshot_date <= DATEADD(month,3,close_fiscal_quarter_date)
       -- 2 quarters before start
       AND snapshot_date >= DATEADD(month,-6,close_fiscal_quarter_date)
-    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12, 13, 14, 15, 16,17,18,19,20,21,22
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 --, 11,12, 13, 14, 15, 16,17,18,19,20,21,22
 
 ), final AS (
 
