@@ -41,7 +41,8 @@ def load_yaml_file(file_name: str) -> dict:
 
 def test_remove_incremental_tables() -> None:
     """
-    Check are tables from incremental load are removed properly
+    Check are tables from incremental removed properly
+    from the el_gitlab_com_db_manifest file.
     return: None
     """
     full_path = f"{abs_path}el_gitlab_com_db_manifest.yaml"
@@ -54,7 +55,8 @@ def test_remove_incremental_tables() -> None:
 def test_add_scd_tables() -> None:
     """
     Check are tables from incremental load are
-    added properly to SCD load
+    added properly to SCD load into file
+    el_gitlab_com_scd_db_manifest
     return: None
     """
     full_path = f"{abs_path}el_gitlab_com_scd_db_manifest.yaml"
