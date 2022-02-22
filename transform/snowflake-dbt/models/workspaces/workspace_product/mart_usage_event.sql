@@ -24,7 +24,7 @@
       stage_name,
       section_name,
       group_name,
-      source,
+      data_source,
       plan_id_at_event_date,
       plan_name_at_event_date,
       plan_was_paid_at_event_date,

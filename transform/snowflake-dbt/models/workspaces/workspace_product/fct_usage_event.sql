@@ -126,7 +126,7 @@
       plan_name_at_event_date                 AS plan_name_at_event_date,
       plan_was_paid_at_event_date             AS plan_was_paid_at_event_date,
       project_is_learn_gitlab                 AS project_is_learn_gitlab,
-      'GITLAB_DOTCOM'                         AS source
+      'GITLAB_DOTCOM'                         AS data_source
     FROM final
     LEFT JOIN dim_date
       ON TO_DATE(event_created_at) = dim_date.date_day

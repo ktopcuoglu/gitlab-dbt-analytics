@@ -13,7 +13,7 @@
         {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_instance_id']) }}       AS mart_usage_instance_id,
         event_date,
         event_name,
-        source,
+        data_source,
         dim_instance_id,
         COUNT(*) AS event_count,
         COUNT(DISTINCT(dim_user_id)) AS distinct_user_count

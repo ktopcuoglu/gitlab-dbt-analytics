@@ -10,7 +10,7 @@
 
 , usage_events AS (
     SELECT
-        {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_namespace_id','plan_was_paid_at_event_date']) }}       AS mart_usage_namespace_id,
+        {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_namespace_id']) }}       AS mart_usage_namespace_id,
         event_date,
         event_name,
         dim_product_tier_id,
@@ -20,7 +20,7 @@
         stage_name,
         section_name,
         group_name,
-        source,
+        data_source,
         plan_id_at_event_date,
         plan_name_at_event_date,
         plan_was_paid_at_event_date,
