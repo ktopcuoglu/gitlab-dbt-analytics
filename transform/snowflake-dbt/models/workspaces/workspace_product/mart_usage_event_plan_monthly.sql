@@ -6,7 +6,7 @@
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
     ('dim_date','dim_date'),
-    ('fct_event_usage_metrics', 'fct_event_usage_metrics'),
+    ('fct_usage_event', 'fct_usage_event'),
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ])
 }}
@@ -34,7 +34,7 @@
         QUARTER(event_date)                                                                             AS reporting_quarter,
         YEAR(event_date)                                                                                AS reporting_year
 
-    FROM fct_event_usage_metrics as fact
+    FROM fct_usage_event as fact
 
 ), fact_with_date_range AS (
 
