@@ -83,7 +83,7 @@ WITH source AS (
         mkto_si__last_interesting_moment_date__c    AS marketo_last_interesting_moment_date,
         last_utm_campaign__c                        AS last_utm_campaign,
         last_utm_content__c                         AS last_utm_content,
-        vartopiadrs__partner_prospect_acceptance__c as prospect_share_status,
+        vartopiadrs__partner_prospect_acceptance__c AS prospect_share_status,
         vartopiadrs__partner_prospect_status__c     AS partner_prospect_status,
         vartopiadrs__vartopia_prospect_id__c        AS partner_prospect_id,
         vartopiadrs__partner_prospect_owner_name__c AS partner_prospect_owner_name,
