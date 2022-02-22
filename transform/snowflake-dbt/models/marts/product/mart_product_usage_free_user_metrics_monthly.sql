@@ -10,7 +10,8 @@
 
 {{ simple_cte([
     ('free_user_metrics', 'fct_product_usage_free_user_metrics_monthly'),
-    ('crm_accounts', 'dim_crm_account')
+    ('crm_accounts', 'dim_crm_account'),
+    ('namespaces', 'dim_namespace')
 ]) }}
 
 , joined AS (
@@ -18,6 +19,7 @@
     SELECT
       free_user_metrics.reporting_month,
       free_user_metrics.dim_namespace_id,
+      namespaces.namespace_name,
       free_user_metrics.uuid,
       free_user_metrics.hostname,
       free_user_metrics.delivery_type,
@@ -120,6 +122,8 @@
     FROM free_user_metrics
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
+    LEFT JOIN namespaces 
+      ON namespaces.dim_namespace_id = free_user_metrics.dim_namespace_id
 
 )
 
