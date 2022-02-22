@@ -1000,6 +1000,14 @@ models:
         tests:
           - not_null
           - unique
+      - name: is_gmau
+        description: Flag to show whether metric is part of Group Monthly Active Users (GMAU) calculations.
+      - name: is_smau
+        description: Flag to show whether metric is part of Stage Monthly Active Users (SMAU) calculations.
+      - name: is_paid_gmau
+        description: Flag to show whether metric is part of paid Group Monthly Active Users (GMAU) calculations.
+      - name: is_umau
+        description: Flag to show whether metric is part of Unique Monthly Active Users (UMAU) calculations.        
 
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
