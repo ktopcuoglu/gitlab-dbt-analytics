@@ -95,6 +95,7 @@
           THEN 1 
         ELSE 0 
       END                                                                                     AS is_group_namespace,
+      namespace_lineage.is_setup_for_company                                                  AS is_setup_for_company,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
       marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE
@@ -287,7 +288,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@pempey",
+    updated_by="@jpeguero",
     created_date="2021-02-04",
-    updated_date="2021-11-10"
+    updated_date="2022-02-22"
 ) }}
