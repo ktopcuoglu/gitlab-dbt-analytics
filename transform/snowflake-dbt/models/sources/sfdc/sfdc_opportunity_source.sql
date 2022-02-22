@@ -44,8 +44,11 @@ WITH source AS (
         manager_current__c                          AS opportunity_owner_manager,
         sales_market__c                             AS opportunity_owner_department,
         SDR_LU__c                                   AS opportunity_sales_development_representative,
-        BDR_LU__c                                   AS opportunity_business_development_representative,
+        business_development_representative__c      AS opportunity_business_development_representative,
+        BDR_LU__c                                   AS opportunity_business_development_representative_lookup,
         BDR_SDR__c                                  AS opportunity_development_representative,
+
+
         account_owner_team_o__c                     AS account_owner_team_stamped,
 
         sales_accepted_date__c                      AS sales_accepted_date,
@@ -213,6 +216,8 @@ WITH source AS (
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
         dr_partner_deal_type__c                     AS dr_partner_deal_type,
         dr_partner_engagement__c                    AS dr_partner_engagement,
+        vartopiadrs__dr_deal_reg_id__c              AS dr_deal_id,
+        vartopiadrs__primary_registration__c        AS dr_primary_registration,
         {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                     AS channel_type,
         impartnerprm__partneraccount__c             AS partner_account,
