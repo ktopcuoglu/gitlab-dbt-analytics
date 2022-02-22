@@ -4261,7 +4261,6 @@ roles:
             - customers_db
             - analyst_marketing
             - data_team_analyst
-            - restricted_safe
         warehouses:
             - analyst_xs
 
