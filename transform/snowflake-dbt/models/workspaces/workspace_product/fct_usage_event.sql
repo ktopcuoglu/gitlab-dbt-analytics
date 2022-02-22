@@ -32,8 +32,6 @@
       parent_id                                                       AS parent_id,
       IFF(usage_data_events.parent_type = 'project', parent_id, NULL) AS project_id,
       event_created_at                                                AS event_created_at,
-      plan_id_at_event_date                                           AS plan_id_at_event_date,
-      plan_name_at_event_date                                         AS plan_name_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
             THEN xmau_metrics.stage_name
@@ -53,8 +51,10 @@
 
     SELECT
         namespace_id,
-        CAST(event_created_at AS DATE)  AS event_date,
-        plan_was_paid_at_event_date,
+        CAST(event_created_at AS DATE)                                  AS event_date,
+        plan_was_paid_at_event_date                                     AS plan_was_paid_at_event_date,
+        plan_id_at_event_date                                           AS plan_id_at_event_date,
+        plan_name_at_event_date                                         AS plan_name_at_event_date,
         event_created_at
     FROM usage_data_events
         QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_id, event_date
@@ -64,7 +64,9 @@
 
   SELECT
     fct_events.*,
-    paid_flag_by_day.plan_was_paid_at_event_date    AS plan_was_paid_at_event_date
+    paid_flag_by_day.plan_was_paid_at_event_date                     AS plan_was_paid_at_event_date,
+    paid_flag_by_day.plan_id_at_event_date                           AS plan_id_at_event_date,
+    paid_flag_by_day.plan_name_at_event_date                         AS plan_name_at_event_date
   FROM fct_events
     LEFT JOIN paid_flag_by_day
   ON fct_events.namespace_id = paid_flag_by_day.namespace_id and CAST(fct_events.event_created_at AS DATE) = paid_flag_by_day.event_date
