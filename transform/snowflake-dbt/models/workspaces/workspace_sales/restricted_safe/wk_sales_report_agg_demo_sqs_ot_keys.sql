@@ -55,22 +55,22 @@ WITH sfdc_account_xf AS (
 ), eligible AS (
 
   SELECT         
-        report_opportunity_user_segment,
-        report_opportunity_user_geo,
-        report_opportunity_user_region,
-        report_opportunity_user_area,
+        LOWER(report_opportunity_user_segment)       AS report_opportunity_user_segment,
+        LOWER(report_opportunity_user_geo)           AS report_opportunity_user_geo,
+        LOWER(report_opportunity_user_region)        AS report_opportunity_user_region,
+        LOWER(report_opportunity_user_area)          AS report_opportunity_user_area,
         
-        sales_qualified_source,
-        order_type_stamped,
+        LOWER(sales_qualified_source)           AS sales_qualified_source,
+        LOWER(order_type_stamped)               AS order_type_stamped,
   
-        deal_category,
-        deal_group,
-  
+        LOWER(deal_category)                    AS deal_category,
+        LOWER(deal_group)                       AS deal_group,
+
         LOWER(CONCAT(report_opportunity_user_segment, '-',report_opportunity_user_geo, '-',report_opportunity_user_region, '-',report_opportunity_user_area))                                                          AS report_user_segment_geo_region_area,
         LOWER(CONCAT(report_opportunity_user_segment, '-',report_opportunity_user_geo, '-',report_opportunity_user_region, '-',report_opportunity_user_area, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot
   FROM sfdc_opportunity_xf
   
-  UNION ALL
+  UNION 
   
   SELECT         
         LOWER(account_owner_user_segment)       AS report_opportunity_user_segment,
@@ -166,16 +166,7 @@ WITH sfdc_account_xf AS (
 
         COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo),'other')                                                                      AS sales_team_vp_level,
         COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region),'other')                                   AS sales_team_avp_rd_level,
-        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region,'_',report_opportunity_user_area),'other')  AS sales_team_asm_level,
-
-        CASE 
-          WHEN LOWER(report_opportunity_user_segment) NOT IN ('jihu','other')
-            AND LOWER(deal_group) != '3. other'
-            AND LOWER(sales_qualified_source) NOT IN ('na','other')
-            THEN 1
-            ELSE 0 
-        END                              AS is_valid_key_flag
-
+        COALESCE(CONCAT(report_opportunity_user_segment,'_',report_opportunity_user_geo,'_',report_opportunity_user_region,'_',report_opportunity_user_area),'other')  AS sales_team_asm_level
 
   FROM eligible
   
