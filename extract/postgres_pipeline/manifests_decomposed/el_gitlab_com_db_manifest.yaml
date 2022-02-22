@@ -229,7 +229,7 @@ tables:
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
-      SELECT id 
+      SELECT id
       , hide_backlog_list
       , hide_closed_list
       , group_id
@@ -237,28 +237,6 @@ tables:
       , updated_at
       , name
       FROM boards_epic_boards
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  bulk_import_entities:
-    export_schema: 'gitlab_com'
-    export_table: bulk_import_entities
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , bulk_import_id
-      , parent_id
-      , namespace_id
-      , project_id
-      , source_type
-      , source_full_path
-      , destination_name
-      , destination_namespace
-      , status
-      , jid
-      , created_at
-      , updated_at
-      FROM bulk_import_entities
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   bulk_imports:
@@ -452,22 +430,6 @@ tables:
       , created_at
       , updated_at
       FROM clusters_integration_elasticstack
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_integration_prometheus:
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_integration_prometheus'
-    export_table_primary_key: cluster_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT cluster_id
-      , enabled
-      , encrypted_alert_manager_token
-      , encrypted_alert_manager_token_iv
-      , health_status
-      , created_at
-      , updated_at
-      FROM clusters_integration_prometheus
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   container_expiration_policies:
@@ -683,22 +645,6 @@ tables:
       FROM grafana_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  group_import_states:
-    export_schema: "gitlab_com"
-    export_table: group_import_states
-    export_table_primary_key: group_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT group_id
-      , created_at
-      , updated_at
-      , status
-      , jid
-      , last_error
-      , user_id
-      FROM group_import_states
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   identities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -768,7 +714,7 @@ tables:
       , instance
       FROM integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp         
+        AND '{END_TIMESTAMP}'::timestamp
   issue_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -852,7 +798,7 @@ tables:
       , updated_at
       FROM issues_self_managed_prometheus_alert_events
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp       
+        AND '{END_TIMESTAMP}'::timestamp
   jira_imports:
     export_schema: "gitlab_com"
     export_table: jira_imports
@@ -950,20 +896,6 @@ tables:
       , filter
       FROM ldap_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  lfs_file_locks:
-    export_schema: "gitlab_com"
-    export_table: lfs_file_locks
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , user_id
-      , created_at
-      , path
-      FROM lfs_file_locks
-      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   lfs_objects:
     export_schema: "gitlab_com"
@@ -1413,21 +1345,6 @@ tables:
       , created_at
       , updated_at
       FROM packages_tags
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  path_locks:
-    export_schema: "gitlab_com"
-    export_table: path_locks
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , path
-      , project_id
-      , user_id
-      , created_at
-      , updated_at
-      FROM path_locks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   project_auto_devops:

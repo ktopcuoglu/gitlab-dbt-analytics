@@ -78,6 +78,26 @@ tables:
       , board_id
       , assignee_id
       FROM board_assignees
+  bulk_import_entities:
+    export_schema: 'gitlab_com'
+    export_table: bulk_import_entities
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , bulk_import_id
+      , parent_id
+      , namespace_id
+      , project_id
+      , source_type
+      , source_full_path
+      , destination_name
+      , destination_namespace
+      , status
+      , jid
+      , created_at
+      , updated_at
+      FROM bulk_import_entities
   board_labels:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -129,6 +149,20 @@ tables:
       , table_schema
       FROM information_schema.columns
     import_schema: information_schema
+  clusters_integration_prometheus:
+    export_schema: 'gitlab_com'
+    export_table: 'clusters_integration_prometheus'
+    export_table_primary_key: cluster_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT cluster_id
+      , enabled
+      , encrypted_alert_manager_token
+      , encrypted_alert_manager_token_iv
+      , health_status
+      , created_at
+      , updated_at
+      FROM clusters_integration_prometheus
   deployment_merge_requests:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -278,6 +312,20 @@ tables:
       , expires_at
       , group_access
       FROM group_group_links
+  group_import_states:
+    export_schema: "gitlab_com"
+    export_table: group_import_states
+    export_table_primary_key: group_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT group_id
+      , created_at
+      , updated_at
+      , status
+      , jid
+      , last_error
+      , user_id
+      FROM group_import_states
   issuable_severities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -343,6 +391,18 @@ tables:
       , created_at
       , updated_at
       FROM label_links
+  lfs_file_locks:
+    export_schema: "gitlab_com"
+    export_table: lfs_file_locks
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , user_id
+      , created_at
+      , path
+      FROM lfs_file_locks
   members:
     advanced_metadata: true
     dbt_snapshots: true
@@ -442,6 +502,19 @@ tables:
       , CAST(certificate_valid_not_after AS VARCHAR) AS certificate_valid_not_after
       , certificate_source
       FROM pages_domains
+  path_locks:
+    export_schema: "gitlab_com"
+    export_table: path_locks
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , path
+      , project_id
+      , user_id
+      , created_at
+      , updated_at
+      FROM path_locks
   plans:
     dbt_source_model: true
     export_schema: 'gitlab_com'
