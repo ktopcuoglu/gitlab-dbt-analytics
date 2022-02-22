@@ -30,3 +30,16 @@ exposures:
     owner:
       name: Sushma Nalamaru
       email: gitlab_id@snalamaru
+
+  - name: pump_disaster_relief_fund
+    type: application
+    maturity: low
+    description: >
+      Send to third party changes to valid employees
+    
+    depends_on:
+      - ref('employee_directory')
+      
+    owner:
+      name: Adrian Perez
+      email: gitlab_id@aperez
