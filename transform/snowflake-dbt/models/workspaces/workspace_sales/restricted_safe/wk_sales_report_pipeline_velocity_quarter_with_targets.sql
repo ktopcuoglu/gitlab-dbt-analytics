@@ -8,7 +8,6 @@ WITH report_pipeline_velocity_quarter AS (
   
   SELECT *
   FROM {{ref('wk_sales_report_pipeline_velocity_quarter')}}  
-  WHERE LOWER(deal_group) LIKE ANY ('%growth%','%new%')
 
 ), date_details AS (
 
@@ -37,7 +36,6 @@ WITH report_pipeline_velocity_quarter AS (
   WHERE is_excluded_flag = 0
     AND is_edu_oss = 0
     AND is_deleted = 0
-    AND LOWER(deal_group) LIKE ANY ('%growth%','%new%')
 
 ), report_targets_totals_per_quarter AS (
   
@@ -49,8 +47,6 @@ WITH report_pipeline_velocity_quarter AS (
   SELECT *
   FROM report_pipeline_velocity_quarter
   CROSS JOIN today_date
-  WHERE is_excluded_flag = 0
-    AND LOWER(deal_group) LIKE ANY ('%growth%','%new%')
    
 ), consolidated_targets_totals AS (
   
@@ -81,10 +77,10 @@ WITH report_pipeline_velocity_quarter AS (
       pv.report_user_segment_geo_region_area_sqs_ot,
       -------------------------
 
-      SUM(pv.open_1plus_net_arr)                AS open_stage_1_net_arr,
-      SUM(pv.open_3plus_net_arr)                AS open_stage_3_net_arr,
-      SUM(pv.open_4plus_net_arr)                AS open_stage_4_net_arr,
-      SUM(pv.booked_net_arr)                    AS won_net_arr,
+      SUM(pv.open_1plus_net_arr)                AS open_1plus_net_arr,
+      SUM(pv.open_3plus_net_arr)                AS open_3plus_net_arr,
+      SUM(pv.open_4plus_net_arr)                AS open_4plus_net_arr,
+      SUM(pv.booked_net_arr)                    AS booked_net_arr,
       SUM(pv.churned_contraction_net_arr)       AS churned_contraction_net_arr
   
   FROM report_pipeline_velocity pv
@@ -104,10 +100,10 @@ WITH report_pipeline_velocity_quarter AS (
       o.report_user_segment_geo_region_area_sqs_ot,
       -------------------------     
 
-      SUM(o.open_1plus_net_arr)              AS open_stage_1_net_arr,
-      SUM(o.open_3plus_net_arr)              AS open_stage_3_net_arr,
-      SUM(o.open_4plus_net_arr)              AS open_stage_4_net_arr,
-      SUM(o.booked_net_arr)                  AS won_net_arr,
+      SUM(o.open_1plus_net_arr)              AS open_1plus_net_arr,
+      SUM(o.open_3plus_net_arr)              AS open_3plus_net_arr,
+      SUM(o.open_4plus_net_arr)              AS open_4plus_net_arr,
+      SUM(o.booked_net_arr)                  AS booked_net_arr,
       SUM(o.churned_contraction_net_arr)     AS churned_contraction_net_arr
   
   FROM sfdc_opportunity_xf o
@@ -136,7 +132,7 @@ WITH report_pipeline_velocity_quarter AS (
 
 ), pipeline_velocity_with_targets_per_day AS (
   
-  SELECT
+  SELECT DISTINCT
   
     base.close_fiscal_quarter_name,
     base.close_fiscal_quarter_date,
@@ -154,10 +150,10 @@ WITH report_pipeline_velocity_quarter AS (
     target.target_net_arr,
     target.adjusted_target_net_arr,
   
-    ps.open_stage_1_net_arr,
-    ps.open_stage_3_net_arr,
-    ps.open_stage_4_net_arr,
-    ps.won_net_arr,
+    ps.open_1plus_net_arr,
+    ps.open_3plus_net_arr,
+    ps.open_4plus_net_arr,
+    ps.booked_net_arr,
     ps.churned_contraction_net_arr
     
   FROM base_keys base

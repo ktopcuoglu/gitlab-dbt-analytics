@@ -5,6 +5,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     FROM {{ref('wk_sales_sfdc_opportunity_snapshot_history_xf')}}  
     WHERE is_deleted = 0
       AND is_edu_oss = 0
+      AND is_excluded_flag = 0
 
 ), agg_demo_keys AS (
 -- keys used for aggregated historical analysis

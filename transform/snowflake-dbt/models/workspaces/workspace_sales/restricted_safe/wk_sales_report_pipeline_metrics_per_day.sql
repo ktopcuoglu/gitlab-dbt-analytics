@@ -411,6 +411,11 @@ WITH date_details AS (
      report_user_segment_geo_region_area_sqs_ot,
      close_fiscal_quarter_date
   FROM pipeline_gen
+  UNION
+   SELECT
+     report_user_segment_geo_region_area_sqs_ot,
+     close_fiscal_quarter_date
+  FROM sao_gen
 
 ), base_fields AS (
   
