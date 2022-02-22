@@ -49,6 +49,8 @@ sheets:
     tabs:
       - ptc_scores_20211221
       - ptc_scores_202202
+      - ptc_scores_20211221_updated
+      - ptc_scores_20211209
   - name: pte_scores
     owner: '@kdietz'
     tabs:
@@ -71,7 +73,3 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - us_cities_latitude_longitude
-  - name: ptc_scores
-    owner: '@kmagda1'
-    tabs:
-      - ptc_scores
