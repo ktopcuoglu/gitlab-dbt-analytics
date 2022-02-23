@@ -284,8 +284,6 @@ models:
           tests:
               - not_null
         - name: zuora_subscription_id
-          tests:
-              - not_null
         - name: salesforce_account_id
           description: 'Used only for joining to SFDC in Looker'
           tests:
@@ -303,17 +301,9 @@ models:
           tests:
               - not_null
         - name: zuora_subscription_cohort_month
-          tests:
-              - not_null
         - name: zuora_subscription_cohort_quarter
-          tests:
-              - not_null
         - name: months_since_zuora_subscription_cohort_start
-          tests:
-              - not_null
         - name: quarters_since_zuora_subscription_cohort_start
-          tests:
-              - not_null
         - name: churn_type
           tests:
               - not_null
