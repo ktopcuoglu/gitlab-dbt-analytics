@@ -1247,7 +1247,7 @@ roles:
                   read:
                       - prod.workspace_data_science.*
                       - prod.restricted_safe_common_mart_sales.*
-                      - prod.restricted_safe_workspace_sales
+                      - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_product.*
                       - prod.common_mart_marketing.*
 
