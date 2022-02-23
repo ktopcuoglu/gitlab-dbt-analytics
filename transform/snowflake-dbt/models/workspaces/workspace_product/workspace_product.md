@@ -22,6 +22,8 @@ or three days of each month.
 
 Gives the total event counts, as well as the number of unique namespaces and uniques users for that plan/month/metric
 
+{% enddocs %}
+
 {% docs mart_usage_namespace_daily %}
 
 GitLab.com Namespace-Level mart - Sourced from fct_event_usage_metrics
