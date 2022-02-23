@@ -22,3 +22,10 @@ The grain of this table is namespace || uuid-hostname per month.
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}
+
+
+
+{% docs pump_disaster_relief_fund %}
+This table pulls data from the employee directory and populated a list of employee hires and terminations to be used by an external partner to validate request for disaster relief funds.
+
+{% enddocs %}

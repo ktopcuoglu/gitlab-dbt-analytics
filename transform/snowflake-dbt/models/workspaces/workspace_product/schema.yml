@@ -54,8 +54,8 @@ models:
           - not_null
           - unique
 
-  - name: fct_event_usage_metrics
-    description: ' {{ doc("fct_event_usage_metrics") }} '
+  - name: fct_usage_event
+    description: ' {{ doc("fct_usage_event") }} '
     columns:
       - name: event_id
         tests:
@@ -65,7 +65,31 @@ models:
   - name: mart_usage_event
     description: ' {{ doc("mart_usage_event") }} '
     columns:
-      - name: usage_id
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_usage_namespace_daily
+    description: ' {{ doc("mart_usage_namespace_daily") }} '
+    columns:
+      - name: mart_usage_namespace_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_usage_instance_daily
+    description: ' {{ doc("mart_usage_instance_daily") }} '
+    columns:
+      - name: mart_usage_instance_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_usage_event_daily
+    description: ' {{ doc("mart_usage_event_daily") }} '
+    columns:
+      - name: mart_usage_event_daily_id
         tests:
           - not_null
           - unique
