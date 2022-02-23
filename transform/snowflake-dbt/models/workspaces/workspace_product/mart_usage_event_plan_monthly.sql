@@ -6,7 +6,7 @@
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
     ('dim_date','dim_date'),
-    ('fct_usage_event', 'fct_event_usage_metrics'),
+    ('fct_usage_event', 'fct_usage_event'),
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ])
 }}
