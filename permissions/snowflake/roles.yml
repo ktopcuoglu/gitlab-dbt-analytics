@@ -2746,6 +2746,7 @@ roles:
             - data_team_analyst
             - analyst_core
             - restricted_safe
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
 
@@ -3196,6 +3197,7 @@ roles:
         member_of:
             - engineer
             - restricted_safe
+            - bi_tool_eval_db
         warehouses:
             - engineer_xs
             - engineer_xl
