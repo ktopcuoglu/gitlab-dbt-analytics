@@ -185,7 +185,7 @@
       usage_ping.secret_detection_pipeline_usage_28_days_event,
       usage_ping.dast_pipeline_usage_28_days_event,
       usage_ping.coverage_fuzzing_jobs_28_days_user,
-      usage_ping.events_all_time_event,
+      usage_ping.environments_all_time_event,
       usage_ping.feature_flags_all_time_event,
       usage_ping.successful_deployments_28_days_event,
       usage_ping.failed_deployments_28_days_event,
