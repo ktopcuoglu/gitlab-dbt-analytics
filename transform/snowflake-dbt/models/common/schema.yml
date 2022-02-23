@@ -2496,8 +2496,9 @@ models:
     description: '{{ doc("fct_event_400") }}'
     columns:
       - name: dim_event_id
-        test:
-          -unique
+        tests:
+          - not_null
+          - unique
 
   - name: fct_event_800
     description: '{{ doc("fct_event_800") }}'
