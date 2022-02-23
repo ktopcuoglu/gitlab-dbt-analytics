@@ -2524,14 +2524,15 @@ models:
   - name: fct_event_400
     description: '{{ doc("fct_event_400") }}'
     columns:
-      - name: dim_event_id
-        test:
-          -unique
+      - name: event_id
+        tests:
+          - not_null
+          - unique
 
   - name: fct_event_800
     description: '{{ doc("fct_event_800") }}'
     columns:
-      - name: dim_event_id
+      - name: event_id
   - name: fct_monthly_subscription_service_ping_opt_in
     description: '{{ doc("fct_monthly_subscription_service_ping_opt_in") }}'
     columns:

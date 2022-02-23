@@ -155,6 +155,14 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_id"
   },
+  {
+    "event_name": "action_monthly_active_users_project_repo",
+    "source_cte_name": "monthly_active_users_project_repo",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id"
+  },
 ]
 
 -%}
@@ -172,7 +180,9 @@
     ('prep_requirement', 'prep_requirement'),
     ('dim_project', 'dim_project'),
     ('prep_namespace', 'prep_namespace'),
-    ('prep_user', 'prep_user')
+    ('prep_user', 'prep_user'),
+    ('prep_plan', 'prep_gitlab_dotcom_plan'),
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist')
 ]) }}
 
 , dast_jobs AS (
@@ -251,6 +261,13 @@
     FROM prep_ci_pipeline
     WHERE failure_reason IS NULL
 
+), monthly_active_users_project_repo AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE target_type IS NULL
+      AND event_action_type = 'pushed'
+
 ), data AS (
 
 {% for event_cte in event_ctes %}
@@ -262,7 +279,9 @@
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
-      {{ event_cte.source_cte_name}}.dim_plan_id,
+      {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
+      prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
+      IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
       {{ event_cte.source_cte_name}}.created_date_id,
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
@@ -305,6 +324,8 @@
     LEFT JOIN prep_user 
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
     {% endif %}
+    LEFT JOIN prep_plan
+      ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
     {% if not loop.last %}
