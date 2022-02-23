@@ -159,7 +159,7 @@
       "usage_activity_by_stage_monthly.secure.container_scanning_pipeline"                      AS container_scanning_pipeline_usage_28_days_event,
       "usage_activity_by_stage_monthly.secure.dependency_scanning_pipeline"                     AS dependency_scanning_pipeline_usage_28_days_event,
       "usage_activity_by_stage_monthly.secure.sast_pipeline"                                    AS sast_pipeline_usage_28_days_event,
-      "usage_activity_by_stage_monthly.secure.secret_detection_pipeline"                        AS secret_detection_pipeline_usage_28_days_event
+      "usage_activity_by_stage_monthly.secure.secret_detection_pipeline"                        AS secret_detection_pipeline_usage_28_days_event,
       "usage_activity_by_stage_monthly.secure.dast_pipeline"                                    AS dast_pipeline_usage_28_days_event,
       "usage_activity_by_stage_monthly.secure.user_coverage_fuzzing_jobs"                       AS coverage_fuzzing_jobs_28_days_user,
       "counts.environments"                                                                     AS environments_all_time_event,
