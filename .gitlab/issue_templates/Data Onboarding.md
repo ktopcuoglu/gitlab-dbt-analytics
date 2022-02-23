@@ -375,6 +375,8 @@ There are many data sets brought into the Enterprise Data Warehouse, the followi
 
 - [ ] Review the [Product Data Training](https://docs.google.com/presentation/d/1ySP9sndhF9BdRhaZhMK6kGbc8txO_UkAu48HmoxLtfI/edit#slide=id.g29a70c6c35_0_68) deck and make sure to click through the links
 - [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+- [ ] Review the [Data Guide for Growth](https://about.gitlab.com/handbook/product/product-analysis/growth-data-guide/) for an overview of commonly used query snippets used by the Growth sub-group.
+- [ ] Explore the [Product Analysis handbook page](https://about.gitlab.com/handbook/product/product-analysis/) for a high level overview of how the Product Analysis team works. This page contains a number of links that should help with starting to understand how the Data team approaches Product specific data questions.
 
 #### Service Ping Deep Dive
 
