@@ -289,6 +289,11 @@ WITH first_contact  AS (
       sales_accepted_date.fiscal_quarter_name_fy                                                  AS sales_accepted_fiscal_quarter_name,
       sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
 
+      start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
+      start_date.first_day_of_fiscal_quarter                                        subscription_start_date_fiscal_quarter_date,
+      start_date.fiscal_year                                                                      AS subscription_start_date_fiscal_year,
+      start_date.first_day_of_month                                                               AS subscription_start_date_month,
+
       CASE
         WHEN sfdc_opportunity.stage_name
           IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
@@ -321,6 +326,11 @@ WITH first_contact  AS (
           THEN 1
         ELSE 0
       END                                                                                         AS is_renewal,
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
+          THEN 1
+        ELSE 0
+      END                                                                                         AS is_decommissed,
       CASE 
         WHEN is_won = 1  
           THEN '1.Won'
@@ -342,7 +352,7 @@ WITH first_contact  AS (
       CASE 
         WHEN sfdc_opportunity.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
           AND sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND pipeline_created_fiscal_quarter_date IS NOT NULL
           AND sfdc_opportunity.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
           AND (is_stage_1_plus = 1
             OR is_lost = 1)
@@ -402,18 +412,6 @@ WITH first_contact  AS (
           ELSE 0
       END                                                                                         AS is_eligible_churn_contraction,
       CASE 
-        WHEN sfdc_opportunity.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
-          AND sfdc_opportunity.close_date < '2020-08-01' 
-            THEN 1
-        WHEN sfdc_opportunity.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
-          AND sfdc_opportunity.snapshot_date < '2021-05-01' 
-          THEN 1
-        -- WHEN sfdc_opportunity.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
-        --         AND vision_opps.opportunity_id IS NOT NULL
-          -- THEN 1
-        ELSE 0
-      END                                                                                         AS is_excluded,
-      CASE 
         WHEN sfdc_opportunity.stage_name IN ('10-Duplicate')
             THEN 1
         ELSE 0
@@ -455,10 +453,10 @@ WITH first_contact  AS (
      END                                                                                        AS churn_contraction_type_calc,
      CASE 
         WHEN is_renewal = 1 
-          AND sfdc_opportunity.subscription_start_date_fiscal_quarter_date >= sfdc_opportunity.close_fiscal_quarter_date 
+          AND subscription_start_date_fiscal_quarter_date >= close_fiscal_quarter_date 
          THEN 'On-Time'
         WHEN is_renewal = 1 
-          AND sfdc_opportunity.subscription_start_date_fiscal_quarter_date < sfdc_opportunity.close_fiscal_quarter_date 
+          AND subscription_start_date_fiscal_quarter_date < close_fiscal_quarter_date 
             THEN 'Late' 
       END                                                                                       AS renewal_timing_status,
       CASE 
@@ -474,9 +472,9 @@ WITH first_contact  AS (
           THEN '5. 100k+'
       END                                                                                       AS churned_contraction_net_arr_bucket,
        CASE 
-        WHEN sfdc_opportunity.is_refund = 1
+        WHEN is_decommissed = 1
           THEN -1
-        WHEN sfdc_opportunity.is_credit = 1
+        WHEN is_credit = 1
           THEN 0
         ELSE 1
       END                                                                                       AS calculated_deal_count
@@ -502,6 +500,8 @@ WITH first_contact  AS (
       ON net_arr_created_date.date_actual = sfdc_opportunity.iacv_created_date::DATE
     LEFT JOIN date_details AS sales_accepted_date
       ON sales_accepted_date.date_actual = sfdc_opportunity.sales_accepted_date::DATE
+    LEFT JOIN date_details AS start_date
+      ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
     {%- if model_type == 'base' %}
     {%- elif model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
