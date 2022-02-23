@@ -7,7 +7,7 @@ with raw_mrr_totals_levelled AS (
       SELECT subscription_name, 
               subscription_name_slugify,
               dim_crm_account_id                                        AS sfdc_account_id,
-              dim_subscription_id                                       AS oldest_subscription_in_cohort,
+              oldest_subscription_in_cohort                             AS oldest_subscription_in_cohort,
               subscription_lineage                                      AS lineage,
               arr_month                                                 AS mrr_month,
               subscription_cohort_month                                 AS zuora_subscription_cohort_month,
