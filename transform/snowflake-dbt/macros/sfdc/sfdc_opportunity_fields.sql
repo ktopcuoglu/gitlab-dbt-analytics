@@ -15,6 +15,11 @@ WITH first_contact  AS (
     FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
 
+), date_details AS (
+
+    SELECT * 
+    FROM {{ ref('date_details') }}
+
 ), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
     --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
     SELECT
@@ -249,10 +254,232 @@ WITH first_contact  AS (
       -- attribution information
       linear_attribution_base.count_crm_attribution_touchpoints,
       campaigns_per_opp.count_campaigns,
-      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv
+      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv,
 
       -- Noel's fields
+      close_date_detail.first_day_of_month                                                        AS close_date_month,
+      close_date_detail.fiscal_year                                                               AS close_fiscal_year,
+      close_date_detail.fiscal_quarter_name_fy                                                    AS close_fiscal_quarter_name,
+      close_date_detail.first_day_of_fiscal_quarter                                               AS close_fiscal_quarter_date,
 
+      created_date_detail.first_day_of_month                                                      AS created_date_month,
+      created_date_detail.fiscal_year                                                             AS created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                                                  AS created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter                                             AS created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                                                     AS iacv_created_date_month,
+      net_arr_created_date.fiscal_year                                                            AS iacv_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
+
+      created_date_detail.date_actual                                                             AS net_arr_created_date,
+      created_date_detail.first_day_of_month                                                      AS net_arr_created_date_month,
+      created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
+
+      net_arr_created_date.date_actual                                                            AS pipeline_created_date,
+      net_arr_created_date.first_day_of_month                                                     AS pipeline_created_date_month,
+      net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                                                 AS pipeline_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter                                            AS pipeline_created_fiscal_quarter_date,
+
+      sales_accepted_date.first_day_of_month                                                      AS sales_accepted_month,
+      sales_accepted_date.fiscal_year                                                             AS sales_accepted_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                                                  AS sales_accepted_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
+
+      CASE
+        WHEN sfdc_opportunity.stage_name
+          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+            THEN 1
+        ELSE 0
+      END                                                                                         AS is_stage_1_plus,
+      CASE 
+        WHEN sfdc_opportunity.stage_name 
+          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1                                                 
+        ELSE 0
+      END                                                                                         AS is_stage_3_plus, 
+      CASE 
+        WHEN sfdc_opportunity.stage_name 
+          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1                                                 
+        ELSE 0
+      END                                                                                         AS is_stage_4_plus,
+      CASE 
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')  
+          THEN 1 ELSE 0
+      END                                                                                         AS is_lost,
+      CASE 
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+            THEN 0
+        ELSE 1  
+      END                                                                                         AS is_open,
+      CASE 
+        WHEN LOWER(sfdc_opportunity.sales_type) like '%renewal%' 
+          THEN 1
+        ELSE 0
+      END                                                                                         AS is_renewal,
+      CASE 
+        WHEN is_won = 1  
+          THEN '1.Won'
+        WHEN is_lost = 1 
+          THEN '2.Lost'
+        WHEN is_open = 1 
+          THEN '0. Open' 
+        ELSE 'N/A'
+      END                                                                                         AS stage_category,
+      CASE 
+        WHEN lower(sfdc_opportunity.order_type_grouped) LIKE ANY ('%growth%', '%new%')
+          AND sfdc_opportunity.is_edu_oss = 0
+          AND is_stage_1_plus = 1
+          AND sfdc_opportunity.forecast_category_name != 'Omitted'
+          AND is_open = 1
+         THEN 1
+         ELSE 0
+      END                                                                                         AS is_eligible_open_pipeline,
+      CASE 
+        WHEN sfdc_opportunity.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND sfdc_opportunity.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
+          AND (is_stage_1_plus = 1
+            OR is_lost = 1)
+          AND sfdc_opportunity.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
+          AND (sfdc_opportunity.net_arr > 0 
+            OR sfdc_opportunity.opportunity_category = 'Credit')
+          -- -- exclude vision opps from FY21-Q2
+          -- AND (sfdc_opportunity.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
+          --       OR vision_opps.opportunity_id IS NULL)
+          -- 20220128 Updated to remove webdirect SQS deals 
+          AND sfdc_opportunity.sales_qualified_source  != 'Web Direct Generated'
+              THEN 1
+         ELSE 0
+      END                                                                                         AS is_eligible_created_pipeline,
+      CASE
+        WHEN sfdc_opportunity.sales_accepted_date IS NOT NULL
+          AND sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+            THEN 1
+        ELSE 0
+      END                                                                                         AS is_eligible_sao,
+      CASE 
+        WHEN sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth')
+          AND sfdc_opportunity.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
+          AND ((sfdc_opportunity.is_web_portal_purchase = 1 
+                AND sfdc_opportunity.net_arr > 0)
+                OR sfdc_opportunity.is_web_portal_purchase = 0)
+            THEN 1
+          ELSE 0
+      END                                                                                         AS is_eligible_asp_analysis,
+      CASE 
+        WHEN sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+          AND is_renewal = 0
+          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+          AND sfdc_opportunity.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
+          AND sfdc_opportunity.is_web_portal_purchase = 0
+            THEN 1
+          ELSE 0
+      END                                                                                         AS is_eligible_age_analysis,
+      CASE
+        WHEN sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+          AND (is_won = 1 
+              OR (is_renewal = 1 AND is_lost = 1))
+          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            THEN 1
+          ELSE 0
+      END                                                                                         AS is_eligible_net_arr,
+      CASE
+        WHEN sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+          AND sfdc_opportunity.order_type IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
+            THEN 1
+          ELSE 0
+      END                                                                                         AS is_eligible_churn_contraction,
+      CASE 
+        WHEN sfdc_opportunity.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+          AND sfdc_opportunity.close_date < '2020-08-01' 
+            THEN 1
+        WHEN sfdc_opportunity.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          AND sfdc_opportunity.snapshot_date < '2021-05-01' 
+          THEN 1
+        -- WHEN sfdc_opportunity.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
+        --         AND vision_opps.opportunity_id IS NOT NULL
+          -- THEN 1
+        ELSE 0
+      END                                                                                         AS is_excluded,
+      CASE 
+        WHEN sfdc_opportunity.stage_name IN ('10-Duplicate')
+            THEN 1
+        ELSE 0
+      END                                                                                         AS is_duplicate,
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Credit')
+          THEN 1
+        ELSE 0
+      END                                                                                         AS is_credit,
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                                                         AS is_contract_reset,
+      COALESCE(sfdc_opportunity.reason_for_loss, sfdc_opportunity.downgrade_reason)               AS reason_for_loss_staged,
+      CASE 
+        WHEN reason_for_loss_staged IN ('Do Nothing','Other','Competitive Loss','Operational Silos') 
+          OR reason_for_loss_staged IS NULL 
+          THEN 'Unknown'
+        WHEN reason_for_loss_staged IN ('Missing Feature','Product value/gaps','Product Value / Gaps',
+                                          'Stayed with Community Edition','Budget/Value Unperceived') 
+          THEN 'Product Value / Gaps'
+        WHEN reason_for_loss_staged IN ('Lack of Engagement / Sponsor','Went Silent','Evangelist Left') 
+          THEN 'Lack of Engagement / Sponsor'
+        WHEN reason_for_loss_staged IN ('Loss of Budget','No budget') 
+          THEN 'Loss of Budget'
+        WHEN reason_for_loss_staged = 'Merged into another opportunity' 
+          THEN 'Merged Opp'
+        WHEN reason_for_loss_staged = 'Stale Opportunity' 
+          THEN 'No Progression - Auto-close'
+        WHEN reason_for_loss_staged IN ('Product Quality / Availability','Product quality/availability') 
+          THEN 'Product Quality / Availability'
+        ELSE reason_for_loss_staged
+     END                                                                                        AS reason_for_loss_calc,
+     CASE 
+       WHEN sfdc_opportunity.order_type IN ('4. Contraction','5. Churn - Partial')
+        THEN 'Contraction'
+        ELSE 'Churn'
+     END                                                                                        AS churn_contraction_type_calc,
+     CASE 
+        WHEN is_renewal = 1 
+          AND sfdc_opportunity.subscription_start_date_fiscal_quarter_date >= sfdc_opportunity.close_fiscal_quarter_date 
+         THEN 'On-Time'
+        WHEN is_renewal = 1 
+          AND sfdc_opportunity.subscription_start_date_fiscal_quarter_date < sfdc_opportunity.close_fiscal_quarter_date 
+            THEN 'Late' 
+      END                                                                                       AS renewal_timing_status,
+      CASE 
+        WHEN net_arr > -5000 
+          THEN '1. < 5k'
+        WHEN net_arr > -20000 AND net_arr <= -5000 
+          THEN '2. 5k-20k'
+        WHEN net_arr > -50000 AND net_arr <= -20000 
+          THEN '3. 20k-50k'
+        WHEN net_arr > -100000 AND net_arr <= -50000 
+          THEN '4. 50k-100k'
+        WHEN net_arr < -100000 
+          THEN '5. 100k+'
+      END                                                                                       AS churned_contraction_net_arr_bucket,
+       CASE 
+        WHEN sfdc_opportunity.is_refund = 1
+          THEN -1
+        WHEN sfdc_opportunity.is_credit = 1
+          THEN 0
+        ELSE 1
+      END                                                                                       AS calculated_deal_count
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -267,6 +494,14 @@ WITH first_contact  AS (
       ON sfdc_opportunity.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
+    LEFT JOIN date_details AS close_date_detail
+      ON close_date_detail.date_actual = sfdc_opportunity.close_date::DATE
+    LEFT JOIN date_details AS created_date_detail
+      ON created_date_detail.date_actual = sfdc_opportunity.created_date::DATE
+    LEFT JOIN date_details AS net_arr_created_date
+      ON net_arr_created_date.date_actual = sfdc_opportunity.iacv_created_date::DATE
+    LEFT JOIN date_details AS sales_accepted_date
+      ON sales_accepted_date.date_actual = sfdc_opportunity.sales_accepted_date::DATE
     {%- if model_type == 'base' %}
     {%- elif model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id

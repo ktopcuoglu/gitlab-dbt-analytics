@@ -113,5 +113,5 @@ WITH prep_crm_opportunity AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-11-20",
-    updated_date="2022-02-16"
+    updated_date="2022-02-23"
 ) }}

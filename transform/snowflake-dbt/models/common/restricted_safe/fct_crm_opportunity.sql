@@ -143,6 +143,8 @@
       sfdc_opportunity.dr_partner_engagement,
       sfdc_opportunity.partner_account,
       sfdc_opportunity.dr_status,
+      sfdc_opportunity.dr_deal_id,
+      sfdc_opportunity.dr_primary_registration,
       sfdc_opportunity.distributor,
       sfdc_opportunity.influence_partner,
       sfdc_opportunity.fulfillment_partner,
@@ -206,5 +208,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-02-01"
+    updated_date="2022-02-23"
 ) }}
