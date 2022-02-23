@@ -48,8 +48,25 @@ WITH date_details AS (
       report_opportunity_user_geo,
       report_opportunity_user_region,
       report_opportunity_user_area,
-
       report_user_segment_geo_region_area,
+      report_user_segment_geo_region_area_sqs_ot,
+
+      -- NF 2022-02-17 new aggregated keys 
+      key_segment,
+      key_sqs,
+      key_ot,
+
+      key_segment_geo,
+      key_segment_geo_sqs,
+      key_segment_geo_ot,      
+
+      key_segment_geo_region,
+      key_segment_geo_region_sqs,
+      key_segment_geo_region_ot,   
+
+      key_segment_geo_region_area,
+      key_segment_geo_region_area_sqs,
+      key_segment_geo_region_area_ot,
 
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
@@ -780,7 +797,24 @@ WITH date_details AS (
       sfdc_opportunity_xf.report_opportunity_user_region,
       sfdc_opportunity_xf.report_opportunity_user_area,
 
+      -- NF 2022-02-17 new aggregated keys 
       sfdc_opportunity_xf.report_user_segment_geo_region_area,
+      sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
+      sfdc_opportunity_xf.key_segment,
+      sfdc_opportunity_xf.key_sqs,
+      sfdc_opportunity_xf.key_ot,
+
+      sfdc_opportunity_xf.key_segment_geo,
+      sfdc_opportunity_xf.key_segment_geo_sqs,
+      sfdc_opportunity_xf.key_segment_geo_ot,      
+
+      sfdc_opportunity_xf.key_segment_geo_region,
+      sfdc_opportunity_xf.key_segment_geo_region_sqs,
+      sfdc_opportunity_xf.key_segment_geo_region_ot,   
+
+      sfdc_opportunity_xf.key_segment_geo_region_area,
+      sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
+      sfdc_opportunity_xf.key_segment_geo_region_area_ot,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    

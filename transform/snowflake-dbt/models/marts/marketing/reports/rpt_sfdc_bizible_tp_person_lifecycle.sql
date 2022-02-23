@@ -66,6 +66,7 @@
       rpt_crm_person_with_opp.is_edu_oss,
       rpt_crm_person_with_opp.stage_name,
       rpt_crm_person_with_opp.is_sao,
+      rpt_crm_person_with_opp.user_sales_segment, 
       mart_crm_touchpoint.crm_account_name,
       mart_crm_touchpoint.dim_crm_account_id,
       mart_crm_touchpoint.crm_account_gtm_strategy,
@@ -74,7 +75,7 @@
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.crm_person_title,
       mart_crm_touchpoint.bizible_touchpoint_position,
-      UPPER(mart_crm_touchpoint.country) as person_country,
+      UPPER(mart_crm_touchpoint.crm_person_country) as person_country,
       mart_crm_touchpoint.last_utm_campaign,
       mart_crm_touchpoint.last_utm_content,
       1 AS touchpoint_count,
@@ -143,5 +144,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-01-25"
+    updated_date="2022-02-17"
 ) }}
