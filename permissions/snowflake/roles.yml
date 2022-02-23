@@ -2379,6 +2379,13 @@ roles:
     - cmccarty: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
+    - cmeddaugh:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - analyst_xs  
+
     - cmestel: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
@@ -4401,6 +4408,11 @@ users:
     - cmccarty: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
+
+    - cmeddaugh:
+        can_login: yes
+        member_of:
+            - cmeddaugh     
 
     - cmestel: # De provisioned as part of Quarterly audit and security check.
         can_login: no
