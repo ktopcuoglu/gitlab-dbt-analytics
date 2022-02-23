@@ -269,3 +269,4 @@ WITH mrr_totals_levelled AS (
 SELECT *
 FROM final
 WHERE final.arr_month < DATE_TRUNC('month', CURRENT_DATE)
+  AND sfdc_account_id != '0016100001B9b0UAAR'--filter out account with data quality problem
