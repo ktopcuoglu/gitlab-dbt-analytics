@@ -731,6 +731,8 @@ roles:
                     - prod.legacy
                     - prod.workspace_data_science
                     - prod.restricted_safe_common_mart_sales
+                    - prod.common_mart_product
+                    - prod.common_mart_marketing
                     - raw.*
                 write:
                     - prod.boneyard
@@ -742,6 +744,8 @@ roles:
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.workspace_data_science.*
                     - prod.restricted_safe_common_mart_sales.*
+                    - prod.common_mart_product.*
+                    - prod.common_mart_marketing.*
                     - raw.*.*
                 write:
                     - prod.boneyard.*
@@ -1234,10 +1238,14 @@ roles:
                   read:
                       - prod.workspace_data_science
                       - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_product
+                      - prod.common_mart_marketing
               tables:
                   read:
                       - prod.workspace_data_science.*
                       - prod.restricted_safe_common_mart_sales.*
+                      - prod.common_mart_product.*
+                      - prod.common_mart_marketing.*
 
 
     - demandbase:
