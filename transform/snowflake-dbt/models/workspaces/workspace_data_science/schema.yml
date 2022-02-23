@@ -7,5 +7,12 @@ models:
           combination_of_columns:
             - dim_crm_account_id
             - snapshot_month
+  - name: monthly_stage_usage_by_namespace
+    description: Product stage usage metrics for free and paid ultimate parent namespaces by month
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+          - unique
   - name: pte_training_model
   - name: pte_scores
