@@ -100,13 +100,13 @@
         is_smau,
         is_gmau,
         is_umau,
-        reporting_quarter,
-        reporting_year,
+        --reporting_quarter, (commented out to reduce table size. If want to look at
+        --reporting_year,     quarter or yearly usage, uncomment and add to surrogate key)
         COUNT(*)                                                                                        AS event_count,
         COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
         COUNT(DISTINCT(user_id))                                                                        AS user_count
     FROM fact_with_xmau_flags
-    {{ dbt_utils.group_by(n=12) }}
+    {{ dbt_utils.group_by(n=10) }}
     ORDER BY reporting_month DESC, plan_id_at_event_date DESC
 
 )
@@ -116,5 +116,5 @@
     created_by="@dihle",
     updated_by="@dihle",
     created_date="2022-02-22",
-    updated_date="2022-02-22"
+    updated_date="2022-02-23"
 ) }}
