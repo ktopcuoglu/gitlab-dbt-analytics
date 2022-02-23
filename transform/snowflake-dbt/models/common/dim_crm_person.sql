@@ -46,6 +46,7 @@ WITH crm_person AS (
       prospect_share_status,
       partner_prospect_status,
       partner_prospect_owner_name,
+      partner_prospect_id,
       marketo_last_interesting_moment,
       marketo_last_interesting_moment_date,
       outreach_step_number,
