@@ -43,6 +43,10 @@ WITH crm_person AS (
       sequence_step_type,
       is_actively_being_sequenced,
       region,
+      prospect_share_status,
+      partner_prospect_status,
+      partner_prospect_owner_name,
+      partner_prospect_id,
       marketo_last_interesting_moment,
       marketo_last_interesting_moment_date,
       outreach_step_number,
@@ -60,5 +64,5 @@ WITH crm_person AS (
     created_by="@jjstark",
     updated_by="@degan",
     created_date="2020-09-10",
-    updated_date="2022-01-10"
+    updated_date="2022-02-17"
 ) }}
