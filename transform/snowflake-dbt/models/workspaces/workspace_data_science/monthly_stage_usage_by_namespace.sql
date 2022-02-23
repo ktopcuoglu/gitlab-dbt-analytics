@@ -6,17 +6,12 @@
     )
 }}
 
-WITH dates AS (
-  
-		SELECT *
-		FROM {{ ref('dim_date') }}
-  
-), saas_usage_ping AS (
+WITH saas_usage_ping AS (
   
 		SELECT *
 		FROM {{ ref('prep_saas_usage_ping_namespace') }}
 		WHERE ping_date >= '2021-03-01'::DATE
-		  -- AND ping_date <= '2021-12-01'::DATE
+		  AND ping_date <= '2021-12-01'::date
 			AND ping_name LIKE 'usage_activity_by_stage%'
 			AND counter_value > 0 -- Filter out non-instances
 			AND ping_date < DATE_TRUNC( -- Only return data for complete months
@@ -46,17 +41,15 @@ WITH dates AS (
 ), saas_last_monthly_ping_per_account AS (
   
 		SELECT
-			saas_usage_ping.dim_namespace_id,
-			dates.first_day_of_month 					AS snapshot_month,
-			saas_usage_ping.ping_name 				AS metrics_path,
-			saas_usage_ping.counter_value     AS metrics_value
+			saas_usage_ping.dim_namespace_id												AS dim_namespace_id,
+			DATE_TRUNC('month', saas_usage_ping.ping_date) 					AS snapshot_month,
+			saas_usage_ping.ping_name 															AS metrics_path,
+			saas_usage_ping.counter_value     											AS metrics_value
 		FROM saas_usage_ping
-		INNER JOIN dates
-			ON saas_usage_ping.ping_date = dates.date_day
 		QUALIFY ROW_NUMBER() OVER (
 		PARTITION BY
 			saas_usage_ping.dim_namespace_id,
-			dates.first_day_of_month,
+			snapshot_month,
 			saas_usage_ping.ping_name
 		ORDER BY
 			saas_usage_ping.ping_date DESC
@@ -82,7 +75,6 @@ WITH dates AS (
 			snapshot_month,
 			metrics_path,
 			metrics_value
-			-- is_paid
 		FROM saas_last_monthly_ping_per_account
   
 )
@@ -91,8 +83,6 @@ SELECT
   {{ dbt_utils.surrogate_key(['flattened_metrics.snapshot_month', 'flattened_metrics.dim_namespace_id']) }} AS primary_key,
 	flattened_metrics.snapshot_month,
 	flattened_metrics.dim_namespace_id,
-	-- flattened_metrics.dim_crm_account_id,
-	-- flattened_metrics.is_paid, 
 	
 	-- NUMBER OF FEATURES USED BY PRODUCT STAGE
 	COUNT(
