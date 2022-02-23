@@ -6,12 +6,16 @@
     )
 }}
 
-WITH saas_usage_ping AS (
+WITH dates AS (
+  
+		SELECT *
+		FROM {{ ref('dim_date') }}
+  
+), saas_usage_ping AS (
   
 		SELECT *
 		FROM {{ ref('prep_saas_usage_ping_namespace') }}
 		WHERE ping_date >= '2021-03-01'::DATE
-		  AND ping_date <= '2021-12-01'::date
 			AND ping_name LIKE 'usage_activity_by_stage%'
 			AND counter_value > 0 -- Filter out non-instances
 			AND ping_date < DATE_TRUNC( -- Only return data for complete months
@@ -22,18 +26,7 @@ WITH saas_usage_ping AS (
 			AND DATE_TRUNC('month', ping_date) > (SELECT MAX(snapshot_month) FROM {{ this }})
 			{% endif %}
 
-)
--- , namespace_subscription_bridge AS (
-
--- 		SELECT DISTINCT
--- 		  -- dim_crm_account_id,
---       dim_namespace_id,
---       snapshot_month
--- 		FROM {{ ref('bdg_namespace_order_subscription_monthly') }}
--- 		WHERE namespace_order_subscription_match_status = 'Paid All Matching'
-
--- )
-, usage_ping_metrics AS (
+), usage_ping_metrics AS (
   
 		SELECT *
 		FROM {{ ref('dim_usage_ping_metric') }}
@@ -41,34 +34,23 @@ WITH saas_usage_ping AS (
 ), saas_last_monthly_ping_per_account AS (
   
 		SELECT
-			saas_usage_ping.dim_namespace_id												AS dim_namespace_id,
-			DATE_TRUNC('month', saas_usage_ping.ping_date) 					AS snapshot_month,
-			saas_usage_ping.ping_name 															AS metrics_path,
-			saas_usage_ping.counter_value     											AS metrics_value
+			saas_usage_ping.dim_namespace_id,
+			dates.first_day_of_month 					AS snapshot_month,
+			saas_usage_ping.ping_name 				AS metrics_path,
+			saas_usage_ping.counter_value     AS metrics_value
 		FROM saas_usage_ping
+		INNER JOIN dates
+			ON saas_usage_ping.ping_date = dates.date_day
 		QUALIFY ROW_NUMBER() OVER (
 		PARTITION BY
 			saas_usage_ping.dim_namespace_id,
-			snapshot_month,
+			dates.first_day_of_month,
 			saas_usage_ping.ping_name
 		ORDER BY
 			saas_usage_ping.ping_date DESC
 		) = 1
   
-)
--- , saas_last_monthly_ping_per_account_with_paid_flag AS (
-	
--- 		SELECT
--- 			saas_last_monthly_ping_per_account.*,
--- 			-- namespace_subscription_bridge.dim_crm_account_id,
--- 			IFF(namespace_subscription_bridge.dim_namespace_id IS NULL, FALSE, TRUE) AS is_paid
--- 		FROM saas_last_monthly_ping_per_account
--- 		LEFT JOIN namespace_subscription_bridge
--- 			ON saas_last_monthly_ping_per_account.dim_namespace_id = namespace_subscription_bridge.dim_namespace_id
--- 			AND saas_last_monthly_ping_per_account.snapshot_month = namespace_subscription_bridge.snapshot_month
-
--- )
-, flattened_metrics AS (
+), flattened_metrics AS (
   
 		SELECT
 			dim_namespace_id,
