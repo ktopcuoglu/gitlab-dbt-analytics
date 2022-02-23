@@ -8,6 +8,17 @@
     ('gmau_metrics','prep_usage_ping_subscription_mapped_gmau')
 ]) }}
 
+{%- set gmau_metrics = dbt_utils.get_query_results_as_dict(
+    "SELECT DISTINCT
+       group_name || '_' || sql_friendly_name   AS name,
+       sql_friendly_path                        AS path
+    FROM " ~ ref('dim_key_xmau_metric') ~
+    " WHERE is_gmau
+      OR is_paid_gmau
+    ORDER BY name"
+    )
+-%}
+
 , sm_subscriptions AS (
 
     SELECT DISTINCT
@@ -54,34 +65,12 @@
       gmau_monthly.ping_created_at,
       {{ get_date_id('gmau_monthly.ping_created_at') }}             AS ping_created_date_id,
       gmau_monthly.dim_location_country_id,
-      gmau_monthly.analytics_analytics_total_unique_counts_monthly,                                                 /* Manage:Optimize */
-      gmau_monthly.compliance_compliance_total_unique_counts_monthly,                                               /* Manage:Compliance */
-      --gmau_monthly.knowledge_action_monthly_active_users_design_management,                                       /*  */
-      gmau_monthly.import_usage_activity_by_stage_monthly_manage_unique_users_all_imports,                          /* Manage:Import */
-      gmau_monthly.portfolio_management_redis_hll_counters_epics_usage_epics_usage_total_unique_counts_monthly,     /* Plan:Product Planning */
-      gmau_monthly.project_management_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly,       /* Plan:Project Management */
-      gmau_monthly.source_code_repo_writes,                                                                         /* Create:Source Code */
-      gmau_monthly.editor_ide_edit_users_28_days,                                                                   /* Create:Editor  */
-      --gmau_monthly.static_site_editor_static_site_editor_views_28_days,                                           /*  */
-      gmau_monthly.ecosystem_redis_hll_counters_ecosystem_ecosystem_total_unique_counts_monthly,                    /* Create:Ecosystem */
-      gmau_monthly.geo_usage_activity_by_stage_monthly_enablement_geo_secondary_web_oauth_users,                    /* Enablement:Geo */
-      gmau_monthly.global_search_paid_search_28_days,                                                               /* Enablement:Global Search(?) */
-      gmau_monthly.global_search_search_users_28_days,                                                              /* Enablement:Global Search(?) */
-      gmau_monthly.continuous_integration_ci_pipelines_users_28_days,                                               /* Verify:CI */
-      gmau_monthly.code_review_merge_request_interaction_users_28_days,                                             /* Verify:Pipeline Authoring */
-      gmau_monthly.testing_counts_monthly_aggregated_metrics_i_testing_paid_monthly_active_user_total,              /* Verify:Testing */
-      gmau_monthly.package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly,              /* Package:Package */
-      gmau_monthly.release_management_release_creation_users_28_days,                                               /* Release:Release */
-      gmau_monthly.configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly,               /* Configure:Configure */
-      gmau_monthly.monitor_incident_management_activer_user_28_days,                                                /* Monitor:Monitor */
-      gmau_monthly.static_analysis_sast_jobs_users_28_days,                                                         /* Secure:Static Analysis */
-      gmau_monthly.static_analysis_secret_detection_jobs_users_28_days,                                             /* Secure:Static Analysis */
-      gmau_monthly.dynamic_analysis_dast_jobs_users_28_days,                                                        /* Secure:Dynamic Analysis */
-      gmau_monthly.composition_analysis_dependency_scanning_jobs_users_28_days,                                     /* Secure:Composition Analysis */
-      gmau_monthly.composition_analysis_license_management_jobs_user_28_days,                                       /* Secure:Composition Analysis */
-      gmau_monthly.composition_analysis_license_scanning_jobs_users_28_days,                                        /* Secure:Composition Analysis */
-      gmau_monthly.fuzz_testing_fuzz_testing_jobs_users_28_days,                                                    /* Secure:Fuzz Testing */
-      gmau_monthly.container_security_container_scanning_jobs_users_28_days,                                        /* Protect:Container Security */
+
+      {%- for metric in gmau_metrics.NAME %}
+      {{ metric }} AS {{ gmau_metrics.NAME[loop.index0] }}
+      {%- if not loop.last %},{% endif -%}
+      {% endfor %},
+      
       IFF(ROW_NUMBER() OVER (
             PARTITION BY
               gmau_monthly.dim_subscription_id,
