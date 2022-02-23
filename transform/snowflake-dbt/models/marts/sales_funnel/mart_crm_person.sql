@@ -102,7 +102,7 @@
       dim_crm_person.prospect_share_status,
       dim_crm_person.partner_prospect_status,
       dim_crm_person.partner_prospect_owner_name,
-      fct_crm_person.partner_prospect_id,
+      dim_crm_person.partner_prospect_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.region,
       dim_crm_person.state,
