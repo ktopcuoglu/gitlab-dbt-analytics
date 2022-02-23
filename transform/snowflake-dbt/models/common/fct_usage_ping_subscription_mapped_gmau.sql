@@ -64,7 +64,7 @@
       gmau_monthly.editor_ide_edit_users_28_days,                                                                   /* Create:Editor  */
       --gmau_monthly.static_site_editor_static_site_editor_views_28_days,                                           /*  */
       gmau_monthly.ecosystem_redis_hll_counters_ecosystem_ecosystem_total_unique_counts_monthly,                    /* Create:Ecosystem */
-      gmau_monthly.geo_usage_activity_by_stage_monthly_enablement_usage_activity_by_stage_monthly_manage_groups,    /* Enablement:Geo */
+      gmau_monthly.geo_usage_activity_by_stage_monthly_enablement_geo_secondary_web_oauth_users,                    /* Enablement:Geo */
       gmau_monthly.global_search_paid_search_28_days,                                                               /* Enablement:Global Search(?) */
       gmau_monthly.global_search_search_users_28_days,                                                              /* Enablement:Global Search(?) */
       gmau_monthly.continuous_integration_ci_pipelines_users_28_days,                                               /* Verify:CI */
@@ -101,5 +101,5 @@
     created_by="@ischweickartDD",
     updated_by="@chrissharp",
     created_date="2021-03-15",
-    updated_date="2021-12-16"
+    updated_date="2022-02-23"
 ) }}
