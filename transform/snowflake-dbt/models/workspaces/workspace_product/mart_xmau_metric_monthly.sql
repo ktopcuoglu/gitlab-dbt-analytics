@@ -82,7 +82,7 @@
 ), total_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                               AS mart_usage_event_plan_monthly_id,
+       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                               AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
        COUNT(*)                                                                                        AS total_event_count,
@@ -95,7 +95,7 @@
 ), free_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                               AS mart_usage_event_plan_monthly_id,
+       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                               AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
        COUNT(*)                                                                                       AS free_event_count,
@@ -109,7 +109,7 @@
 ), paid_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                                AS mart_usage_event_plan_monthly_id,
+       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                                AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
        COUNT(*)                                                                                        AS paid_event_count,
