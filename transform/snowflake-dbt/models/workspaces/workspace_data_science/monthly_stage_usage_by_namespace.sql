@@ -1,15 +1,14 @@
 {{
     config(
         materialized='incremental',
-        unique_key='primary_key',
-     		tags=["mnpi_exception"]
+        unique_key='primary_key'
     )
 }}
 
 WITH flattened_metrics AS (
 
 	SELECT *
-	FROM {{ ref('flattened_metrics') }}
+	FROM {{ ref('prep_saas_flattened_metrics') }}
 	{% if is_incremental() %}
 	WHERE snapshot_month > (SELECT MAX(snapshot_month) FROM {{ this }})
 	{% endif %}
