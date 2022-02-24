@@ -60,6 +60,7 @@ WITH sfdc_user_roles AS (
       sfdc_users.is_active,
       sfdc_users.start_date,
       sfdc_users.user_role_id,
+      sfdc_users.user_role_type,
       sfdc_user_roles.name                                                                                                            AS user_role_name,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}                                                                      AS dim_crm_user_sales_segment_id,
       sfdc_users.user_segment                                                                                                         AS crm_user_sales_segment,
@@ -73,7 +74,7 @@ WITH sfdc_user_roles AS (
       COALESCE(
                sfdc_users.user_segment_geo_region_area,
                CONCAT(sfdc_users.user_segment,'-' , sfdc_users.user_geo, '-', sfdc_users.user_region, '-', sfdc_users.user_area)
-               )                                                                                                                      AS crm_user_segment_geo_region_area,
+               )                                                                                                                      AS crm_user_sales_segment_geo_region_area,
       sfdc_users.user_segment_region_grouped                                                                                          AS crm_user_sales_segment_region_grouped,
       created_date
     FROM sfdc_users

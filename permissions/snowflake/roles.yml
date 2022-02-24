@@ -730,6 +730,10 @@ roles:
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
+                    - prod.restricted_safe_workspace_sales
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.common_mart_product
+                    - prod.common_mart_marketing
                     - raw.*
                 write:
                     - prod.boneyard
@@ -740,6 +744,10 @@ roles:
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.workspace_data_science.*
+                    - prod.restricted_safe_workspace_sales.*
+                    - prod.restricted_safe_common_mart_sales.*
+                    - prod.common_mart_product.*
+                    - prod.common_mart_marketing.*
                     - raw.*.*
                 write:
                     - prod.boneyard.*
@@ -1231,9 +1239,17 @@ roles:
               schemas:
                   read:
                       - prod.workspace_data_science
+                      - prod.restricted_safe_common_mart_sales
+                      - prod.restricted_safe_workspace_sales
+                      - prod.common_mart_product
+                      - prod.common_mart_marketing
               tables:
                   read:
                       - prod.workspace_data_science.*
+                      - prod.restricted_safe_common_mart_sales.*
+                      - prod.restricted_safe_workspace_sales.*
+                      - prod.common_mart_product.*
+                      - prod.common_mart_marketing.*
 
 
     - demandbase:
@@ -2379,6 +2395,13 @@ roles:
     - cmccarty: # De provisioned as part of Quarterly audit and security check.
         warehouses: []
 
+    - cmeddaugh:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - analyst_xs  
+
     - cmestel: # De provisioned as part of Quarterly audit and security check.
         member_of: []
         warehouses: []
@@ -2746,6 +2769,7 @@ roles:
             - data_team_analyst
             - analyst_core
             - restricted_safe
+            - bi_tool_eval_db
         warehouses:
             - analyst_xs
 
@@ -3196,6 +3220,7 @@ roles:
         member_of:
             - engineer
             - restricted_safe
+            - bi_tool_eval_db
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -4400,6 +4425,11 @@ users:
         can_login: no
         member_of: []
 
+    - cmeddaugh:
+        can_login: yes
+        member_of:
+            - cmeddaugh     
+
     - cmestel: # De provisioned as part of Quarterly audit and security check.
         can_login: no
         member_of: []
@@ -4928,6 +4958,8 @@ users:
         can_login: yes
         member_of:
             - rdemiri
+            - accountadmin
+            - securityadmin
 
     - rheannamistry: # De provisioned as part of Quarterly audit and security check.
         can_login: no

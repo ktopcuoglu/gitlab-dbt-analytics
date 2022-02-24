@@ -20,8 +20,12 @@ models:
       - name: dim_user_id
         description: ID of the user who triggered the event
         tests:
-      - name: dim_plan_id
+      - name: plan_id_at_event_date
         description: ID of the plan of the ultimate parent namespace when the event got triggered
+        tests:
+          - not_null
+      - name: plan_name_at_event_date
+        description: Name of the plan of the ultimate parent namespace when the event got triggered
         tests:
           - not_null
       - name: created_date_id
