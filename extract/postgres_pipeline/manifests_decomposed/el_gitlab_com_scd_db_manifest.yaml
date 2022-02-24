@@ -79,6 +79,7 @@ tables:
       , assignee_id
       FROM board_assignees
   bulk_import_entities:
+    advanced_metadata: true
     export_schema: 'gitlab_com'
     export_table: bulk_import_entities
     export_table_primary_key: id
@@ -150,6 +151,7 @@ tables:
       FROM information_schema.columns
     import_schema: information_schema
   clusters_integration_prometheus:
+    advanced_metadata: true
     export_schema: 'gitlab_com'
     export_table: 'clusters_integration_prometheus'
     export_table_primary_key: cluster_id
@@ -313,6 +315,7 @@ tables:
       , group_access
       FROM group_group_links
   group_import_states:
+    advanced_metadata: true
     export_schema: "gitlab_com"
     export_table: group_import_states
     export_table_primary_key: group_id
@@ -392,6 +395,7 @@ tables:
       , updated_at
       FROM label_links
   lfs_file_locks:
+    advanced_metadata: true
     export_schema: "gitlab_com"
     export_table: lfs_file_locks
     export_table_primary_key: id
@@ -503,6 +507,7 @@ tables:
       , certificate_source
       FROM pages_domains
   path_locks:
+    advanced_metadata: true
     export_schema: "gitlab_com"
     export_table: path_locks
     export_table_primary_key: id
