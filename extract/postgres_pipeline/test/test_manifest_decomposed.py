@@ -66,6 +66,7 @@ def test_add_scd_tables() -> None:
         table_definition = loaded_file["tables"][table]
         assert table_definition is not None
         assert table_definition.get("export_table", None) == table
+        assert table_definition.get("advanced_metadata", None) is True
 
 
 if __name__ == "__main__":
