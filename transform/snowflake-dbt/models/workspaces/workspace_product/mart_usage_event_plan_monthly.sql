@@ -104,7 +104,7 @@
         --reporting_year,     quarter or yearly usage, uncomment and add to surrogate key)
         COUNT(*)                                                                                        AS event_count,
         COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
-        COUNT(DISTINCT(user_id))                                                                        AS user_count
+        COUNT(DISTINCT(dim_user_id))                                                                        AS user_count
     FROM fact_with_xmau_flags
     {{ dbt_utils.group_by(n=10) }}
     ORDER BY reporting_month DESC, plan_id_at_event_date DESC
