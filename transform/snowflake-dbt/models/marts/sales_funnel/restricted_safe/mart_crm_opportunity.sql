@@ -189,6 +189,17 @@
         'dim_crm_user_hierarchy_live_region.crm_user_region') }}
                                                                            AS crm_user_sales_segment_region_grouped,
 
+      
+       -- crm account owner/sales rep live fields
+      dim_crm_account_user_hierarchy_live_sales_segment.crm_user_sales_segment           AS crm_account_user_sales_segment,
+      dim_crm_account_user_hierarchy_live_sales_segment.crm_user_sales_segment_grouped   AS crm_account_user_sales_segment_grouped,
+      dim_crm_account_user_hierarchy_live_geo.crm_user_geo                               AS crm_account_user_geo,
+      dim_crm_account_user_hierarchy_live_region.crm_user_region                         AS crm_account_user_region,
+      dim_crm_account_user_hierarchy_live_area.crm_user_area                             AS crm_account_user_area,
+      {{ sales_segment_region_grouped('dim_crm_account_user_hierarchy_live_sales_segment.crm_user_sales_segment',
+        'dim_crm_account_user_hierarchy_live_region.crm_user_region') }}
+                                                                                         AS crm_account_user_sales_segment_region_grouped,
+
       -- channel fields
       fct_crm_opportunity.lead_source,
       fct_crm_opportunity.dr_partner_deal_type,
@@ -256,13 +267,21 @@
       ON fct_crm_opportunity.dim_crm_user_region_id = dim_crm_user_hierarchy_live_region.dim_crm_user_region_id
     LEFT JOIN dim_crm_user_hierarchy_live_area
       ON fct_crm_opportunity.dim_crm_user_area_id = dim_crm_user_hierarchy_live_area.dim_crm_user_area_id
+    LEFT JOIN dim_crm_user_hierarchy_live_sales_segment AS dim_crm_account_user_hierarchy_live_sales_segment
+      ON fct_crm_opportunity.dim_crm_account_user_sales_segment_id = dim_crm_account_user_hierarchy_live_sales_segment.dim_crm_user_sales_segment_id
+    LEFT JOIN dim_crm_user_hierarchy_live_geo           AS dim_crm_account_user_hierarchy_live_geo
+      ON fct_crm_opportunity.dim_crm_account_user_geo_id = dim_crm_account_user_hierarchy_live_geo.dim_crm_user_geo_id
+    LEFT JOIN dim_crm_user_hierarchy_live_region        AS dim_crm_account_user_hierarchy_live_region
+      ON fct_crm_opportunity.dim_crm_account_user_region_id = dim_crm_account_user_hierarchy_live_region.dim_crm_user_region_id
+    LEFT JOIN dim_crm_user_hierarchy_live_area          AS dim_crm_account_user_hierarchy_live_area
+      ON fct_crm_opportunity.dim_crm_account_user_area_id = dim_crm_account_user_hierarchy_live_area.dim_crm_user_area_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@degan",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2022-02-14",
+    updated_date="2022-02-24",
   ) }}
