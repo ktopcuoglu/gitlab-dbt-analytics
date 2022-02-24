@@ -72,7 +72,6 @@ WITH fct_mrr AS (
       active_subscriptions.subscription_name_slugify,
       active_subscriptions.subscription_start_date,
       active_subscriptions.subscription_end_date,
-      mrr*12                                                                                                            AS arr,
       quantity,
       MAX(fct_payload.dim_subscription_id) IS NOT NULL                                                                     AS has_sent_payloads,
       COUNT(DISTINCT fct_payload.dim_usage_ping_id)                                                                        AS monthly_payload_counts,
@@ -86,7 +85,7 @@ WITH fct_mrr AS (
     LEFT JOIN fct_payload ON all_subscriptions.dim_subscription_id = fct_payload.dim_subscription_id AND first_day_of_month = DATE_TRUNC('month', fct_payload.ping_created_at)
     LEFT JOIN mau ON fct_payload.dim_usage_ping_id = mau.ping_id
     LEFT JOIN prep_license ON fct_payload.dim_license_id = prep_license.dim_license_id
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=7) }}
 
 ), latest_versions AS (
 
@@ -119,7 +118,7 @@ WITH fct_mrr AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-10-16",
-    updated_date="2020-01-21"
+    updated_date="2022-02-17"
 ) }}

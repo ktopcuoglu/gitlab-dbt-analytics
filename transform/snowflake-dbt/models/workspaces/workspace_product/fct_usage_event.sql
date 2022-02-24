@@ -25,15 +25,13 @@
     SELECT
       event_primary_key                                               AS event_primary_key,
       usage_data_events.event_name                                    AS event_name,
-      namespace_id                                                    AS namespace_id,
+      namespace_id                                                    AS namespace_id, -- make empty namespace = null
+      'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'                          AS dim_instance_id,
       user_id                                                         AS user_id,
       parent_type                                                     AS parent_type,
       parent_id                                                       AS parent_id,
       IFF(usage_data_events.parent_type = 'project', parent_id, NULL) AS project_id,
       event_created_at                                                AS event_created_at,
-      plan_id_at_event_date                                           AS plan_id_at_event_date,
-      plan_name_at_event_date                                         AS plan_name_at_event_date,
-      plan_was_paid_at_event_date                                     AS plan_was_paid_at_event_date,
       CASE
           WHEN usage_data_events.stage_name IS NULL
             THEN xmau_metrics.stage_name
@@ -48,6 +46,30 @@
     FROM usage_data_events
     LEFT JOIN xmau_metrics
       ON usage_data_events.event_name = xmau_metrics.events_to_include
+
+), paid_flag_by_day AS (
+
+    SELECT
+        namespace_id,
+        CAST(event_created_at AS DATE)                                  AS event_date,
+        plan_was_paid_at_event_date                                     AS plan_was_paid_at_event_date,
+        plan_id_at_event_date                                           AS plan_id_at_event_date,
+        plan_name_at_event_date                                         AS plan_name_at_event_date,
+        event_created_at
+    FROM usage_data_events
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_id, event_date
+                                   ORDER BY event_created_at DESC) = 1
+
+), fct_events_w_plan_was_paid AS (
+
+  SELECT
+    fct_events.*,
+    paid_flag_by_day.plan_was_paid_at_event_date                     AS plan_was_paid_at_event_date,
+    paid_flag_by_day.plan_id_at_event_date                           AS plan_id_at_event_date,
+    paid_flag_by_day.plan_name_at_event_date                         AS plan_name_at_event_date
+  FROM fct_events
+    LEFT JOIN paid_flag_by_day
+  ON fct_events.namespace_id = paid_flag_by_day.namespace_id and CAST(fct_events.event_created_at AS DATE) = paid_flag_by_day.event_date
 
 ), deduped_namespace_bdg AS (
 
@@ -80,15 +102,16 @@
 ), final AS (
 
     SELECT *
-    FROM fct_events
+    FROM fct_events_w_plan_was_paid
     LEFT JOIN dim_namespace_w_bdg
-      ON fct_events.namespace_id = dim_namespace_w_bdg.dim_namespace_id
+      ON fct_events_w_plan_was_paid.namespace_id = dim_namespace_w_bdg.dim_namespace_id
 
 ), gitlab_dotcom_fact AS (
 
     SELECT
       event_primary_key                       AS event_id,
       event_name                              AS event_name,
+      dim_instance_id                         AS dim_instance_id,
       dim_product_tier_id                     AS dim_product_tier_id,
       dim_subscription_id                     AS dim_subscription_id,
       date_id                                 AS dim_event_date_id,
@@ -105,7 +128,7 @@
       plan_name_at_event_date                 AS plan_name_at_event_date,
       plan_was_paid_at_event_date             AS plan_was_paid_at_event_date,
       project_is_learn_gitlab                 AS project_is_learn_gitlab,
-      'GITLAB_DOTCOM'                         AS source
+      'GITLAB_DOTCOM'                         AS data_source
     FROM final
     LEFT JOIN dim_date
       ON TO_DATE(event_created_at) = dim_date.date_day
