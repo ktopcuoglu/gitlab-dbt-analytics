@@ -93,3 +93,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: mart_usage_event_plan_monthly
+    description: ' {{ doc("mart_usage_event_plan_monthly") }} '
+    columns:
+      - name: mart_usage_event_plan_monthly_id
+        tests:
+          - not_null
+          - unique
