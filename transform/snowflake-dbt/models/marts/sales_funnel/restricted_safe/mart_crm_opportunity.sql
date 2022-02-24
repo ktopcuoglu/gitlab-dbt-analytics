@@ -166,7 +166,7 @@
       dim_crm_opportunity.sao_crm_opp_owner_region_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_area_stamped,
       dim_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
-      dim_crm_opportunity.sao_opp_owner_sales_segment_geo_region_area_stamped,
+      dim_crm_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
 
       -- crm opp owner/account owner stamped fields stamped at close date
       dim_crm_opportunity.crm_opp_owner_stamped_name,

@@ -144,7 +144,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.sao_crm_opp_owner_region_stamped,
       sfdc_opportunity.sao_crm_opp_owner_area_stamped,
       sfdc_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
-      sfdc_opportunity.sao_opp_owner_sales_segment_geo_region_area_stamped,
+      sfdc_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
       --sfdc_opportunity.user_segment_go_region_area_stamped                  AS crm_opp_owner_sales_segment_geo_region_area_stamped,
       sfdc_opportunity.crm_opp_owner_user_role_type_stamped,
 
