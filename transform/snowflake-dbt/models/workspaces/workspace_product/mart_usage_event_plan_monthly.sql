@@ -16,7 +16,7 @@
     SELECT
         event_id,
         CAST(EVENT_CREATED_AT AS DATE)                                                                  AS event_date,
-        user_id,
+        dim_user_id,
         event_name,
         dim_product_tier_id,
         dim_subscription_id,
