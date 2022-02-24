@@ -53,7 +53,7 @@
         fact.stage_name,
         fact.section_name,
         fact.group_name,
-        fact.source,
+        fact.data_source,
         fact.plan_id_at_event_date,
         fact.plan_name_at_event_date,
         fact.plan_was_paid_at_event_date,
