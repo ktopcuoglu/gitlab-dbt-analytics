@@ -35,6 +35,9 @@ TEST_JSON_DICT = {
 }
 TARGET_FILE = "test_file.json"
 
+FILE_NAME_ORIGINAL = "/Users/radbac/repos/analytics/transform/snowflake-dbt/target/manifest.json"  # TODO: rbacovic make this dynamic
+FILE_NAME_REDUCED = f"{FILE_NAME_ORIGINAL}.reduced"
+
 
 def clean_up_file(file_name) -> None:
     """
@@ -135,6 +138,74 @@ def test_get_file_size() -> None:
     assert file_size > 0
 
 
+def end_to_end_process(
+    config: str, file_name_source_original: str, file_name_source_reduced: str
+) -> bool:
+    """
+    Check end_to_end_testing, mimic the original function
+    return: None
+    """
+
+    COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = 14
+    is_reduced = False
+    config_name = config
+
+    if os.path.exists(file_name_source_reduced):
+        os.remove(file_name_source_reduced)
+
+    if os.path.exists(file_name_source_original):
+        if (
+            config_name == "manifest_reduce"
+            and get_file_size(file_to_measure=file_name_source_original)
+            >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB
+        ):
+
+            raw_json = load_json_file(source_file=file_name_source_original)
+            reduced_json = reduce_manifest_file(raw_json=raw_json)
+            save_json_file(
+                reduced_json=reduced_json, target_file=file_name_source_reduced
+            )
+
+            is_reduced = True
+    else:
+        print(
+            f"Dbt File {file_name_source_original} is missing. Check if dbt run completed successfully"
+        )
+
+    return is_reduced
+
+
+def test_regression_config_manifest() -> None:
+
+    config = "manifest"
+    is_reduced = end_to_end_process(
+        config=config,
+        file_name_source_original=FILE_NAME_ORIGINAL,
+        file_name_source_reduced=FILE_NAME_REDUCED,
+    )
+
+    assert is_reduced is False
+    assert os.path.exists(FILE_NAME_REDUCED) is False
+
+
+def test_config_manifest_reduce() -> None:
+
+    file_size_before = get_file_size(file_to_measure=FILE_NAME_ORIGINAL)
+
+    config = "manifest_reduce"
+    is_reduced = end_to_end_process(
+        config=config,
+        file_name_source_original=FILE_NAME_ORIGINAL,
+        file_name_source_reduced=FILE_NAME_REDUCED,
+    )
+
+    file_size_after = get_file_size(file_to_measure=FILE_NAME_REDUCED)
+
+    assert is_reduced is True
+    assert os.path.exists(FILE_NAME_REDUCED) is True
+    assert file_size_before > file_size_after
+
+
 def main() -> None:
     """
     Main routine to run test cases
@@ -146,6 +217,8 @@ def main() -> None:
     test_reduce_nodes_section()
     test_reduce_manifest_file()
     test_get_file_size()
+    test_regression_config_manifest()
+    test_config_manifest_reduce()
 
 
 if __name__ == "__main__":
