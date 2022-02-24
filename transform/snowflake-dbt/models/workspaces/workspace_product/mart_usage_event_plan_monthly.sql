@@ -44,7 +44,7 @@
         dim_date.last_day_of_month                                                                      AS last_day_of_month,
         dim_date.last_day_of_quarter                                                                    AS last_day_of_quarter,
         dim_date.last_day_of_fiscal_year                                                                AS last_day_of_fiscal_year,
-        fact.user_id,
+        fact.dim_user_id,
         fact.event_name,
         fact.dim_product_tier_id,
         fact.dim_subscription_id,
