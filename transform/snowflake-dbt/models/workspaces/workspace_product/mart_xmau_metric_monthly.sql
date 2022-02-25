@@ -120,7 +120,7 @@
        {{ dbt_utils.group_by(n=3) }}
    ORDER BY reporting_month DESC
 
-), final_results AS (
+), results AS (
 
    SELECT
        total_results.*,
