@@ -12,7 +12,7 @@
 
 #### Data Engineer To
 
-1. [ ] Create MR for new DAG in analytics. 
+1. [ ] Create MR for new DAG in analytics repo under [/dags/data_science](https://gitlab.com/gitlab-data/analytics/-/blob/master/dags/data_science) folder.
    1. The [`propensity_to_expand`](https://gitlab.com/gitlab-data/analytics/-/blob/master/dags/data_science/propensity_to_expand.py) DAG can be used as a template. 
    2. Only updates / changes should be for parameters specified above. 
       - Ensure the below fields are updated 
