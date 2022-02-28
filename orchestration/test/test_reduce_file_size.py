@@ -10,13 +10,10 @@ import pytest
 
 # Tweak path as due to script execution way in Airflow,
 # can't touch the original code
-abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = (
-    abs_path[: abs_path.find("orchestration")]
-    + "orchestration/test/"
-)
-
-sys.path.append(abs_path)
+# abs_path = os.path.dirname(os.path.realpath(__file__))
+# abs_path = abs_path[: abs_path.find("orchestration")] + "orchestration/test/"
+#
+# sys.path.append(abs_path)
 
 from orchestration.reduce_file_size import (
     load_json_file,
@@ -51,7 +48,7 @@ TEST_JSON_DICT: Dict[Any, Any] = {
 }
 TARGET_FILE = "test_file.json"
 
-FILE_NAME_ZIPPED = "test_manifest.json.gz"
+FILE_NAME_ZIPPED = "/orchestration/test/test_manifest.json.gz"
 FILE_NAME_ORIGINAL = f"{FILE_NAME_ZIPPED.replace('.gz','')}"
 FILE_NAME_REDUCED = f"{FILE_NAME_ORIGINAL}.reduced"
 
