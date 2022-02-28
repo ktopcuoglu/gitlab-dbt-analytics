@@ -15,11 +15,15 @@ This macro applies proper formatting to sales segment data with the end result b
 {% enddocs %}
 
 {% docs sfdc_account_fields%}
-This macro stores all of the shared logic between the live and snapshot crm account models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models.
+This macro stores all of the shared logic between the live and snapshot crm account models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models. Whenever a new field is added to the live `_source` model, it will need to be added to the `_snapshots_source` model as well to maintain continuity between the live and snapshot models.
 {% enddocs %}
 
 {% docs sfdc_deal_size %}
 This macro buckets a unit into a deal size (Small, Medium, Big, or Jumbo) based on an inputted value.
+{% enddocs %}
+
+{% docs sfdc_opportunity_fields%}
+This macro stores all of the shared logic between the live and snapshot crm opportunity models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models. Whenever a new field is added to the live `_source` model, it will need to be added to the `_snapshots_source` model as well to maintain continuity between the live and snapshot models.
 {% enddocs %}
 
 {% docs sfdc_source_buckets %}
@@ -27,7 +31,7 @@ This macro is a CASE WHEN statement that groups the lead sources into new market
 {% enddocs %}
 
 {% docs sfdc_user_fields%}
-This macro stores all of the shared logic between the live and snapshot crm user models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models.
+This macro stores all of the shared logic between the live and snapshot crm user models. It takes two values for the model_type variable ('snapshot', 'base') to create either the snapshot or live view of a model from the `source` models. Whenever a new field is added to the live `_source` model, it will need to be added to the `_snapshots_source` model as well to maintain continuity between the live and snapshot models.
 {% enddocs %}
 
 {% docs sales_funnel_text_slugify %}
