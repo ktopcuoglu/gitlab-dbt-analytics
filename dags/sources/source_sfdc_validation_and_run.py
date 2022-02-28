@@ -97,6 +97,7 @@ test = KubernetesPodOperator(
 # Snapshot source data
 snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{data_source}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """

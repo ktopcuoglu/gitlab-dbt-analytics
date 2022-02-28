@@ -12,11 +12,10 @@ WITH source AS (
       order_type,
       area,
       allocated_target,
-      kpi_total,
-      month_percentage,
-      opportunity_source_percentage,
-      order_type_percentage,
-      area_percentage
+      user_segment,
+      user_geo,
+      user_region,
+      user_area
     FROM source
 
 )
@@ -24,7 +23,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2020-11-18",
-    updated_date="2020-11-18"
+    updated_date="2022-02-10"
 ) }}

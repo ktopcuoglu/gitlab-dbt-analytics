@@ -59,7 +59,8 @@
       dim_crm_person.owner_id,
       dim_crm_person.person_score,
       dim_crm_person.title                                                 AS crm_person_title,
-      dim_crm_person.country,
+      dim_crm_person.country                                               AS crm_person_country,
+      dim_crm_person.state                                                 AS crm_person_state,
       dim_crm_person.status                                                AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -186,6 +187,8 @@
         WHEN  dim_campaign.budget_holder = 'fmm'
               OR campaign_rep_role_name = 'Field Marketing Manager'
               OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+              OR LOWER(dim_campaign.type) = 'field event'
+              OR LOWER(dim_crm_person.lead_source) = 'field event'
         THEN 1
         ELSE 0
       END AS is_fmm_influenced

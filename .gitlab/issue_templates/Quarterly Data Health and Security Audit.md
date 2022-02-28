@@ -164,6 +164,43 @@ Below checklist of activities would be run once for quarter to validate security
    ORDER BY last_name;
    ```
 
+3. [ ] Deprovision SAFE Dashboard Space access if an account has not logged-in within the past 90 days from the moment of performing audit.
+
+    <details>
+
+   * [ ] Run below SQL script to perform the check.
+
+   ```sql
+   WITH final as (
+    SELECT users.id, 
+        first_name, 
+        last_name, 
+        email_address, 
+        spaces.name,
+        MAX(DATE(time_on_site_logs.created_at)) AS last_login_date  
+    FROM time_on_site_logs
+    JOIN users
+    --inner join between time_on_site_logs and users. This means if a user never performed a login, it will not show up in the results
+    --improvement point for next iteration check for users that were created over 90 days ago and that didn't perform a login.
+    ON time_on_site_logs.USER_ID = users.ID
+    LEFT OUTER JOIN user_roles
+    ON users.id = user_roles.user_id
+    LEFT OUTER JOIN roles
+    ON user_roles.role_id = roles.id
+    --check if a user has a role assigned (because the users table contains all users ever exist in Sisense).
+    LEFT OUTER JOIN spaces
+    on roles.space_id = spaces.id
+    WHERE roles.name = 'Everyone'
+    AND spaces.name = 'gitlab:safe-dashboard'
+    GROUP BY 1,2,3,4,5
+   )
+
+    SELECT * 
+    FROM final
+    WHERE last_login_date < CURRENT_DATE-90
+    ORDER BY last_name;
+   ```
+
 ## TRUSTED DATA
 1. [ ] Review all Golden Record TD tests and make sure they're passing.
 
