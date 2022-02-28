@@ -2,7 +2,11 @@
 Main test file for reduce_file_size.py
 """
 import os
+import gzip
+import shutil
+from typing import Dict, Any
 import pytest
+
 from orchestration.reduce_file_size import (
     load_json_file,
     save_json_file,
@@ -11,8 +15,9 @@ from orchestration.reduce_file_size import (
     get_file_size,
 )
 
+COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = 14
 
-TEST_JSON_DICT = {
+TEST_JSON_DICT: Dict[Any, Any] = {
     "metadata": {"adapter_type": "snowflake", "user_id": "null"},
     "test_key": "test_value",
     "nodes": {
@@ -35,11 +40,36 @@ TEST_JSON_DICT = {
 }
 TARGET_FILE = "test_file.json"
 
-FILE_NAME_ORIGINAL = "/Users/radbac/repos/analytics/transform/snowflake-dbt/target/manifest.json"  # TODO: rbacovic make this dynamic
+FILE_NAME_ZIPPED = "test_manifest.json.gz"
+FILE_NAME_ORIGINAL = f"{FILE_NAME_ZIPPED.replace('.gz','')}"
 FILE_NAME_REDUCED = f"{FILE_NAME_ORIGINAL}.reduced"
 
 
-def clean_up_file(file_name) -> None:
+def extract_gzip_file(file_name_zipped: str, file_name_extracted: str) -> None:
+    """
+    Unzip manifest.json file and keep original for repetitive testing
+    param file_name_zipped: str
+    param file_name_extracted: str
+    return: None
+    """
+    with gzip.open(file_name_zipped, "rb") as zipped_file:
+        with open(file_name_extracted, "wb") as json_file:
+            shutil.copyfileobj(zipped_file, json_file)
+
+
+def test_extract_gzip_file():
+    """
+    Extract zip file
+    return: None
+    """
+    clean_up_file(FILE_NAME_ORIGINAL)
+
+    extract_gzip_file(FILE_NAME_ZIPPED, FILE_NAME_ORIGINAL)
+
+    assert os.path.exists(FILE_NAME_ORIGINAL) is True
+
+
+def clean_up_file(file_name: str) -> None:
     """
     Routine to delete temp file for testing
     param file_name: file name to be deleted
@@ -146,7 +176,6 @@ def end_to_end_process(
     return: None
     """
 
-    COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = 14
     is_reduced = False
     config_name = config
 
@@ -168,14 +197,16 @@ def end_to_end_process(
 
             is_reduced = True
     else:
-        print(
-            f"Dbt File {file_name_source_original} is missing. Check if dbt run completed successfully"
-        )
+        print(f"Dbt File {file_name_source_original} is missing")
 
     return is_reduced
 
 
 def test_regression_config_manifest() -> None:
+    """
+    Regression test to not brake existing process generating DBT-DOCS
+    return: None
+    """
 
     config = "manifest"
     is_reduced = end_to_end_process(
@@ -189,7 +220,10 @@ def test_regression_config_manifest() -> None:
 
 
 def test_config_manifest_reduce() -> None:
-
+    """
+    Test reducing manifest file
+    return: None
+    """
     file_size_before = get_file_size(file_to_measure=FILE_NAME_ORIGINAL)
 
     config = "manifest_reduce"
@@ -206,10 +240,23 @@ def test_config_manifest_reduce() -> None:
     assert file_size_before > file_size_after
 
 
+def test_clean_up_file() -> None:
+    """
+    return: None
+    """
+    clean_up_file(FILE_NAME_ORIGINAL)
+    clean_up_file(FILE_NAME_REDUCED)
+
+    assert os.path.exists(FILE_NAME_ORIGINAL) is False
+    assert os.path.exists(FILE_NAME_REDUCED) is False
+
+
 def main() -> None:
     """
     Main routine to run test cases
     """
+
+    test_extract_gzip_file()
 
     test_load_json_file_not_existing_file()
     test_load_json_file_existing_file()
@@ -219,7 +266,9 @@ def main() -> None:
     test_get_file_size()
     test_regression_config_manifest()
     test_config_manifest_reduce()
+    test_clean_up_file()
 
 
 if __name__ == "__main__":
+
     main()
