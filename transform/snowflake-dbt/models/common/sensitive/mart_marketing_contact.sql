@@ -10,7 +10,9 @@
   ('customers_db_trials', 'customers_db_trials'),
   ('customers_db_leads', 'customers_db_leads_source'),
   ('gitlab_dotcom_daily_usage_data_events', 'gitlab_dotcom_daily_usage_data_events'),
-  ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics')
+  ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
+  ('services', 'gitlab_dotcom_services_source'),
+  ('project', 'prep_project')
 ]) }}
 
 -------------------------- Start of PQL logic: --------------------------
@@ -211,9 +213,23 @@
 )
 -------------------------- End of PQL logic --------------------------
 
-, subscription_aggregate AS (
+, services_by_marketing_contact_id AS (
 
-    SELECT 
+    SELECT
+      marketing_contact_order.dim_marketing_contact_id                                           AS dim_marketing_contact_id,
+      COUNT(*)                                                                                   AS pql_nbr_integrations_installed,
+      ARRAY_AGG(DISTINCT services.service_type) WITHIN GROUP (ORDER BY services.service_type)    AS pql_integrations_installed
+    FROM services
+    LEFT JOIN project
+      ON services.project_id = project.dim_project_id
+    LEFT JOIN marketing_contact_order
+      ON marketing_contact_order.dim_namespace_id = project.dim_namespace_id
+    WHERE services.is_active = TRUE
+    GROUP BY 1
+
+), subscription_aggregate AS (
+
+    SELECT
       dim_marketing_contact_id,
       MIN(subscription_start_date)                                                               AS min_subscription_start_date,
       MAX(subscription_end_date)                                                                 AS max_subscription_end_date
@@ -728,6 +744,8 @@
       latest_pql.pql_trial_start_date,
       latest_pql.pql_min_subscription_start_date,
       latest_pql.pql_event_created_at,
+      services_by_marketing_contact_id.pql_nbr_integrations_installed,
+      services_by_marketing_contact_id.pql_integrations_installed,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
@@ -785,6 +803,8 @@
       ON paid_subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN usage_metrics
       ON usage_metrics.dim_marketing_contact_id = prep.dim_marketing_contact_id
+    LEFT JOIN services_by_marketing_contact_id
+      ON services_by_marketing_contact_id.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN latest_pql
       ON latest_pql.email = marketing_contact.email_address
 
@@ -905,7 +925,7 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-02-22"
+    updated_date="2022-02-28"
 ) }}
 
 
