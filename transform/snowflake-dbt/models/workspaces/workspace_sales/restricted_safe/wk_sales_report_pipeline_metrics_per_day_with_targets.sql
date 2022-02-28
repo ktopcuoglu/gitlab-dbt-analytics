@@ -90,7 +90,15 @@ WITH date_details AS (
 
         -- sao deal count
         SUM(sao_deal_count)                     AS sao_deal_count,
-        SUM(sao_net_arr)                        AS sao_net_arr
+        SUM(sao_net_arr)                        AS sao_net_arr,
+
+        -- one year ago pipe gen
+        SUM(minus_1_year_pipe_gen_net_arr)      AS minus_1_year_pipe_gen_net_arr,
+        SUM(minus_1_year_pipe_gen_deal_count)   AS minus_1_year_pipe_gen_deal_count,
+
+        -- one year ago sao
+        SUM(minus_1_year_sao_net_arr)           AS minus_1_year_sao_net_arr,
+        SUM(minus_1_year_sao_deal_count)        AS minus_1_year_sao_deal_count
 
 
     FROM report_pipeline_metrics_day
@@ -294,6 +302,14 @@ WITH date_details AS (
         metrics.sao_deal_count,
         metrics.sao_net_arr,
 
+        -- one year ago pipe gen
+        metrics.minus_1_year_pipe_gen_net_arr,
+        metrics.minus_1_year_pipe_gen_deal_count,
+
+        -- one year ago sao
+        metrics.minus_1_year_sao_net_arr,
+        metrics.minus_1_year_sao_deal_count,
+
         -- reported quarter + 1
         metrics.rq_plus_1_open_1plus_net_arr,
         metrics.rq_plus_1_open_3plus_net_arr,
@@ -343,6 +359,12 @@ WITH date_details AS (
         COALESCE(qtd_target.qtd_target_deal_count,0)                AS qtd_target_deal_count,
         COALESCE(qtd_target.qtd_target_pipe_generation_net_arr,0)   AS qtd_target_pipe_generation_net_arr,
 
+        -- totals one year ago
+        COALESCE(year_minus_one.total_booked_net_arr,0)             AS minus_1_year_total_booked_net_arr,
+        COALESCE(year_minus_one.total_booked_deal_count,0)          AS minus_1_year_total_booked_deal_count,
+        COALESCE(year_minus_one.total_pipe_generation_net_arr,0)    AS minus_1_year_total_pipe_generation_net_arr,
+        COALESCE(year_minus_one.total_pipe_generation_deal_count,0) AS minus_1_year_total_pipe_generation_deal_count,
+
       -- TIMESTAMP
       current_timestamp                                              AS dbt_last_run_at
   
@@ -374,7 +396,13 @@ WITH date_details AS (
       ON qtd_target.close_fiscal_quarter_date = base.close_fiscal_quarter_date
         AND qtd_target.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
         AND qtd_target.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
-   
+    -- one year ago totals
+    LEFT JOIN consolidated_targets_per_day year_minus_one
+      ON year_minus_one.close_fiscal_quarter_date = dateadd(month,-12,base.close_fiscal_quarter_date)
+        AND year_minus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
+        AND year_minus_one.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
+
+
 
 )
  SELECT *
