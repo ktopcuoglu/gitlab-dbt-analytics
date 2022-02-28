@@ -58,7 +58,7 @@ with mrr_totals_levelled AS (
                {{ churn_type('original_mrr', 'net_retention_mrr') }}
         FROM finals
         LEFT JOIN mrr_totals_levelled
-        ON finals.sfdc_account_id = mrr_totals_levelled.sfdc_account_id
+        ON finals.sfdc_account_id = mrr_totals_levelled.dim_crm_account_id
         GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 
 )
