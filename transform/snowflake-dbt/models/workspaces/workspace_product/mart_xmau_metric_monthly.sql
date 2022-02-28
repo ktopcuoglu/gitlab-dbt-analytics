@@ -82,12 +82,13 @@
 ), total_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                               AS mart_xmau_metric_monthly_id,
+       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                  AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
-       COUNT(*)                                                                                        AS total_event_count,
-       COUNT(DISTINCT(dim_namespace_id))                                                               AS total_namespace_count,
-       COUNT(DISTINCT(dim_user_id))                                                                    AS total_user_count
+       COUNT(*)                                                                                        AS event_count,
+       COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
+       COUNT(DISTINCT(dim_user_id))                                                                    AS user_count,
+       "total"                                                                                         AS user_group
    FROM fact_w_paid_deduped
       {{ dbt_utils.group_by(n=3) }}
    ORDER BY reporting_month DESC
@@ -95,12 +96,13 @@
 ), free_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                               AS mart_xmau_metric_monthly_id,
+       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                 AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
-       COUNT(*)                                                                                       AS free_event_count,
-       COUNT(DISTINCT(dim_namespace_id))                                                              AS free_namespace_count,
-       COUNT(DISTINCT(dim_user_id))                                                                   AS free_user_count
+       COUNT(*)                                                                                       AS event_count,
+       COUNT(DISTINCT(dim_namespace_id))                                                              AS namespace_count,
+       COUNT(DISTINCT(dim_user_id))                                                                   AS user_count,
+       "free"                                                                                         AS user_group
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = FALSE
        {{ dbt_utils.group_by(n=3) }}
@@ -109,12 +111,13 @@
 ), paid_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name']) }}                                AS mart_xmau_metric_monthly_id,
+       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                  AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
-       COUNT(*)                                                                                        AS paid_event_count,
-       COUNT(DISTINCT(dim_namespace_id))                                                               AS paid_namespace_count,
-       COUNT(DISTINCT(dim_user_id))                                                                    AS paid_user_count
+       COUNT(*)                                                                                        AS event_count,
+       COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
+       COUNT(DISTINCT(dim_user_id))                                                                    AS user_count,
+       "paid"                                                                                          AS user_group
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = TRUE
        {{ dbt_utils.group_by(n=3) }}
@@ -122,19 +125,11 @@
 
 ), results AS (
 
-   SELECT
-       total_results.*,
-       free_results.free_event_count,
-       free_results.free_namespace_count,
-       free_results.free_user_count,
-       paid_results.paid_event_count,
-       paid_results.paid_namespace_count,
-       paid_results.paid_user_count
-   FROM total_results
-       LEFT JOIN free_results
-           ON total_results.reporting_month = free_results.reporting_month AND total_results.event_name = free_results.event_name
-       LEFT JOIN paid_results
-           ON total_results.reporting_month = paid_results.reporting_month AND total_results.event_name = paid_results.event_name
+  SELECT * FROM total_results
+    UNION ALL
+  SELECT * FROM free_results
+    UNION ALL
+  SELECT * FROM paid_results
 
 )
 
