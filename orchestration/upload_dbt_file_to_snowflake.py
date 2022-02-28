@@ -70,7 +70,7 @@ if __name__ == "__main__":
             reduced_json = reduce_manifest_file(raw_json=raw_json)
             save_json_file(reduced_json=reduced_json, target_file=file_name)
 
-            logging.info(f"manifest file {file_name} " f"reduced successfully.")
+            logging.info(f"manifest file {file_name} reduced successfully.")
 
         snowflake_stage_load_copy_remove(
             file_name,
