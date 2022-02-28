@@ -781,22 +781,6 @@ tables:
         FROM lfs_objects_projects
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL   
-        SELECT 'gitlab_db_geo_nodes' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM geo_nodes
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_group_custom_attributes' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM group_custom_attributes
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
         UNION ALL
         SELECT 'gitlab_db_audit_events_external_audit_event_destinations' AS table_name
         , DATE(created_at) as created_date

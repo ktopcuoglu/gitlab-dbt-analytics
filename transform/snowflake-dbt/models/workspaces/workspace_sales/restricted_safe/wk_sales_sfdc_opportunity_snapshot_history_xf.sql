@@ -44,10 +44,29 @@ WITH date_details AS (
       sales_team_asm_level,
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
-      report_opportunity_segment,
-      report_opportunity_geo,
-      report_opportunity_region,
-      report_opportunity_area,
+      report_opportunity_user_segment,
+      report_opportunity_user_geo,
+      report_opportunity_user_region,
+      report_opportunity_user_area,
+      report_user_segment_geo_region_area,
+      report_user_segment_geo_region_area_sqs_ot,
+
+      -- NF 2022-02-17 new aggregated keys 
+      key_segment,
+      key_sqs,
+      key_ot,
+
+      key_segment_geo,
+      key_segment_geo_sqs,
+      key_segment_geo_ot,      
+
+      key_segment_geo_region,
+      key_segment_geo_region_sqs,
+      key_segment_geo_region_ot,   
+
+      key_segment_geo_region_area,
+      key_segment_geo_region_area_sqs,
+      key_segment_geo_region_area_ot,
 
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
@@ -288,6 +307,7 @@ WITH date_details AS (
       snapshot_date.fiscal_quarter_name_fy                        AS snapshot_fiscal_quarter_name,
       snapshot_date.first_day_of_fiscal_quarter                   AS snapshot_fiscal_quarter_date,
       snapshot_date.day_of_fiscal_quarter_normalised              AS snapshot_day_of_fiscal_quarter_normalised,
+      snapshot_date.day_of_fiscal_year_normalised                 AS snapshot_day_of_fiscal_year_normalised,
       
       close_date_detail.first_day_of_month                        AS close_date_month,
       close_date_detail.fiscal_year                               AS close_fiscal_year,
@@ -319,10 +339,10 @@ WITH date_details AS (
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
-      sales_accepted_date.first_day_of_month                     AS sales_accepted_date_month,
-      sales_accepted_date.fiscal_year                            AS sales_accepted_date_fiscal_year,
-      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_date_fiscal_quarter_name,
-      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_date_fiscal_quarter_date,
+      sales_accepted_date.first_day_of_month                     AS sales_accepted_month,
+      sales_accepted_date.fiscal_year                            AS sales_accepted_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_fiscal_quarter_date,
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
@@ -772,10 +792,29 @@ WITH date_details AS (
       sfdc_opportunity_xf.sales_team_asm_level,
 
       -- this fields use the opportunity owner version for current FY and account fields for previous years
-      sfdc_opportunity_xf.report_opportunity_segment,
-      sfdc_opportunity_xf.report_opportunity_geo,
-      sfdc_opportunity_xf.report_opportunity_region,
-      sfdc_opportunity_xf.report_opportunity_area,
+      sfdc_opportunity_xf.report_opportunity_user_segment,
+      sfdc_opportunity_xf.report_opportunity_user_geo,
+      sfdc_opportunity_xf.report_opportunity_user_region,
+      sfdc_opportunity_xf.report_opportunity_user_area,
+
+      -- NF 2022-02-17 new aggregated keys 
+      sfdc_opportunity_xf.report_user_segment_geo_region_area,
+      sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
+      sfdc_opportunity_xf.key_segment,
+      sfdc_opportunity_xf.key_sqs,
+      sfdc_opportunity_xf.key_ot,
+
+      sfdc_opportunity_xf.key_segment_geo,
+      sfdc_opportunity_xf.key_segment_geo_sqs,
+      sfdc_opportunity_xf.key_segment_geo_ot,      
+
+      sfdc_opportunity_xf.key_segment_geo_region,
+      sfdc_opportunity_xf.key_segment_geo_region_sqs,
+      sfdc_opportunity_xf.key_segment_geo_region_ot,   
+
+      sfdc_opportunity_xf.key_segment_geo_region_area,
+      sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
+      sfdc_opportunity_xf.key_segment_geo_region_area_ot,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    

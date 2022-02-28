@@ -24,6 +24,13 @@ WITH sfdc_opportunity AS (
     SELECT * 
     FROM {{ ref('wk_sales_date_details') }} 
 
+
+), agg_demo_keys AS (
+-- keys used for aggregated historical analysis
+
+    SELECT *
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
+
 ), today AS (
 
   SELECT DISTINCT 
@@ -288,7 +295,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_accepted_fiscal_year,
-      sfdc_opportunity_xf.sales_accepted_date_month,
+      sfdc_opportunity_xf.sales_accepted_date_month AS sales_accepted_month,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_qualified_fiscal_year,
@@ -633,39 +640,35 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_segment
         ELSE sfdc_opportunity_xf.opportunity_owner_user_segment
-      END                                                       AS report_opportunity_segment,
+      END                                                       AS report_opportunity_user_segment,
 
       CASE 
-        WHEN sfdc_opportunity_xf.opportunity_owner_user_segment = 'PubSec' -- <- NF PubSec Geo is AMER, but for reporting it makes no sense to show that
-          THEN 'PubSec'
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_geo
         ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
-      END                                                       AS report_opportunity_geo,
+      END                                                       AS report_opportunity_user_geo,
 
       CASE 
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_region
         ELSE sfdc_opportunity_xf.opportunity_owner_user_region
-      END                                                       AS report_opportunity_region,
+      END                                                       AS report_opportunity_user_region,
 
       CASE 
         WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
           THEN sfdc_accounts_xf.account_owner_user_area
         ELSE sfdc_opportunity_xf.opportunity_owner_user_area
-      END                                                       AS report_opportunity_area,
+      END                                                       AS report_opportunity_user_area,
       -- report_opportunity_subarea
 
       -------------------
-      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
-      COALESCE(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'_',sfdc_opportunity_xf.opportunity_owner_user_region),'NA')         AS sales_team_rd_asm_level,
-       -------------------
-      COALESCE(sfdc_opportunity_xf.opportunity_owner_user_segment ,'NA')            AS sales_team_cro_level,
-      
-      --COALESCE(report_opportunity_segment ,'NA')                                    AS sales_team_cro_level,
-      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo),'NA')                                                            AS sales_team_vp_level,
-      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region),'NA')                              AS sales_team_avp_rd_level,
-      COALESCE(CONCAT(report_opportunity_segment,'_',report_opportunity_geo,'_',report_opportunity_region,'_',report_opportunity_area),'NA')  AS sales_team_asm_level,
+      -- BASE KEYS
+       -- 20220214 NF: Temporary keys, until the SFDC key is exposed
+      LOWER(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'-',sfdc_opportunity_xf.opportunity_owner_user_geo,'-',sfdc_opportunity_xf.opportunity_owner_user_region,'-',sfdc_opportunity_xf.opportunity_owner_user_area)) AS opportunity_user_segment_geo_region_area,
+
+      -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
+      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area)) AS report_user_segment_geo_region_area,
+      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area, '-', sfdc_opportunity_xf.sales_qualified_source, '-', sfdc_opportunity_xf.order_type_stamped)) AS report_user_segment_geo_region_area_sqs_ot,
 
       -- account driven fields 
       sfdc_accounts_xf.account_name,
@@ -1102,13 +1105,45 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         WHEN net_arr < -100000 
           AND is_eligible_churn_contraction_flag = 1
           THEN '5. 100k+'
-      END                                                 AS churn_contracton_net_arr_bucket
+      END                                                 AS churn_contracton_net_arr_bucket,
+
+      -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with 
+      -- different aggregation levels
+
+        COALESCE(agg_demo_keys.key_segment,'other')                     AS key_segment,
+        COALESCE(agg_demo_keys.key_sqs,'other')                         AS key_sqs,
+        COALESCE(agg_demo_keys.key_ot,'other')                          AS key_ot,
+
+        COALESCE(agg_demo_keys.key_segment_geo,'other')                 AS key_segment_geo,
+        COALESCE(agg_demo_keys.key_segment_geo_sqs,'other')             AS key_segment_geo_sqs,
+        COALESCE(agg_demo_keys.key_segment_geo_ot,'other')              AS key_segment_geo_ot,      
+
+        COALESCE(agg_demo_keys.key_segment_geo_region,'other')          AS key_segment_geo_region,
+        COALESCE(agg_demo_keys.key_segment_geo_region_sqs,'other')      AS key_segment_geo_region_sqs,
+        COALESCE(agg_demo_keys.key_segment_geo_region_ot,'other')       AS key_segment_geo_region_ot,   
+
+        COALESCE(agg_demo_keys.key_segment_geo_region_area,'other')     AS key_segment_geo_region_area,
+        COALESCE(agg_demo_keys.key_segment_geo_region_area_sqs,'other') AS key_segment_geo_region_area_sqs,
+        COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
+
+        COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')   AS sales_team_cro_level,
+     
+        -- NF: This code replicates the reporting structured of FY22, to keep current tools working
+        COALESCE(agg_demo_keys.sales_team_rd_asm_level,'other')  AS sales_team_rd_asm_level,
+
+        COALESCE(agg_demo_keys.sales_team_vp_level,'other')      AS sales_team_vp_level,
+        COALESCE(agg_demo_keys.sales_team_avp_rd_level,'other')  AS sales_team_avp_rd_level,
+        COALESCE(agg_demo_keys.sales_team_asm_level,'other')     AS sales_team_asm_level
+
       
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
     LEFT JOIN net_iacv_to_net_arr_ratio
       ON net_iacv_to_net_arr_ratio.user_segment_stamped = oppty_final.opportunity_owner_user_segment
       AND net_iacv_to_net_arr_ratio.order_type_stamped = oppty_final.order_type_stamped
+    -- Add keys for aggregated analysis
+    LEFT JOIN agg_demo_keys
+      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
 
 )
 SELECT *

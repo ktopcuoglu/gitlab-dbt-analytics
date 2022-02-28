@@ -143,6 +143,7 @@
       dim_crm_opportunity.opportunity_sales_development_representative,
       dim_crm_opportunity.opportunity_business_development_representative,
       dim_crm_opportunity.opportunity_development_representative,
+      dim_crm_opportunity.sdr_or_bdr,
       dim_crm_opportunity.iqm_submitted_by_role,
       dim_crm_opportunity.sdr_pipeline_contribution,
       dim_crm_opportunity.is_web_portal_purchase,
@@ -194,6 +195,8 @@
       fct_crm_opportunity.partner_account,
       fct_crm_opportunity.dr_status,
       fct_crm_opportunity.distributor,
+      fct_crm_opportunity.dr_deal_id,
+      fct_crm_opportunity.dr_primary_registration,
       fct_crm_opportunity.influence_partner,
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
@@ -259,7 +262,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-12-07",
-    updated_date="2022-02-08",
+    updated_date="2022-02-14",
   ) }}
