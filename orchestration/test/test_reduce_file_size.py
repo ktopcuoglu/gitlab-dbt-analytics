@@ -48,7 +48,7 @@ TEST_JSON_DICT: Dict[Any, Any] = {
 }
 TARGET_FILE = "test_file.json"
 
-FILE_NAME_ZIPPED = "test/test_manifest.json.gz"
+FILE_NAME_ZIPPED = "orchestration/test/test_manifest.json.gz"
 FILE_NAME_ORIGINAL = f"{FILE_NAME_ZIPPED.replace('.gz','')}"
 FILE_NAME_REDUCED = f"{FILE_NAME_ORIGINAL}.reduced"
 
