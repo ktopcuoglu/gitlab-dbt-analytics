@@ -548,6 +548,14 @@ WITH date_details AS (
       COALESCE(sao_gen.sao_deal_count,0)                                  AS sao_deal_count,
       COALESCE(sao_gen.sao_net_arr,0)                                     AS sao_net_arr,
 
+       -- one year ago sao gen
+      COALESCE(minus_1_year_sao_gen.sao_net_arr,0)                      AS minus_1_year_sao_net_arr,
+      COALESCE(minus_1_year_sao_gen.sao_deal_count,0)                   AS minus_1_year_sao_deal_count,
+
+      -- one year ago pipe gen
+      COALESCE(minus_1_year_pipe_gen.pipe_gen_net_arr,0)                AS minus_1_year_pipe_gen_net_arr,
+      COALESCE(minus_1_year_pipe_gen.pipe_gen_count,0)                  AS minus_1_year_pipe_gen_deal_count,
+
       -- TIMESTAMP
       current_timestamp                                                 AS dbt_last_run_at
 
@@ -581,7 +589,16 @@ WITH date_details AS (
        ON base_fields.close_day_of_fiscal_quarter_normalised = sao_gen.close_day_of_fiscal_quarter_normalised
         AND base_fields.close_fiscal_quarter_date = sao_gen.close_fiscal_quarter_date   
         AND base_fields.report_user_segment_geo_region_area_sqs_ot = sao_gen.report_user_segment_geo_region_area_sqs_ot
-
+    -- One Year Ago  pipeline generation
+    LEFT JOIN pipeline_gen  minus_1_year_pipe_gen
+      ON minus_1_year_pipe_gen.close_day_of_fiscal_quarter_normalised = base_fields.close_day_of_fiscal_quarter_normalised
+        AND minus_1_year_pipe_gen.close_fiscal_quarter_date = DATEADD(month, -12, base_fields.close_fiscal_quarter_date)
+        AND minus_1_year_pipe_gen.report_user_segment_geo_region_area_sqs_ot = base_fields.report_user_segment_geo_region_area_sqs_ot
+    -- One Year Ago Sales Accepted Opportunity Generation
+    LEFT JOIN sao_gen minus_1_year_sao_gen
+      ON minus_1_year_sao_gen.close_day_of_fiscal_quarter_normalised = base_fields.close_day_of_fiscal_quarter_normalised
+        AND minus_1_year_sao_gen.close_fiscal_quarter_date = DATEADD(month, -12, base_fields.close_fiscal_quarter_date)
+        AND minus_1_year_sao_gen.report_user_segment_geo_region_area_sqs_ot = base_fields.report_user_segment_geo_region_area_sqs_ot
 
 )
 
