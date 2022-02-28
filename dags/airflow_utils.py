@@ -328,7 +328,7 @@ clone_data_science_repo_cmd = f"""
     git checkout $GIT_COMMIT &&
     cd .."""
 
-# command to exclude models (for test models)
+# command to exclude models (for test models) in dbt test command
 run_command_test_exclude = "--exclude staging.gitlab_com"
 
 
