@@ -50,7 +50,7 @@ TEST_JSON_DICT: Dict[Any, Any] = {
 TARGET_FILE = "test_file.json"
 
 # FILE_NAME_ZIPPED = "orchestration/test/test_manifest.json.gz"
-FILE_NAME_ZIPPED = "test_manifest.json.gz"
+FILE_NAME_ZIPPED = f"{abs_path}/test_manifest.json.gz"
 FILE_NAME_ORIGINAL = f"{FILE_NAME_ZIPPED.replace('.gz','')}"
 FILE_NAME_REDUCED = f"{FILE_NAME_ORIGINAL}.reduced"
 
@@ -65,7 +65,7 @@ def extract_gzip_file(file_name_zipped: str, file_name_extracted: str) -> None:
     with gzip.open(file_name_zipped, "rb") as zipped_file:
         with open(file_name_extracted, "wb") as json_file:
             shutil.copyfileobj(zipped_file, json_file)
-    print('aaaaaa: '+str(sys.path))
+
 
 def test_extract_gzip_file():
     """
