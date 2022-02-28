@@ -1,6 +1,6 @@
 with mrr_totals_levelled AS (
 
-       SELECT * FROM {{ref('mrr_totals_levelled')}}
+       SELECT * FROM {{ref('mart_arr')}}
 
 ), current_arr_segmentation_all_levels AS (
 
@@ -9,9 +9,9 @@ with mrr_totals_levelled AS (
 
 ), list AS ( --get all the subscription + their lineage + the month we're looking for MRR for (12 month in the future)
 
-       SELECT sfdc_account_id,
-              mrr_month as original_mrr_month,
-              dateadd('year', 1, mrr_month) AS retention_month,
+       SELECT dim_crm_account_id AS sfdc_account_id,
+              arr_month as original_mrr_month,
+              dateadd('year', 1, arr_month) AS retention_month,
               sum(mrr) as mrr
        FROM mrr_totals_levelled
        GROUP BY 1, 2, 3
@@ -46,15 +46,15 @@ with mrr_totals_levelled AS (
 
         SELECT finals.sfdc_account_id,
                finals.sfdc_account_id as salesforce_account_id,
-               sfdc_account_name,
+               crm_account_name AS sfdc_account_name,
                dateadd('year', 1, finals.original_mrr_month) AS retention_month, --THIS IS THE RETENTION MONTH, NOT THE MRR MONTH!!
                original_mrr,
                net_retention_mrr,
                gross_retention_mrr,
-               sfdc_account_cohort_month,
-               sfdc_account_cohort_quarter,
-               datediff(month, sfdc_account_cohort_month, original_mrr_month) as months_since_sfdc_account_cohort_start,
-               datediff(quarter, sfdc_account_cohort_quarter, original_mrr_month) as quarters_since_sfdc_account_cohort_start,
+               crm_account_cohort_month AS sfdc_account_cohort_month,
+               crm_account_cohort_quarter AS sfdc_account_cohort_quarter,
+               datediff(month, crm_account_cohort_month, original_mrr_month) as months_since_sfdc_account_cohort_start,
+               datediff(quarter, crm_account_cohort_quarter, original_mrr_month) as quarters_since_sfdc_account_cohort_start,
                {{ churn_type('original_mrr', 'net_retention_mrr') }}
         FROM finals
         LEFT JOIN mrr_totals_levelled
