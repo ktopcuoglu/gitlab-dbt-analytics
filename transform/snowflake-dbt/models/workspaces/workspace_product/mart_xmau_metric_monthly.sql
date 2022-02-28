@@ -84,7 +84,7 @@
    SELECT
        reporting_month,
        event_name,
-       "total"                                                                                         AS user_group,
+       'total'                                                                                         AS user_group,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
@@ -98,7 +98,7 @@
    SELECT
        reporting_month,
        event_name,
-       "free"                                                                                         AS user_group,
+       'free'                                                                                         AS user_group,
        COUNT(*)                                                                                       AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                              AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                   AS user_count
@@ -112,7 +112,7 @@
    SELECT
        reporting_month,
        event_name,
-       "paid"                                                                                          AS user_group,
+       'paid'                                                                                          AS user_group,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
