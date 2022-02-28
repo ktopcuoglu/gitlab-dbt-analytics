@@ -82,7 +82,6 @@
 ), total_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                  AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
        COUNT(*)                                                                                        AS event_count,
@@ -96,7 +95,6 @@
 ), free_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                 AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
        COUNT(*)                                                                                       AS event_count,
@@ -111,7 +109,6 @@
 ), paid_results AS (
 
    SELECT
-       {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                  AS mart_xmau_metric_monthly_id,
        reporting_month,
        event_name,
        COUNT(*)                                                                                        AS event_count,
@@ -123,13 +120,20 @@
        {{ dbt_utils.group_by(n=3) }}
    ORDER BY reporting_month DESC
 
-), results AS (
+), results_wo_pk AS (
 
   SELECT * FROM total_results
     UNION ALL
   SELECT * FROM free_results
     UNION ALL
   SELECT * FROM paid_results
+
+), results AS (
+
+  SELECT
+    {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                  AS mart_xmau_metric_monthly_id,
+    *
+  FROM results_wo_pk
 
 )
 
@@ -138,5 +142,5 @@
     created_by="@icooper_acp",
     updated_by="@icooper_acp",
     created_date="2022-02-23",
-    updated_date="2022-02-23"
+    updated_date="2022-02-28"
 ) }}
