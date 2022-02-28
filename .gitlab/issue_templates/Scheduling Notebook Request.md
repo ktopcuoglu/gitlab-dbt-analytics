@@ -5,11 +5,12 @@
 1. [ ] Specify process name: ``
 2. [ ] Create MR to the [data-science/deployments](https://gitlab.com/gitlab-data/data-science/-/tree/main/deployments) folder
    1. The MR should create a new folder containing all of the queries required, along with the Notebook. The [pte folder](https://gitlab.com/gitlab-data/data-science/-/tree/main/deployments/pte) can be used as an example
-   2. If any parameters are required for running the notebook please specify them here: `` 
-3. [ ] Specify requested schedule: `` 
+3. [ ] Specify command line Papermill notebook parameters, if any are needed: ``
+   1. For example, in the PTE Dag a parameter was created to specify the environment: `papermill scoring_code.ipynb -p `**`is_local_development False`** 
+4. [ ] Specify requested schedule: `` 
    1. The schedule should be specified using cron tab scheduling. 
    2. For examples and help specifying a schedule, see [CronTab Guru](https://crontab.guru/#*_*_*/1__) 
-4. [ ] Ping @data-team/engineers and request the below process
+5. [ ] Ping @data-team/engineers and request the below process
 
 
 #### Data Engineer To
