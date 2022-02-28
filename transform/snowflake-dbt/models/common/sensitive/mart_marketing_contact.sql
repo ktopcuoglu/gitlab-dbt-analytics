@@ -224,7 +224,6 @@
       ON services.project_id = project.dim_project_id
     LEFT JOIN marketing_contact_order
       ON marketing_contact_order.dim_namespace_id = project.dim_namespace_id
-    WHERE services.is_active = TRUE
     GROUP BY 1
 
 ), users_role_by_marketing_contact_id AS (
@@ -238,18 +237,6 @@
     LEFT JOIN marketing_contact_order
       ON marketing_contact_order.dim_namespace_id = dim_namespace.dim_namespace_id
     GROUP BY 1
-
-), users_role_by_marketing_contact_id_last AS (
-
-    SELECT
-      marketing_contact_order.dim_marketing_contact_id,
-      gitlab_dotcom_users_source.role   AS pql_namespace_creator_job_description_last
-    FROM gitlab_dotcom_users_source
-    LEFT JOIN dim_namespace
-      ON dim_namespace.creator_id = gitlab_dotcom_users_source.user_id
-    LEFT JOIN marketing_contact_order
-      ON marketing_contact_order.dim_namespace_id = dim_namespace.dim_namespace_id
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY marketing_contact_order.dim_marketing_contact_id ORDER BY dim_namespace.created_at DESC) = 1
 
 ), subscription_aggregate AS (
 
@@ -771,7 +758,6 @@
       services_by_marketing_contact_id.pql_nbr_integrations_installed,
       services_by_marketing_contact_id.pql_integrations_installed,
       users_role_by_marketing_contact_id.pql_namespace_creator_job_description,
-      users_role_by_marketing_contact_id_last.pql_namespace_creator_job_description_last,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
@@ -835,8 +821,6 @@
       ON latest_pql.email = marketing_contact.email_address
     LEFT JOIN users_role_by_marketing_contact_id
       ON users_role_by_marketing_contact_id.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
-    LEFT JOIN users_role_by_marketing_contact_id_last
-      ON users_role_by_marketing_contact_id_last.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
 )
 
 {{ hash_diff(
