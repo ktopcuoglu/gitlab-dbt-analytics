@@ -18,7 +18,7 @@
         CAST(EVENT_CREATED_AT AS DATE)                                                                  AS event_date,
         dim_user_id,
         event_name,
-        data_source,
+        source,
         plan_id_at_event_date,
         plan_name_at_event_date,
         plan_was_paid_at_event_date,
@@ -38,7 +38,7 @@
         dim_date.last_day_of_fiscal_year                                                                AS last_day_of_fiscal_year,
         fact.dim_user_id,
         fact.event_name,
-        fact.data_source,
+        fact.source,
         fact.plan_was_paid_at_event_date,
         fact.dim_namespace_id,
         fact.reporting_month,
@@ -84,10 +84,11 @@
    SELECT
        reporting_month,
        event_name,
+       "total"                                                                                         AS user_group,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
-       COUNT(DISTINCT(dim_user_id))                                                                    AS user_count,
-       "total"                                                                                         AS user_group
+       COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
+
    FROM fact_w_paid_deduped
       {{ dbt_utils.group_by(n=3) }}
    ORDER BY reporting_month DESC
@@ -97,10 +98,10 @@
    SELECT
        reporting_month,
        event_name,
+       "free"                                                                                         AS user_group,
        COUNT(*)                                                                                       AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                              AS namespace_count,
-       COUNT(DISTINCT(dim_user_id))                                                                   AS user_count,
-       "free"                                                                                         AS user_group
+       COUNT(DISTINCT(dim_user_id))                                                                   AS user_count
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = FALSE
        {{ dbt_utils.group_by(n=3) }}
@@ -111,10 +112,10 @@
    SELECT
        reporting_month,
        event_name,
+       "paid"                                                                                          AS user_group,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
-       COUNT(DISTINCT(dim_user_id))                                                                    AS user_count,
-       "paid"                                                                                          AS user_group
+       COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = TRUE
        {{ dbt_utils.group_by(n=3) }}
