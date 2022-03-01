@@ -81,7 +81,6 @@ sources:
       - name: mapping_sdr_sfdc_bamboohr
       - name: marketing_core_users_from_docs_gitlab_com
       - name: marketing_kpi_benchmarks
-      - name: marketing_pipe_to_spend_headcount
       - name: maxmind_countries
       - name: maxmind_ranges
       - name: net_arr_net_iacv_conversion_factors
