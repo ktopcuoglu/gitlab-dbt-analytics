@@ -54,6 +54,15 @@ if __name__ == "__main__":
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     if os.path.exists(file_name):
+        """
+        Add a IF condition for the following reason:
+        if this module is called from DBT
+        config_name = "manifest_reduce" and will shrink,
+        if exceed size of 16MB.
+        Otherwise, will just be uploaded.
+        "manifest" and "manifest_reduce" are separated 
+        to prevent shrink of manifest.json we are using for production documentation. 
+        """
         if (
             config_name == "manifest_reduce"
             and get_file_size(file_to_measure=file_name)
