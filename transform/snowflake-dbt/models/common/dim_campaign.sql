@@ -24,7 +24,8 @@ WITH sfdc_campaign_info AS (
       alliance_partner_name,
       channel_partner_name,
       sales_play,
-      gtm_motion
+      gtm_motion,
+      total_planned_mqls
     FROM sfdc_campaign_info
 
 )
@@ -32,7 +33,7 @@ WITH sfdc_campaign_info AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@paul_armstrong",
-    updated_by="@mcooperDD",
+    updated_by="@rkohnke",
     created_date="2020-11-13",
-    updated_date="2021-03-01"
+    updated_date="2022-03-01"
 ) }}
