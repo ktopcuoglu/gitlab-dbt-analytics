@@ -60,8 +60,8 @@ if __name__ == "__main__":
         config_name = "manifest_reduce" and will shrink,
         if exceed size of 16MB.
         Otherwise, will just be uploaded.
-        "manifest" and "manifest_reduce" are separated 
-        to prevent shrink of manifest.json we are using for production documentation. 
+        "manifest" and "manifest_reduce" are separated
+        to prevent shrink of manifest.json we are using for production documentation.
         """
         if (
             config_name == "manifest_reduce"
