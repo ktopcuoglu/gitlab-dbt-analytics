@@ -125,7 +125,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
      unioned_targets.dim_sales_qualified_source_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
-     unioned_targets.crm_opp_owner_user_segment_geo_region_area_stamped                                                             AS crm_user_segment_geo_region_area,
+     unioned_targets.crm_opp_owner_user_segment_geo_region_area_stamped                                                             AS crm_user_sales_segment_geo_region_area,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)           AS dim_crm_user_hierarchy_live_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)   AS dim_crm_user_sales_segment_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                       AS dim_crm_user_geo_id,
