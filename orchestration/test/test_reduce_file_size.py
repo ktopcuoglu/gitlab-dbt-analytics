@@ -2,7 +2,6 @@
 Main test file for reduce_file_size.py
 """
 
-
 import os
 import sys
 import gzip
@@ -45,6 +44,7 @@ TEST_JSON_DICT: Dict[Any, Any] = {
         }
     },
 }
+
 TARGET_FILE = "test_file.json"
 
 FILE_NAME_ZIPPED = f"{abs_path}/test_manifest.json.gz"
@@ -72,6 +72,8 @@ def test_extract_gzip_file():
     clean_up_file(FILE_NAME_ORIGINAL)
 
     extract_gzip_file(FILE_NAME_ZIPPED, FILE_NAME_ORIGINAL)
+
+    assert os.path.exists(FILE_NAME_ZIPPED) is True
 
     assert os.path.exists(FILE_NAME_ORIGINAL) is True
 
@@ -125,8 +127,9 @@ def test_reduce_nodes_section() -> None:
     """
     return: None
     """
+    node_items = TEST_JSON_DICT["nodes"].items()
 
-    node_json = reduce_nodes_section(source_nodes_json=TEST_JSON_DICT["nodes"].items())
+    node_json = reduce_nodes_section(source_nodes_json=node_items)
 
     assert len(node_json["test_metric"]["config"]) == 1
 
@@ -223,7 +226,10 @@ def test_regression_config_manifest() -> None:
     )
 
     assert is_reduced is False
+
     assert os.path.exists(FILE_NAME_REDUCED) is False
+
+    assert os.path.exists(FILE_NAME_ORIGINAL) is True
 
 
 def test_config_manifest_reduce() -> None:
@@ -243,7 +249,11 @@ def test_config_manifest_reduce() -> None:
     file_size_after = get_file_size(file_to_measure=FILE_NAME_REDUCED)
 
     assert is_reduced is True
+
     assert os.path.exists(FILE_NAME_REDUCED) is True
+
+    assert os.path.exists(FILE_NAME_ORIGINAL) is True
+
     assert file_size_before > file_size_after
 
 
@@ -255,6 +265,7 @@ def test_clean_up_file() -> None:
     clean_up_file(FILE_NAME_REDUCED)
 
     assert os.path.exists(FILE_NAME_ORIGINAL) is False
+
     assert os.path.exists(FILE_NAME_REDUCED) is False
 
 
