@@ -50,14 +50,66 @@ dag = DAG(
 data_yaml_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python gitlab_data_yaml/upload.py &&
-    python gitlab_feature_flags_yaml/upload.py &&
-    python gitlab_flaky_tests/upload.py
 """
 data_yaml_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
     task_id="data-yaml-extract",
     name="data-yaml-extract",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_DATABASE,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        GITLAB_ANALYTICS_PRIVATE_TOKEN,
+        GITLAB_COM_API_TOKEN,
+    ],
+    affinity=get_affinity(False),
+    tolerations=get_toleration(False),
+    env_vars=pod_env_vars,
+    arguments=[data_yaml_extract_cmd],
+    dag=dag,
+)
+
+# Feature flags extract
+data_yaml_extract_cmd = f"""
+    {clone_and_setup_extraction_cmd} &&
+    python gitlab_feature_flags_yaml/upload.py &&
+"""
+feature_flags_extract = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id="feature-flags-extract",
+    name="feature-flags-extract",
+    secrets=[
+        SNOWFLAKE_ACCOUNT,
+        SNOWFLAKE_LOAD_DATABASE,
+        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_USER,
+        SNOWFLAKE_LOAD_WAREHOUSE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        GITLAB_ANALYTICS_PRIVATE_TOKEN,
+        GITLAB_COM_API_TOKEN,
+    ],
+    affinity=get_affinity(False),
+    tolerations=get_toleration(False),
+    env_vars=pod_env_vars,
+    arguments=[data_yaml_extract_cmd],
+    dag=dag,
+)
+
+# Flaky tests Extract
+data_yaml_extract_cmd = f"""
+    {clone_and_setup_extraction_cmd} &&
+    python gitlab_flaky_tests/upload.py
+"""
+flaky_tests_extract = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DATA_IMAGE,
+    task_id="flaky-tests-extract",
+    name="flaky-tests-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_DATABASE,
