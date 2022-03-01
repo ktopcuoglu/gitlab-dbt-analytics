@@ -49,7 +49,7 @@ WITH source AS (
       account_tier__c                               AS account_tier,
       customer_since__c::DATE                       AS customer_since_date,
       carr_this_account__c                          AS carr_this_account,
-      -- carr_acct_family__c                           AS carr_account_family,
+      carr_acct_family__c                           AS carr_account_family,
       next_renewal_date__c                          AS next_renewal_date,
       license_utilization__c                        AS license_utilization,
       region__c                                     AS account_region,

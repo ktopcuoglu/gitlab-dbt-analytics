@@ -172,7 +172,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.federal_account                                        AS federal_account,
       sfdc_account.is_jihu_account                                        AS is_jihu_account,
       sfdc_account.carr_this_account,
-      -- sfdc_account.carr_account_family,
+      sfdc_account.carr_account_family,
       sfdc_account.potential_arr_lam,
       sfdc_account.lam                                                    AS parent_crm_account_lam,
       sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
