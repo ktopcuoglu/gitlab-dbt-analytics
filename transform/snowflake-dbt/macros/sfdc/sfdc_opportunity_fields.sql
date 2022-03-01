@@ -484,8 +484,6 @@ WITH first_contact  AS (
       ON sfdc_opportunity.stage_name = sfdc_opportunity_stage.primary_label
     LEFT JOIN quote
       ON sfdc_opportunity.dim_crm_opportunity_id = quote.dim_crm_opportunity_id
-    LEFT JOIN sfdc_account AS fulfillment_partner
-      ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     LEFT JOIN linear_attribution_base
       ON sfdc_opportunity.dim_crm_opportunity_id = linear_attribution_base.dim_crm_opportunity_id
     LEFT JOIN campaigns_per_opp
@@ -502,6 +500,8 @@ WITH first_contact  AS (
       ON sales_accepted_date.date_actual = sfdc_opportunity.sales_accepted_date::DATE
     LEFT JOIN date_details AS start_date
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
+    LEFT JOIN sfdc_account AS fulfillment_partner
+      ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'base' %}
     {%- elif model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
