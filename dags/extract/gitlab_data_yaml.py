@@ -74,7 +74,7 @@ data_yaml_extract = KubernetesPodOperator(
 )
 
 # Feature flags extract
-data_yaml_extract_cmd = f"""
+feature_flags_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python gitlab_feature_flags_yaml/upload.py &&
 """
@@ -96,12 +96,12 @@ feature_flags_extract = KubernetesPodOperator(
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     env_vars=pod_env_vars,
-    arguments=[data_yaml_extract_cmd],
+    arguments=[feature_flags_extract_cmd],
     dag=dag,
 )
 
 # Flaky tests Extract
-data_yaml_extract_cmd = f"""
+flaky_tests_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python gitlab_flaky_tests/upload.py
 """
@@ -123,6 +123,6 @@ flaky_tests_extract = KubernetesPodOperator(
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     env_vars=pod_env_vars,
-    arguments=[data_yaml_extract_cmd],
+    arguments=[flaky_tests_extract_cmd],
     dag=dag,
 )
