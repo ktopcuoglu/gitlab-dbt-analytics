@@ -21,6 +21,7 @@ WITH source AS (
       manager_name__c                                                   AS manager_name,
       isactive                                                          AS is_active,
       userroleid                                                        AS user_role_id,
+      user_role_type__c                                                 AS user_role_type,
       start_date__c                                                     AS start_date,
       {{ sales_hierarchy_sales_segment_cleaning('user_segment__c') }}   AS user_segment,
       user_geo__c                                                       AS user_geo,
