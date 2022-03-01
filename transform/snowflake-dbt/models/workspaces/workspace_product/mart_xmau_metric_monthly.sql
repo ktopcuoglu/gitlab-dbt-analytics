@@ -15,7 +15,8 @@
 
     SELECT
         event_id,
-        CAST(EVENT_CREATED_AT AS DATE)                                                                  AS event_date,
+        CAST(event_created_at AS DATE)                                                                  AS event_date,
+        event_created_at,
         dim_user_id,
         event_name,
         source,
@@ -23,16 +24,24 @@
         plan_name_at_event_date,
         plan_was_paid_at_event_date,
         dim_namespace_id,
+        is_umau,
+        is_gmau,
+        is_smau,
+        section_name,
+        stage_name,
+        group_name,
         DATE_TRUNC('MONTH', event_date)                                                                 AS reporting_month,
         QUARTER(event_date)                                                                             AS reporting_quarter,
         YEAR(event_date)                                                                                AS reporting_year
     FROM fct_usage_event as fact
+      WHERE is_umau = TRUE OR is_gmau = TRUE OR is_smau = TRUE
 
 ), fact_with_date_range AS (
 
     SELECT
         fact.event_id,
         fact.event_date,
+        fact.event_created_at,
         dim_date.last_day_of_month                                                                      AS last_day_of_month,
         dim_date.last_day_of_quarter                                                                    AS last_day_of_quarter,
         dim_date.last_day_of_fiscal_year                                                                AS last_day_of_fiscal_year,
@@ -41,6 +50,12 @@
         fact.source,
         fact.plan_was_paid_at_event_date,
         fact.dim_namespace_id,
+        fact.is_umau,
+        fact.is_gmau,
+        fact.is_smau,
+        fact.section_name,
+        fact.stage_name,
+        fact.group_name,
         fact.reporting_month,
         fact.reporting_quarter,
         fact.reporting_year
@@ -57,7 +72,7 @@
           plan_was_paid_at_event_date
       FROM fact_with_date_range
           QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_namespace_id, reporting_month
-                                     ORDER BY reporting_month DESC) = 1
+                                     ORDER BY event_created_at DESC) = 1
 
  ), fact_w_paid_deduped AS (
 
@@ -71,6 +86,12 @@
          fact_with_date_range.event_name,
          fact_with_date_range.source,
          fact_with_date_range.dim_namespace_id,
+         fact_with_date_range.is_umau,
+         fact_with_date_range.is_gmau,
+         fact_with_date_range.is_smau,
+         fact_with_date_range.section_name,
+         fact_with_date_range.stage_name,
+         fact_with_date_range.group_name,
          fact_with_date_range.reporting_month,
          fact_with_date_range.reporting_quarter,
          fact_with_date_range.reporting_year,
@@ -84,13 +105,18 @@
    SELECT
        reporting_month,
        event_name,
+       is_umau,
+       is_gmau,
+       is_smau,
+       section_name,
+       stage_name,
+       group_name,
        'total'                                                                                         AS user_group,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
-
    FROM fact_w_paid_deduped
-      {{ dbt_utils.group_by(n=3) }}
+      {{ dbt_utils.group_by(n=9) }}
    ORDER BY reporting_month DESC
 
 ), free_results AS (
@@ -98,13 +124,19 @@
    SELECT
        reporting_month,
        event_name,
+       is_umau,
+       is_gmau,
+       is_smau,
+       section_name,
+       stage_name,
+       group_name,
        'free'                                                                                         AS user_group,
        COUNT(*)                                                                                       AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                              AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                   AS user_count
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = FALSE
-       {{ dbt_utils.group_by(n=3) }}
+       {{ dbt_utils.group_by(n=9) }}
    ORDER BY reporting_month DESC
 
 ), paid_results AS (
@@ -112,13 +144,19 @@
    SELECT
        reporting_month,
        event_name,
+       is_umau,
+       is_gmau,
+       is_smau,
+       section_name,
+       stage_name,
+       group_name,
        'paid'                                                                                          AS user_group,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = TRUE
-       {{ dbt_utils.group_by(n=3) }}
+       {{ dbt_utils.group_by(n=9) }}
    ORDER BY reporting_month DESC
 
 ), results_wo_pk AS (
@@ -132,7 +170,7 @@
 ), results AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group']) }}                  AS mart_xmau_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group', 'section_name', 'stage_name', 'group_name']) }}                  AS mart_xmau_metric_monthly_id,
     *
   FROM results_wo_pk
 
