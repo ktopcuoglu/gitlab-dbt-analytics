@@ -122,6 +122,7 @@ WITH sfdc_opportunity_snapshots AS (
       deal_path__c                                AS deal_path,
       dr_partner_deal_type__c                     AS dr_partner_deal_type,
       dr_partner_engagement__c                    AS dr_partner_engagement,
+      order_type_test__c                          AS order_type_stamped,
       {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                   AS channel_type,
       impartnerprm__partneraccount__c             AS partner_account,
