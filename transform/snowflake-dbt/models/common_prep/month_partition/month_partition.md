@@ -24,6 +24,8 @@ Then other metadata available in the model are :
   - project_is_learn_gitlab
   - project_is_imported
 
-A specific handbook page has been created for this table. This has more information on how to add events and some analysis that can be run with this model.
+A specific handbook page has been created for this table [here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-product-events-data/). This has more information on how to add events and some analysis that can be run with this model.
+
+When making changes to this model, you will have to use a specific DAG to backfill the partitions. Details [here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-product-events-data/#backfill-the-data).
 
 {% enddocs %}
