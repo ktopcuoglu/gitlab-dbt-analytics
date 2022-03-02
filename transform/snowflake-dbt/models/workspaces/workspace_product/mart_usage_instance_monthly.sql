@@ -92,7 +92,7 @@
         section_name                                                          AS section_name,
         group_name                                                            AS group_name,
         ping_created_at                                                       AS ping_created_at,
-        edition,                                                              AS edition
+        edition                                                               AS edition,
         major_version                                                         AS major_version,
         minor_version                                                         AS minor_version,
         usage_ping_delivery_type                                              AS usage_ping_delivery_type,
