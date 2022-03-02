@@ -230,12 +230,12 @@
 
     SELECT
       marketing_contact_order.dim_marketing_contact_id,
-      ARRAY_AGG(DISTINCT gitlab_dotcom_users_source.role) WITHIN GROUP (ORDER BY gitlab_dotcom_users_source.role) AS pql_namespace_creator_job_description
-    FROM gitlab_dotcom_users_source
-    LEFT JOIN dim_namespace
-      ON dim_namespace.creator_id = gitlab_dotcom_users_source.user_id
-    LEFT JOIN marketing_contact_order
+      ARRAY_AGG(DISTINCT marketing_contact.job_title) WITHIN GROUP (ORDER BY marketing_contact.job_title) AS pql_namespace_creator_job_description
+    FROM marketing_contact_order 
+    INNER JOIN dim_namespace
       ON marketing_contact_order.dim_namespace_id = dim_namespace.dim_namespace_id
+    INNER JOIN marketing_contact
+      ON dim_namespace.creator_id = marketing_contact.gitlab_dotcom_user_id
     GROUP BY 1
 
 ), subscription_aggregate AS (
