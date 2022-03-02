@@ -207,13 +207,14 @@ WITH biz_person AS (
                                     SELECT *
                                     FROM duplicates
                                       )
+      AND sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@degan",
+    updated_by="@iweeks",
     created_date="2020-12-08",
-    updated_date="2022-02-17"
+    updated_date="2022-02-28"
 ) }}

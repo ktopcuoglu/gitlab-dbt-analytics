@@ -103,11 +103,6 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - gitlab_slack_stats
-  # Silence as part of issue https://gitlab.com/gitlab-data/analytics/-/issues/11964
-  #- name: google_referrals
-  #  owner: '@tayloramurphy'
-  #  tabs:
-  #    - google_referrals
   - name: headcount
     owner: '@wwright'
     tabs:
@@ -165,11 +160,6 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - marketing_kpi_benchmarks
-  # This pipeline is silences as part of issue https://gitlab.com/gitlab-data/analytics/-/issues/11965
-  #- name: marketing_pipe_to_spend_headcount
-  #  owner: '@tayloramurphy'
-  #  tabs:
-  #    - marketing_pipe_to_spend_headcount
   - name: maxmind_countries
     owner: '@snalamaru'
     tabs:
