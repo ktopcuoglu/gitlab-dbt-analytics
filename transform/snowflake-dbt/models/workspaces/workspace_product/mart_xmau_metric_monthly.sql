@@ -36,7 +36,7 @@
         YEAR(event_date)                                                                                AS reporting_year
     FROM fct_usage_event
     LEFT JOIN xmau_metrics
-      ON usage_data_events.event_name = xmau_metrics.events_to_include
+      ON fct_usage_event.event_name = xmau_metrics.events_to_include
     WHERE is_umau = TRUE OR is_gmau = TRUE OR is_smau = TRUE
 
 ), fact_with_date_range AS (
