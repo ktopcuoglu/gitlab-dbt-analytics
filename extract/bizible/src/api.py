@@ -51,7 +51,7 @@ class BizibleSnowFlakeExtractor:
             snowflake_query_max_date = f"""
                 SELECT 
                     max('_modified_date') as last_modified_date
-                FROM "BIZIBLE_WAREHOUSE_IMPORT_RAW"."BIZIBLE".{table_name} 
+                FROM "BIZIBLE".{table_name} 
             """
             df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
 
@@ -70,6 +70,33 @@ class BizibleSnowFlakeExtractor:
                 bizible_dict[table_name] = f"SELECT * FROM {t}"
         return bizible_dict
 
+    def get_bizible_query(self, full_table_name):
+        """
+
+        :param full_table_name:
+        :type full_table_name:
+        """
+        table_name = full_table_name.split(".")[-1]
+
+        snowflake_query_max_date = f"""
+                        SELECT 
+                            max('_modified_date') as last_modified_date
+                        FROM "BIZIBLE".{table_name} 
+                    """
+        df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
+
+        last_modified_date_list = df["last_modified_date"].to_list()
+
+        snowflake_last_modified_date = None
+
+        if len(last_modified_date_list) > 0 and last_modified_date_list[0]:
+            snowflake_last_modified_date = last_modified_date_list[0]
+
+        if snowflake_last_modified_date:
+            return { table_name: f"SELECT * FROM {table_name} WHERE _last_modified_date > '{snowflake_last_modified_date}'"}
+        else:
+            return { table_name : f"SELECT * FROM {table_name}"} 
+
     def extract_latest_bizible_files(self, bizible_queries: Dict):
         """
 
@@ -86,9 +113,38 @@ class BizibleSnowFlakeExtractor:
             logging.info("Writing to db")
             snowflake_stage_load_copy_remove(
                 file_name,
-                f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.BIZIBLE_LOAD",
-                f"BIZIBLE_WAREHOUSE_IMPORT_RAW.BIZIBLE.{table_name}",
+                f"BIZIBLE.BIZIBLE_LOAD",
+                f"BIZIBLE.{table_name}",
                 self.snowflake_engine,
                 "csv",
                 file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
+            
+    def process_bizible_query(self, query_details: Dict):
+        for table_name in query_details.keys():
+            file_name = f"{table_name}.json"
+            logging.info(f"Running {table_name} query")
+            df = query_dataframe(self.bizible_engine, query_details[table_name])
+            logging.info(f"Creating {file_name}")
+            df.to_csv(file_name, index=False, sep="|")
+
+            logging.info("Writing to db")
+            snowflake_stage_load_copy_remove(
+                file_name,
+                f"BIZIBLE.BIZIBLE_LOAD",
+                f"BIZIBLE.{table_name}",
+                self.snowflake_engine,
+                "csv",
+                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
+            )
+        
+
+    def extract_latest_bizible_file(self, table_name: str):
+        """
+
+        :param table_name:
+        :type table_name:
+        """
+        query = self.get_bizible_query(full_table_name=table_name)
+        self.process_bizible_query(query_details=query)
+

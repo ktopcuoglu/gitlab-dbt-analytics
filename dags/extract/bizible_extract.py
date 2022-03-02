@@ -1,7 +1,7 @@
 import logging
 import os
 from datetime import datetime, timedelta
-
+import yaml
 from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
     KubernetesPodOperator,
@@ -50,18 +50,29 @@ default_args = {
 # Create the DAG
 dag = DAG("bizible_extract", default_args=default_args, schedule_interval="0 */2 * * *")
 
-# Bizible Extract
-bizible_extract_cmd = f"""
-    {clone_and_setup_extraction_cmd} &&
-    python bizible/src/execute.py
-"""
+def extract_manifest(file_path):
+    with open(file_path, "r") as file:
+        manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
+    return manifest_dict
 
-# having both xcom flag flavors since we're in an airflow version where one is being deprecated
-bamboohr_extract = KubernetesPodOperator(
+
+
+manifest = extract_manifest('analytics/extract/bizible/manifests/el_bizible_tables.yaml')
+tables = manifest.get('tables')
+
+for table_name in tables:
+    # Bizible Extract
+    extract_command = f"""
+        {clone_and_setup_extraction_cmd} &&
+        python bizible/src/main.py tap ../manifests/el_bizible_tables.yaml --load_only_table {table_name}
+    """
+
+    # having both xcom flag flavors since we're in an airflow version where one is being deprecated
+    bizible_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="bizible-extract",
-    name="bizible-extract",
+    task_id=f"bizible-extract-{table_name.replace('_', '-')}",
+    name=f"bizible-extract-{table_name.replace('_', '-')}",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_PASSWORD,
@@ -78,7 +89,7 @@ bamboohr_extract = KubernetesPodOperator(
     env_vars=pod_env_vars,
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
-    arguments=[bizible_extract_cmd],
+    arguments=[extract_command],
     do_xcom_push=True,
     dag=dag,
 )
