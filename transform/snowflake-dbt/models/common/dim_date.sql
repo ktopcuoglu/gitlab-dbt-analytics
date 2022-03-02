@@ -12,9 +12,6 @@ WITH dates AS (
 
 )
 
-SELECT *
-FROM final
-
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
