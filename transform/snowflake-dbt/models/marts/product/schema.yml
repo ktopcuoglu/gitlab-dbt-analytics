@@ -84,6 +84,8 @@ models:
       - name: reporting_month
         description: Month in which the product usage was reported.
       - name: dim_namespace_id
+      - name: namespace_name
+        description: Name associated with the dim_namespace_id. Brought in as part of Wave 5.1 Metrics.
       - name: uuid
       - name: hostname
       - name: delivery_type

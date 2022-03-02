@@ -19,6 +19,15 @@ models:
 
   - name: mart_product_usage_paid_user_metrics_monthly
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - snapshot_month
+            - dim_subscription_id
+            - delivery_type
+            - uuid
+            - hostname
+            - dim_namespace_id
     columns:
       - name: snapshot_month
         description: Month in which the product usage was reported.

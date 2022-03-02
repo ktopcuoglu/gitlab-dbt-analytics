@@ -21,11 +21,13 @@ WITH source AS (
       manager_name__c                                                   AS manager_name,
       isactive                                                          AS is_active,
       userroleid                                                        AS user_role_id,
+      user_role_type__c                                                 AS user_role_type,
       start_date__c                                                     AS start_date,
       {{ sales_hierarchy_sales_segment_cleaning('user_segment__c') }}   AS user_segment,
       user_geo__c                                                       AS user_geo,
       user_region__c                                                    AS user_region,
       user_area__c                                                      AS user_area,
+      user_segment_geo_region_area__c                                   AS user_segment_geo_region_area,
       CASE 
         WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
         ELSE user_segment

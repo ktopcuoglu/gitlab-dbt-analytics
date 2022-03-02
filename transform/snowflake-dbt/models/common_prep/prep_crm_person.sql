@@ -88,6 +88,10 @@ WITH biz_person AS (
       sequence_status,
       is_actively_being_sequenced,
       region,
+      prospect_share_status,
+      partner_prospect_status,
+      partner_prospect_id,
+      partner_prospect_owner_name,
       mailing_country                               AS country,
       mailing_state                                 AS state,
       last_activity_date,
@@ -161,6 +165,10 @@ WITH biz_person AS (
       sequence_status,
       is_actively_being_sequenced,
       region,
+      prospect_share_status,
+      partner_prospect_status,
+      partner_prospect_id,
+      partner_prospect_owner_name,
       country,
       state,
       last_activity_date,
@@ -199,13 +207,14 @@ WITH biz_person AS (
                                     SELECT *
                                     FROM duplicates
                                       )
+      AND sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@iweeks",
     created_date="2020-12-08",
-    updated_date="2022-01-12"
+    updated_date="2022-02-28"
 ) }}
