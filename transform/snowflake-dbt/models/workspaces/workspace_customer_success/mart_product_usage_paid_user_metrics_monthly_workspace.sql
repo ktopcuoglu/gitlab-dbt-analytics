@@ -184,7 +184,7 @@
       monthly_sm_metrics.failed_deployments_28_days_event,
       monthly_sm_metrics.projects_compliance_framework_all_time_event,
       monthly_sm_metrics.commit_ci_config_file_28_days_user,
-      monthly_sm_metrics.view_audit_all_time_event,
+      monthly_sm_metrics.view_audit_all_time_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -341,7 +341,7 @@
       monthly_saas_metrics.failed_deployments_28_days_event,
       monthly_saas_metrics.projects_compliance_framework_all_time_event,
       monthly_saas_metrics.commit_ci_config_file_28_days_user,
-      monthly_saas_metrics.view_audit_all_time_event,    
+      monthly_saas_metrics.view_audit_all_time_user,    
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics

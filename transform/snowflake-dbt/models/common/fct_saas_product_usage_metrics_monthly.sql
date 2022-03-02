@@ -168,7 +168,7 @@
       "counts_monthly.failed_deployments"                                                       AS failed_deployments_28_days_event,
       "usage_activity_by_stage_monthly.manage.projects_with_compliance_framework"               AS projects_compliance_framework_all_time_event,
       "redis_hll_counters.pipeline_authoring.o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly" AS commit_ci_config_file_28_days_user,
-      "compliance_unique_visits.g_compliance_audit_events"                                      AS view_audit_all_time_event,
+      "compliance_unique_visits.g_compliance_audit_events"                                      AS view_audit_all_time_user,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
