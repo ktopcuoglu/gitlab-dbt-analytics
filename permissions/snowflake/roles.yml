@@ -2289,6 +2289,7 @@ roles:
         member_of:
             - analyst_people
             - bamboohr
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -2303,6 +2304,7 @@ roles:
         member_of:
             - reporter
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - reporting
 
@@ -2318,6 +2320,7 @@ roles:
             - analyst_growth
             - restricted_safe
             - data_team_analyst
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -2340,6 +2343,7 @@ roles:
         member_of:
             - engineer
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2424,6 +2428,7 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -2463,6 +2468,7 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -2694,6 +2700,7 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -2857,6 +2864,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
             - jstemmer_xl
@@ -2869,6 +2877,7 @@ roles:
             - analyst_finance
             - restricted_safe
             - xactly
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -2911,6 +2920,7 @@ roles:
             - salesforce
             - restricted_safe
             - dbt_data_science
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3075,6 +3085,7 @@ roles:
     - lmai:
         member_of:
             - analyst_engineering
+            - bi_tool_eval_read
         privileges:
             databases:
                 read:
@@ -3096,6 +3107,7 @@ roles:
         member_of:
             - analyst_sales
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
             - analyst_l
@@ -3147,6 +3159,7 @@ roles:
          - data_team_analyst
          - analytics_engineer_rd
          - restricted_safe
+         - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3288,6 +3301,7 @@ roles:
             - analyst_sales
             - xactly
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3370,6 +3384,7 @@ roles:
             - analyst_sales
             - restricted_safe
             - data_team_analyst
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3409,6 +3424,7 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -3416,6 +3432,7 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -3603,6 +3620,7 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3962,6 +3980,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
