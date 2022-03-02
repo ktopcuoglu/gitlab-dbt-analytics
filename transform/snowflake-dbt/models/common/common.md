@@ -306,7 +306,7 @@ A fact table for salesforce opportunities with keys to connect opportunities to 
 
 {% docs fct_crm_opportunity_daily_snapshot %}
 
-A daily snapshot fact table for salesforce opportunities with keys to connect opportunities to shared dimensions through the attributes of the crm account. This table shows the state of the opportunity as it was on the day of the snapshot. 
+A daily snapshot fact table for salesforce opportunities with keys to connect opportunities to shared dimensions. This table shows the state of the opportunity as it was on the day of the snapshot. 
 
 {% enddocs %}
 

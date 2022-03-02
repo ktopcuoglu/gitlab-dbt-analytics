@@ -1,4 +1,4 @@
-{{ sfdc_opportunity_fields('base') }}
+{{ sfdc_opportunity_fields('live') }}
 
 {{ dbt_audit(
     cte_ref="final",

@@ -41,7 +41,7 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ref('sfdc_opportunity_stage_source')}}
 
-{%- if model_type == 'base' %}
+{%- if model_type == 'live' %}
 
 {%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
@@ -70,7 +70,7 @@ WITH first_contact  AS (
       user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
       user_region_stamped                                                AS crm_opp_owner_region_stamped,
       user_area_stamped                                                  AS crm_opp_owner_area_stamped,
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
         {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT"])}}
     {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
@@ -78,7 +78,7 @@ WITH first_contact  AS (
         {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT"])}}
      {%- endif %}
     FROM 
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
        {{ref('sfdc_opportunity_source')}}
     {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_opportunity_snapshots_source') }}
@@ -113,7 +113,7 @@ WITH first_contact  AS (
 ), sfdc_account AS (
 
     SELECT 
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
         *
     {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
@@ -121,7 +121,7 @@ WITH first_contact  AS (
         sfdc_account_snapshots_source.*
      {%- endif %}
     FROM 
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
         {{ ref('sfdc_account_source') }}
     {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_account_snapshots_source') }}
@@ -502,7 +502,7 @@ WITH first_contact  AS (
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
     {%- elif model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
     {%- endif %}
