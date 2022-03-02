@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     snowflake_stage_load_copy_remove(
         "all_feature_flags.json",
-        "raw.gitlab_data_yaml.gitlab_data_yaml_load",
-        "raw.gitlab_data_yaml.feature_flags",
+        "gitlab_data_yaml.gitlab_data_yaml_load",
+        "gitlab_data_yaml.feature_flags",
         snowflake_engine,
     )
