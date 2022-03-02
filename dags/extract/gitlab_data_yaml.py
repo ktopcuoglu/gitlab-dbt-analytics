@@ -12,7 +12,6 @@ from airflow_utils import (
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
@@ -58,7 +57,6 @@ data_yaml_extract = KubernetesPodOperator(
     name="data-yaml-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
@@ -85,7 +83,6 @@ feature_flags_extract = KubernetesPodOperator(
     name="feature-flags-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
@@ -112,7 +109,6 @@ flaky_tests_extract = KubernetesPodOperator(
     name="flaky-tests-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
