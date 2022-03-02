@@ -19,7 +19,7 @@
         CAST(event_created_at AS DATE)                                                                  AS event_date,
         event_created_at,
         dim_user_id,
-        event_name,
+        fct_usage_event.event_name,
         source,
         plan_id_at_event_date,
         plan_name_at_event_date,
