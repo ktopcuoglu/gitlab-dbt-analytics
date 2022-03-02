@@ -13,7 +13,7 @@
 
 , flattened_usage AS (
 
-    SELECT
+    SELECT top 100
       dim_usage_ping_id           AS dim_usage_ping_id,
       path                        AS metrics_path,
       dim_product_tier_id         AS dim_product_tier_id,
@@ -40,7 +40,7 @@
   FROM usage_ping_payload,
     LATERAL FLATTEN(input => raw_usage_data_payload,
     RECURSIVE => true)
-  WHERE SUBSTR(event_count, 1, 1) != '{' AND IS_REAL(TO_VARIANT(event_count)) = true
+  --WHERE SUBSTR(event_count, 1, 1) != '{' AND IS_REAL(TO_VARIANT(event_count)) = true
 
 ), flattened_w_metrics AS (
 
