@@ -54,11 +54,23 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_sales_development_representative,
       sfdc_opportunity.opportunity_business_development_representative,
       sfdc_opportunity.opportunity_development_representative,
+      CASE
+        WHEN sfdc_opportunity.created_date < '2022-02-01' 
+          THEN 'Legacy'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL AND sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'SDR & BDR'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL
+          THEN 'SDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'BDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NULL AND sfdc_opportunity.opportunity_sales_development_representative IS NULL
+          THEN 'No XDR Assigned'
+      END                                                                   AS sdr_or_bdr,
       sfdc_opportunity.iqm_submitted_by_role,
       sfdc_opportunity.sdr_pipeline_contribution,
       sfdc_opportunity.stage_name,
-      sfdc_opportunity_stage.is_active                  AS stage_is_active,
-      sfdc_opportunity_stage.is_closed                  AS stage_is_closed,
+      sfdc_opportunity_stage.is_active                                      AS stage_is_active,
+      sfdc_opportunity_stage.is_closed                                      AS stage_is_closed,
       sfdc_opportunity.technical_evaluation_date,
       sfdc_opportunity.sa_tech_evaluation_close_status,
       sfdc_opportunity.sa_tech_evaluation_end_date,
@@ -82,10 +94,10 @@ WITH sfdc_opportunity AS (
           OR sfdc_opportunity.pushed_count > 0)
           THEN TRUE
           ELSE FALSE
-      END                                               AS is_risky,
+      END                                                                   AS is_risky,
       sfdc_opportunity.is_swing_deal,
       sfdc_opportunity.is_edu_oss,
-      sfdc_opportunity_stage.is_won                     AS is_won,
+      sfdc_opportunity_stage.is_won                                         AS is_won,
       sfdc_opportunity.is_ps_opp,
       sfdc_opportunity.probability,
       sfdc_opportunity.professional_services_value,
@@ -97,7 +109,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.is_web_portal_purchase,
       sfdc_opportunity.partner_initiated_opportunity,
       sfdc_opportunity.user_segment,
-      sfdc_opportunity.order_type_stamped               AS order_type,
+      sfdc_opportunity.order_type_stamped                                   AS order_type,
       sfdc_opportunity.opportunity_category,
       sfdc_opportunity.opportunity_health,
       sfdc_opportunity.risk_type,
@@ -109,7 +121,7 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity.opportunity_term IS NULL THEN
           DATEDIFF('month', quote.quote_start_date, sfdc_opportunity.subscription_end_date)
         ELSE sfdc_opportunity.opportunity_term
-      END                                              AS opportunity_term,
+      END                                                                   AS opportunity_term,
       quote.quote_start_date,
       sfdc_opportunity.subscription_start_date,
       sfdc_opportunity.subscription_end_date,
@@ -132,6 +144,9 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.sao_crm_opp_owner_region_stamped,
       sfdc_opportunity.sao_crm_opp_owner_area_stamped,
       sfdc_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
+      sfdc_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
+      --sfdc_opportunity.user_segment_go_region_area_stamped                  AS crm_opp_owner_sales_segment_geo_region_area_stamped,
+      sfdc_opportunity.crm_opp_owner_user_role_type_stamped,
 
       -- ************************************
       -- channel reporting
@@ -153,7 +168,7 @@ WITH sfdc_opportunity AS (
 {{ dbt_audit(
     cte_ref="layered",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-11-20",
-    updated_date="2021-02-08"
+    updated_date="2021-02-10"
 ) }}

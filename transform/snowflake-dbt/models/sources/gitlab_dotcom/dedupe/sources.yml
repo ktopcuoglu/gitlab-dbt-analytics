@@ -100,6 +100,9 @@ sources:
         identifier: gitlab_db_cluster_groups
       - name: clusters_integration_elasticstack
         identifier: gitlab_db_clusters_integration_elasticstack
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects
@@ -392,9 +395,6 @@ sources:
         identifier: gitlab_db_compliance_management_frameworks
       - name: csv_issue_imports
         identifier: gitlab_db_csv_issue_imports
-      - name: geo_nodes
-        identifier: gitlab_db_geo_nodes
-        freshness: null
       - name: gitlab_pgp_export
         identifier: gitlab_pgp_export
         loaded_at_field: DATEADD(sec, _updated_at, '1970-01-01')

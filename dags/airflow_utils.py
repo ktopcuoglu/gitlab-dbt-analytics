@@ -4,7 +4,6 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
@@ -14,7 +13,7 @@ HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
-ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.24"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.25"
 
 DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
 DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
@@ -228,7 +227,7 @@ env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 gitlab_pod_env_vars = {
     "CI_PROJECT_DIR": "/analytics",
-    "EXECUTION_DATE": "{{ next_execution_date }}",
+    "EXECUTION_DATE": "{{ data_interval_end }}",
     "SNOWFLAKE_PREPARATION_SCHEMA": "preparation",
     "SNOWFLAKE_SNAPSHOT_DATABASE": "RAW"
     if GIT_BRANCH == "master"
@@ -327,6 +326,9 @@ clone_data_science_repo_cmd = f"""
     cd data-science &&
     git checkout $GIT_COMMIT &&
     cd .."""
+
+# command to exclude models (for test models) in dbt test command
+run_command_test_exclude = "--exclude staging.gitlab_com"
 
 
 def number_of_dbt_threads_argument(number_of_threads):

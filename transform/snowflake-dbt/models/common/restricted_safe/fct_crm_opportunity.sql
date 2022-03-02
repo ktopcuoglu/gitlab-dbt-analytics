@@ -1,5 +1,6 @@
 {{ simple_cte([
     ('crm_account_dimensions', 'map_crm_account'),
+    ('prep_crm_account', 'prep_crm_account'),
     ('order_type', 'prep_order_type'),
     ('sales_qualified_source', 'prep_sales_qualified_source'),
     ('deal_path', 'prep_deal_path'),
@@ -149,6 +150,8 @@
       sfdc_opportunity.channel_type,
       sfdc_opportunity.partner_account,
       sfdc_opportunity.dr_status,
+      sfdc_opportunity.dr_deal_id,
+      sfdc_opportunity.dr_primary_registration,
       sfdc_opportunity.distributor,
       sfdc_opportunity.influence_partner,
       sfdc_opportunity.fulfillment_partner,
@@ -345,6 +348,7 @@
 
       -- common dimension keys
       {{ get_keyed_nulls('opportunity_fields.dim_crm_user_id') }}                                                           AS dim_crm_user_id,
+      {{ get_keyed_nulls('prep_crm_account.dim_crm_user_id') }}                                                             AS dim_crm_account_user_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
       {{ get_keyed_nulls('dr_partner_engagement.dim_dr_partner_engagement_id') }}                                           AS dim_dr_partner_engagement_id,
       {{ get_keyed_nulls('alliance_type.dim_alliance_type_id') }}                                                           AS dim_alliance_type_id,
@@ -369,6 +373,10 @@
       {{ get_keyed_nulls('sales_rep.dim_crm_user_geo_id') }}                                                                AS dim_crm_user_geo_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_region_id') }}                                                             AS dim_crm_user_region_id,
       {{ get_keyed_nulls('sales_rep.dim_crm_user_area_id') }}                                                               AS dim_crm_user_area_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_sales_segment_id') }}                                              AS dim_crm_account_user_sales_segment_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                        AS dim_crm_account_user_geo_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                     AS dim_crm_account_user_region_id,
+      {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
 
             -- flags
       opportunity_fields.is_closed,
@@ -400,6 +408,8 @@
       opportunity_fields.dr_partner_engagement,
       opportunity_fields.partner_account,
       opportunity_fields.dr_status,
+      opportunity_fields.dr_deal_id,
+      opportunity_fields.dr_primary_registration,
       opportunity_fields.distributor,
       opportunity_fields.influence_partner,
       opportunity_fields.fulfillment_partner,
@@ -431,6 +441,8 @@
     FROM opportunity_fields
     LEFT JOIN crm_account_dimensions
       ON opportunity_fields.dim_crm_account_id = crm_account_dimensions.dim_crm_account_id
+    LEFT JOIN prep_crm_account
+      ON opportunity_fields.dim_crm_account_id = prep_crm_account.dim_crm_account_id
     LEFT JOIN first_contact
       ON opportunity_fields.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN sales_qualified_source
@@ -471,6 +483,8 @@
       ON opportunity_fields.channel_type = channel_type.channel_type_name
     LEFT JOIN sales_rep
       ON opportunity_fields.dim_crm_user_id = sales_rep.dim_crm_user_id
+    LEFT JOIN sales_rep AS sales_rep_account
+      ON prep_crm_account.dim_crm_user_id = sales_rep_account.dim_crm_user_id
     LEFT JOIN linear_attribution_base
       ON opportunity_fields.dim_crm_opportunity_id = linear_attribution_base.dim_crm_opportunity_id
     LEFT JOIN campaigns_per_opp
@@ -483,5 +497,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2021-12-02"
+    updated_date="2022-02-24"
 ) }}

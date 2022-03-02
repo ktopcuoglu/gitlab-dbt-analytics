@@ -19,6 +19,7 @@ from airflow_utils import (
     slack_failed_task,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
+    run_command_test_exclude,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -86,6 +87,7 @@ dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 *
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc path:snapshots/gitlab_dotcom; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
@@ -160,7 +162,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +legacy.snapshots --exclude staging.gitlab_com; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots {run_command_test_exclude}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 

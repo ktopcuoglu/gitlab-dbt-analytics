@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: mart_crm_opportunity_stamped_hierarchy_hist
+    description: >-
+      Model with single pane of glass sales and marketing metrics.
+      It differs from `mart_crm_opportunity` by using the live sales hierarchy, from the account object, for the stamped fields
+      when the fiscal year is below the current one.
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+            - not_null
+            - unique

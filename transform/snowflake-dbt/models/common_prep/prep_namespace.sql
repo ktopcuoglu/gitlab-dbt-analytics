@@ -12,7 +12,8 @@
     ('members_source', 'gitlab_dotcom_members_source'),
     ('projects_source', 'gitlab_dotcom_projects_source'),
     ('audit_events', 'gitlab_dotcom_audit_events_source'),
-    ('audit_event_details_clean', 'prep_audit_event_details_clean')
+    ('audit_event_details_clean', 'prep_audit_event_details_clean'),
+    ('users', 'prep_user')
 ]) }}
 
 , members AS (
@@ -131,6 +132,7 @@
       namespaces.project_creation_level,
       namespaces.push_rule_id,
       IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
+      IFNULL(users.is_blocked_user, FALSE)                                            AS namespace_creator_is_blocked,
       namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
@@ -151,6 +153,8 @@
       ON namespaces.dim_namespace_id = projects.namespace_id
     LEFT JOIN creators
       ON namespaces.dim_namespace_id = creators.group_id
+    LEFT JOIN users
+      ON creators.creator_id = users.dim_user_id
     LEFT JOIN map_namespace_internal
       ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
     LEFT JOIN product_tiers saas_product_tiers
@@ -171,7 +175,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@pempey",
+    updated_by="@chrissharp",
     created_date="2021-01-14",
-    updated_date="2021-11-10"
+    updated_date="2022-02-16"
 ) }}

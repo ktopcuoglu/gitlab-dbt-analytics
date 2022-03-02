@@ -144,6 +144,11 @@ models:
 
   - name: employee_locality
     description: This idenitifes the location factor for an employee on a given day starting 2020.03.24 by joining the locality value from bamboohr to the location_factor yaml or geo_zones yaml file to capture the location factor.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_number
+            - updated_at
     columns:
       - name: employee_number
       - name: employee_id
