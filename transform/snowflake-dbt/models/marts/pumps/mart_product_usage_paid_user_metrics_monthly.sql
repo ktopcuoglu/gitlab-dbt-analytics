@@ -46,6 +46,7 @@
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
+      NULL                                                                         AS namespace_name,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -202,6 +203,7 @@
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
+      namespaces.namespace_name,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -367,5 +369,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-02-04"
+    updated_date="2022-03-02"
 ) }}
