@@ -110,10 +110,6 @@ Counts of Pipelines that have at least 1 coverage-guided Fuzz Testing job.[link]
  Total failed deployments. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216181924_failed_deployments.yml)
 {% enddocs %}
 
-{% docs _desc %}
- [link]()
-{% enddocs %}
-
 {% docs projects_compliance_framework_all_time_event_desc %}
  Number of projects labeled with a compliance framework label. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216180825_projects_with_compliance_framework.yml)
 {% enddocs %}
