@@ -15,7 +15,7 @@
 
     SELECT
       dim_usage_ping_id           AS dim_usage_ping_id,
-      "path"                      AS metrics_path,
+      path                        AS metrics_path,
       dim_product_tier_id         AS dim_product_tier_id,
       dim_subscription_id         AS dim_subscription_id,
       dim_location_country_id     AS dim_location_country_id,
