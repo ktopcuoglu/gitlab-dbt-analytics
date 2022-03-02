@@ -191,7 +191,7 @@
       usage_ping.failed_deployments_28_days_event,
       usage_ping.projects_compliance_framework_all_time_event,
       usage_ping.commit_ci_config_file_28_days_user,
-      usage_ping.view_audit_all_time_event,
+      usage_ping.view_audit_all_time_user,
       -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
           usage_ping.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
