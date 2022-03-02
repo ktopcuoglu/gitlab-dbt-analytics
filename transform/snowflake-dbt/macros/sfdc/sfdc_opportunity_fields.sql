@@ -502,8 +502,7 @@ WITH first_contact  AS (
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
-    {%- if model_type == 'live' %}
-    {%- elif model_type == 'snapshot' %}
+    {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
     {%- endif %}
 
