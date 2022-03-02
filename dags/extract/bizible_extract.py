@@ -57,17 +57,14 @@ def extract_manifest(file_path):
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
     return manifest_dict
 
-
-manifest = extract_manifest(
-    "analytics/extract/bizible/manifests/el_bizible_tables.yaml"
-)
+manifest = extract_manifest("analytics/extract/bizible/manifests/el_bizible_tables.yaml")
 tables = manifest.get("tables")
 
 for table_name in tables:
     # Bizible Extract
     extract_command = f"""
         {clone_and_setup_extraction_cmd} &&
-        python bizible/src/main.py tap ../manifests/el_bizible_tables.yaml --load_only_table {table_name}
+            python bizible/src/main.py tap bizible/manifests/el_bizible_tables.yaml --load_only_table {table_name}
     """
 
     # having both xcom flag flavors since we're in an airflow version where one is being deprecated
