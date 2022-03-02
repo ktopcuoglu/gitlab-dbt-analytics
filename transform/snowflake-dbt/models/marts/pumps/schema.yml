@@ -84,27 +84,27 @@ models:
         tests:
           - not_null
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
-        description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: merge_requests_28_days_user
-        description: Monthly count of unique users making merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests))
+        description: '{{ doc("merge_requests_28_days_user_desc") }}'
       - name: projects_with_repositories_enabled_28_days_user
-        description: Monthly count of unique users that created projects with repositories enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateprojects_with_repositories_enabled))
+        description: '{{ doc("projects_with_repositories_enabled_28_days_user_desc") }}'
       - name: commit_comment_all_time_event
-        description: All-time count commit comments ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countscommit_comment))
+        description: '{{ doc("commit_comment_all_time_event_desc") }}'
       - name: source_code_pushes_all_time_event
-        description: All-time count of source code pushes ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssource_code_pushes))
+        description: '{{ doc("source_code_pushes_all_time_event_desc") }}'
       - name: ci_pipelines_28_days_user
-        description: Monthly count of unique users triggering pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_pipelines))
+        description: '{{ doc("ci_pipelines_28_days_user_desc") }}'
       - name: ci_internal_pipelines_28_days_user
-        description: Monthly count of unique users triggering pipelines in GitLab repositories ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_internal_pipelines))
+        description: '{{ doc("ci_internal_pipelines_28_days_user_desc") }}'
       - name: ci_builds_28_days_user
-        description: Monthly count of unique users running CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_builds))
+        description: '{{ doc("ci_builds_28_days_user_desc") }}'
       - name: ci_builds_all_time_user
-        description: All-time count of unique users running CI builds ([source]()https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_builds)
+        description: '{{ doc("ci_builds_all_time_user_desc") }}'
       - name: ci_builds_all_time_event
-        description: All-time count of CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_builds))
+        description: '{{ doc("ci_builds_all_time_event_desc") }}'
       - name: ci_runners_all_time_event
         description: All-time count of CI Runners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_runners))
       - name: auto_devops_enabled_all_time_event
@@ -325,7 +325,7 @@ models:
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
         description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
       - name: merge_requests_28_days_user
@@ -751,7 +751,7 @@ models:
       - name: license_utilization
       - name: max_historical_user_count
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
         description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
       - name: merge_requests_28_days_user
