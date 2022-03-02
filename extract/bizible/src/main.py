@@ -6,6 +6,7 @@ from fire import Fire
 from typing import Dict, Any
 import yaml
 
+
 def manifest_reader(file_path: str) -> Dict[str, Dict]:
     """
     Read a yaml manifest file into a dictionary and return it.

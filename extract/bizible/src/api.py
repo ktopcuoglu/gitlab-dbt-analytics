@@ -93,9 +93,11 @@ class BizibleSnowFlakeExtractor:
             snowflake_last_modified_date = last_modified_date_list[0]
 
         if snowflake_last_modified_date:
-            return { table_name: f"SELECT * FROM {table_name} WHERE _last_modified_date > '{snowflake_last_modified_date}'"}
+            return {
+                table_name: f"SELECT * FROM {table_name} WHERE _last_modified_date > '{snowflake_last_modified_date}'"
+            }
         else:
-            return { table_name : f"SELECT * FROM {table_name}"} 
+            return {table_name: f"SELECT * FROM {table_name}"}
 
     def extract_latest_bizible_files(self, bizible_queries: Dict):
         """
@@ -119,7 +121,7 @@ class BizibleSnowFlakeExtractor:
                 "csv",
                 file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
-            
+
     def process_bizible_query(self, query_details: Dict):
         for table_name in query_details.keys():
             file_name = f"{table_name}.json"
@@ -137,7 +139,6 @@ class BizibleSnowFlakeExtractor:
                 "csv",
                 file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
-        
 
     def extract_latest_bizible_file(self, table_name: str):
         """
@@ -147,4 +148,3 @@ class BizibleSnowFlakeExtractor:
         """
         query = self.get_bizible_query(full_table_name=table_name)
         self.process_bizible_query(query_details=query)
-

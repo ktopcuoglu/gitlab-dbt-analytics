@@ -50,15 +50,17 @@ default_args = {
 # Create the DAG
 dag = DAG("bizible_extract", default_args=default_args, schedule_interval="0 */2 * * *")
 
+
 def extract_manifest(file_path):
     with open(file_path, "r") as file:
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
     return manifest_dict
 
 
-
-manifest = extract_manifest('analytics/extract/bizible/manifests/el_bizible_tables.yaml')
-tables = manifest.get('tables')
+manifest = extract_manifest(
+    "analytics/extract/bizible/manifests/el_bizible_tables.yaml"
+)
+tables = manifest.get("tables")
 
 for table_name in tables:
     # Bizible Extract
@@ -69,27 +71,27 @@ for table_name in tables:
 
     # having both xcom flag flavors since we're in an airflow version where one is being deprecated
     bizible_extract = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id=f"bizible-extract-{table_name.replace('_', '-')}",
-    name=f"bizible-extract-{table_name.replace('_', '-')}",
-    secrets=[
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_PASSWORD,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-        BIZIBLE_SNOWFLAKE_DATABASE,
-        BIZIBLE_SNOWFLAKE_ROLE,
-        BIZIBLE_SNOWFLAKE_PASSWORD,
-        BIZIBLE_SNOWFLAKE_USER,
-        BIZIBLE_SNOWFLAKE_WAREHOUSE,
-        BIZIBLE_SNOWFLAKE_ACCOUNT,
-    ],
-    env_vars=pod_env_vars,
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
-    arguments=[extract_command],
-    do_xcom_push=True,
-    dag=dag,
-)
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id=f"bizible-extract-{table_name.replace('_', '-')}",
+        name=f"bizible-extract-{table_name.replace('_', '-')}",
+        secrets=[
+            SNOWFLAKE_ACCOUNT,
+            SNOWFLAKE_LOAD_PASSWORD,
+            SNOWFLAKE_LOAD_ROLE,
+            SNOWFLAKE_LOAD_USER,
+            SNOWFLAKE_LOAD_WAREHOUSE,
+            BIZIBLE_SNOWFLAKE_DATABASE,
+            BIZIBLE_SNOWFLAKE_ROLE,
+            BIZIBLE_SNOWFLAKE_PASSWORD,
+            BIZIBLE_SNOWFLAKE_USER,
+            BIZIBLE_SNOWFLAKE_WAREHOUSE,
+            BIZIBLE_SNOWFLAKE_ACCOUNT,
+        ],
+        env_vars=pod_env_vars,
+        affinity=get_affinity(False),
+        tolerations=get_toleration(False),
+        arguments=[extract_command],
+        do_xcom_push=True,
+        dag=dag,
+    )
