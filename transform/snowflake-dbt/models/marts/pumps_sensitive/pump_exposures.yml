@@ -2,20 +2,19 @@ version: 2
 
 exposures:
   
-  - name: pump_marketing_premium_to_ultimate
+  - name: pump_marketing_contact
     type: application
     maturity: low
     description: >
       Send to Marketo for use in email campaigns
     
     depends_on:
-      - ref('pump_marketing_contact')
       - ref('mart_marketing_contact')
       - ref('dim_marketing_contact')
       
     owner:
-      name: Nout Boctor-Smith
-      email: gitlab_id@nbsmith
+      name: Amy Waller
+      email: gitlab_id@amy.waller
 
 
   - name: pump_product_usage_free_user_metrics_monthly
@@ -31,3 +30,16 @@ exposures:
     owner:
       name: Sushma Nalamaru
       email: gitlab_id@snalamaru
+
+  - name: pump_disaster_relief_fund
+    type: application
+    maturity: low
+    description: >
+      Send to third party changes to valid employees
+    
+    depends_on:
+      - ref('employee_directory')
+      
+    owner:
+      name: Adrian Perez
+      email: gitlab_id@aperez

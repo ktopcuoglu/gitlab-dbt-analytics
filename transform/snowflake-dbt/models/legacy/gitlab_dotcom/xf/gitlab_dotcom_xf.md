@@ -74,7 +74,6 @@ This model enables product managers to surface which issue has been requested by
 It extends the models `gitlab_dotcom_notes_linked_to_sfdc_account_id` and `gitlab_dotcom_issues_linked_to_sfdc_account_id` by joining it to SFDC account metadata through the `account_id`. We add then the following metrics:
 
 * `total_tcv`
-* `carr_total`
 * `count_licensed_users`
 
 We also join the model `gitlab_dotcom_notes_linked_to_sfdc_account_id` and `gitlab_dotcom_issues_linked_to_sfdc_account_id` to `gitlab_dotcom_issues`, `gitlab_dotcom_projects` and `gitlab_dotcom_namespaces_xf` to add more metadata about issues, projects and namespaces.
@@ -256,7 +255,7 @@ This table is populated to try to catch customized setups. It leverages tables g
 
 {% docs gitlab_dotcom_usage_data_events %}
 
-This view brings the three source tables (`gitlab_dotcom_usage_data_pipelines`, `gitlab_dotcom_usage_data_notels` and `gitlab_dotcom_usage_data_issues`) together into one table. 
+This view brings the four source tables (`gitlab_dotcom_usage_data_pipelines`, `gitlab_dotcom_usage_data_ci_builds`, `gitlab_dotcom_usage_data_notels` and `gitlab_dotcom_usage_data_issues`) together into one table. 
 
 This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
 
@@ -337,6 +336,30 @@ Currently, the following tables are included in the model:
 * gitlab_dotcom_services
 * gitlab_dotcom_snippets
 * gitlab_dotcom_todos
+
+{% enddocs %}
+
+{% docs gitlab_dotcom_usage_data_ci_builds %}
+
+This table aggregates but does not manipulate a subset of columns from the pipeline related gitlab_dotcom database tables. These tables are populated directly from gitlab-dot-com variables. The calculated columns are `stage_name` and `event_name`.
+
+This table was split out from `gitlab_dotcom_usage_data_events` in order to allow the model to complete in a reasonable time.
+
+This data is associated to the top-most namespace/project level, not necessarily the level at which the event occurred.
+
+The goal is to be able to reproduce the same usage dataset as the one sent weekly by self-managed instances to the version app.
+
+Data Team notes:
+
+The table normalizes all the gitlab_dotcom tables to always extract the same subset of column:
+* namespace_id, 
+* namespace_created_at,
+* project_created_at,
+* event_created_at
+
+Currently, the following tables are included in the model:
+
+* gitlab_dotcom_ci_builds
 
 {% enddocs %}
 

@@ -45,10 +45,11 @@ WITH source AS (
       dfox_industry__c                              AS df_industry,
       industry                                      AS industry,
       sub_industry__c                               AS sub_industry,
+      parent_lam_industry_acct_heirarchy__c         AS parent_account_industry_hierarchy,
       account_tier__c                               AS account_tier,
       customer_since__c::DATE                       AS customer_since_date,
       carr_this_account__c                          AS carr_this_account,
-      carr_total__c                                 AS carr_total,
+      -- carr_acct_family__c                           AS carr_account_family,
       next_renewal_date__c                          AS next_renewal_date,
       license_utilization__c                        AS license_utilization,
       region__c                                     AS account_region,
@@ -58,6 +59,8 @@ WITH source AS (
       billingcountry                                AS billing_country,
       billingpostalcode                             AS billing_postal_code,
       sdr_target_account__c::BOOLEAN                AS is_sdr_target_account,
+      lam__c                                        AS lam,
+      lam_dev_count__c                              AS lam_dev_count,
       potential_arr_lam__c                          AS potential_arr_lam,
       jihu_account__c::BOOLEAN                      AS is_jihu_account,
       partners_signed_contract_date__c              AS partners_signed_contract_date,
@@ -87,18 +90,18 @@ WITH source AS (
       atam_address_postal_code__c                   AS tsp_address_postal_code,
 
       -- account demographics fields
-        account_demographics_sales_segment__c       AS account_demographics_sales_segment,
-        account_demographics_geo__c                 AS account_demographics_geo,
-        account_demographics_region__c              AS account_demographics_region,
-        account_demographics_area__c                AS account_demographics_area,
-        account_demographics_territory__c           AS account_demographics_territory,
-        account_demographics_employee_count__c      AS account_demographics_employee_count,
-        account_demographic_max_family_employees__c AS account_demographics_max_family_employee,
-        account_demographics_upa_country__c         AS account_demographics_upa_country,
-        account_demographics_upa_state__c           AS account_demographics_upa_state,
-        account_demographics_upa_city__c            AS account_demographics_upa_city,
-        account_demographics_upa_street__c          AS account_demographics_upa_street,
-        account_demographics_upa_postal_code__c     AS account_demographics_upa_postal_code,
+      account_demographics_sales_segment__c         AS account_demographics_sales_segment,
+      account_demographics_geo__c                   AS account_demographics_geo,
+      account_demographics_region__c                AS account_demographics_region,
+      account_demographics_area__c                  AS account_demographics_area,
+      account_demographics_territory__c             AS account_demographics_territory,
+      account_demographics_employee_count__c        AS account_demographics_employee_count,
+      account_demographic_max_family_employees__c   AS account_demographics_max_family_employee,
+      account_demographics_upa_country__c           AS account_demographics_upa_country,
+      account_demographics_upa_state__c             AS account_demographics_upa_state,
+      account_demographics_upa_city__c              AS account_demographics_upa_city,
+      account_demographics_upa_street__c            AS account_demographics_upa_street,
+      account_demographics_upa_postal_code__c       AS account_demographics_upa_postal_code,
 
       -- present state info
       health__c                                     AS health_score,
@@ -154,11 +157,11 @@ WITH source AS (
 
       -- ************************************
       -- NF: 2020-12-17
-      -- these three fields are used to identify accounts owned by reps within hierarchies that they do not fully own
+      -- these two fields are used to identify accounts owned by reps within hierarchies that they do not fully own
       -- or even within different regions
 
-      locally_Managed__c                            AS is_locally_managed_account,
-      strategic__c                                  AS is_strategic_account,
+      locally_Managed__c                             AS is_locally_managed_account,
+      strategic__c                                   AS is_strategic_account,
 
       -- ************************************
       -- New SFDC Account Fields for FY22 Planning

@@ -4,7 +4,7 @@
 
 {{ config({
         "materialized": "incremental",
-        "primary_key": "event_primary_key",
+        "unique_key": "event_primary_key",
         "automatic_clustering": true
     })
 }}
@@ -63,51 +63,6 @@
     "key_to_parent_project": "project_id",
     "primary_key": "board_id",
     "stage_name": "plan",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_builds",
-    "source_table_name": "temp_gitlab_dotcom_ci_builds_filtered",
-    "user_column_name": "ci_build_user_id",
-    "key_to_parent_project": "ci_build_project_id",
-    "primary_key": "ci_build_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_pipeline_schedules",
-    "source_table_name": "gitlab_dotcom_ci_pipeline_schedules",
-    "user_column_name": "owner_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_schedule_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_pipelines",
-    "source_table_name": "gitlab_dotcom_ci_pipelines",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "ci_stages",
-    "source_table_name": "gitlab_dotcom_ci_stages",
-    "user_column_name": "NULL",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_stage_id",
-    "stage_name": "configure",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_triggers",
-    "source_table_name": "gitlab_dotcom_ci_triggers",
-    "user_column_name": "owner_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_trigger_id",
-    "stage_name": "verify",
     "is_representative_of_stage": "False"
   },
   {
@@ -183,15 +138,6 @@
     "is_representative_of_stage": "False"
   },
   {
-    "event_name": "events",
-    "source_table_name": "gitlab_dotcom_events",
-    "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "event_id",
-    "stage_name": "manage",
-    "is_representative_of_stage": "False"
-  },
-  {
     "event_name": "labels",
     "source_table_name": "gitlab_dotcom_labels",
     "user_column_name": "NULL",
@@ -262,15 +208,6 @@
     "primary_key": "project_id",
     "stage_name": "monitor",
     "is_representative_of_stage": "True"
-  },
-  {
-    "event_name": "push_events",
-    "source_cte_name": "push_events_source",
-    "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "event_id",
-    "stage_name": "create",
-    "is_representative_of_stage": "False"
   },
   {
     "event_name": "releases",
@@ -370,7 +307,8 @@
     ('namespaces', 'gitlab_dotcom_namespaces_xf'),
     ('plans', 'gitlab_dotcom_plans'),
     ('projects', 'gitlab_dotcom_projects_xf'),
-    ('blocked_users', 'gitlab_dotcom_users_blocked_xf')
+    ('blocked_users', 'gitlab_dotcom_users_blocked_xf'),
+    ('user_details','gitlab_dotcom_users')
 ]) }}
 
 
@@ -439,20 +377,6 @@
     SELECT *
     FROM {{ ref('gitlab_dotcom_projects_xf') }}
     WHERE container_registry_enabled = True
-
-), push_events_source AS (
-
-    SELECT *
-    FROM {{ ref('temp_gitlab_dotcom_events_filtered') }}
-    WHERE event_action_type = 'pushed'
-
--- ), group_members AS (
-
---     SELECT
---       *,
---       invite_created_at AS created_at
---     FROM {{ ref('gitlab_dotcom_members') }}
---     WHERE member_source_type = 'Namespace'
 
 ), sast_jobs AS (
 
@@ -602,7 +526,7 @@
 , final AS (
     SELECT
       data.*,
-      users.created_at                                    AS user_created_at,
+      user_details.created_at                             AS user_created_at,
       FLOOR(
       DATEDIFF('hour',
               namespace_created_at,
@@ -628,8 +552,8 @@
                 user_created_at,
                 event_created_at)/(24 * 7))               AS weeks_since_user_creation
     FROM data
-    LEFT JOIN users
-      ON data.user_id = users.user_id
+    LEFT JOIN user_details
+      ON data.user_id = user_details.user_id
     WHERE event_created_at < CURRENT_DATE()
 
 )

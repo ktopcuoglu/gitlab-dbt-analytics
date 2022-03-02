@@ -1,5 +1,5 @@
 {{ config({
-    "unique_key": "run_unique_key"
+    "materialized": "view"
     })
 }}
 
@@ -7,9 +7,6 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('dbt', 'run') }}
-    {% if is_incremental() %}
-    WHERE uploaded_at >= (SELECT MAX(uploaded_at) FROM {{this}})
-    {% endif %}
 
 ), flattened AS (
 
