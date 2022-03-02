@@ -36,6 +36,7 @@ logging.info(pod_env_vars)
 # Default arguments for the DAG
 default_args = {
     "catchup": False,
+    "concurrency": 2,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
