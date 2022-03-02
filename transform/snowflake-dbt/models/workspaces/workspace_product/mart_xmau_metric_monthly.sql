@@ -5,13 +5,14 @@
 
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
+    ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ('dim_date','dim_date'),
     ('fct_usage_event', 'fct_usage_event'),
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
     ])
 }}
 
-, fact_raw AS (
+, fct_events AS  (
 
     SELECT
         event_id,
@@ -33,8 +34,10 @@
         DATE_TRUNC('MONTH', event_date)                                                                 AS reporting_month,
         QUARTER(event_date)                                                                             AS reporting_quarter,
         YEAR(event_date)                                                                                AS reporting_year
-    FROM fct_usage_event as fact
-      WHERE is_umau = TRUE OR is_gmau = TRUE OR is_smau = TRUE
+    FROM fct_usage_event
+    LEFT JOIN xmau_metrics
+      ON usage_data_events.event_name = xmau_metrics.events_to_include
+    WHERE is_umau = TRUE OR is_gmau = TRUE OR is_smau = TRUE
 
 ), fact_with_date_range AS (
 
