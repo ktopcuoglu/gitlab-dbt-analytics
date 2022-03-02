@@ -49,3 +49,9 @@ GitLab.com Event-Level Daily mart - Sourced from fct_event_usage_metrics
 This table contains all gitlab.com events with additional dimensions and other facilitating fields aggregated at a date/user/namespace/plan/event grain
 
 {% enddocs %}
+
+{% docs mart_usage_instance_monthly %}
+
+Version source, self managed usage data mart.
+
+{% enddocs %}
