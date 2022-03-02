@@ -28,9 +28,9 @@
         is_umau,
         gmau                                                                                            AS is_gmau,
         smau                                                                                            AS is_smau,
-        section_name,
-        stage_name,
-        group_name,
+        fct_usage_event.section_name,
+        fct_usage_event.stage_name,
+        fct_usage_event.group_name,
         DATE_TRUNC('MONTH', event_date)                                                                 AS reporting_month,
         QUARTER(event_date)                                                                             AS reporting_quarter,
         YEAR(event_date)                                                                                AS reporting_year
