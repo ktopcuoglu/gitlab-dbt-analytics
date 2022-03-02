@@ -13,8 +13,8 @@
 
 , flattened_usage AS (
 
-    SELECT top 100
-      dim_usage_ping_id           AS dim_usage_ping_id
+    SELECT
+      dim_usage_ping_id           AS dim_usage_ping_id,
       path                        AS metrics_path,
       dim_product_tier_id         AS dim_product_tier_id,
       dim_subscription_id         AS dim_subscription_id,
