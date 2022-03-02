@@ -12,7 +12,7 @@
     ])
 }}
 
-, fct_events AS  (
+, fact_raw AS  (
 
     SELECT
         event_id,
