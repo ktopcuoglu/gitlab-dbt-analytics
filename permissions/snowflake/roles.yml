@@ -2765,6 +2765,7 @@ roles:
             - analyst_finance
             - gainsight
             - restricted_safe
+            - dbt_data_science
         warehouses:
             - analyst_xs
             - analyst_l
