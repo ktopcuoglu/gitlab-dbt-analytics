@@ -1813,3 +1813,12 @@ models:
         description: The date the location factor for a locality stops being applied.
       - name: is_current
         description: A flag to indicate if the location factor for the locality is from the most recent source data.
+
+  - name: prep_host
+    description: The host_id and host_name of the self-managed instance.
+    columns:
+      - name: dim_host_id
+        tests: 
+          - not_null
+          - unique
+      - name: host_name
