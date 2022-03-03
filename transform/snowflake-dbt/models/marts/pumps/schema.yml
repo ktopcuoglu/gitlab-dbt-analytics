@@ -259,44 +259,84 @@ models:
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: protected_branches_28_days_user
         description: '{{ doc("protected_branches_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: ci_cd_lead_time_usage_28_days_event
         description: '{{ doc("ci_cd_lead_time_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: ci_cd_deployment_frequency_usage_28_days_event
         description: '{{ doc("ci_cd_deployment_frequency_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: projects_with_repositories_enabled_all_time_user
         description: '{{ doc("projects_with_repositories_enabled_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: api_fuzzing_jobs_usage_28_days_user
         description: '{{ doc("api_fuzzing_jobs_usage_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: coverage_fuzzing_pipeline_usage_28_days_event
         description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: api_fuzzing_pipeline_usage_28_days_event
         description: '{{ doc("api_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: container_scanning_pipeline_usage_28_days_event
         description: '{{ doc("container_scanning_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: dependency_scanning_pipeline_usage_28_days_event
         description: '{{ doc("dependency_scanning_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: sast_pipeline_usage_28_days_event
         description: '{{ doc("sast_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: secret_detection_pipeline_usage_28_days_event
         description: '{{ doc("secret_detection_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: dast_pipeline_usage_28_days_event
         description: '{{ doc("dast_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: coverage_fuzzing_jobs_28_days_user
         description: '{{ doc("coverage_fuzzing_jobs_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: environments_all_time_event
         description: '{{ doc("environments_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: feature_flags_all_time_event
         description: '{{ doc("feature_flags_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: successful_deployments_28_days_event
         description: '{{ doc("successful_deployments_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: failed_deployments_28_days_event
         description: '{{ doc("failed_deployments_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: projects_compliance_framework_all_time_event
         description: '{{ doc("projects_compliance_framework_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: commit_ci_config_file_28_days_user
         description: '{{ doc("commit_ci_config_file_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: view_audit_all_time_user
         description: '{{ doc("view_audit_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
 
