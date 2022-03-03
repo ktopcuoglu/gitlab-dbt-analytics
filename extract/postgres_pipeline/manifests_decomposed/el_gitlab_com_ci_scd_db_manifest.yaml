@@ -51,6 +51,21 @@ tables:
       , pipeline_id
       , variable_type
       FROM ci_pipeline_variables
+
+  ci_project_monthly_usages:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_project_monthly_usages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , date
+      , amount_used
+      , shared_runners_duration
+      , created_at
+      FROM ci_project_monthly_usages
   ci_sources_pipelines:
     dbt_source_model: true
     export_schema: 'gitlab_com'
