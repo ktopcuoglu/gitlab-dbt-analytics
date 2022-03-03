@@ -5,6 +5,7 @@
 {{ simple_cte([
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'prep_namespace_hist'),
+    ('namespace_settings', 'gitlab_dotcom_namespace_settings_source'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
@@ -115,6 +116,7 @@
       namespaces.is_membership_locked,
       namespaces.has_request_access_enabled,
       namespaces.has_share_with_group_locked,
+      namespace_settings.is_setup_for_company,
       namespaces.visibility_level,
       namespaces.ldap_sync_status,
       namespaces.ldap_sync_error,
@@ -147,6 +149,8 @@
     LEFT JOIN namespace_lineage
       ON namespaces.dim_namespace_id = namespace_lineage.namespace_id
       AND IFNULL(namespaces.parent_id, namespaces.dim_namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
+    LEFT JOIN namespace_settings
+      ON namespaces.dim_namespace_id = namespace_settings.namespace_id
     LEFT JOIN members
       ON namespaces.dim_namespace_id = members.source_id
     LEFT JOIN projects
@@ -175,7 +179,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2021-01-14",
-    updated_date="2022-02-16"
+    updated_date="2022-02-22"
 ) }}

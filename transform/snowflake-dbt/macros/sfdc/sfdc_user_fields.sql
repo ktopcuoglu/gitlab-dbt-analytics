@@ -5,7 +5,7 @@ WITH sfdc_user_roles AS (
     SELECT *
     FROM {{ ref('sfdc_user_roles_source')}}
 
-{%- if model_type == 'base' %}
+{%- if model_type == 'live' %}
 
 {%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
@@ -24,7 +24,7 @@ WITH sfdc_user_roles AS (
 ), sfdc_users AS (
 
     SELECT 
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
         *
       {%- elif model_type == 'snapshot' %}
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
@@ -32,7 +32,7 @@ WITH sfdc_user_roles AS (
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
       {{ ref('sfdc_users_source') }}
       {%- elif model_type == 'snapshot' %}
       {{ ref('sfdc_user_snapshots_source') }}
@@ -44,7 +44,7 @@ WITH sfdc_user_roles AS (
 ), final AS (
 
     SELECT
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
   
       {%- elif model_type == 'snapshot' %}
       sfdc_users.crm_user_snapshot_id,
@@ -60,6 +60,7 @@ WITH sfdc_user_roles AS (
       sfdc_users.is_active,
       sfdc_users.start_date,
       sfdc_users.user_role_id,
+      sfdc_users.user_role_type,
       sfdc_user_roles.name                                                                                                            AS user_role_name,
       {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}                                                                      AS dim_crm_user_sales_segment_id,
       sfdc_users.user_segment                                                                                                         AS crm_user_sales_segment,
@@ -73,7 +74,7 @@ WITH sfdc_user_roles AS (
       COALESCE(
                sfdc_users.user_segment_geo_region_area,
                CONCAT(sfdc_users.user_segment,'-' , sfdc_users.user_geo, '-', sfdc_users.user_region, '-', sfdc_users.user_area)
-               )                                                                                                                      AS crm_user_segment_geo_region_area,
+               )                                                                                                                      AS crm_user_sales_segment_geo_region_area,
       sfdc_users.user_segment_region_grouped                                                                                          AS crm_user_sales_segment_region_grouped,
       created_date
     FROM sfdc_users

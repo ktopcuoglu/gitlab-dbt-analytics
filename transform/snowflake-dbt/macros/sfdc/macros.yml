@@ -11,6 +11,8 @@ macros:
     description: '{{ doc("sfdc_account_fields") }}'
   - name: sfdc_deal_size
     description: '{{ doc("sfdc_deal_size") }}'
+  - name: sfdc_opportunity_fields
+    description: '{{ doc("sfdc_opportunity_fields") }}'
   - name: sfdc_source_buckets
     description: '{{ doc("sfdc_source_buckets") }}'
   - name: sfdc_user_fields

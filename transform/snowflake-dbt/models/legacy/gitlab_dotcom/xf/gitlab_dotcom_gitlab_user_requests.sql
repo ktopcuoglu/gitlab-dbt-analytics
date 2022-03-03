@@ -69,7 +69,7 @@ WITH epic_issues AS (
       sfdc_accounts.account_id   AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
       sfdc_accounts.carr_this_account,
-      sfdc_accounts.carr_total,
+      -- sfdc_accounts.carr_account_family,
       epics.epic_title
     FROM gitlab_dotcom_notes_linked_to_sfdc_account_id
     INNER JOIN issues
@@ -106,7 +106,7 @@ WITH epic_issues AS (
       sfdc_accounts.account_id   AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
       sfdc_accounts.carr_this_account,
-      sfdc_accounts.carr_total,
+      -- sfdc_accounts.carr_account_family,
       epics.epic_title --Redundant in this case.
     FROM gitlab_dotcom_notes_linked_to_sfdc_account_id
     INNER JOIN epics
@@ -137,7 +137,7 @@ WITH epic_issues AS (
       sfdc_accounts.account_id AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
       sfdc_accounts.carr_this_account,
-      sfdc_accounts.carr_total,
+      -- sfdc_accounts.carr_account_family,
       epics.epic_title
     FROM gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id
     INNER JOIN issues
@@ -174,7 +174,7 @@ WITH epic_issues AS (
       sfdc_accounts.account_id   AS sfdc_account_id,
       sfdc_accounts.account_type AS sfdc_account_type,
       sfdc_accounts.carr_this_account,
-      sfdc_accounts.carr_total,
+      -- sfdc_accounts.carr_account_family,
       epics.epic_title --Redundant in this case.
     FROM gitlab_dotcom_issues_and_epics_linked_to_sfdc_account_id
     INNER JOIN epics

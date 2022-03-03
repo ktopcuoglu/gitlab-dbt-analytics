@@ -10,7 +10,8 @@
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription')
+    ('subscriptions', 'dim_subscription'),
+    ('namespaces', 'dim_namespace')
 ]) }}
 
 
@@ -45,6 +46,7 @@
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
+      NULL                                                                         AS namespace_name,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -124,7 +126,6 @@
       monthly_sm_metrics.projects_bamboo_active_all_time_event,
       monthly_sm_metrics.projects_jira_active_all_time_event,
       monthly_sm_metrics.projects_drone_ci_active_all_time_event,
-      --monthly_sm_metrics.jira_imports_28_days_event,
       monthly_sm_metrics.projects_github_active_all_time_event,
       monthly_sm_metrics.projects_jira_server_active_all_time_event,
       monthly_sm_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -163,6 +164,28 @@
       monthly_sm_metrics.ci_templates_usage_28_days_event,
       monthly_sm_metrics.project_management_issue_milestone_changed_28_days_user,
       monthly_sm_metrics.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      monthly_sm_metrics.protected_branches_28_days_user,
+      monthly_sm_metrics.ci_cd_lead_time_usage_28_days_event,
+      monthly_sm_metrics.ci_cd_deployment_frequency_usage_28_days_event,
+      monthly_sm_metrics.projects_with_repositories_enabled_all_time_user,
+      monthly_sm_metrics.api_fuzzing_jobs_usage_28_days_user,
+      monthly_sm_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
+      monthly_sm_metrics.api_fuzzing_pipeline_usage_28_days_event,
+      monthly_sm_metrics.container_scanning_pipeline_usage_28_days_event,
+      monthly_sm_metrics.dependency_scanning_pipeline_usage_28_days_event,
+      monthly_sm_metrics.sast_pipeline_usage_28_days_event,
+      monthly_sm_metrics.secret_detection_pipeline_usage_28_days_event,
+      monthly_sm_metrics.dast_pipeline_usage_28_days_event,
+      monthly_sm_metrics.coverage_fuzzing_jobs_28_days_user,
+      monthly_sm_metrics.environments_all_time_event,
+      monthly_sm_metrics.feature_flags_all_time_event,
+      monthly_sm_metrics.successful_deployments_28_days_event,
+      monthly_sm_metrics.failed_deployments_28_days_event,
+      monthly_sm_metrics.projects_compliance_framework_all_time_event,
+      monthly_sm_metrics.commit_ci_config_file_28_days_user,
+      monthly_sm_metrics.view_audit_all_time_user,
+      -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
     LEFT JOIN billing_accounts
@@ -180,6 +203,7 @@
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
+      namespaces.namespace_name,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -259,7 +283,6 @@
       monthly_saas_metrics.projects_bamboo_active_all_time_event,
       monthly_saas_metrics.projects_jira_active_all_time_event,
       monthly_saas_metrics.projects_drone_ci_active_all_time_event,
-      --monthly_saas_metrics.jira_imports_28_days_event,
       monthly_saas_metrics.projects_github_active_all_time_event,
       monthly_saas_metrics.projects_jira_server_active_all_time_event,
       monthly_saas_metrics.projects_jira_dvcs_cloud_active_all_time_event,
@@ -298,14 +321,38 @@
       monthly_saas_metrics.ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
       monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      monthly_saas_metrics.protected_branches_28_days_user,
+      monthly_saas_metrics.ci_cd_lead_time_usage_28_days_event,
+      monthly_saas_metrics.ci_cd_deployment_frequency_usage_28_days_event,
+      monthly_saas_metrics.projects_with_repositories_enabled_all_time_user,
+      monthly_saas_metrics.api_fuzzing_jobs_usage_28_days_user,
+      monthly_saas_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
+      monthly_saas_metrics.api_fuzzing_pipeline_usage_28_days_event,
+      monthly_saas_metrics.container_scanning_pipeline_usage_28_days_event,
+      monthly_saas_metrics.dependency_scanning_pipeline_usage_28_days_event,
+      monthly_saas_metrics.sast_pipeline_usage_28_days_event,
+      monthly_saas_metrics.secret_detection_pipeline_usage_28_days_event,
+      monthly_saas_metrics.dast_pipeline_usage_28_days_event,
+      monthly_saas_metrics.coverage_fuzzing_jobs_28_days_user,
+      monthly_saas_metrics.environments_all_time_event,
+      monthly_saas_metrics.feature_flags_all_time_event,
+      monthly_saas_metrics.successful_deployments_28_days_event,
+      monthly_saas_metrics.failed_deployments_28_days_event,
+      monthly_saas_metrics.projects_compliance_framework_all_time_event,
+      monthly_saas_metrics.commit_ci_config_file_28_days_user,
+      monthly_saas_metrics.view_audit_all_time_user,    
+      -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN subscriptions
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
-      LEFT JOIN most_recent_subscription_version
-        ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN most_recent_subscription_version
+      ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN namespaces 
+      ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 

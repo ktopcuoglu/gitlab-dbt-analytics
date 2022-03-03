@@ -144,7 +144,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
       sfdc_opportunity_snapshot_history.opportunity_development_representative,
 
-      sfdc_opportunity_snapshot_history.order_type AS snapshot_order_type_stamped,
+      sfdc_opportunity_snapshot_history.order_type_stamped AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
       --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
@@ -205,7 +205,9 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.downgrade_iacv,
       sfdc_opportunity_snapshot_history.renewal_acv,
       sfdc_opportunity_snapshot_history.renewal_amount,
-      --sfdc_opportunity_snapshot_history.sales_qualified_source,
+      sfdc_opportunity_snapshot_history.sales_qualified_source  AS snapshot_sales_qualified_source,
+      sfdc_opportunity_snapshot_history.is_edu_oss  AS snapshot_is_edu_oss,
+
       --sfdc_opportunity_snapshot_history.segment,
       --sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
       sfdc_opportunity_snapshot_history.total_contract_value,

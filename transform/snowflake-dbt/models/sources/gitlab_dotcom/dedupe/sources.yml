@@ -100,6 +100,9 @@ sources:
         identifier: gitlab_db_cluster_groups
       - name: clusters_integration_elasticstack
         identifier: gitlab_db_clusters_integration_elasticstack
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects
