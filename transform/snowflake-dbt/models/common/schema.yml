@@ -488,13 +488,13 @@ models:
         tags: ["tdf", "common", "zuora_revenue"]
 
   - name: dim_host
-  description: The host_id and host_name of the self-managed instance.
-  columns:
-    - name: dim_host_id
-      tests: 
-        - not_null
-        - unique
-    - name: host_name
+    description: The host_id and host_name of the self-managed instance.
+    columns:
+      - name: dim_host_id
+        tests: 
+          - not_null
+          - unique
+      - name: host_name
 
   - name: dim_industry
     description: '{{ doc("dim_industry") }}'
