@@ -101,3 +101,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: mart_xmau_metric_monthly
+    description: ' {{ doc("mart_xmau_metric_monthly") }} '
+    columns:
+      - name: mart_xmau_metric_monthly_id
+        tests:
+          - not_null
+          - unique

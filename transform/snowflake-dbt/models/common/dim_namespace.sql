@@ -22,6 +22,7 @@
       is_membership_locked,
       has_request_access_enabled,
       has_share_with_group_locked,
+      is_setup_for_company,
       visibility_level,
       ldap_sync_status,
       ldap_sync_error,
@@ -55,7 +56,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2020-12-29",
-    updated_date="2022-02-16"
+    updated_date="2022-02-22"
 ) }}

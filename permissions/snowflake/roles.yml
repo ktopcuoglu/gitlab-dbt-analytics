@@ -2765,6 +2765,7 @@ roles:
             - analyst_finance
             - gainsight
             - restricted_safe
+            - dbt_data_science
         warehouses:
             - analyst_xs
             - analyst_l
@@ -3425,6 +3426,12 @@ roles:
             - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
+        warehouses:
+            - analyst_xs
+
+    - nkhanna:
+        member_of:
+            - reporter
         warehouses:
             - analyst_xs
 
@@ -4299,6 +4306,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nkhanna:
+        can_login: yes
+        member_of:
+            - nkhanna
 
     - nraisinghani:
         can_login: yes

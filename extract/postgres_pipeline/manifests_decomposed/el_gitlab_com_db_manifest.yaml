@@ -1054,7 +1054,7 @@ tables:
       , target_project_id
       , updated_by_id
       , merge_error
-      , merge_params
+      , NULL as merge_params
       , merge_when_pipeline_succeeds
       , merge_user_id
       , approvals_before_merge
