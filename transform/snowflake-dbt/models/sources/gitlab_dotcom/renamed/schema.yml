@@ -1927,3 +1927,20 @@ models:
       - name: vulnerability_name
       - name: vulnerability_report_type
       - name: vulnerability_severity
+
+  - name: gitlab_dotcom_security_scans_source
+    description: >-
+      Base model for Gitlab.com security scans.
+    columns:
+      - name: security_scan_id
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+      - name: updated_at
+      - name: build_id
+      - name: scan_type
+      - name: project_id
+      - name: pipeline_id
+      - name: is_latest
+      - name: security_scan_status
