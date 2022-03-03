@@ -51,7 +51,6 @@ tables:
       , pipeline_id
       , variable_type
       FROM ci_pipeline_variables
-
   ci_project_monthly_usages:
     dbt_source_model: true
     export_schema: 'gitlab_com'
