@@ -3428,6 +3428,12 @@ roles:
         warehouses:
             - analyst_xs
 
+    - nkhanna:
+        member_of:
+            - reporter
+        warehouses:
+            - analyst_xs
+
     - nraisinghani:
         member_of:
             - analyst_growth
@@ -4299,6 +4305,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nkhanna:
+        can_login: yes
+        member_of:
+            - nkhanna
 
     - nraisinghani:
         can_login: yes
