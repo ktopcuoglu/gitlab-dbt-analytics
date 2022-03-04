@@ -71,6 +71,7 @@ sm_last_monthly_ping_per_account AS (
 saas_last_monthly_ping_per_account AS (
     SELECT
         namespace_subscription_bridge.dim_crm_account_id,
+        namespace_subscription_bridge.dim_subscription_id,
         namespace_subscription_bridge.dim_namespace_id,
         namespace_subscription_bridge.snapshot_month,
         saas_usage_ping.ping_name AS metrics_path,
