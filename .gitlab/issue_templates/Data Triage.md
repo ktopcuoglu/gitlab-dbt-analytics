@@ -6,20 +6,19 @@ Please complete all items. Ask questions in the #data slack channel
 
 ## Housekeeping 
 * [ ] Title the issue as "<ISO date> Data Triage" e.g. **2020-07-09 Data Triage**
-* [ ] Assign this issue to both the Data Analyst and Data Engineer assigned to Triage 
+* [ ] Assign this issue to both the Data Analyst, Analytics Engineer and Data Engineer assigned to Triage 
 * [ ] [Add a weight to the issue](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-pointing)
 * [ ] Link any issues opened as a result of Data Triage to this `parent` issue. 
 
 ## Data Analyst tasks
-All tasks below should be checked off on your Triage day. 
-This is the most important issue on your Triage day. 
-Please prioritize this issue since we dedicate a day from your milestone to this activity. 
+All tasks below should be checked off at the end of Triage day. 
 
 ### Reply to slack channels 
 * [ ] Review each slack message request in the **#data** and **#data-lounge** channel 
-    - [ ] Reply to slack threads by pointing GitLab team member to the appropriate handbook page, visualization, or to other GitLab team member who may know more about the topic. 
-    - [ ] Direct GitLab team member to the channel description, which has the link to the Data team project, if the request requires more than 5 minutes of investigative effort from a Data team member.
-* [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.  Because this channel can sometimes be difficult to keep track of, you **should** also look at [issues with the ~"Needs Triage" label](https://gitlab.com/gitlab-data/analytics/-/issues?label_name%5B%5D=Needs+Triage&scope=all&state=opened), as this label is added every hour to issues that may have been missed.
+    - [ ] Reply to slack threads by pointing GitLab team member to the appropriate handbook page, visualization or,
+    - [ ] Direct GitLab team member to the channel description, which has the link to the Data team project, if the request requires more than 5 minutes of investigative effort from a Data team member or,
+    - [ ] Ping [Triage Group](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#enterprise-data-program-triage-instructions) who may know more about the topic. 
+ * [ ] Review each slack message in the **#data-triage** channel, which will inform the triager of what issues have been opened in the data team project that day.  Because this channel can sometimes be difficult to keep track of, you **should** also look at [issues with the ~"Needs Triage" label](https://gitlab.com/gitlab-data/analytics/-/issues?label_name%5B%5D=Needs+Triage&scope=all&state=opened), as this label is added every hour to issues that may have been missed.
     - [ ] For each issue opened by a non-Data Team member, label the issue by: 
         - [ ] Adding the `Workflow::start (triage)` and `Triage` label
         - [ ] Adding additional [labels](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-labeling)
@@ -33,23 +32,11 @@ Please prioritize this issue since we dedicate a day from your milestone to this
 * [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
 * ```:awesome-dog-pug: :siren-siren:  Hi everyone, just a small FYI / reminder that due to the family and friends day this week the last day to merge MR’s in to the analytics repo this week will be Wednesday. :awesome-dog-pug: :siren-siren:```
 
-### Maintain KPI related information         
-* [ ] Maintain the KPI Index page by 
-    - [ ] Creating an issue with any outstanding concerns from your respective division (broken links, missing KPI definitions, charts vs links, etc)
-    - [ ] Assigning the issue to the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
-* [ ] Review the commit history of the following two files and update the [sheetload_kpi_status data](https://docs.google.com/spreadsheets/d/1CZLnXiAG7D_T_6vm50X0hDPnMPKrKmtajrcga5vyDTQ/edit?usp=sharing) with any new KPIs or update existing KPI statistics (`commit_start` column is the commit URL for the `start_date` and `commit_handbook_v1` column is the commit URL for the `completion_date`)
-    - [ ] [KPI Index handbook page](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/sites/handbook/source/handbook/business-technology/data-team/kpi-development/index.html.md.erb)
-    - [ ] [Engineering KPI list](https://gitlab.com/gitlab-com/www-gitlab-com/-/blob/master/data/performance_indicators/engineering_function.yml)
-
-### Prepare for Next Milestone 
-* [ ] Groom Issues for Next Milestone: for issues that have missing or poor requirements, add comments in the issue asking questions to the Business DRI. 
-* [ ] Update the planning issues for this milestone and the next milestone 
-* [ ] Close/clean-up any irrelevant issues in your backlog. 
-
+## Analytics Engineer tasks
 
 ## Data Engineer tasks
 
-* [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the _#data_ Slack channel using the appropriate Data Notification Template
+* [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
     * [ ] Link to all resulting issues and MRs in slack 
 * [ ] [Investigate](https://gitlab.com/gitlab-org/gitlab/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) all relevant merge requests to the gitlab.com database schema, create an issue for each MR in the analytics project that impacts the GitLab.com extraction. Link each issue created to this issue. A detailed explanation of how to act if there is some impact is described on the page [#gitlabcom-db-structure-changes](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-db-structure-changes)
