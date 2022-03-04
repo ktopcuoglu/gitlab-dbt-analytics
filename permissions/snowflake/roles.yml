@@ -953,7 +953,7 @@ roles:
 
     - data_observability:
         warehouses:
-            - monte_carlo_wh
+            - data_obs_wh_1
         privileges:
             databases:
                 read:
@@ -4557,7 +4557,7 @@ users:
         member_of:
             - zzhang
 
-    - monte_carlo: # External user - Monte Carlo
+    - data_obs_user_1: # External user - Data Observability Vendor 
         can_login: yes
         member_of:
             - data_observability
