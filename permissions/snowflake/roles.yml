@@ -97,6 +97,11 @@ databases:
     - laddula_prep:
         shared: no
 
+    - lvinueza_prod:
+        shared: no
+    - lvinueza_prep:
+        shared: no
+
     - mcooper_prod:
         shared: no
     - mcooper_prep:
@@ -3104,6 +3109,47 @@ roles:
         warehouses:
             - admin
 
+    - lvinueza:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - lvinueza_prep
+                - lvinueza_prod
+            schemas:
+                - lvinueza_prep.*
+                - lvinueza_prod.*
+            tables:
+                - lvinueza_prep.*.*
+                - lvinueza_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - lvinueza_prep
+                    - lvinueza_prod
+                write:
+                    - lvinueza_prep
+                    - lvinueza_prod
+            schemas:
+                read:
+                    - lvinueza_prep.*
+                    - lvinueza_prod.*
+                write:
+                    - lvinueza_prep.*
+                    - lvinueza_prod.*
+            tables:
+                read:
+                    - lvinueza_prep.*.*
+                    - lvinueza_prod.*.*
+                write:
+                    - lvinueza_prep.*.*
+                    - lvinueza_prod.*.*
+
     - marntz:
         member_of:
             - analyst_sales
@@ -4246,6 +4292,11 @@ users:
         member_of:
             - lvandijk
             - securityadmin
+
+    - lvinueza:
+        can_login: yes
+        member_of:
+            - lvinueza
 
     - marntz:
         can_login: yes
