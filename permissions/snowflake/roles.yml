@@ -951,6 +951,47 @@ roles:
                     - prod.*.*
                     - raw.snapshots.*
 
+    - data_observability:
+        warehouses:
+            - monte_carlo_wh
+        privileges:
+            databases:
+                read:
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_common
+                    - prod.common
+                    - prod.legacy
+                    - raw.zuora_stitch
+                    - raw.tap_postgress
+                    - raw.snowplow
+                    - raw.airflow_stitch
+                    - raw.dbt
+            tables:
+                read:
+                    - prod.restricted_safe_common_mart_sales.mart_arr
+                    - prod.restricted_safe_common.fct_mrr
+                    - prod.restricted_safe_common.dim_crm_account
+                    - prod.common.dim_product_detail
+                    - prod.common.dim_billing_account
+                    - prod.common.fct_usage_ping_payload
+                    - prod.common.dim_date
+                    - prod.legacy.dim_subscriptions
+                    - prod.legacy.gitlab_dotcom_ci_job_artifacts
+                    - prod.legacy.gitlab_dotcom_namespaces_xf
+                    - prod.legacy.gitlab_dotcom_usage_data_events
+                    - raw.zuora_stitch.account
+                    - raw.zuora_stitch.subscription
+                    - raw.tap_postgres.gitlab_db_ci_builds
+                    - raw.tap_postgres.gitlab_db_notes
+                    - raw.snowplow.gitlab_events
+                    - raw.airflow_stitch.dag_run
+                    - raw.dbt.test_run_results
+                    - raw.dbt.run_results
+                    
 # ==========================================
 # Object Roles
 # ==========================================
@@ -4495,6 +4536,11 @@ users:
         member_of:
             - zzhang
 
+    - monte_carlo: # External user - Monte Carlo
+        can_login: yes
+        member_of:
+            - data_observability
+
 # ==========================================
 # Warehouses
 # ==========================================
@@ -4576,3 +4622,6 @@ warehouses:
 
     - usage_ping:
         size: small
+
+    - monte_carlo_wh:
+        size: x-small
