@@ -494,15 +494,15 @@ WITH first_contact  AS (
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN date_details AS close_date_detail
-      ON close_date_detail.date_actual = sfdc_opportunity.close_date
+      ON sfdc_opportunity.close_date = close_date_detail.date_actual
     LEFT JOIN date_details AS created_date_detail
-      ON created_date_detail.date_actual = sfdc_opportunity.created_date
+      ON sfdc_opportunity.created_date = created_date_detail.date_actual
     LEFT JOIN date_details AS net_arr_created_date
-      ON net_arr_created_date.date_actual = sfdc_opportunity.iacv_created_date
+      ON sfdc_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual 
     LEFT JOIN date_details AS sales_accepted_date
-      ON sales_accepted_date.date_actual = sfdc_opportunity.sales_accepted_date
+      ON sfdc_opportunity.sales_accepted_date = sales_accepted_date.date_actual
     LEFT JOIN date_details AS start_date
-      ON sfdc_opportunity.subscription_start_date = start_date.date_actual
+      ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}
