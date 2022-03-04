@@ -28,7 +28,6 @@ tables:
       , certificate
       , "authorization"
       FROM ci_builds_runner_session
-
   ci_namespace_monthly_usages:
     export_schema: 'gitlab_com'
     export_table: ci_namespace_monthly_usages
