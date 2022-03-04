@@ -112,7 +112,6 @@ wave,metric_name
 5.2,usage_activity_by_stage.manage.project_imports.total
 5.2,usage_activity_by_stage_monthly.manage.user_auth_by_provider
 5.2,usage_activity_by_stage_monthly.secure.user_preferences_group_overview_security_dashboard
-5.2,usage_activity_by_stage_monthly.secure.user_api_fuzzing_dnd_jobs
 5.2,usage_activity_by_stage_monthly.create.action_monthly_active_users_ide_edit
 5.2,counts.ci_pipeline_config_auto_devops
 5.2,counts.projects_prometheus_active
@@ -122,5 +121,5 @@ wave,metric_name
 5.2,usage_activity_by_stage.manage.issue_imports.jira
 5.2,usage_activity_by_stage.plan.epics
 5.2,usage_activity_by_stage.plan.issues
-5.2,usage_activity_by_stage_monthly.release.failed_deployments
+5.2,usage_activity_by_stage_monthly.release.failed_deployments-REVISIT THIS ONE
 5.2,usage_activity_by_stage_monthly.release.successful_deployments
