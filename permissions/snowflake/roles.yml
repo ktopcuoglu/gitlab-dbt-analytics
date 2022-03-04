@@ -994,8 +994,6 @@ roles:
                     - prod.workspace_data.dbt_failing_tests
                     - prod.workspace_data.dbt_compilation_runtime
                     - prod.workspace_data.dbt_last_successful_test_runs
-                    - prod.workspace_data.dbt_source_freshness
-                    - prod.workspace_data.dbt_source_tests
                     - raw.zuora_stitch.account
                     - raw.zuora_stitch.subscription
                     - raw.tap_postgres.gitlab_db_ci_builds
