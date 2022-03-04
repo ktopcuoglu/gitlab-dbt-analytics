@@ -1,12 +1,9 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception"],
+    materialized="incremental",
+    unique_key="mau_id"
 ) }}
 
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "mau_id"
-    })
-}}
 
 WITH date_details AS (
   
