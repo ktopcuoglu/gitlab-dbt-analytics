@@ -1005,11 +1005,14 @@ roles:
                     - raw.airflow_stitch.dag
                     - raw.dbt.test_run_results
                     - raw.dbt.run_results
+                    - raw.dbt.manifest
+                    - raw.dbt.snapshots_run_results
                     - prep.airflow.airflow_dag_run_source
                     - prep.airflow.airflow_dag_source
                     - prep.dbt.dbt_test_results_source
                     - prep.dbt.dbt_run_results_source
                     - prep.dbt.dbt_model_source
+                    - prep.dbt_snapshots_results_source
 
                     
 
