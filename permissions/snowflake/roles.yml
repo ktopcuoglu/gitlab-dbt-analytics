@@ -966,7 +966,7 @@ roles:
                     - prod.common
                     - prod.legacy
                     - raw.zuora_stitch
-                    - raw.tap_postgress
+                    - raw.tap_postgres
                     - raw.snowplow
                     - raw.airflow_stitch
                     - raw.dbt
