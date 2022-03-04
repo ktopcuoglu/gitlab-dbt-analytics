@@ -18,7 +18,7 @@ WITH crm_user_hierarchy_stamped AS (
       crm_opp_owner_sales_segment_region_stamped_grouped,
       dim_crm_opp_owner_area_stamped_id,
       crm_opp_owner_area_stamped,
-      crm_opp_owner_user_segment_geo_region_area_stamped
+      crm_opp_owner_sales_segment_geo_region_area_stamped
     FROM {{ ref('prep_crm_user_hierarchy_stamped') }}
 )
 
@@ -27,5 +27,5 @@ WITH crm_user_hierarchy_stamped AS (
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2021-01-05",
-    updated_date="2022-02-11"
+    updated_date="2022-03-04"
 ) }}
