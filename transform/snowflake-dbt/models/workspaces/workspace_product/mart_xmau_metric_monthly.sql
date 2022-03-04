@@ -20,7 +20,7 @@
         event_created_at,
         dim_user_id,
         fct_usage_event.event_name,
-        source,
+        data_source                                                                                     AS data_source,
         plan_id_at_event_date,
         plan_name_at_event_date,
         plan_was_paid_at_event_date,
@@ -50,7 +50,7 @@
         dim_date.last_day_of_fiscal_year                                                                AS last_day_of_fiscal_year,
         fact.dim_user_id,
         fact.event_name,
-        fact.source,
+        fact.data_source,
         fact.plan_was_paid_at_event_date,
         fact.dim_namespace_id,
         fact.is_umau,
@@ -87,7 +87,7 @@
          fact_with_date_range.last_day_of_fiscal_year,
          fact_with_date_range.dim_user_id,
          fact_with_date_range.event_name,
-         fact_with_date_range.source,
+         fact_with_date_range.data_source,
          fact_with_date_range.dim_namespace_id,
          fact_with_date_range.is_umau,
          fact_with_date_range.is_gmau,
@@ -107,7 +107,6 @@
 
    SELECT
        reporting_month,
-       event_name,
        is_umau,
        is_gmau,
        is_smau,
@@ -115,11 +114,12 @@
        stage_name,
        group_name,
        'total'                                                                                         AS user_group,
+       ARRAY_AGG(event_name)                                                                           AS event_name,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
    FROM fact_w_paid_deduped
-      {{ dbt_utils.group_by(n=9) }}
+      {{ dbt_utils.group_by(n=8) }}
    ORDER BY reporting_month DESC
 
 ), free_results AS (
@@ -134,19 +134,19 @@
        stage_name,
        group_name,
        'free'                                                                                         AS user_group,
+       ARRAY_AGG(event_name)                                                                          AS event_name,
        COUNT(*)                                                                                       AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                              AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                   AS user_count
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = FALSE
-       {{ dbt_utils.group_by(n=9) }}
+       {{ dbt_utils.group_by(n=8) }}
    ORDER BY reporting_month DESC
 
 ), paid_results AS (
 
    SELECT
        reporting_month,
-       event_name,
        is_umau,
        is_gmau,
        is_smau,
@@ -154,12 +154,13 @@
        stage_name,
        group_name,
        'paid'                                                                                          AS user_group,
+       ARRAY_AGG(event_name)                                                                           AS event_name,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
    FROM fact_w_paid_deduped
    WHERE plan_was_paid_at_event_date = TRUE
-       {{ dbt_utils.group_by(n=9) }}
+       {{ dbt_utils.group_by(n=8) }}
    ORDER BY reporting_month DESC
 
 ), results_wo_pk AS (
