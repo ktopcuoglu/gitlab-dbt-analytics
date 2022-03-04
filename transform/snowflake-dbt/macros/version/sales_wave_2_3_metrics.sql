@@ -120,7 +120,6 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['project_imports']['total']") }}                               AS projects_imported_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['user_auth_by_provider']") }}                         AS two_factor_auth_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_preferences_group_overview_security_dashboard']") }}  AS preferences_security_dashboard_28_days_user,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_api_fuzzing_dnd_jobs']") }}                     AS api_fuzzing_dnd_jobs_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['action_monthly_active_users_ide_edit']") }}          AS web_ide_edit_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_pipeline_config_auto_devops']") }}                                                   AS auto_devops_pipelines_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_prometheus_active']") }}                                                       AS projects_prometheus_active_all_time_event,
@@ -130,7 +129,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['issue_imports']['jira']") }}                                 AS jira_issue_imports_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['plan']['epics']") }}                                                   AS author_epic_all_time_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['plan']['issues']") }}                                                  AS author_issue_all_time_user,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['release']['failed_deployments']") }}                                   AS failed_deployments_28_days_event,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['release']['successful_deployments']") }}                               AS successful_deployments_28_days_event
+    -- {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['failed_deployments']") }}                           AS failed_deployments_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['successful_deployments']") }}                       AS successful_deployments_28_days_event
 
 {%- endmacro -%}
