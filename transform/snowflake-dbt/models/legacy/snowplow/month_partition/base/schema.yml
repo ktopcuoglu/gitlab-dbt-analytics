@@ -21,6 +21,13 @@ models:
    
     - name: snowplow_gitlab_events_experiment_contexts
       description: This is a view that extracts all the key data from the experiment context json.  May produce several rows for the same `event_id` if the event has multiple experiments.
+      tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - event_id
+              - experiment_name
+              - context_key
+              - experiment_variant
       columns:
         - name: event_id
           tests:
@@ -31,7 +38,6 @@ models:
         - name: context_key
           tests:
             - not_null
-            - unique
         - name: experiment_variant
           tests:
             - not_null

@@ -29,7 +29,6 @@ WITH base AS (
 
 events_with_context_flattened AS (
 
-
   SELECT
     base.*,
     flat_contexts.value['schema']::VARCHAR AS context_data_schema,
@@ -41,7 +40,7 @@ events_with_context_flattened AS (
 
 experiment_contexts AS (
 
-  SELECT
+  SELECT DISTINCT -- Some event_id are not unique dispite haveing the same experiment context as discussed in MR 6288
     event_id,
     context_data['experiment']::VARCHAR AS experiment_name,
     context_data['key']::VARCHAR AS context_key,
