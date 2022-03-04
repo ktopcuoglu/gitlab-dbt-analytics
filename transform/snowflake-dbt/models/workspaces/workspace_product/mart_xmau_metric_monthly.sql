@@ -114,7 +114,7 @@
        stage_name,
        group_name,
        'total'                                                                                         AS user_group,
-       ARRAY_AGG(event_name)                                                                           AS event_name,
+       --ARRAY_AGG(event_name)                                                                           AS event_name,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
@@ -134,7 +134,7 @@
        stage_name,
        group_name,
        'free'                                                                                         AS user_group,
-       ARRAY_AGG(event_name)                                                                          AS event_name,
+       --ARRAY_AGG(event_name)                                                                          AS event_name,
        COUNT(*)                                                                                       AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                              AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                   AS user_count
@@ -154,7 +154,7 @@
        stage_name,
        group_name,
        'paid'                                                                                          AS user_group,
-       ARRAY_AGG(event_name)                                                                           AS event_name,
+       --ARRAY_AGG(event_name)                                                                           AS event_name,
        COUNT(*)                                                                                        AS event_count,
        COUNT(DISTINCT(dim_namespace_id))                                                               AS namespace_count,
        COUNT(DISTINCT(dim_user_id))                                                                    AS user_count
