@@ -4644,5 +4644,5 @@ warehouses:
     - usage_ping:
         size: small
 
-    - monte_carlo_wh:
+    - data_obs_wh_1:
         size: x-small
