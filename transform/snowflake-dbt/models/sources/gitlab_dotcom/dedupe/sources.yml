@@ -85,7 +85,7 @@ sources:
       - name: ci_platform_metrics
         identifier: gitlab_db_ci_platform_metrics
       - name: ci_project_monthly_usages
-        identifier: ci_project_monthly_usages
+        identifier: gitlab_db_ci_project_monthly_usages
       - name: ci_runner_projects
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners
