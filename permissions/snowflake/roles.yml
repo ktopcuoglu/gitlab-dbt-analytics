@@ -1010,7 +1010,7 @@ roles:
                     - prep.dbt.dbt_test_results_source
                     - prep.dbt.dbt_run_results_source
                     - prep.dbt.dbt_model_source
-                    - prep.dbt_snapshots_results_source
+                    - prep.dbt.dbt_snapshots_results_source
 
                     
 
