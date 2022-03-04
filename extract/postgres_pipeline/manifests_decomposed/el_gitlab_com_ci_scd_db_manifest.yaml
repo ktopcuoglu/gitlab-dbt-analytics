@@ -31,7 +31,7 @@ tables:
   ci_namespace_monthly_usages:
     export_schema: 'gitlab_com'
     export_table: ci_namespace_monthly_usages
-    export_table_primary_key: build_id
+    export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
