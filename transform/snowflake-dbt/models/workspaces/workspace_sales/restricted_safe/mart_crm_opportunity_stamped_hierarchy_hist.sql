@@ -98,7 +98,7 @@
       dim_crm_account.dim_parent_crm_account_id,
       dim_crm_account.crm_account_name,
       dim_crm_account.dim_crm_account_id,
-      dim_crm_opportunity.dim_crm_sales_rep_id,
+      dim_crm_opportunity.dim_crm_user_id,
 
       -- opportunity attributes & additive fields
       fct_crm_opportunity.is_won,

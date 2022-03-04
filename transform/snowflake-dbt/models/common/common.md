@@ -304,6 +304,12 @@ A fact table for salesforce opportunities with keys to connect opportunities to 
 
 {% enddocs %}
 
+{% docs fct_crm_opportunity_daily_snapshot %}
+
+A daily snapshot fact table for salesforce opportunities with keys to connect opportunities to shared dimensions. This table shows the state of the opportunity as it was on the day of the snapshot. 
+
+{% enddocs %}
+
 {% docs fct_crm_person %}
 
 A fact table for Salesforce unconverted leads and contacts. The important stage dates have been included to calculate the velocity of people through the sales funnel. A boolean flag has been created to indicate leads and contacts who have been assigned a Marketo Qualified Lead Date, and a Bizible person id has been included to pull in the marketing channel based on the first touchpoint of a given lead or contact.

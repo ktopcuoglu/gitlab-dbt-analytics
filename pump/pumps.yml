@@ -11,3 +11,7 @@ pumps:
     timestamp_column: reporting_month
     sensitive: True
     owner: '@snalamaru'
+  - model: pump_disaster_relief_fund
+    timestamp_column: null
+    sensitive: True
+    owner: '@aperez349'
