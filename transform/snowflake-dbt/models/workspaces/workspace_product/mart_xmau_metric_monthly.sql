@@ -173,7 +173,7 @@
 ), results AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'event_name', 'user_group', 'section_name', 'stage_name', 'group_name']) }}                  AS mart_xmau_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }}                  AS mart_xmau_metric_monthly_id,
     *
   FROM results_wo_pk
 
