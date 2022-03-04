@@ -182,7 +182,9 @@
     ('prep_namespace', 'prep_namespace'),
     ('prep_user', 'prep_user'),
     ('prep_plan', 'prep_gitlab_dotcom_plan'),
-    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist')
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
+    ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
+    ('map_saas_event_to_smau','map_saas_event_to_smau')
 ]) }}
 
 , dast_jobs AS (
@@ -268,6 +270,17 @@
     WHERE target_type IS NULL
       AND event_action_type = 'pushed'
 
+), stage_mapping AS (
+
+    SELECT DISTINCT *
+    FROM (
+        SELECT event_name, stage_name
+        FROM map_saas_event_to_gmau
+        UNION ALL
+        SELECT event_name, stage_name
+        FROM map_saas_event_to_smau
+    )
+
 ), data AS (
 
 {% for event_cte in event_ctes %}
@@ -275,6 +288,7 @@
     SELECT
       MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
+      stage_mapping.stage_name,
       {% if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
       {% endif %}
@@ -326,6 +340,8 @@
     {% endif %}
     LEFT JOIN prep_plan
       ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
+    LEFT JOIN stage_mapping
+      ON '{{ event_cte.event_name }}' = stage_mapping.event_name
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
     {% if not loop.last %}
