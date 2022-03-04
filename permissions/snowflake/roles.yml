@@ -959,17 +959,21 @@ roles:
                 read:
                     - prod
                     - raw
+                    - prep
             schemas:
                 read:
                     - prod.restricted_safe_common_mart_sales
                     - prod.restricted_safe_common
                     - prod.common
                     - prod.legacy
+                    - prod.workspace_data
                     - raw.zuora_stitch
                     - raw.tap_postgres
                     - raw.snowplow
                     - raw.airflow_stitch
                     - raw.dbt
+                    - prep.dbt
+                    - prep.airflow
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -983,14 +987,31 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
+                    - prod.workspace_data.airflow_dag
+                    - prod.workspace_data.airflow_dag_run
+                    - prod.workspace_data.dbt_test_results
+                    - prod.workspace_data.dbt_run_results
+                    - prod.workspace_data.dbt_failing_tests
+                    - prod.workspace_data.dbt_compilation_runtime
+                    - prod.workspace_data.dbt_last_successful_test_runs
+                    - prod.workspace_data.dbt_source_freshness
+                    - prod.workspace_data.dbt_source_tests
                     - raw.zuora_stitch.account
                     - raw.zuora_stitch.subscription
                     - raw.tap_postgres.gitlab_db_ci_builds
                     - raw.tap_postgres.gitlab_db_notes
                     - raw.snowplow.gitlab_events
                     - raw.airflow_stitch.dag_run
+                    - raw.airflow_stitch.dag
                     - raw.dbt.test_run_results
                     - raw.dbt.run_results
+                    - prep.airflow.airflow_dag_run_source
+                    - prep.airflow.airflow_dag_source
+                    - prep.dbt.dbt_test_results_source
+                    - prep.dbt.dbt_run_results_source
+
+                    
+
                     
 # ==========================================
 # Object Roles
