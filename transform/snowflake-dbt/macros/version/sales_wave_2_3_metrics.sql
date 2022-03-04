@@ -117,7 +117,7 @@
     -- 5.2 metrics
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_dependency_scanning_jobs']") }}                 AS dependency_scanning_jobs_all_time_user,
     {{ null_negative_numbers("raw_usage_data_payload['analytics_unique_visits']['i_analytics_dev_ops_adoption']") }}                                    AS analytics_devops_adoption_all_time_user,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['project_imports']['total]") }}                               AS projects_imported_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['project_imports']['total']") }}                               AS projects_imported_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['user_auth_by_provider']") }}                         AS two_factor_auth_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_preferences_group_overview_security_dashboard']") }}  AS preferences_security_dashboard_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_api_fuzzing_dnd_jobs']") }}                     AS api_fuzzing_dnd_jobs_28_days_user,
