@@ -70,13 +70,15 @@ WITH first_contact  AS (
       user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
       user_region_stamped                                                AS crm_opp_owner_region_stamped,
       user_area_stamped                                                  AS crm_opp_owner_area_stamped,
-      user_segment_geo_region_area_stamped                               AS crm_opp_owner_sales_segment_geo_region_area_stamped,
+      created_date::DATE                                                 AS created_date,
+      sales_accepted_date::DATE                                          AS sales_accepted_date,
+      close_date::DATE                                                   AS close_date,
     {%- if model_type == 'live' %}
-        {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT"])}}
+        {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE"])}}
     {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
         snapshot_dates.date_id                                                                                        AS snapshot_id,
-        {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT"])}}
+        {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE"])}}
      {%- endif %}
     FROM 
     {%- if model_type == 'live' %}
@@ -492,13 +494,13 @@ WITH first_contact  AS (
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN date_details AS close_date_detail
-      ON close_date_detail.date_actual = sfdc_opportunity.close_date::DATE
+      ON sfdc_opportunity.close_date = close_date_detail.date_actual
     LEFT JOIN date_details AS created_date_detail
-      ON created_date_detail.date_actual = sfdc_opportunity.created_date::DATE
+      ON sfdc_opportunity.created_date = created_date_detail.date_actual
     LEFT JOIN date_details AS net_arr_created_date
-      ON net_arr_created_date.date_actual = sfdc_opportunity.iacv_created_date::DATE
+      ON sfdc_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual 
     LEFT JOIN date_details AS sales_accepted_date
-      ON sales_accepted_date.date_actual = sfdc_opportunity.sales_accepted_date::DATE
+      ON sfdc_opportunity.sales_accepted_date = sales_accepted_date.date_actual
     LEFT JOIN date_details AS start_date
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
