@@ -108,13 +108,10 @@
       sfdc_opportunity_source.user_geo_stamped                    AS user_geo,
       sfdc_opportunity_source.user_region_stamped                 AS user_region,
       sfdc_opportunity_source.user_area_stamped                   AS user_area,
-      COALESCE(sfdc_opportunity_source.user_segment_geo_region_area_stamped, 
-               CONCAT(sfdc_opportunity_source.user_segment_stamped, '-', 
-                      sfdc_opportunity_source.user_geo_stamped, '-', 
-                      sfdc_opportunity_source.user_region_stamped, '-', 
-                      sfdc_opportunity_source.user_area_stamped
-                      )
-              )                                                    AS user_segment_geo_region_area
+      CONCAT(sfdc_opportunity_source.user_segment_stamped, '-', 
+         sfdc_opportunity_source.user_geo_stamped, '-', 
+         sfdc_opportunity_source.user_region_stamped, '-', 
+         sfdc_opportunity_source.user_area_stamped)               AS user_segment_geo_region_area
     FROM sfdc_opportunity_source
     INNER JOIN dim_date
       ON sfdc_opportunity_source.close_date = dim_date.date_actual
