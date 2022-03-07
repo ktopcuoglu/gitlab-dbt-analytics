@@ -89,7 +89,7 @@
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-02-18",
-    updated_date="2022-02-14",
+    updated_date="2022-03-07",
   ) }}

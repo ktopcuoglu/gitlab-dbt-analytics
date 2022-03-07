@@ -27,5 +27,5 @@ WITH crm_user_hierarchy_stamped AS (
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2021-01-05",
-    updated_date="2022-03-04"
+    updated_date="2022-03-07"
 ) }}
