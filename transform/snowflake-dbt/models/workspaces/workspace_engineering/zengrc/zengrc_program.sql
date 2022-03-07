@@ -6,7 +6,7 @@
 
 , audit_programs AS (
 
-    SELECT DISTINCT
+    SELECT
       audits.program_id,
       audits.program_title,
       audits.program_type AS zengrc_object_type
@@ -16,7 +16,7 @@
 
 ), issue_programs AS (
 
-    SELECT DISTINCT
+    SELECT
       mapped_programs.value['id']::NUMBER     AS program_id,
       mapped_programs.value['title']::VARCHAR AS program_title,
       mapped_programs.value['type']::VARCHAR  AS zengrc_type
@@ -26,7 +26,7 @@
 
 ), requests_programs AS (
 
-    SELECT DISTINCT
+    SELECT
       mapped_programs.value['id']::NUMBER     AS program_id,
       mapped_programs.value['title']::VARCHAR AS program_title,
       mapped_programs.value['type']::VARCHAR  AS zengrc_type
