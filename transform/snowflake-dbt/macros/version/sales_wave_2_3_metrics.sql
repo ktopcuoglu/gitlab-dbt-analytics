@@ -129,7 +129,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['issue_imports']['jira']") }}                                 AS jira_issue_imports_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['plan']['epics']") }}                                                   AS author_epic_all_time_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['plan']['issues']") }}                                                  AS author_issue_all_time_user,
-    -- {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['failed_deployments']") }}                           AS failed_deployments_28_days_event,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['successful_deployments']") }}                       AS successful_deployments_28_days_event
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['failed_deployments']") }}                           AS failed_deployments_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['successful_deployments']") }}                       AS successful_deployments_28_days_user
 
 {%- endmacro -%}

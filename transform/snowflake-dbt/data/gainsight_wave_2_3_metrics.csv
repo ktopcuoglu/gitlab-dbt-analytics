@@ -121,5 +121,5 @@ wave,metric_name
 5.2,usage_activity_by_stage.manage.issue_imports.jira
 5.2,usage_activity_by_stage.plan.epics
 5.2,usage_activity_by_stage.plan.issues
-5.2,usage_activity_by_stage_monthly.release.failed_deployments-REVISIT THIS ONE
+5.2,usage_activity_by_stage_monthly.release.failed_deployments
 5.2,usage_activity_by_stage_monthly.release.successful_deployments
