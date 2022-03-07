@@ -156,8 +156,8 @@
     "primary_key": "dim_ci_build_id"
   },
   {
-    "event_name": "succesful_ci_pipeline_creation",
-    "source_cte_name": "succesful_ci_pipelines",
+    "event_name": "successful_ci_pipeline_creation",
+    "source_cte_name": "successful_ci_pipelines",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -267,7 +267,7 @@
                                     'secret_detection'
                                     )
     
-), succesful_ci_pipelines AS (
+), successful_ci_pipelines AS (
 
     SELECT *
     FROM prep_ci_pipeline
