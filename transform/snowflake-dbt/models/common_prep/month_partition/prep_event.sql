@@ -36,6 +36,14 @@
     "primary_key": "dim_deployment_id"
   },
   {
+    "event_name": "epic_creation",
+    "source_cte_name": "prep_epic",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "NULL",
+    "primary_key": "dim_epic_id"
+  },
+  {
     "event_name": "issue_creation",
     "source_cte_name": "prep_issue",
     "user_column_name": "author_id",
@@ -172,6 +180,7 @@
     ('prep_action', 'prep_action'),
     ('prep_ci_build', 'prep_ci_build'),
     ('prep_deployment', 'prep_deployment'),
+    ('prep_epic', 'prep_epic'),
     ('prep_issue', 'prep_issue'),
     ('prep_merge_request', 'prep_merge_request'),
     ('prep_note', 'prep_note'),
@@ -292,6 +301,8 @@
       stage_mapping.stage_name,
       {% if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
+      {% else %}
+      NULL,
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       prep_namespace_hist.namespace_type                                                                       AS parent_type,
@@ -319,10 +330,14 @@
       FLOOR(
       DATEDIFF('hour',
               dim_project.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation,
-      {% endif %} 
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation, 
       dim_project.is_imported                                                                                  AS project_is_imported,
       dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
+      {% else %}
+      NULL,
+      NULL,
+      NULL
+      {% endif %}                                                                       
     FROM {{ event_cte.source_cte_name }}
     {% if event_cte.project_column_name != 'NULL' %}
     INNER JOIN dim_project 
