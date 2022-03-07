@@ -62,6 +62,7 @@ SELECT
   pql_list_stages,
   pql_nbr_stages,
   pql_nbr_namespace_users,
+  has_namespace_setup_for_company_use
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed
