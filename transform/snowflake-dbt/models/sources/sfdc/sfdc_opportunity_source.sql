@@ -146,7 +146,14 @@ WITH source AS (
         stamped_user_area__c                            AS user_area_stamped,
         {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
                                                         AS user_segment_region_stamped_grouped,
-        stamped_opp_owner_segment_geo_region_are__c     AS user_segment_geo_region_area_stamped,
+        CONCAT(user_segment_stamped,
+               '-', 
+               user_geo_stamped,
+               '-',
+               user_region_stamped,
+               '-',
+               user_area_stamped
+              )                                         AS user_segment_geo_region_area_stamped,
         stamped_opp_owner_user_role_type__c             AS crm_opp_owner_user_role_type_stamped,
         stamped_opportunity_owner__c                    AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                        AS crm_account_owner_stamped_name,
