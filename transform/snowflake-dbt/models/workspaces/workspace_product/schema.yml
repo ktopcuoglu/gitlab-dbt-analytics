@@ -109,3 +109,6 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: fct_usage_ping
+    description: ' {{ doc("fct_usage_ping") }} '
