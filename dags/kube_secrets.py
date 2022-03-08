@@ -254,4 +254,4 @@ SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
 
 ZUORA_API_USER = Secret("env", "ZUORA_API_USER", "airflow", "ZUORA_API_USER")
-ZUORA_API_USER = Secret("env", "ZUORA_API_PASS", "airflow", "ZUORA_API_PASS")
+ZUORA_API_PASS = Secret("env", "ZUORA_API_PASS", "airflow", "ZUORA_API_PASS")
