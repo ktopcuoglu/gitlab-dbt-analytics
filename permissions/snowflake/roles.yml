@@ -2659,8 +2659,12 @@ roles:
 
     - hselim: 
         member_of: 
-            - xactly
+            - adaptive
+            - reporter
             - restricted_safe
+            - salesforce
+            - xactly
+
         warehouses: 
             - analyst_xs
 
