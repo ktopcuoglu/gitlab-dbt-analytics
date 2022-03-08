@@ -13,7 +13,7 @@ from os import environ as env
 class ZuoraQueriesAPI:
     def __init__(self):
         user = env["ZUORA_API_USER"]
-        password = env["ZUORA_PASSWORD"]
+        password = env["ZUORA_API_PASS"]
         self.base_url = "https://rest.zuora.com"
 
         zuora_token = self.authenticate_zuora(user, password)

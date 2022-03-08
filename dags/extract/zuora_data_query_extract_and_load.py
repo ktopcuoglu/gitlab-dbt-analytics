@@ -16,6 +16,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    ZUORA_API_USER,
+    ZUORA_API_PASS,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -47,29 +49,30 @@ dag = DAG(
     schedule_interval="0 */2 * * *",
 )
 
-# BambooHR Extract
-bamboohr_extract_cmd = f"""
+zuora_data_query_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
     python zuora_data_query/src/api.py
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated
-bamboohr_extract = KubernetesPodOperator(
+zuora_data_query_extract_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="bamboohr-extract",
-    name="bamboohr-extract",
+    task_id="zuora-data-query-extract",
+    name="zuora-data-query-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
+        ZUORA_API_USER,
+        ZUORA_API_PASS,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
-    arguments=[bamboohr_extract_cmd],
+    arguments=[zuora_data_query_extract_cmd],
     do_xcom_push=True,
     dag=dag,
 )
