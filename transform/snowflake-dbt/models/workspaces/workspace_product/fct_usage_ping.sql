@@ -180,7 +180,8 @@
 ), joined_payload AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('prep_usage_ping'), relation_alias='prep_usage_ping', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}, /* Might need to look into this line, was referencing the model but now want it to reference CTE, not sure if it can within macro*/
+      --{{ dbt_utils.star(from=ref('prep_usage_ping'), relation_alias='prep_usage_ping', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}, /* Might need to look into this line, was referencing the model but now want it to reference CTE, not sure if it can within macro*/
+      prep_usage_ping_cte.*,
       main_edition                                                                                   AS edition,
       main_edition_product_tier                                                                      AS edition_product_tier,
       ping_source                                                                                    AS usage_ping_delivery_type,
