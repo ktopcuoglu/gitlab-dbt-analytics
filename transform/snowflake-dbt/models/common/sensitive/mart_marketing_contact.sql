@@ -929,7 +929,8 @@
       'usage_epics_28_days_user',
       'usage_issues_28_days_user',
       'usage_instance_user_count_not_aligned',
-      'usage_historical_max_users_not_aligned'
+      'usage_historical_max_users_not_aligned',
+      'has_namespace_setup_for_company_use'
       ]
 ) }}
 
@@ -938,7 +939,7 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-02-28"
+    updated_date="2022-03-07"
 ) }}
 
 
