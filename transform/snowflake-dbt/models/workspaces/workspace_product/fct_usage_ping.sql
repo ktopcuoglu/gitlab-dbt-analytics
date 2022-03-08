@@ -160,13 +160,13 @@
       edition,
       main_edition,
       product_tier,
-      main_edition_product_tier,
+      main_edition_product_tier                         AS edition_product_tier,
       cleaned_version,
       version_is_prerelease,
       major_version,
       minor_version,
       major_minor_version,
-      ping_source,
+      ping_source                                       AS usage_ping_delivery_type,
       is_internal,
       is_staging,
       instance_user_count,
@@ -181,9 +181,6 @@
 
     SELECT
       prep_usage_ping_cte.*,
-      main_edition                                                                                   AS edition,
-      main_edition_product_tier                                                                      AS edition_product_tier,
-      ping_source                                                                                    AS usage_ping_delivery_type,
       prep_license.dim_license_id,
       prep_subscription.dim_subscription_id,
       dim_date.date_id,
@@ -191,7 +188,6 @@
       (raw_usage_data.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
       raw_usage_data.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
       IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)                                       AS is_trial
-
     FROM prep_usage_ping_cte
     LEFT JOIN raw_usage_data
       ON prep_usage_ping_cte.raw_usage_data_id = raw_usage_data.raw_usage_data_id
