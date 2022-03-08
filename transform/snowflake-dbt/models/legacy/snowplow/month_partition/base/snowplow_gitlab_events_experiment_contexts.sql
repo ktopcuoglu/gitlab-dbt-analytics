@@ -6,7 +6,7 @@ WITH base AS (
   SELECT DISTINCT
     event_id,
     contexts
-  {% if target.name not in ("prod", "dev_xl") -%} -- remove dev_xl before merge
+  {% if target.name not in ("prod") -%}
 
   FROM {{ ref('snowplow_gitlab_good_events_sample_source') }}
 
