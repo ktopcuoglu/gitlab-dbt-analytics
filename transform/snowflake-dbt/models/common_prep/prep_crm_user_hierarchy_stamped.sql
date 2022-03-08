@@ -182,7 +182,7 @@
           WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment
         END                                                                           AS crm_opp_owner_sales_segment_stamped_grouped,
-      {{ sales_segment_region_grouped('user_segment', 'user_region') }}               AS crm_opp_owner_sales_segment_region_stamped_grouped,
+      {{ sales_segment_region_grouped('user_segment', 'user_geo') }}                  AS crm_opp_owner_sales_segment_region_stamped_grouped,
       fiscal_year,
       is_last_user_hierarchy_in_fiscal_year,
       is_last_user_area_in_fiscal_year

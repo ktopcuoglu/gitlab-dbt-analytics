@@ -32,7 +32,7 @@ WITH source AS (
         WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
         ELSE user_segment
       END                                                               AS user_segment_grouped,
-      {{ sales_segment_region_grouped('user_segment', 'user_region') }} AS user_segment_region_grouped,
+      {{ sales_segment_region_grouped('user_segment', 'user_geo') }}    AS user_segment_region_grouped,
 
       --metadata
       createdbyid                                                       AS created_by_id,
