@@ -18,25 +18,26 @@ def manifest_reader(file_path: str) -> Dict[str, Dict]:
     return manifest_dict
 
 
-def filter_manifest(manifest_list: list, load_only_table: str = None) -> None:
+def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
     # When load_only_table specified reduce manifest to keep only relevant table config
-    if load_only_table and load_only_table in manifest_list:
-        manifest_list = [m for m in manifest_list if m == load_only_table]
-        return manifest_list
-
+    if load_only_table and load_only_table in manifest_dict["tables"].keys():
+        manifest_dict["tables"] = {
+            load_only_table: manifest_dict["tables"][load_only_table]
+        }
 
 def main(file_path: str, load_only_table: str = None) -> None:
     config_dict = env.copy()
     extractor = BizibleSnowFlakeExtractor(config_dict)
 
     logging.info(f"Reading manifest at location: {file_path}")
-    manifest_list = manifest_reader(file_path)
+    manifest_dict = manifest_reader(file_path)
     # When load_only_table specified reduce manifest to keep only relevant table config
-    manifest_list = filter_manifest(manifest_list, load_only_table)
+    manifest_dict = filter_manifest(manifest_dict, load_only_table)
 
-    for table in manifest_list:
+    for table in manifest_dict["tables"]:
         logging.info(f"Processing Table: {table}")
-        extractor.extract_latest_bizible_file(table)
+        table_dict = manifest_dict["tables"][table]
+        extractor.extract_latest_bizible_file(table_dict)
 
 
 if __name__ == "__main__":
