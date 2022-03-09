@@ -47,5 +47,3 @@ models:
         description: days since the project creation
       - name: project_is_imported
         description: TRUE if the project was imported
-        tests:
-          - not_null
