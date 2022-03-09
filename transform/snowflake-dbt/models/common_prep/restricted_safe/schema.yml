@@ -31,6 +31,7 @@ models:
         description: Total quantity
 
   - name: prep_crm_account
+    description: '{{ doc("prep_crm_account") }}'
     columns:
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
@@ -63,6 +64,14 @@ models:
         description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+
+  - name: prep_crm_opportunity
+    description: '{{ doc("prep_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+          - not_null
+          - unique
 
   - name: prep_quote
     description: '{{ doc("prep_quote") }}'

@@ -137,7 +137,7 @@ models:
       - name: ping_date
         description: Actual date when ping is executed and data is extracted into Data Warehouse. This value determinates when data is processed.
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
         description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
       - name: merge_requests_28_days_user
@@ -312,3 +312,33 @@ models:
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
+
+  - name: pump_disaster_relief_fund
+    description: '{{ doc("pump_disaster_relief_fund") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - Employee ID
+            - Action
+          quote_columns: true
+    columns:
+      - name: Fund
+        quote: true
+        description: A field requested by the recipient of the data
+      - name: First Name
+        quote: true
+        description: The first name of the employee
+      - name: Last Name
+        quote: true
+        description: The last name of the employee
+      - name: Employee ID
+        quote: true
+        description: The employee id of the employee
+      - name: Email
+        quote: true
+        description: The work email for the employee
+      - name: Action
+        quote: true
+        description: A field indicating if the employee is the be added or removed representing Hires and Terminations.
+      - name: report_date
+        description: The date the report table was created

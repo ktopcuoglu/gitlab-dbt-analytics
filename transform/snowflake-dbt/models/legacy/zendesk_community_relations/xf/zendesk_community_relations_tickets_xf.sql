@@ -16,9 +16,7 @@ WITH zendesk_community_relations_tickets AS (
  
   SELECT
     organization_id,
-    sfdc_account_id,
-    organization_tags,
-    organization_market_segment
+    organization_tags
   FROM {{ref('zendesk_community_relations_organizations_source')}}
 
 ), zendesk_community_relations_groups AS (
@@ -40,8 +38,6 @@ SELECT DISTINCT
   zendesk_community_relations_groups.group_name                             AS channel,
   zendesk_community_relations_users.name                                    AS assignee_name,
   zendesk_community_relations_users.role                                    AS assignee_role,
-  zendesk_community_relations_organizations.sfdc_account_id,
-  zendesk_community_relations_organizations.organization_market_segment,
   zendesk_community_relations_organizations.organization_tags,
   zendesk_community_relations_ticket_metrics.solved_at
 FROM zendesk_community_relations_tickets
