@@ -906,13 +906,12 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND oppty_final.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
           -- 20211222 Adjusted to remove the ommitted filter
-          AND (oppty_final.is_stage_1_plus = 1
-                OR oppty_final.is_lost = 1)
-          AND oppty_final.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
+          AND oppty_final.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
           -- 20220128 Updated to remove webdirect SQS deals 
           AND oppty_final.sales_qualified_source  != 'Web Direct Generated'
+          AND oppty_final.is_jihu_account = 0
          THEN 1
          ELSE 0
       END                                                          AS is_eligible_created_pipeline_flag,
@@ -924,7 +923,7 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
           AND oppty_final.is_renewal = 0
-          AND oppty_final.stage_name NOT IN ('10-Duplicate', '9-Unqualified','0-Pending Acceptance')
+          AND oppty_final.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             THEN 1
         ELSE 0
       END                                                         AS is_eligible_sao_flag,
@@ -1110,9 +1109,12 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with 
       -- different aggregation levels
 
-        COALESCE(agg_demo_keys.key_segment,'other')                     AS key_segment,
         COALESCE(agg_demo_keys.key_sqs,'other')                         AS key_sqs,
         COALESCE(agg_demo_keys.key_ot,'other')                          AS key_ot,
+
+        COALESCE(agg_demo_keys.key_segment,'other')                     AS key_segment,
+        COALESCE(key_segment_sqs,'other')                               AS key_segment_sqs,                 
+        COALESCE(key_segment_ot,'other')                                AS key_segment_ot,       
 
         COALESCE(agg_demo_keys.key_segment_geo,'other')                 AS key_segment_geo,
         COALESCE(agg_demo_keys.key_segment_geo_sqs,'other')             AS key_segment_geo_sqs,
