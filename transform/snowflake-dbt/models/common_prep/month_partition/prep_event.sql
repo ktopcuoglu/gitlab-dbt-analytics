@@ -299,12 +299,14 @@
       '{{ event_cte.event_name }}'                                                                             AS event_name,
       stage_mapping.stage_name,
       {% if event_cte.project_column_name != 'NULL' %}
-      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
+      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS dim_project_id,
       'project'                                                                                                AS parent_type,
       {% else %}
-      NULL,
+      NULL                                                                                                     AS dim_project_id,
       'group'                                                                                                  AS parent_type,
       {% endif %}
+      IFNULL({{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}, 
+             {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id)                                      AS parent_id,
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
