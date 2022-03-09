@@ -16,7 +16,8 @@
     ('prep_subscription', 'prep_subscription'),
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
 }}
@@ -204,7 +205,7 @@
     FROM {{ ref('dim_product_tier') }}
     WHERE product_delivery_type = 'Self-Managed'
 
-), final AS (
+), prep_usage_ping_payload_cte AS (
 
     SELECT
       joined_payload.dim_usage_ping_id,
@@ -246,6 +247,52 @@
       ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
       AND edition = 'EE'
 
+), flattened_high_level as (
+    SELECT
+      dim_usage_ping_id           AS dim_usage_ping_id,
+      path                        AS metrics_path,
+      dim_product_tier_id         AS dim_product_tier_id,
+      dim_subscription_id         AS dim_subscription_id,
+      dim_location_country_id     AS dim_location_country_id,
+      dim_date_id                 AS dim_date_id,
+      dim_instance_id             AS dim_instance_id,
+      ping_created_at             AS ping_created_at,
+      ping_created_at_date        AS ping_created_at_date,
+      edition                     AS edition,
+      product_tier                AS product_tier,
+      major_version               AS major_version,
+      minor_version               AS minor_version,
+      usage_ping_delivery_type    AS usage_ping_delivery_type,
+      is_internal                 AS is_internal,
+      is_staging                  AS is_staging,
+      is_trial                    AS is_trial,
+      instance_user_count         AS instance_user_count,
+      host_name                   AS host_name,
+      umau_value                  AS umau_value,
+      license_subscription_id     AS license_subscription_id,
+      key                         AS event_name,
+      value                       AS event_count,
+  /*  CASE WHEN SUBSTR(event_count, 1, 1) != '{' THEN TRUE
+        ELSE FALSE
+    END AS to_include */
+  FROM prep_usage_ping_payload_cte,
+    LATERAL FLATTEN(input => raw_usage_data_payload,
+    RECURSIVE => true)
+
+), metric_attributes AS (
+
+    SELECT * FROM dim_usage_ping_metric
+        WHERE time_frame != 'none'
+
+), metric_attributes_joined AS (
+
+    SELECT
+        flattened_high_level.*,
+        metric_attributes.time_frame
+    FROM flattened_high_level
+        INNER JOIN metric_attributes
+    ON flattened_high_level.metrics_path = metric_attributes.metrics_path
+
 )
 
 {{ dbt_audit(
@@ -255,6 +302,3 @@
     created_date="2022-03-08",
     updated_date="2022-03-08"
 ) }}
-
-
-/* Test */
