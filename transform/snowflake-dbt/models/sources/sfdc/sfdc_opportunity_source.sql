@@ -14,12 +14,8 @@ WITH source AS (
         WHEN stagename = '4-Proposal'               THEN x4_proposal_date__c
         WHEN stagename = '5-Negotiating'            THEN x5_negotiating_date__c
         WHEN stagename = '6-Awaiting Signature'     THEN x6_awaiting_signature_date__c
-      END calculation_days_in_stage_date,
-      DATEDIFF(
-        days,
-        calculation_days_in_stage_date::DATE,
-        CURRENT_DATE::DATE
-      ) + 1                                         AS days_in_stage
+      END                                                                                   AS calculation_days_in_stage_date,
+      DATEDIFF(days,calculation_days_in_stage_date::DATE,CURRENT_DATE::DATE) + 1            AS days_in_stage
     FROM {{ source('salesforce', 'opportunity') }}  AS opportunity
 
 ), renamed AS (

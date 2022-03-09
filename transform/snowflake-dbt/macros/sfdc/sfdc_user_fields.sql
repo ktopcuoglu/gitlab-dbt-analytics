@@ -5,7 +5,7 @@ WITH sfdc_user_roles AS (
     SELECT *
     FROM {{ ref('sfdc_user_roles_source')}}
 
-{%- if model_type == 'base' %}
+{%- if model_type == 'live' %}
 
 {%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
@@ -24,7 +24,7 @@ WITH sfdc_user_roles AS (
 ), sfdc_users AS (
 
     SELECT 
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
         *
       {%- elif model_type == 'snapshot' %}
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
@@ -32,7 +32,7 @@ WITH sfdc_user_roles AS (
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
       {{ ref('sfdc_users_source') }}
       {%- elif model_type == 'snapshot' %}
       {{ ref('sfdc_user_snapshots_source') }}
@@ -44,7 +44,7 @@ WITH sfdc_user_roles AS (
 ), final AS (
 
     SELECT
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
   
       {%- elif model_type == 'snapshot' %}
       sfdc_users.crm_user_snapshot_id,
