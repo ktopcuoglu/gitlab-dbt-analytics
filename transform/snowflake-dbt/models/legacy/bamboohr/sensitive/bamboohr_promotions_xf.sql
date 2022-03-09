@@ -163,7 +163,6 @@ WITH bamboohr_compensation AS (
         (prior_compensation_value_usd+ COALESCE(prior_ote_usd,0)),2))                                 AS percent_change_in_comp
     FROM intermediate
     WHERE compensation_change_reason = 'Promotion'
-      AND job_title NOT LIKE '%VP%'
 
 )
 
