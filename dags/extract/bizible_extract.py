@@ -57,7 +57,10 @@ def extract_manifest(file_path):
         manifest_dict = yaml.load(file, Loader=yaml.FullLoader)
     return manifest_dict
 
-manifest = extract_manifest("analytics/extract/bizible/manifests/el_bizible_tables.yaml")
+
+manifest = extract_manifest(
+    "analytics/extract/bizible/manifests/el_bizible_tables.yaml"
+)
 tables = manifest.get("tables")
 
 for table_name in tables:

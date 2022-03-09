@@ -25,6 +25,7 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> None:
             load_only_table: manifest_dict["tables"][load_only_table]
         }
 
+
 def main(file_path: str, load_only_table: str = None) -> None:
     config_dict = env.copy()
     extractor = BizibleSnowFlakeExtractor(config_dict)
