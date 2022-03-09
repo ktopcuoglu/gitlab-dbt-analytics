@@ -70,7 +70,7 @@ class BizibleSnowFlakeExtractor:
                 bizible_dict[table_name] = f"SELECT * FROM {t}"
         return bizible_dict
 
-    def get_bizible_query(self, full_table_name):
+    def get_bizible_query(self, full_table_name, date_column):
         """
 
         :param full_table_name:
@@ -80,7 +80,7 @@ class BizibleSnowFlakeExtractor:
 
         snowflake_query_max_date = f"""
                         SELECT 
-                            max('_modified_date') as last_modified_date
+                            max('{date_column}') as last_modified_date
                         FROM "BIZIBLE".{table_name} 
                     """
         df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
@@ -94,7 +94,7 @@ class BizibleSnowFlakeExtractor:
 
         if snowflake_last_modified_date:
             return {
-                table_name: f"SELECT * FROM {table_name} WHERE _last_modified_date > '{snowflake_last_modified_date}'"
+                table_name: f"SELECT * FROM {table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
             }
         else:
             return {table_name: f"SELECT * FROM {table_name}"}
@@ -140,12 +140,12 @@ class BizibleSnowFlakeExtractor:
                 file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
 
-    def extract_latest_bizible_file(self, table_name: str):
+    def extract_latest_bizible_file(self, table_name: str, date_column: str):
         """
 
         :param table_name:
         :type table_name:
         """
 
-        query = self.get_bizible_query(full_table_name=table_name)
+        query = self.get_bizible_query(full_table_name=table_name, date_column=date_column)
         self.process_bizible_query(query_details=query)

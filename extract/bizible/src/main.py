@@ -40,8 +40,8 @@ def main(file_path: str, load_only_table: str = None) -> None:
     for table in manifest_dict["tables"]:
         logging.info(f"Processing Table: {table}")
         table_dict = manifest_dict["tables"][table]
-        logging.info(table_dict)
-        extractor.extract_latest_bizible_file(table)
+        date_column = table_dict.get("date_column")
+        extractor.extract_latest_bizible_file(table, date_column)
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ connection_info:
   warehouse: BIZIBLE_SNOWFLAKE_WAREHOUSE
 tables:
   biz_accounts:
-    date_column: true
+    date_column: modified_date
   biz_account_to_emails:
     date_column: modified_date
   biz_activities:
