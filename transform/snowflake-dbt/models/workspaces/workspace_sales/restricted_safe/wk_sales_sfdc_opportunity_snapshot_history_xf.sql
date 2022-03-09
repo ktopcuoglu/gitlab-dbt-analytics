@@ -52,9 +52,12 @@ WITH date_details AS (
       report_user_segment_geo_region_area_sqs_ot,
 
       -- NF 2022-02-17 new aggregated keys 
-      key_segment,
       key_sqs,
       key_ot,
+
+      key_segment,
+      key_segment_sqs,                 
+      key_segment_ot,    
 
       key_segment_geo,
       key_segment_geo_sqs,
