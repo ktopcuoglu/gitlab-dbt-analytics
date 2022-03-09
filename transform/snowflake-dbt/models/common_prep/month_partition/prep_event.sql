@@ -298,15 +298,15 @@
       MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
       stage_mapping.stage_name,
-      {% if event_cte.project_column_name != 'NULL' %}
+      {%- if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS dim_project_id,
       'project'                                                                                                AS parent_type,
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS parent_id,
-      {% else %}
+      {%- else %}
       NULL                                                                                                     AS dim_project_id,
       'group'                                                                                                  AS parent_type,
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id                                              AS parent_id,
-      {% endif -%}
+      {%- endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
@@ -328,35 +328,35 @@
       DATEDIFF('hour',
               prep_user.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation,
-      {% if event_cte.project_column_name != 'NULL' %}
+      {%- if event_cte.project_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
               dim_project.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation, 
       IFNULL(dim_project.is_imported, FALSE)                                                                   AS project_is_imported,
       dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
-      {% else %}
+      {%- else %}
       NULL,
       NULL,
       NULL
-      {% endif -%}                                                                       
+      {%- endif %}                                                                       
     FROM {{ event_cte.source_cte_name }}
-    {% if event_cte.project_column_name != 'NULL' %}
+    {%- if event_cte.project_column_name != 'NULL' %}
     INNER JOIN dim_project 
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
-    {% endif -%}
-    {% if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
+    {%- endif %}
+    {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
     INNER JOIN prep_namespace 
       ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace.dim_namespace_id
       AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN prep_user AS blocked_user
       ON prep_namespace.creator_id = blocked_user.dim_user_id
       AND blocked_user.user_state = 'blocked'
-    {% endif -%}
-    {% if event_cte.user_column_name != 'NULL' %}
+    {%- endif %}
+    {%- if event_cte.user_column_name != 'NULL' %}
     LEFT JOIN prep_user 
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
-    {% endif -%}
+    {%- endif %}
     LEFT JOIN prep_plan
       ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
     LEFT JOIN stage_mapping
@@ -366,7 +366,7 @@
     {% if not loop.last %}
     UNION ALL
     {% endif %}
-    {% endfor -%}
+    {%- endfor %}
 
 )
 
