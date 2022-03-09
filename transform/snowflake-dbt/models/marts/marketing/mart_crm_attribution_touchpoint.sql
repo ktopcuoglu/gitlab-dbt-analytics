@@ -110,6 +110,7 @@
       dim_campaign.alliance_partner_name,
       dim_campaign.channel_partner_name,
       dim_campaign.sales_play,
+      dim_campaign.total_planned_mqls,
       fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                            AS campaign_created_by_id,
@@ -269,7 +270,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@iweeks",
+    updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2022-01-14"
+    updated_date="2022-03-01"
 ) }}

@@ -32,6 +32,7 @@ WITH sfdc_campaign_info AS (
       channel_partner_name,
       sales_play,
       gtm_motion,
+      total_planned_mqls,
 
       -- user ids
       campaign_owner_id,
@@ -67,7 +68,7 @@ WITH sfdc_campaign_info AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@mcooperDD",
+    updated_by="@rkohnke",
     created_date="2021-03-01",
-    updated_date="2021-03-01"
+    updated_date="2022-03-01"
 ) }}

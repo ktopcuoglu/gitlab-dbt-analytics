@@ -39,6 +39,7 @@ WITH source AS (
         channel_partner_name__c                                             AS channel_partner_name,
         sales_play__c                                                       AS sales_play,
         gtm_motion__c                                                       AS gtm_motion,
+        total_planned_mql__c                                                AS total_planned_mqls,
 
         --results
         actualcost                                                          AS actual_cost,

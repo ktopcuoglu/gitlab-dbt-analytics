@@ -113,7 +113,7 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM ci_job_artifacts
-        WHERE DATE(updated_at) > current_date - interval '8' day
+        WHERE updated_at > current_timestamp - interval '8' day
         GROUP BY 1,2,3
   cluster_6:
     dbt_source_model: true

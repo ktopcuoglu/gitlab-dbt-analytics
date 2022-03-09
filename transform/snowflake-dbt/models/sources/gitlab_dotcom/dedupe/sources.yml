@@ -70,6 +70,8 @@ sources:
         identifier: gitlab_db_ci_group_variables
       - name: ci_job_artifacts
         identifier: gitlab_db_ci_job_artifacts
+      - name: ci_namespace_monthly_usages
+        identifier: gitlab_db_ci_namespace_monthly_usages
       - name: ci_pipeline_chat_data
         identifier: gitlab_db_ci_pipeline_chat_data
       - name: ci_pipeline_schedule_variables
@@ -82,6 +84,8 @@ sources:
         identifier: gitlab_db_ci_pipelines
       - name: ci_platform_metrics
         identifier: gitlab_db_ci_platform_metrics
+      - name: ci_project_monthly_usages
+        identifier: gitlab_db_ci_project_monthly_usages
       - name: ci_runner_projects
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners
@@ -100,6 +104,9 @@ sources:
         identifier: gitlab_db_cluster_groups
       - name: clusters_integration_elasticstack
         identifier: gitlab_db_clusters_integration_elasticstack
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects

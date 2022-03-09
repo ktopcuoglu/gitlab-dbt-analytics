@@ -10,7 +10,9 @@
   ('customers_db_trials', 'customers_db_trials'),
   ('customers_db_leads', 'customers_db_leads_source'),
   ('gitlab_dotcom_daily_usage_data_events', 'gitlab_dotcom_daily_usage_data_events'),
-  ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics')
+  ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
+  ('services', 'gitlab_dotcom_services_source'),
+  ('project', 'prep_project')
 ]) }}
 
 -------------------------- Start of PQL logic: --------------------------
@@ -211,9 +213,34 @@
 )
 -------------------------- End of PQL logic --------------------------
 
-, subscription_aggregate AS (
+, services_by_marketing_contact_id AS (
 
-    SELECT 
+    SELECT
+      marketing_contact_order.dim_marketing_contact_id                                           AS dim_marketing_contact_id,
+      COUNT(*)                                                                                   AS pql_nbr_integrations_installed,
+      ARRAY_AGG(DISTINCT services.service_type) WITHIN GROUP (ORDER BY services.service_type)    AS pql_integrations_installed
+    FROM services
+    LEFT JOIN project
+      ON services.project_id = project.dim_project_id
+    LEFT JOIN marketing_contact_order
+      ON marketing_contact_order.dim_namespace_id = project.dim_namespace_id
+    GROUP BY 1
+
+), users_role_by_marketing_contact_id AS (
+
+    SELECT
+      marketing_contact_order.dim_marketing_contact_id,
+      ARRAY_AGG(DISTINCT marketing_contact.job_title) WITHIN GROUP (ORDER BY marketing_contact.job_title) AS pql_namespace_creator_job_description
+    FROM marketing_contact_order 
+    INNER JOIN dim_namespace
+      ON marketing_contact_order.dim_namespace_id = dim_namespace.dim_namespace_id
+    INNER JOIN marketing_contact
+      ON dim_namespace.creator_id = marketing_contact.gitlab_dotcom_user_id
+    GROUP BY 1
+
+), subscription_aggregate AS (
+
+    SELECT
       dim_marketing_contact_id,
       MIN(subscription_start_date)                                                               AS min_subscription_start_date,
       MAX(subscription_end_date)                                                                 AS max_subscription_end_date
@@ -593,6 +620,11 @@
           THEN TRUE 
         ELSE FALSE 
       END                                                                                        AS is_self_managed_ultimate_tier,
+      CASE
+        WHEN MAX(marketing_contact_order.is_setup_for_company) = TRUE
+          THEN TRUE
+        ELSE FALSE
+      END                                                                                        AS has_namespace_setup_for_company_use,
       ARRAY_AGG(
                 DISTINCT IFNULL(marketing_contact_order.marketing_contact_role || ': ' || 
                   IFNULL(marketing_contact_order.saas_product_tier, '') || IFNULL(marketing_contact_order.self_managed_product_tier, ''), 'No Role') 
@@ -723,6 +755,9 @@
       latest_pql.pql_trial_start_date,
       latest_pql.pql_min_subscription_start_date,
       latest_pql.pql_event_created_at,
+      services_by_marketing_contact_id.pql_nbr_integrations_installed,
+      services_by_marketing_contact_id.pql_integrations_installed,
+      users_role_by_marketing_contact_id.pql_namespace_creator_job_description,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
@@ -780,9 +815,12 @@
       ON paid_subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN usage_metrics
       ON usage_metrics.dim_marketing_contact_id = prep.dim_marketing_contact_id
+    LEFT JOIN services_by_marketing_contact_id
+      ON services_by_marketing_contact_id.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN latest_pql
       ON latest_pql.email = marketing_contact.email_address
-
+    LEFT JOIN users_role_by_marketing_contact_id
+      ON users_role_by_marketing_contact_id.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
 )
 
 {{ hash_diff(
@@ -891,16 +929,17 @@
       'usage_epics_28_days_user',
       'usage_issues_28_days_user',
       'usage_instance_user_count_not_aligned',
-      'usage_historical_max_users_not_aligned'
+      'usage_historical_max_users_not_aligned',
+      'has_namespace_setup_for_company_use'
       ]
 ) }}
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@trevor31",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-01-21"
+    updated_date="2022-03-07"
 ) }}
 
 

@@ -7,20 +7,20 @@ WITH source AS (
 ), renamed AS (
 
     SELECT 
-      created_at::TIMESTAMP                               AS CREATED_AT,
-      updated_at::TIMESTAMP                               AS UPDATED_AT,
-      namespace_id::NUMBER                                AS NAMESPACE_ID,
-      prevent_forking_outside_group::BOOLEAN              AS PREVENT_FORKING_OUTSIDE_GROUP,
-      allow_mfa_for_subgroups::BOOLEAN                    AS ALLOW_MFA_FOR_SUBGROUPS,
-      default_branch_name::VARCHAR                        AS DEFAULT_BRANCH_NAME,
-      repository_read_only::BOOLEAN                       AS REPOSITORY_READ_ONLY,
-      delayed_project_removal::BOOLEAN                    AS DELAYED_PROJECT_REMOVAL,
-      resource_access_token_creation_allowed::BOOLEAN     AS RESOURCE_ACCESS_TOKEN_CREATION_ALLOWED,
-      lock_delayed_project_removal::BOOLEAN               AS LOCK_DELAYED_PROJECT_REMOVAL,
-      prevent_sharing_groups_outside_hierarchy::BOOLEAN   AS PREVENT_SHARING_GROUPS_OUTSIDE_HIERARCHY,
-      new_user_signups_cap::NUMBER                        AS NEW_SIGNUPS_CAP,
-      setup_for_company::BOOLEAN                          AS SETUP_FOR_COMPANY,
-      jobs_to_be_done::NUMBER                             AS JOBS_TO_BE_DONE
+      created_at::TIMESTAMP                               AS created_at,
+      updated_at::TIMESTAMP                               AS updated_at,
+      namespace_id::NUMBER                                AS namespace_id,
+      prevent_forking_outside_group::BOOLEAN              AS prevent_forking_outside_group,
+      allow_mfa_for_subgroups::BOOLEAN                    AS allow_mfa_for_subgroups,
+      default_branch_name::VARCHAR                        AS default_branch_name,
+      repository_read_only::BOOLEAN                       AS repository_read_only,
+      delayed_project_removal::BOOLEAN                    AS delayed_project_removal,
+      resource_access_token_creation_allowed::BOOLEAN     AS resource_access_token_creation_allowed,
+      lock_delayed_project_removal::BOOLEAN               AS lock_delayed_project_removal,
+      prevent_sharing_groups_outside_hierarchy::BOOLEAN   AS prevent_sharing_groups_outside_hierarchy,
+      new_user_signups_cap::NUMBER                        AS new_signups_cap,
+      setup_for_company::BOOLEAN                          AS is_setup_for_company,
+      jobs_to_be_done::NUMBER                             AS jobs_to_be_done
     FROM source
 
 )

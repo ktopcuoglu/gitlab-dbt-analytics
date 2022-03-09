@@ -34,6 +34,7 @@ order_type, For identifying types or order data
 on-run-end,dbt built-in
 on-run-start,dbt built-in
 opportunity, Relates to customer opportunity data.
+opportunity_snapshots, For CRM opportunity snapshots
 people, Related to the People team data.
 poc,Proof of concept
 product,For large product analytics data
