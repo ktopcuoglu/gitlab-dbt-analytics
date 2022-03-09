@@ -30,7 +30,6 @@ def filter_manifest(manifest_dict: Dict, load_only_table: str = None) -> Dict:
 
 def main(file_path: str, load_only_table: str = None) -> None:
     config_dict = env.copy()
-    logging.info(config_dict)
     extractor = BizibleSnowFlakeExtractor(config_dict)
 
     logging.info(f"Reading manifest at location: {file_path}")
