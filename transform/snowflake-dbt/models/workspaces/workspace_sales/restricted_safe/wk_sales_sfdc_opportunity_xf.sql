@@ -1113,8 +1113,8 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         COALESCE(agg_demo_keys.key_ot,'other')                          AS key_ot,
 
         COALESCE(agg_demo_keys.key_segment,'other')                     AS key_segment,
-        COALESCE(key_segment_sqs,'other')                               AS key_segment_sqs,                 
-        COALESCE(key_segment_ot,'other')                                AS key_segment_ot,       
+        COALESCE(agg_demo_keys.key_segment_sqs,'other')                 AS key_segment_sqs,                 
+        COALESCE(agg_demo_keys.key_segment_ot,'other')                  AS key_segment_ot,       
 
         COALESCE(agg_demo_keys.key_segment_geo,'other')                 AS key_segment_geo,
         COALESCE(agg_demo_keys.key_segment_geo_sqs,'other')             AS key_segment_geo_sqs,
