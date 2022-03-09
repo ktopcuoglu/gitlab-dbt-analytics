@@ -42,6 +42,9 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 snowplow_model_to_full_refresh = Variable.get(
     "SNOWPLOW_MODEL_TO_FULL_REFRESH", default_var="test"
 )
+snowplow_full_refresh_start_date = Variable.get(
+    "SNOWPLOW_FULL_REFRESH_START_DATE", default_var="2021-04-01"
+)
 if GIT_BRANCH in ["master", "main"]:
     target = "prod"
 else:
@@ -112,6 +115,6 @@ def generate_dbt_command(vars_dict):
 dummy_operator = DummyOperator(task_id="start", dag=dag)
 
 for month in partitions(
-    datetime.strptime("2018-07-01", "%Y-%m-%d").date(), date.today(), "month"
+    datetime.strptime(snowplow_full_refresh_start_date, "%Y-%m-%d").date(), date.today(), "month"
 ):
     dummy_operator >> generate_dbt_command(month)
