@@ -146,5 +146,6 @@ class BizibleSnowFlakeExtractor:
         :param table_name:
         :type table_name:
         """
+
         query = self.get_bizible_query(full_table_name=table_name)
         self.process_bizible_query(query_details=query)
