@@ -110,11 +110,11 @@ def generate_dbt_command(vars_dict):
     )
 
 
-
-
 dummy_operator = DummyOperator(task_id="start", dag=dag)
 
 for month in partitions(
-    datetime.strptime(snowplow_full_refresh_start_date, "%Y-%m-%d").date(), date.today(), "month"
+    datetime.strptime(snowplow_full_refresh_start_date, "%Y-%m-%d").date(),
+    date.today(),
+    "month",
 ):
     dummy_operator >> generate_dbt_command(month)
