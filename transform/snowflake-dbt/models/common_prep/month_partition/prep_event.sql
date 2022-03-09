@@ -193,8 +193,7 @@
     ('prep_plan', 'prep_gitlab_dotcom_plan'),
     ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
-    ('map_saas_event_to_smau','map_saas_event_to_smau'),
-    ('prep_namespace_hist', 'prep_namespace_hist')
+    ('map_saas_event_to_smau','map_saas_event_to_smau')
 ]) }}
 
 , dast_jobs AS (
@@ -301,11 +300,12 @@
       stage_mapping.stage_name,
       {% if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
+      'project'                                                                                                AS parent_type,
       {% else %}
       NULL,
+      'group'                                                                                                  AS parent_type,
       {% endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
-      prep_namespace_hist.namespace_type                                                                       AS parent_type,
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
       IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
@@ -331,7 +331,7 @@
       DATEDIFF('hour',
               dim_project.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation, 
-      dim_project.is_imported                                                                                  AS project_is_imported,
+      IFNULL(dim_project.is_imported, FALSE)                                                                   AS project_is_imported,
       dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
       {% else %}
       NULL,
@@ -359,10 +359,6 @@
       ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
     LEFT JOIN stage_mapping
       ON '{{ event_cte.event_name }}' = stage_mapping.event_name
-    LEFT JOIN prep_namespace_hist
-      ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace_hist.dim_namespace_id
-      AND {{ event_cte.source_cte_name}}.created_at BETWEEN prep_namespace_hist.valid_from 
-                                                    AND {{ coalesce_to_infinity('prep_namespace_hist.valid_to') }} 
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
     {% if not loop.last %}
