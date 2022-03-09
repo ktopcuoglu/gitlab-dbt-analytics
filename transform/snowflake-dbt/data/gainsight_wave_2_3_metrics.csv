@@ -110,7 +110,6 @@ wave,metric_name
 5.2,usage_activity_by_stage.secure.user_dependency_scanning_jobs
 5.2,analytics_unique_visits.i_analytics_dev_ops_adoption
 5.2,usage_activity_by_stage.manage.project_imports.total
-5.2,usage_activity_by_stage_monthly.manage.user_auth_by_provider
 5.2,usage_activity_by_stage_monthly.secure.user_preferences_group_overview_security_dashboard
 5.2,usage_activity_by_stage_monthly.create.action_monthly_active_users_ide_edit
 5.2,counts.ci_pipeline_config_auto_devops
