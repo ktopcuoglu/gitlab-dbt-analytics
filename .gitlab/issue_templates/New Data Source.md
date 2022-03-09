@@ -71,7 +71,10 @@ use contact the Data Engineer assigned below for confirmation.
 - [ ] Analyst: <!-- please tag them -->
 - [ ] Analytics Engineer <!-- please tag them -->
 - [ ] Data Engineer: <!-- please tag them -->
- 
+
+**Who can we contact in the case of external errors or source freshness problems**
+- [ ] Ensure the [data source contact sheet](https://docs.google.com/spreadsheets/d/1VKvqyn7wy6HqpWS9T3MdPnE6qbfH2kGPQDFg2qPcp6U/edit#gid=0) is updated. 
+
 <!-- Do not edit below this line -->
  
 /label ~"new data source" ~"workflow::1 - triage" ~"Team::Data Platform" ~"Priority::3-Other"
