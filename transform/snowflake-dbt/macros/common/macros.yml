@@ -33,6 +33,9 @@ macros:
       - name: sales_geo
         type: string
         description: Sales geo field to use for grouping
+      - name: sales_region
+        type: string
+        description: Sales region field to use for grouping
   - name: alliance_type
     description: This macro applies business logic to identify alliance partners in the Channel business. The Macro uses the same names that are found in the source data.
     arguments:
