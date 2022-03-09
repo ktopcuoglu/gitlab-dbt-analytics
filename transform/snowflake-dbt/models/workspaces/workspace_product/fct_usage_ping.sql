@@ -284,7 +284,7 @@
     SELECT * FROM dim_usage_ping_metric
         WHERE time_frame != 'none'
 
-), metric_attributes_joined AS (
+), final AS (
 
     SELECT
         flattened_high_level.*,
