@@ -2178,12 +2178,10 @@ roles:
             schemas:
                 read:
                     - prep.zendesk
-                    - raw.zendesk_stitch
                     - raw.tap_zendesk
             tables:
                 read:
                     - prep.zendesk.*
-                    - raw.zendesk_stitch.*
                     - raw.tap_zendesk.*
 
     - zendesk_community_relations:
@@ -2197,12 +2195,10 @@ roles:
               schemas:
                   read:
                       - prep.zendesk_community_relations
-                      - raw.zendesk_community_relations_stitch
                       - raw.tap_zendesk__community_relations
               tables:
                   read:
                       - prep.zendesk_community_relations.*
-                      - raw.zendesk_community_relations_stitch.*
                       - raw.tap_zendesk__community_relations.*
 
     - zoom:
@@ -3898,27 +3894,19 @@ roles:
                 read:
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.zendesk_stitch
-                    - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
                 write:
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.zendesk_stitch
-                    - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
             tables:
                 read:
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.zendesk_stitch.*
-                    - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
                 write:
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.zendesk_stitch.*
-                    - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
 
     - target_snowflake:
