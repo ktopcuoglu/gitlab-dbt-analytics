@@ -112,6 +112,23 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts_monthly']['failed_deployments']") }}                                                       AS failed_deployments_28_days_event,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['manage']['projects_with_compliance_framework']") }}            AS projects_compliance_framework_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['redis_hll_counters']['pipeline_authoring']['o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly']") }}  AS commit_ci_config_file_28_days_user,
-    {{ null_negative_numbers("raw_usage_data_payload['compliance_unique_visits']['g_compliance_audit_events']") }}                                      AS view_audit_all_time_user
+    {{ null_negative_numbers("raw_usage_data_payload['compliance_unique_visits']['g_compliance_audit_events']") }}                                      AS view_audit_all_time_user,
+    
+    -- 5.2 metrics
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_dependency_scanning_jobs']") }}                 AS dependency_scanning_jobs_all_time_user,
+    {{ null_negative_numbers("raw_usage_data_payload['analytics_unique_visits']['i_analytics_dev_ops_adoption']") }}                                    AS analytics_devops_adoption_all_time_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['project_imports']['total']") }}                              AS projects_imported_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['user_preferences_group_overview_security_dashboard']") }}  AS preferences_security_dashboard_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['create']['action_monthly_active_users_ide_edit']") }}          AS web_ide_edit_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_pipeline_config_auto_devops']") }}                                                   AS auto_devops_pipelines_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['projects_prometheus_active']") }}                                                       AS projects_prometheus_active_all_time_event,
+    {{ convert_variant_to_boolean_field("raw_usage_data_payload['prometheus_enabled']") }}                                                              AS prometheus_enabled,
+    {{ convert_variant_to_boolean_field("raw_usage_data_payload['prometheus_metrics_enabled']") }}                                                      AS prometheus_metrics_enabled,
+    {{ convert_variant_to_boolean_field("raw_usage_data_payload['usage_activity_by_stage']['manage']['group_saml_enabled']") }}                         AS group_saml_enabled,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['manage']['issue_imports']['jira']") }}                                 AS jira_issue_imports_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['plan']['epics']") }}                                                   AS author_epic_all_time_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['plan']['issues']") }}                                                  AS author_issue_all_time_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['failed_deployments']") }}                           AS failed_deployments_28_days_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['successful_deployments']") }}                       AS successful_deployments_28_days_user
 
 {%- endmacro -%}
