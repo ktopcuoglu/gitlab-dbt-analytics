@@ -95,10 +95,10 @@ class BizibleSnowFlakeExtractor:
 
         if snowflake_last_modified_date:
             return {
-                table_name: f"SELECT * FROM BIZIBLE.{table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
+                table_name: f"SELECT * FROM {table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
             }
         else:
-            return {table_name: f"SELECT * FROM BIZIBLE.{table_name}"}
+            return {table_name: f"SELECT * FROM {table_name}"}
 
     def extract_latest_bizible_files(self, bizible_queries: Dict):
         """
@@ -107,10 +107,12 @@ class BizibleSnowFlakeExtractor:
         :type bizible_queries:
         """
         for table_name in bizible_queries.keys():
-            file_name = f"{table_name}.json"
             logging.info(f"Running {table_name} query")
             df = query_dataframe(self.bizible_engine, bizible_queries[table_name])
+
+            file_name = f"{table_name}.json"
             logging.info(f"Creating {file_name}")
+
             df.to_csv(file_name, index=False, sep="|")
 
             logging.info("Writing to db")
@@ -127,6 +129,7 @@ class BizibleSnowFlakeExtractor:
         for table_name in query_details.keys():
             file_name = f"{table_name}.json"
             logging.info(f"Running {table_name} query")
+            logging.info(query_details[table_name])
             df = query_dataframe(self.bizible_engine, query_details[table_name])
             logging.info(f"Creating {file_name}")
             df.to_csv(file_name, index=False, sep="|")
