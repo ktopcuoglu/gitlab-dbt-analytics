@@ -69,13 +69,13 @@ for table_name in tables:
         {clone_and_setup_extraction_cmd} &&
             python bizible/src/main.py tap bizible/manifests/el_bizible_tables.yaml --load_only_table {table_name}
     """
-
+    task_identifier =f"bizible-extract-{table_name.replace('_', '-')}"
     # having both xcom flag flavors since we're in an airflow version where one is being deprecated
     bizible_extract = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id=f"bizible-extract-{table_name.replace('_', '-')}",
-        name=f"bizible-extract-{table_name.replace('_', '-')}",
+        task_id=task_identifier,
+        name=task_identifier,
         secrets=[
             SNOWFLAKE_ACCOUNT,
             SNOWFLAKE_LOAD_PASSWORD,
@@ -89,10 +89,12 @@ for table_name in tables:
             BIZIBLE_SNOWFLAKE_WAREHOUSE,
             BIZIBLE_SNOWFLAKE_ACCOUNT,
         ],
-        env_vars=pod_env_vars,
+        env_vars={**pod_env_vars,
+                  "TASK_INSTANCE": "{{ task_instance_key_str }}",
+                  "task_id": task_identifier,
+                  },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[extract_command],
-        do_xcom_push=True,
         dag=dag,
     )
