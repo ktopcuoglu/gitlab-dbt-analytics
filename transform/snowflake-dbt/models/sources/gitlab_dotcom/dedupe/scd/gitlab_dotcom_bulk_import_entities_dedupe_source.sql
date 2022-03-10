@@ -1,1 +1,7 @@
-{{ scd_latest_state(table_name='bulk_import_entities') }}
+WITH base AS (
+
+    SELECT *
+    FROM {{ source('gitlab_dotcom', 'bulk_import_entities') }}
+
+)
+{{ scd_latest_state(source=base) }}

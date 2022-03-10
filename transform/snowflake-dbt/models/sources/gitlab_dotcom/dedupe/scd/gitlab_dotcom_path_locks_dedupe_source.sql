@@ -1,1 +1,7 @@
-{{ scd_latest_state(table_name='path_locks') }}
+WITH base AS (
+
+    SELECT *
+    FROM {{ source('gitlab_dotcom', 'path_locks') }}
+
+)
+{{ scd_latest_state(source=base) }}
