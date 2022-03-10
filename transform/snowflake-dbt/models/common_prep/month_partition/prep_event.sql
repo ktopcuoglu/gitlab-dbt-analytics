@@ -39,7 +39,7 @@
     "event_name": "epic_creation",
     "source_cte_name": "prep_epic",
     "user_column_name": "author_id",
-    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "ultimate_parent_namespace_column_name": "group_id",
     "project_column_name": "NULL",
     "primary_key": "dim_epic_id"
   },
@@ -301,13 +301,12 @@
       {%- if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS dim_project_id,
       'project'                                                                                                AS parent_type,
-      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS parent_id,
       {%- else %}
       NULL                                                                                                     AS dim_project_id,
       'group'                                                                                                  AS parent_type,
-      {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id                                              AS parent_id,
       {%- endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
+      {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                     AS parent_id, 
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
       IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
@@ -346,7 +345,7 @@
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
     {%- endif %}
     {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-    INNER JOIN prep_namespace 
+    INNER JOIN prep_namespace
       ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace.dim_namespace_id
       AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN prep_user AS blocked_user
