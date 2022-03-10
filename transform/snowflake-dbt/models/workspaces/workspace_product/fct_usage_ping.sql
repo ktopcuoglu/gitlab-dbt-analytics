@@ -18,7 +18,7 @@
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
-    ('dim_usage_ping_metric', 'dim_service_ping_metric')
+    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
 }}
@@ -284,7 +284,7 @@
 
 ), metric_attributes AS (
 
-    SELECT * FROM dim_service_ping_metric
+    SELECT * FROM dim_usage_ping_metric
         WHERE time_frame != 'none'
 
 ), final AS (
