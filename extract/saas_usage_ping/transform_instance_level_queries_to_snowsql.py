@@ -252,7 +252,7 @@ def rename_table_name(
             # insert, token list to string list, create the SQL query, reparse it
             # there is FOR sure a better way to do that
             token_string_list[index + i] = (
-                f"prep.gitlab_dotcom.gitlab_dotcom_"
+                f"RBACOVIC_prep.gitlab_dotcom.gitlab_dotcom_"
                 f"{str(next_token)}"
                 f"_dedupe_source AS "
                 f"{str(next_token)}"
