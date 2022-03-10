@@ -43,7 +43,7 @@ def main(file_path: str, load_only_table: str = None) -> None:
         if table_dict:
             date_column = table_dict.get("date_column")
         else:
-            date_column = ''
+            date_column = ""
         extractor.extract_latest_bizible_file(table, date_column)
 
 

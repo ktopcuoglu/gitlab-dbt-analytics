@@ -48,10 +48,12 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("bizible_extract",
-          default_args=default_args,
-          concurrency=2,
-          schedule_interval="25 */11 * * *")
+dag = DAG(
+    "bizible_extract",
+    default_args=default_args,
+    concurrency=2,
+    schedule_interval="25 */11 * * *",
+)
 
 
 def extract_manifest(file_path):
@@ -71,7 +73,7 @@ for table_name in tables:
         {clone_and_setup_extraction_cmd} &&
             python bizible/src/main.py tap bizible/manifests/el_bizible_tables.yaml --load_only_table {table_name}
     """
-    task_identifier =f"bizible-extract-{table_name.replace('_', '-')}"
+    task_identifier = f"bizible-extract-{table_name.replace('_', '-')}"
     # having both xcom flag flavors since we're in an airflow version where one is being deprecated
     bizible_extract = KubernetesPodOperator(
         **gitlab_defaults,
@@ -91,10 +93,11 @@ for table_name in tables:
             BIZIBLE_SNOWFLAKE_WAREHOUSE,
             BIZIBLE_SNOWFLAKE_ACCOUNT,
         ],
-        env_vars={**pod_env_vars,
-                  "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                  "task_id": task_identifier,
-                  },
+        env_vars={
+            **pod_env_vars,
+            "TASK_INSTANCE": "{{ task_instance_key_str }}",
+            "task_id": task_identifier,
+        },
         affinity=get_affinity(False),
         tolerations=get_toleration(False),
         arguments=[extract_command],
