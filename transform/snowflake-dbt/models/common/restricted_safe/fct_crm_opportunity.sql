@@ -169,6 +169,7 @@
       sfdc_opportunity.incremental_acv                                                                                      AS iacv,
       sfdc_opportunity.net_incremental_acv                                                                                  AS net_iacv,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.new_logo_count,
       sfdc_opportunity.amount,
       sfdc_opportunity.recurring_amount,
       sfdc_opportunity.true_up_amount,
