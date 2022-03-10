@@ -5,12 +5,15 @@ models:
     description: Workspace model that builds a MVC for Self-Managed SPO and SPU KPIs.
     columns:
       - name: organization_id
+        description: Top-level namespace id.
         tests:
           - not_null
       - name: delivery
+        description: delivery is based on the product category name.
         tests:
           - not_null
       - name: organization_type
+        description: segmentation for organization type. Values - Group, Individual, User
         tests:
           - not_null
           - accepted_values:
@@ -23,6 +26,7 @@ models:
     description: Workspace model that shows monthly Stages per Organization data on a namespace-level for SaaS.
     columns:
       - name: reporting_month
+        description: Month in which the product usage was reported.
         tests:
           - not_null
       - name: organization_id
@@ -30,17 +34,21 @@ models:
         tests:
           - not_null
       - name: delivery
+        description: delivery is based on the product category name.
         tests:
           - not_null
       - name: organization_type
+        description: segmentation for organization type. Values - Group, Individual, User
         tests:
           - not_null
           - accepted_values:
               values: ['Group','Individual','User']
       - name: product_tier
+        description: segmentation for Product Tier. Values - Core (CE, EE), Starter, Premium, Ultimate, NULL
         tests:
           - not_null
       - name: is_paid_product_tier
+        description: information on whether the product tier has been paid for or not
         tests:
           - not_null
       - name: active_stage_count
@@ -50,6 +58,7 @@ models:
     description: Extract and flatten data from the geo nodes
     columns:
       - name: instance_path_id
+        description: the unique ID for an instance path.
         tests:
           - not_null
           - unique
@@ -58,6 +67,7 @@ models:
     description: ' {{ doc("fct_usage_event") }} '
     columns:
       - name: event_id
+        description: The unique ID of an event.
         tests:
           - not_null
           - unique
@@ -66,6 +76,7 @@ models:
     description: ' {{ doc("mart_usage_event") }} '
     columns:
       - name: event_id
+        description: The unique ID of an event.
         tests:
           - not_null
           - unique
@@ -74,6 +85,7 @@ models:
     description: ' {{ doc("mart_usage_namespace_daily") }} '
     columns:
       - name: mart_usage_namespace_id
+        description: the unique ID of a usage namespace in mart_usage_namespace
         tests:
           - not_null
           - unique
@@ -82,6 +94,7 @@ models:
     description: ' {{ doc("mart_usage_instance_daily") }} '
     columns:
       - name: mart_usage_instance_id
+        description: the unique ID of a usage instance in mart_usage_instance
         tests:
           - not_null
           - unique
@@ -90,6 +103,7 @@ models:
     description: ' {{ doc("mart_usage_event_daily") }} '
     columns:
       - name: mart_usage_event_daily_id
+        description: the unique ID of a daily usage event in mart_usage_event_daily
         tests:
           - not_null
           - unique
@@ -98,6 +112,7 @@ models:
     description: ' {{ doc("mart_usage_event_plan_monthly") }} '
     columns:
       - name: mart_usage_event_plan_monthly_id
+        description: the unique ID of a montthly usage event plan in mart_usage_event_plan_monthly
         tests:
           - not_null
           - unique
@@ -106,6 +121,7 @@ models:
     description: ' {{ doc("mart_xmau_metric_monthly") }} '
     columns:
       - name: mart_xmau_metric_monthly_id
+        description: the unique ID of a montthly xMAU metric in mart_xmau_metric_monthly 
         tests:
           - not_null
           - unique
