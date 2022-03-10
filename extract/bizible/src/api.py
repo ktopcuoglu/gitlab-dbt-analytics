@@ -16,7 +16,9 @@ class BizibleSnowFlakeExtractor:
         :param config_dict: To be passed from the execute.py, should be ENV.
         :type config_dict:
         """
-        self.bizible_engine = bizible_snowflake_engine_factory(config_dict, "BIZIBLE_USER")
+        self.bizible_engine = bizible_snowflake_engine_factory(
+            config_dict, "BIZIBLE_USER"
+        )
         self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     def get_latest_bizible_tables(self) -> list:
@@ -151,5 +153,7 @@ class BizibleSnowFlakeExtractor:
         :type table_name:
         """
 
-        query = self.get_bizible_query(full_table_name=table_name, date_column=date_column)
+        query = self.get_bizible_query(
+            full_table_name=table_name, date_column=date_column
+        )
         self.process_bizible_query(query_details=query)
