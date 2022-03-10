@@ -1,5 +1,5 @@
 {{ config({
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
     "materialized": "incremental",
     "unique_key": "dim_usage_ping_id"
     })
