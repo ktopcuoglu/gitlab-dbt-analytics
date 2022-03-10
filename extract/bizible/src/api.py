@@ -95,10 +95,10 @@ class BizibleSnowFlakeExtractor:
 
         if snowflake_last_modified_date:
             return {
-                table_name: f"SELECT * FROM {table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
+                table_name: f"SELECT * FROM BIZIBLE.{table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
             }
         else:
-            return {table_name: f"SELECT * FROM {table_name}"}
+            return {table_name: f"SELECT * FROM BIZIBLE.{table_name}"}
 
     def extract_latest_bizible_files(self, bizible_queries: Dict):
         """
