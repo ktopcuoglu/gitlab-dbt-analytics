@@ -177,6 +177,8 @@ WITH first_contact  AS (
       CASE
         WHEN sfdc_opportunity.new_logo_count = 1
           OR sfdc_opportunity.new_logo_count = -1
+          THEN TRUE 
+        ELSE FALSE
       END                                                                                         AS is_new_logo_first_order, 
       CASE
         WHEN sfdc_opportunity.is_edu_oss = 0
@@ -289,7 +291,7 @@ WITH first_contact  AS (
       sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
 
       start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
-      start_date.first_day_of_fiscal_quarter                                        subscription_start_date_fiscal_quarter_date,
+      start_date.first_day_of_fiscal_quarter                                                      AS subscription_start_date_fiscal_quarter_date,
       start_date.fiscal_year                                                                      AS subscription_start_date_fiscal_year,
       start_date.first_day_of_month                                                               AS subscription_start_date_month,
 
