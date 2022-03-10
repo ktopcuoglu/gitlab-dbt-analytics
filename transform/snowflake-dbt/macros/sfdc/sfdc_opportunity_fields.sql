@@ -175,12 +175,8 @@ WITH first_contact  AS (
       END                                                                                         AS is_sdr_sao,
       sfdc_opportunity.fpa_master_bookings_flag                                                   AS is_net_arr_closed_deal,
       CASE
-        WHEN sfdc_opportunity_stage.is_won = 'TRUE'
-          AND sfdc_opportunity.is_closed = 'TRUE'
-          AND sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.order_type = '1. New - First Order'
-            THEN TRUE
-        ELSE FALSE
+        WHEN sfdc_opportunity.new_logo_count = 1
+          OR sfdc_opportunity.new_logo_count = -1
       END                                                                                         AS is_new_logo_first_order, 
       CASE
         WHEN sfdc_opportunity.is_edu_oss = 0
