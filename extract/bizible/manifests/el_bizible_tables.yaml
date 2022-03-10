@@ -7,80 +7,76 @@ connection_info:
   warehouse: BIZIBLE_SNOWFLAKE_WAREHOUSE
 tables:
   biz_accounts:
-    date_column: modified_date
+    date_column: _modified_date
   biz_account_to_emails:
-    date_column: modified_date
+    date_column: _modified_date
   biz_activities:
-    date_column: modified_date
+    date_column: _modified_date
   biz_ads:
-    date_column: modified_date
+    date_column: _modified_date
   biz_advertisers:
-    date_column: modified_date
+    date_column: _modified_date
   biz_ad_accounts:
-    date_column: modified_date
+    date_column: _modified_date
   biz_ad_campaigns:
-    date_column: modified_date
+    date_column: _modified_date
   biz_ad_groups:
     date_column: modified_date
   biz_ad_providers:
-    date_column: modified_date
   biz_campaign_members:
-    date_column: modified_date
+    date_column: _modified_date
   biz_channels:
-    date_column: modified_date
   biz_contacts:
-    date_column: modified_date
+    date_column: _modified_date
   biz_conversion_rates:
-    date_column: modified_date
+    date_column: _modified_date
   biz_costs:
-    date_column: modified_date
+    date_column: _modified_date
   biz_creatives:
-    date_column: modified_date
+    date_column: _modified_date
   biz_crm_tasks:
-    date_column: modified_date
+    date_column: _modified_date
   biz_currencies:
-    date_column: modified_date
+    date_column: _modified_date
   biz_email_to_visitor_ids:
-    date_column: modified_date
+    date_column: _modified_date
   biz_facts:
     date_column: modified_date
   biz_lead_stage_transitions:
-    date_column: modified_date
+    date_column: _modified_date
   biz_segments:
-    date_column: modified_date
   biz_sites:
-    date_column: modified_date
+    date_column: _modified_date
   biz_site_links:
-    date_column: modified_date
+    date_column: _modified_date
   biz_urls:
-    date_column: modified_date
   biz_customer_ab_tests:
-    date_column: modified_date
+    date_column: _modified_date
   biz_opportunities:
-    date_column: modified_date
+    date_column: _modified_date
   biz_sessions:
-    date_column: modified_date
+    date_column: _modified_date
   biz_user_touchpoints:
-    date_column: modified_date
+    date_column: _modified_date
   biz_attribution_touchpoints:
-    date_column: modified_date
+    date_column: _modified_date
   biz_form_submits:
-    date_column: modified_date
+    date_column: _modified_date
   biz_keywords:
-    date_column: modified_date
+    date_column: _modified_date
   biz_leads:
-    date_column: modified_date
+    date_column: _modified_date
   biz_opp_stage_transitions:
-    date_column: modified_date
+    date_column: _modified_date
   biz_touchpoints:
-    date_column: modified_date
+    date_column: _modified_date
   biz_crm_events:
-    date_column: modified_date
+    date_column: _modified_date
   biz_page_views:
-    date_column: modified_date
+    date_column: _modified_date
   biz_stage_definitions:
-    date_column: modified_date
+    date_column: _modified_date
   biz_placements:
-    date_column: modified_date
+    date_column: _modified_date
   biz_web_host_mappings:
-    date_column: modified_date
+    date_column: _modified_date

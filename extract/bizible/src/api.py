@@ -80,25 +80,27 @@ class BizibleSnowFlakeExtractor:
         :type full_table_name:
         """
         table_name = full_table_name.split(".")[-1]
+        if len(date_column) > 0:
+            snowflake_query_max_date = f"""
+                            SELECT 
+                                max({date_column}) as last_modified_date
+                            FROM "BIZIBLE".{table_name} 
+                        """
+            df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
 
-        snowflake_query_max_date = f"""
-                        SELECT 
-                            max({date_column}) as last_modified_date
-                        FROM "BIZIBLE".{table_name} 
-                    """
-        df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
+            last_modified_date_list = df["last_modified_date"].to_list()
 
-        last_modified_date_list = df["last_modified_date"].to_list()
+            snowflake_last_modified_date = None
 
-        snowflake_last_modified_date = None
+            if len(last_modified_date_list) > 0 and last_modified_date_list[0]:
+                snowflake_last_modified_date = last_modified_date_list[0]
 
-        if len(last_modified_date_list) > 0 and last_modified_date_list[0]:
-            snowflake_last_modified_date = last_modified_date_list[0]
-
-        if snowflake_last_modified_date:
-            return {
-                table_name: f"SELECT * FROM GITLAB.{table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
-            }
+            if snowflake_last_modified_date:
+                return {
+                    table_name: f"SELECT * FROM GITLAB.{table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
+                }
+            else:
+                return {table_name: f"SELECT * FROM GITLAB.{table_name}"}
         else:
             return {table_name: f"SELECT * FROM GITLAB.{table_name}"}
 
@@ -146,7 +148,7 @@ class BizibleSnowFlakeExtractor:
                 file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
 
-    def extract_latest_bizible_file(self, table_name: str, date_column: str):
+    def extract_latest_bizible_file(self, table_name: str, date_column: str = ''):
         """
 
         :param table_name:
