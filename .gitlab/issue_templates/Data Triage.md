@@ -42,6 +42,7 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failed DBT test
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
 * [ ] Clean up the dbt-test failure logs and put them into a table in the comments of this issue, use the below format as an example: 
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
 
 <details>
 <summary>instructions</summary>
