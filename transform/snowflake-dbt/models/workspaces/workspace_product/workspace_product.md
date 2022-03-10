@@ -1,32 +1,41 @@
 {% docs fct_usage_event %}
 
-Union of gitlab_dotcom and service_ping sources with additional dim id's
+Type of Data: Union of gitlab_dotcom and service_ping sources with additional dim id's
+Use case: Source of truth (atomic)
 
 {% enddocs %}
 
 
 {% docs mart_usage_event %}
 
-GitLab.com Event-Level mart - Sourced from fct_event_usage_metrics
-
-This table contains all gitlab.com events with additional dimensions and other facilitating fields.
+Type of Data: gitlab.com db usage events
+Aggregate Grain: Event (this would be the mart version of the atomic table)
+Time Grain: None
+Use case: Everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges, exclude specific projects
+(GitLab.com Event-Level mart - Sourced from fct_event_usage_metrics)
 
 {% enddocs %}
 
 
 {% docs mart_xmau_metric_monthly %}
 
-GitLab.com mart that determined unique namespace and user counts for total, free and paid metrics.
+Type of Data: gitlab.com db usage events
+Aggregate Grain: Plan (including Free/Paid and Total) / Metric
+Time Grain: 28-day (likely last 28 days of the month)
+Use case: Paid SaaS xMAU, SaaS SpO
+(GitLab.com mart that determined unique namespace and user counts for total, free and paid metrics.)
 
 {% enddocs %}
 
 {% docs mart_usage_event_plan_monthly %}
 
-GitLab.com Plan/Metric mart aggregated by month. Trying to mimic Self-managed usage ping format by
+Type of Data: gitlab.com db usage events
+Aggregate Grain: Plan (including Free/Paid and Total) / Metric
+Time Grain: 28-day (likely last 28 days of the month)
+Use case: Paid SaaS xMAU, SaaS SpO
+(GitLab.com Plan/Metric mart aggregated by month. Trying to mimic Self-managed usage ping format by
 getting the count of each event that happened in the last 28 days. Effectively ignoring the first two
-or three days of each month.
-
-Gives the total event counts, as well as the number of unique namespaces and uniques users for that plan/month/metric
+or three days of each month.)
 
 {% enddocs %}
 
@@ -50,8 +59,10 @@ This table contains all gitlab.com events with additional dimensions and other f
 
 {% docs mart_usage_event_daily %}
 
-GitLab.com Event-Level Daily mart - Sourced from fct_event_usage_metrics
-
-This table contains all gitlab.com events with additional dimensions and other facilitating fields aggregated at a date/user/namespace/plan/event grain
+Type of Data: gitlab.com db usage events
+Aggregate Grain: User / Namespace / Plan / Event
+Time Grain: Day
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+(GitLab.com Event-Level Daily mart - Sourced from fct_event_usage_metrics)
 
 {% enddocs %}
