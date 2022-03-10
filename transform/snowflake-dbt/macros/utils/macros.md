@@ -142,7 +142,22 @@ Defines the format for how comments are added to queries. See [dbt documentation
 {% enddocs %}
 
 {% docs scd_latest_state %}
-This macro pick up the latest state when data is ingested as SCD type. For this purspose to ensure we load only the latest state of data, will use `_task_instance` column as a criteria. 
+This macro pick up the latest state when data is ingested as SCD type. For this purpose, to ensure we load only the latest state of data, will use `_task_instance` column as a criteria (this can be redefined).
+Example, if we have data records in the `RAW` layer like:
+
+| ID | DATE |
+| ---- | ---- |
+|1| `2022-01-01`|
+|1| `2022-02-02`|
+|1| `2022-03-28`|
+
+using this macro should reflect and show in the `PREP` layer as:
+
+| ID | DATE |
+| ---- | ---- |
+|1| `2022-03-28`|
+
+as this record is the recent one. We need this approach for some specific use case.
 
 {% enddocs %}
 

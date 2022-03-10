@@ -1,6 +1,6 @@
-{%- macro scd_latest_state(source, max_column='_task_instance') -%}
+{%- macro scd_latest_state(source='base', max_column='_task_instance') -%}
 
-, max_task_intance AS (
+, max_task_instance AS (
     SELECT MAX({{ max_column }}) AS max_column_value
     FROM {{ source }}
 
