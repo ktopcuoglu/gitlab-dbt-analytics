@@ -81,7 +81,7 @@ class BizibleSnowFlakeExtractor:
 
         snowflake_query_max_date = f"""
                         SELECT 
-                            max('{date_column}') as last_modified_date
+                            max({date_column}) as last_modified_date
                         FROM "BIZIBLE".{table_name} 
                     """
         df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
