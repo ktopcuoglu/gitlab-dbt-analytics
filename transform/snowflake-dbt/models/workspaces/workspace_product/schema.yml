@@ -112,3 +112,8 @@ models:
 
   - name: fct_usage_ping
     description: ' {{ doc("fct_usage_ping") }} '
+    columns:
+      - name: fct_usage_ping_id
+        tests:
+          - not_null
+          - unique

@@ -271,7 +271,7 @@
       umau_value                  AS umau_value,
       license_subscription_id     AS license_subscription_id,
       key                         AS event_name,
-      value                       AS event_count,
+      value                       AS event_count
   /*  CASE WHEN SUBSTR(event_count, 1, 1) != '{' THEN TRUE
         ELSE FALSE
     END AS to_include */
@@ -287,6 +287,7 @@
 ), final AS (
 
     SELECT
+        {{ dbt_utils.surrogate_key(['dim_usage_ping_id', 'metrics_path']) }}       AS fct_usage_ping_id,
         flattened_high_level.*,
         metric_attributes.time_frame
     FROM flattened_high_level
