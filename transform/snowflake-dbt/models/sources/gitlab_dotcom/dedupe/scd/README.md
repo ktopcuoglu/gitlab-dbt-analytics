@@ -10,4 +10,4 @@ The following tables are moved from incremental to full (SCD) load and moved und
 
 Model name should be **not** changed as per `instance_sql_metrics` algorithm based on the `*_dedupe_source` table names.
 
-For this purpose, `scd_latest_state` macro is used instead of the incremental load.
+For this purpose, `scd_latest_state` macro is used instead of the incremental load and expose the snapshot of data based on the `_task_instance` column.
