@@ -4,6 +4,7 @@ from gitlabdata.orchestration_utils import (
     query_dataframe,
     snowflake_stage_load_copy_remove,
     snowflake_engine_factory,
+    bizible_snowflake_engine_factory,
 )
 from typing import Dict
 
@@ -15,7 +16,7 @@ class BizibleSnowFlakeExtractor:
         :param config_dict: To be passed from the execute.py, should be ENV.
         :type config_dict:
         """
-        self.bizible_engine = snowflake_engine_factory(config_dict, "BIZIBLE_USER")
+        self.bizible_engine = bizible_snowflake_engine_factory(config_dict, "BIZIBLE_USER")
         self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     def get_latest_bizible_tables(self) -> list:
