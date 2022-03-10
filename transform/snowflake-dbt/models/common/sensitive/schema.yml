@@ -296,5 +296,5 @@ models:
         description: Number of integrations services installed in all the namespaces the marketing contact is a member of
       - name: pql_integrations_installed
         description: List of all the integrations services installed in all the namespaces the marketing contact is a member of
-      - name: is_setup_for_company
+      - name: has_namespace_setup_for_company_use
         description: If True, the marketing contact is a member of a namespace that has been checked for company use
