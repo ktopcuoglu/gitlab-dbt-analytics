@@ -141,6 +141,11 @@ This macro takes in either a number or varchar field, converts it to a number, a
 Defines the format for how comments are added to queries. See [dbt documentation](https://docs.getdbt.com/docs/building-a-dbt-project/dbt-projects/configuring-query-comments/).
 {% enddocs %}
 
+{% docs scd_latest_state %}
+This macro pick up the latest state when data is ingested as SCD type. For this purspose to ensure we load only the latest state of data, will use `_task_instance` column as a criteria. 
+
+{% enddocs %}
+
 {% docs scd_type_2 %}
 This macro inserts SQL statements that turn the inputted CTE into a [type 2 slowly changing dimension model](https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row). According to [Orcale](https://www.oracle.com/webfolder/technetwork/tutorials/obe/db/10g/r2/owb/owb10gr2_gs/owb/lesson3/slowlychangingdimensions.htm), "a Type 2 SCD retains the full history of values. When the value of a chosen attribute changes, the current record is closed. A new record is created with the changed data values and this new record becomes the current record. Each record contains the effective time and expiration time to identify the time period between which the record was active."
 
