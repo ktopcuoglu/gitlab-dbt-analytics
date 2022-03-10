@@ -1,8 +1,5 @@
-{{ config(
-    tags=["product", "mnpi_exception"]
-) }}
-
 {{ config({
+    tags=["product", "mnpi_exception"]
     "materialized": "incremental",
     "unique_key": "dim_usage_ping_id"
     })
@@ -17,7 +14,7 @@
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+    ('dim_usage_ping_metric', 'dim_service_ping_metric')
     ])
 
 }}
@@ -49,7 +46,7 @@
 ), usage_data AS (
 
     SELECT
-      dim_usage_ping_id,
+      dim_usage_ping_id                                                                               AS dim_service_ping_id,
       host_id                                                                                         AS dim_host_id,
       uuid                                                                                            AS dim_instance_id,
       ping_created_at,
@@ -69,7 +66,7 @@
 ), joined_ping AS (
 
     SELECT
-      dim_usage_ping_id,
+      dim_service_ping_id,
       dim_host_id,
       usage_data.dim_instance_id,
       ping_created_at,
@@ -143,7 +140,7 @@
 ), prep_usage_ping_cte AS (
 
     SELECT
-      dim_usage_ping_id,
+      dim_service_ping_id,
       dim_host_id,
       dim_instance_id,
       dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
@@ -167,7 +164,7 @@
       major_version,
       minor_version,
       major_minor_version,
-      ping_source                                       AS usage_ping_delivery_type,
+      ping_source                                       AS service_ping_delivery_type,
       is_internal,
       is_staging,
       instance_user_count,
@@ -208,7 +205,7 @@
 ), prep_usage_ping_payload_cte AS (
 
     SELECT
-      joined_payload.dim_usage_ping_id,
+      joined_payload.dim_service_ping_id,
       dim_product_tier.dim_product_tier_id                   AS dim_product_tier_id,
       COALESCE(license_subscription_id, dim_subscription_id) AS dim_subscription_id,
       dim_license_id,
@@ -234,7 +231,7 @@
       major_version,
       minor_version,
       major_minor_version,
-      usage_ping_delivery_type,
+      service_ping_delivery_type,
       is_internal,
       is_staging,
       is_trial,
@@ -249,29 +246,31 @@
 
 ), flattened_high_level as (
     SELECT
-      dim_usage_ping_id           AS dim_usage_ping_id,
-      path                        AS metrics_path,
-      dim_product_tier_id         AS dim_product_tier_id,
-      dim_subscription_id         AS dim_subscription_id,
-      dim_location_country_id     AS dim_location_country_id,
-      dim_date_id                 AS dim_date_id,
-      dim_instance_id             AS dim_instance_id,
-      ping_created_at             AS ping_created_at,
-      ping_created_at_date        AS ping_created_at_date,
-      edition                     AS edition,
-      product_tier                AS product_tier,
-      major_version               AS major_version,
-      minor_version               AS minor_version,
-      usage_ping_delivery_type    AS usage_ping_delivery_type,
-      is_internal                 AS is_internal,
-      is_staging                  AS is_staging,
-      is_trial                    AS is_trial,
-      instance_user_count         AS instance_user_count,
-      host_name                   AS host_name,
-      umau_value                  AS umau_value,
-      license_subscription_id     AS license_subscription_id,
-      key                         AS event_name,
-      value                       AS event_count
+      dim_service_ping_id               AS dim_service_ping_id,
+      path                              AS metrics_path,
+      dim_product_tier_id               AS dim_product_tier_id,
+      dim_subscription_id               AS dim_subscription_id,
+      dim_location_country_id           AS dim_location_country_id,
+      dim_date_id                       AS dim_date_id,
+      dim_instance_id                   AS dim_instance_id,
+      ping_created_at                   AS ping_created_at,
+      ping_created_at_date              AS ping_created_at_date,
+      edition                           AS edition,
+      major_version                     AS major_version,
+      minor_version                     AS minor_version,
+      major_minor_version               AS major_minor_version,
+      major_version*100 + minor_version AS major_minor_version_id,
+      service_ping_delivery_type        AS service_ping_delivery_type,
+      is_internal                       AS is_internal,
+      is_staging                        AS is_staging,
+      is_trial                          AS is_trial,
+      instance_user_count               AS instance_user_count,
+      host_name                         AS host_name,
+      umau_value                        AS umau_value,
+      license_subscription_id           AS dim_subscription_license_id,
+      key                               AS event_name,
+      value                             AS event_count,
+      'VERSION_DB'                      AS data_source
   /*  CASE WHEN SUBSTR(event_count, 1, 1) != '{' THEN TRUE
         ELSE FALSE
     END AS to_include */
@@ -281,14 +280,15 @@
 
 ), metric_attributes AS (
 
-    SELECT * FROM dim_usage_ping_metric
+    SELECT * FROM dim_service_ping_metric
         WHERE time_frame != 'none'
 
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['dim_usage_ping_id', 'flattened_high_level.metrics_path']) }}       AS fct_usage_ping_id,
+        {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'flattened_high_level.metrics_path']) }}       AS fct_usage_ping_id,
         flattened_high_level.*,
+        metric_attributes.is_paid_gmau,
         metric_attributes.time_frame
     FROM flattened_high_level
         INNER JOIN metric_attributes
