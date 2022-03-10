@@ -1,10 +1,10 @@
-## Data Triage 
+# Data Triage 
 
 <!--
 Please complete all items. Ask questions in the #data slack channel
 --->
 
-## Housekeeping 
+# Housekeeping 
 * [ ] Title the issue as "<ISO date> Data Triage" e.g. **2020-07-09 Data Triage**
 * [ ] Assign this issue to both the Data Analyst, Analytics Engineer and Data Engineer assigned to Triage 
 * [ ] [Add a weight to the issue](https://about.gitlab.com/handbook/business-ops/data-team/how-we-work/#issue-pointing)
@@ -27,6 +27,7 @@ All tasks below should be checked off at the end of Triage day.
             - [ ] the [functional DRIs](https://about.gitlab.com/handbook/business-ops/data-team/organization/#team-organization)
             - [ ] OR to the  Manager, Data if you aren't sure. 
         - [ ] Asking initial questions (data source, business logic clarification, etc) to groom the issue. 
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
 
 ### Friends and family days
 * [ ] As we currently have a no-merge Friday rule if there is an upcoming family and friends day during your triage week which affects this please ensure this message (or similar) is shared #data channel by Tuesday at the latest: 
@@ -34,8 +35,10 @@ All tasks below should be checked off at the end of Triage day.
 
 ## Analytics Engineer tasks
 
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
+    * [ ] Link to all resulting issues and MRs in slack 
 
-#### Handling dbt-test errors:
+### Handling dbt-test errors:
 
 * [ ] Clean up the dbt-test failure logs and put them into a table in the comments of this issue, use the below format as an example: 
 
@@ -75,13 +78,14 @@ Completed with x errors and x warnings:
 
 ## Data Engineer tasks
 
-* [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#analytics-pipelines**
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#data-pipelines**
     * [ ] Link to all resulting issues and MRs in slack 
+    * [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
 * [ ] [Investigate](https://gitlab.com/gitlab-org/gitlab/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) all relevant merge requests to the gitlab.com database schema, create an issue for each MR in the analytics project that impacts the GitLab.com extraction. Link each issue created to this issue. A detailed explanation of how to act if there is some impact is described on the page [#gitlabcom-db-structure-changes](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-db-structure-changes)
 
 In addition to these tasks, the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859)
 
+* [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#data-pipelines** so that it is clear for the next triager what time to check for issues from.
 
 ### Data Notification Templates
 
@@ -145,9 +149,6 @@ The link to the Data Team Incident issue is <link>
 
 
 ## Finishing the Day
-
-* [ ] At the end of your working day post EOD message to slack along with a link to this issue in the above mentioned slack channels so that it is clear for the next triager what time to check for issues from.
-* [ ] Leave a comment giving context on open items and issues in this issue. If it's relevant to a specific issue, consider commenting in that issue and then linking to your comment.
 
 
 /label ~"workflow::In dev" ~"Housekeeping" ~"Data Team" ~"Documentation" ~"Triage" ~"Priority::1-Ops"
