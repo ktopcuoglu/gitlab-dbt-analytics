@@ -36,8 +36,6 @@ logging.info(pod_env_vars)
 # Default arguments for the DAG
 default_args = {
     "catchup": False,
-    "concurrency": 1,
-    "max_active_runs": 1,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
@@ -50,7 +48,10 @@ default_args = {
 }
 
 # Create the DAG
-dag = DAG("bizible_extract", default_args=default_args, schedule_interval="0 */2 * * *")
+dag = DAG("bizible_extract",
+          default_args=default_args,
+          concurrency=2,
+          schedule_interval="0 */2 * * *")
 
 
 def extract_manifest(file_path):
