@@ -44,7 +44,6 @@ class ZuoraQueriesAPI:
             return response.json()["access_token"]
         else:
             error("COULD NOT AUTHENTICATE")
-            error(response.status_code)
             exit(1)
 
     def request_query_data(self, query_string, query_type):
