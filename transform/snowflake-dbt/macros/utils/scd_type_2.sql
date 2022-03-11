@@ -33,7 +33,7 @@
 
     FROM {{casted_cte}}
     LEFT JOIN max_by_primary_key
-      ON {{casted_cte}}.{{primary_key_renamed}} = max_by_primary_key.primary_key
+      ON renamed.{{primary_key_renamed}} = max_by_primary_key.primary_key
     ORDER BY valid_from, valid_to
 
 )
