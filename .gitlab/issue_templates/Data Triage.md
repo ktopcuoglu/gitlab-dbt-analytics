@@ -39,8 +39,10 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
 
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failed DBT model
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
+    * [ ] Work with the Data Fusion Team Manager to determine a DRI and SLO to resolve the dbt run failure. These run failures are more urgent to resolve because they result in stale data and we need to determine the path forward to have the model run again.
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failed DBT test
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
+    * [ ] Work with Data Fusion Team Manager to determine a DRI and SLO for test failure resolution. These test failures can be less urgent and usually relate to a DQ issue that needs to be investigated.
 * [ ] Clean up the dbt-test failure logs and put them into a table in the comments of this issue, use the below format as an example: 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
 
