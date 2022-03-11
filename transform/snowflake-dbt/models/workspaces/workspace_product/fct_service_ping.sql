@@ -1,4 +1,3 @@
-
 {{ config(
     tags=["product", "mnpi_exception"]
 ) }}
@@ -281,7 +280,7 @@
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'flattened_high_level.metrics_path']) }}       AS fct_usage_ping_id,
+        {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_id,
         flattened_high_level.*,
         metric_attributes.is_paid_gmau,
         metric_attributes.time_frame

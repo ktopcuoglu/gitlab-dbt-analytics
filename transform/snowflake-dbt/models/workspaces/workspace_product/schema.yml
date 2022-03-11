@@ -110,10 +110,18 @@ models:
           - not_null
           - unique
 
-  - name: fct_usage_ping
-    description: ' {{ doc("fct_usage_ping") }} '
+  - name: fct_service_ping
+    description: ' {{ doc("fct_service_ping") }} '
     columns:
-      - name: fct_usage_ping_id
+      - name: fct_service_ping_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_service_ping
+    description: ' {{ doc("dim_service_ping") }} '
+    columns:
+      - name: dim_service_ping_id
         tests:
           - not_null
           - unique

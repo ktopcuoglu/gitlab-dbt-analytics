@@ -56,8 +56,14 @@ Version source, self managed usage data mart.
 
 {% enddocs %}
 
-{% docs fct_usage_ping %}
+{% docs fct_service_ping %}
 
 Version source, self managed usage data fact table.
+
+{% enddocs %}
+
+{% docs fct_usage_ping %}
+
+Version source, self managed usage data dim table.
 
 {% enddocs %}

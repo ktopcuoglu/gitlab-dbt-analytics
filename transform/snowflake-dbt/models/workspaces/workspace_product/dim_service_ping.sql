@@ -41,7 +41,7 @@
       license_starts_at,
       license_expires_at,
       license_add_ons,
-      recordered_at,
+      recorded_at,
       created_at,
       updated_at,
       mattermost_enabled,
