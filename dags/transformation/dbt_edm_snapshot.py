@@ -108,7 +108,6 @@ dbt_snapshot_models_run = KubernetesPodOperator(
     image=DBT_IMAGE,
     task_id="dbt-run-edm-model-snapshots",
     name="dbt-run-edm-model-snapshots",
-    trigger_rule="all_done",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snapshot_models_command],
@@ -128,7 +127,6 @@ dbt_test_snapshot_models = KubernetesPodOperator(
     image=DBT_IMAGE,
     task_id="dbt-test-edm-snapshots",
     name="dbt-test-edm-snapshots",
-    trigger_rule="all_done",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_test_snapshots_cmd],
@@ -136,4 +134,4 @@ dbt_test_snapshot_models = KubernetesPodOperator(
 )
 
 
-(dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models)
+dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models
