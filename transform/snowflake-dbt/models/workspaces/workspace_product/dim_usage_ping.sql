@@ -70,7 +70,6 @@
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       cleaned_edition                                                                           AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
-      main_edition || ' - ' || product_tier                                                     AS main_edition_product_tier,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -123,7 +122,6 @@
     SELECT
       add_country_info_to_usage_ping.*,
       dim_product_tier.dim_product_tier_id              AS dim_product_tier_id,
-      main_edition_product_tier                         AS edition_product_tier,
       ping_source                                       AS service_ping_delivery_type
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
