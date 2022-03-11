@@ -52,7 +52,7 @@
       dim_service_ping_id                                                                                           AS dim_service_ping_id,
       host_id                                                                                                       AS dim_host_id,
       uuid                                                                                                          AS dim_instance_id,
-      *,
+      source.*,
       source_ip_hash                                                                                                AS ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       edition                                                                                                       AS original_edition,
