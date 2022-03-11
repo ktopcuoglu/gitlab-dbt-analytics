@@ -215,6 +215,7 @@
       dim_location_country_id,
       date_id                                                AS dim_date_id,
       dim_instance_id,
+      dim_host_id                                            AS dim_host_id,
 
       -- timestamps
       ping_created_at,
