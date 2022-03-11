@@ -160,7 +160,7 @@
     FROM {{ ref('dim_product_tier') }}
     WHERE product_delivery_type = 'Self-Managed'
 
-), prep_usage_ping_payload_cte AS (
+), final AS (
 
     SELECT
       joined_payload.*,
