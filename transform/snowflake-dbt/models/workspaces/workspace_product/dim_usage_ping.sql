@@ -172,7 +172,7 @@
       DATE_TRUNC('MONTH', ping_created_at)                   AS ping_created_at_month,
       DATE_TRUNC('WEEK', ping_created_at)                    AS ping_created_at_week,
       DATE_TRUNC('DAY', ping_created_at)                     AS ping_created_at_date,
-      raw_usage_data_id                                      AS raw_usage_data_id,
+      raw_usage_data_id                                      AS raw_usage_data_id
     FROM joined_payload
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
