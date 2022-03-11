@@ -52,7 +52,6 @@
       host_id                                                                                                       AS dim_host_id,
       uuid                                                                                                          AS dim_instance_id,
       source.*,
-      source_ip_hash                                                                                                AS ip_address_hash,
       edition                                                                                                       AS original_edition,
       IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
