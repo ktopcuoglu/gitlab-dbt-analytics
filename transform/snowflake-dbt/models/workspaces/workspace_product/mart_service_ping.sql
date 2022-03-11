@@ -130,7 +130,7 @@ SELECT
     dim_service_ping.version_is_prerelease                  AS version_is_prerelease,
     dim_service_ping.is_internal                            AS is_internal,
     dim_service_ping.is_staging                             AS is_staging,
-    dim_service_ping.                                       AS instance_user_count
+    dim_service_ping.instance_user_count                    AS instance_user_count
 FROM fct_service_ping
   INNER JOIN dim_service_ping_id
 ON fct_service_ping.dim_service_ping_id = dim_service_ping.dim_service_ping_id
@@ -206,7 +206,7 @@ FROM fct_w_metric_dims
       fct_w_product_tier.is_staging,
       fct_w_product_tier.instance_user_count,
       fct_w_product_tier.ping_created_at,
-      fct_w_product_tier.time_period
+      fct_w_product_tier.time_period,
       fct_usage_ping_payload.dim_instance_id,
       fct_usage_ping_payload.host_name
     FROM fct_monthly_usage_data
@@ -222,7 +222,7 @@ FROM fct_w_metric_dims
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'dim_date_id', 'dim_instance_id', 'host_name']) }} AS primary_key,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'dim_date_id', 'dim_instance_id', 'host_name']) }} AS mart_service_ping_id,
       dim_date_id,
       metrics_path,
       metric_value,
