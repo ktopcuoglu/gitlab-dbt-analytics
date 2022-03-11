@@ -259,10 +259,12 @@
       dim_date_id                           AS dim_date_id,
       dim_instance_id                       AS dim_instance_id,
       dim_host_id                           AS dim_host_id,
+      dim_license_id                        AS dim_license_id,
       ping_created_at                       AS ping_created_at,
       ping_created_at_date                  AS ping_created_at_date,
       is_trial                              AS is_trial,
       umau_value                            AS umau_value,
+      service_ping_delivery_type            AS service_ping_delivery_type,
       license_subscription_id               AS dim_subscription_license_id,
       'VERSION_DB'                          AS data_source
   FROM prep_usage_ping_payload_cte,

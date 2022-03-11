@@ -125,3 +125,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: mart_service_ping
+    description: ' {{ doc("dim_service_ping") }} '
+    columns:
+      - name: mart_service_ping_id
+        tests:
+          - not_null
+          - unique
