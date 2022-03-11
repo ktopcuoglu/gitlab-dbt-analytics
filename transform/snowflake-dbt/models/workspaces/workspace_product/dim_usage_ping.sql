@@ -67,7 +67,6 @@
 
     SELECT
       usage_data.*,
-      edition                                                                                   AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
