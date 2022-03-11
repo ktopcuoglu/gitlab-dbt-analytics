@@ -1,35 +1,55 @@
-{%- macro apply_dynamic_data_masking(database, schema, table) -%}
+{%- macro apply_dynamic_data_masking(database, columns) -%}
 
-{# Create all masking policies needed by type of PII column we need to mask #}
-{# {{ create_masking_policies(database, schema) }} #} 
+{% set materialization = 'view' if model.config.materialized == 'view' else 'table' %}
+{# {% set database = model.config.database %} #}
+{% set schema = model.config.schema %}
+{% set alias = model.config.alias %}
 
-{# 
-{% set column_name = 'arr' %}
-alter table {{database}}.{{schema}}.{{table}} 
-modify column {{column_name}} 
-set masking policy {{database}}.{{schema}}.hide_float_column_values;
-#}
+{{ create_masking_policies(database, schema) }} 
 
-{# 
-  # Loop through the columns of the model, check if is_pii is true and only for those run the alter statement 
-  # Based on the data type of the pii column, run the appropriate masking policy (variant, boolean, string etc.)
+{% for column in columns %}
 
-  # Choosing option to pass a column_list. 
+    {% for column_name, column_type in column.items() %}
 
-{% for column in column_list %}
-    alter table {{database}}.{{schema}}.{{table}} 
-    modify column {{column}} 
-    set masking policy {{database}}.{{schema}}.hide_float_column_values;
-{% endfor %}
-#}
+        {% if column_type == "float" %}
 
-{% for column_name, column_properties in model.get('columns').items() %}
+            alter {{materialization}} {{database}}.{{schema}}.{{alias}} 
+            modify column {{column_name}} 
+            set masking policy {{database}}.{{schema}}.hide_float_column_values;
 
-    {% if column_properties.get('meta').get('contains_pii') or  column_properties.get('tags').get('pii')  %}
-        alter table {{database}}.{{schema}}.{{table}} 
-        modify column {{column}} 
-        set masking policy {{database}}.{{schema}}.hide_float_column_values;
-    {% endif %}
+        {% elif column_type == "array" %}
+
+            alter {{materialization}} {{database}}.{{schema}}.{{alias}} 
+            modify column {{column_name}} 
+            set masking policy {{database}}.{{schema}}.hide_array_column_values;
+
+        {% elif column_type == "boolean" %}
+
+            alter {{materialization}} {{database}}.{{schema}}.{{model}} 
+            modify column {{column_name}} 
+            set masking policy {{database}}.{{schema}}.hide_boolean_column_values;
+
+        {% elif column_type == "number" %}
+
+            alter {{materialization}} {{database}}.{{schema}}.{{alias}} 
+            modify column {{column_name}} 
+            set masking policy {{database}}.{{schema}}.hide_number_column_values;
+
+        {% elif column_type == "string" %}
+
+            alter {{materialization}} {{database}}.{{schema}}.{{alias}} 
+            modify column {{column_name}} 
+            set masking policy {{database}}.{{schema}}.hide_string_column_values;
+       
+        {% elif column_type == "variant" %}
+
+            alter {{materialization}} {{database}}.{{schema}}.{{alias}} 
+            modify column {{column_name}} 
+            set masking policy {{database}}.{{schema}}.hide_variant_column_values;
+        
+        {% endif %}
+
+    {% endfor %}
 
 {% endfor %}
 
