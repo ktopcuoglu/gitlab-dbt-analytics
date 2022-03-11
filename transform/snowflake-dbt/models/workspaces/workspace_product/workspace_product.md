@@ -62,7 +62,7 @@ Version source, self managed usage data fact table.
 
 {% enddocs %}
 
-{% docs fct_usage_ping %}
+{% docs dim_service_ping %}
 
 Version source, self managed usage data dim table.
 
