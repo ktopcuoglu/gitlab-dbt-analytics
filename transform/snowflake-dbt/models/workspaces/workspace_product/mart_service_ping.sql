@@ -34,21 +34,6 @@
     SELECT *
     FROM {{ ref('fct_charge')}}
 
-), fct_monthly_usage_data AS (
-
-    SELECT *
-    FROM {{ ref('fct_monthly_usage_data') }}
-    {% if is_incremental() %}
-
-      WHERE ping_created_month >= (SELECT MAX(reporting_month) FROM {{this}})
-
-    {% endif %}
-
-), fct_usage_ping_payload AS (
-
-    SELECT *
-    FROM {{ ref('fct_usage_ping_payload') }}
-
 ), subscription_source AS (
 
     SELECT *
@@ -116,6 +101,7 @@ SELECT
     fct_service_ping.dim_host_id                            AS dim_host_id,
     fct_service_ping.ping_created_at                        AS ping_created_at,
     fct_service_ping.ping_created_at_date                   AS ping_created_at_date,
+    DATE_TRUNC('MONTH', ping_created_at::TIMESTAMP)         AS ping_created_month,
     fct_service_ping.is_trial                               AS is_trial,
     fct_service_ping.umau_value                             AS umau_value,
     fct_service_ping.dim_subscription_license_id            AS dim_subscription_license_id,
@@ -130,7 +116,9 @@ SELECT
     dim_service_ping.version_is_prerelease                  AS version_is_prerelease,
     dim_service_ping.is_internal                            AS is_internal,
     dim_service_ping.is_staging                             AS is_staging,
-    dim_service_ping.instance_user_count                    AS instance_user_count
+    dim_service_ping.instance_user_count                    AS instance_user_count,
+    dim_service_ping.service_ping_delivery_type             AS service_ping_delivery_type,
+    dim_service_ping.last_ping_of_month_flag                AS last_ping_of_month_flag
 FROM fct_service_ping
   INNER JOIN dim_service_ping_id
 ON fct_service_ping.dim_service_ping_id = dim_service_ping.dim_service_ping_id
@@ -194,7 +182,6 @@ FROM fct_w_metric_dims
       license_subscriptions.technical_account_manager,
       COALESCE(is_paid_subscription, FALSE)                         AS is_paid_subscription,
       COALESCE(is_program_subscription, FALSE)                      AS is_program_subscription,
-      fct_w_product_tier.service_ping_delivery_type,
       fct_w_product_tier.edition,
       fct_w_product_tier.product_tier                               AS ping_product_tier,
       fct_w_product_tier.edition_product_tier                       AS ping_main_edition_product_tier,
@@ -207,13 +194,13 @@ FROM fct_w_metric_dims
       fct_w_product_tier.instance_user_count,
       fct_w_product_tier.ping_created_at,
       fct_w_product_tier.time_period,
-      fct_usage_ping_payload.dim_instance_id,
-      fct_usage_ping_payload.host_name
-    FROM fct_monthly_usage_data
-    LEFT JOIN fct_usage_ping_payload
-      ON fct_monthly_usage_data.dim_usage_ping_id = fct_usage_ping_payload.dim_usage_ping_id
+      fct_w_product_tier.dim_instance_id,
+      fct_w_product_tier.service_ping_delivery_type,
+      fct_w_product_tier.host_name,
+      fct_w_product_tier.last_ping_of_month_flag
+    FROM fct_w_product_tier
     LEFT JOIN {{ ref('map_usage_ping_active_subscription')}} act_sub
-      ON fct_usage_ping_payload.dim_usage_ping_id = act_sub.dim_usage_ping_id
+      ON fct_w_product_tier.dim_usage_ping_id = act_sub.dim_usage_ping_id
     LEFT JOIN license_subscriptions ON act_sub.dim_subscription_id = license_subscriptions.latest_active_subscription_id
       AND ping_created_month = reporting_month
 
@@ -222,7 +209,7 @@ FROM fct_w_metric_dims
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'dim_date_id', 'dim_instance_id', 'host_name']) }} AS mart_service_ping_id,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'dim_date_id', 'dim_instance_id', 'dim_host_id']) }} AS mart_service_ping_id,
       dim_date_id,
       metrics_path,
       metric_value,
@@ -234,6 +221,7 @@ FROM fct_w_metric_dims
       latest_active_subscription_id,
       dim_billing_account_id,
       dim_parent_crm_account_id,
+      dim_host_id,
       host_name,
       -- metadata usage ping
       usage_ping_delivery_type,
@@ -282,6 +270,7 @@ FROM fct_w_metric_dims
       technical_account_manager,
 
       ping_created_at,
+      last_ping_of_month_flag,
 
       -- fct_monthly_usage_data
       time_period

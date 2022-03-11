@@ -16,12 +16,44 @@
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
+    ('version_usage_data_source', 'version_usage_data_source'),
     ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
 }}
 
-, final AS (
+, usage_data_w_date AS (
+  SELECT
+    version_usage_data_source.*,
+    dim_date.dim_date_id
+  FROM version_usage_data_source
+  LEFT JOIN dim_date
+    ON TO_DATE(created_at) = dim_date.date_day
+
+), last_ping_of_month_flag AS (
+
+SELECT
+    usage_data_w_date.dim_date_id,
+    usage_data_w_date.uuid,
+    dim_date.month_actual,
+    TRUE                      AS last_ping_of_month_flag
+  FROM FROM version_usage_data_source
+    INNER JOIN dim_date
+  ON usage_data_w_date.dim_date_id = dim_date.dim_date_id
+  QUALIFY rank() OVER (
+          PARTITION BY usage_data_w_date.uuid, dim_date.month_actual
+          ORDER BY usage_data_w_date.dim_date_id DESC) = 1
+
+), fct_w_month_flag AS (
+
+  SELECT
+      usage_data_w_date.*,
+      last_ping_of_month_flag.last_ping_of_month_flag
+    FROM usage_data_w_date
+      LEFT JOIN last_ping_of_month_flag
+        ON usage_data_w_date.dim_date_id = last_ping_of_month_flag.dim_date_id
+
+), final AS (
 
     SELECT
       id                                                                        AS dim_service_ping_id,
@@ -113,7 +145,7 @@
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                                              AS is_staging
-    FROM {{ ref('version_usage_data_source') }}
+    FROM fct_w_month_flag
 
 )
 
