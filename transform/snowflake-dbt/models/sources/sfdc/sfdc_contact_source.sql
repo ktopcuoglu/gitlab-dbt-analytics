@@ -52,6 +52,13 @@ WITH source AS (
         mailingpostalcode           AS mailing_zip_code,
 
         -- info
+        dozisf__zoominfo_company_id__c AS zoominfo_company_id,
+        zi_company_revenue__c AS zoominfo_company_revenue,
+        zi_employee_count__c AS zoominfo_company_employee_count,
+        zi_company_city__c AS zoominfo_company_city,
+        zi_industry__c AS zoominfo_company_industry,
+        zi_company_state__c AS zoominfo_company_state_province,
+        zi_company_country__c AS zoominfo_company_country,
         using_ce__c                 AS using_ce,
         ee_trial_start_date__c      AS ee_trial_start_date,
         ee_trial_end_date__c        AS ee_trial_end_date,

@@ -55,6 +55,11 @@ WITH source AS (
         -- info
         requested_contact__c                                    AS requested_contact,
         company                                                 AS company,
+        dozisf__zoominfo_company_id__c AS zoominfo_company_id,
+        zi_company_revenue__c AS zoominfo_company_revenue,
+        zi_employee_count__c AS zoominfo_company_employee_count,
+        zi_company_city__c AS zoominfo_company_city,
+        zi_industry__c AS zoominfo_company_industry,
         buying_process_for_procuring_gitlab__c                  AS buying_process,
         core_check_in_notes__c                                  AS core_check_in_notes,
         industry                                                AS industry,

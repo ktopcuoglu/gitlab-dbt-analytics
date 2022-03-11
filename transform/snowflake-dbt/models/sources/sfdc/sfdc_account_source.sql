@@ -181,6 +181,14 @@ WITH source AS (
 
       --*************************************
       -- Zoom Info Fields
+      zi_account_name__c AS zoom_info_company_name,
+      zi_revenue__c AS zoom_info_company_revenue,
+      zi_employees__c AS zoom_info_company_employee_count,
+      zi_industry__c AS zoom_info_company_industry,
+      zi_city__c AS zoom_info_company_city,
+      zi_state_province__c AS zoom_info_company_state_province,
+      zi_country__c AS zoom_info_company_country,
+      exclude_from_zoominfo_enrich__c AS is_excluded_from_zoom_info_enrich,
       zi_website__c                                 AS zoom_info_website,
       zi_company_other_domains__c                   AS zoom_info_company_other_domains,
       dozisf__zoominfo_id__c                        AS zoom_info_dozisf_zi_id,
