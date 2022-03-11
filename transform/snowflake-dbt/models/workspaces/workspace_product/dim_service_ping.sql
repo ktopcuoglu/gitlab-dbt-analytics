@@ -71,7 +71,7 @@
       usage_activity_by_stage,
       usage_activity_by_stage_monthly,
       gitaly_clusters,
-      gitaly_versions,
+      gitaly_version,
       gitaly_servers,
       gitaly_filesystems,
       gitpod_enabled,
