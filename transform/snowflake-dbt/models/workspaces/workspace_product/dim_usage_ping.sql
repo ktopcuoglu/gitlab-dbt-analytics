@@ -49,7 +49,6 @@ WITH source AS (
       major_version || '.' || minor_version                                                                         AS major_minor_version,
       cleaned_edition                                                                                               AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                                      AS main_edition,
-      main_edition || ' - ' || product_tier                                                                         AS main_edition_product_tier,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
@@ -106,6 +105,7 @@ WITH source AS (
       DATE_TRUNC('DAY', ping_created_at)                                                              AS ping_created_at_date,
       TO_DATE(raw_usage_data.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
       (raw_usage_data.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
+      main_edition || ' - ' || dim_product_tier.product_tier                                          AS main_edition_product_tier,
       raw_usage_data.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
       IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)                                       AS is_trial
     FROM add_country_info_to_usage_ping
