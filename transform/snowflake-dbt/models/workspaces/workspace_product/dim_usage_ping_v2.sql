@@ -95,7 +95,7 @@
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                   AS minor_version,
       major_version || '.' || minor_version                                                                         AS major_minor_version,
-      ASE
+      CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
         END                                                                                     AS ping_source,
