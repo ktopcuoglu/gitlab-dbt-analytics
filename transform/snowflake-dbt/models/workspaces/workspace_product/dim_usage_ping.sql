@@ -53,7 +53,6 @@
       uuid                                                                                                          AS dim_instance_id,
       source.*,
       source_ip_hash                                                                                                AS ip_address_hash,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       edition                                                                                                       AS original_edition,
       IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
