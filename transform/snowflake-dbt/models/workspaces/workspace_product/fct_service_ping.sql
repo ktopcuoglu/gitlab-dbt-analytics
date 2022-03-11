@@ -11,6 +11,7 @@
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
 
 {{ simple_cte([
+    ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_license', 'prep_license'),
     ('prep_subscription', 'prep_subscription'),
     ('raw_usage_data', 'version_raw_usage_data_source'),
@@ -24,7 +25,7 @@
 , source AS (
 
     SELECT
-      id                                                                        AS dim_service_ping_id,
+      id                                                                        AS dim_usage_ping_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
@@ -48,19 +49,19 @@
 ), usage_data AS (
 
     SELECT
-      dim_service_ping_id                                                                                           AS dim_service_ping_id,
-      host_id                                                                                                       AS dim_host_id,
-      uuid                                                                                                          AS dim_instance_id,
+      dim_usage_ping_id                                                                               AS dim_service_ping_id,
+      host_id                                                                                         AS dim_host_id,
+      uuid                                                                                            AS dim_instance_id,
       ping_created_at,
-      source_ip_hash                                                                                                AS ip_address_hash,
+      source_ip_hash                                                                                  AS ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
-      edition                                                                                                       AS original_edition,
-      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
-      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
-      IFF(version ILIKE '%-pre', True, False)                                                                       AS version_is_prerelease,
-      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,
-      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                   AS minor_version,
-      major_version || '.' || minor_version                                                                         AS major_minor_version
+      edition                                                                                         AS original_edition,
+      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')    AS cleaned_edition,
+      REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                 AS cleaned_version,
+      IFF(version ILIKE '%-pre', True, False)                                                         AS version_is_prerelease,
+      SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                     AS major_version,
+      SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                     AS minor_version,
+      major_version || '.' || minor_version                                                           AS major_minor_version
     FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%')
@@ -77,6 +78,15 @@
       original_edition,
       cleaned_edition                                                                           AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
+      CASE
+        WHEN original_edition = 'CE'                                     THEN 'Core'
+        WHEN original_edition = 'EE Free'                                THEN 'Core'
+        WHEN license_expires_at < ping_created_at                        THEN 'Core'
+        WHEN original_edition = 'EE'                                     THEN 'Starter'
+        WHEN original_edition = 'EES'                                    THEN 'Starter'
+        WHEN original_edition = 'EEP'                                    THEN 'Premium'
+        WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
+        ELSE NULL END                                                                           AS product_tier,
       main_edition || ' - ' || product_tier                                                     AS main_edition_product_tier,
       cleaned_version,
       version_is_prerelease,
@@ -205,7 +215,7 @@
       dim_location_country_id,
       date_id                                                AS dim_date_id,
       dim_instance_id,
-      dim_host_id,
+
       -- timestamps
       ping_created_at,
       DATEADD('days', -28, ping_created_at)                  AS ping_created_at_28_days_earlier,
