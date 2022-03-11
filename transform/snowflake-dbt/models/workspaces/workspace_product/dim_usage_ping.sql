@@ -53,7 +53,7 @@
       uuid                                                                                                          AS dim_instance_id,
       source.*,
       edition                                                                                                       AS original_edition,
-      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
+      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                                       AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,
@@ -67,7 +67,7 @@
 
     SELECT
       usage_data.*,
-      cleaned_edition,
+      edition                                                                                   AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
