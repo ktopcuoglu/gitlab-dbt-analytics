@@ -154,7 +154,6 @@
 
     SELECT
       joined_payload.*,
-      dim_product_tier.dim_product_tier_id                   AS dim_product_tier_id,
       COALESCE(license_subscription_id, dim_subscription_id) AS dim_subscription_id,
       date_id                                                AS dim_date_id,
       DATEADD('days', -28, ping_created_at)                  AS ping_created_at_28_days_earlier,
@@ -163,9 +162,6 @@
       DATE_TRUNC('WEEK', ping_created_at)                    AS ping_created_at_week,
       DATE_TRUNC('DAY', ping_created_at)                     AS ping_created_at_date
     FROM joined_payload
-    LEFT JOIN dim_product_tier
-      ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-      AND edition = 'EE'
 
 )
 
