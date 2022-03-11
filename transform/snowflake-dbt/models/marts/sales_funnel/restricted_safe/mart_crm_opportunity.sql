@@ -177,7 +177,7 @@
       dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped,
       dim_crm_user_hierarchy_stamped_area.crm_opp_owner_area_stamped,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped',
-        'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
+        'dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
                                                                            AS crm_opp_owner_sales_segment_region_stamped_grouped,
       --dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped,
       dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
@@ -189,7 +189,7 @@
       dim_crm_user_hierarchy_live_region.crm_user_region,
       dim_crm_user_hierarchy_live_area.crm_user_area,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment',
-        'dim_crm_user_hierarchy_live_region.crm_user_region') }}
+        'dim_crm_user_hierarchy_live_geo.crm_user_geo', 'dim_crm_user_hierarchy_live_region.crm_user_region') }}
                                                                            AS crm_user_sales_segment_region_grouped,
 
       
@@ -200,7 +200,7 @@
       dim_crm_account_user_hierarchy_live_region.crm_user_region                         AS crm_account_user_region,
       dim_crm_account_user_hierarchy_live_area.crm_user_area                             AS crm_account_user_area,
       {{ sales_segment_region_grouped('dim_crm_account_user_hierarchy_live_sales_segment.crm_user_sales_segment',
-        'dim_crm_account_user_hierarchy_live_region.crm_user_region') }}
+        'dim_crm_account_user_hierarchy_live_geo.crm_user_geo', 'dim_crm_account_user_hierarchy_live_region.crm_user_region') }}
                                                                                          AS crm_account_user_sales_segment_region_grouped,
 
       -- channel fields
@@ -286,5 +286,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2022-02-24",
+    updated_date="2022-03-08",
   ) }}

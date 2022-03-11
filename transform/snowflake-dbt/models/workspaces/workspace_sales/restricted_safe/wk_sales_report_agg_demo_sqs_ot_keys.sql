@@ -116,14 +116,17 @@ WITH sfdc_account_xf AS (
         sales_qualified_source            AS key_sqs,
         deal_group                        AS key_ot,
 
+        report_opportunity_user_segment || '_' || sales_qualified_source             AS key_segment_sqs,
+        report_opportunity_user_segment || '_' || deal_group                         AS key_segment_ot,    
+
         report_opportunity_user_segment || '_' || report_opportunity_user_geo                                               AS key_segment_geo,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  sales_qualified_source             AS key_segment_geo_sqs,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  deal_group                         AS key_segment_geo_ot,      
 
 
-        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region                                  AS key_segment_geo_region,
-        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_geo || '_' ||  sales_qualified_source   AS key_segment_geo_region_sqs,
-        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_geo || '_' ||  deal_group               AS key_segment_geo_region_ot,   
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region                                     AS key_segment_geo_region,
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source   AS key_segment_geo_region_sqs,
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  deal_group               AS key_segment_geo_region_ot,   
 
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area                                       AS key_segment_geo_region_area,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  sales_qualified_source     AS key_segment_geo_region_area_sqs,
