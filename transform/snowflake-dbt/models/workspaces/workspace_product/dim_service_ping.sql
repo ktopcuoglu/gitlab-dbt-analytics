@@ -70,7 +70,7 @@
       prometheus_metrics_enabled,
       usage_activity_by_stage,
       usage_activity_by_stage_monthly,
-      gitaly_clusers,
+      gitaly_clusters,
       gitaly_versions,
       gitaly_servers,
       gitaly_filesystems,
