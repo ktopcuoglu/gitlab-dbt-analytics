@@ -67,7 +67,7 @@
 ), joined_ping AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
+      usage_data.*,
       cleaned_edition                                                                           AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
       CASE
