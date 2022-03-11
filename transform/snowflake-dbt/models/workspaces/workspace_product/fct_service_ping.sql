@@ -23,7 +23,7 @@
 
 , source AS (
 
-    SELECT top 1000
+    SELECT
       id                                                                        AS dim_service_ping_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,
@@ -241,6 +241,7 @@
     SELECT
       dim_service_ping_id                   AS dim_service_ping_id,
       path                                  AS metrics_path,
+      value                                 AS metric_value,
       dim_product_tier_id                   AS dim_product_tier_id,
       dim_subscription_id                   AS dim_subscription_id,
       dim_location_country_id               AS dim_location_country_id,
@@ -249,25 +250,10 @@
       dim_host_id                           AS dim_host_id,
       ping_created_at                       AS ping_created_at,
       ping_created_at_date                  AS ping_created_at_date,
-      edition                               AS edition,
-      major_version                         AS major_version,
-      minor_version                         AS minor_version,
-      major_minor_version                   AS major_minor_version,
-      major_version * 100 + minor_version   AS major_minor_version_id,
-      service_ping_delivery_type            AS service_ping_delivery_type,
-      is_internal                           AS is_internal,
-      is_staging                            AS is_staging,
       is_trial                              AS is_trial,
-      instance_user_count                   AS instance_user_count,
-      host_name                             AS host_name,
       umau_value                            AS umau_value,
       license_subscription_id               AS dim_subscription_license_id,
-      key                                   AS event_name,
-      value                                 AS event_count,
       'VERSION_DB'                          AS data_source
-  /*  CASE WHEN SUBSTR(event_count, 1, 1) != '{' THEN TRUE
-        ELSE FALSE
-    END AS to_include */
   FROM prep_usage_ping_payload_cte,
     LATERAL FLATTEN(input => raw_usage_data_payload,
     RECURSIVE => true)

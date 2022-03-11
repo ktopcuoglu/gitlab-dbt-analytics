@@ -23,7 +23,7 @@
 
 , final AS (
 
-    SELECT top 1000
+    SELECT
       id                                                                        AS dim_service_ping_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       DATEADD('days', -28, ping_created_at)                                     AS ping_created_at_28_days_earlier,
@@ -47,7 +47,7 @@
       mattermost_enabled,
       uuid                                                                      AS dim_instance_id,
       edition,
-      hostname,
+      hostname                                                                  AS host_name,
       host_id                                                                   AS dim_host_id,
       license_trial,
       source_license_id,
@@ -95,24 +95,24 @@
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                   AS minor_version,
       major_version || '.' || minor_version                                                                         AS major_minor_version,
+      major_version * 100 + minor_version   AS major_minor_version_id,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'
-        END                                                                                     AS ping_source,
+        END                                                                                                         AS service_ping_delivery_type,
       CASE
         WHEN ping_source = 'SaaS'                               THEN TRUE
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE
         WHEN hostname = 'gitlab.com'                            THEN TRUE
         WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE
-        ELSE FALSE END                                                                          AS is_internal,
+        ELSE FALSE END                                                                                              AS is_internal,
       CASE
         WHEN hostname ilike 'staging.%'                         THEN TRUE
         WHEN hostname IN (
         'staging.gitlab.com',
         'dr.gitlab.com'
       )                                                         THEN TRUE
-        ELSE FALSE END                                                                          AS is_staging,
-        hostname                                                                                AS host_name
+        ELSE FALSE END                                                                                              AS is_staging
     FROM {{ ref('version_usage_data_source') }}
 
 )
