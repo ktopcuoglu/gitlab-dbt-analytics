@@ -151,7 +151,7 @@ Example, if we have data records in the `RAW` layer like:
 |1| `2022-02-02`|
 |1| `2022-03-28`|
 
-using this macro should reflect and show in the `PREP` layer as:
+using this macro (and treating `DATE` ask the `_task_instance`) should reflect and show in the `PREP` layer as:
 
 | ID | DATE |
 | ---- | ---- |
