@@ -49,7 +49,6 @@
 ), usage_data AS (
 
     SELECT
-      dim_service_ping_id                                                                                           AS dim_service_ping_id,
       host_id                                                                                                       AS dim_host_id,
       uuid                                                                                                          AS dim_instance_id,
       source.*,
@@ -69,7 +68,6 @@
 ), joined_ping AS (
 
     SELECT
-      usage_data.*,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
       cleaned_edition                                                                           AS edition,
       IFF(original_edition = 'CE', 'CE', 'EE')                                                  AS main_edition,
