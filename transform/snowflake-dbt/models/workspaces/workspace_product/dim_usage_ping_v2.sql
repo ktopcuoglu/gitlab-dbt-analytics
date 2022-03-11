@@ -112,7 +112,7 @@
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                          AS is_staging,
-        hostname                                                                                AS host_name,
+        hostname                                                                                AS host_name
     FROM {{ ref('version_usage_data_source') }}
 
 )
