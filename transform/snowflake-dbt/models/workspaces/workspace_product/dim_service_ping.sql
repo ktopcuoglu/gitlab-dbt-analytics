@@ -81,7 +81,7 @@
       recording_ee_finished_at,
       stats_used,
       counts,
-      in_ingress_modsecurity_enabled,
+      is_ingress_modsecurity_enabled,
       topology,
       is_grafana_link_enabled,
       analytics_unique_visits,
