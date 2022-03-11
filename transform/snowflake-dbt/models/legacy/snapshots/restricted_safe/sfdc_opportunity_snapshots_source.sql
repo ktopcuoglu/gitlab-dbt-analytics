@@ -144,7 +144,7 @@ SELECT
         stamped_user_geo__c                             AS user_geo_stamped,
         stamped_user_region__c                          AS user_region_stamped,
         stamped_user_area__c                            AS user_area_stamped,
-        {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
+        {{ sales_segment_region_grouped('user_segment_stamped', 'user_geo_stamped', 'user_region_stamped') }}
                                                         AS user_segment_region_stamped_grouped,
         CONCAT(user_segment_stamped,
                '-', 
@@ -168,7 +168,7 @@ SELECT
         sao_user_geo__c                                 AS sao_crm_opp_owner_geo_stamped,
         sao_user_region__c                              AS sao_crm_opp_owner_region_stamped,
         sao_user_area__c                                AS sao_crm_opp_owner_area_stamped,
-        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_region_stamped') }}
+        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_geo_stamped', 'sao_crm_opp_owner_region_stamped') }}
                                                         AS sao_crm_opp_owner_segment_region_stamped_grouped,
         opportunity_category__c                         AS opportunity_category,
         opportunity_health__c                           AS opportunity_health,
