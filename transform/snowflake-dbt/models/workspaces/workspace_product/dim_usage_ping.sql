@@ -105,13 +105,9 @@ WITH source AS (
       DATE_TRUNC('DAY', ping_created_at)                                                              AS ping_created_at_date,
       TO_DATE(raw_usage_data.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
       (raw_usage_data.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
-      main_edition || ' - ' || dim_product_tier.product_tier                                          AS main_edition_product_tier,
       raw_usage_data.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
       IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)                                       AS is_trial
     FROM add_country_info_to_usage_ping
-    LEFT OUTER JOIN dim_product_tier
-    ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-    AND MAIN_EDITION = 'EE'
 
 )
 
