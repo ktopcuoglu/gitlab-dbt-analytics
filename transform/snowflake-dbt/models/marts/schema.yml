@@ -5,11 +5,13 @@ models:
     description: '{{ doc("mart_arr") }}'
     columns:
       - name: arr
-        description: "Calculated as 12 * MRR value"
+        description: "Calculated as 12 * MRR value"     
       - name: primary_key
         tests:
           - not_null
           - unique
+        meta:
+          contains_pii: true
       - name: is_reseller
         description: Identify whether a crm_account is a reseller.
       - name: subscription_sales_type
@@ -32,7 +34,9 @@ models:
       - name: subscription_cohort_quarter
       - name: mrr
         tests:
-          - not_null
+          - not_null 
+        tags:
+            - pii
       - name: months_since_subscription_cohort_start
       - name: quarters_since_subscription_cohort_start
       - name: dim_billing_account_id

@@ -2,7 +2,8 @@
 {{ config({
         "materialized": "table",
         "transient": false,
-        "schema": "restricted_safe_common_mart_sales"
+        "schema": "restricted_safe_common_mart_sales",
+        "post-hook": '{{ apply_dynamic_data_masking("rdemiri_prod", "restricted_safe_common_mart_sales", "mart_arr") }}'
     })
 }}
 
