@@ -68,6 +68,15 @@
       ping_created_at,
       ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
+      CASE
+        WHEN original_edition = 'CE'                                     THEN 'Core'
+        WHEN original_edition = 'EE Free'                                THEN 'Core'
+        WHEN license_expires_at < ping_created_at                        THEN 'Core'
+        WHEN original_edition = 'EE'                                     THEN 'Starter'
+        WHEN original_edition = 'EES'                                    THEN 'Starter'
+        WHEN original_edition = 'EEP'                                    THEN 'Premium'
+        WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
+        ELSE NULL END                                                                                      AS product_tier,
       COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
@@ -116,7 +125,7 @@
       dim_location_country_id
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
-    ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
+    ON TRIM(LOWER(add_country_info_to_usage_ping.dim_product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
     AND MAIN_EDITION = 'EE'
 
 ), joined_payload AS (
