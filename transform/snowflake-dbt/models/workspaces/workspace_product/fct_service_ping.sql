@@ -169,8 +169,6 @@
       date_id                                                AS dim_date_id,
       dim_instance_id,
       dim_host_id                                            AS dim_host_id,
-      is_internal,
-      is_staging,
       is_trial,
       umau_value,
       license_subscription_id
