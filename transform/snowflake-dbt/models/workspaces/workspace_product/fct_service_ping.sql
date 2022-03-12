@@ -126,7 +126,7 @@
       dim_location_country_id
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
-    ON TRIM(LOWER(add_country_info_to_usage_ping.dim_product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
+    ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
     AND MAIN_EDITION = 'EE'
 
 ), joined_payload AS (
