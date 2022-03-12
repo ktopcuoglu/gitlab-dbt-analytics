@@ -171,7 +171,8 @@
       dim_host_id                                            AS dim_host_id,
       is_trial,
       umau_value,
-      license_subscription_id
+      license_subscription_id,
+      raw_usage_data_payload
     FROM joined_payload
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
