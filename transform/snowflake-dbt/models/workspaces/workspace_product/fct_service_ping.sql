@@ -125,11 +125,12 @@
       raw_usage_data_payload,
       license_md5,
       dim_location_country_id,
-      product_tier
+      product_tier,
+      main_edition
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-    AND MAIN_EDITION = 'EE'
+    AND main_edition = 'EE'
 
 ), joined_payload AS (
 
@@ -178,7 +179,7 @@
     FROM joined_payload
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-      AND edition = 'EE'
+      AND main_edition = 'EE'
 
 ), flattened_high_level as (
     SELECT
