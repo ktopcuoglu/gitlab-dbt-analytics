@@ -69,6 +69,7 @@
       ping_created_at,
       ip_address_hash,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
+      IFF(original_edition = 'CE', 'CE', 'EE')                                                            AS main_edition,
       CASE
         WHEN original_edition = 'CE'                                     THEN 'Core'
         WHEN original_edition = 'EE Free'                                THEN 'Core'
