@@ -124,7 +124,8 @@
       raw_usage_data_id                                  AS raw_usage_data_id,
       raw_usage_data_payload,
       license_md5,
-      dim_location_country_id
+      dim_location_country_id,
+      product_tier
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
