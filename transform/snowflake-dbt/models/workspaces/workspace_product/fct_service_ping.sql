@@ -172,6 +172,8 @@
       is_trial,
       umau_value,
       license_subscription_id,
+      ping_created_at                       AS ping_created_at,
+      ping_created_at_date                  AS ping_created_at_date,
       raw_usage_data_payload
     FROM joined_payload
     LEFT JOIN dim_product_tier
