@@ -169,8 +169,6 @@
       date_id                                                AS dim_date_id,
       dim_instance_id,
       dim_host_id                                            AS dim_host_id,
-      raw_usage_data_payload,
-      service_ping_delivery_type,
       is_internal,
       is_staging,
       is_trial,
