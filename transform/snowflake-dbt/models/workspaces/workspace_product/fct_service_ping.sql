@@ -54,7 +54,7 @@
       uuid                                                                                            AS dim_instance_id,
       ping_created_at,
       source_ip_hash                                                                                  AS ip_address_hash,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
+      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}
     FROM source
     WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%')

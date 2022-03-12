@@ -37,10 +37,10 @@ SELECT
     usage_data_w_date.uuid,
     dim_date.month_actual,
     TRUE                      AS last_ping_of_month_flag
-  FROM FROM version_usage_data_source
+  FROM version_usage_data_source
     INNER JOIN dim_date
-  ON usage_data_w_date.dim_date_id = dim_date.dim_date_id
-  QUALIFY rank() OVER (
+  ON usage_data_w_date.dim_date_id = dim_date.date_id
+  QUALIFY RANK() OVER (
           PARTITION BY usage_data_w_date.uuid, dim_date.month_actual
           ORDER BY usage_data_w_date.dim_date_id DESC) = 1
 
