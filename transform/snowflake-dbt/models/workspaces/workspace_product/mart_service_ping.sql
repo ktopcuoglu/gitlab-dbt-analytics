@@ -16,6 +16,7 @@
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_instances', 'dim_instances'),
     ('dim_product_detail', 'dim_product_detail'),
+    ('fct_charge', 'fct_charge'),
     ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
@@ -29,10 +30,6 @@
       OR zuora_renewal_subscription_name_slugify IS NULL)
       AND subscription_status NOT IN ('Draft', 'Expired')
 
-), fct_charge AS (
-
-    SELECT *
-    FROM {{ ref('fct_charge')}}
 
 ), subscription_source AS (
 
@@ -88,7 +85,7 @@
 
 ), fct_pings_w_dims AS  (
 
-SELECT
+SELECT top 1000
     fct_service_ping.fct_service_ping_id                    AS fct_service_ping_id,
     fct_service_ping.dim_service_ping_id                    AS dim_service_ping_id,
     fct_service_ping.metrics_path                           AS metrics_path,

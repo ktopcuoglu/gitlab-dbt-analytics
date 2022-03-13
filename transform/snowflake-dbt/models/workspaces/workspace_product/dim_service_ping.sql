@@ -144,7 +144,11 @@ SELECT
         'staging.gitlab.com',
         'dr.gitlab.com'
       )                                                         THEN TRUE
-        ELSE FALSE END                                                                                              AS is_staging
+        ELSE FALSE END                                                                                              AS is_staging,
+        CASE
+          WHEN last_ping_of_month_flag = TRUE      THEN TRUE
+          ELSE FALSE
+          END                                                                                                       AS last_ping_of_month_flag
     FROM fct_w_month_flag
 
 )

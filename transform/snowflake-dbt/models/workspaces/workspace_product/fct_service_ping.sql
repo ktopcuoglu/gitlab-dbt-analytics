@@ -14,9 +14,10 @@
     ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_license', 'prep_license'),
     ('prep_subscription', 'prep_subscription'),
-    ('raw_usage_data', 'version_raw_usage_data_source'),
     ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
+    ('map_ip_to_country', 'map_ip_to_country'),
+    ('locations', 'prep_location_country'),
     ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
@@ -24,27 +25,12 @@
 
 , source AS (
 
-    SELECT
+    SELECT top 1000
       id                                                                        AS dim_usage_ping_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
-
-), raw_usage_data AS (
-
-    SELECT *
-    FROM {{ ref('version_raw_usage_data_source') }}
-
-), map_ip_to_country AS (
-
-    SELECT *
-    FROM {{ ref('map_ip_to_country') }}
-
-), locations AS (
-
-    SELECT *
-    FROM {{ ref('prep_location_country') }}
 
 ), usage_data AS (
 
@@ -106,7 +92,6 @@
 
   SELECT *
   FROM {{ ref('dim_product_tier') }}
-  WHERE product_delivery_type = 'Self-Managed'
 
 ), prep_usage_ping_cte AS (
 
@@ -152,11 +137,6 @@
       ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
     LEFT JOIN dim_date
       ON TO_DATE(ping_created_at) = dim_date.date_day
-
-), dim_product_tier AS (
-
-    SELECT *
-    FROM {{ ref('dim_product_tier') }}
 
 ), prep_usage_ping_payload_cte AS (
 
