@@ -1,7 +1,7 @@
 {%- macro apply_dynamic_data_masking(columns) -%}
 
 {% set materialization = 'view' if model.config.materialized == 'view' else 'table' %}
-{% set database = generate_database_name(env_var('SNOWFLAKE_PROD_DATABASE')) %}
+{% set database = generate_database_name(model.config.database) %}
 {% set schema = model.config.schema %}
 {% set alias = model.config.alias %}
 
