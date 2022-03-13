@@ -25,7 +25,7 @@
 , usage_data_w_date AS (
   SELECT
     version_usage_data_source.*,
-    dim_date.dim_date_id
+    dim_date.date_id
   FROM version_usage_data_source
   LEFT JOIN dim_date
     ON TO_DATE(created_at) = dim_date.date_day
