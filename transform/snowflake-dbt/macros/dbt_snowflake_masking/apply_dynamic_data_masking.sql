@@ -1,4 +1,4 @@
-{%- macro apply_dynamic_data_masking(columns) -%}
+{%- macro apply_dynamic_data_masking(database, columns) -%}
 
 {% set materialization = 'view' if model.config.materialized == 'view' else 'table' %}
 {% set database = generate_database_name(model.config.database) %}
