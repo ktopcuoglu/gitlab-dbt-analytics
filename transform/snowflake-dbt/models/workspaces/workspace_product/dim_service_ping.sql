@@ -161,4 +161,4 @@ SELECT
     updated_date="2022-03-11"
 ) }}
 
--- commenting to refresh...
+-- Determine error
