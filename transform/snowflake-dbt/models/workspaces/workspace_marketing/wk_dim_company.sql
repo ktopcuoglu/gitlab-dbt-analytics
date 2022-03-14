@@ -1,5 +1,6 @@
 {{ config(
-    materialized='table'
+    materialized='table',
+    tags=["mnpi_exception"]
 ) }}
 
 {{ simple_cte([
@@ -10,7 +11,7 @@
 ]) }},
 
 salesforce_accounts AS (
-  SELECT DISTINCT
+  SELECT
     zoom_info_dozisf_zi_id AS company_id,
     zoom_info_company_name AS company_name,
     zoom_info_company_revenue AS company_revenue,
@@ -29,7 +30,7 @@ salesforce_accounts AS (
 ),
 
 salesforce_leads AS (
-  SELECT DISTINCT
+  SELECT
     zoominfo_company_id AS company_id,
     company AS company_name,
     zoominfo_company_revenue AS company_revenue,
@@ -47,7 +48,7 @@ salesforce_leads AS (
 ),
 
 salesforce_contacts AS (
-  SELECT DISTINCT
+  SELECT
     zoominfo_company_id AS company_id,
     zoominfo_company_revenue AS company_revenue,
     zoominfo_company_employee_count AS company_employee_count,
@@ -65,16 +66,16 @@ salesforce_contacts AS (
 
 zoom_info_base AS (
   SELECT
-    zi_c_company_id AS company_id,
-    zi_c_company_name AS company_name,
-    zi_c_employees AS company_employee_count,
-    zi_c_industry_primary AS company_industry,
-    zi_c_company_state AS company_state_province,
-    zi_c_company_country AS company_country,
-    zi_c_ids_merged,
-    zi_c_company_revenue * 1000 AS company_revenue
+    company_id AS company_id,
+    headquarters_company_name AS company_name,
+    headquarters_employees AS company_employee_count,
+    industry_primary AS company_industry,
+    headquarters_company_state AS company_state_province,
+    headquarters_company_country AS company_country,
+    merged_previous_company_ids,
+    headquarters_revenue AS company_revenue
   FROM zoom_info
-  WHERE zi_c_is_hq = 1
+  WHERE is_headquarters = TRUE
 ),
 
 zoom_info_merged AS (
@@ -88,7 +89,7 @@ zoom_info_merged AS (
     zoom_info_base.company_country,
     zoom_info_base.company_id AS source_company_id
   FROM zoom_info_base
-  INNER JOIN LATERAL FLATTEN(INPUT =>SPLIT(zi_c_ids_merged, '|')) AS merged_company_ids
+  INNER JOIN LATERAL FLATTEN(INPUT =>SPLIT(merged_previous_company_ids, '|')) AS merged_company_ids
 ),
 
 company_id_spine AS (
@@ -120,6 +121,7 @@ company_id_spine AS (
 
 report AS (
   SELECT DISTINCT
+    {{ dbt_utils.surrogate_key(['company_id_spine.company_id::INT']) }} AS dim_company_id,
     company_id_spine.company_id::INT AS company_id,
     zoom_info_merged.source_company_id,
     COALESCE(zoom_info_base.company_name,
