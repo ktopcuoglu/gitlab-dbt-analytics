@@ -2,7 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ ref('gitlab_dotcom_events_dedupe_source') }}
-    
+
 ), renamed AS (
 
     SELECT
@@ -22,4 +22,3 @@ WITH source AS (
 
 SELECT *
 FROM renamed
-ORDER BY updated_at

@@ -72,6 +72,14 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      marketo_last_interesting_moment,
+      marketo_last_interesting_moment_date,
+      outreach_step_number,
+      NULL                                          AS matched_account_owner_role,
+      NULL                                          AS matched_account_account_owner_name,
+      NULL                                          AS matched_account_sdr_assigned,
+      NULL                                          AS matched_account_type,
+      NULL                                          AS matched_account_gtm_strategy,
       last_utm_content,
       last_utm_campaign,
       sequence_step_type,
@@ -80,9 +88,25 @@ WITH biz_person AS (
       sequence_status,
       is_actively_being_sequenced,
       region,
-      NULL                                          AS country,
-      mailing_country,
+      prospect_share_status,
+      partner_prospect_status,
+      partner_prospect_id,
+      partner_prospect_owner_name,
+      mailing_country                               AS country,
+      mailing_state                                 AS state,
       last_activity_date,
+      account_demographics_sales_segment,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
+      account_demographics_territory,
+      account_demographics_employee_count,
+      account_demographics_max_family_employee,
+      account_demographics_upa_country,
+      account_demographics_upa_state,
+      account_demographics_upa_city,
+      account_demographics_upa_street,
+      account_demographics_upa_postal_code,
 
       NULL                                          AS crm_partner_id
 
@@ -125,6 +149,14 @@ WITH biz_person AS (
       bizible_touchpoint_position,
       bizible_marketing_channel_path,
       bizible_touchpoint_date,
+      marketo_last_interesting_moment,
+      marketo_last_interesting_moment_date,
+      outreach_step_number,
+      matched_account_owner_role,
+      matched_account_account_owner_name,
+      matched_account_sdr_assigned,
+      matched_account_type,
+      matched_account_gtm_strategy,
       last_utm_content,
       last_utm_campaign,
       sequence_step_type,
@@ -133,10 +165,25 @@ WITH biz_person AS (
       sequence_status,
       is_actively_being_sequenced,
       region,
+      prospect_share_status,
+      partner_prospect_status,
+      partner_prospect_id,
+      partner_prospect_owner_name,
       country,
-      NULL                                      AS mailing_country,
+      state,
       last_activity_date,
-
+      account_demographics_sales_segment,
+      account_demographics_geo,
+      account_demographics_region,
+      account_demographics_area,
+      account_demographics_territory,
+      account_demographics_employee_count,
+      account_demographics_max_family_employee,
+      account_demographics_upa_country,
+      account_demographics_upa_state,
+      account_demographics_upa_city,
+      account_demographics_upa_street,
+      account_demographics_upa_postal_code,
       crm_partner_id
 
     FROM sfdc_leads
@@ -160,13 +207,14 @@ WITH biz_person AS (
                                     SELECT *
                                     FROM duplicates
                                       )
+      AND sfdc_record_id != '00Q4M00000kDDKuUAO' --DQ issue: https://gitlab.com/gitlab-data/analytics/-/issues/11559
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@iweeks",
     created_date="2020-12-08",
-    updated_date="2021-10-27"
+    updated_date="2022-02-28"
 ) }}

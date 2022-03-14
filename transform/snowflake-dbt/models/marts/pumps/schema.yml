@@ -5,10 +5,10 @@ models:
     description: '{{ doc("subscription_product_usage_data") }}'
     columns:
       - name: delivery_group
-        tests: 
+        tests:
           - not_null
       - name: original_id
-        tests: 
+        tests:
           - not_null
       - name: subscription_id
         tests:
@@ -19,13 +19,22 @@ models:
 
   - name: mart_product_usage_paid_user_metrics_monthly
     description: '{{ doc("mart_product_usage_paid_user_metrics_monthly") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - snapshot_month
+            - dim_subscription_id
+            - delivery_type
+            - uuid
+            - hostname
+            - dim_namespace_id
     columns:
       - name: snapshot_month
         description: Month in which the product usage was reported.
-        tests: 
+        tests:
           - not_null
       - name: dim_subscription_id
-        tests: 
+        tests:
           - not_null
       - name: dim_namespace_id
       - name: uuid
@@ -46,6 +55,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: snapshot_date_id
         tests:
           - not_null
@@ -62,30 +81,30 @@ models:
       - name: iso_3_country_code
       - name: delivery_type
         description: Indicates if the product usage came from a SaaS or Self-Managed user.
-        tests: 
+        tests:
           - not_null
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
-        description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: merge_requests_28_days_user
-        description: Monthly count of unique users making merge requests ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreatemerge_requests))
+        description: '{{ doc("merge_requests_28_days_user_desc") }}'
       - name: projects_with_repositories_enabled_28_days_user
-        description: Monthly count of unique users that created projects with repositories enabled ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateprojects_with_repositories_enabled))
+        description: '{{ doc("projects_with_repositories_enabled_28_days_user_desc") }}'
       - name: commit_comment_all_time_event
-        description: All-time count commit comments ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countscommit_comment))
+        description: '{{ doc("commit_comment_all_time_event_desc") }}'
       - name: source_code_pushes_all_time_event
-        description: All-time count of source code pushes ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countssource_code_pushes))
+        description: '{{ doc("source_code_pushes_all_time_event_desc") }}'
       - name: ci_pipelines_28_days_user
-        description: Monthly count of unique users triggering pipelines ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_pipelines))
+        description: '{{ doc("ci_pipelines_28_days_user_desc") }}'
       - name: ci_internal_pipelines_28_days_user
-        description: Monthly count of unique users triggering pipelines in GitLab repositories ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_internal_pipelines))
+        description: '{{ doc("ci_internal_pipelines_28_days_user_desc") }}'
       - name: ci_builds_28_days_user
-        description: Monthly count of unique users running CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_builds))
+        description: '{{ doc("ci_builds_28_days_user_desc") }}'
       - name: ci_builds_all_time_user
-        description: All-time count of unique users running CI builds ([source]()https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_builds)
+        description: '{{ doc("ci_builds_all_time_user_desc") }}'
       - name: ci_builds_all_time_event
-        description: All-time count of CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_builds))
+        description: '{{ doc("ci_builds_all_time_event_desc") }}'
       - name: ci_runners_all_time_event
         description: All-time count of CI Runners ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_runners))
       - name: auto_devops_enabled_all_time_event
@@ -164,8 +183,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -240,9 +257,89 @@ models:
         description: Monthly count of MAU changing an issue’s milestone ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_milestone_changed_monthly))
       - name: project_management_issue_iteration_changed_28_days_user
         description: Monthly count of MAU changing an issue’s iteration ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#redis_hll_countersissues_editg_project_management_issue_iteration_changed_monthly))
+      - name: protected_branches_28_days_user
+        description: '{{ doc("protected_branches_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_cd_lead_time_usage_28_days_event
+        description: '{{ doc("ci_cd_lead_time_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_cd_deployment_frequency_usage_28_days_event
+        description: '{{ doc("ci_cd_deployment_frequency_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_with_repositories_enabled_all_time_user
+        description: '{{ doc("projects_with_repositories_enabled_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_jobs_usage_28_days_user
+        description: '{{ doc("api_fuzzing_jobs_usage_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_pipeline_usage_28_days_event
+        description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_pipeline_usage_28_days_event
+        description: '{{ doc("api_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_pipeline_usage_28_days_event
+        description: '{{ doc("container_scanning_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_pipeline_usage_28_days_event
+        description: '{{ doc("dependency_scanning_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_pipeline_usage_28_days_event
+        description: '{{ doc("sast_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_pipeline_usage_28_days_event
+        description: '{{ doc("secret_detection_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_pipeline_usage_28_days_event
+        description: '{{ doc("dast_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_jobs_28_days_user
+        description: '{{ doc("coverage_fuzzing_jobs_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: environments_all_time_event
+        description: '{{ doc("environments_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: feature_flags_all_time_event
+        description: '{{ doc("feature_flags_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: successful_deployments_28_days_event
+        description: '{{ doc("successful_deployments_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: failed_deployments_28_days_event
+        description: '{{ doc("failed_deployments_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_compliance_framework_all_time_event
+        description: '{{ doc("projects_compliance_framework_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: commit_ci_config_file_28_days_user
+        description: '{{ doc("commit_ci_config_file_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: view_audit_all_time_user
+        description: '{{ doc("view_audit_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-        
+
   - name: mart_product_usage_wave_1_3_metrics_monthly
     description: '{{ doc("mart_product_usage_wave_1_3_metrics_monthly") }}'
     columns:
@@ -256,6 +353,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: dim_billing_account_id
         description: Returns unknown ID (MD5(-1)) if the `account_id` from `fct_product_usage_wave_1_3_metrics_monthly` is not found in `dim_billing_account`.
         tests:
@@ -298,7 +405,7 @@ models:
       - name: license_user_count
         description: Count of licensed users purchased with the customer's subcription.
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
         description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
       - name: merge_requests_28_days_user
@@ -397,8 +504,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -508,6 +613,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: snapshot_month
         description: Month from which Usage Ping and/or Seat Link data is reported (reported as the first day of the month - '2020-01-01').
         tests:
@@ -685,6 +800,16 @@ models:
         tags: ["tdf", "common", "gainsight"]
       - name: subscription_status
         description: Status of the subscription at the time the usage ping was created.
+      - name: subscription_start_date
+        description: Date the subscription term of the subscription_id started.
+      - name: subscription_end_date
+        description: Date the subscription term of the subscription_id ended.
+      - name: subscription_status_original
+        description: Status of the original subscription id at the time the usage ping was created. This was added to allow a status to be reported even when manual changes to Zuora subscriptions have broken the join.
+      - name: subscription_start_date_original
+        description: Date the subscription term of the orgininal subscription version started.
+      - name: subscription_end_date_original
+        description: Date the subscription term of the original subscription version ended. Because of how subscription end dates are calcuated in dim_subscription_snapshot_bottom_up, this will be the same as the subscription_end_date.
       - name: dim_billing_account_id
         tests:
           - not_null
@@ -706,7 +831,7 @@ models:
       - name: license_utilization
       - name: max_historical_user_count
       - name: umau_28_days_user
-        description: Monthly count of unique users that made an triggered an [Event](https://docs.gitlab.com/ee/api/events.html) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageevents))
+        description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
         description: Monthly count of unique users that made an Action on a valid [Target](https://docs.gitlab.com/ee/api/events.html#target-types) ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlycreateaction_monthly_active_users_project_repo))
       - name: merge_requests_28_days_user
@@ -805,8 +930,6 @@ models:
         description: All-time count of projects with active integrations for Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_jira_active))
       - name: projects_drone_ci_active_all_time_event
         description: All-time count of projects with active integrations for Drone CI ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_drone_ci_active))
-      - name: jira_imports_28_days_event
-        description: Monthly count of Issues imported from Jira ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlymanageissue_importsjira))
       - name: projects_github_active_all_time_event
         description: All-time count of projects with active integrations for GitHub ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsprojects_github_active))
       - name: projects_jira_server_active_all_time_event
@@ -839,6 +962,3 @@ models:
         description: Flags if there is either Subscription Seats data or Usage Ping data present in the given month for a given subscription
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-
-  - name: pump_hash_marketing_contact
-    description: '{{ doc("pump_hash_marketing_contact") }}'

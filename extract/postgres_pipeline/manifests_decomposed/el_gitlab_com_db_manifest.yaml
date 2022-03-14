@@ -161,6 +161,21 @@ tables:
       FROM audit_events
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  audit_events_external_audit_event_destinations:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'audit_events_external_audit_event_destinations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , destination_url
+      , created_at
+      , updated_at
+      FROM audit_events_external_audit_event_destinations
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   authentication_events:
     export_schema: "gitlab_com"
     export_table: authentication_events
@@ -214,7 +229,7 @@ tables:
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
-      SELECT id 
+      SELECT id
       , hide_backlog_list
       , hide_closed_list
       , group_id
@@ -222,28 +237,6 @@ tables:
       , updated_at
       , name
       FROM boards_epic_boards
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  bulk_import_entities:
-    export_schema: 'gitlab_com'
-    export_table: bulk_import_entities
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , bulk_import_id
-      , parent_id
-      , namespace_id
-      , project_id
-      , source_type
-      , source_full_path
-      , destination_name
-      , destination_namespace
-      , status
-      , jid
-      , created_at
-      , updated_at
-      FROM bulk_import_entities
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   bulk_imports:
@@ -437,22 +430,6 @@ tables:
       , created_at
       , updated_at
       FROM clusters_integration_elasticstack
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_integration_prometheus:
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_integration_prometheus'
-    export_table_primary_key: cluster_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT cluster_id
-      , enabled
-      , encrypted_alert_manager_token
-      , encrypted_alert_manager_token_iv
-      , health_status
-      , created_at
-      , updated_at
-      FROM clusters_integration_prometheus
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   container_expiration_policies:
@@ -653,49 +630,20 @@ tables:
       FROM experiment_subjects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  experiment_users:
+  external_status_checks:
     dbt_source_model: true
     export_schema: 'gitlab_com'
-    export_table: 'experiment_users'
+    export_table: 'external_status_checks'
     export_table_primary_key: id
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , experiment_id
-      , user_id
-      , group_type
+      , project_id
       , created_at
       , updated_at
-      , converted_at
-      , context
-      FROM experiment_users
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  geo_nodes:
-    export_schema: "gitlab_com"
-    export_table: geo_nodes
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , oauth_application_id
-      , enabled
-      , access_key
-      , clone_url_prefix
-      , files_max_capacity
-      , repos_max_capacity
-      , url
-      , selective_sync_type
-      , selective_sync_shards
-      , verification_max_capacity
-      , minimum_reverification_interval
-      , internal_url
+      , external_url
       , name
-      , container_repositories_max_capacity
-      , created_at
-      , updated_at
-      , sync_object_storage
-      FROM geo_nodes
+      FROM external_status_checks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   grafana_integrations:
@@ -711,38 +659,6 @@ tables:
       , grafana_url
       , enabled
       FROM grafana_integrations
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  group_custom_attributes:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'group_custom_attributes'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , group_id
-      , key
-      , value
-      FROM group_custom_attributes
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  group_import_states:
-    export_schema: "gitlab_com"
-    export_table: group_import_states
-    export_table_primary_key: group_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT group_id
-      , created_at
-      , updated_at
-      , status
-      , jid
-      , last_error
-      , user_id
-      FROM group_import_states
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   identities:
@@ -812,9 +728,10 @@ tables:
       , group_id
       , inherit_from_id
       , instance
+      , type_new
       FROM integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp         
+        AND '{END_TIMESTAMP}'::timestamp
   issue_metrics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -833,7 +750,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   issues:
-    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00')
+    additional_filtering: AND created_at NOT IN ( '0001-01-01 00:00:00+00', '1000-01-01 00:00:00+00', '10000-01-01 00:00:00+00','4714-11-24 00:00:00+00 BC')
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -898,7 +815,7 @@ tables:
       , updated_at
       FROM issues_self_managed_prometheus_alert_events
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp       
+        AND '{END_TIMESTAMP}'::timestamp
   jira_imports:
     export_schema: "gitlab_com"
     export_table: jira_imports
@@ -996,20 +913,6 @@ tables:
       , filter
       FROM ldap_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  lfs_file_locks:
-    export_schema: "gitlab_com"
-    export_table: lfs_file_locks
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , user_id
-      , created_at
-      , path
-      FROM lfs_file_locks
-      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   lfs_objects:
     export_schema: "gitlab_com"
@@ -1168,7 +1071,7 @@ tables:
       , target_project_id
       , updated_by_id
       , merge_error
-      , merge_params
+      , NULL as merge_params
       , merge_when_pipeline_succeeds
       , merge_user_id
       , approvals_before_merge
@@ -1459,21 +1362,6 @@ tables:
       , created_at
       , updated_at
       FROM packages_tags
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  path_locks:
-    export_schema: "gitlab_com"
-    export_table: path_locks
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , path
-      , project_id
-      , user_id
-      , created_at
-      , updated_at
-      FROM path_locks
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   project_auto_devops:
@@ -1768,6 +1656,7 @@ tables:
       , author_id
       , state
       , build_id
+      , issue_id
       FROM requirements_management_test_reports
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

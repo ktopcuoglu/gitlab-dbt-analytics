@@ -3,6 +3,7 @@ version: 2
 sources:
   - name: saas_usage_ping
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    tags: ["product", "service_ping"]
     schema: saas_usage_ping
     loaded_at_field: DATEADD(sec, _uploaded_at, '1970-01-01')
     loader: Airflow
@@ -16,6 +17,8 @@ sources:
     tables:
       - name: instance
         identifier: instance_sql_metrics
+      - name: instance_sql_errors
+        identifier: instance_sql_errors
       - name: namespace
         identifier: gitlab_dotcom_namespace
       - name: instance_redis_metrics

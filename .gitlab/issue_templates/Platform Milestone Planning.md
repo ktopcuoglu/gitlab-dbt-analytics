@@ -12,6 +12,7 @@ Please add a number for days you'll be working this milestone. Engineers should 
 - @laddula:
 - @vedprakash2021:
 - @rbacovic:
+- @rigerta:
 
 **Total engineering days**: <!-- sum the above engineering days -->
 
@@ -58,4 +59,4 @@ We assume that preceding milestone's velocity is a good predictor of the followi
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~Housekeeping ~"Team::Data Platform" ~Planning ~"Priority::1-Ops" 
-/assign @jjstark @dvanrooijen2 @rbacovic @vedprakash2021 @laddula @paul_armstrong 
+/assign @jjstark @dvanrooijen2 @rbacovic @vedprakash2021 @laddula @paul_armstrong @Rigerta

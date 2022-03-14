@@ -113,7 +113,6 @@ There are many slack channels for communication of data team needs and informati
 | `data-engineering` | No | Yes | Yes | Yes | Yes |
 | `business-technology` | No | Yes | Yes | Yes | Yes |
 | `bt-team-lounge` | No | Yes | Yes | Yes | Yes |
-| `dbt-runs` | No | No | Yes | No | Yes |
 | `analytics-pipelines` | No | No | No | No | Yes |
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
@@ -218,7 +217,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - Install [Python 3.8.6](https://www.python.org/downloads/release/python-386/) manually
 - Consider downloading and installing [Little Snitch](https://www.obdev.at/products/littlesnitch/index.html) - You can submit for reimbursement for the full version
 - Install Data Grip (from JetBrains) for interfacing with databases
-    - Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
+    - Follow [this process](https://about.gitlab.com/handbook/tools-and-tips/other-apps/#jetbrains) for requesting a license for Data Grip.  Until you have a license, you can easily use Data Grip on a trial basis for 30 days
     - Change your formatting preferences in Data Grip by going to Preferences > Editor > Code Style > HTML. You should have:
         - Use tab character: unchecked
         - Tab size: 4
@@ -261,7 +260,7 @@ On [the Data team handbook page](https://about.gitlab.com/handbook/business-ops/
 
 - [ ] Login to Snowflake using [Okta](https://gitlab.okta.com/app/UserHome) 
 - [ ] Familiarize yourself with the [Snowflake Web UI](https://docs.snowflake.com/en/user-guide/snowflake-manager.html#worksheet-page)for querying the data warehouse. 
-- [ ] Update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/blob/master/load/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
+- [ ] Update your role, warehouse, and database to the same info you're instructed to put in your dbt profile (Ask your manager if this is confusing or check out [roles.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/permissions/snowflake/roles.yml) to see which roles, warehouses, and databases you've been assigned). The schema does not matter because your query will reference the schema.
   - [ ] Run `alter user "your_user" set default_role = "your_role";` to set the UI default Role to your appropriate role instead of `PUBLIC`. (E.g. `alter user "KDIETZ" set default_role = "KDIETZ";`)
 - [ ] Test your Snowflake connection in the UI by first running selecting which warehouse to use (e.g. `use warehouse ANALYST_XS;`), clicking the "play" button, and then querying a database you have access to (e.g. `select * from "PROD"."COMMON"."DIM_CRM_PERSON" limit 10;`) 
 
@@ -376,6 +375,8 @@ There are many data sets brought into the Enterprise Data Warehouse, the followi
 
 - [ ] Review the [Product Data Training](https://docs.google.com/presentation/d/1ySP9sndhF9BdRhaZhMK6kGbc8txO_UkAu48HmoxLtfI/edit#slide=id.g29a70c6c35_0_68) deck and make sure to click through the links
 - [ ] Watch [Overview of Growth Data at GitLab](https://www.youtube.com/watch?v=eNLkj3Ho2bk&feature=youtu.be) from Eli at the Growth Fastboot. (You'll need to be logged into GitLab Unfiltered.)
+- [ ] Review the [Data Guide for Growth](https://about.gitlab.com/handbook/product/product-analysis/growth-data-guide/) for an overview of commonly used query snippets used by the Growth sub-group.
+- [ ] Explore the [Product Analysis handbook page](https://about.gitlab.com/handbook/product/product-analysis/) for a high level overview of how the Product Analysis team works. This page contains a number of links that should help with starting to understand how the Data team approaches Product specific data questions.
 
 #### Service Ping Deep Dive
 

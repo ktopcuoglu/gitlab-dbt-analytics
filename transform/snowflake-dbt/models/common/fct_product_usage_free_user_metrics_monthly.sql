@@ -20,9 +20,9 @@
       uuid,
       hostname,
       snapshot_month,
-      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,                   
+      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,
       {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
-      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user, 
+      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user,
       {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
       {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
     FROM smau
@@ -89,7 +89,6 @@
       sm_free_users.projects_bamboo_active_all_time_event,
       sm_free_users.projects_jira_active_all_time_event,
       sm_free_users.projects_drone_ci_active_all_time_event,
-      sm_free_users.jira_imports_28_days_event,
       sm_free_users.projects_github_active_all_time_event,
       sm_free_users.projects_jira_server_active_all_time_event,
       sm_free_users.projects_jira_dvcs_cloud_active_all_time_event,
@@ -128,6 +127,28 @@
       sm_free_users.ci_templates_usage_28_days_event,
       sm_free_users.project_management_issue_milestone_changed_28_days_user,
       sm_free_users.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      sm_free_users.protected_branches_28_days_user,
+      sm_free_users.ci_cd_lead_time_usage_28_days_event,
+      sm_free_users.ci_cd_deployment_frequency_usage_28_days_event,
+      sm_free_users.projects_with_repositories_enabled_all_time_user,
+      sm_free_users.api_fuzzing_jobs_usage_28_days_user,
+      sm_free_users.coverage_fuzzing_pipeline_usage_28_days_event,
+      sm_free_users.api_fuzzing_pipeline_usage_28_days_event,
+      sm_free_users.container_scanning_pipeline_usage_28_days_event,
+      sm_free_users.dependency_scanning_pipeline_usage_28_days_event,
+      sm_free_users.sast_pipeline_usage_28_days_event,
+      sm_free_users.secret_detection_pipeline_usage_28_days_event,
+      sm_free_users.dast_pipeline_usage_28_days_event,
+      sm_free_users.coverage_fuzzing_jobs_28_days_user,
+      sm_free_users.environments_all_time_event,
+      sm_free_users.feature_flags_all_time_event,
+      sm_free_users.successful_deployments_28_days_event,
+      sm_free_users.failed_deployments_28_days_event,
+      sm_free_users.projects_compliance_framework_all_time_event,
+      sm_free_users.commit_ci_config_file_28_days_user,
+      sm_free_users.view_audit_all_time_user,    
+      -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.hostname
                              ORDER BY sm_free_users.ping_created_at DESC
                             ) = 1,
@@ -208,7 +229,6 @@
       "counts.projects_bamboo_active"                                                           AS projects_bamboo_active_all_time_event,
       "counts.projects_jira_active"                                                             AS projects_jira_active_all_time_event,
       "counts.projects_drone_ci_active"                                                         AS projects_drone_ci_active_all_time_event,
-      "usage_activity_by_stage_monthly.manage.issues_imported.jira"                             AS jira_imports_28_days_event,
       "counts.projects_github_active"                                                           AS projects_github_active_all_time_event,
       "counts.projects_jira_server_active"                                                      AS projects_jira_server_active_all_time_event,
       "counts.projects_jira_dvcs_cloud_active"                                                  AS projects_jira_dvcs_cloud_active_all_time_event,
@@ -247,6 +267,28 @@
       "redis_hll_counters.ci_templates.ci_templates_total_unique_counts_monthly"                AS ci_templates_usage_28_days_event,
       "redis_hll_counters.issues_edit.g_project_management_issue_milestone_changed_monthly"     AS project_management_issue_milestone_changed_28_days_user,
       "redis_hll_counters.issues_edit.g_project_management_issue_iteration_changed_monthly"     AS project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      "usage_activity_by_stage_monthly.create.protected_branches"                               AS protected_branches_28_days_user,
+      "redis_hll_counters.analytics.p_analytics_ci_cd_lead_time_monthly"                        AS ci_cd_lead_time_usage_28_days_event,
+      "redis_hll_counters.analytics.p_analytics_ci_cd_deployment_frequency_monthly"             AS ci_cd_deployment_frequency_usage_28_days_event,
+      "usage_activity_by_stage.create.projects_with_repositories_enabled"                       AS projects_with_repositories_enabled_all_time_user,
+      "usage_activity_by_stage_monthly.secure.user_api_fuzzing_jobs"                            AS api_fuzzing_jobs_usage_28_days_user,
+      "usage_activity_by_stage_monthly.secure.coverage_fuzzing_pipeline"                        AS coverage_fuzzing_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.api_fuzzing_pipeline"                             AS api_fuzzing_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.container_scanning_pipeline"                      AS container_scanning_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.dependency_scanning_pipeline"                     AS dependency_scanning_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.sast_pipeline"                                    AS sast_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.secret_detection_pipeline"                        AS secret_detection_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.dast_pipeline"                                    AS dast_pipeline_usage_28_days_event,
+      "usage_activity_by_stage_monthly.secure.user_coverage_fuzzing_jobs"                       AS coverage_fuzzing_jobs_28_days_user,
+      "counts.environments"                                                                     AS environments_all_time_event,
+      "counts.feature_flags"                                                                    AS feature_flags_all_time_event,
+      "counts_monthly.successful_deployments"                                                   AS successful_deployments_28_days_event,
+      "counts_monthly.failed_deployments"                                                       AS failed_deployments_28_days_event,
+      "usage_activity_by_stage_monthly.manage.projects_with_compliance_framework"               AS projects_compliance_framework_all_time_event,
+      "redis_hll_counters.pipeline_authoring.o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly"  AS commit_ci_config_file_28_days_user,
+      "compliance_unique_visits.g_compliance_audit_events"                                      AS view_audit_all_time_user,
+      -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
     FROM saas_free_users
@@ -266,7 +308,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2021-09-28"
+    updated_date="2022-03-02"
 ) }}

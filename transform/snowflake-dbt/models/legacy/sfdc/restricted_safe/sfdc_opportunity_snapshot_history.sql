@@ -75,6 +75,7 @@ WITH sfdc_opportunity_snapshots AS (
       is_refund_opportunity__c       AS is_refund,
       is_downgrade_opportunity__c    AS is_downgrade,
       swing_deal__c                  AS is_swing_deal,
+      is_edu_oss_opportunity__c      AS is_edu_oss,
       net_iacv__c                    AS net_incremental_acv,
       nrv__c                         AS nrv,
       campaignid                     AS primary_campaign_source_id,
@@ -122,6 +123,7 @@ WITH sfdc_opportunity_snapshots AS (
       deal_path__c                                AS deal_path,
       dr_partner_deal_type__c                     AS dr_partner_deal_type,
       dr_partner_engagement__c                    AS dr_partner_engagement,
+      order_type_test__c                          AS order_type_stamped,
       {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                   AS channel_type,
       impartnerprm__partneraccount__c             AS partner_account,

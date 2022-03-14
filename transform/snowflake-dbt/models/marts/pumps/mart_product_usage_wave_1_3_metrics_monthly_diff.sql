@@ -13,6 +13,17 @@
     ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
+, original_subscription_dates AS (
+
+    SELECT DISTINCT
+      dim_subscription_id,
+      subscription_start_date,
+      subscription_end_date
+    FROM subscriptions
+    WHERE subscription_version = 1
+
+)
+
 , months AS (
 
     SELECT DISTINCT
@@ -64,7 +75,27 @@
       {{ usage_ping_month_range('projects_imported_from_github_all_time_event') }},
       {{ usage_ping_month_range('projects_jira_cloud_active_all_time_event') }},
       {{ usage_ping_month_range('projects_jira_dvcs_server_active_all_time_event') }},
-      {{ usage_ping_month_range('service_desk_issues_all_time_event') }}
+      {{ usage_ping_month_range('service_desk_issues_all_time_event') }},
+      {{ usage_ping_month_range('protected_branches_28_days_user') }},
+      {{ usage_ping_month_range('ci_cd_lead_time_usage_28_days_event') }},
+      {{ usage_ping_month_range('ci_cd_deployment_frequency_usage_28_days_event') }},
+      {{ usage_ping_month_range('projects_with_repositories_enabled_all_time_user') }},
+      {{ usage_ping_month_range('api_fuzzing_jobs_usage_28_days_user') }},
+      {{ usage_ping_month_range('coverage_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('api_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('container_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('dependency_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('sast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('secret_detection_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('dast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_month_range('coverage_fuzzing_jobs_28_days_user') }},
+      {{ usage_ping_month_range('environments_all_time_event') }},
+      {{ usage_ping_month_range('feature_flags_all_time_event') }},
+      {{ usage_ping_month_range('successful_deployments_28_days_event') }},
+      {{ usage_ping_month_range('failed_deployments_28_days_event') }},
+      {{ usage_ping_month_range('projects_compliance_framework_all_time_event') }},
+      {{ usage_ping_month_range('commit_ci_config_file_28_days_user') }},
+      {{ usage_ping_month_range('view_audit_all_time_user') }}
     FROM monthly_metrics
 
 ), diffs AS (
@@ -123,7 +154,27 @@
       {{ usage_ping_over_ping_difference('projects_imported_from_github_all_time_event') }},
       {{ usage_ping_over_ping_difference('projects_jira_cloud_active_all_time_event') }},
       {{ usage_ping_over_ping_difference('projects_jira_dvcs_server_active_all_time_event') }},
-      {{ usage_ping_over_ping_difference('service_desk_issues_all_time_event') }}
+      {{ usage_ping_over_ping_difference('service_desk_issues_all_time_event') }},
+      {{ usage_ping_over_ping_difference('protected_branches_28_days_user') }},
+      {{ usage_ping_over_ping_difference('ci_cd_lead_time_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('ci_cd_deployment_frequency_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('projects_with_repositories_enabled_all_time_user') }},
+      {{ usage_ping_over_ping_difference('api_fuzzing_jobs_usage_28_days_user') }},
+      {{ usage_ping_over_ping_difference('coverage_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('api_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('container_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('dependency_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('sast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('secret_detection_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('dast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_difference('coverage_fuzzing_jobs_28_days_user') }},
+      {{ usage_ping_over_ping_difference('environments_all_time_event') }},
+      {{ usage_ping_over_ping_difference('feature_flags_all_time_event') }},
+      {{ usage_ping_over_ping_difference('successful_deployments_28_days_event') }},
+      {{ usage_ping_over_ping_difference('failed_deployments_28_days_event') }},
+      {{ usage_ping_over_ping_difference('projects_compliance_framework_all_time_event') }},
+      {{ usage_ping_over_ping_difference('commit_ci_config_file_28_days_user') }},
+      {{ usage_ping_over_ping_difference('view_audit_all_time_user') }}
     FROM monthly_metrics
 
 ), smoothed_diffs AS (
@@ -176,7 +227,27 @@
       {{ usage_ping_over_ping_smoothed('projects_imported_from_github_all_time_event') }},
       {{ usage_ping_over_ping_smoothed('projects_jira_cloud_active_all_time_event') }},
       {{ usage_ping_over_ping_smoothed('projects_jira_dvcs_server_active_all_time_event') }},
-      {{ usage_ping_over_ping_smoothed('service_desk_issues_all_time_event') }}
+      {{ usage_ping_over_ping_smoothed('service_desk_issues_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('protected_branches_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('ci_cd_lead_time_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('ci_cd_deployment_frequency_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('projects_with_repositories_enabled_all_time_user') }},
+      {{ usage_ping_over_ping_smoothed('api_fuzzing_jobs_usage_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('coverage_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('api_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('container_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('dependency_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('sast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('secret_detection_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('dast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('coverage_fuzzing_jobs_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('environments_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('feature_flags_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('successful_deployments_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('failed_deployments_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('projects_compliance_framework_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('commit_ci_config_file_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('view_audit_all_time_user') }}
     FROM diffs
     INNER JOIN months
       ON diffs.snapshot_month = months.first_day_of_month
@@ -188,6 +259,11 @@
       smoothed_diffs.dim_subscription_id_original,
       smoothed_diffs.dim_billing_account_id,
       subscriptions.subscription_status,
+      subscriptions.subscription_start_date,
+      subscriptions.subscription_end_date,
+      subscriptions_original.subscription_status                                        AS subscription_status_original,
+      original_subscription_dates.subscription_start_date                               AS subscription_start_date_original,
+      original_subscription_dates.subscription_end_date                                 AS subscription_end_date_original,
       smoothed_diffs.snapshot_month,
       smoothed_diffs.uuid,
       smoothed_diffs.hostname,
@@ -229,23 +305,49 @@
       {{ usage_ping_over_ping_estimated('projects_imported_from_github_all_time_event') }},
       {{ usage_ping_over_ping_estimated('projects_jira_cloud_active_all_time_event') }},
       {{ usage_ping_over_ping_estimated('projects_jira_dvcs_server_active_all_time_event') }},
-      {{ usage_ping_over_ping_estimated('service_desk_issues_all_time_event') }}
+      {{ usage_ping_over_ping_estimated('service_desk_issues_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('protected_branches_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('ci_cd_lead_time_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('ci_cd_deployment_frequency_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('projects_with_repositories_enabled_all_time_user') }},
+      {{ usage_ping_over_ping_estimated('api_fuzzing_jobs_usage_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('coverage_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('api_fuzzing_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('container_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('dependency_scanning_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('sast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('secret_detection_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('dast_pipeline_usage_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('coverage_fuzzing_jobs_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('environments_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('feature_flags_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('successful_deployments_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('failed_deployments_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('projects_compliance_framework_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('commit_ci_config_file_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('view_audit_all_time_user') }}
     FROM smoothed_diffs
     LEFT JOIN ping_ranges
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
       AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
     LEFT JOIN subscriptions
-      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id 
-      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month)) 
+      ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month))
       = TO_DATE(TO_CHAR(subscriptions.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN subscriptions AS subscriptions_original
+      ON smoothed_diffs.dim_subscription_id_original = subscriptions_original.dim_subscription_id_original
+      AND IFNULL(smoothed_diffs.ping_created_at::DATE, DATEADD('day', -1, smoothed_diffs.snapshot_month))
+      = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
+    LEFT JOIN original_subscription_dates
+      ON original_subscription_dates.dim_subscription_id = smoothed_diffs.dim_subscription_id_original
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@chrissharp",
+    updated_by="@mdrussell",
     created_date="2021-03-04",
-    updated_date="2021-10-21"
+    updated_date="2022-03-02"
 ) }}

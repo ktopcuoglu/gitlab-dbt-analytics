@@ -1,4 +1,6 @@
 {{ config(alias='sfdc_opportunity_snapshot_history_xf') }}
+-- TODO
+-- Add CS churn fields into model from wk_sales_opportunity object
 
 WITH date_details AS (
 
@@ -25,14 +27,49 @@ WITH date_details AS (
       is_edu_oss,
       account_owner_team_stamped, 
 
-      sales_team_cro_level,
-      sales_team_rd_asm_level,
-
       -- Opportunity Owner Stamped fields
       opportunity_owner_user_segment,
       opportunity_owner_user_region,
       opportunity_owner_user_area,
       opportunity_owner_user_geo,
+
+      -------------------
+      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
+      sales_team_rd_asm_level,
+      -------------------
+
+      sales_team_cro_level,
+      sales_team_vp_level,
+      sales_team_avp_rd_level,
+      sales_team_asm_level,
+
+      -- this fields use the opportunity owner version for current FY and account fields for previous years
+      report_opportunity_user_segment,
+      report_opportunity_user_geo,
+      report_opportunity_user_region,
+      report_opportunity_user_area,
+      report_user_segment_geo_region_area,
+      report_user_segment_geo_region_area_sqs_ot,
+
+      -- NF 2022-02-17 new aggregated keys 
+      key_sqs,
+      key_ot,
+
+      key_segment,
+      key_segment_sqs,                 
+      key_segment_ot,    
+
+      key_segment_geo,
+      key_segment_geo_sqs,
+      key_segment_geo_ot,      
+
+      key_segment_geo_region,
+      key_segment_geo_region_sqs,
+      key_segment_geo_region_ot,   
+
+      key_segment_geo_region_area,
+      key_segment_geo_region_area_sqs,
+      key_segment_geo_region_area_ot,
 
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
@@ -110,7 +147,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
       sfdc_opportunity_snapshot_history.opportunity_development_representative,
 
-      sfdc_opportunity_snapshot_history.order_type AS snapshot_order_type_stamped,
+      sfdc_opportunity_snapshot_history.order_type_stamped AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
       --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
@@ -144,13 +181,17 @@ WITH date_details AS (
         ELSE 0
       END                                                          AS is_refund,
 
-
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit','Contract Reset')
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit')
           THEN 1
         ELSE 0
-      END                                                          AS is_credit_contract_reset,
-
+      END                                                          AS is_credit_flag,
+      
+      CASE
+        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Contract Reset')
+          THEN 1
+        ELSE 0
+      END                                                          AS is_contract_reset_flag,
       --sfdc_opportunity_snapshot_history.is_refund,
 
       --sfdc_opportunity_snapshot_history.is_downgrade,
@@ -167,7 +208,9 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.downgrade_iacv,
       sfdc_opportunity_snapshot_history.renewal_acv,
       sfdc_opportunity_snapshot_history.renewal_amount,
-      --sfdc_opportunity_snapshot_history.sales_qualified_source,
+      sfdc_opportunity_snapshot_history.sales_qualified_source  AS snapshot_sales_qualified_source,
+      sfdc_opportunity_snapshot_history.is_edu_oss  AS snapshot_is_edu_oss,
+
       --sfdc_opportunity_snapshot_history.segment,
       --sfdc_opportunity_snapshot_history.solutions_to_be_replaced,
       sfdc_opportunity_snapshot_history.total_contract_value,
@@ -249,7 +292,6 @@ WITH date_details AS (
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 
-
       -- stage dates
             -- dates in stage fields
       sfdc_opportunity_snapshot_history.stage_0_pending_acceptance_date,
@@ -270,6 +312,7 @@ WITH date_details AS (
       snapshot_date.fiscal_quarter_name_fy                        AS snapshot_fiscal_quarter_name,
       snapshot_date.first_day_of_fiscal_quarter                   AS snapshot_fiscal_quarter_date,
       snapshot_date.day_of_fiscal_quarter_normalised              AS snapshot_day_of_fiscal_quarter_normalised,
+      snapshot_date.day_of_fiscal_year_normalised                 AS snapshot_day_of_fiscal_year_normalised,
       
       close_date_detail.first_day_of_month                        AS close_date_month,
       close_date_detail.fiscal_year                               AS close_fiscal_year,
@@ -301,6 +344,10 @@ WITH date_details AS (
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
+      sales_accepted_date.first_day_of_month                     AS sales_accepted_month,
+      sales_accepted_date.fiscal_year                            AS sales_accepted_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_fiscal_quarter_date,
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
@@ -507,6 +554,8 @@ WITH date_details AS (
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
     LEFT JOIN date_details net_arr_created_date
       ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
+    LEFT JOIN date_details sales_accepted_date
+      ON sales_accepted_date.date_actual = sfdc_opportunity_snapshot_history.sales_accepted_date::DATE
 
 
 ), net_iacv_to_net_arr_ratio AS (
@@ -636,7 +685,7 @@ WITH date_details AS (
       CASE 
         WHEN opp_snapshot.is_refund = 1
           THEN -1
-        WHEN opp_snapshot.is_credit_contract_reset = 1
+        WHEN opp_snapshot.is_credit_flag = 1
           THEN 0
         ELSE 1
       END                                                                     AS calculated_deal_count,
@@ -718,18 +767,67 @@ WITH date_details AS (
       -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
       -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
       -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
+
+      /*
+
+      FY23 - NF 2022-01-28 
+
+      At this point I still think the best is to keep taking the owner / account demographics cuts from the most recent version of the opportunity object.
+
+      The snapshot history at this point is mainly used to track how current performance compares with previous quarters and years
+      and to do that effectively the patches / territories must be the same. Any error that is corrected in the future should be incorporated 
+      into the overview
+
+      */
+
       sfdc_opportunity_xf.opportunity_owner_user_segment,
       sfdc_opportunity_xf.opportunity_owner_user_region,
       sfdc_opportunity_xf.opportunity_owner_user_area,
       sfdc_opportunity_xf.opportunity_owner_user_geo,
 
       --- target fields for reporting, changing their name might help to isolate their logic from the actual field
-      -- in FY21, there were multiple ways of getting this done, and it meant changing downwards reports
-      sfdc_opportunity_xf.sales_team_cro_level,
+      -------------------
+      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
       sfdc_opportunity_xf.sales_team_rd_asm_level,
+      -------------------
+
+      sfdc_opportunity_xf.sales_team_cro_level,
+      sfdc_opportunity_xf.sales_team_vp_level,
+      sfdc_opportunity_xf.sales_team_avp_rd_level,
+      sfdc_opportunity_xf.sales_team_asm_level,
+
+      -- this fields use the opportunity owner version for current FY and account fields for previous years
+      sfdc_opportunity_xf.report_opportunity_user_segment,
+      sfdc_opportunity_xf.report_opportunity_user_geo,
+      sfdc_opportunity_xf.report_opportunity_user_region,
+      sfdc_opportunity_xf.report_opportunity_user_area,
+
+      -- NF 2022-02-17 new aggregated keys 
+      sfdc_opportunity_xf.report_user_segment_geo_region_area,
+      sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
+
+      sfdc_opportunity_xf.key_sqs,
+      sfdc_opportunity_xf.key_ot,
+
+      sfdc_opportunity_xf.key_segment,
+      sfdc_opportunity_xf.key_segment_sqs,                 
+      sfdc_opportunity_xf.key_segment_ot,    
+
+      sfdc_opportunity_xf.key_segment_geo,
+      sfdc_opportunity_xf.key_segment_geo_sqs,
+      sfdc_opportunity_xf.key_segment_geo_ot,      
+
+      sfdc_opportunity_xf.key_segment_geo_region,
+      sfdc_opportunity_xf.key_segment_geo_region_sqs,
+      sfdc_opportunity_xf.key_segment_geo_region_ot,   
+
+      sfdc_opportunity_xf.key_segment_geo_region_area,
+      sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
+      sfdc_opportunity_xf.key_segment_geo_region_area_ot,
       
       -- using current opportunity perspective instead of historical
-      -- NF 2020-01-26: this might change to order type live 2.1     
+      -- NF 2021-01-26: this might change to order type live 2.1    
+      -- NF 2022-01-28: Update to OT 2.3 will be stamped directly  
       sfdc_opportunity_xf.order_type_stamped,     
 
       -- top level grouping of the order type field
@@ -740,7 +838,6 @@ WITH date_details AS (
       
       -- duplicates flag
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
-
 
       -- the owner name in the opportunity is not clean.
       opportunity_owner.name AS opportunity_owner,
@@ -755,8 +852,28 @@ WITH date_details AS (
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
       sfdc_accounts_xf.ultimate_parent_account_id,
+      upa.account_name                        AS ultimate_parent_account_name,
       sfdc_accounts_xf.ultimate_parent_id,
-      sfdc_accounts_xf.is_jihu_account        
+      sfdc_accounts_xf.is_jihu_account,
+
+      sfdc_accounts_xf.account_owner_user_segment,
+      sfdc_accounts_xf.account_owner_user_geo, 
+      sfdc_accounts_xf.account_owner_user_region,
+      sfdc_accounts_xf.account_owner_user_area,
+      -- account_owner_subarea_stamped
+
+      sfdc_accounts_xf.account_demographics_sales_segment AS account_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region,
+      sfdc_accounts_xf.account_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory,
+      -- account_demographics_subarea_stamped        
+
+      sfdc_accounts_xf.account_demographics_sales_segment    AS upa_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
+      sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory
       
 
     FROM sfdc_opportunity_snapshot_history opp_snapshot
@@ -764,6 +881,8 @@ WITH date_details AS (
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_opportunity_xf.account_id = sfdc_accounts_xf.account_id 
+    LEFT JOIN sfdc_accounts_xf upa
+      ON upa.account_id = sfdc_accounts_xf.ultimate_parent_account_id
     LEFT JOIN sfdc_users_xf account_owner
       ON account_owner.user_id = sfdc_accounts_xf.owner_id
     LEFT JOIN sfdc_users_xf opportunity_owner
@@ -840,7 +959,7 @@ WITH date_details AS (
         ELSE 'Other' 
       END                                                           AS calculated_deal_size,
 
-            -- Open pipeline eligibility definition
+      -- Open pipeline eligibility definition
       CASE 
         WHEN lower(opp_snapshot.deal_group) LIKE ANY ('%growth%', '%new%')
           AND opp_snapshot.is_edu_oss = 0
@@ -853,33 +972,38 @@ WITH date_details AS (
 
 
       -- Created pipeline eligibility definition
+      -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE 
         WHEN opp_snapshot.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-          AND ((opp_snapshot.is_stage_1_plus = 1
-                AND opp_snapshot.forecast_category_name != 'Omitted')
-            OR opp_snapshot.is_lost = 1)
+         AND (opp_snapshot.is_stage_1_plus = 1
+                OR opp_snapshot.is_lost = 1)
+          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
           AND (opp_snapshot.net_arr > 0 
             OR opp_snapshot.opportunity_category = 'Credit')
           -- exclude vision opps from FY21-Q2
           AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
                 OR vision_opps.opportunity_id IS NULL)
-          -- 20210802 remove webpurchase deals
-          AND opp_snapshot.is_web_portal_purchase = 0
-             THEN 1
+          -- 20220128 Updated to remove webdirect SQS deals 
+          AND opp_snapshot.sales_qualified_source  != 'Web Direct Generated'
+              THEN 1
          ELSE 0
       END                                                      AS is_eligible_created_pipeline_flag,
 
+      -- SAO alignment issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2656
       CASE
         WHEN opp_snapshot.sales_accepted_date IS NOT NULL
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.is_renewal = 0
+          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             THEN 1
         ELSE 0
       END                                                     AS is_eligible_sao_flag,
 
+      -- ASP Analysis eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
@@ -888,16 +1012,14 @@ WITH date_details AS (
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
           AND opp_snapshot.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
-          -- Web Purchase have no Net ARR before reconciliation, exclude those 
-          -- from ASP analysis
-          AND ((opp_snapshot.is_web_portal_purchase = 1 
-                AND net_arr > 0)
-                OR opp_snapshot.is_web_portal_purchase = 0)
+          -- Exclude Deals with nARR < 0
+          AND net_arr > 0
           -- Not JiHu
             THEN 1
           ELSE 0
       END                                                    AS is_eligible_asp_analysis_flag,
       
+      -- Age eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
@@ -914,6 +1036,7 @@ WITH date_details AS (
           ELSE 0
       END                                                   AS is_eligible_age_analysis_flag,
 
+      -- TODO: This is the same as FP&A Boookings Flag
       CASE
         WHEN opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.is_deleted = 0
@@ -923,7 +1046,7 @@ WITH date_details AS (
           -- Not JiHu
             THEN 1
           ELSE 0
-      END                                                   AS is_eligible_net_arr_flag,
+      END                                                   AS is_booked_net_arr_flag,
 
       CASE
         WHEN opp_snapshot.is_edu_oss = 0

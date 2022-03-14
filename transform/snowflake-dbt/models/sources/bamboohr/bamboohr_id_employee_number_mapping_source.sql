@@ -21,13 +21,19 @@ WITH source AS (
            WHEN d.value['terminationDate']= '0000-00-00'
             THEN NULL
            ELSE d.value['terminationDate']::VARCHAR END)::DATE        AS termination_date,
-        d.value['customCandidateID']::NUMBER                          AS greenhouse_candidate_id,
-        d.value['customCostCenter']::VARCHAR                          AS cost_center,
-        d.value['customGitLabUsername']::VARCHAR                      AS gitlab_username,
-        d.value['customJobTitleSpeciality']::VARCHAR                  AS jobtitle_speciality,
-        d.value['customLocality']::VARCHAR                            AS locality,
+      d.value['customCandidateID']::NUMBER                            AS greenhouse_candidate_id,
+      d.value['customCostCenter']::VARCHAR                            AS cost_center,
+      d.value['customGitLabUsername']::VARCHAR                        AS gitlab_username,
+      d.value['customJobTitleSpeciality']::VARCHAR                    AS jobtitle_speciality_single_select,
+      d.value['customJobTitleSpecialty(Multi-Select)']::VARCHAR       AS jobtitle_speciality_multi_select,
+      -- requiers cleaning becase of an error in the snapshoted source data
+      CASE d.value['customLocality']::VARCHAR
+        WHEN 'Canberra, Australia Capital Territory, Australia'
+            THEN 'Canberra, Australian Capital Territory, Australia'
+        ELSE d.value['customLocality']::VARCHAR
+      END                                                             AS locality,
       d.value['customNationality']::VARCHAR                           AS nationality,
-        d.value['customOtherGenderOptions']::VARCHAR                  AS gender_dropdown, 
+      d.value['customOtherGenderOptions']::VARCHAR                    AS gender_dropdown, 
       d.value['customRegion']::VARCHAR                                AS region,
       d.value['customRole']::VARCHAR                                  AS job_role,
       d.value['customSalesGeoDifferential']::VARCHAR                  AS sales_geo_differential,
@@ -56,8 +62,12 @@ WITH source AS (
       AND LOWER(last_name) NOT LIKE '%test profile%'
       AND LOWER(last_name) != 'test-gitlab')
       AND employee_id != 42039
+    -- The same emplpyee can appear more than once in the same upload.
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_number, DATE_TRUNC(day, uploaded_at) ORDER BY uploaded_at DESC) = 1
 
 ) 
+
+
 
 SELECT * 
 FROM final

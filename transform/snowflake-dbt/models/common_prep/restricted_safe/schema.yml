@@ -31,6 +31,7 @@ models:
         description: Total quantity
 
   - name: prep_crm_account
+    description: '{{ doc("prep_crm_account") }}'
     columns:
       - name: dim_crm_account_id
         description: account id from SFDC identifing the customer
@@ -63,6 +64,14 @@ models:
         description: for deleted accounts this is the SFDC account they were merged to
       - name: crm_account_created_date
         description: The date on which the CRM account was created in SFDC
+
+  - name: prep_crm_opportunity
+    description: '{{ doc("prep_crm_opportunity") }}'
+    columns:
+      - name: dim_crm_opportunity_id
+        tests:
+          - not_null
+          - unique
 
   - name: prep_quote
     description: '{{ doc("prep_quote") }}'
@@ -140,6 +149,16 @@ models:
 
   - name: prep_mart_arr_snapshot_base
     description: Base model for the mart_arr snapshot data
+    columns:
+      - name: primary_key
+        tests:
+          - not_null
+      - name: dbt_valid_from
+        tests:
+          - not_null
+
+  - name: prep_mart_available_to_renew_snapshot_base
+    description: Base model for the mart_available_to_renew snapshot data
     columns:
       - name: primary_key
         tests:
@@ -241,7 +260,7 @@ models:
         description: Unique identifier of a Zuora Billing account
       - name: subscription_name
         description: Unique name of a subscription
-      - name: subscription_sales_type_update
+      - name: subscription_sales_type
         description: Self-Service or Sales-Assisted, as defined by the Zuora user who created the subscription
       - name: subscription_account_id
         description: Unique identifier of a SFDC account, as associated with the dim_subscription_id

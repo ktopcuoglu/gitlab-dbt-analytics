@@ -17,9 +17,9 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
-    slack_snapshot_failed_task,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
+    run_command_test_exclude,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -72,7 +72,7 @@ pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 default_args = {
     "catchup": False,
     "depends_on_past": False,
-    "on_failure_callback": slack_snapshot_failed_task,
+    "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "sla": timedelta(hours=12),
     "sla_miss_callback": slack_failed_task,
@@ -87,6 +87,7 @@ dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 *
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc path:snapshots/gitlab_dotcom; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
@@ -161,7 +162,7 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +legacy.snapshots; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots {run_command_test_exclude}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 

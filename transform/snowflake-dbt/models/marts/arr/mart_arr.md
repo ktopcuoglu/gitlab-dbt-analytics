@@ -22,6 +22,16 @@ Here is an image documenting the ERD for this table:
 
 {% enddocs %}
 
+{% docs mart_arr_jihu %}
+
+Data mart to explore ARR which INCLUDES Jihu accounts. This model will satisfy use cases that need to provide a consolidated view of ARR to include Jihu accounts. This model is built using the same logic as the Zuora UI out of the box MRR Trend Report. The report looks at the charges associated with subscriptions, along with their effective dates and subscription statuses, and calculates ARR.
+
+Here is an image documenting the ERD for this table:
+
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://app.lucidchart.com/documents/embeddedchart/998dbbae-f04e-4310-9d85-0c360a40a018" id="T0XuoGn786sQ"></iframe></div>
+
+{% enddocs %}
+
 {% docs mart_arr_col_months_since_parent_cohort_start %}
 
 The number of months between the MRR being reported in that row and the parent account cohort month. Must be a positive number.

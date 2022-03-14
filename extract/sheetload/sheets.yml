@@ -95,14 +95,14 @@ sheets:
     owner: '@dtownsend'
     tabs:
       - gcp_active_cud
+  - name: gitlab_certification_tracking_dashboard
+    owner: '@rbacovic'
+    tabs:
+      - gitlab_certification_tracking_dashboard
   - name: gitlab_slack_stats
     owner: '@ken_aguilar'
     tabs:
       - gitlab_slack_stats
-  - name: google_referrals
-    owner: '@tayloramurphy'
-    tabs:
-      - google_referrals
   - name: headcount
     owner: '@wwright'
     tabs:
@@ -160,10 +160,6 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - marketing_kpi_benchmarks
-  - name: marketing_pipe_to_spend_headcount
-    owner: '@tayloramurphy'
-    tabs:
-      - marketing_pipe_to_spend_headcount
   - name: maxmind_countries
     owner: '@snalamaru'
     tabs:
@@ -223,7 +219,7 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - sales_funnel_partner_alliance_targets_matrix
-  - name: sales_funnel_targets
+  - name: sales_funnel_targets  
     owner: '@paul_armstrong'
     tabs:
       - sales_funnel_targets_dates
@@ -242,6 +238,10 @@ sheets:
     owner: '@jjstark'
     tabs:
       - test_sheet
+  - name: sales_capacity_kpi
+    owner: '@mvilain'
+    tabs:
+      - sales_capacity_kpi
   - name: scalable_employment_values
     owner: '@iweeks'
     tabs:

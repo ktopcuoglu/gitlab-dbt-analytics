@@ -59,7 +59,6 @@ models:
 - name: sheetload_gcp_active_cud
 - name: sheetload_gitlab_contributing_organizations
 - name: sheetload_gitlab_slack_stats
-- name: sheetload_google_referrals
 - name: sheetload_headcount
 - name: sheetload_hire_plan
 - name: sheetload_hire_replan
@@ -164,13 +163,8 @@ models:
     - name: milestone_status
     - name: data_team_member_gitlab_handle
     - name: data_team_member_capacity
-
-- name: sheetload_sales_funnel_targets_kpi_values
-  description: Kpi total info
-- name: sheetload_sales_funnel_targets_opportunity
-  description: Opportunity data
-- name: sheetload_sales_funnel_targets_dates
-  description: Sales funnel target dates
+- name: sheetload_sales_capacity_kpi
+  descritpion: This is the model captures sales capacity kpis target and actual
 - name: sheetload_sales_funnel_targets_matrix
   description: Sales funnel target Matrix
 - name: sheetload_sales_funnel_partner_alliance_targets_matrix

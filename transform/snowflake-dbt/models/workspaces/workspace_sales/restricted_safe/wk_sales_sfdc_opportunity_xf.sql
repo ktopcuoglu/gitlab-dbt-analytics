@@ -5,7 +5,8 @@
 WITH sfdc_opportunity AS (
 
     SELECT opportunity_id,
-          opportunity_category
+          opportunity_category,
+          product_category
     FROM {{ref('sfdc_opportunity')}}
 
 ), sfdc_users_xf AS (
@@ -14,12 +15,29 @@ WITH sfdc_opportunity AS (
 
 ), sfdc_accounts_xf AS (
 
-    SELECT * FROM {{ref('sfdc_accounts_xf')}}
+    SELECT * 
+    FROM {{ref('sfdc_accounts_xf')}}
+
 
 ), date_details AS (
 
     SELECT * 
     FROM {{ ref('wk_sales_date_details') }} 
+
+
+), agg_demo_keys AS (
+-- keys used for aggregated historical analysis
+
+    SELECT *
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
+
+), today AS (
+
+  SELECT DISTINCT 
+    fiscal_year               AS current_fiscal_year,
+    first_day_of_fiscal_year  AS current_fiscal_year_date
+  FROM date_details 
+  WHERE date_actual = CURRENT_DATE
 
 ), sfdc_opportunity_xf AS (
 
@@ -106,6 +124,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.professional_services_value,
       sfdc_opportunity_xf.reason_for_loss,
       sfdc_opportunity_xf.reason_for_loss_details,
+      sfdc_opportunity_xf.downgrade_reason,
       sfdc_opportunity_xf.renewal_acv,
       sfdc_opportunity_xf.renewal_amount,
       CASE
@@ -198,11 +217,13 @@ WITH sfdc_opportunity AS (
       partner_account.account_name              AS partner_account_name,
       sfdc_opportunity_xf.dr_status,
       sfdc_opportunity_xf.distributor,
+
+      sfdc_opportunity_xf.influence_partner,
+
       ----------------------------------------------------------
       -- NF 20211108 this field should be removed when possible, need to validate with Channel Ops
-      sfdc_opportunity_xf.influence_partner,
-      ----------------------------------------------------------
       sfdc_opportunity_xf.fulfillment_partner,
+      ----------------------------------------------------------
       sfdc_opportunity_xf.fulfillment_partner   AS resale_partner_id,
       resale_account.account_name               AS resale_partner_name,
       sfdc_opportunity_xf.platform_partner,
@@ -243,8 +264,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.is_stage_3_plus,
       sfdc_opportunity_xf.is_lost,
       
-      -- NF: Added the 'Duplicate' stage to the is_open definition
-      --sfdc_opportunity_xf.is_open,
+      -- NF: Excluded 'Duplicate' stage from is_open definition
       CASE 
         WHEN sfdc_opportunity_xf.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
             THEN 0
@@ -275,7 +295,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_accepted_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_accepted_fiscal_year,
-      sfdc_opportunity_xf.sales_accepted_date_month,
+      sfdc_opportunity_xf.sales_accepted_date_month AS sales_accepted_month,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_name,
       sfdc_opportunity_xf.sales_qualified_fiscal_quarter_date,
       sfdc_opportunity_xf.sales_qualified_fiscal_year,
@@ -322,28 +342,34 @@ WITH sfdc_opportunity AS (
       -- Opportunity User fields
       -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
 
-      sfdc_opportunity_xf.user_area_stamped                                 AS opportunity_owner_user_area,
-      sfdc_opportunity_xf.user_geo_stamped                                  AS opportunity_owner_user_geo,
+   
 
       -- Team Segment / ASM - RD 
-      --  stamped field is not maintained for open deals
-      CASE WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+      --  NF 2022-01-28 Data seems clean in SFDC, but leving the fallback just in case
+      CASE 
+        WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
           THEN opportunity_owner.user_segment 
-          ELSE sfdc_opportunity_xf.user_segment_stamped
-      END                                                                    AS opportunity_owner_user_segment,
+        ELSE sfdc_opportunity_xf.user_segment_stamped
+      END                                                                   AS opportunity_owner_user_segment,
 
-      --  stamped field is not maintained for open deals
-      -- NF: 20210707 JB Asked to roll LATAM deals into EAST region
-      CASE WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
-            AND  opportunity_owner.user_region != 'LATAM'
-              THEN opportunity_owner.user_region
-          WHEN sfdc_opportunity_xf.user_region_stamped != 'LATAM'
-              THEN sfdc_opportunity_xf.user_region_stamped
-          WHEN (sfdc_opportunity_xf.user_region_stamped = 'LATAM'
-              OR  opportunity_owner.user_region = 'LATAM')
-                THEN 'East'
-          ELSE 'Other'
-      END                                                                    AS opportunity_owner_user_region,
+      CASE 
+        WHEN sfdc_opportunity_xf.user_geo_stamped IS NULL 
+          THEN opportunity_owner.user_geo
+        ELSE sfdc_opportunity_xf.user_geo_stamped
+      END                                                                   AS opportunity_owner_user_geo,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
+          THEN opportunity_owner.user_region
+          ELSE sfdc_opportunity_xf.user_region_stamped
+      END                                                                   AS opportunity_owner_user_region,
+
+      CASE
+        WHEN sfdc_opportunity_xf.user_area_stamped IS NULL
+          THEN opportunity_owner.user_area
+        ELSE sfdc_opportunity_xf.user_area_stamped
+      END                                                                   AS opportunity_owner_user_area,
+      -- opportunity_owner_subarea_stamped
 
 
       -- NF: 20210827 Fields for competitor analysis 
@@ -464,7 +490,8 @@ WITH sfdc_opportunity AS (
 
 
       -- fields form opportunity source
-      sfdc_opportunity.opportunity_category
+      sfdc_opportunity.opportunity_category,
+      sfdc_opportunity.product_category
     
     FROM {{ref('sfdc_opportunity_xf')}} sfdc_opportunity_xf
     -- not all fields are in opportunity xf
@@ -537,6 +564,44 @@ WITH sfdc_opportunity AS (
           'PubSec'                  AS "USER_SEGMENT_STAMPED", 
           0.965670500               AS "RATIO_NET_IACV_TO_NET_ARR" 
 
+
+), churn_metrics AS (
+
+SELECT
+    o.opportunity_id,
+    NVL(o.reason_for_loss, o.downgrade_reason) AS reason_for_loss_staged,
+    CASE 
+      WHEN reason_for_loss_staged IN ('Do Nothing','Other','Competitive Loss','Operational Silos') 
+        OR reason_for_loss_staged IS NULL 
+          THEN 'Unknown'
+      WHEN reason_for_loss_staged IN ('Missing Feature','Product value/gaps','Product Value / Gaps',
+                                          'Stayed with Community Edition','Budget/Value Unperceived') 
+          THEN 'Product Value / Gaps'
+      WHEN reason_for_loss_staged IN ('Lack of Engagement / Sponsor','Went Silent','Evangelist Left') 
+          THEN 'Lack of Engagement / Sponsor'
+      WHEN reason_for_loss_staged IN ('Loss of Budget','No budget') 
+          THEN 'Loss of Budget'
+      WHEN reason_for_loss_staged = 'Merged into another opportunity' 
+          THEN 'Merged Opp'
+      WHEN reason_for_loss_staged = 'Stale Opportunity' 
+          THEN 'No Progression - Auto-close'
+      WHEN reason_for_loss_staged IN ('Product Quality / Availability','Product quality/availability') 
+          THEN 'Product Quality / Availability'
+      ELSE reason_for_loss_staged
+     END                                    AS reason_for_loss_calc,
+    o.reason_for_loss_details,
+    
+    CASE 
+      WHEN o.order_type_stamped IN ('4. Contraction','5. Churn - Partial')
+        THEN 'Contraction'
+      ELSE 'Churn'
+    END                                    AS churn_contraction_type_calc
+
+FROM sfdc_opportunity_xf o
+WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn - Final')
+    AND (o.is_won = 1
+        OR (is_renewal = 1 AND is_lost = 1))
+
 ), oppty_final AS (
 
     SELECT 
@@ -555,6 +620,81 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.net_arr_created_fiscal_quarter_name         AS pipeline_created_fiscal_quarter_name,
       sfdc_opportunity_xf.net_arr_created_fiscal_quarter_date         AS pipeline_created_fiscal_quarter_date,
 
+      /*
+      FY23 fields
+      2022-01-28 NF
+
+        There are different layers of reporting.
+        Account Owner -> Used to report performance of territories year over year, they are comparable across years 
+          as it will be restated for all accounts after carving
+        Opportunity Owner -> Used to report performance, the team might be different to the Account Owner due to holdovers 
+          (accounts kept by a Sales Rep for a certain amount of time)
+        Account Demographics -> The fields that would be appropiate to that account according to their address, it might not match the one
+          of the account owner
+        Report -> This will be a calculated field, using Opportunity Owner for current fiscal year opties and Account for anything before
+        Sales Team -> Same as report, but with a naming convention closer to the sales org hierarchy
+
+      */
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_segment
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_segment
+      END                                                       AS report_opportunity_user_segment,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_geo
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
+      END                                                       AS report_opportunity_user_geo,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_region
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_region
+      END                                                       AS report_opportunity_user_region,
+
+      CASE 
+        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
+          THEN sfdc_accounts_xf.account_owner_user_area
+        ELSE sfdc_opportunity_xf.opportunity_owner_user_area
+      END                                                       AS report_opportunity_user_area,
+      -- report_opportunity_subarea
+
+      -------------------
+      -- BASE KEYS
+       -- 20220214 NF: Temporary keys, until the SFDC key is exposed
+      LOWER(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'-',sfdc_opportunity_xf.opportunity_owner_user_geo,'-',sfdc_opportunity_xf.opportunity_owner_user_region,'-',sfdc_opportunity_xf.opportunity_owner_user_area)) AS opportunity_user_segment_geo_region_area,
+
+      -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
+      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area)) AS report_user_segment_geo_region_area,
+      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area, '-', sfdc_opportunity_xf.sales_qualified_source, '-', sfdc_opportunity_xf.order_type_stamped)) AS report_user_segment_geo_region_area_sqs_ot,
+
+      -- account driven fields 
+      sfdc_accounts_xf.account_name,
+      sfdc_accounts_xf.ultimate_parent_account_id,
+      sfdc_accounts_xf.is_jihu_account,
+      
+      sfdc_accounts_xf.account_owner_user_segment,
+      sfdc_accounts_xf.account_owner_user_geo, 
+      sfdc_accounts_xf.account_owner_user_region,
+      sfdc_accounts_xf.account_owner_user_area,
+      -- account_owner_subarea_stamped
+
+      sfdc_accounts_xf.account_demographics_sales_segment   AS account_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region,
+      sfdc_accounts_xf.account_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory,
+      -- account_demographics_subarea_stamped
+
+      sfdc_accounts_xf.account_demographics_sales_segment    AS upa_demographics_segment,
+      sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
+      sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
+      sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
+      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory,
+      -----------------------------------------------
+
       CASE
         WHEN sfdc_opportunity_xf.stage_name
           IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
@@ -562,18 +702,12 @@ WITH sfdc_opportunity AS (
         ELSE 0
       END                                                                   AS is_stage_1_plus,
 
-
       CASE
         WHEN sfdc_opportunity_xf.stage_name
           IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
       END                                                                   AS is_stage_4_plus,
-
-      -- account driven fields 
-      sfdc_accounts_xf.account_name,
-      sfdc_accounts_xf.ultimate_parent_account_id,
-      sfdc_accounts_xf.is_jihu_account,
 
       -- medium level grouping of the order type field
       CASE 
@@ -588,7 +722,6 @@ WITH sfdc_opportunity AS (
         ELSE '5. Other' 
       END                                                                   AS deal_category,
 
-
       CASE 
         WHEN sfdc_opportunity_xf.order_type_stamped = '1. New - First Order' 
           THEN '1. New'
@@ -599,7 +732,8 @@ WITH sfdc_opportunity AS (
 
       ----------------------------------------------------------------
       ----------------------------------------------------------------
-      -- temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
+      -- Temporary, to deal with global Bookings FY21 reports that use account_owner_team_stamp field
+      -- NF 2022-01-28 TO BE REMOVED
       CASE 
         WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
           THEN 'SMB'
@@ -622,14 +756,15 @@ WITH sfdc_opportunity AS (
         ELSE 1
       END                                                                    AS calculated_deal_count,
 
-        -- PIO Flag for PIO reporting dashboard
+      ----------------------------------------------------------------
+      -- NF 2022-01-28 This is probably TO BE DEPRECATED too, need to align with Channel ops
+      -- PIO Flag for PIO reporting dashboard
       CASE 
         WHEN sfdc_opportunity_xf.dr_partner_engagement = 'PIO' 
           THEN 1 
         ELSE 0 
       END                                                                    AS partner_engaged_opportunity_flag,
-
-      
+ 
        -- check if renewal was closed on time or not
       CASE 
         WHEN sfdc_opportunity_xf.is_renewal = 1 
@@ -640,7 +775,8 @@ WITH sfdc_opportunity AS (
             THEN 'Late' 
       END                                                                       AS renewal_timing_status,
 
-      --********************************************************
+      ----------------------------------------------------------------
+      ----------------------------------------------------------------
       -- calculated fields for pipeline velocity report
       
       -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
@@ -652,11 +788,20 @@ WITH sfdc_opportunity AS (
         WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
           THEN 1
         ELSE 0
-      END                                                                       AS is_excluded_flag
+      END                                                                       AS is_excluded_flag,
+
+      -- Customer Success related fields
+      -- DRI Michael Armtz
+      churn_metrics.reason_for_loss_staged,
+      churn_metrics.reason_for_loss_calc,
+      churn_metrics.churn_contraction_type_calc
 
     FROM sfdc_opportunity_xf
+    CROSS JOIN today
     LEFT JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
+    LEFT JOIN churn_metrics 
+      ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
     
     WHERE sfdc_accounts_xf.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')   -- remove test account
       AND sfdc_opportunity_xf.account_id NOT IN ('0014M00001kGcORQA0')                -- remove test account
@@ -666,9 +811,6 @@ WITH sfdc_opportunity AS (
 
     SELECT 
       oppty_final.*,
-      
-      COALESCE(oppty_final.opportunity_owner_user_segment ,'NA')                                                       AS sales_team_cro_level,
-      COALESCE(CONCAT(oppty_final.opportunity_owner_user_segment,'_',oppty_final.opportunity_owner_user_region),'NA')  AS sales_team_rd_asm_level,
 
       ---------------------------------------------------------------------------------------------
       ---------------------------------------------------------------------------------------------
@@ -757,33 +899,36 @@ WITH sfdc_opportunity AS (
 
 
       -- Created pipeline eligibility definition
+      -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
       CASE 
         WHEN oppty_final.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND oppty_final.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-          AND ((oppty_final.is_stage_1_plus = 1
-                AND oppty_final.forecast_category_name != 'Omitted')
-            OR oppty_final.is_lost = 1)
+          -- 20211222 Adjusted to remove the ommitted filter
+          AND oppty_final.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
           AND (net_arr > 0 
             OR oppty_final.opportunity_category = 'Credit')
-          -- 20210802 remove webpurchase deals
-          AND oppty_final.is_web_portal_purchase = 0
+          -- 20220128 Updated to remove webdirect SQS deals 
+          AND oppty_final.sales_qualified_source  != 'Web Direct Generated'
+          AND oppty_final.is_jihu_account = 0
          THEN 1
          ELSE 0
       END                                                          AS is_eligible_created_pipeline_flag,
 
 
-      -- SAO alignment issue: https://mail.google.com/mail/u/0/#inbox/FMfcgzGkbDZKFplMhHCSFkPJSvDkTvCL
+      -- SAO alignment issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2656
       CASE
         WHEN oppty_final.sales_accepted_date IS NOT NULL
           AND oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
+          AND oppty_final.is_renewal = 0
+          AND oppty_final.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             THEN 1
         ELSE 0
       END                                                         AS is_eligible_sao_flag,
 
-
+      -- ASP Analysis eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
@@ -792,12 +937,13 @@ WITH sfdc_opportunity AS (
           -- Exclude Decomissioned as they are not aligned to the real owner
           -- Contract Reset, Decomission
           AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
-          -- Exclude Deals with net ARR < 0
+          -- Exclude Deals with nARR < 0
           AND net_arr > 0
             THEN 1
           ELSE 0
       END                                                           AS is_eligible_asp_analysis_flag,
 
+      -- Age eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
       CASE 
         WHEN oppty_final.is_edu_oss = 0
           AND oppty_final.is_deleted = 0
@@ -821,7 +967,7 @@ WITH sfdc_opportunity AS (
           AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
             THEN 1
           ELSE 0
-      END                                                           AS is_eligible_net_arr_flag,
+      END                                                           AS is_booked_net_arr_flag,
 
       CASE
         WHEN oppty_final.is_edu_oss = 0
@@ -875,14 +1021,20 @@ WITH sfdc_opportunity AS (
 
       -- churned contraction deal count as OT
       CASE
-        WHEN ((oppty_final.is_renewal = 1
-            AND oppty_final.is_lost = 1)
-            OR oppty_final.is_won = 1 )
-            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        WHEN is_eligible_churn_contraction_flag = 1
         THEN oppty_final.calculated_deal_count
         ELSE 0
       END                                                 AS churned_contraction_deal_count,
     
+
+        CASE
+        WHEN ((oppty_final.is_renewal = 1
+                AND oppty_final.is_lost = 1)
+              OR oppty_final.is_won = 1 )
+            AND is_eligible_churn_contraction_flag = 1
+        THEN oppty_final.calculated_deal_count
+        ELSE 0
+      END                                                 AS booked_churned_contraction_deal_count,
       -----------------
       -- Net ARR
 
@@ -915,21 +1067,85 @@ WITH sfdc_opportunity AS (
         ELSE 0 
       END                                                 AS booked_net_arr,
 
-      -- churned contraction net arr as OT
+      -- booked churned contraction net arr as OT
       CASE
-        WHEN ((oppty_final.is_renewal = 1
+        WHEN 
+          ((oppty_final.is_renewal = 1
             AND oppty_final.is_lost = 1)
             OR oppty_final.is_won = 1 )
-            AND oppty_final.order_type_stamped IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+            AND is_eligible_churn_contraction_flag = 1
         THEN net_arr
         ELSE 0
-      END                                                 AS churned_contraction_net_arr
+      END                                                 AS booked_churned_contraction_net_arr,
+
+      -- churned contraction net arr as OT
+      CASE
+        WHEN is_eligible_churn_contraction_flag = 1
+        THEN net_arr
+        ELSE 0
+      END                                                 AS churned_contraction_net_arr,
+
+      CASE 
+        WHEN net_arr > -5000             
+            AND is_eligible_churn_contraction_flag = 1
+          THEN '1. < 5k'
+        WHEN net_arr > -20000 
+          AND net_arr <= -5000 
+          AND is_eligible_churn_contraction_flag = 1
+          THEN '2. 5k-20k'
+        WHEN net_arr > -50000 
+          AND net_arr <= -20000 
+          AND is_eligible_churn_contraction_flag = 1
+          THEN '3. 20k-50k'
+        WHEN net_arr > -100000 
+          AND net_arr <= -50000 
+          AND is_eligible_churn_contraction_flag = 1
+          THEN '4. 50k-100k'
+        WHEN net_arr < -100000 
+          AND is_eligible_churn_contraction_flag = 1
+          THEN '5. 100k+'
+      END                                                 AS churn_contracton_net_arr_bucket,
+
+      -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with 
+      -- different aggregation levels
+
+        COALESCE(agg_demo_keys.key_sqs,'other')                         AS key_sqs,
+        COALESCE(agg_demo_keys.key_ot,'other')                          AS key_ot,
+
+        COALESCE(agg_demo_keys.key_segment,'other')                     AS key_segment,
+        COALESCE(agg_demo_keys.key_segment_sqs,'other')                 AS key_segment_sqs,                 
+        COALESCE(agg_demo_keys.key_segment_ot,'other')                  AS key_segment_ot,       
+
+        COALESCE(agg_demo_keys.key_segment_geo,'other')                 AS key_segment_geo,
+        COALESCE(agg_demo_keys.key_segment_geo_sqs,'other')             AS key_segment_geo_sqs,
+        COALESCE(agg_demo_keys.key_segment_geo_ot,'other')              AS key_segment_geo_ot,      
+
+        COALESCE(agg_demo_keys.key_segment_geo_region,'other')          AS key_segment_geo_region,
+        COALESCE(agg_demo_keys.key_segment_geo_region_sqs,'other')      AS key_segment_geo_region_sqs,
+        COALESCE(agg_demo_keys.key_segment_geo_region_ot,'other')       AS key_segment_geo_region_ot,   
+
+        COALESCE(agg_demo_keys.key_segment_geo_region_area,'other')     AS key_segment_geo_region_area,
+        COALESCE(agg_demo_keys.key_segment_geo_region_area_sqs,'other') AS key_segment_geo_region_area_sqs,
+        COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
+
+        COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')   AS sales_team_cro_level,
+     
+        -- NF: This code replicates the reporting structured of FY22, to keep current tools working
+        COALESCE(agg_demo_keys.sales_team_rd_asm_level,'other')  AS sales_team_rd_asm_level,
+
+        COALESCE(agg_demo_keys.sales_team_vp_level,'other')      AS sales_team_vp_level,
+        COALESCE(agg_demo_keys.sales_team_avp_rd_level,'other')  AS sales_team_avp_rd_level,
+        COALESCE(agg_demo_keys.sales_team_asm_level,'other')     AS sales_team_asm_level
+
       
     FROM oppty_final
     -- Net IACV to Net ARR conversion table
     LEFT JOIN net_iacv_to_net_arr_ratio
       ON net_iacv_to_net_arr_ratio.user_segment_stamped = oppty_final.opportunity_owner_user_segment
       AND net_iacv_to_net_arr_ratio.order_type_stamped = oppty_final.order_type_stamped
+    -- Add keys for aggregated analysis
+    LEFT JOIN agg_demo_keys
+      ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
 
 )
 SELECT *

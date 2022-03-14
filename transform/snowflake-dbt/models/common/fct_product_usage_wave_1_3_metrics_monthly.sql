@@ -30,9 +30,9 @@
       uuid,
       hostname,
       snapshot_month,
-      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,                   
+      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,
       {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
-      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user, 
+      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user,
       {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
       {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
     FROM smau
@@ -133,7 +133,6 @@
       usage_ping.projects_bamboo_active_all_time_event,
       usage_ping.projects_jira_active_all_time_event,
       usage_ping.projects_drone_ci_active_all_time_event,
-      usage_ping.jira_imports_28_days_event,
       usage_ping.projects_github_active_all_time_event,
       usage_ping.projects_jira_server_active_all_time_event,
       usage_ping.projects_jira_dvcs_cloud_active_all_time_event,
@@ -172,6 +171,27 @@
       usage_ping.ci_templates_usage_28_days_event,
       usage_ping.project_management_issue_milestone_changed_28_days_user,
       usage_ping.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      usage_ping.protected_branches_28_days_user,
+      usage_ping.ci_cd_lead_time_usage_28_days_event,
+      usage_ping.ci_cd_deployment_frequency_usage_28_days_event,
+      usage_ping.projects_with_repositories_enabled_all_time_user,
+      usage_ping.api_fuzzing_jobs_usage_28_days_user,
+      usage_ping.coverage_fuzzing_pipeline_usage_28_days_event,
+      usage_ping.api_fuzzing_pipeline_usage_28_days_event,
+      usage_ping.container_scanning_pipeline_usage_28_days_event,
+      usage_ping.dependency_scanning_pipeline_usage_28_days_event,
+      usage_ping.sast_pipeline_usage_28_days_event,
+      usage_ping.secret_detection_pipeline_usage_28_days_event,
+      usage_ping.dast_pipeline_usage_28_days_event,
+      usage_ping.coverage_fuzzing_jobs_28_days_user,
+      usage_ping.environments_all_time_event,
+      usage_ping.feature_flags_all_time_event,
+      usage_ping.successful_deployments_28_days_event,
+      usage_ping.failed_deployments_28_days_event,
+      usage_ping.projects_compliance_framework_all_time_event,
+      usage_ping.commit_ci_config_file_28_days_user,
+      usage_ping.view_audit_all_time_user,
       -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
           usage_ping.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -206,13 +226,13 @@
       AND sm_subscriptions.snapshot_month = smau_convert.snapshot_month
       AND usage_ping.uuid = smau_convert.uuid
       AND usage_ping.hostname = smau_convert.hostname
-  
+
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-02-08",
-    updated_date="2021-09-28"
+    updated_date="2021-12-23"
 ) }}

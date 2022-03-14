@@ -19,7 +19,7 @@
 
     SELECT
       zuora_account.account_id                              AS dim_billing_account_id,
-      map_merged_crm_account.dim_crm_account_id            AS dim_crm_account_id,
+      map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
       zuora_account.account_number                          AS billing_account_number,
       zuora_account.account_name                            AS billing_account_name,
       zuora_account.status                                  AS account_status,
@@ -28,7 +28,11 @@
       zuora_account.currency                                AS account_currency,
       zuora_contact.country                                 AS sold_to_country,
       zuora_account.ssp_channel,
-      zuora_account.po_required,
+      CASE
+        WHEN zuora_account.po_required = '' THEN 'NO'
+        WHEN zuora_account.po_required IS NULL THEN 'NO'
+        ELSE zuora_account.po_required
+      END                                                   AS po_required,
       zuora_account.is_deleted,
       zuora_account.batch
     FROM zuora_account
@@ -42,7 +46,7 @@
 {{ dbt_audit(
     cte_ref="filtered",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2020-07-20",
-    updated_date="2021-10-21"
+    updated_date="2021-12-22"
 ) }}

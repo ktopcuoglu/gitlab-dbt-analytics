@@ -34,6 +34,7 @@ help:
 	run-dbt: attaches a shell to the dbt virtual environment and changes to the dbt directory. \n \
 	run-dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
 	clean-dbt: deletes all virtual environment artifacts \n \
+	pip-dbt-shell: opens the pipenv environment in the dbt folder. Primarily for use with sql fluff. \n \
 	\n \
 	++ Python Related ++ \n \
 	data-image: attaches to a shell in the data-image and mounts the repo for testing. \n \
@@ -80,6 +81,9 @@ prepare-dbt:
 	which pipenv || python3 -m pip install pipenv
 	pipenv install
 
+pip-dbt-shell:
+	pipenv shell "cd transform/snowflake-dbt/;"
+
 run-dbt:
 	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps;"
 
@@ -124,8 +128,9 @@ radon:
 	@radon cc . --total-average -nb
 
 update-containers:
-	@echo "Pulling latest containers for airflow-image, data-image and dbt-image..."
+	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
 	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
 

@@ -1,3 +1,9 @@
+{{config({
+    "materialized": "table",
+    "transient": false
+  })
+}}
+
 {{ simple_cte([
     ('rcl','zuora_revenue_revenue_contract_line_source'),
     ('act','zuora_revenue_accounting_type_source'),
@@ -222,7 +228,7 @@
       waterfall_with_previous_revenue.organization_name,
       waterfall_with_previous_revenue.revenue_contract_customer_name,
       MAX(rcl.subscription_name)                                                    AS subscription_name,
-      waterfall_with_previous_revenue.sales_order_line_id,
+      {{ get_keyed_nulls('waterfall_with_previous_revenue.sales_order_line_id') }}  AS sales_order_line_id,
       waterfall_with_previous_revenue.revenue_contract_id,
       MAX(rcl.rate_plan_name)                                                       AS rate_plan_name,
       MAX(rcl.rate_plan_charge_name)                                                AS rate_plan_charge_name,
@@ -259,12 +265,19 @@
       ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact_source.contact_id
     GROUP BY 1,2,4,5,7,8,11,12,20
 
+), final_waterfall_with_key AS (
+
+    SELECT 
+      {{ dbt_utils.surrogate_key(['CONCAT(as_of_period_id, sales_order_line_id, revenue_contract_id, accounting_segment)']) }} AS primary_key,
+      *
+    FROM final_waterfall_pivot
+
 )
 
 {{ dbt_audit(
-    cte_ref="final_waterfall_pivot",
+    cte_ref="final_waterfall_with_key",
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-11-08",
-    updated_date="2021-11-08"
+    updated_date="2021-11-18"
 ) }}

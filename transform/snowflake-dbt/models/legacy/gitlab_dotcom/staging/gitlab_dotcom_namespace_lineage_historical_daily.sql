@@ -6,47 +6,33 @@
 
 {{ simple_cte([
     ('map_namespace_internal', 'map_namespace_internal'),
-    ('namespace_subscription_snapshots', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base')
+    ('namespace_subscription_snapshots', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
+    ('namespace_lineage','gitlab_dotcom_namespace_lineage_scd')
 ]) }}
+,
 
-, namespace_snapshots_daily AS (
+dates AS (
+  SELECT *
+  FROM {{ ref('dim_date') }} --prod.common.dim_date
+  WHERE date_actual <= CURRENT_DATE()
+  {% if is_incremental() -%}
+  AND date_actual >= (SELECT MAX(snapshot_day) FROM {{ this }})
+  {%- endif %}
+),
+namespace_lineage_daily AS (
+SELECT
+  dates.date_actual AS snapshot_day,
+  namespace_lineage.namespace_id,
+  namespace_lineage.parent_id,
+  namespace_lineage.upstream_lineage,
+  namespace_lineage.ultimate_parent_id 
+FROM namespace_lineage
+INNER JOIN dates
+  ON dates.date_actual BETWEEN date_trunc('day',namespace_lineage.lineage_valid_from) AND date_trunc('day',namespace_lineage.lineage_valid_to)
+QUALIFY ROW_NUMBER() OVER (PARTITION BY dates.date_actual,namespace_id ORDER BY namespace_lineage.lineage_valid_to DESC) = 1
+),
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespace_historical_daily') }}
-    {% if is_incremental() -%}
-    WHERE snapshot_day >= (SELECT MAX(snapshot_day) FROM {{ this }})
-    {%- endif %}
-
-), recursive_namespace_ultimate(snapshot_day, namespace_id, parent_id, upstream_lineage) AS (
-    
-   SELECT
-     namespace_snapshots_daily.snapshot_day,
-     namespace_snapshots_daily.namespace_id,
-     namespace_snapshots_daily.parent_id,
-     TO_ARRAY(namespace_id)                                                           AS upstream_lineage
-   FROM namespace_snapshots_daily
-   WHERE parent_id IS NULL
-  
-   UNION ALL
-  
-   SELECT
-     iter.snapshot_day,
-     iter.namespace_id,
-     iter.parent_id,
-     ARRAY_APPEND(anchor.upstream_lineage, iter.namespace_id)                         AS upstream_lineage
-   FROM recursive_namespace_ultimate AS anchor
-   INNER JOIN namespace_snapshots_daily AS iter
-     ON iter.parent_id = anchor.namespace_id
-     AND iter.snapshot_day = anchor.snapshot_day
-  
-), namespace_lineage_daily AS (
-    
-    SELECT
-      *,
-      upstream_lineage[0]::NUMBER                                                       AS ultimate_parent_id
-    FROM recursive_namespace_ultimate
-
-), with_plans AS (
+with_plans AS (
 
     SELECT
       namespace_lineage_daily.*,

@@ -21,6 +21,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         sales_qualified_source,
         deal_category,
         deal_group,
+        opportunity_category,
         sales_team_cro_level,
         sales_team_rd_asm_level
   FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  
@@ -64,6 +65,22 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       AND is_web_portal_purchase = 1
     GROUP BY 1,2
 
+), pipeline_type_created_ids AS (
+
+    SELECT 
+        created.opportunity_id,
+        created.pipeline_created_fiscal_quarter_date,
+        min(created.snapshot_day_of_fiscal_quarter_normalised)  AS snapshot_day_of_fiscal_quarter_normalised
+    FROM sfdc_opportunity_snapshot_history_xf created
+    WHERE created.stage_name NOT IN ('9-Unqualified','10-Duplicate','Unqualified','00-Pre Opportunity','0-Pending Acceptance') 
+      -- pipeline created same quarter
+      AND created.snapshot_fiscal_quarter_date = created.pipeline_created_fiscal_quarter_date
+      -- created and landed
+      AND created.pipeline_created_fiscal_quarter_date = created.close_fiscal_quarter_date
+      AND created.is_eligible_created_pipeline_flag = 1
+    GROUP BY 1,2
+
+ 
 ), pipeline_type_quarter_start AS (
     
     -- create a list of opties and min snapshot day to identify all the opties that should be flagged as starting in the first 5 days
@@ -86,15 +103,23 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           AND starting.snapshot_fiscal_quarter_date = starting_list.snapshot_fiscal_quarter_date
           AND starting.snapshot_day_of_fiscal_quarter_normalised = starting_list.max_snapshot_day_of_fiscal_quarter_normalised
     WHERE starting.snapshot_fiscal_quarter_date = starting.close_fiscal_quarter_date -- closing in the same quarter of the snapshot
+      AND starting_list.max_snapshot_day_of_fiscal_quarter_normalised = 5 -- exclude deals that were before day 5, unless they were at day 5
 
 ), pipeline_type_quarter_created AS (
 
     SELECT 
         created.opportunity_id,
         created.pipeline_created_fiscal_quarter_date,
-        min(created.snapshot_date)                      AS created_snapshot_date
+        created.snapshot_date                     AS created_snapshot_date,
+        created.is_won                            AS created_is_won,
+        created.is_lost                           AS created_is_lost,
+        created.is_open                           AS created_is_open
     FROM sfdc_opportunity_snapshot_history_xf created
-    LEFT JOIN pipeline_type_quarter_start starting
+    INNER JOIN pipeline_type_created_ids created_ids
+      ON created_ids.opportunity_id = created.opportunity_id 
+      AND created_ids.pipeline_created_fiscal_quarter_date = created.pipeline_created_fiscal_quarter_date
+      AND created_ids.snapshot_day_of_fiscal_quarter_normalised = created.snapshot_day_of_fiscal_quarter_normalised
+    LEFT JOIN pipeline_type_start_ids starting
       ON starting.opportunity_id = created.opportunity_id
       AND starting.snapshot_fiscal_quarter_date = created.snapshot_fiscal_quarter_date
     LEFT JOIN pipeline_type_web_purchase_ids web
@@ -108,7 +133,6 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
       -- not already flagged as starting pipeline
       AND starting.opportunity_id IS NULL  
       AND web.opportunity_id IS NULL
-    GROUP BY 1, 2
 
 ), pipeline_type_pulled_in AS (
 
@@ -158,6 +182,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         opp_snap.opportunity_id,
         opp_snap.close_fiscal_quarter_date,
         opp_snap.close_fiscal_quarter_name,
+        opp_snap.close_fiscal_year,
 
         pipe_start.starting_forecast_category,
         pipe_start.starting_net_arr,
@@ -177,6 +202,10 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         pipe_end.end_is_lost,
         pipe_end.end_close_date,
 
+        pipe_created.created_is_won,
+        pipe_created.created_is_lost,
+        pipe_created.created_is_open,
+
         -- pipeline type, identifies if the opty was there at the begging of the quarter or not
         CASE
           WHEN pipe_start.opportunity_id IS NOT NULL
@@ -187,7 +216,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
             THEN '2. Created & Landed'
           WHEN pipe_pull.opportunity_id IS NOT NULL
             THEN '3. Pulled in'
-          ELSE Null
+          ELSE '0. Other'
         END                                                         AS pipeline_type,
 
         -- created pipe
@@ -270,7 +299,7 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
           OR pipe_pull.opportunity_id IS NOT NULL
           OR web.opportunity_id IS NOT NULL   
         )
-  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
 
 -- last day within snapshot quarter of a particular opportunity
 ), pipeline_last_day_in_snapshot_quarter AS (
@@ -281,7 +310,10 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
     history.stage_name,
     history.forecast_category_name,
     history.net_arr,
-    history.booked_net_arr
+    history.booked_net_arr,
+    history.is_won,
+    history.is_lost,
+    history.is_open
   FROM pipeline_type
     INNER JOIN sfdc_opportunity_snapshot_history_xf history
       ON history.opportunity_id = pipeline_type.opportunity_id
@@ -298,11 +330,13 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         opty.sales_qualified_source,
         opty.deal_category,
         opty.deal_group,
+        opty.opportunity_category,
         opty.sales_team_cro_level,
         opty.sales_team_rd_asm_level,
         -- pipeline fields
         pipe.close_fiscal_quarter_date      AS report_fiscal_quarter_date,
         pipe.close_fiscal_quarter_name      AS report_fiscal_quarter_name,
+        pipe.close_fiscal_year              AS report_fiscal_year,
         pipe.pipeline_type,
 
         CASE 
@@ -355,12 +389,18 @@ WITH sfdc_opportunity_snapshot_history_xf AS (
         COALESCE(pipe.starting_stage,pipe.pipeline_created_stage)                                     AS quarter_start_stage,
         COALESCE(pipe.starting_forecast_category,pipe.pipeline_created_forecast_category)             AS quarter_start_forecast_category,
         COALESCE(pipe.starting_close_date,pipe.pipeline_created_close_date)                           AS quarter_start_close_date,
+        COALESCE(pipe.starting_is_open,pipe.created_is_open)                                          AS quarter_start_is_open,
+        COALESCE(pipe.starting_is_won,pipe.created_is_won)                                            AS quarter_start_is_won,
+        COALESCE(pipe.starting_is_lost,pipe.created_is_lost)                                          AS quarter_start_is_lost,       
 
         -- last day the opportunity was closing in quarter
         last_day.net_arr                  AS last_day_net_arr,                                                       
         last_day.booked_net_arr           AS last_day_booked_net_arr,
         last_day.stage_name               AS last_day_stage_name,
         last_day.forecast_category_name   AS last_day_forecast_category,
+        last_day.is_won                   AS last_day_end_is_won,
+        last_day.is_lost                  AS last_day_end_is_lost,
+        last_day.is_open                  AS last_day_end_is_open,
 
         -- last day of the quarter, at this point the deal might not be closing
         -- on the quarter

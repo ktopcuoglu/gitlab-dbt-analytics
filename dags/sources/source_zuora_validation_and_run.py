@@ -9,6 +9,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
+    run_command_test_exclude,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -59,7 +60,6 @@ default_args = {
     "catchup": False,
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
-    "params": {"slack_channel_override": "#dbt-runs"},
     "owner": "airflow",
     "retries": 0,
     "trigger_rule": "all_success",
@@ -131,7 +131,7 @@ model_run = KubernetesPodOperator(
 # Test all source models
 model_test_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +sources.{data_source}; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +sources.{data_source} {run_command_test_exclude}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 model_test = KubernetesPodOperator(

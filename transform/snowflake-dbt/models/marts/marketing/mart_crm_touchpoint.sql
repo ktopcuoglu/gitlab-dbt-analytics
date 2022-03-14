@@ -45,6 +45,7 @@
       dim_crm_touchpoint.touchpoint_segment,
       dim_crm_touchpoint.gtm_motion,
       dim_crm_touchpoint.integrated_campaign_grouping,
+      dim_crm_touchpoint.utm_content,
       fct_crm_touchpoint.bizible_count_first_touch,
       fct_crm_touchpoint.bizible_count_lead_creation_touch,
       fct_crm_touchpoint.bizible_count_u_shaped,
@@ -58,8 +59,8 @@
       dim_crm_person.owner_id,
       dim_crm_person.person_score,
       dim_crm_person.title                                                 AS crm_person_title,
-      dim_crm_person.country,
-      dim_crm_person.mailing_country,
+      dim_crm_person.country                                               AS crm_person_country,
+      dim_crm_person.state                                                 AS crm_person_state,
       dim_crm_person.status                                                AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -99,6 +100,7 @@
       dim_campaign.alliance_partner_name,
       dim_campaign.channel_partner_name,
       dim_campaign.sales_play,
+      dim_campaign.total_planned_mqls,
       fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                           AS campaign_created_by_id,
@@ -133,7 +135,7 @@
       dim_crm_user.crm_user_geo                            AS touchpoint_crm_user_geo_name_live,
       dim_crm_user.crm_user_region                         AS touchpoint_crm_user_region_name_live,
       dim_crm_user.crm_user_area                           AS touchpoint_crm_user_area_name_live,
-     
+
       -- campaign owner info
       campaign_owner.user_name                             AS campaign_rep_name,
       campaign_owner.title                                 AS campaign_rep_title,
@@ -179,7 +181,18 @@
       dim_crm_account.crm_account_type,
       dim_crm_account.technical_account_manager,
       dim_crm_account.merged_to_account_id,
-      dim_crm_account.is_reseller
+      dim_crm_account.is_reseller,
+
+      -- bizible influenced
+       CASE
+        WHEN  dim_campaign.budget_holder = 'fmm'
+              OR campaign_rep_role_name = 'Field Marketing Manager'
+              OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+              OR LOWER(dim_campaign.type) = 'field event'
+              OR LOWER(dim_crm_person.lead_source) = 'field event'
+        THEN 1
+        ELSE 0
+      END AS is_fmm_influenced
 
     FROM fct_crm_touchpoint
     LEFT JOIN dim_crm_touchpoint
@@ -207,5 +220,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2021-02-18",
-    updated_date="2021-11-09"
+    updated_date="2022-03-01"
 ) }}

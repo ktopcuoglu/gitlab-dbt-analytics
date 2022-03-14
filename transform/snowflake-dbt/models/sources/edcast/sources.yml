@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: edcast
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    tags: ["people", "edcast"]
+    schema: tap_edcast
+    loaded_at_field: __loaded_at
+    loader: Airflow
+    description: Extracted data transformation for EdCast. Data is extracted using tap-edcast (Meltano)
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 3, period: day}
+      error_after: {count: 7, period: day}
+
+    tables:
+      - name: glue_groups_g3_group_performance_data_explorer
+        identifier: glue_groups_g3_group_performance_data_explorer
+      - name: datasets
+        identifier: datasets

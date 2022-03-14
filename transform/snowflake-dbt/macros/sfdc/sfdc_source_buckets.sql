@@ -1,7 +1,7 @@
 {%- macro sfdc_source_buckets(lead_source) -%}
 
     CASE
-      WHEN {{ lead_source }} in ('CORE Check-Up')
+      WHEN {{ lead_source }} in ('CORE Check-Up','Free Registration')
         THEN 'Core'
       WHEN {{ lead_source }} in ('GitLab Subscription Portal', 'Gitlab.com', 'GitLab.com', 'Trial - Gitlab.com', 'Trial - GitLab.com')
         THEN 'GitLab.com'

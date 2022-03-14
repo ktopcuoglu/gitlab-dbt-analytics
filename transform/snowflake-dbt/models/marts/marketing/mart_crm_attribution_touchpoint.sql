@@ -69,8 +69,8 @@
       dim_crm_person.owner_id,
       dim_crm_person.person_score,
       dim_crm_person.title                                                  AS crm_person_title,
-      dim_crm_person.country,
-      dim_crm_person.mailing_country,
+      dim_crm_person.country                                                AS crm_person_country,
+      dim_crm_person.state                                                  AS crm_person_state,
       dim_crm_person.status                                                 AS crm_person_status,
       dim_crm_person.lead_source,
       dim_crm_person.lead_source_type,
@@ -110,6 +110,7 @@
       dim_campaign.alliance_partner_name,
       dim_campaign.channel_partner_name,
       dim_campaign.sales_play,
+      dim_campaign.total_planned_mqls,
       fct_campaign.dim_parent_campaign_id,
       fct_campaign.campaign_owner_id,
       fct_campaign.created_by_id                                            AS campaign_created_by_id,
@@ -226,12 +227,24 @@
       mart_crm_opportunity.source_buckets                                   AS opportunity_source_buckets,
       mart_crm_opportunity.opportunity_sales_development_representative,
       mart_crm_opportunity.opportunity_business_development_representative,
+      mart_crm_opportunity.sdr_or_bdr,
       mart_crm_opportunity.opportunity_development_representative,
       mart_crm_opportunity.is_web_portal_purchase,
       mart_crm_opportunity.count_crm_attribution_touchpoints                AS crm_attribution_touchpoints_per_opp,
       mart_crm_opportunity.weighted_linear_iacv,
       mart_crm_opportunity.count_campaigns                                  AS count_campaigns_per_opp,
-      (mart_crm_opportunity.iacv / mart_crm_opportunity.count_campaigns)    AS iacv_per_campaign
+      (mart_crm_opportunity.iacv / mart_crm_opportunity.count_campaigns)    AS iacv_per_campaign,
+
+      -- bizible influenced
+       CASE
+        WHEN  dim_campaign.budget_holder = 'fmm'
+              OR campaign_rep_role_name = 'Field Marketing Manager'
+              OR LOWER(dim_crm_touchpoint.utm_content) LIKE '%field%'
+              OR LOWER(dim_campaign.type) = 'field event'
+              OR LOWER(dim_crm_person.lead_source) = 'field event'
+        THEN 1
+        ELSE 0
+      END AS is_fmm_influenced
 
     FROM fct_crm_attribution_touchpoint
     LEFT JOIN dim_crm_touchpoint
@@ -259,5 +272,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2020-11-09"
+    updated_date="2022-03-01"
 ) }}

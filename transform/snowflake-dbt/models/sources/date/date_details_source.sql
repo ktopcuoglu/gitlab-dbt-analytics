@@ -93,7 +93,8 @@ WITH date_spine AS (
       IFF(DATE_TRUNC('month', last_day_of_fiscal_quarter) = date_actual, TRUE, FALSE)         AS is_first_day_of_last_month_of_fiscal_quarter,
       DATE_TRUNC('month', last_day_of_fiscal_year)                                            AS last_month_of_fiscal_year,
       IFF(DATE_TRUNC('month', last_day_of_fiscal_year) = date_actual, TRUE, FALSE)            AS is_first_day_of_last_month_of_fiscal_year,
-      DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa
+      DATEADD('day',7,DATEADD('month',1,first_day_of_month))                                  AS snapshot_date_fpa,
+      DATEADD('day',44,DATEADD('month',1,first_day_of_month))                                 AS snapshot_date_billings
 
     FROM date_spine
 
@@ -142,7 +143,8 @@ WITH date_spine AS (
       is_first_day_of_last_month_of_fiscal_quarter,
       last_month_of_fiscal_year,
       is_first_day_of_last_month_of_fiscal_year,
-      snapshot_date_fpa
+      snapshot_date_fpa,
+      snapshot_date_billings
     FROM calculated
 
 )
@@ -150,7 +152,7 @@ WITH date_spine AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2021-08-16"
+    updated_date="2021-12-06"
 ) }}

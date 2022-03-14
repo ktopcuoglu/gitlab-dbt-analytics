@@ -20,9 +20,7 @@ WITH sfdc_account AS (
 
 ), parent_account AS (
 
-    SELECT 
-      account_id      AS ultimate_parent_account_id,
-      account_name    AS ultimate_parent_account_name
+    SELECT *
     FROM {{ ref('sfdc_account') }}
 
 ), joined AS (
@@ -30,8 +28,8 @@ WITH sfdc_account AS (
     SELECT
       sfdc_account.*,
 
-      sfdc_users.name                                                                   AS technical_account_manager,
-      parent_account.ultimate_parent_account_name, 
+      tam_user.name                                                                   AS technical_account_manager,
+      parent_account.account_name                                                     AS ultimate_parent_account_name, 
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -47,8 +45,8 @@ WITH sfdc_account AS (
       sfdc_record_type.record_type_modifying_object_type,
       sfdc_account_deal_size_segmentation.deal_size,
       CASE 
-        WHEN ultimate_parent_sales_segment IN ('Large', 'Strategic')
-          OR division_sales_segment IN ('Large', 'Strategic') 
+        WHEN sfdc_account.ultimate_parent_sales_segment IN ('Large', 'Strategic')
+          OR sfdc_account.division_sales_segment IN ('Large', 'Strategic') 
           THEN TRUE
         ELSE FALSE 
       END                                                                               AS is_large_and_up,
@@ -129,14 +127,27 @@ WITH sfdc_account AS (
         WHEN CONTAINS (sfdc_account.zi_technologies, 'ARE_USED: BitBucket') 
           THEN 1 
         ELSE 0
-      END                                 AS zi_bit_bucket_presence_flag
+      END                                 AS zi_bit_bucket_presence_flag,
 
+    -- NF 2022-01-28 Added extra account owner demographics fields
+    --account_owner.user_segment            AS account_owner_user_segment, -- coming directly from source table
+    account_owner.user_geo                AS account_owner_user_geo, 
+    account_owner.user_region             AS account_owner_user_region,
+    account_owner.user_area               AS account_owner_user_area,
+
+    parent_account.account_demographics_sales_segment    AS upa_demographics_segment,
+    parent_account.account_demographics_geo              AS upa_demographics_geo,
+    parent_account.account_demographics_region           AS upa_demographics_region,
+    parent_account.account_demographics_area             AS upa_demographics_area,
+    parent_account.account_demographics_territory        AS upa_demographics_territory
 
     FROM sfdc_account
     LEFT JOIN parent_account
-      ON sfdc_account.ultimate_parent_account_id = parent_account.ultimate_parent_account_id
-    LEFT OUTER JOIN sfdc_users
-      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+      ON sfdc_account.ultimate_parent_account_id = parent_account.account_id
+    LEFT JOIN sfdc_users tam_user
+      ON sfdc_account.technical_account_manager_id = tam_user.user_id
+    LEFT JOIN sfdc_users account_owner
+      ON sfdc_account.owner_id = account_owner.user_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
     LEFT JOIN sfdc_account_deal_size_segmentation

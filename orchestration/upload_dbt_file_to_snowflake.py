@@ -2,10 +2,20 @@ import logging
 import os
 import sys
 from os import environ as env
+from reduce_file_size import (
+    reduce_manifest_file,
+    save_json_file,
+    load_json_file,
+    get_file_size,
+)
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
+)
+
+COLUMN_LIMIT_SIZE_SNOWFLAKE_MB = (
+    14  # actually, it is 16MB, but to avoid corner case should put 14
 )
 
 
@@ -29,6 +39,8 @@ def get_table_name(config_name, snowflake_database):
         return f'"{snowflake_database}".dbt.test_run_results'
     elif config_name == "manifest":
         return f'"{snowflake_database}".dbt.manifest'
+    elif config_name == "manifest_reduce":
+        return f'"{snowflake_database}".dbt.manifest'
     else:
         return f'"{snowflake_database}".dbt.run_results'
 
@@ -37,9 +49,38 @@ if __name__ == "__main__":
     config_name = sys.argv[1]
     file_name = get_file_name(config_name)
     config_dict = env.copy()
+
     snowflake_database = config_dict["SNOWFLAKE_LOAD_DATABASE"].upper()
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
     if os.path.exists(file_name):
+        """
+        Add a IF condition for the following reason:
+        if this module is called from DBT
+        config_name = "manifest_reduce" and will shrink,
+        if exceed size of 16MB.
+        Otherwise, will just be uploaded.
+        "manifest" and "manifest_reduce" are separated
+        to prevent shrink of manifest.json we are using for production documentation.
+        """
+        if (
+            config_name == "manifest_reduce"
+            and get_file_size(file_to_measure=file_name)
+            >= COLUMN_LIMIT_SIZE_SNOWFLAKE_MB
+        ):
+            logging.info(
+                f"manifest file {file_name} "
+                f"is bigger than "
+                f"{COLUMN_LIMIT_SIZE_SNOWFLAKE_MB}, "
+                f"should be reduced."
+            )
+
+            raw_json = load_json_file(source_file=file_name)
+            reduced_json = reduce_manifest_file(raw_json=raw_json)
+            save_json_file(reduced_json=reduced_json, target_file=file_name)
+
+            logging.info(f"manifest file {file_name} reduced successfully.")
+
         snowflake_stage_load_copy_remove(
             file_name,
             f"{snowflake_database}.dbt.dbt_load",
