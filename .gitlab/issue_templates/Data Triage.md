@@ -44,7 +44,13 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
     * [ ] Work with Data Fusion Team Manager to determine a DRI and SLO for test failure resolution. These test failures can be less urgent and usually relate to a DQ issue that needs to be investigated.
 * [ ] Clean up the dbt-test failure logs and put them into a table in the comments of this issue, use the below format as an example: 
+
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
+
+### Prepare for Next Milestone 
+* [ ] Groom Issues for Next Milestone: for issues that have missing or poor requirements, add comments in the issue asking questions to the Business DRI. 
+* [ ] Update the planning issues for this milestone and the next milestone 
+* [ ] Close/clean-up any irrelevant issues in your backlog. 
 
 <details>
 <summary>instructions</summary>
