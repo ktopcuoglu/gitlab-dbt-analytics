@@ -1,6 +1,6 @@
-{{ config(
-    tags=["mnpi_exception"]
-) }}
+{{ config({
+    "tags": ["mnpi_exception"]
+}) }}
 
 WITH prep_amendment AS (
 

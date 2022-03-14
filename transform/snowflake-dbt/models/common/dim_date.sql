@@ -1,3 +1,8 @@
+{{ config({
+    "alias": "dim_date",
+    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"account_owner":"string"},{"carr_this_account":"float"}]) }}'
+}) }}
+
 WITH dates AS (
 
   SELECT *
