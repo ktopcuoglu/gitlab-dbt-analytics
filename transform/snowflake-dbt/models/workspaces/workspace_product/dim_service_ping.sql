@@ -134,7 +134,7 @@ SELECT
         ELSE 'Self-Managed'
         END                                                                                                         AS service_ping_delivery_type,
       CASE
-        WHEN ping_source = 'SaaS'                               THEN TRUE
+        WHEN service_ping_delivery_type = 'SaaS'                THEN TRUE
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE
         WHEN hostname = 'gitlab.com'                            THEN TRUE
         WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE
