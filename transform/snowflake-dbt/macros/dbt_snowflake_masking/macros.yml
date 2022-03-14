@@ -13,3 +13,5 @@ macros:
     description: '{{ doc("create_masking_policy_hide_number_column_values") }}'
   - name: create_masking_policy_hide_variant_column_values
     description: '{{ doc("create_masking_policy_hide_variant_column_values") }}'
+  - name: create_masking_policy_hide_date_column_values
+    description: '{{ doc("create_masking_policy_hide_date_column_values") }}'
