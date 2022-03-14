@@ -27,8 +27,8 @@
       COALESCE(prep_epic.group_id,
                 prep_issue.ultimate_parent_namespace_id,
                 prep_merge_request.ultimate_parent_namespace_id)                        AS ultimate_parent_namespace_id,
-      user_id                                                                           AS dim_user_id,
-      
+      user_id                                                                           AS dim_user_id
+
     FROM resource_label_events
     LEFT JOIN prep_epic
       ON resource_label_events.epic_id = prep_epic.dim_epic_id
