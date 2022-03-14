@@ -179,7 +179,7 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_note_id"
   },
-    {
+  {
     "event_name": "todos",
     "source_cte_name": "prep_todo",
     "user_column_name": "author_id",
@@ -187,6 +187,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_todo_id"
   },
+  {
+    "event_name": "issue_resource_label_events",
+    "source_cte_name": "prep_issue_resource_label_events",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "NULL",
+    "primary_key": "dim_issue_label_id"
+  },
+  
 ]
 
 -%}
@@ -209,7 +218,8 @@
     ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('prep_ci_stage', 'prep_ci_stage'),
     ('prep_note', 'prep_note'),
-    ('prep_todo', 'prep_todo')
+    ('prep_todo', 'prep_todo'),
+    ('prep_issue_resource_label_events', 'prep_issue_resource_label_events')
 ]) }}
 
 , dast_jobs AS (
