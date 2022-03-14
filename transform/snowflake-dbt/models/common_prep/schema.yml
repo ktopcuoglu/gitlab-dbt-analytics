@@ -1822,3 +1822,17 @@ models:
           - not_null
           - unique
       - name: host_name
+
+  - name: prep_todo
+    desctiption: '{{ doc("prep_todo") }}'
+    columns:
+      - name: dim_todo_id
+        tests:
+          - not_null
+          - unique
+      - name: author_id
+        description: The user id of the todo author
+      - name: target_type
+        description: The type of item the todo was created on
+      - name: state
+        description: Can be either 'pending' or 'done'
