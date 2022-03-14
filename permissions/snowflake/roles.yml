@@ -1009,7 +1009,7 @@ roles:
                     - prep.zuora.zuora_account_source
                     - prep.zuora.zuora_subscription_source
                     - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
-                    - prep.gitlab_dotcom_gitlab_dotcom_notes_dedupe_source
+                    - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
 
 
