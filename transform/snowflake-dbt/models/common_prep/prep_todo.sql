@@ -1,0 +1,62 @@
+{{ config(
+    tags=["product"]
+) }}
+
+{{ config({
+    "materialized": "incremental",
+    "unique_key": "dim_todo_id"
+    })
+}}
+
+{{ simple_cte([
+    ('dim_date', 'dim_date'),
+    ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
+    ('prep_project', 'prep_project'),
+]) }}
+
+, gitlab_dotcom_todo_dedupe_source AS (
+    
+    SELECT *
+    FROM {{ ref('gitlab_dotcom_todos_source') }} 
+    {% if is_incremental() %}
+
+    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+
+    {% endif %}
+
+), prep_user AS (
+    
+    SELECT *
+    FROM {{ ref('prep_user') }} users
+    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
+
+), joined AS (
+
+    SELECT 
+      gitlab_dotcom_todo_dedupe_source.todo_id::NUMBER                  AS dim_todo_id,
+      gitlab_dotcom_todo_dedupe_source.author_id::NUMBER                AS author_id,
+      gitlab_dotcom_todo_dedupe_source.project_id::NUMBER               AS dim_project_id,
+      prep_project.ultimate_parent_namespace_id::NUMBER                 AS ultimate_parent_namespace_id,
+      dim_date.date_id::NUMBER                                          AS created_date_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER           AS dim_plan_id,
+      IFF(target_type = '', NULL, target_type)::VARCHAR                 AS target_type,
+      gitlab_dotcom_todo_dedupe_source.created_at::TIMESTAMP            AS created_at,
+      gitlab_dotcom_todo_dedupe_source.updated_at::TIMESTAMP            AS updated_at,
+      gitlab_dotcom_todo_dedupe_source.todo_state::VARCHAR              AS state
+    FROM gitlab_dotcom_todo_dedupe_source
+    LEFT JOIN prep_project ON gitlab_dotcom_todo_dedupe_source.project_id = prep_project.dim_project_id
+    LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+        AND gitlab_dotcom_todo_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
+        AND gitlab_dotcom_todo_dedupe_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
+    LEFT JOIN prep_user ON gitlab_dotcom_todo_dedupe_source.author_id = prep_user.dim_user_id
+    LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_todo_dedupe_source.created_at) = dim_date.date_day
+
+)
+
+{{ dbt_audit(
+    cte_ref="joined",
+    created_by="@chrissharp",
+    updated_by="@chrissharp",
+    created_date="2022-03-14",
+    updated_date="2022-03-14"
+) }}
