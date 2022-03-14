@@ -6,6 +6,8 @@ models:
     columns:
       - name: location_id
         description: '{{ doc("zi_location_id") }}'
+        tests:
+          - unique
       - name: company_id
         description: '{{ doc("zi_company_id") }}'
       - name: is_headquarters
