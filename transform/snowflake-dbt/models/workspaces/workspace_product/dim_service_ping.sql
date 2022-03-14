@@ -25,7 +25,7 @@
 , usage_data_w_date AS (
   SELECT
     version_usage_data_source.*,
-    dim_date.date_id
+    dim_date.date_id              AS dim_date_id
   FROM version_usage_data_source
   LEFT JOIN dim_date
     ON TO_DATE(created_at) = dim_date.date_day
@@ -57,6 +57,7 @@ SELECT
 
     SELECT
       id                                                                        AS dim_service_ping_id,
+      dim_date_id                                                               AS dim_date_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       DATEADD('days', -28, ping_created_at)                                     AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                                       AS ping_created_at_year,
