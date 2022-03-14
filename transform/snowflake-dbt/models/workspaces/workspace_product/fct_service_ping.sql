@@ -3,8 +3,7 @@
 ) }}
 
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "dim_usage_ping_id"
+    "materialized": "table"
     })
 }}
 

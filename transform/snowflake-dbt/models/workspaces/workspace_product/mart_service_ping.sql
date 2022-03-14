@@ -14,7 +14,6 @@
     ('dim_date', 'dim_date'),
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_crm_account', 'dim_crm_account'),
-    ('dim_instances', 'dim_instances'),
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_usage_ping_metric', 'dim_usage_ping_metric')

@@ -3,21 +3,13 @@
 ) }}
 
 {{ config({
-    "materialized": "incremental",
-    "unique_key": "dim_usage_ping_id"
+    "materialized": "table"
     })
 }}
 
-{%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
-
 {{ simple_cte([
-    ('prep_license', 'prep_license'),
-    ('prep_subscription', 'prep_subscription'),
-    ('raw_usage_data', 'version_raw_usage_data_source'),
-    ('prep_usage_ping_metrics_setting', 'prep_usage_ping_metrics_setting'),
     ('dim_date', 'dim_date'),
-    ('version_usage_data_source', 'version_usage_data_source'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+    ('version_usage_data_source', 'version_usage_data_source')
     ])
 
 }}
