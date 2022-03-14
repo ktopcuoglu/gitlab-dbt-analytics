@@ -163,6 +163,22 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id"
   },
+  {
+    "event_name": "ci_stage",
+    "source_cte_name": "prep_ci_stage",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_stage_id" 
+  },
+  {
+    "event_name": "notes",
+    "source_cte_name": "prep_note",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_note_id"
+  },
 ]
 
 -%}
@@ -182,7 +198,9 @@
     ('prep_namespace', 'prep_namespace'),
     ('prep_user', 'prep_user'),
     ('prep_plan', 'prep_gitlab_dotcom_plan'),
-    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist')
+    ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
+    ('prep_ci_stage', 'prep_ci_stage'),
+    ('prep_note', 'prep_note')
 ]) }}
 
 , dast_jobs AS (
@@ -284,9 +302,15 @@
       IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
       {{ event_cte.source_cte_name}}.created_date_id,
+      {%- if event_cte.user_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
       prep_user.created_at                                                                                     AS user_created_at,
       TO_DATE(prep_user.created_at)                                                                            AS user_created_date,
+      {%- else %}
+      NULL                                                                                                     AS dim_user_id,
+      NULL                                                                                                     AS user_created_at,
+      NULL                                                                                                     AS user_created_date,
+      {%- endif %}
       prep_namespace.created_at                                                                                AS namespace_created_at,
       TO_DATE(prep_namespace.created_at)                                                                       AS namespace_created_date,
       IFF(blocked_user.dim_user_id IS NOT NULL, TRUE, FALSE)                                                   AS is_blocked_namespace,
@@ -295,10 +319,14 @@
       DATEDIFF('hour',
               prep_namespace.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation,
+      {% if event_cte.user_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
               prep_user.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation,
+      {%- else %}
+      NULL                                                                                                     AS days_since_user_creation,
+      {% endif %}
       {% if event_cte.project_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
