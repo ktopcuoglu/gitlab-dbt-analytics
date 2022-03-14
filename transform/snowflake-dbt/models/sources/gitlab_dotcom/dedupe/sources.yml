@@ -181,6 +181,8 @@ sources:
         freshness: null #https://gitlab.com/gitlab-data/analytics/-/merge_requests/5998
       - name: experiments
         identifier: gitlab_db_experiments
+      - name: external_status_checks
+        identifier: gitlab_db_external_status_checks
       - name: gitlab_subscription_histories
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
