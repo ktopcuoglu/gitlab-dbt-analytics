@@ -411,15 +411,12 @@ def test_transform_having_clause(test_cases_dict_transformed, metric_list):
     final_sql_query_dict = test_cases_dict_transformed
 
     for metric_name, metric_sql in final_sql_query_dict.items():
-        transformed_query = transform_having_clause(metric_sql)
-
-        assert len(metric_sql) < len(transformed_query)
-
-        assert ".ID" in transformed_query
-        assert "MAX(" in transformed_query
-        assert "COUNT(approval_project_rules_users.ID)" in transformed_query
-        assert "MAX(approvals_required)" in transformed_query
-        assert transformed_query.count("(") == transformed_query.count(")")
+        assert ".ID" in metric_sql
+        assert "MAX(" in metric_sql
+        assert "COUNT(approval_project_rules_users.ID)" in metric_sql
+        assert "MAX(approvals_required)" in metric_sql
+        assert "subquery" in metric_sql
+        assert metric_sql.count("(") == metric_sql.count(")")
         assert metric_name in metric_list
         assert metric_name in metric_sql
 
