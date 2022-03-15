@@ -189,10 +189,10 @@
   },
   {
     "event_name": "issue_resource_label_events",
-    "source_cte_name": "prep_issue_resource_label_events",
+    "source_cte_name": "prep_resource_label_events",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "NULL",
+    "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_label_id"
   },
   
@@ -219,7 +219,7 @@
     ('prep_ci_stage', 'prep_ci_stage'),
     ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
-    ('prep_issue_resource_label_events', 'prep_issue_resource_label_events')
+    ('prep_resource_label_events', 'prep_resource_label_events')
 ]) }}
 
 , dast_jobs AS (
@@ -304,6 +304,12 @@
     FROM  prep_action
     WHERE target_type IS NULL
       AND event_action_type = 'pushed'
+
+), issue_resource_label_events AS (
+
+    SELECT *
+    FROM prep_resource_label_events
+    WHERE issue_id IS NOT NULL
 
 ), data AS (
 
