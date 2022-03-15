@@ -158,6 +158,22 @@ models:
           - not_null
       - name: dbt_valid_from
           - not_null
+      - name: zoom_info_company_name
+        description: The name of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_revenue
+        description: The estimated revenue of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_employee_count
+        description: The number of employees of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_industry
+        description: The the primary industry of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_city
+        description: The city of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_state_province
+        description: The state or province of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_country
+        description: The country of the company matched by the Zoom Info enrichment process.
+      - name: is_excluded_from_zoom_info_enrich
+        description: A flag to indicate if the account should be included in the Zoom Info enrichment process.
   - name: sfdc_opportunity_snapshots_base
     description: This is the base model for snapshots of the salesforce opportunity table for 2019-10-01 and forward.
     columns:
