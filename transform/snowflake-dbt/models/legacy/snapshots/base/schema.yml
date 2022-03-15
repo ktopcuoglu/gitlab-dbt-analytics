@@ -153,10 +153,17 @@ models:
           - not_null
   - name: sfdc_account_snapshots_source
     description: This is the source model for snapshots of the salesforce account table for cleaning and renaming.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - account_id
+            - dbt_valid_from
     columns:
-      - name: id
+      - name: account_id
+        tests:
           - not_null
       - name: dbt_valid_from
+        tests:
           - not_null
       - name: zoom_info_company_name
         description: The name of the company matched by the Zoom Info enrichment process.
