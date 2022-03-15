@@ -117,11 +117,11 @@ models:
       - name: days_since_namespace_created
         description: The difference in days since the namespace was created
       - name: is_smau
-        description: Is this event smau?
+        description: Is this event part of the stage monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_gmau
-        description: Is this event gmau?
+        description: Is this event part of the group active monthly user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_umau
-        description: Is this event umau?
+        description: Is this event part of the unique monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: created_by
         description: Who created this model?
       - name: update_by
@@ -197,11 +197,11 @@ models:
       - name: days_since_namespace_created
         description: The difference in days since the namespace was created
       - name: is_smau
-        description: Is this event smau?
+        description: Is this event part of the stage monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_gmau
-        description: Is this event gmau?
+        description: Is this event part of the group active monthly user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_umau
-        description: Is this event umau?
+        description: Is this event part of the unique monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: event_count
         description: The count of events
       - name: created_by
