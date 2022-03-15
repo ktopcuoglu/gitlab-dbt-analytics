@@ -77,6 +77,25 @@ def optimize_token_size(input_token: str) -> str:
     return "".join(optimized_token)
 
 
+def transform_having_clause(postgres_sql: str) -> str:
+    """
+    Algorithm enhancement , need to allow following transformation from:
+    (COUNT(approval_project_rules_users) < approvals_required)
+    to
+    (COUNT(approval_project_rules_users.id) < MAX(approvals_required))
+    """
+
+    snowflake_having_clause = postgres_sql.replace(
+        "(approval_project_rules_users)", "(approval_project_rules_users.ID)"
+    )
+
+    snowflake_having_clause = snowflake_having_clause.replace(
+        "approvals_required)", "MAX(approvals_required))"
+    )
+
+    return snowflake_having_clause
+
+
 def translate_postgres_snowflake_count(input_token_list: list) -> List[str]:
     """
     Function to support translation of COUNT syntax from Postgres to Snowflake.
@@ -246,9 +265,12 @@ def rename_table_name(
             i += 1
 
         next_token = tokens[index + i]
-        if not str(next_token).startswith("prep") and not str(next_token).startswith(
-            "prod"
+        if (
+            not str(next_token).startswith("prep")
+            and not str(next_token).startswith("prod")
+            and not (str(token) == "FROM" and str(next_token).startswith("("))
         ):
+
             # insert, token list to string list, create the SQL query, reparse it
             # there is FOR sure a better way to do that
             token_string_list[index + i] = (
