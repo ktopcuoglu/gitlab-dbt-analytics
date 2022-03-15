@@ -104,7 +104,7 @@ models:
         description: The location that this data is being stored
       - name: plan_id_at_event_date
         description: The id of the plan when the event was created.
-      - name: plan_name_at_created_date
+      - name: plan_name_at_event_date
         description: The name of the plan type when the event was created
       - name: plan_was_paid_at_event_date
         description: Defines whether the plan was paid for when the event was created
@@ -140,6 +140,58 @@ models:
         tests:
           - not_null
           - unique
+      - name: event_date
+        description: The date when the event was created.
+      - name: event_name
+        description: The name tied to an event
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_crm_account_id
+        description: The unique id of a crm account in the dim_crm_account model.
+      - name: dim_billing_account_id
+        description: The unqiue id of a billing account in the dim_billing_account model.
+      - name: stage_name
+        description: The name of the assigned stage.
+      - name: section_name
+        description: The name of the assigned section.
+      - name: group_name
+        description: The name of the assigned group
+      - name: data_source
+        description: The location that this data is being stored
+      - name: plan_id_at_event_date
+        description: The id of the plan when the event was created.
+      - name: plan_name_at_event_date
+        description: The name of the plan type when the event was created
+      - name: plan_was_paid_at_event_date
+        description: Defines whether the plan was paid for when the event was created
+      - name: dim_instance_id
+        description: The uniqu id of an instance from the dim_instance model.
+      - name: dim_namespace_id
+        description: The unique id of a namespace from the dim_namespace model.
+      - name: namespace_created_at
+        description: The date when the namespace was created.
+      - name: days_since_namespace_created
+        description: The difference in days since the namespace was created
+      - name: is_smau
+        description: Is this event part of the stage monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: is_gmau
+        description: Is this event part of the group active monthly user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: is_umau
+        description: Is this event part of the unique monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: event_count
+        description: The count of events
+      - name: distinct_user_count
+        description: The count of distinct users
+      - name: created_by
+        description: Who created this model?
+      - name: update_by
+        description: Who updated this model last?
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model was last updated
 
   - name: mart_usage_instance_daily
     description: ' {{ doc("mart_usage_instance_daily") }} '
@@ -149,6 +201,26 @@ models:
         tests:
           - not_null
           - unique
+      - name: event_date
+        description: The date when the event was created.
+      - name: event_name
+        description: The name tied to an event
+      - name: data_source
+        description: The location that this data is being stored
+      - name: dim_instance_id
+        description: The uniqu id of an instance from the dim_instance model.
+      - name: event_count
+        description: The count of events
+      - name: distinct_user_count
+        description: The count of distinct users
+      - name: created_by
+        description: Who created this model?
+      - name: update_by
+        description: Who updated this model last?
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model was last updated
 
   - name: mart_usage_event_daily
     description: ' {{ doc("mart_usage_event_daily") }} '
@@ -186,7 +258,7 @@ models:
         description: The name of the assigned group
       - name: data_source
         description: The location that this data is being stored
-      - name: plan_name_at_created_date
+      - name: plan_name_at_event_date
         description: The name of the plan type when the event was created
       - name: plan_was_paid_at_event_date
         description: Defines whether the plan was paid for when the event was created
@@ -213,7 +285,6 @@ models:
       - name: model_updated_date
         description: The date at which the model was last updated
 
-
   - name: mart_usage_event_plan_monthly
     description: ' {{ doc("mart_usage_event_plan_monthly") }} '
     columns:
@@ -222,6 +293,38 @@ models:
         tests:
           - not_null
           - unique
+      - name: reporting_month
+        description: Month in which the product usage was reported.
+      - name: plan_id_at_event_date
+        description: The id of the plan when the event was created.
+      - name: event_name
+        description: The name tied to an event
+      - name: stage_name
+        description: The name of the assigned stage.
+      - name: section_name
+        description: The name of the assigned section.
+      - name: group_name
+        description: The name of the assigned group
+      - name: is_smau
+        description: Is this event part of the stage monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: is_gmau
+        description: Is this event part of the group active monthly user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: is_umau
+        description: Is this event part of the unique monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: event_count
+        description: The count of events
+      - name: namespace_count
+        description: The count of namespaces
+      - name: user_count
+        description: The count of users
+      - name: created_by
+        description: Who created this model?
+      - name: update_by
+        description: Who updated this model last?
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model was last updated
 
   - name: mart_xmau_metric_monthly
     description: ' {{ doc("mart_xmau_metric_monthly") }} '
@@ -231,3 +334,35 @@ models:
         tests:
           - not_null
           - unique
+      - name: reporting_month
+        description: Month in which the product usage was reported.
+      - name: is_smau
+        description: Is this event part of the stage monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: is_gmau
+        description: Is this event part of the group active monthly user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: is_umau
+        description: Is this event part of the unique monthly active user slice? See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      - name: stage_name
+        description: The name of the assigned stage.
+      - name: section_name
+        description: The name of the assigned section.
+      - name: group_name
+        description: The name of the assigned group
+      - name: user_group
+        description:
+      - name: event_name_array
+        description: 
+      - name: event_count
+        description: The count of events
+      - name: namespace_count
+        description: The count of namespaces
+      - name: user_count
+        description: The count of users
+      - name: created_by
+        description: Who created this model?
+      - name: update_by
+        description: Who updated this model last?
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model was last updated
