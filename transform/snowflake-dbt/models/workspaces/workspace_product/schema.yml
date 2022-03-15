@@ -112,6 +112,25 @@ models:
         description: The unique id of a namespace from the dim_namespace model.
       - name: dim_instacne_id
         description: The uniqu id of an instance from the dim_instance model.
+      - name: namespace_created_at
+        description: The date when the namespace was created.
+      - name: days_since_namespace_created
+        description: The difference in days since the namespace was created
+      - name: is_smau
+        description: Is this event smau?
+      - name: is_gmau
+        description: Is this event gmau?
+      - name: is_umau
+        description: Is this event umau?
+      - name: created_by
+        description: Who created this model?
+      - name: update_by
+        description: Who updated this model last?
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model was last updated
+        
 
   - name: mart_usage_namespace_daily
     description: ' {{ doc("mart_usage_namespace_daily") }} '
