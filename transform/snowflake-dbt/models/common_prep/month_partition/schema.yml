@@ -14,9 +14,7 @@ models:
         tests:
           - not_null
       - name: dim_project_id
-        description: ID of the project in which the event was triggered
-        tests:
-          - not_null
+        description: ID of the project in which the event was triggered. Can be null for events which are not tied to a project
       - name: dim_user_id
         description: ID of the user who triggered the event
         tests:
@@ -49,5 +47,3 @@ models:
         description: days since the project creation
       - name: project_is_imported
         description: TRUE if the project was imported
-        tests:
-          - not_null
