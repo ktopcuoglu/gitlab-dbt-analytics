@@ -11,9 +11,9 @@
 
     {% for column_name, column_type in column.items() %}
 
-            alter {{materialization}} {{database}}.{{schema}}.{{alias}} 
+            alter {{materialization}} "{{database}}".{{schema}}.{{alias}} 
             modify column {{column_name}} 
-            set masking policy {{database}}.{{schema}}.hide_{{column_type}}_column_values;
+            set masking policy "{{database}}".{{schema}}.hide_{{column_type}}_column_values;
         
     {% endfor %}
 
