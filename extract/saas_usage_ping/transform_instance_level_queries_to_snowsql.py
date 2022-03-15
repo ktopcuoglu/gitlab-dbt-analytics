@@ -11,7 +11,7 @@ from flatten_dict.reducer import make_reducer
 import sqlparse
 from sqlparse.sql import Token, TokenList
 from sqlparse.tokens import Whitespace
-
+import re
 import requests
 
 META_API_COLUMNS = [
@@ -85,13 +85,20 @@ def transform_having_clause(postgres_sql: str) -> str:
     (COUNT(approval_project_rules_users.id) < MAX(approvals_required))
     """
 
-    snowflake_having_clause = postgres_sql.replace(
-        "(approval_project_rules_users)", "(approval_project_rules_users.ID)"
-    )
+    snowflake_having_clause = postgres_sql
 
-    snowflake_having_clause = snowflake_having_clause.replace(
-        "approvals_required)", "MAX(approvals_required))"
-    )
+    if re.findall(
+        "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED",
+        snowflake_having_clause.upper(),
+    ):
+
+        snowflake_having_clause = postgres_sql.replace(
+            "(approval_project_rules_users)", "(approval_project_rules_users.ID)"
+        )
+
+        snowflake_having_clause = snowflake_having_clause.replace(
+            "approvals_required)", "MAX(approvals_required))"
+        )
 
     return snowflake_having_clause
 
@@ -307,7 +314,12 @@ def rename_query_tables(sql_query: str) -> str:
             index=index,
             token_string_list=token_string_list,
         )
-    return "".join(token_string_list)
+
+    raw_string_list = "".join(token_string_list)
+
+    prepared_string_list = transform_having_clause(raw_string_list)
+
+    return prepared_string_list
 
 
 def keep_meta_data(json_file: dict) -> dict:
