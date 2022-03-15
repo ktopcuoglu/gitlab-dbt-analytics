@@ -32,7 +32,7 @@ renamed AS (
     zi_c_name_confidence_score::FLOAT AS company_name_confidence_score,
     zi_c_url_confidence_score::FLOAT AS company_url_confidence_score,
     zi_c_address_confidence_score::FLOAT AS company_address_confidence_score,
-    zi_c_phone_confidence_score::FLOAT AS company_phone_confidence_score, -- convert from thousand
+    zi_c_phone_confidence_score::FLOAT AS company_phone_confidence_score, 
     zi_c_employees_confidence_score::FLOAT AS employees_confidence_score,
     zi_c_revenue_confidence_score::FLOAT AS revenue_confidence_score,
     zi_es_industry_confidence_score::FLOAT AS everstring_industry_confidence_score,
@@ -71,7 +71,7 @@ renamed AS (
     zi_c_parent_child_confidence_score::FLOAT AS parent_child_confidence_score,
     zi_c_immediate_parent_company_id::NUMBER AS immediate_parent_company_id,
     zi_es_immediate_parent_ecid::NUMBER AS everstring_immediate_parent_id,
-    zi_c_domestic_parent_company_id::NUMBER AS domestic_parent_company_id, -- convert from thousand
+    zi_c_domestic_parent_company_id::NUMBER AS domestic_parent_company_id, 
     zi_es_domestic_parent_ecid::NUMBER AS everstring_domestic_parent_id,
     zi_c_global_parent_company_id::NUMBER AS global_parent_company_id,
     zi_es_global_parent_ecid::NUMBER AS everstring_global_parent_id,
@@ -94,7 +94,7 @@ renamed AS (
     NULLIF(zi_c_county::VARCHAR, '') AS company_county,
     NULLIF(zi_c_employee_range::VARCHAR, '') AS employee_range,
     NULLIF(zi_c_revenue_range::VARCHAR, '') AS revenue_range,
-    zi_c_revenue::NUMBER * 1000 AS revenue,
+    zi_c_revenue::NUMBER * 1000 AS revenue, -- convert from thousand
     NULLIF(zi_c_phone::VARCHAR, '') AS company_phone,
     NULLIF(zi_c_fax::VARCHAR, '') AS company_fax,
     NULLIF(zi_c_industry_primary::VARCHAR, '') AS industry_primary,
@@ -126,7 +126,7 @@ renamed AS (
     NULLIF(zi_c_company_verified_address, '')::BOOLEAN AS has_headquarters_company_verified_address,
     NULLIF(zi_c_company_employee_range::VARCHAR, '') AS headquarters_employee_range,
     NULLIF(zi_c_company_revenue_range::VARCHAR, '') AS headquarters_revenue_range,
-    zi_c_company_revenue::NUMBER * 1000 AS headquarters_revenue,
+    zi_c_company_revenue::NUMBER * 1000 AS headquarters_revenue, -- convert from thousand
     NULLIF(zi_c_company_phone::VARCHAR, '') AS headquarters_company_phone,
     NULLIF(zi_c_company_fax::VARCHAR, '') AS headquarters_company_fax,
     NULLIF(zi_c_linkedin_url::VARCHAR, '') AS linkedin_url,
