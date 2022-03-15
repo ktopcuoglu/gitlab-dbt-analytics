@@ -301,12 +301,13 @@
       {%- if event_cte.project_column_name != 'NULL' %}
       {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS dim_project_id,
       'project'                                                                                                AS parent_type,
+      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS parent_id, 
       {%- else %}
       NULL                                                                                                     AS dim_project_id,
       'group'                                                                                                  AS parent_type,
+      {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                     AS parent_id, 
       {%- endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
-      {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                     AS parent_id, 
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
       IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
