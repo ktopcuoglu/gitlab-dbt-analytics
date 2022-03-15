@@ -3,6 +3,7 @@ Test unit to ensure quality of transformation algorithm
 from Postgres to Snowflake
 """
 from typing import Dict, List, Any
+import re
 import pytest
 import sqlparse.sql
 
@@ -13,7 +14,6 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
     prepare_sql_statement,
     translate_postgres_snowflake_count,
     keep_meta_data,
-    transform_having_clause,
     META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
@@ -325,14 +325,14 @@ def test_keep_meta_data():
         "recording_ee_finished_at": "2022-01-21 09:07:53 UTC",
     }
 
-    meta_json_raw = {k: v for k, v in meta_json_result.items()}
+    meta_json_raw = meta_json_result.copy()
     meta_json_raw["fake1"] = "12"
     meta_json_raw["fake2"] = "13"
 
     result_json = keep_meta_data(meta_json_raw)
 
-    for k, v in result_json.items():
-        assert v == meta_json_raw.get(k)
+    for result_key, result_value in result_json.items():
+        assert result_value == meta_json_raw.get(result_key)
 
     assert isinstance(result_json, dict)
     assert len(result_json.keys()) == len(META_API_COLUMNS)
@@ -341,7 +341,7 @@ def test_keep_meta_data():
 
 
 @pytest.fixture
-def test_cases_dict_transformed():
+def test_cases_dict_transformed() -> Dict[Any, Any]:
     """
     Prepare fixture data for testing
     """
@@ -366,15 +366,18 @@ def test_cases_dict_transformed():
 
 
 @pytest.fixture
-def metric_list():
-    return [
+def metric_list() -> set:
+    """
+    static list of metrics for testing complex subqueries
+    """
+    return {
         "usage_activity_by_stage_monthly.create.approval_project_rules_with_more_approvers_than_required",
         "usage_activity_by_stage_monthly.create.approval_project_rules_with_less_approvers_than_required",
         "usage_activity_by_stage_monthly.create.approval_project_rules_with_exact_required_approvers",
         "usage_activity_by_stage.create.approval_project_rules_with_more_approvers_than_required",
         "usage_activity_by_stage.create.approval_project_rules_with_less_approvers_than_required",
         "usage_activity_by_stage.create.approval_project_rules_with_exact_required_approvers",
-    ]
+    }
 
 
 def test_subquery_complex(test_cases_dict_transformed, metric_list):
@@ -395,7 +398,7 @@ def test_subquery_complex(test_cases_dict_transformed, metric_list):
         )  # expect 2 SELECT statement
         assert (
             metric_sql.upper().count("FROM") == expect_value_from
-        )  # expect 1 dedupe_source as the bug is fixed
+        )  # expect 2 FROM statements
         assert metric_sql.count("(") == metric_sql.count(")")  # query parsed properly
 
 
@@ -411,11 +414,15 @@ def test_transform_having_clause(test_cases_dict_transformed, metric_list):
     final_sql_query_dict = test_cases_dict_transformed
 
     for metric_name, metric_sql in final_sql_query_dict.items():
-        assert ".ID" in metric_sql
+        assert ".id" in metric_sql
         assert "MAX(" in metric_sql
-        assert "COUNT(approval_project_rules_users.ID)" in metric_sql
+        assert "COUNT(approval_project_rules_users.id)" in metric_sql
         assert "MAX(approvals_required)" in metric_sql
         assert "subquery" in metric_sql
+        assert re.findall(
+            "COUNT.*approval_project_rules_users.id.*MAX.*approvals_required.*",
+            metric_sql,
+        )
         assert metric_sql.count("(") == metric_sql.count(")")
         assert metric_name in metric_list
         assert metric_name in metric_sql

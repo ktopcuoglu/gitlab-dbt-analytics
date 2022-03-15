@@ -6,12 +6,13 @@ from typing import Any, Dict, List
 from logging import info
 
 from os import environ as env
+import re
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
 import sqlparse
 from sqlparse.sql import Token, TokenList
 from sqlparse.tokens import Whitespace
-import re
+
 import requests
 
 META_API_COLUMNS = [
@@ -93,7 +94,7 @@ def transform_having_clause(postgres_sql: str) -> str:
     ):
 
         snowflake_having_clause = postgres_sql.replace(
-            "(approval_project_rules_users)", "(approval_project_rules_users.ID)"
+            "(approval_project_rules_users)", "(approval_project_rules_users.id)"
         )
 
         snowflake_having_clause = snowflake_having_clause.replace(
