@@ -323,16 +323,16 @@
       FLOOR(
       DATEDIFF('hour',
               prep_namespace.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation,
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation_at_event_date,
       FLOOR(
       DATEDIFF('hour',
               prep_user.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation,
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation_at_event_date,
       {%- if event_cte.project_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
               dim_project.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation, 
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation_at_event_date, 
       IFNULL(dim_project.is_imported, FALSE)                                                                   AS project_is_imported,
       dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
       {%- else %}
