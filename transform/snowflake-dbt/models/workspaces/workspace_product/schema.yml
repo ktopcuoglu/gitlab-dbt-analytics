@@ -355,7 +355,7 @@ models:
       - name: is_smau
         description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_gmau
-        description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_umau
         description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: event_count
