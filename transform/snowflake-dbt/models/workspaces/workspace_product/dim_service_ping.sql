@@ -25,16 +25,19 @@
 ), last_ping_of_month_flag AS (
 
 SELECT
+    usage_data_w_date.id,
     usage_data_w_date.dim_date_id,
     usage_data_w_date.uuid,
+    usage_data_w_date.host_id,
+    usage_data_w_date.created_at::TIMESTAMP(0)   AS ping_created_at,
     dim_date.month_actual,
     TRUE                      AS last_ping_of_month_flag
   FROM usage_data_w_date
     INNER JOIN dim_date
   ON usage_data_w_date.dim_date_id = dim_date.date_id
   QUALIFY RANK() OVER (
-          PARTITION BY usage_data_w_date.uuid, dim_date.month_actual
-          ORDER BY usage_data_w_date.dim_date_id DESC) = 1
+          PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.month_actual
+          ORDER BY ping_created_at DESC) = 1
 
 ), fct_w_month_flag AS (
 
@@ -43,7 +46,7 @@ SELECT
       last_ping_of_month_flag.last_ping_of_month_flag
     FROM usage_data_w_date
       LEFT JOIN last_ping_of_month_flag
-        ON usage_data_w_date.dim_date_id = last_ping_of_month_flag.dim_date_id
+        ON usage_data_w_date.id = last_ping_of_month_flag.id
 
 ), final AS (
 
@@ -71,6 +74,7 @@ SELECT
       updated_at,
       mattermost_enabled,
       uuid                                                                      AS dim_instance_id,
+      host_id || dim_instance_id                                                AS dim_installation_id,
       edition,
       hostname                                                                  AS host_name,
       host_id                                                                   AS dim_host_id,
@@ -141,7 +145,7 @@ SELECT
         CASE
           WHEN last_ping_of_month_flag = TRUE      THEN TRUE
           ELSE FALSE
-          END                                                                                                       AS last_ping_of_month_flag
+          END                                                                                                       AS is_last_ping_of_month
     FROM fct_w_month_flag
 
 )
@@ -153,5 +157,3 @@ SELECT
     created_date="2022-03-08",
     updated_date="2022-03-11"
 ) }}
-
--- Determine error

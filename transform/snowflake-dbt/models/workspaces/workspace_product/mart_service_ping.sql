@@ -84,39 +84,42 @@
 
 ), fct_pings_w_dims AS  (
 
-SELECT top 1000
-    fct_service_ping.fct_service_ping_id                    AS fct_service_ping_id,
-    fct_service_ping.dim_service_ping_id                    AS dim_service_ping_id,
-    fct_service_ping.metrics_path                           AS metrics_path,
-    fct_service_ping.metric_value                           AS metric_value,
-    fct_service_ping.dim_product_tier_id                    AS dim_product_tier_id,
-    fct_service_ping.dim_subscription_id                    AS dim_subscription_id,
-    fct_service_ping.dim_location_country_id                AS dim_location_country_id,
-    fct_service_ping.dim_date_id                            AS dim_date_id,
-    fct_service_ping.dim_instance_id                        AS dim_instance_id,
-    fct_service_ping.dim_host_id                            AS dim_host_id,
-    fct_service_ping.ping_created_at                        AS ping_created_at,
-    fct_service_ping.ping_created_at_date                   AS ping_created_at_date,
-    DATE_TRUNC('MONTH', ping_created_at::TIMESTAMP)         AS ping_created_month,
-    fct_service_ping.is_trial                               AS is_trial,
-    fct_service_ping.umau_value                             AS umau_value,
-    fct_service_ping.dim_subscription_license_id            AS dim_subscription_license_id,
-    fct_service_ping.data_source                            AS data_source,
-    fct_service_ping.is_paid_gmau                           AS is_paid_gmau,
-    fct_service_ping.time_frame                             AS time_frame,
-    dim_service_ping.edition                                AS edition,
-    dim_service_ping.host_name                              AS host_name,
-    dim_service_ping.major_version                          AS major_version,
-    dim_service_ping.minor_version                          AS minor_version,
-    dim_service_ping.major_minor_version                    AS major_minor_version,
-    dim_service_ping.version_is_prerelease                  AS version_is_prerelease,
-    dim_service_ping.is_internal                            AS is_internal,
-    dim_service_ping.is_staging                             AS is_staging,
-    dim_service_ping.instance_user_count                    AS instance_user_count,
-    dim_service_ping.service_ping_delivery_type             AS service_ping_delivery_type,
-    dim_service_ping.last_ping_of_month_flag                AS last_ping_of_month_flag
+SELECT
+    fct_service_ping.fct_service_ping_id                                      AS fct_service_ping_id,
+    fct_service_ping.dim_service_ping_id                                      AS dim_service_ping_id,
+    fct_service_ping.metrics_path                                             AS metrics_path,
+    fct_service_ping.metric_value                                             AS metric_value,
+    fct_service_ping.dim_product_tier_id                                      AS dim_product_tier_id,
+    fct_service_ping.dim_subscription_id                                      AS dim_subscription_id,
+    fct_service_ping.dim_location_country_id                                  AS dim_location_country_id,
+    fct_service_ping.dim_date_id                                              AS dim_date_id,
+    fct_service_ping.dim_instance_id                                          AS dim_instance_id,
+    fct_service_ping.dim_installation_id                                      AS dim_installation_id,
+    fct_service_ping.dim_host_id                                              AS dim_host_id,
+    fct_service_ping.dim_license_id                                           AS dim_license_id,
+    fct_service_ping.ping_created_at                                          AS ping_created_at,
+    fct_service_ping.ping_created_at_date                                     AS ping_created_at_date,
+    DATE_TRUNC('MONTH', fct_service_ping.ping_created_at::TIMESTAMP)          AS ping_created_month,
+    fct_service_ping.is_trial                                                 AS is_trial,
+    fct_service_ping.umau_value                                               AS umau_value,
+    fct_service_ping.dim_subscription_license_id                              AS dim_subscription_license_id,
+    fct_service_ping.data_source                                              AS data_source,
+    fct_service_ping.is_paid_gmau                                             AS is_paid_gmau,
+    dim_service_ping.edition                                                  AS edition,
+    dim_service_ping.host_name                                                AS host_name,
+    dim_service_ping.major_version                                            AS major_version,
+    dim_service_ping.minor_version                                            AS minor_version,
+    dim_service_ping.major_minor_version                                      AS major_minor_version,
+    dim_service_ping.major_minor_version_id                                   AS major_minor_version_id,
+    dim_service_ping.version_is_prerelease                                    AS version_is_prerelease,
+    dim_service_ping.is_internal                                              AS is_internal,
+    dim_service_ping.is_staging                                               AS is_staging,
+    dim_service_ping.instance_user_count                                      AS instance_user_count,
+    dim_service_ping.service_ping_delivery_type                               AS service_ping_delivery_type,
+    dim_service_ping.is_last_ping_of_month                                    AS is_last_ping_of_month,
+    fct_service_ping.time_frame                                               AS time_frame
 FROM fct_service_ping
-  INNER JOIN dim_service_ping_id
+  INNER JOIN dim_service_ping
 ON fct_service_ping.dim_service_ping_id = dim_service_ping.dim_service_ping_id
 
 ), fct_w_metric_dims AS (
@@ -124,7 +127,6 @@ ON fct_service_ping.dim_service_ping_id = dim_service_ping.dim_service_ping_id
 SELECT
   fct_pings_w_dims.*,
   dim_usage_ping_metric.is_gmau,
-  dim_usage_ping_metric.is_paid_gmau,
   dim_usage_ping_metric.is_smau,
   dim_usage_ping_metric.is_umau,
   dim_usage_ping_metric.product_group,
@@ -146,18 +148,20 @@ FROM fct_w_metric_dims
 ), joined AS (
 
     SELECT
-      fct_w_product_tier.dim_usage_ping_id,
+      fct_w_product_tier.dim_service_ping_id,
       fct_w_product_tier.dim_date_id,
       fct_w_product_tier.metrics_path,
       fct_w_product_tier.metric_value,
-      fct_w_product_tier.group_name,
-      fct_w_product_tier.stage_name,
-      fct_w_product_tier.section_name,
+      fct_w_product_tier.product_section AS group_name,
+      fct_w_product_tier.product_stage   AS stage_name,
+      fct_w_product_tier.product_section AS section_name,
       fct_w_product_tier.is_smau,
       fct_w_product_tier.is_gmau,
       fct_w_product_tier.is_paid_gmau,
       fct_w_product_tier.is_umau,
       fct_w_product_tier.dim_license_id,
+      fct_w_product_tier.dim_installation_id,
+      fct_w_product_tier.major_minor_version_id,
       fct_w_product_tier.is_trial,
       fct_w_product_tier.umau_value,
       license_subscriptions.latest_active_subscription_id,
@@ -189,14 +193,14 @@ FROM fct_w_metric_dims
       fct_w_product_tier.is_staging,
       fct_w_product_tier.instance_user_count,
       fct_w_product_tier.ping_created_at,
-      fct_w_product_tier.time_period,
       fct_w_product_tier.dim_instance_id,
       fct_w_product_tier.service_ping_delivery_type,
       fct_w_product_tier.host_name,
-      fct_w_product_tier.last_ping_of_month_flag
+      fct_w_product_tier.is_last_ping_of_month,
+      fct_w_product_tier.time_frame
     FROM fct_w_product_tier
     LEFT JOIN {{ ref('map_usage_ping_active_subscription')}} act_sub
-      ON fct_w_product_tier.dim_usage_ping_id = act_sub.dim_usage_ping_id
+      ON fct_w_product_tier.dim_service_ping_id = act_sub.dim_usage_ping_id
     LEFT JOIN license_subscriptions ON act_sub.dim_subscription_id = license_subscriptions.latest_active_subscription_id
       AND ping_created_month = reporting_month
 
@@ -205,22 +209,24 @@ FROM fct_w_metric_dims
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['metrics_path', 'dim_date_id', 'dim_instance_id', 'dim_host_id']) }} AS mart_service_ping_id,
+      {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'metrics_path']) }} AS mart_service_ping_id,
       dim_date_id,
       metrics_path,
       metric_value,
-      dim_usage_ping_id,
+      dim_service_ping_id,
 
       --Foreign Key
       dim_instance_id,
       dim_license_id,
+      dim_installation_id,
       latest_active_subscription_id,
       dim_billing_account_id,
       dim_parent_crm_account_id,
+      major_minor_version_id
       dim_host_id,
       host_name,
       -- metadata usage ping
-      usage_ping_delivery_type,
+      service_ping_delivery_type,
       edition,
       ping_product_tier,
       ping_main_edition_product_tier,
@@ -266,12 +272,13 @@ FROM fct_w_metric_dims
       technical_account_manager,
 
       ping_created_at,
-      last_ping_of_month_flag,
+      is_last_ping_of_month,
 
       -- fct_monthly_usage_data
-      time_period
+      time_frame
 
     FROM joined
+      WHERE time_frame != 'none'
 
 )
 

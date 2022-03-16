@@ -170,6 +170,7 @@
       dim_date_id                           AS dim_date_id,
       dim_instance_id                       AS dim_instance_id,
       dim_host_id                           AS dim_host_id,
+      dim_host_id || dim_instance_id        AS dim_installation_id,
       dim_license_id                        AS dim_license_id,
       ping_created_at                       AS ping_created_at,
       ping_created_at_date                  AS ping_created_at_date,
