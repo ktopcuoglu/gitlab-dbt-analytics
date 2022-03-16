@@ -1836,3 +1836,27 @@ models:
         description: The type of item the todo was created on
       - name: state
         description: Can be either 'pending' or 'done'
+
+  - name: prep_resource_label_events
+    desctiption: Prep table used in `prep_event`
+    columns:
+      - name: dim_issue_label_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_environment_event
+    desctiption: Prep table used in `prep_event`
+    columns:
+      - name: dim_environment_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ci_stage
+    desctiption: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_stage_id
+        tests:
+          - not_null
+          - unique
