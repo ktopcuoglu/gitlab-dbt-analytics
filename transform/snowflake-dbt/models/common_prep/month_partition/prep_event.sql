@@ -36,6 +36,14 @@
     "primary_key": "dim_deployment_id"
   },
   {
+    "event_name": "epic_creation",
+    "source_cte_name": "prep_epic",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "group_id",
+    "project_column_name": "NULL",
+    "primary_key": "dim_epic_id"
+  },
+  {
     "event_name": "issue_creation",
     "source_cte_name": "prep_issue",
     "user_column_name": "author_id",
@@ -148,8 +156,8 @@
     "primary_key": "dim_ci_build_id"
   },
   {
-    "event_name": "succesful_ci_pipeline_creation",
-    "source_cte_name": "succesful_ci_pipelines",
+    "event_name": "successful_ci_pipeline_creation",
+    "source_cte_name": "successful_ci_pipelines",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -205,6 +213,7 @@
     ('prep_action', 'prep_action'),
     ('prep_ci_build', 'prep_ci_build'),
     ('prep_deployment', 'prep_deployment'),
+    ('prep_epic', 'prep_epic'),
     ('prep_issue', 'prep_issue'),
     ('prep_merge_request', 'prep_merge_request'),
     ('prep_note', 'prep_note'),
@@ -220,6 +229,8 @@
     ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
     ('prep_resource_label_events', 'prep_resource_label_events')
+    ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
+    ('map_saas_event_to_smau','map_saas_event_to_smau')
 ]) }}
 
 , dast_jobs AS (
@@ -292,7 +303,7 @@
                                     'secret_detection'
                                     )
     
-), succesful_ci_pipelines AS (
+), successful_ci_pipelines AS (
 
     SELECT *
     FROM prep_ci_pipeline
@@ -311,6 +322,17 @@
     FROM prep_resource_label_events
     WHERE issue_id IS NOT NULL
 
+), stage_mapping AS (
+
+    SELECT DISTINCT *
+    FROM (
+        SELECT event_name, stage_name
+        FROM map_saas_event_to_gmau
+        UNION ALL
+        SELECT event_name, stage_name
+        FROM map_saas_event_to_smau
+    )
+
 ), data AS (
 
 {% for event_cte in event_ctes %}
@@ -318,9 +340,16 @@
     SELECT
       MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
-      {% if event_cte.project_column_name != 'NULL' %}
-      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }},
-      {% endif %}
+      stage_mapping.stage_name,
+      {%- if event_cte.project_column_name != 'NULL' %}
+      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS dim_project_id,
+      'project'                                                                                                AS parent_type,
+      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS parent_id, 
+      {%- else %}
+      NULL                                                                                                     AS dim_project_id,
+      'group'                                                                                                  AS parent_type,
+      {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                     AS parent_id, 
+      {%- endif %}
       {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
       {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
       prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
@@ -338,7 +367,7 @@
       {%- endif %}
       prep_namespace.created_at                                                                                AS namespace_created_at,
       TO_DATE(prep_namespace.created_at)                                                                       AS namespace_created_date,
-      IFF(blocked_user.dim_user_id IS NOT NULL, TRUE, FALSE)                                                   AS is_blocked_namespace,
+      blocked_user.is_blocked_user                                                                             AS is_blocked_namespace_creator,
       prep_namespace.namespace_is_internal,
       FLOOR(
       DATEDIFF('hour',
@@ -348,43 +377,50 @@
       FLOOR(
       DATEDIFF('hour',
               prep_user.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation,
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation_at_event_date,
       {%- else %}
-      NULL                                                                                                     AS days_since_user_creation,
+      NULL                                                                                                     AS days_since_user_creation_at_event_date,
       {% endif %}
       {% if event_cte.project_column_name != 'NULL' %}
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation_at_event_date,
+      {%- if event_cte.project_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
               dim_project.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation,
-      {% endif %} 
-      dim_project.is_imported                                                                                  AS project_is_imported,
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation_at_event_date, 
+      IFNULL(dim_project.is_imported, FALSE)                                                                   AS project_is_imported,
       dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
+      {%- else %}
+      NULL,
+      NULL,
+      NULL
+      {%- endif %}                                                                       
     FROM {{ event_cte.source_cte_name }}
-    {% if event_cte.project_column_name != 'NULL' %}
+    {%- if event_cte.project_column_name != 'NULL' %}
     INNER JOIN dim_project 
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
-    {% endif %}
-    {% if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-    INNER JOIN prep_namespace 
+    {%- endif %}
+    {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
+    INNER JOIN prep_namespace
       ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace.dim_namespace_id
       AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN prep_user AS blocked_user
       ON prep_namespace.creator_id = blocked_user.dim_user_id
-      AND blocked_user.user_state = 'blocked'
-    {% endif %}
-    {% if event_cte.user_column_name != 'NULL' %}
-    LEFT JOIN prep_user 
+    {%- endif %}
+    {%- if event_cte.user_column_name != 'NULL' %}
+    LEFT JOIN prep_user
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
-    {% endif %}
+    {%- endif %}
     LEFT JOIN prep_plan
       ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
+    LEFT JOIN stage_mapping
+      ON '{{ event_cte.event_name }}' = stage_mapping.event_name
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
     {% if not loop.last %}
     UNION ALL
     {% endif %}
-    {% endfor -%}
+    {%- endfor %}
 
 )
 

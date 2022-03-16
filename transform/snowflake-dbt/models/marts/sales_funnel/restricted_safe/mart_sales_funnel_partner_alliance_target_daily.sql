@@ -39,7 +39,7 @@
     LEFT JOIN dim_order_type
       ON fct_sales_funnel_target.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_crm_user_hierarchy_stamped
-     ON fct_sales_funnel_target.crm_user_sales_segment_geo_region_area = dim_crm_user_hierarchy_stamped.crm_opp_owner_user_segment_geo_region_area_stamped
+     ON fct_sales_funnel_target.crm_user_sales_segment_geo_region_area = dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped
         AND fct_sales_funnel_target.fiscal_year = dim_crm_user_hierarchy_stamped.fiscal_year
     LEFT JOIN dim_crm_user_hierarchy_live
       ON fct_sales_funnel_target.crm_user_sales_segment_geo_region_area = dim_crm_user_hierarchy_live.crm_user_sales_segment_geo_region_area
@@ -105,7 +105,7 @@
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
     created_by="@jpeguero",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-04-08",
-    updated_date="2022-02-16",
+    updated_date="2022-03-07",
   ) }}
