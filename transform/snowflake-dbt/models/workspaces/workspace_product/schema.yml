@@ -148,13 +148,13 @@ models:
       - name: group_name
         description: The name of the assigned group
       - name: data_source
-        description: The location that this data is being stored
+        description: The source application where the data was extracted from.
       - name: plan_id_at_event_date
         description: The id of the plan when the event was created.
       - name: plan_name_at_event_date
         description: The name of the plan type when the event was created
       - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid for when the event was created
+        description: Defines whether the plan was paid or free when the event was created
       - name: dim_namespace_id
         description: The unique id of a namespace from the dim_namespace model.
       - name: dim_instance_id
@@ -206,13 +206,13 @@ models:
       - name: group_name
         description: The name of the assigned group
       - name: data_source
-        description: The location that this data is being stored
+        description: The source application where the data was extracted from.
       - name: plan_id_at_event_date
         description: The id of the plan when the event was created.
       - name: plan_name_at_event_date
         description: The name of the plan type when the event was created
       - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid for when the event was created
+        description: Defines whether the plan was paid or free when the event was created
       - name: dim_instance_id
         description: The unique id of an instance from the dim_instance model.
       - name: dim_namespace_id
@@ -253,7 +253,7 @@ models:
       - name: event_name
         description: The name tied to an event
       - name: data_source
-        description: The location that this data is being stored
+        description: The source application where the data was extracted from.
       - name: dim_instance_id
         description: The unique id of an instance from the dim_instance model.
       - name: event_count
@@ -304,11 +304,11 @@ models:
       - name: group_name
         description: The name of the assigned group
       - name: data_source
-        description: The location that this data is being stored
+        description: The source application where the data was extracted from.
       - name: plan_name_at_event_date
         description: The name of the plan type when the event was created
       - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid for when the event was created
+        description: Defines whether the plan was paid or free when the event was created
       - name: namespace_is_internal
         description: Tells whether this namespace is internal or not
       - name: namespace_created_at
