@@ -105,7 +105,7 @@ models:
       - name: plan_name_at_event_date
         description: The name of the plan type when the event was created
       - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid for when the event was created
+        description: Defines whether the plan was paid or free when the event was created
       - name: project_is_learn_gitlab
         description: Does this project relate to Learn GitLab?
       - name: data_source
