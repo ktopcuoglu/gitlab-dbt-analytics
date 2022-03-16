@@ -109,7 +109,7 @@ models:
       - name: project_is_learn_gitlab
         description: Does this project relate to Learn GitLab?
       - name: data_source
-        description: The location that this data is being stored
+        description: The source application where the data was extracted from.
       - name: created_by
         description: Who created this model?
       - name: update_by
