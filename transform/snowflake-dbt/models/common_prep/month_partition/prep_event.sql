@@ -372,17 +372,15 @@
       FLOOR(
       DATEDIFF('hour',
               prep_namespace.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation,
-      {% if event_cte.user_column_name != 'NULL' %}
+              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation_at_event_date,
+      {%- if event_cte.user_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
               prep_user.created_at,
               {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation_at_event_date,
       {%- else %}
       NULL                                                                                                     AS days_since_user_creation_at_event_date,
-      {% endif %}
-      {% if event_cte.project_column_name != 'NULL' %}
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation_at_event_date,
+      {%- endif %}
       {%- if event_cte.project_column_name != 'NULL' %}
       FLOOR(
       DATEDIFF('hour',
@@ -420,7 +418,7 @@
     {% if not loop.last %}
     UNION ALL
     {% endif %}
-    {%- endfor %}
+{%- endfor %}
 
 )
 
