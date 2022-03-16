@@ -26,6 +26,7 @@ META_API_COLUMNS = [
 
 TRANSFORMED_INSTANCE_QUERIES_FILE = "transformed_instance_queries.json"
 META_DATA_INSTANCE_QUERIES_FILE = "meta_data_instance_queries.json"
+HAVING_CLAUSE_PATTERN = re.compile("HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED", re.IGNORECASE)
 
 
 def get_sql_query_map(private_token: str = None) -> Dict[Any, Any]:
@@ -88,10 +89,7 @@ def transform_having_clause(postgres_sql: str) -> str:
 
     snowflake_having_clause = postgres_sql
 
-    if re.findall(
-        "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED",
-        snowflake_having_clause.upper(),
-    ):
+    if HAVING_CLAUSE_PATTERN.findall(snowflake_having_clause):
 
         snowflake_having_clause = postgres_sql.replace(
             "(approval_project_rules_users)", "(approval_project_rules_users.id)"
