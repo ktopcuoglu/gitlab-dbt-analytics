@@ -3,21 +3,20 @@
 WITH sfdc_opportunity_xf AS (
   
     SELECT * 
-    FROM restricted_safe_workspace_sales.sfdc_opportunity_xf o
+    FROM {{ ref('wk_sales_sfdc_opportunity_xf')}} 
     WHERE is_edu_oss = 0
     AND is_deleted = 0
   
 ), date_details AS (
   
     SELECT *
-    FROM  workspace_sales.date_details
+    FROM {{ ref('wk_sales_date_details') }} 
 
  ), agg_demo_keys AS (
     -- keys used for aggregated historical analysis
 
     SELECT *
-    FROM restricted_safe_workspace_sales.report_agg_demo_sqs_ot_keys
-    --FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
+    FROM {{ ref('wk_sales_report_agg_demo_sqs_ot_keys') }} 
    
 ), today AS (
 
