@@ -244,7 +244,7 @@ models:
     description: ' {{ doc("mart_usage_instance_daily") }} '
     columns:
       - name: mart_usage_instance_id
-        description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance. ({{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_instance_id']) }}       AS mart_usage_instance_id,)
+        description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance.
         tests:
           - not_null
           - unique
