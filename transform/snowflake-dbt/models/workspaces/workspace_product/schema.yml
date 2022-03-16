@@ -81,7 +81,7 @@ models:
       - name: dim_subscripton_id
         description: The unique id of a subscription from the dim_subscription model
       - name: dim_event_date_id
-        description: The unique id of an instance from the dim_event_date model.
+        description: The unique date id of an event to join to dim_date.
       - name: dim_crm_account_id
         description: The unique id of a crm account in the dim_crm_account model.
       - name: dim_billing_account_id
