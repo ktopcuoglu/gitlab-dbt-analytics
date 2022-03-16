@@ -96,8 +96,8 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.sao_crm_opp_owner_area_stamped,
       prep_crm_opportunity.sao_crm_opp_owner_segment_region_stamped_grouped,
       prep_crm_opportunity.sao_crm_opp_owner_sales_segment_geo_region_area_stamped,
-      --prep_crm_opportunity.user_segment_go_region_area_stamped                  AS crm_opp_owner_sales_segment_geo_region_area_stamped,
       prep_crm_opportunity.crm_opp_owner_user_role_type_stamped,
+      prep_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
 
       -- channel reporting
       prep_crm_opportunity.dr_partner_deal_type,
@@ -115,5 +115,5 @@ WITH prep_crm_opportunity AS (
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-11-20",
-    updated_date="2022-02-24"
+    updated_date="2022-03-07"
 ) }}

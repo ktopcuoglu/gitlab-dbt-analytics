@@ -179,7 +179,7 @@
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped',
         'dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
                                                                            AS crm_opp_owner_sales_segment_region_stamped_grouped,
-      --dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped,
+      dim_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
       dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
 
       -- crm owner/sales rep live fields
@@ -284,7 +284,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-03-08",
+    updated_date="2022-03-07",
   ) }}
