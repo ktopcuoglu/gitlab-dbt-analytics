@@ -203,6 +203,14 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_label_id"
   },
+  {
+    "event_name": "environments",
+    "source_cte_name": "prep_environment_event",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_environment_id"
+  },
   
 ]
 
@@ -230,7 +238,8 @@
     ('prep_todo', 'prep_todo'),
     ('prep_resource_label_events', 'prep_resource_label_events'),
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
-    ('map_saas_event_to_smau','map_saas_event_to_smau')
+    ('map_saas_event_to_smau','map_saas_event_to_smau'),
+    ('prep_environment_event', 'prep_environment_event')
 ]) }}
 
 , dast_jobs AS (
@@ -320,7 +329,7 @@
 
     SELECT *
     FROM prep_resource_label_events
-    WHERE issue_id IS NOT NULL
+    WHERE dim_issue_id IS NOT NULL
 
 ), stage_mapping AS (
 
