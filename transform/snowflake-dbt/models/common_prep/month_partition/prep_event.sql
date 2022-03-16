@@ -228,7 +228,7 @@
     ('prep_ci_stage', 'prep_ci_stage'),
     ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
-    ('prep_resource_label_events', 'prep_resource_label_events')
+    ('prep_resource_label_events', 'prep_resource_label_events'),
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
     ('map_saas_event_to_smau','map_saas_event_to_smau')
 ]) }}
