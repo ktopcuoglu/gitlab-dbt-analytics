@@ -411,6 +411,11 @@ def test_transform_having_clause(test_cases_dict_transformed, metric_list):
     to
     (COUNT(approval_project_rules_users.id) < MAX(approvals_required))
     """
+
+    HAVING_CLAUSE_PATTERN = re.compile(
+        "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED", re.IGNORECASE
+    )
+
     final_sql_query_dict = test_cases_dict_transformed
 
     for metric_name, metric_sql in final_sql_query_dict.items():
@@ -419,10 +424,8 @@ def test_transform_having_clause(test_cases_dict_transformed, metric_list):
         assert "COUNT(approval_project_rules_users.id)" in metric_sql
         assert "MAX(approvals_required)" in metric_sql
         assert "subquery" in metric_sql
-        assert re.findall(
-            "COUNT.*approval_project_rules_users.id.*MAX.*approvals_required.*",
-            metric_sql,
-        )
+        assert HAVING_CLAUSE_PATTERN.findall(metric_sql)
+
         assert metric_sql.count("(") == metric_sql.count(")")
         assert metric_name in metric_list
         assert metric_name in metric_sql
