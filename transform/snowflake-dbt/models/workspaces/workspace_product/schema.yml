@@ -183,7 +183,7 @@ models:
     description: ' {{ doc("mart_usage_namespace_daily") }} '
     columns:
       - name: mart_usage_namespace_id
-        description: the unique ID combination of the event_date, event_name, na ddim_namespace_id in mart_usage_namespace. ({{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_namespace_id']) }}       AS mart_usage_namespace_id,)
+        description: the unique ID combination of the event_date, event_name, na ddim_namespace_id in mart_usage_namespace.
         tests:
           - not_null
           - unique
