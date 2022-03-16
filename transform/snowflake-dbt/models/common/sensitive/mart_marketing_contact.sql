@@ -625,6 +625,11 @@
           THEN TRUE
         ELSE FALSE
       END                                                                                        AS has_namespace_setup_for_company_use,
+      CASE
+        WHEN MAX(marketing_contact_order.namespace_has_public_project) = TRUE
+          THEN TRUE
+        ELSE FALSE
+      END                                                                                        AS has_namespace_with_public_project,
       ARRAY_AGG(
                 DISTINCT IFNULL(marketing_contact_order.marketing_contact_role || ': ' || 
                   IFNULL(marketing_contact_order.saas_product_tier, '') || IFNULL(marketing_contact_order.self_managed_product_tier, ''), 'No Role') 
@@ -939,7 +944,7 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-03-07"
+    updated_date="2022-03-16"
 ) }}
 
 
