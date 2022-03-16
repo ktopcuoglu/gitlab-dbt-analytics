@@ -30,7 +30,7 @@ models:
         tests:
           - not_null
       - name: organization_id
-        description: A unique id that is a combination of the host_name and dim_instance_id.
+        description: Top-level namespace id.
         tests:
           - not_null
       - name: delivery
