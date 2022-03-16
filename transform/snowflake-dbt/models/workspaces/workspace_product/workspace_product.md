@@ -23,7 +23,8 @@ Type of Data: gitlab.com db usage events
 Aggregate Grain: Plan (including Free/Paid and Total) / Metric
 Time Grain: 28-day (likely last 28 days of the month)
 Use case: Paid SaaS xMAU, SaaS SpO
-(GitLab.com mart that determined unique namespace and user counts for total, free and paid metrics.)
+Usage is attributed to a namespace's last reported plan (free vs paid)
+(GitLab.com mart that determines unique namespace and user counts for total, free and paid metrics.)
 
 {% enddocs %}
 
