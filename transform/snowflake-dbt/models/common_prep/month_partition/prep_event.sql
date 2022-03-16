@@ -172,7 +172,7 @@
     "primary_key": "dim_action_id"
   },
   {
-    "event_name": "ci_stage",
+    "event_name": "ci_stages",
     "source_cte_name": "prep_ci_stage",
     "user_column_name": "NULL",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
