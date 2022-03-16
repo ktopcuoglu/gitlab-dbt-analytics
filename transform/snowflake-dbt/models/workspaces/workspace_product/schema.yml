@@ -9,7 +9,7 @@ models:
         tests:
           - not_null
       - name: delivery
-        description: delivery is based on the product category name.
+        description: delivery is based on the product category name and is either SaaS or Self-Managed delivery.
         tests:
           - not_null
       - name: organization_type
