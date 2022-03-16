@@ -3497,6 +3497,7 @@ roles:
             - restricted_safe
             - data_team_analyst
             - bi_tool_eval_read
+            - xactly
         warehouses:
             - analyst_xs
         owns:
