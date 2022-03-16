@@ -48,7 +48,7 @@ models:
         tests:
           - not_null
       - name: is_paid_product_tier
-        description: information on whether the product tier has been paid for or not
+        description: information on whether the subscription is a free or paid product tier.
         tests:
           - not_null
       - name: active_stage_count
