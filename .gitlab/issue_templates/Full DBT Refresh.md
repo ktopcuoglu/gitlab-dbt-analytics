@@ -9,8 +9,8 @@
 <!-- Please link any relevant MRs or Issues here -->
 
 
-## Analytics Engineer To Do
+## To Do
 
-* [ ] For dbt models need to be refreshed, follow the instructions [here](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#dbt-models-full-refresh) 
+* [ ] For dbt models need to be refreshed, follow the [instructions](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#dbt-models-full-refresh).
 
 cc @gitlab-data/analytics-engineers 
