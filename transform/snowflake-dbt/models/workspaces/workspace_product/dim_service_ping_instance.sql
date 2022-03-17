@@ -51,7 +51,7 @@ SELECT
 ), final AS (
 
     SELECT
-      id                                                                        AS dim_service_ping_id,
+      id                                                                        AS dim_service_ping_instance_id,
       dim_date_id                                                               AS dim_date_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       DATEADD('days', -28, ping_created_at)                                     AS ping_created_at_28_days_earlier,
@@ -78,7 +78,7 @@ SELECT
       edition,
       hostname                                                                  AS host_name,
       host_id                                                                   AS dim_host_id,
-      license_trial,
+      license_trial                                                             AS is_trial,
       source_license_id,
       installation_type,
       license_plan,

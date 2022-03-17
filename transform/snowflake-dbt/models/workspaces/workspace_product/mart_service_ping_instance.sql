@@ -8,8 +8,8 @@
 }}
 
 {{ simple_cte([
-    ('fct_service_ping', 'fct_service_ping'),
-    ('dim_service_ping', 'dim_service_ping'),
+    ('fct_service_ping', 'fct_service_ping_instance'),
+    ('dim_service_ping', 'dim_service_ping_instance'),
     ('dim_product_tier', 'dim_product_tier'),
     ('dim_date', 'dim_date'),
     ('dim_billing_account', 'dim_billing_account'),
@@ -85,8 +85,8 @@
 ), fct_pings_w_dims AS  (
 
 SELECT
-    fct_service_ping.fct_service_ping_id                                      AS fct_service_ping_id,
-    fct_service_ping.dim_service_ping_id                                      AS dim_service_ping_id,
+    fct_service_ping.fct_service_ping_instance_id                             AS fct_service_ping_instance_id,
+    fct_service_ping.dim_service_ping_instance_id                             AS dim_service_ping_instance_id,
     fct_service_ping.metrics_path                                             AS metrics_path,
     fct_service_ping.metric_value                                             AS metric_value,
     fct_service_ping.dim_product_tier_id                                      AS dim_product_tier_id,
@@ -100,7 +100,7 @@ SELECT
     fct_service_ping.ping_created_at                                          AS ping_created_at,
     fct_service_ping.ping_created_at_date                                     AS ping_created_at_date,
     DATE_TRUNC('MONTH', fct_service_ping.ping_created_at::TIMESTAMP)          AS ping_created_at_month,
-    fct_service_ping.is_trial                                                 AS is_trial,
+    dim_service_ping.is_trial                                                 AS is_trial,
     fct_service_ping.umau_value                                               AS umau_value,
     fct_service_ping.dim_subscription_license_id                              AS dim_subscription_license_id,
     fct_service_ping.data_source                                              AS data_source,
@@ -119,7 +119,7 @@ SELECT
     fct_service_ping.time_frame                                               AS time_frame
 FROM fct_service_ping
   INNER JOIN dim_service_ping
-ON fct_service_ping.dim_service_ping_id = dim_service_ping.dim_service_ping_id
+ON fct_service_ping.dim_service_ping_instance_id = dim_service_ping.dim_service_ping_instance_id
 
 ), fct_w_metric_dims AS (
 
@@ -148,7 +148,7 @@ FROM fct_w_metric_dims
 ), joined AS (
 
     SELECT
-      fct_w_product_tier.dim_service_ping_id,
+      fct_w_product_tier.dim_service_ping_instance_id,
       fct_w_product_tier.dim_date_id,
       fct_w_product_tier.metrics_path,
       fct_w_product_tier.metric_value,
@@ -201,7 +201,7 @@ FROM fct_w_metric_dims
       fct_w_product_tier.time_frame
     FROM fct_w_product_tier
     LEFT JOIN {{ ref('map_usage_ping_active_subscription')}} act_sub
-      ON fct_w_product_tier.dim_service_ping_id = act_sub.dim_usage_ping_id
+      ON fct_w_product_tier.dim_service_ping_instance_id = act_sub.dim_usage_ping_id
     LEFT JOIN license_subscriptions ON act_sub.dim_subscription_id = license_subscriptions.latest_active_subscription_id
       AND ping_created_at_month = reporting_month
 
@@ -210,11 +210,11 @@ FROM fct_w_metric_dims
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'metrics_path']) }} AS mart_service_ping_id,
+      {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'metrics_path']) }} AS mart_service_ping_instance_id,
       dim_date_id,
       metrics_path,
       metric_value,
-      dim_service_ping_id,
+      dim_service_ping_instance_id,
 
       --Foreign Key
       dim_instance_id,

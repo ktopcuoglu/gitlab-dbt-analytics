@@ -102,26 +102,35 @@ models:
           - not_null
           - unique
 
-  - name: fct_service_ping
-    description: ' {{ doc("fct_service_ping") }} '
+  - name: prep_service_ping_instance
+    description: ' {{ doc("prep_service_ping_instance") }} '
     columns:
-      - name: fct_service_ping_id
+      - name: prep_service_ping_instance_id
         tests:
           - not_null
           - unique
 
-  - name: dim_service_ping
-    description: ' {{ doc("dim_service_ping") }} '
+
+  - name: fct_service_ping_instance
+    description: ' {{ doc("fct_service_ping_instance") }} '
     columns:
-      - name: dim_service_ping_id
+      - name: fct_service_ping_instance_id
         tests:
           - not_null
           - unique
 
-  - name: mart_service_ping
-    description: ' {{ doc("dim_service_ping") }} '
+  - name: dim_service_ping_instance
+    description: ' {{ doc("dim_service_ping_instance") }} '
     columns:
-      - name: mart_service_ping_id
+      - name: dim_service_ping_instance_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_service_ping_instance
+    description: ' {{ doc("dim_service_ping_instance") }} '
+    columns:
+      - name: mart_service_ping_instance_id
         tests:
           - not_null
           - unique

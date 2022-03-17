@@ -17,59 +17,13 @@
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
+    ('prep_service_ping_instance', 'prep_service_ping_instance'),
     ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
 }}
 
-, source AS (
-
-    SELECT top 1000
-      id                                                                        AS dim_usage_ping_id,
-      created_at::TIMESTAMP(0)                                                  AS ping_created_at,
-      *,
-      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
-    FROM {{ ref('version_usage_data_source') }}
-
-), usage_data AS (
-
-    SELECT
-      dim_usage_ping_id                                                                               AS dim_service_ping_id,
-      host_id                                                                                         AS dim_host_id,
-      uuid                                                                                            AS dim_instance_id,
-      ping_created_at,
-      source_ip_hash                                                                                  AS ip_address_hash,
-      edition                                                                                         AS original_edition,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}
-    FROM source
-    WHERE uuid IS NOT NULL
-      AND version NOT LIKE ('%VERSION%')
-
-), joined_ping AS (
-
-    SELECT
-      dim_service_ping_id,
-      dim_host_id,
-      usage_data.dim_instance_id,
-      ping_created_at,
-      ip_address_hash,
-      {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
-      IFF(original_edition = 'CE', 'CE', 'EE')                                                            AS main_edition,
-      CASE
-        WHEN original_edition = 'CE'                                     THEN 'Core'
-        WHEN original_edition = 'EE Free'                                THEN 'Core'
-        WHEN license_expires_at < ping_created_at                        THEN 'Core'
-        WHEN original_edition = 'EE'                                     THEN 'Starter'
-        WHEN original_edition = 'EES'                                    THEN 'Starter'
-        WHEN original_edition = 'EEP'                                    THEN 'Premium'
-        WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
-        ELSE NULL END                                                                                      AS product_tier,
-      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
-    FROM usage_data
-    LEFT JOIN raw_usage_data
-      ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
-
-), map_ip_location AS (
+, map_ip_location AS (
 
     SELECT
       map_ip_to_country.ip_address_hash,
@@ -81,11 +35,11 @@
 ), add_country_info_to_usage_ping AS (
 
     SELECT
-      joined_ping.*,
+      prep_service_ping_instance.*,
       map_ip_location.dim_location_country_id
-    FROM joined_ping
+    FROM prep_service_ping_instance
     LEFT JOIN map_ip_location
-      ON joined_ping.ip_address_hash = map_ip_location.ip_address_hash
+      ON prep_service_ping_instance.ip_address_hash = map_ip_location.ip_address_hash
 
 ), dim_product_tier AS (
 
@@ -95,7 +49,7 @@
 ), prep_usage_ping_cte AS (
 
     SELECT
-      dim_service_ping_id,
+      dim_service_ping_instance_id,
       dim_host_id,
       dim_instance_id,
       dim_product_tier.dim_product_tier_id               AS dim_product_tier_id,
@@ -110,7 +64,9 @@
       license_md5,
       dim_location_country_id,
       product_tier,
-      main_edition
+      main_edition,
+      metrics_path,
+      metric_value
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -140,9 +96,9 @@
 
 ), flattened_high_level as (
     SELECT
-      dim_service_ping_id                   AS dim_service_ping_id,
-      path                                  AS metrics_path,
-      value                                 AS metric_value,
+      dim_service_ping_instance_id          AS dim_service_ping_instance_id,
+      metrics_path                          AS metrics_path,
+      metric_value                          AS metric_value,
       dim_product_tier_id                   AS dim_product_tier_id,
       dim_subscription_id                   AS dim_subscription_id,
       dim_location_country_id               AS dim_location_country_id,
@@ -156,9 +112,7 @@
       umau_value                            AS umau_value,
       license_subscription_id               AS dim_subscription_license_id,
       'VERSION_DB'                          AS data_source
-  FROM joined_payload,
-    LATERAL FLATTEN(input => raw_usage_data_payload,
-    RECURSIVE => true)
+  FROM joined_payload
 
 ), metric_attributes AS (
 
@@ -168,7 +122,7 @@
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_id,
+        {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_instance_id,
         flattened_high_level.*,
         metric_attributes.time_frame
     FROM flattened_high_level

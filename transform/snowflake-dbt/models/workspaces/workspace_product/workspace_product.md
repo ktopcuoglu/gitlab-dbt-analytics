@@ -50,20 +50,26 @@ This table contains all gitlab.com events with additional dimensions and other f
 
 {% enddocs %}
 
-{% docs fct_service_ping %}
+{% docs fct_service_ping_instance %}
 
 Version source, self managed usage data fact table.
 
 {% enddocs %}
 
-{% docs dim_service_ping %}
+{% docs dim_service_ping_instance %}
 
 Version source, self managed usage data dim table.
 
 {% enddocs %}
 
-{% docs mart_service_ping %}
+{% docs mart_service_ping_instance %}
 
 Version source, self managed usage data mart table.
+
+{% enddocs %}
+
+{% docs prep_service_ping_instance %}
+
+Version source, self managed usage data prep table.
 
 {% enddocs %}
