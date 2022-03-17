@@ -11,7 +11,7 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
-    ('prep_project', 'prep_project'),
+    ('dim_project', 'dim_project'),
 ]) }}
 
 , environment_event AS (
@@ -27,15 +27,15 @@
 ), joined AS (
 
     SELECT
-      environment_event.environment_id::NUMBER                  AS dim_environment_id,
-      environment_event.project_id::NUMBER                      AS dim_project_id,
-      prep_project.ultimate_parent_namespace_id::NUMBER         AS ultimate_parent_namespace_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER   AS dim_plan_id,
-      environment_event.created_at::TIMESTAMP                   AS created_at,
-      dim_date.date_id::NUMBER                                  AS created_date_id
+      environment_event.environment_id::NUMBER                      AS dim_environment_id,
+      environment_event.project_id::NUMBER                          AS dim_project_id,
+      IFNULL(dim_project.ultimate_parent_namespace_id::NUMBER, -1)  AS ultimate_parent_namespace_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER       AS dim_plan_id,
+      environment_event.created_at::TIMESTAMP                       AS created_at,
+      dim_date.date_id::NUMBER                                      AS created_date_id
     FROM environment_event
-    LEFT JOIN prep_project ON environment_event.project_id = prep_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+    LEFT JOIN dim_project ON environment_event.project_id = dim_project.dim_project_id
+    LEFT JOIN dim_namespace_plan_hist ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND environment_event.created_at >= dim_namespace_plan_hist.valid_from
         AND environment_event.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
     LEFT JOIN dim_date ON TO_DATE(environment_event.created_at) = dim_date.date_day
