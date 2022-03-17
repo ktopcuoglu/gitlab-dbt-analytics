@@ -1,7 +1,7 @@
 {% docs fct_usage_event %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: user/event
+Aggregate Grain: Event
 Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
 
 {% enddocs %}
@@ -20,7 +20,7 @@ Use case: Everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_xmau_metric_monthly %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: Plan (including Free/Paid and Total) / Metric
+Aggregate reporting_month, user_group, section_name, stage_name, and group_name
 Time Grain: Last 28 days of the month
 Use case: Paid SaaS xMAU, SaaS SpO
 Usage is attributed to a namespace's last reported plan (free vs paid)
@@ -31,7 +31,7 @@ Usage is attributed to a namespace's last reported plan (free vs paid)
 {% docs mart_usage_event_plan_monthly %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: Plan (including Free/Paid and Total) / Metric
+Aggregate Grain: reporting_month, plan_id_at_event_date, and event_name
 Time Grain: Last 28 days of the month
 Use case: Paid SaaS xMAU, SaaS SpO
 (Trying to mimic Self-managed usage ping format by getting the count of each event that happened in the last 28 days.
@@ -42,7 +42,7 @@ Use case: Paid SaaS xMAU, SaaS SpO
 {% docs mart_usage_namespace_daily %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: Namespace and Event
+Aggregate Grain: event_date, event_name, and dim_namespace_id
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
 
@@ -52,7 +52,7 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_usage_instance_daily %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: Instance (all of SaaS)
+Aggregate Grain: event_date, event_name, dim_instance_id (all od SaaS)
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
 
@@ -62,6 +62,6 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_usage_event_daily %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: User / Namespace / Event
+Aggregate Grain: event_date, dim_user_id, dim_namespace_id, and event_name
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
