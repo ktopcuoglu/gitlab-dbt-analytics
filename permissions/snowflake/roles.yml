@@ -27,6 +27,11 @@ databases:
     - testing_db:
         shared: no
 
+    - brhea_prod:
+          shared: no
+    - brhea_prep:
+          shared: no
+
     - csharp_prod:
         shared: no
     - csharp_prep:
