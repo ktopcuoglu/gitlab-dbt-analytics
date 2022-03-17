@@ -1909,6 +1909,7 @@ roles:
                     - prep.sensitive.qualtrics_mailing_contacts
                     - prep.sensitive.qualtrics_nps_answers
                     - prep.sensitive.qualtrics_nps_survey_responses
+                    - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
 
     - pmg:
