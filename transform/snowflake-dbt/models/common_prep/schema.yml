@@ -1852,11 +1852,3 @@ models:
         tests:
           - not_null
           - unique
-
-  - name: prep_ci_stage
-    desctiption: Prep table used in `prep_event`
-    columns:
-      - name: dim_ci_stage_id
-        tests:
-          - not_null
-          - unique
