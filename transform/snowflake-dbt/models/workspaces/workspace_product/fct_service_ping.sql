@@ -98,7 +98,7 @@
       dim_service_ping_id,
       dim_host_id,
       dim_instance_id,
-      dim_product_tier.dim_product_tier_id AS dim_product_tier_id,
+      dim_product_tier.dim_product_tier_id               AS dim_product_tier_id,
       ping_created_at,
       DATEADD('days', -28, ping_created_at)              AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                AS ping_created_at_year,
@@ -114,6 +114,7 @@
     FROM add_country_info_to_usage_ping
     LEFT OUTER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
+    AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
     AND main_edition = 'EE'
 
 ), joined_payload AS (
@@ -151,12 +152,13 @@
       is_trial,
       umau_value,
       license_subscription_id,
-      ping_created_at                       AS ping_created_at,
-      ping_created_at_date                  AS ping_created_at_date,
+      ping_created_at                                       AS ping_created_at,
+      ping_created_at_date                                  AS ping_created_at_date,
       raw_usage_data_payload
     FROM joined_payload
     LEFT JOIN dim_product_tier
       ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
+      AND IFF( joined_payload.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
       AND main_edition = 'EE'
 
 ), flattened_high_level as (
