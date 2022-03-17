@@ -35,7 +35,7 @@ SELECT
   FROM usage_data_w_date
     INNER JOIN dim_date
   ON usage_data_w_date.dim_date_id = dim_date.date_id
-  QUALIFY RANK() OVER (
+  QUALIFY ROW_NUMBER() OVER (
           PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.month_actual
           ORDER BY ping_created_at DESC) = 1
 
@@ -117,14 +117,13 @@ SELECT
       raw_usage_data_id,
       container_registry_vendor,
       container_registry_version,
-      raw_usage_data_payload_reconstructed,
       IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                                       AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,
       SPLIT_PART(cleaned_version, '.', 2)::NUMBER                                                                   AS minor_version,
       major_version || '.' || minor_version                                                                         AS major_minor_version,
-      major_version * 100 + minor_version   AS major_minor_version_id,
+      major_version * 100 + minor_version                                                                           AS major_minor_version_id,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
         ELSE 'Self-Managed'

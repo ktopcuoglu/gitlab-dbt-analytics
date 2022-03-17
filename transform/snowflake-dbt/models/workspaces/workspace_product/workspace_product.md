@@ -50,12 +50,6 @@ This table contains all gitlab.com events with additional dimensions and other f
 
 {% enddocs %}
 
-{% docs mart_usage_instance_monthly %}
-
-Version source, self managed usage data mart.
-
-{% enddocs %}
-
 {% docs fct_service_ping %}
 
 Version source, self managed usage data fact table.

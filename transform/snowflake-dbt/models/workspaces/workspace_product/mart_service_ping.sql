@@ -99,12 +99,11 @@ SELECT
     fct_service_ping.dim_license_id                                           AS dim_license_id,
     fct_service_ping.ping_created_at                                          AS ping_created_at,
     fct_service_ping.ping_created_at_date                                     AS ping_created_at_date,
-    DATE_TRUNC('MONTH', fct_service_ping.ping_created_at::TIMESTAMP)          AS ping_created_month,
+    DATE_TRUNC('MONTH', fct_service_ping.ping_created_at::TIMESTAMP)          AS ping_created_at_month,
     fct_service_ping.is_trial                                                 AS is_trial,
     fct_service_ping.umau_value                                               AS umau_value,
     fct_service_ping.dim_subscription_license_id                              AS dim_subscription_license_id,
     fct_service_ping.data_source                                              AS data_source,
-    fct_service_ping.is_paid_gmau                                             AS is_paid_gmau,
     dim_service_ping.edition                                                  AS edition,
     dim_service_ping.host_name                                                AS host_name,
     dim_service_ping.major_version                                            AS major_version,
@@ -131,7 +130,8 @@ SELECT
   dim_usage_ping_metric.is_umau,
   dim_usage_ping_metric.product_group,
   dim_usage_ping_metric.product_section,
-  dim_usage_ping_metric.product_stage
+  dim_usage_ping_metric.product_stage,
+  dim_usage_ping_metric.is_paid_gmau
 FROM fct_pings_w_dims
   INNER JOIN dim_usage_ping_metric
 ON fct_pings_w_dims.metrics_path = dim_usage_ping_metric.metrics_path
@@ -193,6 +193,7 @@ FROM fct_w_metric_dims
       fct_w_product_tier.is_staging,
       fct_w_product_tier.instance_user_count,
       fct_w_product_tier.ping_created_at,
+      fct_w_product_tier.ping_created_at_month,
       fct_w_product_tier.dim_instance_id,
       fct_w_product_tier.service_ping_delivery_type,
       fct_w_product_tier.host_name,
@@ -202,7 +203,7 @@ FROM fct_w_metric_dims
     LEFT JOIN {{ ref('map_usage_ping_active_subscription')}} act_sub
       ON fct_w_product_tier.dim_service_ping_id = act_sub.dim_usage_ping_id
     LEFT JOIN license_subscriptions ON act_sub.dim_subscription_id = license_subscriptions.latest_active_subscription_id
-      AND ping_created_month = reporting_month
+      AND ping_created_at_month = reporting_month
 
 ), sorted AS (
 
@@ -224,6 +225,7 @@ FROM fct_w_metric_dims
       dim_parent_crm_account_id,
       major_minor_version_id
       dim_host_id,
+      major_minor_version_id,
       host_name,
       -- metadata usage ping
       service_ping_delivery_type,
@@ -248,6 +250,7 @@ FROM fct_w_metric_dims
       is_gmau,
       is_paid_gmau,
       is_umau,
+      time_frame,
 
       --metadata instance
       instance_user_count,
@@ -272,10 +275,9 @@ FROM fct_w_metric_dims
       technical_account_manager,
 
       ping_created_at,
-      is_last_ping_of_month,
+      ping_created_at_month,
+      is_last_ping_of_month
 
-      -- fct_monthly_usage_data
-      time_frame
 
     FROM joined
       WHERE time_frame != 'none'

@@ -122,10 +122,10 @@
     SELECT
       prep_usage_ping_cte.*,
       prep_license.dim_license_id,
-      prep_subscription.dim_subscription_id,
-      dim_date.date_id,
+      dim_date.date_id                                                                                AS dim_date_id,
       TO_DATE(raw_usage_data.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
       (raw_usage_data.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
+      COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                        AS dim_subscription_id,
       raw_usage_data.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
       IFF(ping_created_at < license_trial_ends_on, TRUE, FALSE)                                       AS is_trial
     FROM prep_usage_ping_cte
@@ -137,29 +137,6 @@
       ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
     LEFT JOIN dim_date
       ON TO_DATE(ping_created_at) = dim_date.date_day
-
-), prep_usage_ping_payload_cte AS (
-
-    SELECT
-      joined_payload.dim_service_ping_id,
-      dim_product_tier.dim_product_tier_id                   AS dim_product_tier_id,
-      COALESCE(license_subscription_id, dim_subscription_id) AS dim_subscription_id,
-      dim_license_id,
-      dim_location_country_id,
-      date_id                                                AS dim_date_id,
-      dim_instance_id,
-      dim_host_id                                            AS dim_host_id,
-      is_trial,
-      umau_value,
-      license_subscription_id,
-      ping_created_at                                       AS ping_created_at,
-      ping_created_at_date                                  AS ping_created_at_date,
-      raw_usage_data_payload
-    FROM joined_payload
-    LEFT JOIN dim_product_tier
-      ON TRIM(LOWER(joined_payload.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
-      AND IFF( joined_payload.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
-      AND main_edition = 'EE'
 
 ), flattened_high_level as (
     SELECT
@@ -176,11 +153,10 @@
       dim_license_id                        AS dim_license_id,
       ping_created_at                       AS ping_created_at,
       ping_created_at_date                  AS ping_created_at_date,
-      is_trial                              AS is_trial,
       umau_value                            AS umau_value,
       license_subscription_id               AS dim_subscription_license_id,
       'VERSION_DB'                          AS data_source
-  FROM prep_usage_ping_payload_cte,
+  FROM joined_payload,
     LATERAL FLATTEN(input => raw_usage_data_payload,
     RECURSIVE => true)
 
@@ -194,10 +170,9 @@
     SELECT
         {{ dbt_utils.surrogate_key(['dim_service_ping_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_id,
         flattened_high_level.*,
-        metric_attributes.is_paid_gmau,
         metric_attributes.time_frame
     FROM flattened_high_level
-        INNER JOIN metric_attributes
+        LEFT JOIN metric_attributes
     ON flattened_high_level.metrics_path = metric_attributes.metrics_path
 
 )

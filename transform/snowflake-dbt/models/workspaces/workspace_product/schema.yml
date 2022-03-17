@@ -102,14 +102,6 @@ models:
           - not_null
           - unique
 
-  - name: mart_usage_instance_monthly
-    description: ' {{ doc("mart_usage_instance_monthly") }} '
-    columns:
-      - name: mart_usage_instance_monthly_id
-        tests:
-          - not_null
-          - unique
-
   - name: fct_service_ping
     description: ' {{ doc("fct_service_ping") }} '
     columns:
