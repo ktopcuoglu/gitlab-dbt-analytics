@@ -70,6 +70,7 @@ WITH first_contact  AS (
       user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
       user_region_stamped                                                AS crm_opp_owner_region_stamped,
       user_area_stamped                                                  AS crm_opp_owner_area_stamped,
+      user_segment_geo_region_area_stamped                               AS crm_opp_owner_sales_segment_geo_region_area_stamped,
       created_date::DATE                                                 AS created_date,
       sales_accepted_date::DATE                                          AS sales_accepted_date,
       close_date::DATE                                                   AS close_date,

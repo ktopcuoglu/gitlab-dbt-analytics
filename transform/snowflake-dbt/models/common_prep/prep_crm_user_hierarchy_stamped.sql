@@ -104,14 +104,11 @@
 
     SELECT DISTINCT
       dim_date.fiscal_year,
-      sfdc_opportunity_source.user_segment_stamped                AS user_segment,
-      sfdc_opportunity_source.user_geo_stamped                    AS user_geo,
-      sfdc_opportunity_source.user_region_stamped                 AS user_region,
-      sfdc_opportunity_source.user_area_stamped                   AS user_area,
-      CONCAT(sfdc_opportunity_source.user_segment_stamped, '-', 
-         sfdc_opportunity_source.user_geo_stamped, '-', 
-         sfdc_opportunity_source.user_region_stamped, '-', 
-         sfdc_opportunity_source.user_area_stamped)               AS user_segment_geo_region_area
+      sfdc_opportunity_source.user_segment_stamped                  AS user_segment,
+      sfdc_opportunity_source.user_geo_stamped                      AS user_geo,
+      sfdc_opportunity_source.user_region_stamped                   AS user_region,
+      sfdc_opportunity_source.user_area_stamped                     AS user_area,
+      sfdc_opportunity_source.user_segment_geo_region_area_stamped  AS user_segment_geo_region_area
     FROM sfdc_opportunity_source
     INNER JOIN dim_date
       ON sfdc_opportunity_source.close_date = dim_date.date_actual
@@ -177,7 +174,7 @@
       user_region                                                                     AS crm_opp_owner_region_stamped,
       {{ dbt_utils.surrogate_key(['user_area']) }}                                    AS dim_crm_opp_owner_area_stamped_id,
       user_area                                                                       AS crm_opp_owner_area_stamped,
-      user_segment_geo_region_area                                                    AS crm_opp_owner_user_segment_geo_region_area_stamped,
+      user_segment_geo_region_area                                                    AS crm_opp_owner_sales_segment_geo_region_area_stamped,
       CASE
           WHEN user_segment IN ('Large', 'PubSec') THEN 'Large'
           ELSE user_segment
