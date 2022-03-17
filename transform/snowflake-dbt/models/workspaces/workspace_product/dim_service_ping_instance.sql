@@ -24,7 +24,7 @@
 
 ), last_ping_of_month_flag AS (
 
-SELECT
+SELECT DISTINCT
     usage_data_w_date.id,
     usage_data_w_date.dim_date_id,
     usage_data_w_date.uuid,
@@ -50,7 +50,7 @@ SELECT
 
 ), final AS (
 
-    SELECT
+    SELECT DISTINCT
       id                                                                        AS dim_service_ping_instance_id,
       dim_date_id                                                               AS dim_date_id,
       ping_created_at::TIMESTAMP(0)                                             AS ping_created_at,
