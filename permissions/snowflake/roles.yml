@@ -2374,6 +2374,44 @@ roles:
         warehouses:
             - reporting
 
+    - brhea:
+        member_of:
+            - reporter
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - brhea_prep
+                - brhea_prod
+            schemas:
+                - brhea_prep.*
+                - brhea_prod.*
+            tables:
+                - brhea_prep.*.*
+                - brhea_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - brhea_prep
+                    - brhea_prod
+                write:
+                    - brhea_prep
+                    - brhea_prod
+            schemas:
+                read:
+                    - brhea_prep.*
+                    - brhea_prod.*
+                write:
+                    - brhea_prep.*
+                    - brhea_prod.*
+            tables:
+                read:
+                    - brhea_prep.*.*
+                    - brhea_prod.*.*
+                write:
+                    - brhea_prep.*.*
+                    - brhea_prod.*.*
+
     - cbalane:
         member_of:
             - reporter
@@ -4156,6 +4194,11 @@ users:
         can_login: yes
         member_of:
             - bbutterfield
+
+    - brhea:
+        can_login: yes
+        member_of:
+            - brhea
 
     - cbalane:
         can_login: yes
