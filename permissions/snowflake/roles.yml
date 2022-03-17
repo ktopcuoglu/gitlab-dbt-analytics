@@ -2378,6 +2378,8 @@ roles:
     - brhea:
         member_of:
             - reporter
+            - qualtrics
+            - qualtrics_sensitive
         warehouses:
             - analyst_xs
         owns:
