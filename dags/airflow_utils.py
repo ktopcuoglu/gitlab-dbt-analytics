@@ -327,6 +327,9 @@ clone_data_science_repo_cmd = f"""
     git checkout $GIT_COMMIT &&
     cd .."""
 
+# command to exclude models (for test models) in dbt test command
+run_command_test_exclude = "--exclude staging.gitlab_com edm_snapshot"
+
 
 def number_of_dbt_threads_argument(number_of_threads):
     return f"--threads {number_of_threads}"

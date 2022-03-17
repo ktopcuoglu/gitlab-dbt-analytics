@@ -97,6 +97,11 @@ databases:
     - laddula_prep:
         shared: no
 
+    - lvinueza_prod:
+        shared: no
+    - lvinueza_prep:
+        shared: no
+
     - mcooper_prod:
         shared: no
     - mcooper_prep:
@@ -946,6 +951,71 @@ roles:
                     - prod.*.*
                     - raw.snapshots.*
 
+    - data_observability:
+        warehouses:
+            - data_obs_wh_1
+        privileges:
+            databases:
+                read:
+                    - prod
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - prod.restricted_safe_common_mart_sales
+                    - prod.restricted_safe_common
+                    - prod.common
+                    - prod.legacy
+                    - prod.workspace_data
+                    - raw.airflow_stitch
+                    - raw.dbt
+                    - prep.zuora
+                    - prep.gitlab_dotcom
+                    - prep.snowplow
+                    - prep.dbt
+                    - prep.airflow
+            tables:
+                read:
+                    - prod.restricted_safe_common_mart_sales.mart_arr
+                    - prod.restricted_safe_common.fct_mrr
+                    - prod.restricted_safe_common.dim_crm_account
+                    - prod.common.dim_product_detail
+                    - prod.common.dim_billing_account
+                    - prod.common.fct_usage_ping_payload
+                    - prod.common.dim_date
+                    - prod.common.dim_subscription
+                    - prod.legacy.gitlab_dotcom_ci_job_artifacts
+                    - prod.legacy.gitlab_dotcom_namespaces_xf
+                    - prod.legacy.gitlab_dotcom_usage_data_events
+                    - prod.workspace_data.airflow_dag
+                    - prod.workspace_data.airflow_dag_run
+                    - prod.workspace_data.dbt_test_results
+                    - prod.workspace_data.dbt_run_results
+                    - prod.workspace_data.dbt_failing_tests
+                    - prod.workspace_data.dbt_compilation_runtime
+                    - prod.workspace_data.dbt_last_successful_test_runs
+                    - raw.airflow_stitch.dag_run
+                    - raw.airflow_stitch.dag
+                    - raw.dbt.test_run_results
+                    - raw.dbt.run_results
+                    - raw.dbt.manifest
+                    - raw.dbt.snapshots_run_results
+                    - prep.airflow.airflow_dag_run_source
+                    - prep.airflow.airflow_dag_source
+                    - prep.dbt.dbt_test_results_source
+                    - prep.dbt.dbt_run_results_source
+                    - prep.dbt.dbt_model_source
+                    - prep.dbt.dbt_snapshots_results_source
+                    - prep.zuora.zuora_account_source
+                    - prep.zuora.zuora_subscription_source
+                    - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
+                    - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
+                    - prep.snowplow.snowplow_gitlab_good_events_source
+
+
+                    
+
+                    
 # ==========================================
 # Object Roles
 # ==========================================
@@ -2109,12 +2179,10 @@ roles:
             schemas:
                 read:
                     - prep.zendesk
-                    - raw.zendesk_stitch
                     - raw.tap_zendesk
             tables:
                 read:
                     - prep.zendesk.*
-                    - raw.zendesk_stitch.*
                     - raw.tap_zendesk.*
 
     - zendesk_community_relations:
@@ -2128,12 +2196,10 @@ roles:
               schemas:
                   read:
                       - prep.zendesk_community_relations
-                      - raw.zendesk_community_relations_stitch
                       - raw.tap_zendesk__community_relations
               tables:
                   read:
                       - prep.zendesk_community_relations.*
-                      - raw.zendesk_community_relations_stitch.*
                       - raw.tap_zendesk__community_relations.*
 
     - zoom:
@@ -2289,6 +2355,7 @@ roles:
         member_of:
             - analyst_people
             - bamboohr
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -2303,6 +2370,7 @@ roles:
         member_of:
             - reporter
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - reporting
 
@@ -2318,6 +2386,7 @@ roles:
             - analyst_growth
             - restricted_safe
             - data_team_analyst
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -2340,6 +2409,7 @@ roles:
         member_of:
             - engineer
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - engineer_xs
             - engineer_xl
@@ -2424,6 +2494,7 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -2463,6 +2534,7 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -2584,8 +2656,12 @@ roles:
 
     - hselim: 
         member_of: 
-            - xactly
+            - adaptive
+            - reporter
             - restricted_safe
+            - salesforce
+            - xactly
+
         warehouses: 
             - analyst_xs
 
@@ -2694,6 +2770,7 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -2758,6 +2835,7 @@ roles:
             - analyst_finance
             - gainsight
             - restricted_safe
+            - dbt_data_science
         warehouses:
             - analyst_xs
             - analyst_l
@@ -2857,6 +2935,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
             - jstemmer_xl
@@ -2869,6 +2948,7 @@ roles:
             - analyst_finance
             - restricted_safe
             - xactly
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -2911,6 +2991,7 @@ roles:
             - salesforce
             - restricted_safe
             - dbt_data_science
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3075,6 +3156,7 @@ roles:
     - lmai:
         member_of:
             - analyst_engineering
+            - bi_tool_eval_read
         privileges:
             databases:
                 read:
@@ -3092,10 +3174,52 @@ roles:
         warehouses:
             - admin
 
+    - lvinueza:
+        member_of:
+            - analyst_finance
+            - customers_db
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - lvinueza_prep
+                - lvinueza_prod
+            schemas:
+                - lvinueza_prep.*
+                - lvinueza_prod.*
+            tables:
+                - lvinueza_prep.*.*
+                - lvinueza_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - lvinueza_prep
+                    - lvinueza_prod
+                write:
+                    - lvinueza_prep
+                    - lvinueza_prod
+            schemas:
+                read:
+                    - lvinueza_prep.*
+                    - lvinueza_prod.*
+                write:
+                    - lvinueza_prep.*
+                    - lvinueza_prod.*
+            tables:
+                read:
+                    - lvinueza_prep.*.*
+                    - lvinueza_prod.*.*
+                write:
+                    - lvinueza_prep.*.*
+                    - lvinueza_prod.*.*
+
     - marntz:
         member_of:
             - analyst_sales
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
             - analyst_l
@@ -3147,6 +3271,7 @@ roles:
          - data_team_analyst
          - analytics_engineer_rd
          - restricted_safe
+         - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3288,6 +3413,7 @@ roles:
             - analyst_sales
             - xactly
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3370,6 +3496,8 @@ roles:
             - analyst_sales
             - restricted_safe
             - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
         warehouses:
             - analyst_xs
         owns:
@@ -3409,6 +3537,13 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - analyst_xs
+
+    - nkhanna:
+        member_of:
+            - reporter
         warehouses:
             - analyst_xs
 
@@ -3416,6 +3551,7 @@ roles:
         member_of:
             - analyst_growth
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -3603,6 +3739,7 @@ roles:
             - reporter
             - analyst_marketing
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
         owns:
@@ -3759,27 +3896,19 @@ roles:
                 read:
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.zendesk_stitch
-                    - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
                 write:
                     - raw.salesforce_stitch
                     - raw.stitch_google_sheets
-                    - raw.zendesk_stitch
-                    - raw.zendesk_community_relations_stitch
                     - raw.zuora_stitch
             tables:
                 read:
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.zendesk_stitch.*
-                    - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
                 write:
                     - raw.salesforce_stitch.*
                     - raw.stitch_google_sheets.*
-                    - raw.zendesk_stitch.*
-                    - raw.zendesk_community_relations_stitch.*
                     - raw.zuora_stitch.*
 
     - target_snowflake:
@@ -3962,6 +4091,7 @@ roles:
             - analyst_finance
             - bamboohr_analytics
             - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - analyst_xs
 
@@ -4221,6 +4351,11 @@ users:
             - lvandijk
             - securityadmin
 
+    - lvinueza:
+        can_login: yes
+        member_of:
+            - lvinueza
+
     - marntz:
         can_login: yes
         member_of:
@@ -4280,6 +4415,11 @@ users:
         can_login: yes
         member_of:
             - ngalang
+
+    - nkhanna:
+        can_login: yes
+        member_of:
+            - nkhanna
 
     - nraisinghani:
         can_login: yes
@@ -4413,6 +4553,11 @@ users:
         member_of:
             - zzhang
 
+    - data_obs_user_1: # External user - Data Observability Vendor 
+        can_login: yes
+        member_of:
+            - data_observability
+
 # ==========================================
 # Warehouses
 # ==========================================
@@ -4494,3 +4639,6 @@ warehouses:
 
     - usage_ping:
         size: small
+
+    - data_obs_wh_1:
+        size: x-small

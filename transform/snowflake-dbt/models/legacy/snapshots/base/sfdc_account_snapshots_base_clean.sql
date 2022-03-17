@@ -48,7 +48,7 @@ WITH sfdc_account_snapshots AS (
       industry                                   AS industry,
       account_tier__c                            AS account_tier,
       customer_since__c::DATE                    AS customer_since_date,
-      -- carr_acct_family__c                        AS carr_account_family
+      carr_acct_family__c                        AS carr_account_family,
       next_renewal_date__c                       AS next_renewal_date,
       license_utilization__c                     AS license_utilization,
       products_purchased__c                      AS products_purchased,

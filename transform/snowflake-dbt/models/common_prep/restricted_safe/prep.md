@@ -1,3 +1,15 @@
+{% docs prep_crm_account %}
+
+Prep model for the live crm account dimension.
+
+{% enddocs %}
+
+{% docs prep_crm_opportunity %}
+
+Prep model for the live crm opportunity dimension and fact models.
+
+{% enddocs %}
+
 {% docs prep_subscription_opportunity_mapping %}
 
  Prep table for the mapping table for subscriptions to opportunities. This incorporates logic from previous processes which includes taking opportunity-subscription connections from quotes, invoices, and the subscription object itself. Based on the created date, term dates, or subscription name, we fill in missing opportunity ids.

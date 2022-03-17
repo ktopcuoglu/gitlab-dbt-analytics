@@ -630,6 +630,22 @@ tables:
       FROM experiment_subjects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  external_status_checks:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'external_status_checks'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , created_at
+      , updated_at
+      , external_url
+      , name
+      FROM external_status_checks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   grafana_integrations:
     export_schema: "gitlab_com"
     export_table: grafana_integrations
@@ -712,6 +728,7 @@ tables:
       , group_id
       , inherit_from_id
       , instance
+      , type_new
       FROM integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
@@ -1054,7 +1071,7 @@ tables:
       , target_project_id
       , updated_by_id
       , merge_error
-      , merge_params
+      , NULL as merge_params
       , merge_when_pipeline_succeeds
       , merge_user_id
       , approvals_before_merge
@@ -1639,6 +1656,7 @@ tables:
       , author_id
       , state
       , build_id
+      , issue_id
       FROM requirements_management_test_reports
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp

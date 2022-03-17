@@ -1,13 +1,11 @@
-
 {{ config({
     "materialized": "incremental",
     "unique_key": "id"
     })
 }}
 
-
 SELECT *
-FROM {{ source('gitlab_dotcom', 'lfs_file_locks') }}
+FROM {{ source('gitlab_dotcom', 'ci_namespace_monthly_usages') }}
 {% if is_incremental() %}
 
 WHERE _uploaded_at >= (SELECT MAX(_uploaded_at) FROM {{this}})
