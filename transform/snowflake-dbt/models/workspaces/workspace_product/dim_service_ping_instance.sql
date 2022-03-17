@@ -106,8 +106,6 @@ SELECT
       is_dependency_proxy_enabled,
       recording_ce_finished_at,
       recording_ee_finished_at,
-      stats_used,
-      counts,
       is_ingress_modsecurity_enabled,
       topology,
       is_grafana_link_enabled,
