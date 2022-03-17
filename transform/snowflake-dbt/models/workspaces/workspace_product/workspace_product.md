@@ -20,7 +20,7 @@ Use case: Everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_xmau_metric_monthly %}
 
 Type of Data: gitlab.com db usage events
-Aggregate reporting_month, user_group, section_name, stage_name, and group_name
+Aggregate Grain: reporting_month, user_group, section_name, stage_name, and group_name
 Time Grain: Last 28 days of the month
 Use case: Paid SaaS xMAU, SaaS SpO
 Usage is attributed to a namespace's last reported plan (free vs paid)
