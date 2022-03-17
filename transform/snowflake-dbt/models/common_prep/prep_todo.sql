@@ -11,7 +11,7 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
-    ('prep_project', 'prep_project'),
+    ('dim_project', 'dim_project'),
 ]) }}
 
 , gitlab_dotcom_todo_dedupe_source AS (
@@ -35,20 +35,18 @@
     SELECT 
       gitlab_dotcom_todo_dedupe_source.todo_id::NUMBER                  AS dim_todo_id,
       gitlab_dotcom_todo_dedupe_source.author_id::NUMBER                AS author_id,
-      gitlab_dotcom_todo_dedupe_source.project_id::NUMBER               AS dim_project_id,
-      prep_project.ultimate_parent_namespace_id::NUMBER                 AS ultimate_parent_namespace_id,
-      dim_date.date_id::NUMBER                                          AS created_date_id,
+      IFNULL(dim_project.dim_project_id, -1)                            AS dim_project_id,
+      IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)              AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER           AS dim_plan_id,
-      IFF(target_type = '', NULL, target_type)::VARCHAR                 AS target_type,
+      dim_date.date_id::NUMBER                                          AS created_date_id,
       gitlab_dotcom_todo_dedupe_source.created_at::TIMESTAMP            AS created_at,
-      gitlab_dotcom_todo_dedupe_source.updated_at::TIMESTAMP            AS updated_at,
-      gitlab_dotcom_todo_dedupe_source.todo_state::VARCHAR              AS state
+      gitlab_dotcom_todo_dedupe_source.updated_at::TIMESTAMP            AS updated_at
     FROM gitlab_dotcom_todo_dedupe_source
-    LEFT JOIN prep_project ON gitlab_dotcom_todo_dedupe_source.project_id = prep_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+    LEFT JOIN dim_project 
+      ON gitlab_dotcom_todo_dedupe_source.project_id = dim_project.dim_project_id
+    LEFT JOIN dim_namespace_plan_hist ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_todo_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_todo_dedupe_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN prep_user ON gitlab_dotcom_todo_dedupe_source.author_id = prep_user.dim_user_id
     LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_todo_dedupe_source.created_at) = dim_date.date_day
 
 )
