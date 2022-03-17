@@ -15,7 +15,7 @@
       MAX(IFNULL(effective_end_date, '2030-12-12')) AS emp_end_date,
       MAX(termination_date) AS termination_date
     FROM bamboohr_job_info_current_division_base
-    WHERE LOWER(job_title) LIKE '%sales development representative%' OR LOWER(job_title) LIKE '%sales development team lead%'
+    WHERE LOWER(job_title) LIKE '%sales development representative%' OR LOWER(job_title) LIKE '%sales development team lead%' OR LOWER(job_title) LIKE '%business development representative%' OR LOWER(job_title) LIKE '%sales development rep%'
     GROUP BY 1, 2
 
 ), sdr AS (

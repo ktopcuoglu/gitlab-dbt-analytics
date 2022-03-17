@@ -168,9 +168,12 @@ WITH date_details AS (
     agg_demo_keys.sales_qualified_source,
     agg_demo_keys.sales_team_rd_asm_level,
 
-    agg_demo_keys.key_segment,
     agg_demo_keys.key_sqs,
     agg_demo_keys.key_ot,
+
+    agg_demo_keys.key_segment,
+    agg_demo_keys.key_segment_sqs,                 
+    agg_demo_keys.key_segment_ot,   
 
     agg_demo_keys.key_segment_geo,
     agg_demo_keys.key_segment_geo_sqs,

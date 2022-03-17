@@ -1,12 +1,9 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception"],
+    materialized="incremental",
+    unique_key="mau_id"
 ) }}
 
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "mau_id"
-    })
-}}
 
 WITH date_details AS (
   
@@ -71,8 +68,9 @@ SELECT
   is_representative_of_stage,
   
   --metadata
-  DATEDIFF('day', user_created_at, date_day)                                             AS days_since_user_creation,
-  DATEDIFF('day', namespace_created_at, date_day)                                        AS days_since_namespace_creation,
+  -- aggregating because user_created_at and namespace_created_at can be impacted by late arriving dimensions
+  MAX(DATEDIFF('day', user_created_at, date_day))                                        AS days_since_user_creation,
+  MAX(DATEDIFF('day', namespace_created_at, date_day))                                   AS days_since_namespace_creation,
   
   COUNT(*)                                                                               AS event_count,
   COUNT(DISTINCT TO_DATE(event_created_at))                                              AS event_day_count
@@ -87,4 +85,4 @@ LEFT JOIN gitlab_subscriptions
 LEFT JOIN plans
   ON gitlab_subscriptions.plan_id = plans.plan_id
 WHERE day_of_month = 1
-{{ dbt_utils.group_by(n=11) }}
+{{ dbt_utils.group_by(n=9) }}

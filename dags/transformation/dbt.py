@@ -164,7 +164,7 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt --no-use-colors test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest; 
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
@@ -202,7 +202,7 @@ dbt_results = KubernetesPodOperator(
 dbt_workspaces_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_datascience.* workspaces.workspace_data.tdf.*; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_data_science.* workspaces.workspace_data.tdf.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces = KubernetesPodOperator(
@@ -222,7 +222,7 @@ dbt_workspaces_xl_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.workspace_datascience.* ; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.workspace_data_science.* ; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces_xl = KubernetesPodOperator(

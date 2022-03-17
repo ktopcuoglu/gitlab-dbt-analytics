@@ -118,6 +118,28 @@
       free_user_metrics.ci_templates_usage_28_days_event,
       free_user_metrics.project_management_issue_milestone_changed_28_days_user,
       free_user_metrics.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      free_user_metrics.protected_branches_28_days_user,
+      free_user_metrics.ci_cd_lead_time_usage_28_days_event,
+      free_user_metrics.ci_cd_deployment_frequency_usage_28_days_event,
+      free_user_metrics.projects_with_repositories_enabled_all_time_user,
+      free_user_metrics.api_fuzzing_jobs_usage_28_days_user,
+      free_user_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
+      free_user_metrics.api_fuzzing_pipeline_usage_28_days_event,
+      free_user_metrics.container_scanning_pipeline_usage_28_days_event,
+      free_user_metrics.dependency_scanning_pipeline_usage_28_days_event,
+      free_user_metrics.sast_pipeline_usage_28_days_event,
+      free_user_metrics.secret_detection_pipeline_usage_28_days_event,
+      free_user_metrics.dast_pipeline_usage_28_days_event,
+      free_user_metrics.coverage_fuzzing_jobs_28_days_user,
+      free_user_metrics.environments_all_time_event,
+      free_user_metrics.feature_flags_all_time_event,
+      free_user_metrics.successful_deployments_28_days_event,
+      free_user_metrics.failed_deployments_28_days_event,
+      free_user_metrics.projects_compliance_framework_all_time_event,
+      free_user_metrics.commit_ci_config_file_28_days_user,
+      free_user_metrics.view_audit_all_time_user,
+      -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
     LEFT JOIN crm_accounts
@@ -228,6 +250,26 @@
         'ci_templates_usage_28_days_event',
         'project_management_issue_milestone_changed_28_days_user',
         'project_management_issue_iteration_changed_28_days_user',
+        'protected_branches_28_days_user',
+        'ci_cd_lead_time_usage_28_days_event',
+        'ci_cd_deployment_frequency_usage_28_days_event',
+        'projects_with_repositories_enabled_all_time_user',
+        'api_fuzzing_jobs_usage_28_days_user',
+        'coverage_fuzzing_pipeline_usage_28_days_event',
+        'api_fuzzing_pipeline_usage_28_days_event',
+        'container_scanning_pipeline_usage_28_days_event',
+        'dependency_scanning_pipeline_usage_28_days_event',
+        'sast_pipeline_usage_28_days_event',
+        'secret_detection_pipeline_usage_28_days_event',
+        'dast_pipeline_usage_28_days_event',
+        'coverage_fuzzing_jobs_28_days_user',
+        'environments_all_time_event',
+        'feature_flags_all_time_event',
+        'successful_deployments_28_days_event',
+        'failed_deployments_28_days_event',
+        'projects_compliance_framework_all_time_event',
+        'commit_ci_config_file_28_days_user',
+        'view_audit_all_time_user',
         'is_latest_data'
     ]
 ) }}
@@ -237,5 +279,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2021-12-23"
+    updated_date="2022-03-02"
 ) }}

@@ -61,6 +61,8 @@ macros:
     description: '{{ doc("null_negative_numbers") }}'
   - name: query_comment
     description: '{{ doc("query_comment") }}'
+  - name: scd_latest_state
+    description: '{{ doc("scd_latest_state") }}'
   - name: scd_type_2
     description: '{{ doc("scd_type_2") }}'
   - name: schema_union_all

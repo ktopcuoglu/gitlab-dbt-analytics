@@ -131,6 +131,11 @@ models:
     description: ' {{ doc("dim_service_ping_instance") }} '
     columns:
       - name: mart_service_ping_instance_id
+
+  - name: mart_xmau_metric_monthly
+    description: ' {{ doc("mart_xmau_metric_monthly") }} '
+    columns:
+      - name: mart_xmau_metric_monthly_id
         tests:
           - not_null
           - unique

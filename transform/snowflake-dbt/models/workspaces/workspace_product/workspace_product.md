@@ -14,6 +14,12 @@ This table contains all gitlab.com events with additional dimensions and other f
 {% enddocs %}
 
 
+{% docs mart_xmau_metric_monthly %}
+
+GitLab.com mart that determined unique namespace and user counts for total, free and paid metrics.
+
+{% enddocs %}
+
 {% docs mart_usage_event_plan_monthly %}
 
 GitLab.com Plan/Metric mart aggregated by month. Trying to mimic Self-managed usage ping format by

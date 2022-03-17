@@ -79,7 +79,7 @@ models:
               field: dim_crm_account_id
         tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: opportunity_name
-      - name: dim_crm_sales_rep_id
+      - name: dim_crm_user_id
         description: Sourced from the opportunity owner_id this key is for joining to dim_crm_user
         tests:
           - relationships:
@@ -307,6 +307,16 @@ models:
         description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx) for renewals only current subscription ARR.
       - name: arr
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
+
+  - name: fct_crm_opportunity_daily_snapshot
+    description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'
+    columns:
+      - name: crm_opportunity_snapshot_id
+        description: Unique identifier of a crm opportunity in the daily snapshot models
+        tests:
+          - not_null
+          - unique
+        tags: [ "tdf", "common", "sales_funnel" ]
 
   - name: fct_invoice
     description: '{{ doc("fct_invoice") }}'
