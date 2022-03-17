@@ -3,13 +3,7 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.python_operator import (
-    BranchPythonOperator,
-    ShortCircuitOperator,
-    PythonOperator,
-)
-from airflow.models import Variable
-from airflow.utils.trigger_rule import TriggerRule
+
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_cmd,
@@ -19,7 +13,6 @@ from airflow_utils import (
     slack_failed_task,
     dbt_install_deps_and_seed_cmd,
     clone_repo_cmd,
-    run_command_test_exclude,
 )
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
@@ -65,7 +58,6 @@ task_secrets = [
     SNOWFLAKE_LOAD_WAREHOUSE,
 ]
 
-
 pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_hash }}" """
 
 # Default arguments for the DAG
@@ -81,77 +73,43 @@ default_args = {
 }
 
 # Create the DAG
-# Runs 3x per day
-dag = DAG("dbt_snapshots", default_args=default_args, schedule_interval="0 */8 * * *")
+dag = DAG(
+    "dbt_edm_snapshots", default_args=default_args, schedule_interval="0 17 * * *"
+)
 
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc path:snapshots/gitlab_dotcom; ret=$?;
+    dbt snapshot -s tag:edm_snapshot --profiles-dir profile; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 
 dbt_snapshot = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-snapshots",
-    name="dbt-snapshots",
+    task_id="dbt-edm-snapshots",
+    name="dbt-edm-snapshots",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snapshot_cmd],
     dag=dag,
 )
 
-dbt_commit_hash_setter = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id="dbt-commit-hash-setter",
-    name="dbt-commit-hash-setter",
-    env_vars=pod_env_vars,
-    arguments=[
-        f"""{clone_repo_cmd} &&
-            cd analytics/transform/snowflake-dbt/ &&
-            mkdir -p /airflow/xcom/ &&
-            echo "{{\\"commit_hash\\": \\"$(git rev-parse HEAD)\\"}}" >> /airflow/xcom/return.json
-        """
-    ],
-    do_xcom_push=True,
-    dag=dag,
-)
-
-
-def commit_hash_exporter(**context):
-    Variable.set(
-        "dbt_hash",
-        context["ti"].xcom_pull(task_ids="dbt-commit-hash-setter", key="return_value")[
-            "commit_hash"
-        ],
-    )
-
-
-dbt_commit_hash_exporter = PythonOperator(
-    task_id="dbt-commit-hash-exporter",
-    provide_context=True,
-    python_callable=commit_hash_exporter,
-    dag=dag,
-)
 
 # run snapshots on large warehouse
 dbt_snapshot_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target prod --models +legacy.snapshots --exclude tags:edm_snapshot; ret=$?;
+    dbt run --profiles-dir profile --target prod --models tags:edm_snapshot; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
 dbt_snapshot_models_run = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-run-model-snapshots",
-    name="dbt-run-model-snapshots",
-    trigger_rule="all_done",
+    task_id="dbt-run-edm-model-snapshots",
+    name="dbt-run-edm-model-snapshots",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_snapshot_models_command],
@@ -162,16 +120,15 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --models +legacy.snapshots {run_command_test_exclude}; ret=$?;
+    dbt test --profiles-dir profile --target prod --models tags:edm_snapshot; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 
 dbt_test_snapshot_models = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id="dbt-test-snapshots",
-    name="dbt-test-snapshots",
-    trigger_rule="all_done",
+    task_id="dbt-test-edm-snapshots",
+    name="dbt-test-edm-snapshots",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[dbt_test_snapshots_cmd],
@@ -179,30 +136,4 @@ dbt_test_snapshot_models = KubernetesPodOperator(
 )
 
 
-def run_or_skip_dbt(current_seconds: int, dag_interval: int) -> bool:
-    # Only run models and tests once per day
-    if current_seconds < dag_interval:
-        return True
-    else:
-        return False
-
-
-SCHEDULE_INTERVAL_HOURS = 8
-timestamp = datetime.now()
-current_seconds = timestamp.hour * 3600
-dag_interval = SCHEDULE_INTERVAL_HOURS * 3600
-
-short_circuit = ShortCircuitOperator(
-    task_id="short_circuit",
-    python_callable=lambda: run_or_skip_dbt(current_seconds, dag_interval),
-    dag=dag,
-)
-
-(
-    dbt_commit_hash_setter
-    >> dbt_commit_hash_exporter
-    >> dbt_snapshot
-    >> short_circuit
-    >> dbt_snapshot_models_run
-    >> dbt_test_snapshot_models
-)
+dbt_snapshot >> dbt_snapshot_models_run >> dbt_test_snapshot_models
