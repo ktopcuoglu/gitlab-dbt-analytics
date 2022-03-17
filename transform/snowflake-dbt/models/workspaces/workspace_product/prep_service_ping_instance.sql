@@ -15,7 +15,7 @@
 
 , source AS (
 
-    SELECT
+    SELECT top 1000
       id                                                                        AS dim_service_ping_instance_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,

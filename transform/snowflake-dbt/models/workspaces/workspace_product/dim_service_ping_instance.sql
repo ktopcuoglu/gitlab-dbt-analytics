@@ -9,18 +9,18 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('version_usage_data_source', 'version_usage_data_source')
+    ('prep_service_ping_instance', 'prep_service_ping_instance')
     ])
 
 }}
 
 , usage_data_w_date AS (
   SELECT
-    version_usage_data_source.*,
+    prep_service_ping_instance.*,
     dim_date.date_id              AS dim_date_id
-  FROM version_usage_data_source
+  FROM prep_service_ping_instance
   LEFT JOIN dim_date
-    ON TO_DATE(created_at) = dim_date.date_day
+    ON TO_DATE(ping_created_at) = dim_date.date_day
 
 ), last_ping_of_month_flag AS (
 
@@ -29,7 +29,7 @@ SELECT
     usage_data_w_date.dim_date_id,
     usage_data_w_date.uuid,
     usage_data_w_date.host_id,
-    usage_data_w_date.created_at::TIMESTAMP(0)   AS ping_created_at,
+    usage_data_w_date.ping_created_at::TIMESTAMP(0)   AS ping_created_at,
     dim_date.month_actual,
     TRUE                      AS last_ping_of_month_flag
   FROM usage_data_w_date
@@ -53,14 +53,13 @@ SELECT
     SELECT
       id                                                                        AS dim_service_ping_instance_id,
       dim_date_id                                                               AS dim_date_id,
-      created_at::TIMESTAMP(0)                                                  AS ping_created_at,
+      ping_created_at::TIMESTAMP(0)                                             AS ping_created_at,
       DATEADD('days', -28, ping_created_at)                                     AS ping_created_at_28_days_earlier,
       DATE_TRUNC('YEAR', ping_created_at)                                       AS ping_created_at_year,
       DATE_TRUNC('MONTH', ping_created_at)                                      AS ping_created_at_month,
       DATE_TRUNC('WEEK', ping_created_at)                                       AS ping_created_at_week,
       DATE_TRUNC('DAY', ping_created_at)                                        AS ping_created_at_date,
-      {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash,
-      source_ip,
+      ip_address_hash                                                           AS ip_address_hash,
       version,
       instance_user_count,
       license_md5,
@@ -70,12 +69,11 @@ SELECT
       license_expires_at,
       license_add_ons,
       recorded_at,
-      created_at,
       updated_at,
       mattermost_enabled,
       uuid                                                                      AS dim_instance_id,
       host_id || dim_instance_id                                                AS dim_installation_id,
-      edition,
+      main_edition                                                              AS edition,
       hostname                                                                  AS host_name,
       host_id                                                                   AS dim_host_id,
       license_trial                                                             AS is_trial,
