@@ -315,6 +315,8 @@ models:
         description: The date when the nampespace was created.
       - name: days_since_namespace_created
         description: The days since the namespace was created.
+      - name: days_since_namespace_creation_at_event_date
+        description: The days since the namespace was created from the day the event was created.
       - name: is_smau
         description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
       - name: is_gmau

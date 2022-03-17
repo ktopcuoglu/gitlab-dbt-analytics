@@ -21,7 +21,7 @@ Use case: Everyday analysis and dashboards; flexibility in aggregating by sets o
 
 Type of Data: gitlab.com db usage events
 Aggregate Grain: Plan (including Free/Paid and Total) / Metric
-Time Grain: 28-day (likely last 28 days of the month)
+Time Grain: Last 28 days of the month
 Use case: Paid SaaS xMAU, SaaS SpO
 Usage is attributed to a namespace's last reported plan (free vs paid)
 (GitLab.com mart that determines unique namespace and user counts for total, free and paid metrics.)
@@ -32,7 +32,7 @@ Usage is attributed to a namespace's last reported plan (free vs paid)
 
 Type of Data: gitlab.com db usage events
 Aggregate Grain: Plan (including Free/Paid and Total) / Metric
-Time Grain: 28-day (likely last 28 days of the month)
+Time Grain: Last 28 days of the month
 Use case: Paid SaaS xMAU, SaaS SpO
 (Trying to mimic Self-managed usage ping format by getting the count of each event that happened in the last 28 days.
  Effectively ignoring the first two or three days of each month.)
@@ -42,7 +42,7 @@ Use case: Paid SaaS xMAU, SaaS SpO
 {% docs mart_usage_namespace_daily %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: Namespace
+Aggregate Grain: Namespace and Event
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
 
@@ -52,7 +52,7 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_usage_instance_daily %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: Instance
+Aggregate Grain: Instance (all of SaaS)
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
 
@@ -62,8 +62,6 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_usage_event_daily %}
 
 Type of Data: gitlab.com db usage events
-Aggregate Grain: User / Namespace / Plan / Event
+Aggregate Grain: User / Namespace / Event
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
-
-{% enddocs %}
