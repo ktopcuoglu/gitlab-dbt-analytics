@@ -65,3 +65,5 @@ Type of Data: gitlab.com db usage events
 Aggregate Grain: event_date, dim_user_id, dim_namespace_id, and event_name
 Time Grain: Day
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+{% enddocs %}
