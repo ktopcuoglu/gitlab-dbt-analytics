@@ -3,7 +3,8 @@
 ) }}
 
 {{ config({
-    "materialized": "table"
+    "materialized": "incremental",
+    "unique_key": "prep_service_ping_instance_id"
     })
 }}
 
@@ -20,8 +21,14 @@
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
-    FROM {{ ref('version_usage_data_source') }}
-      WHERE ping_created_at > dateadd(month, -12, current_date())
+    FROM {{ ref('version_usage_data_source') }} as usage
+
+  {% if is_incremental() %}
+              WHERE
+                  created_at > (SELECT COALESCE(DATEADD(WEEK,-2,MAX(ping_created_at)),dateadd(month, -24, current_date()))            -- Check on First Time UUID/Instance_IDs returns '2000-01-01'
+                              FROM {{this}} AS usage_ping
+                              WHERE usage.uuid  = usage_ping.uuid)
+  {% endif %}
 
 ), usage_data AS (
 
