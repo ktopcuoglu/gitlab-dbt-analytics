@@ -12,18 +12,18 @@ from os import environ as env
 
 class ZuoraQueriesAPI:
     def __init__(self):
-        user = env["ZUORA_API_USER"]
-        password = env["ZUORA_API_PASS"]
+        zuora_api_client_id = env["ZUORA_API_CLIENT_ID"]
+        zuora_api_client_secret = env["ZUORA_API_CLIENT_SECRET"]
         self.base_url = "https://rest.zuora.com"
 
-        zuora_token = self.authenticate_zuora(user, password)
+        zuora_token = self.authenticate_zuora(zuora_api_client_id, zuora_api_client_secret)
 
         self.request_headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {zuora_token}",
         }
 
-    def authenticate_zuora(self, user, password):
+    def authenticate_zuora(self, zuora_api_client_id, zuora_api_client_secret):
         """
         Written to encapsulate Zuora's authentication functionality
         :return:
@@ -33,8 +33,8 @@ class ZuoraQueriesAPI:
         }
 
         data_auth = {
-            "client_id": user,
-            "client_secret": password,
+            "client_id": zuora_api_client_id,
+            "client_secret": zuora_api_client_secret,
             "grant_type": "client_credentials",
         }
         auth_url = f"{self.base_url}/oauth/token"
