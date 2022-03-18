@@ -35,7 +35,7 @@ Aggregate Grain: reporting_month, plan_id_at_event_date, and event_name
 Time Grain: Last 28 days of the month
 Use case: Paid SaaS xMAU, SaaS SpO
 (Trying to mimic Self-managed usage ping format by getting the count of each event that happened in the last 28 days.
- Effectively ignoring the first two or three days of each month.)
+Trying to mimic instance-level service ping format by getting the count of each event that happened in the last 28 days of the month.
 
 {% enddocs %}
 
