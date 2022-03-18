@@ -12,7 +12,7 @@
 
     SELECT
       dim_namespace_id,
-      MAX(IFF(visibility_level = 'public', TRUE, FALSE)) AS namespace_has_public_project
+      MAX(IFF(visibility_level = 'public', TRUE, FALSE)) AS does_namespace_has_public_project
     FROM project
     GROUP BY 1
 
@@ -105,7 +105,7 @@
         ELSE 0 
       END                                                                                     AS is_group_namespace,
       namespace_lineage.is_setup_for_company                                                  AS is_setup_for_company,
-      namespace_project_visibility.namespace_has_public_project                               AS namespace_has_public_project,
+      namespace_project_visibility.does_namespace_has_public_project                          AS does_namespace_has_public_project,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
       marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE

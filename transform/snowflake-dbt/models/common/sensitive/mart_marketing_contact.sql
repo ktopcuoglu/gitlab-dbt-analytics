@@ -626,7 +626,7 @@
         ELSE FALSE
       END                                                                                        AS has_namespace_setup_for_company_use,
       CASE
-        WHEN MAX(marketing_contact_order.namespace_has_public_project) = TRUE
+        WHEN MAX(marketing_contact_order.does_namespace_has_public_project) = TRUE
           THEN TRUE
         ELSE FALSE
       END                                                                                        AS has_namespace_with_public_project,
