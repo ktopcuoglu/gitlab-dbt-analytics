@@ -58,7 +58,6 @@ WITH source AS (
         buying_process_for_procuring_gitlab__c                  AS buying_process,
         core_check_in_notes__c                                  AS core_check_in_notes,
         industry                                                AS industry,
-        region__c                                               AS region,
         largeaccount__c                                         AS is_large_account,
         outreach_stage__c                                       AS outreach_stage,
         Sequence_Step_Number__c                                 AS outreach_step_number,
