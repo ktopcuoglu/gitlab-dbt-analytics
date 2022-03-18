@@ -15,12 +15,13 @@
 
 , source AS (
 
-    SELECT
+    SELECT top 1000
       id                                                                        AS dim_service_ping_instance_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
+      WHERE ping_created_at > dateadd(month, -24, current_date())
 
 ), usage_data AS (
 
