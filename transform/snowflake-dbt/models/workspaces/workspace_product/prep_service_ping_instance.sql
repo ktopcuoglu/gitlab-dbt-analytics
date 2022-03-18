@@ -21,7 +21,7 @@
       *,
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
     FROM {{ ref('version_usage_data_source') }}
-      WHERE ping_created_at > dateadd(month, -24, current_date())
+      WHERE ping_created_at > dateadd(month, -12, current_date())
 
 ), usage_data AS (
 
