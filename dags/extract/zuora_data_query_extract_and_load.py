@@ -16,8 +16,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    ZUORA_API_USER,
-    ZUORA_API_PASS,
+    ZUORA_API_CLIENT_ID,
+    ZUORA_API_CLIENT_SECRET,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -66,8 +66,8 @@ zuora_data_query_extract_extract = KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
-        ZUORA_API_USER,
-        ZUORA_API_PASS,
+        ZUORA_API_CLIENT_ID,
+        ZUORA_API_CLIENT_SECRET,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity(False),
