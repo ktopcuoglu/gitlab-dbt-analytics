@@ -20,6 +20,7 @@ WITH source AS (
       mobile_phone::VARCHAR                     AS mobile_phone,
       inactive_lead_c::BOOLEAN                  AS is_lead_inactive,
       inactive_contact_c::BOOLEAN               AS is_contact_inactive,
+      sales_segmentation_c::VARCHAR             AS sales_segmentation,
       is_email_bounced::BOOLEAN                 AS is_email_bounced,
       email_bounced_date::DATE                  AS email_bounced_date,
       unsubscribed::BOOLEAN                     AS is_unsubscribed,

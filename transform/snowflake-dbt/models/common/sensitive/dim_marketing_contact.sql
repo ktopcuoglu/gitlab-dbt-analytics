@@ -129,6 +129,7 @@ WITH sfdc_lead AS (
       mobile_phone,
       is_lead_inactive,
       is_contact_inactive,
+      IFF(sales_segmentation = 'Unknown', NULL, sales_segmentation)                     AS sales_segmentation,
       is_email_bounced                                                                  AS is_marketo_email_bounced,
       email_bounced_date                                                                AS marketo_email_bounced_date,
       is_unsubscribed                                                                   AS is_marketo_unsubscribed,
