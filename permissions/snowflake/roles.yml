@@ -27,6 +27,11 @@ databases:
     - testing_db:
         shared: no
 
+    - brhea_prod:
+          shared: no
+    - brhea_prep:
+          shared: no
+
     - csharp_prod:
         shared: no
     - csharp_prep:
@@ -1909,6 +1914,7 @@ roles:
                     - prep.sensitive.qualtrics_mailing_contacts
                     - prep.sensitive.qualtrics_nps_answers
                     - prep.sensitive.qualtrics_nps_survey_responses
+                    - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
 
     - pmg:
@@ -2373,6 +2379,46 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - reporting
+
+    - brhea:
+        member_of:
+            - reporter
+            - qualtrics
+            - qualtrics_sensitive
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - brhea_prep
+                - brhea_prod
+            schemas:
+                - brhea_prep.*
+                - brhea_prod.*
+            tables:
+                - brhea_prep.*.*
+                - brhea_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - brhea_prep
+                    - brhea_prod
+                write:
+                    - brhea_prep
+                    - brhea_prod
+            schemas:
+                read:
+                    - brhea_prep.*
+                    - brhea_prod.*
+                write:
+                    - brhea_prep.*
+                    - brhea_prod.*
+            tables:
+                read:
+                    - brhea_prep.*.*
+                    - brhea_prod.*.*
+                write:
+                    - brhea_prep.*.*
+                    - brhea_prod.*.*
 
     - cbalane:
         member_of:
@@ -4156,6 +4202,11 @@ users:
         can_login: yes
         member_of:
             - bbutterfield
+
+    - brhea:
+        can_login: yes
+        member_of:
+            - brhea
 
     - cbalane:
         can_login: yes
