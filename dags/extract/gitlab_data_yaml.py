@@ -43,6 +43,7 @@ dag = DAG(
     "gitlab_data_yaml_extract",
     default_args=default_args,
     schedule_interval="0 */8 * * *",
+    concurrency=1,
 )
 
 # YAML Extract
