@@ -118,7 +118,7 @@ class ZuoraQueriesAPI:
         else:
             return False
 
-    def process_scd(self, scd_file: str = "./scd_queries.yml"):
+    def process_scd(self, scd_file: str = "./zuora_data_query/src/scd_queries.yml"):
 
         with open(scd_file) as file:
             query_specs = yaml.load(file, Loader=yaml.FullLoader)
