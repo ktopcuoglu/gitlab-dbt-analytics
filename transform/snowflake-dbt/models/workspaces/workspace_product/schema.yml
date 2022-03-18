@@ -164,11 +164,11 @@ models:
       - name: days_since_namespace_created
         description: The days since the namespace was created.
       - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: created_by
         description: Who created this model?
       - name: update_by
@@ -222,11 +222,11 @@ models:
       - name: days_since_namespace_created
         description: The days since the namespace was created.
       - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: event_count
         description: The count of events
       - name: distinct_user_count
@@ -318,11 +318,11 @@ models:
       - name: days_since_namespace_creation_at_event_date
         description: The days since the namespace was created from the day the event was created.
       - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: event_count
         description: The count of events
       - name: created_by
