@@ -3,7 +3,7 @@
 ) }}
 
 {{config({
-    "materialized": "incremental"
+    "materialized": "table"
   })
 }}
 
