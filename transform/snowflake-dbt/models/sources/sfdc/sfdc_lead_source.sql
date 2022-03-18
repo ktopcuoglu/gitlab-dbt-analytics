@@ -84,7 +84,6 @@ WITH source AS (
         bad_data_datetime__c                                    AS bad_data_datetime,
         worked_date__c                                          AS worked_datetime,
         web_portal_purchase_datetime__c                         AS web_portal_purchase_datetime,
-        {{ sales_segment_cleaning('sales_segmentation__c') }}   AS sales_segmentation,
         mkto71_Lead_Score__c                                    AS person_score,
         status                                                  AS lead_status,
         last_utm_campaign__c                                    AS last_utm_campaign,

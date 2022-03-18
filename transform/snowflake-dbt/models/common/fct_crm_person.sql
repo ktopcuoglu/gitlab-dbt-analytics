@@ -279,8 +279,6 @@ WITH account_dims_mapping AS (
       ON crm_person.dim_crm_person_id = mqls.crm_person_id
     LEFT JOIN account_dims_mapping
       ON crm_person.dim_crm_account_id = account_dims_mapping.dim_crm_account_id
-    LEFT JOIN sales_segment
-      ON sfdc_leads.sales_segmentation = sales_segment.sales_segment_name
     LEFT JOIN sales_territory
       ON sfdc_leads.tsp_territory = sales_territory.sales_territory_name
     LEFT JOIN industry
