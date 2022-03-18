@@ -12,7 +12,7 @@
 
     SELECT
       dim_namespace_id,
-      MAX(IFF(visibility_level = 'public', TRUE, FALSE)) AS does_namespace_has_public_project
+      MAX(IFF(visibility_level = 'public', TRUE, FALSE)) AS does_namespace_have_public_project
     FROM project
     GROUP BY 1
 
