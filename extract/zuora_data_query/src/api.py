@@ -16,7 +16,9 @@ class ZuoraQueriesAPI:
         zuora_api_client_secret = env["ZUORA_API_CLIENT_SECRET"]
         self.base_url = "https://rest.zuora.com"
 
-        zuora_token = self.authenticate_zuora(zuora_api_client_id, zuora_api_client_secret)
+        zuora_token = self.authenticate_zuora(
+            zuora_api_client_id, zuora_api_client_secret
+        )
 
         self.request_headers = {
             "Content-Type": "application/json",
