@@ -3,7 +3,8 @@
 ) }}
 
 {{ config({
-    "materialized": "table"
+  "materialized": "incremental",
+  "unique_key": "fct_service_ping_instance_id"
     })
 }}
 
@@ -31,14 +32,26 @@
     INNER JOIN locations
       WHERE map_ip_to_country.dim_location_country_id = locations.dim_location_country_id
 
+), source AS (
+
+    SELECT
+      prep_service_ping_instance.*
+    FROM prep_service_ping_instance
+      {% if is_incremental() %}
+                  WHERE
+                      ping_created_at > (SELECT COALESCE(DATEADD(WEEK,-2,MAX(ping_created_at)),dateadd(month, -24, current_date()))            -- Check on First Time UUID/Instance_IDs returns '2000-01-01'
+                                  FROM {{this}} AS usage_ping
+                                  WHERE prep_service_ping_instance.dim_instance_id  = usage_ping.dim_instance_id)
+      {% endif %}
+
 ), add_country_info_to_usage_ping AS (
 
     SELECT
-      prep_service_ping_instance.*,
+      source.*,
       map_ip_location.dim_location_country_id
-    FROM prep_service_ping_instance
+    FROM source
     LEFT JOIN map_ip_location
-      ON prep_service_ping_instance.ip_address_hash = map_ip_location.ip_address_hash
+      ON source.ip_address_hash = map_ip_location.ip_address_hash
 
 ), dim_product_tier AS (
 

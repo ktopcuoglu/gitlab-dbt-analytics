@@ -3,12 +3,13 @@
 ) }}
 
 {{config({
-    "materialized": "table"
+  "materialized": "incremental",
+  "unique_key": "mart_service_ping_instance_id"
   })
 }}
 
 {{ simple_cte([
-    ('fct_service_ping', 'fct_service_ping_instance'),
+    ('fct_service_ping_instance', 'fct_service_ping_instance'),
     ('dim_service_ping', 'dim_service_ping_instance'),
     ('dim_product_tier', 'dim_product_tier'),
     ('dim_date', 'dim_date'),
@@ -81,6 +82,17 @@
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
       AND dim_date.date_day = dim_date.first_day_of_month
     {{ dbt_utils.group_by(n=17)}}
+
+), fct_service_ping AS  (
+
+  SELECT
+    * FROM fct_service_ping_instance
+    {% if is_incremental() %}
+                WHERE
+                    ping_created_at > (SELECT COALESCE(DATEADD(WEEK,-2,MAX(ping_created_at)),dateadd(month, -24, current_date()))            -- Check on First Time UUID/Instance_IDs returns '2000-01-01'
+                                FROM {{this}} AS usage_ping
+                                WHERE fct_service_ping_instance.dim_instance_id  = usage_ping.dim_instance_id)
+    {% endif %}
 
 ), fct_pings_w_dims AS  (
 
