@@ -959,14 +959,13 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
-        member_of:
-            - snowflake_db
         privileges:
             databases:
                 read:
                     - prod
                     - raw
                     - prep
+                    - snowflake
             schemas:
                 read:
                     - prod.restricted_safe_common_mart_sales
@@ -981,6 +980,7 @@ roles:
                     - prep.snowplow
                     - prep.dbt
                     - prep.airflow
+                    - snowflake.account_usage
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -1018,6 +1018,7 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
+                    - snowflake.account_usage.query_history
 
 
                     
