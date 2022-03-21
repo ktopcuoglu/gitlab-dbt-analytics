@@ -105,7 +105,15 @@ models:
   - name: prep_service_ping_instance
     description: ' {{ doc("prep_service_ping_instance") }} '
     columns:
-      - name: prep_service_ping_instance_id
+      - name: dim_service_ping_instance_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_service_ping_instance_flattened
+    description: ' {{ doc("prep_service_ping_instance_flattened") }} '
+    columns:
+      - name: prep_service_ping_instance_flattened_id
         tests:
           - not_null
           - unique

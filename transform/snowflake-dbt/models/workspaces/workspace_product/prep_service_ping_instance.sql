@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "prep_service_ping_instance_id"
+    "unique_key": "dim_service_ping_instance_id"
     })
 }}
 
@@ -68,19 +68,10 @@
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
 
-), flattened_high_level as (
-    SELECT
-      {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'path']) }}       AS prep_service_ping_instance_id,
-      joined_ping.*,
-      path                                  AS metrics_path,
-      value                                 AS metric_value
-  FROM joined_ping,
-    LATERAL FLATTEN(input => raw_usage_data_payload,
-    RECURSIVE => true)
 )
 
 {{ dbt_audit(
-    cte_ref="flattened_high_level",
+    cte_ref="joined_ping",
     created_by="@icooper-acp",
     updated_by="@icooper-acp",
     created_date="2022-03-17",

@@ -79,3 +79,9 @@ Version source, self managed usage data mart table.
 Version source, self managed usage data prep table.
 
 {% enddocs %}
+
+{% docs prep_service_ping_instance_flattened %}
+
+Version source, self managed usage data prep table.
+
+{% enddocs %}
