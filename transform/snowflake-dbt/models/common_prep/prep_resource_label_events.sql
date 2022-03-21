@@ -28,21 +28,21 @@
 ) , joined AS (
 
     SELECT 
-      resource_label_events.resource_label_event_id::NUMBER                 AS dim_issue_label_id,
+      resource_label_events.resource_label_event_id                         AS dim_issue_label_id,
       COALESCE(dim_issue.dim_project_id,
-                dim_merge_request.dim_project_id)::NUMBER                   AS dim_project_id,
+                dim_merge_request.dim_project_id)                           AS dim_project_id,
       COALESCE(dim_epic.dim_plan_id,
                 dim_issue.dim_plan_id,
-                dim_merge_request.dim_plan_id)::NUMBER                      AS dim_plan_id,
+                dim_merge_request.dim_plan_id)                              AS dim_plan_id,
       COALESCE(dim_epic.group_id,
                 dim_issue.ultimate_parent_namespace_id,
-                dim_merge_request.ultimate_parent_namespace_id)::NUMBER     AS ultimate_parent_namespace_id,
-      user_id::NUMBER                                                       AS dim_user_id,
-      issue_id::NUMBER                                                      AS dim_issue_id,
-      merge_request_id::NUMBER                                              AS dim_merge_request_id,
-      epic_id::NUMBER                                                       AS dim_epic_id,
+                dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
+      user_id                                                               AS dim_user_id,
+      issue_id                                                              AS dim_issue_id,
+      merge_request_id                                                      AS dim_merge_request_id,
+      epic_id                                                               AS dim_epic_id,
       resource_label_events.created_at::TIMESTAMP                           AS created_at,
-      dim_date.date_id::NUMBER                                              AS created_date_id
+      dim_date.date_id                                                      AS created_date_id
     FROM resource_label_events
     LEFT JOIN dim_epic
       ON resource_label_events.epic_id = dim_epic.dim_epic_id

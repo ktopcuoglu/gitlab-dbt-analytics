@@ -27,12 +27,12 @@
 ), joined AS (
 
     SELECT
-      environment_event.environment_id::NUMBER                      AS dim_environment_id,
-      environment_event.project_id::NUMBER                          AS dim_project_id,
-      IFNULL(dim_project.ultimate_parent_namespace_id::NUMBER, -1)  AS ultimate_parent_namespace_id,
+      environment_event.environment_id                              AS dim_environment_id,
+      environment_event.project_id                                  AS dim_project_id,
+      dim_project.ultimate_parent_namespace_id                      AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER       AS dim_plan_id,
       environment_event.created_at::TIMESTAMP                       AS created_at,
-      dim_date.date_id::NUMBER                                      AS created_date_id
+      dim_date.date_id                                              AS created_date_id
     FROM environment_event
     LEFT JOIN dim_project ON environment_event.project_id = dim_project.dim_project_id
     LEFT JOIN dim_namespace_plan_hist ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
