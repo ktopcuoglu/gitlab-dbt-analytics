@@ -166,7 +166,7 @@ def slack_webhook_conn(slack_channel):
     return airflow_http_con_id, slack_webhook
 
 
-def slack_failed_task(context):
+def slack_failed_task(context, channel="#data-pipelines"):
     """
     Function to be used as a callable for on_failure_callback.
     Send a Slack alert.
@@ -177,7 +177,7 @@ def slack_failed_task(context):
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
-        channel="#analytics-pipelines",
+        channel=channel,
         task_id=task_id,
         message=task_text,
         http_conn_id=airflow_http_con_id,
