@@ -375,6 +375,47 @@ models:
       - name: model_updated_date
         description: The date at which the model code was last updated
 
+  - name: prep_service_ping_instance
+    description: ' {{ doc("prep_service_ping_instance") }} '
+    columns:
+      - name: dim_service_ping_instance_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_service_ping_instance_flattened
+    description: ' {{ doc("prep_service_ping_instance_flattened") }} '
+    columns:
+      - name: prep_service_ping_instance_flattened_id
+        tests:
+          - not_null
+          - unique
+
+
+  - name: fct_service_ping_instance
+    description: ' {{ doc("fct_service_ping_instance") }} '
+    columns:
+      - name: fct_service_ping_instance_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_service_ping_instance
+    description: ' {{ doc("dim_service_ping_instance") }} '
+    columns:
+      - name: dim_service_ping_instance_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_service_ping_instance
+    description: ' {{ doc("dim_service_ping_instance") }} '
+    columns:
+      - name: mart_service_ping_instance_id
+        tests:
+          - not_null
+          - unique
+
   - name: mart_xmau_metric_monthly
     description: '{{ doc("mart_xmau_metric_monthly") }}'
     columns:
