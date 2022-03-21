@@ -8,6 +8,10 @@
     })
 }}
 
+{{ config(
+    full_refresh = false
+) }}
+
 {{ simple_cte([
     ('raw_usage_data', 'version_raw_usage_data_source')
     ])

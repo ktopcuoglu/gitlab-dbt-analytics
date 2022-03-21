@@ -8,6 +8,10 @@
     })
 }}
 
+{{ config(
+    full_refresh = false
+) }}
+
 {{ simple_cte([
     ('prep_service_ping_instance', 'prep_service_ping_instance')
     ])
