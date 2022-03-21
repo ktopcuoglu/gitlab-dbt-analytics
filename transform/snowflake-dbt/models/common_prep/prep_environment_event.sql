@@ -28,9 +28,9 @@
 
     SELECT
       environment_event.environment_id                              AS dim_environment_id,
-      environment_event.project_id                                  AS dim_project_id,
-      dim_project.ultimate_parent_namespace_id                      AS ultimate_parent_namespace_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER       AS dim_plan_id,
+      IFNULL(environment_event.project_id, -1)                      AS dim_project_id,
+      IFNULL(dim_project.ultimate_parent_namespace_id, -1)          AS ultimate_parent_namespace_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)               AS dim_plan_id,
       environment_event.created_at::TIMESTAMP                       AS created_at,
       dim_date.date_id                                              AS created_date_id
     FROM environment_event

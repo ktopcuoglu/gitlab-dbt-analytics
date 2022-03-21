@@ -25,10 +25,10 @@
   
     SELECT
       ci_stages.id                                              AS dim_ci_stage_id,
-      dim_project.dim_project_id                                AS dim_project_id,
-      dim_ci_pipeline.dim_ci_pipeline_id                        AS dim_ci_pipeline_id,
-      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER   AS dim_plan_id,
-      dim_namespace_plan_hist.dim_namespace_id                  AS ultimate_parent_namespace_id,
+      IFNULL(dim_project.dim_project_id, -1)                    AS dim_project_id,
+      IFNULL(dim_ci_pipeline.dim_ci_pipeline_id, -1)            AS dim_ci_pipeline_id,
+      IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)           AS dim_plan_id,
+      IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)      AS ultimate_parent_namespace_id,
       dim_date.date_id                                          AS created_date_id,
       ci_stages.created_at::TIMESTAMP                           AS created_at,
       ci_stages.updated_at::TIMESTAMP                           AS updated_at,
