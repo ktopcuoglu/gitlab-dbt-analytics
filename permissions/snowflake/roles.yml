@@ -959,6 +959,8 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
+        member_of:
+            - snowflake_db
         privileges:
             databases:
                 read:
