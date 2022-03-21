@@ -398,9 +398,7 @@ models:
       - name: group_name
         description: The name of the group (A stage has one or more groups.).
       - name: user_group
-        description:
       - name: event_name_array
-        description: 
       - name: event_count
         description: The count of events
       - name: namespace_count
