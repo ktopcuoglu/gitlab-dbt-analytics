@@ -135,6 +135,7 @@ SELECT
         arr_basis__c                                    AS arr_basis,
         arr__c                                          AS arr,
         days_in_sao__c                                  AS days_in_sao,
+        new_logo_count__c                               AS new_logo_count,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                         AS user_segment_stamped,
         CASE

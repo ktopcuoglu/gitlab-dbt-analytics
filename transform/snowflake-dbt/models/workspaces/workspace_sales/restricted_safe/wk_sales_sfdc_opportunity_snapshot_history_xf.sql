@@ -978,9 +978,7 @@ WITH date_details AS (
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-         AND (opp_snapshot.is_stage_1_plus = 1
-                OR opp_snapshot.is_lost = 1)
-          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
+          AND opp_snapshot.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
           AND (opp_snapshot.net_arr > 0 
             OR opp_snapshot.opportunity_category = 'Credit')
           -- exclude vision opps from FY21-Q2
