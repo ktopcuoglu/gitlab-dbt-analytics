@@ -70,6 +70,7 @@ WITH first_contact  AS (
       user_geo_stamped                                                   AS crm_opp_owner_geo_stamped,
       user_region_stamped                                                AS crm_opp_owner_region_stamped,
       user_area_stamped                                                  AS crm_opp_owner_area_stamped,
+      user_segment_geo_region_area_stamped                               AS crm_opp_owner_sales_segment_geo_region_area_stamped,
       created_date::DATE                                                 AS created_date,
       sales_accepted_date::DATE                                          AS sales_accepted_date,
       close_date::DATE                                                   AS close_date,
@@ -175,11 +176,9 @@ WITH first_contact  AS (
       END                                                                                         AS is_sdr_sao,
       sfdc_opportunity.fpa_master_bookings_flag                                                   AS is_net_arr_closed_deal,
       CASE
-        WHEN sfdc_opportunity_stage.is_won = 'TRUE'
-          AND sfdc_opportunity.is_closed = 'TRUE'
-          AND sfdc_opportunity.is_edu_oss = 0
-          AND sfdc_opportunity.order_type = '1. New - First Order'
-            THEN TRUE
+        WHEN sfdc_opportunity.new_logo_count = 1
+          OR sfdc_opportunity.new_logo_count = -1
+          THEN TRUE 
         ELSE FALSE
       END                                                                                         AS is_new_logo_first_order, 
       CASE
@@ -293,7 +292,7 @@ WITH first_contact  AS (
       sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
 
       start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
-      start_date.first_day_of_fiscal_quarter                                        subscription_start_date_fiscal_quarter_date,
+      start_date.first_day_of_fiscal_quarter                                                      AS subscription_start_date_fiscal_quarter_date,
       start_date.fiscal_year                                                                      AS subscription_start_date_fiscal_year,
       start_date.first_day_of_month                                                               AS subscription_start_date_month,
 

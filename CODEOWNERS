@@ -88,8 +88,8 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooi
 /transform/snowflake-dbt/models/sources/gitlab_dotcom/      @jeanpeguero    @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
 /transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @jeanpeguero    @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/       @jjstark   @vedprakash2021    @jeanpeguero @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_dotcom/        @jeanpeguero @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/       @jjstark   @vedprakash2021    @jeanpeguero @dvanrooijen2 @vedprakash2021 @iweeks
+/transform/snowflake-dbt/models/legacy/gitlab_dotcom/        @jeanpeguero @dvanrooijen2 @vedprakash2021 @iweeks
 
 /transform/snowflake-dbt/models/sources/greenhouse/ @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru     @ken_aguilar @dvanrooijen2 @vedprakash2021
 /transform/snowflake-dbt/models/legacy/greenhouse/  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru     @ken_aguilar @dvanrooijen2 @vedprakash2021

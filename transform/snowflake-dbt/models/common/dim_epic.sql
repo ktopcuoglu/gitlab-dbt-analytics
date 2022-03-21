@@ -8,7 +8,7 @@ WITH prep_epic AS (
       author_id,
       group_id,
       ultimate_parent_namespace_id,
-      creation_date_id,
+      created_date_id,
       dim_plan_id,
       assignee_id,
 
@@ -44,7 +44,7 @@ WITH prep_epic AS (
 {{ dbt_audit(
     cte_ref="prep_epic",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@chrissharp",
     created_date="2021-06-22",
-    updated_date="2021-10-24"
+    updated_date="2022-03-14"
 ) }}

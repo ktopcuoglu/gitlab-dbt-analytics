@@ -2,12 +2,21 @@
     ('marketing_contact', 'dim_marketing_contact'),
     ('marketing_contact_role', 'bdg_marketing_contact_role'),
     ('namespace_lineage', 'prep_namespace'),
+    ('project', 'prep_project'),
     ('gitlab_namespaces', 'gitlab_dotcom_namespaces_source'),
     ('usage_ping_subscription_smau', 'fct_usage_ping_subscription_mapped_smau'),
     ('product_usage_wave_1_3', 'fct_product_usage_wave_1_3_metrics_monthly')
 ]) }}
 
-, saas_namespace_subscription AS (
+, namespace_project_visibility AS (
+
+    SELECT
+      dim_namespace_id,
+      MAX(IFF(visibility_level = 'public', TRUE, FALSE)) AS does_namespace_have_public_project
+    FROM project
+    GROUP BY 1
+
+), saas_namespace_subscription AS (
     
     SELECT *
     FROM {{ref('bdg_namespace_order_subscription')}}
@@ -96,6 +105,7 @@
         ELSE 0 
       END                                                                                     AS is_group_namespace,
       namespace_lineage.is_setup_for_company                                                  AS is_setup_for_company,
+      namespace_project_visibility.does_namespace_have_public_project                          AS does_namespace_have_public_project,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
       marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE
@@ -232,6 +242,8 @@
                                                    saas_billing_account.dim_namespace_id)
     LEFT JOIN gitlab_namespaces 
       ON namespace_lineage.dim_namespace_id = gitlab_namespaces.namespace_id
+    LEFT JOIN namespace_project_visibility
+      ON namespace_lineage.dim_namespace_id = namespace_project_visibility.dim_namespace_id
       
 ), final AS (
 
@@ -290,5 +302,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-04",
-    updated_date="2022-02-22"
+    updated_date="2022-03-16"
 ) }}
