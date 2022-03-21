@@ -93,6 +93,7 @@
       fct_crm_opportunity.iacv,
       fct_crm_opportunity.net_iacv,
       fct_crm_opportunity.net_arr,
+      fct_crm_opportunity.new_logo_count,
       fct_crm_opportunity.amount,
       dim_crm_opportunity.is_edu_oss,
       dim_crm_opportunity.is_ps_opp,
@@ -286,5 +287,5 @@
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-03-07",
+    updated_date="2022-03-17",
   ) }}
