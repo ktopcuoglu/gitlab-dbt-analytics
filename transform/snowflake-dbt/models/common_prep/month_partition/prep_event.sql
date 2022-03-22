@@ -221,7 +221,7 @@
   },
   {
     "event_name": "issue_resource_label_events",
-    "source_cte_name": "prep_resource_label_events",
+    "source_cte_name": "issue_resource_label_events",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
