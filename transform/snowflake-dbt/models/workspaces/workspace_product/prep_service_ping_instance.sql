@@ -1,19 +1,12 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
-) }}
-
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "dim_service_ping_instance_id"
-    })
-}}
-
-{{ config(
-    full_refresh = false
+    tags=["product", "mnpi_exception"],
+    full_refresh = false,
+    materialized = "incremental",
+    unique_key = "dim_service_ping_instance_id"
 ) }}
 
 {{ simple_cte([
-    ('raw_usage_data', 'version_raw_usage_data_source')
+    ('raw_usage_data', 'prep_service_ping_instance_flattened')
     ])
 
 }}
@@ -67,7 +60,9 @@
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
         ELSE NULL END                                                                                      AS product_tier,
-      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
+      raw_usage_data.metrics_path,
+      raw_usage_data.metric_value,
+      raw_usage_data.raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
