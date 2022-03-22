@@ -1,11 +1,9 @@
-{{ config(
-    tags=["product", "mnpi_exception"]
-) }}
-
 {{ config({
-    "materialized": "table"
-    })
-}}
+    "tags" : ["product", "mnpi_exception"],
+    "materialized": "table",
+    "alias": "fct_usage_ping_payload",
+    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"dim_usage_ping_id":"number"},{"instance_user_count":"number"},{"dim_product_tier_id":"string"},{"dim_subscription_id":"string"},{"dim_license_id":"number"},{"raw_usage_data_id":"number"},{"raw_usage_data_payload":"variant"},{"host_name":"string"},{"umau_value":"number"},{"license_subscription_id":"string"},{"created_by":"string"},{"updated_by":"string"} ]) }}'
+}) }}
 
 {{ simple_cte([
     ('prep_usage_ping_payload', 'prep_usage_ping_payload')

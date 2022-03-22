@@ -24,7 +24,7 @@ renamed AS (
     IFF(LOWER(locked_at) = 'nan', FALSE, TRUE) AS user_locked,
     can_create_group::BOOLEAN AS has_create_group_permissions,
     can_create_team::BOOLEAN AS has_create_team_permissions,
-    state,
+    state::VARCHAR AS state,
     color_scheme_id::NUMBER AS color_scheme_id,
     password_expires_at::TIMESTAMP AS password_expires_at,
     created_by_id::NUMBER AS created_by_id,

@@ -1,3 +1,8 @@
+{{ config({
+    "alias": "zuora_subscription_source",
+    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"account_id":"string"},{"created_by_id":"string"},{"creator_account_id":"string"},{"creator_invoice_owner_id":"string"},{"namespace_id":"string"},{"namespace_name":"string"},{"subscription_id":"string"},{"invoice_owner_id":"string"},{"subscription_name":"string"},{"notes":"string"},{"subscription_name":"string"},{"opportunity_name":"string"},{"subscription_name":"string"},{"original_id":"string"},{"previous_subscription_id":"string"},{"sfdc_purchase_order":"string"},{"quote_number":"string"},{"quote_type":"string"},{"sfdc_recurly_id":"string"},{"amendment_id":"string"},{"updated_by_id":"string"},{"crm_opportunity_name":"string"},{"subscription_name_slugify":"string"},{"sfdc_opportunity_id":"string"}]) }}'
+}) }}
+
 -- depends_on: {{ ref('zuora_excluded_accounts') }}
 
 WITH source AS (
