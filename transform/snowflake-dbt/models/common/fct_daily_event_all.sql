@@ -29,7 +29,7 @@ WITH usage_data AS (
       event_name,
       TO_DATE(event_created_at)                                                                                        AS event_created_date,
 
-      is_blocked_namespace,
+      is_blocked_namespace_creator,
       namespace_created_date,
       namespace_is_internal,
       user_created_date,
