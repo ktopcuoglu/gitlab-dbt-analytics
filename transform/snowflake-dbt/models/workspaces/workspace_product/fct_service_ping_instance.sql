@@ -17,7 +17,7 @@
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
-    ('prep_service_ping_instance_flattened', 'prep_service_ping_instance_flattened'),
+    ('prep_service_ping_instance', 'prep_service_ping_instance'),
     ('dim_usage_ping_metric', 'dim_usage_ping_metric')
     ])
 
@@ -34,9 +34,9 @@
 
 ), source AS (
 
-    SELECT 
-      prep_service_ping_instance_flattened.*
-    FROM prep_service_ping_instance_flattened
+    SELECT
+      prep_service_ping_instance.*
+    FROM prep_service_ping_instance
       {% if is_incremental() %}
                   WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
       {% endif %}
@@ -88,14 +88,14 @@
       prep_usage_ping_cte.*,
       prep_license.dim_license_id,
       dim_date.date_id                                                                                            AS dim_date_id,
-      TO_DATE(prep_service_ping_instance_flattened.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
-      (prep_service_ping_instance_flattened.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
+      TO_DATE(prep_service_ping_instance.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
+      (prep_service_ping_instance.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
       COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                                    AS dim_subscription_id,
-      prep_service_ping_instance_flattened.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
+      prep_service_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
       IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                               AS is_trial
     FROM prep_usage_ping_cte
-    LEFT JOIN prep_service_ping_instance_flattened
-      ON prep_usage_ping_cte.raw_usage_data_id = prep_service_ping_instance_flattened.raw_usage_data_id
+    LEFT JOIN prep_service_ping_instance
+      ON prep_usage_ping_cte.raw_usage_data_id = prep_service_ping_instance.raw_usage_data_id
     LEFT JOIN prep_license
       ON prep_usage_ping_cte.license_md5 = prep_license.license_md5
     LEFT JOIN prep_subscription
