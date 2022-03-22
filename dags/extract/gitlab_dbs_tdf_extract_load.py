@@ -128,7 +128,7 @@ for source_name, config in config_dict_td_pgp.items():
     data_quality_dag_args = {
         "catchup": False,
         "depends_on_past": False,
-        "on_failure_callback": slack_failed_task,
+        "on_failure_callback": slack_failed_task("#data-pipelines"),
         "owner": "airflow",
         "retries": 0,
         "retry_delay": timedelta(minutes=3),

@@ -35,12 +35,12 @@ pod_env_vars = {
 default_args = {
     "catchup": True,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task,
+    "on_failure_callback": slack_failed_task("#data-pipelines"),
     "owner": "airflow",
     # "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
-    "sla_miss_callback": slack_failed_task,
+    "sla_miss_callback": slack_failed_task("#data-pipelines"),
     # PMG only have data from 2020-02, so only makes sense to take data from then.
     "start_date": datetime(2020, 1, 1),
 }

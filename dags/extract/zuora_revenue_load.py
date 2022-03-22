@@ -34,12 +34,12 @@ pod_env_vars = {
 default_args = {
     "catchup": False,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task,
+    "on_failure_callback": slack_failed_task("#data-pipelines"),
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
-    "sla_miss_callback": slack_failed_task,
+    "sla_miss_callback": slack_failed_task("#data-pipelines"),
     "start_date": datetime(2021, 6, 1),
     "dagrun_timeout": timedelta(hours=6),
 }

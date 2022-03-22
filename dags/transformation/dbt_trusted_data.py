@@ -43,11 +43,11 @@ pod_env_vars = {**gitlab_pod_env_vars, **{}}
 default_args = {
     "catchup": False,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task,
+    "on_failure_callback": slack_failed_task("#data-pipelines"),
     "owner": "airflow",
     "retries": 0,
     "sla": timedelta(hours=8),
-    "sla_miss_callback": slack_failed_task,
+    "sla_miss_callback": slack_failed_task("#data-pipelines"),
     "start_date": datetime(2021, 12, 6, 0, 0, 0),
     "trigger_rule": TriggerRule.ALL_DONE,
     "dagrun_timeout": timedelta(hours=6),
