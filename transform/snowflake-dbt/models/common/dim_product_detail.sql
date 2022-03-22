@@ -1,3 +1,9 @@
+{{ config({
+        "alias": "dim_product_detail",
+        "post-hook": '{{ apply_dynamic_data_masking(columns = [{"dim_product_tier_id":"string"},{"product_rate_plan_charge_id":"string"},{"product_rate_plan_id":"string"},{"product_id":"string"},{"updated_by":"string"},{"annual_billing_list_price":"float"},{"created_by":"string"},{"billing_list_price":"float"},{"dim_product_detail_id":"string"}]) }}'
+    })
+}}
+
 WITH base AS (
 
     SELECT *
