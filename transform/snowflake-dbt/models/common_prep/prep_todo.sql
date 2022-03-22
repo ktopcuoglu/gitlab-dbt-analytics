@@ -24,12 +24,6 @@
 
     {% endif %}
 
-), prep_user AS (
-    
-    SELECT *
-    FROM {{ ref('prep_user') }} users
-    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
-
 ), joined AS (
 
     SELECT 
