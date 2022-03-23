@@ -1824,7 +1824,7 @@ models:
       - name: host_name
 
   - name: prep_todo
-    desctiption: Prep table used in `prep_event`
+    description: Prep table used in `prep_event`
     columns:
       - name: dim_todo_id
         tests:
@@ -1838,7 +1838,7 @@ models:
         description: Can be either 'pending' or 'done'
 
   - name: prep_resource_label
-    desctiption: Prep table used in `prep_event`
+    description: Prep table used in `prep_event`
     columns:
       - name: dim_issue_label_id
         tests:
@@ -1846,7 +1846,7 @@ models:
           - unique
 
   - name: prep_environment_event
-    desctiption: Prep table used in `prep_event`
+    description: Prep table used in `prep_event`
     columns:
       - name: dim_environment_id
         tests:
