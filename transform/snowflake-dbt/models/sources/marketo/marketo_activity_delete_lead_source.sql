@@ -18,7 +18,6 @@ WITH source AS (
       _fivetran_synced                  AS _fivetran_synced
 
     FROM source
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY id ORDER BY updated_at DESC) = 1
 
 )
 
