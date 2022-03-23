@@ -237,6 +237,7 @@
     "primary_key": "dim_environment_id",
     "stage_name": "release"
   },
+
   
 ]
 
@@ -262,7 +263,7 @@
     ('prep_ci_stage', 'prep_ci_stage'),
     ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
-    ('prep_resource_label_events', 'prep_resource_label_events'),
+    ('prep_resource_label', 'prep_resource_label'),
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
     ('map_saas_event_to_smau','map_saas_event_to_smau'),
     ('prep_environment_event', 'prep_environment_event')
@@ -354,7 +355,7 @@
 ), issue_resource_label_events AS (
 
     SELECT *
-    FROM prep_resource_label_events
+    FROM prep_resource_label
     WHERE dim_issue_id IS NOT NULL
 
 ), data AS (
