@@ -6,7 +6,6 @@ from gitlabdata.orchestration_utils import (
     snowflake_stage_load_copy_remove,
     snowflake_engine_factory,
     bizible_snowflake_engine_factory,
-
 )
 from typing import Dict
 
@@ -53,12 +52,10 @@ class BizibleSnowFlakeExtractor:
                     table_name: {"last_modified_date": snowflake_last_modified_date}
                 }
 
-        return {
-                table_name: {}
-        }
+        return {table_name: {}}
 
-    def generate_partitioned_files(self, table_name, last_modified_date, date_column ):
-        """ Created due to memory limitations """
+    def generate_partitioned_files(self, table_name, last_modified_date, date_column):
+        """Created due to memory limitations"""
         end_date = datetime.now()
         for dt in rrule.rrule(rrule.HOURLY, dtstart=last_modified_date, until=end_date):
             query_start_date = dt
@@ -86,15 +83,18 @@ class BizibleSnowFlakeExtractor:
                 f"RAW.BIZIBLE.BIZIBLE_LOAD",
                 f"RAW.BIZIBLE.{table_name.lower()}",
                 self.snowflake_engine,
-                'csv',
-                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None"
+                "csv",
+                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
             print(f"Processed {file_name}")
 
             print(f"To delete {file_name}")
             os.remove(file_name)
 
-    def generate_scd_file(self, table_name, ):
+    def generate_scd_file(
+        self,
+        table_name,
+    ):
         query = f"""
         SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
         """
@@ -114,8 +114,8 @@ class BizibleSnowFlakeExtractor:
             f"RAW.BIZIBLE.BIZIBLE_LOAD",
             f"RAW.BIZIBLE.{table_name.lower()}",
             self.snowflake_engine,
-            'csv',
-            file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None"
+            "csv",
+            file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
         )
 
     def process_bizible_query(self, query_details: Dict, date_column):
@@ -124,7 +124,10 @@ class BizibleSnowFlakeExtractor:
             logging.info(f"Running {table_name} query")
             last_modified_date = query_details[table_name].get("last_modified_date")
             if last_modified_date:
-                self.generate_partitioned_files(table_name, last_modified_date, )
+                self.generate_partitioned_files(
+                    table_name,
+                    last_modified_date,
+                )
             else:
                 self.generate_scd_file(table_name)
 
