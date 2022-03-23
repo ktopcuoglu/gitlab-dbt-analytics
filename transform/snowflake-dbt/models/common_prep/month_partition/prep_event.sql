@@ -318,7 +318,7 @@
       TO_DATE(prep_user.created_at)                                                                            AS user_created_date,
       prep_namespace.created_at                                                                                AS namespace_created_at,
       TO_DATE(prep_namespace.created_at)                                                                       AS namespace_created_date,
-      blocked_user.is_blocked_user                                                                             AS is_blocked_namespace_creator,
+      IFNULL(blocked_user.is_blocked_user, FALSE)                                                              AS is_blocked_namespace_creator,
       prep_namespace.namespace_is_internal,
       FLOOR(
       DATEDIFF('hour',
