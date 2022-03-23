@@ -20,7 +20,6 @@ WITH source AS (
       user_agent                        AS user_agent,
       query_parameters                  AS query_parameters,
       referrer_url                      AS referrer_url,
-      _fivetran_synced                  AS _fivetran_synced,
       search_query                      AS search_query
 
     FROM source

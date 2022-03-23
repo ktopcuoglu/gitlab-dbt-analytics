@@ -15,8 +15,7 @@ WITH source AS (
       primary_attribute_value_id                AS primary_attribute_value_id,
       primary_attribute_value                   AS primary_attribute_value,
       used_parent_campaign_token_context        AS used_parent_campaign_token_context,
-      qualified                                 AS qualified,
-      _fivetran_synced                          AS _fivetran_synced
+      qualified                                 AS qualified
 
     FROM source
 

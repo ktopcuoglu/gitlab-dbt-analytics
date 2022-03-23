@@ -24,7 +24,6 @@ WITH source AS (
       user_agent                            AS user_agent,
       bot_activity_pattern                  AS bot_activity_pattern,
       link                                  AS link,
-      _fivetran_synced                      AS _fivetran_synced,
       test_variant                          AS test_variant
 
     FROM source

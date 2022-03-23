@@ -14,8 +14,7 @@ WITH source AS (
       primary_attribute_value_id            AS primary_attribute_value_id,
       primary_attribute_value               AS primary_attribute_value,
       previous_track_id                     AS previous_track_id,
-      new_track_id                          AS new_track_id,
-      _fivetran_synced                      AS _fivetran_synced
+      new_track_id                          AS new_track_id
 
     FROM source
 

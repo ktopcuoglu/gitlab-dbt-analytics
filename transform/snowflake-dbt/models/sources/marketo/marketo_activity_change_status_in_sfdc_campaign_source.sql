@@ -15,8 +15,7 @@ WITH source AS (
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
       old_status                        AS old_status,
-      new_status                        AS new_status,
-      _fivetran_synced                  AS _fivetran_synced
+      new_status                        AS new_status
 
     FROM source
 

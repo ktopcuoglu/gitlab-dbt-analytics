@@ -21,7 +21,6 @@ WITH source AS (
       new_status                        AS new_status,
       program_member_id                 AS program_member_id,
       success                           AS success,
-      _fivetran_synced                  AS _fivetran_synced,
       registration_code                 AS registration_code,
       webinar_url                       AS webinar_url,
       reason                            AS reason,

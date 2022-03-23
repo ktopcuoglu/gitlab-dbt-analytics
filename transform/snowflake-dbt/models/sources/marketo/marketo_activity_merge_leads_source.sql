@@ -15,7 +15,6 @@ WITH source AS (
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
       merge_ids                         AS merge_ids,
-      _fivetran_synced                  AS _fivetran_synced,
       merged_in_sales                   AS merged_in_sales,
       merge_source                      AS merge_source,
       master_updated                    AS master_updated

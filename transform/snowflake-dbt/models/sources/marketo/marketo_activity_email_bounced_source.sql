@@ -21,7 +21,6 @@ WITH source AS (
       subcategory                       AS subcategory,
       step_id                           AS step_id,
       choice_number                     AS choice_number,
-      _fivetran_synced                  AS _fivetran_synced,
       test_variant                      AS test_variant
 
     FROM source

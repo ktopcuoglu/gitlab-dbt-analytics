@@ -14,7 +14,6 @@ WITH source AS (
       campaign_id                       AS campaign_id,
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
-      _fivetran_synced                  AS _fivetran_synced,
       send_to_owner                     AS send_to_owner,
       send_to_list                      AS send_to_list
 

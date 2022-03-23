@@ -15,8 +15,7 @@ WITH source AS (
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
       response                          AS response,
-      error_type                        AS error_type,
-      _fivetran_synced                  AS _fivetran_synced
+      error_type                        AS error_type
 
     FROM source
 )

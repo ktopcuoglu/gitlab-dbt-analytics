@@ -23,9 +23,7 @@ WITH source AS (
       choice_number                     AS choice_number,
       is_bot_activity                   AS is_bot_activity,
       user_agent                        AS user_agent,
-      bot_activity_pattern              AS bot_activity_pattern,
-      _fivetran_synced                  AS _fivetran_synced
-
+      bot_activity_pattern              AS bot_activity_pattern
     FROM source
 
 )

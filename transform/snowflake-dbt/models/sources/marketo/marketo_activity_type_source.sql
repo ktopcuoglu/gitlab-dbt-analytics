@@ -9,8 +9,7 @@ WITH source AS (
 
       id                    AS id,
       name                  AS name,
-      description           AS description,
-      _fivetran_synced      AS _fivetran_synced
+      description           AS description
 
     FROM source
 

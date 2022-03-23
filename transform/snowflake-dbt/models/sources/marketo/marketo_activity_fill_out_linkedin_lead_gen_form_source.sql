@@ -16,8 +16,7 @@ WITH source AS (
       primary_attribute_value       AS primary_attribute_value,
       lead_gen_campaign_name        AS lead_gen_campaign_name,
       lead_gen_creative_id          AS lead_gen_creative_id,
-      lead_gen_account_name         AS lead_gen_account_name,
-      _fivetran_synced              AS _fivetran_synced
+      lead_gen_account_name         AS lead_gen_account_name
 
     FROM source
 

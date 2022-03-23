@@ -19,8 +19,7 @@ WITH source AS (
       webpage_id                        AS webpage_id,
       user_agent                        AS user_agent,
       query_parameters                  AS query_parameters,
-      referrer_url                      AS referrer_url,
-      _fivetran_synced                  AS _fivetran_synced
+      referrer_url                      AS referrer_url
 
     FROM source
 

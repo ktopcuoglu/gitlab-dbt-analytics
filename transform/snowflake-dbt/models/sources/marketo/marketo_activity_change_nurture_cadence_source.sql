@@ -14,7 +14,6 @@ WITH source AS (
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
       new_nurture_cadence               AS new_nurture_cadence,
-      _fivetran_synced                  AS _fivetran_synced,
       previous_nurture_cadence          AS previous_nurture_cadence
     FROM source
 

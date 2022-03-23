@@ -15,7 +15,6 @@ WITH source AS (
       primary_attribute_value_id   AS primary_attribute_value_id,
       primary_attribute_value      AS primary_attribute_value,
       source                       AS source,
-      _fivetran_synced             AS _fivetran_synced,
       description                  AS description,
       date                         AS date
 

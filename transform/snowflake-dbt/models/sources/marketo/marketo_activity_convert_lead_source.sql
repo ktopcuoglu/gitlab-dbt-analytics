@@ -13,8 +13,7 @@ WITH source AS (
       activity_type_id                  AS activity_type_id,
       campaign_id                       AS campaign_id,
       primary_attribute_value_id        AS primary_attribute_value_id,
-      primary_attribute_value           AS primary_attribute_value,
-      _fivetran_synced                  AS _fivetran_synced
+      primary_attribute_value           AS primary_attribute_value
 
     FROM source
 

@@ -14,8 +14,7 @@ WITH source AS (
       campaign_id                           AS campaign_id,
       primary_attribute_value_id            AS primary_attribute_value_id,
       primary_attribute_value               AS primary_attribute_value,
-      new_segment_id                        AS new_segment_id,
-      _fivetran_synced                      AS _fivetran_synced
+      new_segment_id                        AS new_segment_id
 
     FROM source
 

@@ -17,8 +17,7 @@ WITH source AS (
       api_method_name                   AS api_method_name,
       modifying_user                    AS modifying_user,
       request_id                        AS request_id,
-      source                            AS source,
-      _fivetran_synced                  AS _fivetran_synced
+      source                            AS source
 
     FROM source
 

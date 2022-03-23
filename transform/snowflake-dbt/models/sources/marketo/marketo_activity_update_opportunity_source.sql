@@ -14,8 +14,7 @@ WITH source AS (
       campaign_id                       AS campaign_id,
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
-      data_value_changes                AS data_value_changes,
-      _fivetran_synced                  AS _fivetran_synced
+      data_value_changes                AS data_value_changes
 
     FROM source
 

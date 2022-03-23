@@ -19,8 +19,7 @@ WITH source AS (
       is_task                           AS is_task,
       priority                          AS priority,
       activity_owner                    AS activity_owner,
-      due_date                          AS due_date,
-      _fivetran_synced                  AS _fivetran_synced
+      due_date                          AS due_date
 
     FROM source
 

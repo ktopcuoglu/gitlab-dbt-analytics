@@ -17,7 +17,6 @@ WITH source AS (
       campaign_run_id                   AS campaign_run_id,
       step_id                           AS step_id,
       choice_number                     AS choice_number,
-      _fivetran_synced                  AS _fivetran_synced,
       test_variant                      AS test_variant
 
     FROM source

@@ -6,6 +6,7 @@ WITH source AS (
 ), renamed AS (
 
     SELECT
+
       id                                    AS id,
       lead_id                               AS lead_id,
       activity_date                         AS activity_date,
@@ -13,8 +14,8 @@ WITH source AS (
       campaign_id                           AS campaign_id,
       primary_attribute_value_id            AS primary_attribute_value_id,
       primary_attribute_value               AS primary_attribute_value,
-      track_id                              AS track_id,
-      _fivetran_synced                      AS _fivetran_synced
+      track_id                              AS track_id
+
     FROM source
 
 )

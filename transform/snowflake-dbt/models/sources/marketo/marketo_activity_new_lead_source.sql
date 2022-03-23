@@ -19,7 +19,6 @@ WITH source AS (
       api_method_name                   AS api_method_name,
       source_type                       AS source_type,
       request_id                        AS request_id,
-      _fivetran_synced                  AS _fivetran_synced,
       form_name                         AS form_name,
       lead_source                       AS lead_source,
       sfdc_type                         AS sfdc_type,

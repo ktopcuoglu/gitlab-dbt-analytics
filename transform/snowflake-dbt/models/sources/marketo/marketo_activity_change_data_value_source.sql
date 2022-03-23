@@ -17,7 +17,6 @@ WITH source AS (
       new_value                         AS new_value,
       reason                            AS reason,
       source                            AS source,
-      _fivetran_synced                  AS _fivetran_synced,
       api_method_name                   AS api_method_name,
       modifying_user                    AS modifying_user,
       request_id                        AS request_id

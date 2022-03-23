@@ -15,7 +15,6 @@ WITH source AS (
       primary_attribute_value_id        AS primary_attribute_value_id,
       primary_attribute_value           AS primary_attribute_value,
       campaign_run_id                   AS campaign_run_id,
-      _fivetran_synced                  AS _fivetran_synced,
       webform_id                        AS webform_id,
       client_ip_address                 AS client_ip_address,
       form_fields                       AS form_fields,
