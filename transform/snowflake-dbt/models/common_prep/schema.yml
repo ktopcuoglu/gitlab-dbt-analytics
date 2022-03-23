@@ -1837,7 +1837,7 @@ models:
       - name: state
         description: Can be either 'pending' or 'done'
 
-  - name: prep_resource_label_events
+  - name: prep_resource_label
     description: Prep table used in `prep_event`
     columns:
       - name: dim_issue_label_id
