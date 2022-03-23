@@ -329,9 +329,6 @@ models:
         tests:
           - not_null
           - unique
-      - name: lead_id
-        tests:
-          - not_null
   - name: marketo_activity_unsubscribe_email_source
     columns:
       - name: id
