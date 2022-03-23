@@ -246,6 +246,15 @@
     "primary_key": "dim_resource_milestone_id",
     "stage_name": "plan"
   },
+  {
+    "event_name": "labels",
+    "source_cte_name": "prep_labels",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "dim_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_label_id",
+    "stage_name": "plan"
+  },
   
 ]
 
@@ -275,7 +284,8 @@
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
     ('map_saas_event_to_smau','map_saas_event_to_smau'),
     ('prep_environment_event', 'prep_environment_event'),
-    ('prep_resource_milestone', 'prep_resource_milestone')
+    ('prep_resource_milestone', 'prep_resource_milestone'),
+    ('prep_labels', 'prep_labels')
 ]) }}
 
 , dast_jobs AS (
