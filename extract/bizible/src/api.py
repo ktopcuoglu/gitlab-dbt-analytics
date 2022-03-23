@@ -94,26 +94,39 @@ class BizibleSnowFlakeExtractor:
             print(f"To delete {file_name}")
             os.remove(file_name)
 
+    def generate_scd_file(self, table_name, ):
+        query = f"""
+        SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+        """
 
-    def process_bizible_query(self, query_details: Dict):
+        print(f"Running {query}")
+
+        file_name = f"{table_name}.csv"
+
+        df = query_dataframe(self.bizible_engine, query)
+
+        print(f"Creating {file_name}")
+        df.to_csv(file_name, index=False, sep="|")
+
+        print(f"Processing {file_name} to {table_name}")
+        snowflake_stage_load_copy_remove(
+            file_name,
+            f"RAW.BIZIBLE.BIZIBLE_LOAD",
+            f"RAW.BIZIBLE.{table_name.lower()}",
+            self.snowflake_engine,
+            'csv',
+            file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None"
+        )
+
+    def process_bizible_query(self, query_details: Dict, date_column):
         for table_name in query_details.keys():
             file_name = f"{table_name}.json"
             logging.info(f"Running {table_name} query")
-            last_modified_date = query_details[table_name]
-
-            df = query_dataframe(self.bizible_engine, query_details[table_name])
-            logging.info(f"Creating {file_name}")
-            df.to_csv(file_name, index=False, sep="|")
-
-            logging.info("Writing to db")
-            snowflake_stage_load_copy_remove(
-                file_name,
-                f"BIZIBLE.BIZIBLE_LOAD",
-                f"BIZIBLE.{table_name}",
-                self.snowflake_engine,
-                "csv",
-                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
-            )
+            last_modified_date = query_details[table_name].get("last_modified_date")
+            if last_modified_date:
+                self.generate_partitioned_files(table_name, last_modified_date, )
+            else:
+                self.generate_scd_file(table_name)
 
     def extract_latest_bizible_file(self, table_name: str, date_column: str = ""):
         """
@@ -125,4 +138,4 @@ class BizibleSnowFlakeExtractor:
         query = self.get_bizible_query(
             full_table_name=table_name, date_column=date_column
         )
-        self.process_bizible_query(query_details=query)
+        self.process_bizible_query(query_details=query, date_column=date_column)
