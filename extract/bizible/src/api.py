@@ -127,6 +127,7 @@ class BizibleSnowFlakeExtractor:
                 self.generate_partitioned_files(
                     table_name,
                     last_modified_date,
+                    date_column,
                 )
             else:
                 self.generate_scd_file(table_name)
