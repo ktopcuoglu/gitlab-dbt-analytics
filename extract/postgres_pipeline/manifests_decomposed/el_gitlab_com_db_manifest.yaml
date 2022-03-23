@@ -1241,6 +1241,7 @@ tables:
       FROM notes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+        AND id <> 882719904
   notification_settings:
     dbt_source_model: true
     export_schema: 'gitlab_com'
