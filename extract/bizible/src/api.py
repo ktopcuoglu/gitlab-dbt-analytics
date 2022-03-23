@@ -120,7 +120,6 @@ class BizibleSnowFlakeExtractor:
 
     def process_bizible_query(self, query_details: Dict, date_column):
         for table_name in query_details.keys():
-            file_name = f"{table_name}.json"
             logging.info(f"Running {table_name} query")
             last_modified_date = query_details[table_name].get("last_modified_date")
             if last_modified_date:
