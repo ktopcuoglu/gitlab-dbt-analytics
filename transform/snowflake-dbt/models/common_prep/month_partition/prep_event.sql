@@ -237,6 +237,15 @@
     "primary_key": "dim_environment_id",
     "stage_name": "release"
   },
+  {
+    "event_name": "issue_resource_milestone_events",
+    "source_cte_name": "issue_resource_milestone",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_resource_milestone_id",
+    "stage_name": "plan"
+  },
   
 ]
 
@@ -265,7 +274,8 @@
     ('prep_resource_label_events', 'prep_resource_label_events'),
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
     ('map_saas_event_to_smau','map_saas_event_to_smau'),
-    ('prep_environment_event', 'prep_environment_event')
+    ('prep_environment_event', 'prep_environment_event'),
+    ('prep_resource_milestone', 'prep_resource_milestone')
 ]) }}
 
 , dast_jobs AS (
@@ -356,6 +366,12 @@
     SELECT *
     FROM prep_resource_label_events
     WHERE dim_issue_id IS NOT NULL
+
+), issue_resource_milestone AS (
+
+    SELECT *
+    FROM prep_resource_milestone
+    WHERE issue_id IS NOT NULL
 
 ), data AS (
 
