@@ -1,12 +1,17 @@
 import logging
+import os
 
 from gitlabdata.orchestration_utils import (
     query_dataframe,
     snowflake_stage_load_copy_remove,
     snowflake_engine_factory,
     bizible_snowflake_engine_factory,
+
 )
 from typing import Dict
+
+from dateutil import rrule
+from datetime import datetime, timedelta
 
 
 class BizibleSnowFlakeExtractor:
@@ -45,17 +50,57 @@ class BizibleSnowFlakeExtractor:
 
             if snowflake_last_modified_date:
                 return {
-                    table_name: f"SELECT * FROM GITLAB.{table_name} WHERE {date_column} > '{snowflake_last_modified_date}'"
+                    table_name: {"last_modified_date": snowflake_last_modified_date}
                 }
-            else:
-                return {table_name: f"SELECT * FROM GITLAB.{table_name}"}
-        else:
-            return {table_name: f"SELECT * FROM GITLAB.{table_name}"}
+
+        return {
+                table_name: {}
+        }
+
+    def generate_partitioned_files(self, table_name, last_modified_date, date_column ):
+        """ Created due to memory limitations """
+        end_date = datetime.now()
+        for dt in rrule.rrule(rrule.HOURLY, dtstart=last_modified_date, until=end_date):
+            query_start_date = dt
+            query_end_date = dt + timedelta(hours=1)
+
+            query = f"""
+            SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+            WHERE {date_column} >= '{query_start_date}' 
+            AND {date_column} < '{query_end_date}'
+            """
+
+            print(f"Running {query}")
+
+            file_name = f"{table_name}_{str(dt.year)}-{str(dt.month)}-{str(dt.day)}-{str(dt.hour)}.csv"
+
+            df = query_dataframe(self.bizible_engine, query)
+
+            print(f"Creating {file_name}")
+
+            df.to_csv(file_name, index=False, sep="|")
+
+            print(f"Processing {file_name} to {table_name}")
+            snowflake_stage_load_copy_remove(
+                file_name,
+                f"RAW.BIZIBLE.BIZIBLE_LOAD",
+                f"RAW.BIZIBLE.{table_name.lower()}",
+                self.snowflake_engine,
+                'csv',
+                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None"
+            )
+            print(f"Processed {file_name}")
+
+            print(f"To delete {file_name}")
+            os.remove(file_name)
+
 
     def process_bizible_query(self, query_details: Dict):
         for table_name in query_details.keys():
             file_name = f"{table_name}.json"
             logging.info(f"Running {table_name} query")
+            last_modified_date = query_details[table_name]
+
             df = query_dataframe(self.bizible_engine, query_details[table_name])
             logging.info(f"Creating {file_name}")
             df.to_csv(file_name, index=False, sep="|")
