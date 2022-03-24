@@ -1,30 +1,20 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    full_refresh = false,
+    materialized = "incremental",
+    unique_key = "prep_service_ping_instance_flattened_id"
 ) }}
 
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "prep_service_ping_instance_id_flattened"
-    })
-}}
 
-{{ config(
-    full_refresh = false
-) }}
-
-{{ simple_cte([
-    ('prep_service_ping_instance', 'prep_service_ping_instance')
-    ])
-
-}}
-
-, source AS (
+WITH source AS (
 
     SELECT
         *
     FROM {{ ref('prep_service_ping_instance')}} as usage
+      WHERE uuid IS NOT NULL
+      AND version NOT LIKE ('%VERSION%')
     {% if is_incremental() %}
-                WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+                AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
     {% endif %}
 
 ) , flattened_high_level as (

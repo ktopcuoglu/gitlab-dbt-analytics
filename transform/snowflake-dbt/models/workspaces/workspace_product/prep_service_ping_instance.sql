@@ -1,15 +1,8 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
-) }}
-
-{{ config({
-    "materialized": "incremental",
-    "unique_key": "dim_service_ping_instance_id"
-    })
-}}
-
-{{ config(
-    full_refresh = false
+    tags=["product", "mnpi_exception"],
+    full_refresh = false,
+    materialized = "incremental",
+    unique_key = "dim_service_ping_instance_id"
 ) }}
 
 {{ simple_cte([
