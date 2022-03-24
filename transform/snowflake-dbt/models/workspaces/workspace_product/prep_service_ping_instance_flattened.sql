@@ -12,7 +12,7 @@ WITH source AS (
         *
     FROM {{ ref('prep_service_ping_instance')}} as usage
       WHERE uuid IS NOT NULL
-      AND version NOT LIKE ('%VERSION%') and ping_created_at >= '2022-01-01'
+      AND version NOT LIKE ('%VERSION%') and ping_created_at >= '2022-03-01'
     {% if is_incremental() %}
                 AND ping_created_at >= (SELECT COALESCE(MAX(ping_created_at), '2022-03-01') FROM {{this}})
     {% endif %}
