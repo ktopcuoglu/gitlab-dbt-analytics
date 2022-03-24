@@ -2863,11 +2863,8 @@ roles:
                     - jcaine_prod.*.*
 
     - joshua:
-        member_of:
-            - gitlab_dotcom
-            - reporter
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - jpeguero:
         member_of:
@@ -4316,9 +4313,8 @@ users:
             - jcaine
 
     - joshua:
-        can_login: yes
-        member_of:
-            - joshua
+        can_login: no
+        member_of: []
 
     - jpeguero:
         can_login: yes
