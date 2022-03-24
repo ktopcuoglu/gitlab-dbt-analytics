@@ -250,10 +250,19 @@
     "event_name": "labels",
     "source_cte_name": "prep_labels",
     "user_column_name": "NULL",
-    "ultimate_parent_namespace_column_name": "dim_namespace_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_label_id",
     "stage_name": "plan"
+  },
+  {
+    "event_name": "terraform_reports",
+    "source_cte_name": "terraform_reports_events",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_job_artifact_id",
+    "stage_name": "configure"
   },
   
 ]
@@ -285,7 +294,8 @@
     ('map_saas_event_to_smau','map_saas_event_to_smau'),
     ('prep_environment_event', 'prep_environment_event'),
     ('prep_resource_milestone', 'prep_resource_milestone'),
-    ('prep_labels', 'prep_labels')
+    ('prep_labels', 'prep_labels'),
+    ('prep_ci_artifacts', 'prep_ci_artifacts')
 ]) }}
 
 , dast_jobs AS (
@@ -382,6 +392,12 @@
     SELECT *
     FROM prep_resource_milestone
     WHERE issue_id IS NOT NULL
+
+), terraform_reports_events AS (
+
+    SELECT *
+    FROM prep_ci_artifacts
+    WHERE file_type = 18
 
 ), data AS (
 
