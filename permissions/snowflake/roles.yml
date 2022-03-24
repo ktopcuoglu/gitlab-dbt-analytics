@@ -981,6 +981,11 @@ roles:
                     - raw
                     - prep
                     - snowflake
+                monitor: 
+                    - prod
+                    - raw
+                    - prep
+                    - snowflake
             schemas:
                 read:
                     - prod.restricted_safe_common_mart_sales
@@ -996,6 +1001,10 @@ roles:
                     - prep.dbt
                     - prep.airflow
                     - snowflake.account_usage
+                monitor:
+                    - prod.*
+                    - prep.*
+                    - raw.*
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -1034,6 +1043,10 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
+                references: 
+                    - prod.*.*
+                    - prep.*.*
+                    - raw.*.*
            
 # ==========================================
 # Object Roles
