@@ -14,7 +14,7 @@ WITH source AS (
       WHERE uuid IS NOT NULL
       AND version NOT LIKE ('%VERSION%')
     {% if is_incremental() %}
-                AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+                AND ping_created_at >= (SELECT COALESCE(MAX(ping_created_at), '2021-01-01' FROM {{this}})
     {% endif %}
 
 ) , flattened_high_level as (
