@@ -27,9 +27,11 @@ WITH account_dims_mapping AS (
       sequence_status,
       last_activity_date,
       account_demographics_sales_segment,
+      account_demographics_sales_segment_grouped,
       account_demographics_geo,
       account_demographics_region,
       account_demographics_area,
+      account_demographic_segment_region_grouped,
       account_demographics_territory,
       account_demographics_employee_count,
       account_demographics_max_family_employee,
@@ -250,9 +252,11 @@ WITH account_dims_mapping AS (
       crm_person.last_utm_content,
       crm_person.last_utm_campaign,
       crm_person.account_demographics_sales_segment,
+      crm_person.account_demographics_sales_segment_grouped,
       crm_person.account_demographics_geo,
       crm_person.account_demographics_region,
       crm_person.account_demographics_area,
+      crm_person.account_demographic_segment_region_grouped,
       crm_person.account_demographics_territory,
       crm_person.account_demographics_employee_count,
       crm_person.account_demographics_max_family_employee,
@@ -279,6 +283,8 @@ WITH account_dims_mapping AS (
       ON crm_person.dim_crm_person_id = mqls.crm_person_id
     LEFT JOIN account_dims_mapping
       ON crm_person.dim_crm_account_id = account_dims_mapping.dim_crm_account_id
+    LEFT JOIN sales_segment
+      ON sfdc_leads.sales_segmentation = sales_segment.sales_segment_name
     LEFT JOIN sales_territory
       ON sfdc_leads.tsp_territory = sales_territory.sales_territory_name
     LEFT JOIN industry
@@ -293,7 +299,7 @@ WITH account_dims_mapping AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2022-01-07"
+    updated_date="2022-03-17"
 ) }}
