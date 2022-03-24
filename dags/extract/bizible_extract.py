@@ -51,7 +51,7 @@ default_args = {
 dag = DAG(
     "bizible_extract",
     default_args=default_args,
-    concurrency=1,
+    concurrency=2,
     schedule_interval="25 */11 * * *",
 )
 
