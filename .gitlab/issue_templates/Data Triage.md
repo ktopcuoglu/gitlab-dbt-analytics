@@ -37,13 +37,13 @@ All tasks below should be checked off at the end of Triage day.
 
 The focus area for the Analytics Engineer are the `DBT` models including the applied tests. The source for the tasks below are the Airflow logs posted in **#analytics-pipelines** and the Sisense Trusted Data Operations [Dashboard](https://app.periscopedata.com/app/gitlab/756199/TD:-Trusted-Data-Operations-Dashboard). 
 
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failed DBT model
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT model
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
     * [ ] Work with the Data Fusion Team Manager to determine a DRI and SLO to resolve the dbt run failure. These run failures are more urgent to resolve because they result in stale data and we need to determine the path forward to have the model run again.
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failed DBT test
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT test
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
     * [ ] Work with Data Fusion Team Manager to determine a DRI and SLO for test failure resolution. These test failures can be less urgent and usually relate to a DQ issue that needs to be investigated.
-* [ ] Review all dbt-test warnings and [create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) if needed
+* [ ] Review all dbt-test warnings and [create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) if needed
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
 
@@ -89,7 +89,7 @@ Completed with x errors and x warnings:
 
 The focus area for the Data Engineer are the Data Pipelines and Data Infrastructure. 
 
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=DE%20Triage%20Errors) for each new failure in **#data-pipelines** and **#data-prom-alerts**
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) for each new failure in **#data-pipelines** and **#data-prom-alerts**
     * [ ] Link to all resulting issues and MRs in slack 
     * [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
 * [ ] [Investigate](https://gitlab.com/gitlab-org/gitlab/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) all relevant merge requests to the gitlab.com database schema, create an issue for each MR in the analytics project that impacts the GitLab.com extraction. Link each issue created to this issue. A detailed explanation of how to act if there is some impact is described on the page [#gitlabcom-db-structure-changes](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-db-structure-changes)
