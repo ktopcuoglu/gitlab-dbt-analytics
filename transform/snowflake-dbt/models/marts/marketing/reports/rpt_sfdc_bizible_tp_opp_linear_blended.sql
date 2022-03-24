@@ -107,8 +107,8 @@
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_integrated_campaign_grouping,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_marketing_channel_path,
       CASE 
-        WHEN rpt_sfdc_bizible_tp_person_lifecycle.region = 'NORAM' THEN 'AMER'
-        ELSE rpt_sfdc_bizible_tp_person_lifecycle.region 
+        WHEN rpt_sfdc_bizible_tp_person_lifecycle.account_demographics_region = 'NORAM' THEN 'AMER'
+        ELSE rpt_sfdc_bizible_tp_person_lifecycle.account_demographics_region 
       END AS region_normalized, -- 5
       IFF(rpt_sfdc_bizible_tp_person_lifecycle.sales_segment_name IS null,'Unknown',rpt_sfdc_bizible_tp_person_lifecycle.sales_segment_name) AS sales_segment_name,
       rpt_sfdc_bizible_tp_person_lifecycle.crm_person_status,
@@ -366,7 +366,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2022-01-25",
-    updated_date="2022-02-02"
+    updated_date="2022-03-24"
 ) }}

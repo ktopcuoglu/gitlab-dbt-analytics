@@ -52,7 +52,7 @@
       LEAST(IFNULL(mart_crm_touchpoint.mql_date_first:: date,'9999-01-01'),IFNULL(rpt_crm_person_with_opp.mql_inferred_date:: date,'9999-01-01')) AS mql_datetime_least,
       mart_crm_touchpoint.accepted_date,
       mart_crm_touchpoint.crm_person_status,
-      rpt_crm_person_with_opp.region,
+      rpt_crm_person_with_opp.account_demographics_region,
       rpt_crm_person_with_opp.sales_segment_name,
       rpt_crm_person_with_opp.is_inquiry,
       rpt_crm_person_with_opp.is_mql,
@@ -142,7 +142,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2022-01-25",
-    updated_date="2022-02-17"
+    updated_date="2022-03-24"
 ) }}

@@ -113,7 +113,7 @@
       mart_crm_person.source_buckets,
       mart_crm_person.crm_partner_id,
       mart_crm_person.sequence_step_type,
-      mart_crm_person.region,
+      mart_crm_person.account_demographics_region,
       mart_crm_person.state,
       mart_crm_person.country,
       mart_crm_person.name_of_active_sequence,
@@ -186,6 +186,6 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-20",
-    updated_date="2022-01-20",
+    updated_date="2022-03-24",
   ) }}
 
