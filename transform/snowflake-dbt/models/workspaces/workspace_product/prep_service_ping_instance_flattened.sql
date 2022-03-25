@@ -24,9 +24,11 @@ WITH source AS (
         ping_created_at,
         ip_address_hash,
         license_md5,
-        raw_usage_data_payload,
         main_edition,
         product_tier,
+        TO_DATE(source.raw_usage_data_payload:license_trial_ends_on::TEXT)                     AS license_trial_ends_on,
+        (source.raw_usage_data_payload:license_subscription_id::TEXT)                          AS license_subscription_id,
+        source.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER    AS umau_value,
         path                                  AS metrics_path,
         value                                 AS metric_value
       FROM source,
