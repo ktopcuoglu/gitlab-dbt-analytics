@@ -10,7 +10,6 @@ WITH source AS (
     SELECT
         *
     FROM {{ ref('prep_service_ping_instance')}} as usage
-      WHERE ping_created_at >= '2022-01-01'
     {% if is_incremental() %}
           WHERE ping_created_at >= (SELECT COALESCE(MAX(ping_created_at), '2022-01-01') FROM {{this}})
     {% endif %}
