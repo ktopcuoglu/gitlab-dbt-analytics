@@ -40,7 +40,6 @@ SELECT
         duplicate_opportunity__c                        AS duplicate_opportunity_id,
         account_owner__c                                AS account_owner,
         opportunity_owner__c                            AS opportunity_owner,
-        owner_team_o__c                                 AS opportunity_owner_team,
         manager_current__c                              AS opportunity_owner_manager,
         sales_market__c                                 AS opportunity_owner_department,
         SDR_LU__c                                       AS opportunity_sales_development_representative,

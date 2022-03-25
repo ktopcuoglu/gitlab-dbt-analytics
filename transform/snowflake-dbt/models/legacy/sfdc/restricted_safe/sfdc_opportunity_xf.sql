@@ -99,7 +99,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_owner_department                                               AS opportunity_owner_department,
       sfdc_opportunity.opportunity_owner_manager                                                  AS opportunity_owner_manager,
       opportunity_owner.role_name                                                                 AS opportunity_owner_role,
-      sfdc_opportunity.opportunity_owner_team                                                     AS opportunity_owner_team,
       opportunity_owner.title                                                                     AS opportunity_owner_title,
       sfdc_opportunity.opportunity_sales_development_representative,
       sfdc_opportunity.opportunity_development_representative,

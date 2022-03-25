@@ -62,7 +62,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.opportunity_owner_department,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.opportunity_owner_role,
-      sfdc_opportunity_xf.opportunity_owner_team,
       sfdc_opportunity_xf.opportunity_owner_title,
       sfdc_opportunity_xf.opportunity_sales_development_representative,
       sfdc_opportunity_xf.opportunity_development_representative,
