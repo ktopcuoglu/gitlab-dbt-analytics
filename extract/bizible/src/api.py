@@ -25,11 +25,15 @@ class BizibleSnowFlakeExtractor:
         )
         self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
-    def get_bizible_query(self, full_table_name, date_column):
+    def get_bizible_query(self, full_table_name: str, date_column: str) -> Dict:
         """
 
-        :param full_table_name:
-        :type full_table_name:
+        :param full_table_name: Table to retrieve
+        :type full_table_name: str
+        :param date_column: Date column to use for incrementing
+        :type date_column: str
+        :return: Dict containing the table name and last modified date (if it exists).
+        :rtype: Dict
         """
         table_name = full_table_name.split(".")[-1]
         if len(date_column) > 0:
@@ -54,55 +58,17 @@ class BizibleSnowFlakeExtractor:
 
         return {table_name: {}}
 
-    def generate_partitioned_files(self, table_name, last_modified_date, date_column):
-        """Created due to memory limitations"""
-        end_date = datetime.now()
-        for dt in rrule.rrule(rrule.HOURLY, dtstart=last_modified_date, until=end_date):
-            query_start_date = dt
-            query_end_date = dt + timedelta(hours=2)
-
-            query = f"""
-            SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
-            WHERE {date_column} >= '{query_start_date}' 
-            AND {date_column} < '{query_end_date}'
-            """
-
-            logging.info(f"Running {query}")
-
-            file_name = f"{table_name}_{str(dt.year)}-{str(dt.month)}-{str(dt.day)}-{str(dt.hour)}.csv"
-
-            df = query_dataframe(self.bizible_engine, query)
-
-            logging.info(f"Creating {file_name}")
-
-            df.to_csv(file_name, index=False, sep="|")
-
-            logging.info(f"Processing {file_name} to {table_name}")
-            snowflake_stage_load_copy_remove(
-                file_name,
-                f"BIZIBLE.BIZIBLE_LOAD",
-                f"BIZIBLE.{table_name.lower()}",
-                self.snowflake_engine,
-                "csv",
-                file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
-            )
-            logging.info(f"Processed {file_name}")
-
-            logging.info(f"To delete {file_name}")
-            os.remove(file_name)
-
-    def generate_scd_file(
-        self,
-        table_name,
-    ):
-        query = f"""
-        SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+    def upload_query(self, table_name: str, file_name: str, query: str) -> None:
         """
 
+        :param file_name:
+        :type file_name:
+        :param table_name:
+        :type table_name:
+        :param query:
+        :type query:
+        """
         logging.info(f"Running {query}")
-
-        file_name = f"{table_name}.csv"
-
         df = query_dataframe(self.bizible_engine, query)
 
         logging.info(f"Creating {file_name}")
@@ -117,23 +83,79 @@ class BizibleSnowFlakeExtractor:
             "csv",
             file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
         )
+        logging.info(f"Processed {file_name}")
 
-    def process_bizible_query(self, query_details: Dict, date_column):
+        logging.info(f"To delete {file_name}")
+        os.remove(file_name)
+
+    def upload_partitioned_files(self, table_name: object, last_modified_date: object, date_column: object) -> None:
+        """
+        Created due to memory limitations, increments over the data set in hourly batches, primarily to ensure
+        the BIZ.FACTS data size doesn't exceed what is available in K8
+
+        :param table_name:
+        :type table_name:
+        :param last_modified_date:
+        :type last_modified_date:
+        :param date_column:
+        :type date_column:
+        """
+        end_date = datetime.now()
+        for dt in rrule.rrule(rrule.HOURLY, dtstart=last_modified_date, until=end_date):
+            query_start_date = dt
+            query_end_date = dt + timedelta(hours=2)
+
+            query = f"""
+            SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+            WHERE {date_column} >= '{query_start_date}' 
+            AND {date_column} < '{query_end_date}'
+            """
+
+
+            file_name = f"{table_name}_{str(dt.year)}-{str(dt.month)}-{str(dt.day)}-{str(dt.hour)}.csv"
+
+            self.upload_query(table_name, file_name, query)
+
+    def upload_scd_file(
+        self, table_name: str,
+    ) -> None:
+        """
+
+        :param table_name:
+        :type table_name:
+        """
+        query = f"""
+        SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+        """
+
+        file_name = f"{table_name}.csv"
+        self.upload_query(table_name, file_name, query)
+
+    def process_bizible_query(self, query_details: Dict, date_column: str) -> None:
+        """
+
+        :param query_details:
+        :type query_details:
+        :param date_column:
+        :type date_column:
+        """
         for table_name in query_details.keys():
             logging.info(f"Running {table_name} query")
             last_modified_date = query_details[table_name].get("last_modified_date")
             if last_modified_date:
-                self.generate_partitioned_files(
+                self.upload_partitioned_files(
                     table_name,
                     last_modified_date,
                     date_column,
                 )
             else:
-                self.generate_scd_file(table_name)
+                self.upload_scd_file(table_name)
 
-    def extract_latest_bizible_file(self, table_name: str, date_column: str = ""):
+    def extract_latest_bizible_file(self, table_name: str, date_column: str = "") -> None:
         """
 
+        :param date_column:
+        :type date_column:
         :param table_name:
         :type table_name:
         """
