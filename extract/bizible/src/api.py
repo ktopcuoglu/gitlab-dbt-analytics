@@ -67,17 +67,17 @@ class BizibleSnowFlakeExtractor:
             AND {date_column} < '{query_end_date}'
             """
 
-            print(f"Running {query}")
+            logging.info(f"Running {query}")
 
             file_name = f"{table_name}_{str(dt.year)}-{str(dt.month)}-{str(dt.day)}-{str(dt.hour)}.csv"
 
             df = query_dataframe(self.bizible_engine, query)
 
-            print(f"Creating {file_name}")
+            logging.info(f"Creating {file_name}")
 
             df.to_csv(file_name, index=False, sep="|")
 
-            print(f"Processing {file_name} to {table_name}")
+            logging.info(f"Processing {file_name} to {table_name}")
             snowflake_stage_load_copy_remove(
                 file_name,
                 f"BIZIBLE.BIZIBLE_LOAD",
@@ -86,9 +86,9 @@ class BizibleSnowFlakeExtractor:
                 "csv",
                 file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
             )
-            print(f"Processed {file_name}")
+            logging.info(f"Processed {file_name}")
 
-            print(f"To delete {file_name}")
+            logging.info(f"To delete {file_name}")
             os.remove(file_name)
 
     def generate_scd_file(
@@ -99,16 +99,16 @@ class BizibleSnowFlakeExtractor:
         SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
         """
 
-        print(f"Running {query}")
+        logging.info(f"Running {query}")
 
         file_name = f"{table_name}.csv"
 
         df = query_dataframe(self.bizible_engine, query)
 
-        print(f"Creating {file_name}")
+        logging.info(f"Creating {file_name}")
         df.to_csv(file_name, index=False, sep="|")
 
-        print(f"Processing {file_name} to {table_name}")
+        logging.info(f"Processing {file_name} to {table_name}")
         snowflake_stage_load_copy_remove(
             file_name,
             f"BIZIBLE.BIZIBLE_LOAD",
