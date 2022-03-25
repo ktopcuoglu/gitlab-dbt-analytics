@@ -59,7 +59,7 @@ class BizibleSnowFlakeExtractor:
         end_date = datetime.now()
         for dt in rrule.rrule(rrule.HOURLY, dtstart=last_modified_date, until=end_date):
             query_start_date = dt
-            query_end_date = dt + timedelta(hours=1)
+            query_end_date = dt + timedelta(hours=2)
 
             query = f"""
             SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
