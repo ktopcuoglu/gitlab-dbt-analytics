@@ -88,7 +88,9 @@ class BizibleSnowFlakeExtractor:
         logging.info(f"To delete {file_name}")
         os.remove(file_name)
 
-    def upload_partitioned_files(self, table_name: str, last_modified_date: datetime, date_column: str) -> None:
+    def upload_partitioned_files(
+        self, table_name: str, last_modified_date: datetime, date_column: str
+    ) -> None:
         """
         Created due to memory limitations, increments over the data set in hourly batches, primarily to ensure
         the BIZ.FACTS data size doesn't exceed what is available in K8
@@ -111,13 +113,13 @@ class BizibleSnowFlakeExtractor:
             AND {date_column} < '{query_end_date}'
             """
 
-
             file_name = f"{table_name}_{str(dt.year)}-{str(dt.month)}-{str(dt.day)}-{str(dt.hour)}.csv"
 
             self.upload_query(table_name, file_name, query)
 
     def upload_scd_file(
-        self, table_name: str,
+        self,
+        table_name: str,
     ) -> None:
         """
 
@@ -151,7 +153,9 @@ class BizibleSnowFlakeExtractor:
             else:
                 self.upload_scd_file(table_name)
 
-    def extract_latest_bizible_file(self, table_name: str, date_column: str = "") -> None:
+    def extract_latest_bizible_file(
+        self, table_name: str, date_column: str = ""
+    ) -> None:
         """
 
         :param date_column:
