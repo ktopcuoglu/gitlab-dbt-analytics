@@ -10,6 +10,7 @@ WITH source AS (
     SELECT
         *
     FROM {{ ref('prep_service_ping_instance')}} as usage
+      WHERE ping_created_at >= '2021-01-01'
     {% if is_incremental() %}
           WHERE ping_created_at >= (SELECT COALESCE(MAX(ping_created_at), '2022-01-01') FROM {{this}})
     {% endif %}
@@ -18,7 +19,14 @@ WITH source AS (
       SELECT
         {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'path']) }}       AS prep_service_ping_instance_flattened_id,
         dim_service_ping_instance_id,
+        dim_host_id,
+        dim_instance_id,
         ping_created_at,
+        ip_address_hash,
+        license_md5,
+        raw_usage_data_payload,
+        main_edition,
+        product_tier,
         path                                  AS metrics_path,
         value                                 AS metric_value
       FROM source,
