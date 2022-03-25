@@ -88,7 +88,7 @@ class BizibleSnowFlakeExtractor:
         logging.info(f"To delete {file_name}")
         os.remove(file_name)
 
-    def upload_partitioned_files(self, table_name: object, last_modified_date: object, date_column: object) -> None:
+    def upload_partitioned_files(self, table_name: str, last_modified_date: datetime, date_column: str) -> None:
         """
         Created due to memory limitations, increments over the data set in hourly batches, primarily to ensure
         the BIZ.FACTS data size doesn't exceed what is available in K8
