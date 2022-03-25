@@ -1,6 +1,5 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    full_refresh = false,
     materialized = "incremental",
     unique_key = "dim_service_ping_instance_id"
 ) }}
@@ -59,8 +58,8 @@
         WHEN original_edition = 'EES'                                    THEN 'Starter'
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
-        ELSE NULL END                                                                                      AS product_tier,
-      COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
+        ELSE NULL END                                                                                        AS product_tier,
+        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
