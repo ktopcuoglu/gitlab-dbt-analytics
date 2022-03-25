@@ -29,7 +29,6 @@ tables:
   biz_contacts:
     date_column: _modified_date
   biz_conversion_rates:
-    date_column: _modified_date
   biz_costs:
     date_column: _modified_date
   biz_creatives:
