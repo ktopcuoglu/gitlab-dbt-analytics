@@ -203,7 +203,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
       sfdc_opportunity_xf.division_sales_segment,
       sfdc_opportunity_xf.ultimate_parent_sales_segment,
-      sfdc_opportunity_xf.segment,
       sfdc_opportunity_xf.sales_segment,
       sfdc_opportunity_xf.parent_segment,
 

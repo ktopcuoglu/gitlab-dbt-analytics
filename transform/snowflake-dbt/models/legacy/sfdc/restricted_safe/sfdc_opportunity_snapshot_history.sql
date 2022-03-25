@@ -47,7 +47,7 @@ WITH sfdc_opportunity_snapshots AS (
       sales_accepted_date__c         AS sales_accepted_date,
       engagement_type__c             AS sales_path,
       sales_qualified_date__c        AS sales_qualified_date,
-      COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+      COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                      AS sales_segment,
       type                           AS sales_type,
       {{  sfdc_source_buckets('leadsource') }}
@@ -91,7 +91,6 @@ WITH sfdc_opportunity_snapshots AS (
       sql_source__c                  AS sales_qualified_source,
       IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
                                      AS sqs_bucket_engagement,
-      sales_segmentation_o__c        AS segment,
       solutions_to_be_replaced__c    AS solutions_to_be_replaced,
       amount                         AS total_contract_value,
       upside_iacv__c                 AS upside_iacv,

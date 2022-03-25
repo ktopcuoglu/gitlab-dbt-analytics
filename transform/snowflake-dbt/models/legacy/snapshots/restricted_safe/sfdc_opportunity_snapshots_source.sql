@@ -195,8 +195,7 @@ SELECT
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
       -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
-        sales_segmentation_o__c                         AS segment,
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                                         AS sales_segment,
         {{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}
                                                         AS parent_segment,
@@ -221,7 +220,7 @@ SELECT
         x7_closed_lost_date__c                          AS stage_6_closed_lost_date,
 
         -- sales segment fields
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                                         AS division_sales_segment_stamped,
         -- channel reporting
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
