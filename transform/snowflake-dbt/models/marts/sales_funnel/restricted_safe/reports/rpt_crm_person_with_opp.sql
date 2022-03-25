@@ -143,7 +143,7 @@
       mart_crm_person.account_demographics_upa_city,
       mart_crm_person.account_demographics_upa_street,
       mart_crm_person.account_demographics_upa_postal_code,
-      mart_crm_person.sales_segment_region_mapped,
+      mart_crm_person.account_demographic_segment_region_grouped AS sales_segment_region_mapped,
       mart_crm_person.is_mql,
       mart_crm_person.is_inquiry,
       mart_crm_person.is_lead_source_trial,
