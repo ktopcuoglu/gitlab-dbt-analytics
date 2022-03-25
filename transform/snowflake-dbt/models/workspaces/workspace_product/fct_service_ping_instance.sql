@@ -68,10 +68,11 @@
       DATE_TRUNC('MONTH', ping_created_at)               AS ping_created_at_month,
       DATE_TRUNC('WEEK', ping_created_at)                AS ping_created_at_week,
       DATE_TRUNC('DAY', ping_created_at)                 AS ping_created_at_date,
-      raw_usage_data_id                                  AS raw_usage_data_id,
-      raw_usage_data_payload,
       license_md5,
       dim_location_country_id,
+      license_trial_ends_on,
+      license_subscription_id,
+      umau_value,
       product_tier,
       main_edition,
       metrics_path,
@@ -88,10 +89,7 @@
       prep_usage_ping_cte.*,
       prep_license.dim_license_id,
       dim_date.date_id                                                                                     AS dim_date_id,
-      TO_DATE(prep_usage_ping_cte.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
-      (prep_usage_ping_cte.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
       COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                             AS dim_subscription_id,
-      prep_usage_ping_cte.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value,
       IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial
     FROM prep_usage_ping_cte
     LEFT JOIN prep_license
