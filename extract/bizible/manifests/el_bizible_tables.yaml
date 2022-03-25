@@ -15,9 +15,7 @@ tables:
   biz_ads:
     date_column: _modified_date
   biz_advertisers:
-    date_column: _modified_date
   biz_ad_accounts:
-    date_column: _modified_date
   biz_ad_campaigns:
     date_column: _modified_date
   biz_ad_groups:
@@ -36,7 +34,6 @@ tables:
   biz_crm_tasks:
     date_column: _modified_date
   biz_currencies:
-    date_column: _modified_date
   biz_email_to_visitor_ids:
     date_column: _modified_date
   biz_facts:
@@ -76,6 +73,4 @@ tables:
   biz_stage_definitions:
     date_column: _modified_date
   biz_placements:
-    date_column: _modified_date
   biz_web_host_mappings:
-    date_column: _modified_date
