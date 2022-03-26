@@ -1,12 +1,9 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    full_refresh = false,
+    materialized = "incremental",
+    unique_key = "fct_service_ping_instance_id"
 ) }}
-
-{{ config({
-  "materialized": "incremental",
-  "unique_key": "fct_service_ping_instance_id"
-    })
-}}
 
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
 

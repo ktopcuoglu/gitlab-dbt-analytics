@@ -1,12 +1,9 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    full_refresh = false,
+    materialized = "incremental",
+    unique_key = "mart_service_ping_instance_id"
 ) }}
-
-{{config({
-  "materialized": "incremental",
-  "unique_key": "mart_service_ping_instance_id"
-  })
-}}
 
 {{ simple_cte([
     ('fct_service_ping_instance', 'fct_service_ping_instance'),
@@ -88,7 +85,7 @@
   SELECT
     * FROM fct_service_ping_instance
     {% if is_incremental() %}
-                WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+                WHERE ping_created_at >= COALESCE((SELECT MAX(ping_created_at) FROM {{this}}), '2020-01-01')
     {% endif %}
 
 ), fct_pings_w_dims AS  (

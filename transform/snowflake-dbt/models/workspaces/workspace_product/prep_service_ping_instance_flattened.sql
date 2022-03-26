@@ -1,5 +1,6 @@
 {{ config(
     tags=["product", "mnpi_exception"],
+    full_refresh = false,
     materialized = "incremental",
     unique_key = "prep_service_ping_instance_flattened_id"
 ) }}
@@ -10,9 +11,8 @@ WITH source AS (
     SELECT
         *
     FROM {{ ref('prep_service_ping_instance')}} as usage
-      WHERE ping_created_at >= '2021-01-01'
     {% if is_incremental() %}
-          WHERE ping_created_at >= (SELECT COALESCE(MAX(ping_created_at), '2022-01-01') FROM {{this}})
+          WHERE ping_created_at >= (SELECT COALESCE(MAX(ping_created_at) FROM {{this}}), '2022-01-01')
     {% endif %}
 
 ) , flattened_high_level as (
