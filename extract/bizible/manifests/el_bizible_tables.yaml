@@ -42,7 +42,6 @@ tables:
     date_column: _modified_date
   biz_segments:
   biz_sites:
-    date_column: _modified_date
   biz_site_links:
     date_column: _modified_date
   biz_urls:
