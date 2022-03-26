@@ -100,7 +100,7 @@ WITH biz_person AS (
       account_demographics_geo,
       account_demographics_region,
       account_demographics_area,
-      account_demographic_segment_region_grouped,
+      account_demographics_segment_region_grouped,
       account_demographics_territory,
       account_demographics_employee_count,
       account_demographics_max_family_employee,
@@ -179,7 +179,7 @@ WITH biz_person AS (
       account_demographics_geo,
       account_demographics_region,
       account_demographics_area,
-      account_demographic_segment_region_grouped,
+      account_demographics_segment_region_grouped,
       account_demographics_territory,
       account_demographics_employee_count,
       account_demographics_max_family_employee,
@@ -220,5 +220,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2022-03-17"
+    updated_date="2022-03-26"
 ) }}
