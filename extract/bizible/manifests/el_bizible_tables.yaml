@@ -71,6 +71,5 @@ tables:
   biz_page_views:
     date_column: _modified_date
   biz_stage_definitions:
-    date_column: _modified_date
   biz_placements:
   biz_web_host_mappings:
