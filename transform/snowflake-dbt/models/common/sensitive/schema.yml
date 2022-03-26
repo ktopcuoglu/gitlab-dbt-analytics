@@ -300,3 +300,5 @@ models:
         description: If True, the marketing contact is a member of a namespace that has been checked for company use
       - name: has_namespace_with_public_project
         description: If True, the marketing contact is a member of a namespace that has at least one public project
+      - name: has_namespace_with_public_project
+        description: If True, the marketing contact is a member of a Free namespace that has at least one public project
