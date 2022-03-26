@@ -40,7 +40,7 @@ class BizibleSnowFlakeExtractor:
             snowflake_query_max_date = f"""
                             SELECT 
                                 max({date_column}) as last_modified_date
-                            FROM "BIZIBLE".{table_name} 
+                            FROM "RAW"."BIZIBLE".{table_name} 
                         """
             df = query_dataframe(self.snowflake_engine, snowflake_query_max_date)
 
@@ -77,8 +77,8 @@ class BizibleSnowFlakeExtractor:
         logging.info(f"Processing {file_name} to {table_name}")
         snowflake_stage_load_copy_remove(
             file_name,
-            f"BIZIBLE.BIZIBLE_LOAD",
-            f"BIZIBLE.{table_name.lower()}",
+            f"RAW.BIZIBLE.BIZIBLE_LOAD",
+            f"RAW.BIZIBLE.{table_name.lower()}",
             self.snowflake_engine,
             "csv",
             file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
