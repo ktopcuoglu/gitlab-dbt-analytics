@@ -103,7 +103,9 @@ class BizibleSnowFlakeExtractor:
         :type date_column:
         """
         end_date = datetime.now()
-        for dt in rrule.rrule(rrule.HOURLY, dtstart=last_modified_date, until=end_date, interval=2):
+        for dt in rrule.rrule(
+            rrule.HOURLY, dtstart=last_modified_date, until=end_date, interval=2
+        ):
             query_start_date = dt
             query_end_date = dt + timedelta(hours=2)
 
