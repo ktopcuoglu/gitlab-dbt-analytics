@@ -150,7 +150,7 @@ class BizibleSnowFlakeExtractor:
 
         query = f"""
         SELECT COUNT(*) as record_count FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
-        WHERE {date_column} >= {last_modified_date} 
+        WHERE {date_column} >= '{last_modified_date}' 
         """
 
         record_count = query_dataframe(self.snowflake_engine, query)[
