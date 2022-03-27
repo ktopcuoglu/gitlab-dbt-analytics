@@ -110,7 +110,7 @@ class BizibleSnowFlakeExtractor:
             query_end_date = dt + timedelta(hours=2)
 
             query = f"""
-            SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+            SELECT *, SYSDATE() as uploaded_at FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
             WHERE {date_column} >= '{query_start_date}' 
             AND {date_column} < '{query_end_date}'
             """
