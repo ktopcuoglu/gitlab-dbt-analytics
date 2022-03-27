@@ -153,7 +153,7 @@ class BizibleSnowFlakeExtractor:
         WHERE {date_column} >= '{last_modified_date}' 
         """
 
-        record_count = query_dataframe(self.snowflake_engine, query)[
+        record_count = query_dataframe(self.bizible_engine, query)[
             "record_count"
         ].to_list()[0]
 
