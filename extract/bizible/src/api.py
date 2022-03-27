@@ -139,7 +139,8 @@ class BizibleSnowFlakeExtractor:
         self, table_name: str, last_modified_date: datetime, date_column: str
     ) -> bool:
         """
-
+        Small process written to check if there are records available for a given table before loading it.
+        Solves a problem which causes the process to run for ages if the table hasn't been updated in a while.
         :param table_name:
         :type table_name:
         :param last_modified_date:
