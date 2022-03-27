@@ -147,7 +147,7 @@ class BizibleSnowFlakeExtractor:
         :param date_column:
         :type date_column:
         """
-
+        logging.info(f"Checking if records are available for {table_name}")
         query = f"""
         SELECT COUNT(*) as record_count FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
         WHERE {date_column} >= '{last_modified_date}' 
@@ -156,8 +156,9 @@ class BizibleSnowFlakeExtractor:
         record_count = query_dataframe(self.bizible_engine, query)[
             "record_count"
         ].to_list()[0]
-
+        
         if record_count > 0:
+            logging.info(f"Found {record_count} to process")
             return True
         else:
             return False
