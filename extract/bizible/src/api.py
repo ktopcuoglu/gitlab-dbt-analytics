@@ -119,7 +119,7 @@ class BizibleSnowFlakeExtractor:
 
             self.upload_query(table_name, file_name, query)
 
-    def upload_scd_file(
+    def upload_complete_file(
         self,
         table_name: str,
     ) -> None:
@@ -137,7 +137,7 @@ class BizibleSnowFlakeExtractor:
 
     def check_records_updated(
         self, table_name: str, last_modified_date: datetime, date_column: str
-    ) -> bool:
+    ) -> int:
         """
         Small process written to check if there are records available for a given table before loading it.
         Solves a problem which causes the process to run for ages if the table hasn't been updated in a while.
@@ -148,7 +148,6 @@ class BizibleSnowFlakeExtractor:
         :param date_column:
         :type date_column:
         """
-        logging.info(f"Checking if records are available for {table_name}")
         query = f"""
         SELECT COUNT(*) as record_count FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
         WHERE {date_column} >= '{last_modified_date}' 
@@ -158,11 +157,27 @@ class BizibleSnowFlakeExtractor:
             "record_count"
         ].to_list()[0]
 
-        if record_count > 0:
-            logging.info(f"Found {record_count} to process")
-            return True
-        else:
-            return False
+        return record_count
+
+    def upload_batch(
+        self, table_name: str, last_modified_date: datetime, date_column: str
+    ) -> None:
+        """
+        Written to upload smaller batches as one file.
+        :param table_name:
+        :type table_name:
+        :param last_modified_date:
+        :type last_modified_date:
+        :param date_column:
+        :type date_column:
+        """
+        query = f"""
+        SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+        WHERE {date_column} >= '{last_modified_date}' 
+        """
+
+        file_name = f"{table_name}.csv"
+        self.upload_query(table_name, file_name, query)
 
     def process_bizible_query(self, query_details: Dict, date_column: str) -> None:
         """
@@ -176,10 +191,17 @@ class BizibleSnowFlakeExtractor:
             logging.info(f"Running {table_name} query")
             last_modified_date = query_details[table_name].get("last_modified_date")
             if last_modified_date:
-                if self.check_records_updated(
+                record_count = self.check_records_updated(
                     table_name, last_modified_date, date_column
-                ):
+                )
+                if record_count >= 10000:
                     self.upload_partitioned_files(
+                        table_name,
+                        last_modified_date,
+                        date_column,
+                    )
+                elif record_count < 10000:
+                    self.upload_batch(
                         table_name,
                         last_modified_date,
                         date_column,
@@ -187,7 +209,7 @@ class BizibleSnowFlakeExtractor:
                 else:
                     logging.info(f"No records available for {table_name}")
             else:
-                self.upload_scd_file(table_name)
+                self.upload_complete_file(table_name)
 
     def extract_latest_bizible_file(
         self, table_name: str, date_column: str = ""
