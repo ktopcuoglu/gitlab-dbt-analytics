@@ -157,7 +157,7 @@ class BizibleSnowFlakeExtractor:
         record_count = query_dataframe(self.bizible_engine, query)[
             "record_count"
         ].to_list()[0]
-        
+
         if record_count > 0:
             logging.info(f"Found {record_count} to process")
             return True
