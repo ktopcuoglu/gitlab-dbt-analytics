@@ -129,7 +129,7 @@ class BizibleSnowFlakeExtractor:
         :type table_name:
         """
         query = f"""
-        SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+        SELECT *, SYSDATE() as uploaded_at FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
         """
 
         file_name = f"{table_name}.csv"
@@ -172,7 +172,7 @@ class BizibleSnowFlakeExtractor:
         :type date_column:
         """
         query = f"""
-        SELECT * FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+        SELECT *, SYSDATE() as uploaded_at FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
         WHERE {date_column} >= '{last_modified_date}' 
         """
 
