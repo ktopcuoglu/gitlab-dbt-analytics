@@ -81,7 +81,7 @@ class BizibleSnowFlakeExtractor:
             f"RAW.BIZIBLE.{table_name.lower()}",
             self.snowflake_engine,
             "csv",
-            file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None ERROR_ON_COLUMN_COUNT_MISMATCH=false ",
+            file_format_options="trim_space=true field_optionally_enclosed_by = '0x22' SKIP_HEADER = 1 field_delimiter = '|' ESCAPE_UNENCLOSED_FIELD = None",
         )
         logging.info(f"Processed {file_name}")
 
