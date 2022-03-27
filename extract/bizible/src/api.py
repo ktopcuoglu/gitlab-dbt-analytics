@@ -135,6 +135,33 @@ class BizibleSnowFlakeExtractor:
         file_name = f"{table_name}.csv"
         self.upload_query(table_name, file_name, query)
 
+    def check_records_updated(
+        self, table_name: str, last_modified_date: datetime, date_column: str
+    ) -> bool:
+        """
+
+        :param table_name:
+        :type table_name:
+        :param last_modified_date:
+        :type last_modified_date:
+        :param date_column:
+        :type date_column:
+        """
+
+        query = f"""
+        SELECT COUNT(*) as record_count FROM BIZIBLE_ROI_V3.GITLAB.{table_name}
+        WHERE {date_column} >= {last_modified_date} 
+        """
+
+        record_count = query_dataframe(self.snowflake_engine, query)[
+            "record_count"
+        ].to_list()[0]
+
+        if record_count > 0:
+            return True
+        else:
+            return False
+
     def process_bizible_query(self, query_details: Dict, date_column: str) -> None:
         """
 
@@ -147,11 +174,16 @@ class BizibleSnowFlakeExtractor:
             logging.info(f"Running {table_name} query")
             last_modified_date = query_details[table_name].get("last_modified_date")
             if last_modified_date:
-                self.upload_partitioned_files(
-                    table_name,
-                    last_modified_date,
-                    date_column,
-                )
+                if self.check_records_updated(
+                    table_name, last_modified_date, date_column
+                ):
+                    self.upload_partitioned_files(
+                        table_name,
+                        last_modified_date,
+                        date_column,
+                    )
+                else:
+                    logging.info(f"No records available for {table_name}")
             else:
                 self.upload_scd_file(table_name)
 
