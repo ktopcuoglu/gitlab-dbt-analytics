@@ -32,6 +32,7 @@
       IFNULL(dim_project.ultimate_parent_namespace_id, -1)          AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)               AS dim_plan_id,
       environment_event.created_at::TIMESTAMP                       AS created_at,
+      environment_event.updated_at::TIMESTAMP                       AS updated_at,
       dim_date.date_id                                              AS created_date_id
     FROM environment_event
     LEFT JOIN dim_project ON environment_event.project_id = dim_project.dim_project_id
