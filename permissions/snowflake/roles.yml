@@ -959,6 +959,21 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
+            - datasiren
+            - engineer_xl
+            - engineer_xs
+            - fivetran_warehouse
+            - loading
+            - merge_request_l
+            - merge_request_xl
+            - merge_request_xs
+            - reporting
+            - transforming_4xl
+            - transforming_l
+            - transforming_s
+            - transforming_xl
+            - transforming_xs
+            - usage_ping
         privileges:
             databases:
                 read:
