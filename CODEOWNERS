@@ -8,21 +8,19 @@
 # nested in that directory, on any level
 
 [Default]
-* @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+* @rparker2 @iweeks @dvanrooijen2 @mlaanen
 
 
 [Admin]
-/.gitlab/       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @dvanrooijen2 @vedprakash2021
-/admin/         @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @dvanrooijen2 @vedprakash2021
-/analyze/       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru @dvanrooijen2 @vedprakash2021
+/.gitlab/       @rparker2 @iweeks @dvanrooijen2 @mlaanen
+/admin/         @iweeks @dvanrooijen2 @mlaanen
+/analyze/       @mlaanen
 
 CODEOWNERS      @rparker2 @iweeks @dvanrooijen2 @mlaanen
-.gitignore      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-CONTRIBUTING.md @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-LICENSE.md      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-README.md       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-__init__.py     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-
+.gitignore      @jjstark  @paul_armstrong
+CONTRIBUTING.md @rparker2
+LICENSE.md      @rparker2
+README.md       @rparker2
 
 [Data Engineering]
 /dags/              @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
