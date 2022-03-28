@@ -1860,3 +1860,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_ci_artifacts
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_job_artifact_id
+        tests:
+          - not_null
+          - unique
