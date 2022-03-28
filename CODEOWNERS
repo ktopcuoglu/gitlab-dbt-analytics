@@ -12,27 +12,27 @@
 
 
 [Admin]
-/.gitlab/       @rparker2 @iweeks @dvanrooijen2 @mlaanen
-/admin/         @iweeks @dvanrooijen2 @mlaanen
+/.gitlab/       @rparker2  @iweeks  @dvanrooijen2  @mlaanen
+/admin/         @iweeks  @dvanrooijen2  @mlaanen
 /analyze/       @mlaanen
 
-CODEOWNERS      @rparker2 @iweeks @dvanrooijen2 @mlaanen
+CODEOWNERS      @rparker2  @iweeks @dvanrooijen2  @mlaanen
 .gitignore      @jjstark  @paul_armstrong
 CONTRIBUTING.md @rparker2
 LICENSE.md      @rparker2
 README.md       @rparker2
 
 [Data Engineering]
-/dags/              @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
-/extract/           @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
-/load/              @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
-/orchestrate/       @jjstark  @paul_armstrong  @dvanrooijen2  @vedprakash2021
-/permissions/       @jjstark  @paul_armstrong  @dvanrooijen2  @laddula @vedprakash2021
+/dags/              @paul_armstrong
+/extract/           @jjstark  @paul_armstrong  @vedprakash2021
+/load/              @jjstark. @paul_armstrong  @vedprakash2021
+/orchestrate/       @jjstark  @paul_armstrong  @vedprakash2021
+/permissions/       @dvanrooijen2  @laddula
 /pump/              @jjstark  @paul_armstrong @vedprakash2021
 
-Makefile            @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooijen2 @vedprakash2021
-docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooijen2 @vedprakash2021
-.gitlab-ci.yml      @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooijen2 @vedprakash2021
+Makefile            @jjstark  @paul_armstrong  @vedprakash2021
+docker-compose.yml  @jjstark  @paul_armstrong  @vedprakash2021
+.gitlab-ci.yml      @jjstark  @paul_armstrong  @vedprakash2021
 
 
 
@@ -41,100 +41,96 @@ docker-compose.yml  @jjstark  @paul_armstrong   @snalamaru   @rparker2 @dvanrooi
 # ======
 
 [dbt]
-/transform/                                         @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/general/                                 @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/                           @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/generate_dbt_schema.py     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/periscope_check.py         @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/                                         @jjstark  @paul_armstrong  @vedprakash2021
+/transform/general/                                 @jjstark  @paul_armstrong  @vedprakash2021
+/transform/snowflake-dbt/                           @jjstark  @paul_armstrong  @vedprakash2021
+/transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark  @paul_armstrong  @vedprakash2021
+/transform/snowflake-dbt/generate_dbt_schema.py     @jjstark  @paul_armstrong  @vedprakash2021
+/transform/snowflake-dbt/periscope_check.py         @jjstark  @paul_armstrong  @vedprakash2021
 
-/transform/snowflake-dbt/analysis/                  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/docs/                      @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/macros/                    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/analysis/                  @jjstark  @paul_armstrong  @vedprakash2021
+/transform/snowflake-dbt/docs/                      @jjstark  @paul_armstrong  @vedprakash2021
+/transform/snowflake-dbt/macros/                    tbd
 
-/transform/snowflake-dbt/models/bamboohr/           @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/covid19/            @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/marts/product_kpis/ @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/legacy/bamboohr/           tbd
+/transform/snowflake-dbt/models/legacy/covid19/            tbd
 
-/transform/snowflake-dbt/models/common/             @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/common_mapping/     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/common/             tbd
+/transform/snowflake-dbt/models/common_mapping/     tbd
 
-/transform/snowflake-dbt/models/legacy/smau_events/ @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/snapshots/   @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/snowplow/    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/legacy/smau_events/ tbd
+/transform/snowflake-dbt/models/legacy/snapshots/   tbd
+/transform/snowflake-dbt/models/legacy/snowplow/    tbd
 
-/transform/snowflake-dbt/models/sources/customers/  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/customers/   @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/customers/  
+/transform/snowflake-dbt/models/legacy/customers/   tbd
 
-/transform/snowflake-dbt/models/sources/dbt         @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/dbt          @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/dbt         tbd
+/transform/snowflake-dbt/models/legacy/dbt          tbd
 
-/transform/snowflake-dbt/models/sources/engineering/        @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/engineering/         @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/engineering/        tbd
+/transform/snowflake-dbt/models/legacy/engineering/         tbd
 
-/transform/snowflake-dbt/models/sources/gitlab_data_yaml/   @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/   tbd
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/    tbd
 
-/transform/snowflake-dbt/models/sources/gitlab_data_yaml/feature_flags_source.sql          @ayufan  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_latest.sql      @ayufan  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_historical.sql  @ayufan  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/feature_flags_source.sql          tbd
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_latest.sql      tbd
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/feature_flags_yaml_historical.sql  tbd
 
-/transform/snowflake-dbt/models/sources/gitlab_data_yaml/flaky_tests_source.sql          @rymai  @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql      @rymai  @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql  @rymai  @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/models/sources/gitlab_data_yaml/flaky_tests_source.sql          tbd
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql      tbd
+/transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql  tbd
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @jeanpeguero    @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @jeanpeguero    @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic
+/transform/snowflake-dbt/models/legacy/gitlab_dotcom/       tbd
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/       @jjstark   @vedprakash2021    @jeanpeguero @dvanrooijen2 @vedprakash2021 @iweeks
-/transform/snowflake-dbt/models/legacy/gitlab_dotcom/        @jeanpeguero @dvanrooijen2 @vedprakash2021 @iweeks
+/transform/snowflake-dbt/models/sources/greenhouse/    tbd
+/transform/snowflake-dbt/models/legacy/greenhouse/     tbd
 
-/transform/snowflake-dbt/models/sources/greenhouse/ @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru     @ken_aguilar @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/greenhouse/  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru     @ken_aguilar @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/handbook/   tbd
+/transform/snowflake-dbt/models/legacy/handbook/    tbd
 
-/transform/snowflake-dbt/models/sources/handbook/   @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @jeanpeguero @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/handbook/    @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @jeanpeguero @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/license/    tbd
+/transform/snowflake-dbt/models/legacy/license/     tbd
 
-/transform/snowflake-dbt/models/sources/license/    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @jeanpeguero @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/license/     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @jeanpeguero @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/netsuite/   tbd
+/transform/snowflake-dbt/models/legacy/netsuite/    tbd
 
-/transform/snowflake-dbt/models/sources/netsuite/   @iweeks         @paul_armstrong @rparker2   @jjstark    @jeanpeguero @snalamaru @michellecooper @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/netsuite/    @iweeks         @paul_armstrong @rparker2   @jjstark    @jeanpeguero @snalamaru @michellecooper @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/pmg         tbd
+/transform/snowflake-dbt/models/legacy/pmg          tbd
 
-/transform/snowflake-dbt/models/sources/pmg         @jeanpeguero    @paul_armstrong   @jjstark  @iweeks @rparker2 @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/pmg          @jeanpeguero    @paul_armstrong   @jjstark  @iweeks @rparker2 @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/qualtrics   tbd
+/transform/snowflake-dbt/models/legacy/qualtrics    tbd
 
-/transform/snowflake-dbt/models/sources/qualtrics   @jjstark  @paul_armstrong   @snalamaru @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/qualtrics    @jjstark  @paul_armstrong   @snalamaru @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/sfdc/       tbd
+/transform/snowflake-dbt/models/legacy/sfdc/        tbd
 
-/transform/snowflake-dbt/models/sources/sfdc/       @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru   @michellecooper @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/sfdc/        @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru   @michellecooper @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/snowflake/  tbd
+/transform/snowflake-dbt/models/legacy/snowflake/   tbd
 
-/transform/snowflake-dbt/models/sources/snowflake/  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/snowflake/   @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/version/    tbd
+/transform/snowflake-dbt/models/legacy/version/     tbd
 
-/transform/snowflake-dbt/models/sources/version/    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/version/     @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/zendesk     @rigerta @vedprakash2021
+/transform/snowflake-dbt/models/legacy/zendesk      tbd
 
-/transform/snowflake-dbt/models/sources/zendesk     @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/zendesk      @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/sources/zuora       @rigerta @vedprakash2021
+/transform/snowflake-dbt/models/legacy/zuora        tbd
 
-/transform/snowflake-dbt/models/sources/zuora       @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
-/transform/snowflake-dbt/models/legacy/zuora        @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
-
-/transform/snowflake-dbt/models/marts/arr           @jeanpeguero    @paul_armstrong  @iweeks @michellecooper
-/transform/snowflake-dbt/models/marts/sales_funnel  @jeanpeguero    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @michellecooper @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/marts/arr           @jeanpeguero  @paul_armstrong  @iweeks  @michellecooper
+/transform/snowflake-dbt/models/marts/sales_funnel  @jeanpeguero  @iweeks  @snalamaru  @michellecooper
 
 transform/snowflake-dbt/models/marts/pumps/              @jjstark @paul_armstrong @dparker @Karuna16
 transform/snowflake-dbt/models/marts/pumps_sensitive/    @jjstark @paul_armstrong @dparker @Karuna16
 
 /transform/snowflake-dbt/models/workspaces/workspace_sales  @nfiguera @mvilain
 
-/transform/snowflake-dbt/models/workspaces/workspace_finance  @statimatla @fkurniadi @james.shen @cmestel @cmachado1 @iweeks @michellecooper @jeanpeguero @dvanrooijen2 @vedprakash2021
+/transform/snowflake-dbt/models/workspaces/workspace_finance  @statimatla @fkurniadi @james.shen @cmestel @cmachado1 @iweeks @michellecooper @jeanpeguero
 
-/transform/snowflake-dbt/models/workspaces/workspace_engineering  @ken_aguilar @pempey @jjstark @paul_armstrong @iweeks @snalamaru @dvanrooijen2 @vedprakash2021 @meks @davis_townsend
+/transform/snowflake-dbt/models/workspaces/workspace_engineering  @ken_aguilar @pempey  @iweeks @snalamaru  @meks @davis_townsend
 
-/transform/snowflake-dbt/models/workspaces/workspace_people  @ken_aguilar @pempey @jjstark  @iweeks  @dvanrooijen2
+/transform/snowflake-dbt/models/workspaces/workspace_people  @ken_aguilar  @pempey  @iweeks
 
 /transform/snowflake-dbt/models/workspaces/workspace_customer_success @mdrussell @snalamaru @jjstark
 
@@ -148,7 +144,7 @@ transform/snowflake-dbt/models/marts/pumps_sensitive/    @jjstark @paul_armstron
 /transform/snowflake-dbt/data/handbook_file_classification_mapping.csv                  @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @vedprakash2021
 /transform/snowflake-dbt/data/historical_counts_maintainers_engineers.csv               @ken_aguilar    @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @vedprakash2021
 /transform/snowflake-dbt/data/netsuite_expense_cost_category.csv                        @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @vedprakash2021
-/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1 @dvanrooijen2
+/transform/snowflake-dbt/data/projects_part_of_product.csv                              @clefelhocz1
 /transform/snowflake-dbt/data/projects_part_of_product_ops.csv                          @clefelhocz1
 /transform/snowflake-dbt/data/raw_netsuite_currencies.csv                               @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @vedprakash2021
 /transform/snowflake-dbt/data/seeds.md                                                  @jjstark  @paul_armstrong @rparker2   @iweeks @snalamaru  @vedprakash2021
