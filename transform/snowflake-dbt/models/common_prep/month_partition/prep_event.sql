@@ -272,6 +272,15 @@
     "project_column_name": "NULL",
     "primary_key": "dim_user_id",
     "stage_name": "manage"
+  },
+  {
+    "event_name": "action_monthly_active_users_wiki_repo",
+    "source_cte_name": "action_monthly_active_users_wiki_repo_source",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id",
+    "stage_name": "create"
   }
   
 ]
@@ -408,6 +417,13 @@
     SELECT *
     FROM prep_ci_artifacts
     WHERE file_type = 18
+
+), action_monthly_active_users_wiki_repo_source AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE target_type = 'WikiPage::Meta'
+      AND event_action_type IN ('created', 'updated')
 
 ), data AS (
 
