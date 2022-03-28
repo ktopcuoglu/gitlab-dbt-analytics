@@ -185,7 +185,7 @@ sources:
         identifier: gitlab_db_external_status_checks
         freshness:
           warn_after: { count: 25, period: day }
-          error_after: { count: 30, period: day }
+        freshness: null
       - name: gitlab_subscription_histories
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
