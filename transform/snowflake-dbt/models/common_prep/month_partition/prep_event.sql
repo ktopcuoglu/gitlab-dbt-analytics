@@ -281,8 +281,25 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "create"
-  }
-  
+  },
+  {
+    "event_name": "epic_notes",
+    "source_cte_name": "epic_notes_source",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "NULL",
+    "project_column_name": "NULL",
+    "primary_key": "dim_note_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "boards",
+    "source_cte_name": "prep_board",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_board_id",
+    "stage_name": "plan"
+  } 
 ]
 
 -%}
@@ -314,7 +331,8 @@
     ('prep_resource_milestone', 'prep_resource_milestone'),
     ('prep_labels', 'prep_labels'),
     ('prep_ci_artifacts', 'prep_ci_artifacts'),
-    ('prep_user_event', 'prep_user')
+    ('prep_user_event', 'prep_user'),
+    ('prep_board', 'prep_board')
 ]) }}
 
 , dast_jobs AS (
@@ -425,6 +443,12 @@
     WHERE target_type = 'WikiPage::Meta'
       AND event_action_type IN ('created', 'updated')
 
+), epic_notes_source AS (
+
+    SELECT *
+    FROM prep_note
+    WHERE noteable_type = 'Epic'
+
 ), data AS (
 
 {% for event_cte in event_ctes %}
@@ -464,26 +488,26 @@
         {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                        AS dim_user_id,
         prep_user.created_at                                                                                   AS user_created_at,
         TO_DATE(prep_user.created_at)                                                                          AS user_created_date,
-        IFNULL(blocked_user.is_blocked_user, FALSE)                                                            AS is_blocked_namespace_creator,
       {%- else %}
         NULL                                                                                                   AS dim_user_id,
         NULL                                                                                                   AS user_created_at,
         NULL                                                                                                   AS user_created_date,
-        NULL                                                                                                   AS is_blocked_namespace_creator,
       {%- endif %}
       {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
         prep_namespace.created_at                                                                              AS namespace_created_at,
         TO_DATE(prep_namespace.created_at)                                                                     AS namespace_created_date,
+        IFNULL(blocked_user.is_blocked_user, FALSE)                                                            AS is_blocked_namespace_creator,
         prep_namespace.namespace_is_internal,
         FLOOR(
         DATEDIFF('hour',
                 prep_namespace.created_at,
                 {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_namespace_creation_at_event_date,
       {%- else %}
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        NULL                                                                                                   AS namespace_created_at,
+        NULL                                                                                                   AS namespace_created_date,
+        NULL                                                                                                   AS is_blocked_namespace_creator,
+        NULL                                                                                                   AS namespace_is_internal,
+        NULL                                                                                                   AS days_since_namespace_creation_at_event_date,
       {%- endif %}   
       {%- if event_cte.user_column_name != 'NULL' %}
         FLOOR(

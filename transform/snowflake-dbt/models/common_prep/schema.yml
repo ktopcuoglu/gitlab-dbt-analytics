@@ -1868,3 +1868,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_board
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_board_id
+        tests:
+          - not_null
+          - unique
