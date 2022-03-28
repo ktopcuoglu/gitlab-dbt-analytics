@@ -1,11 +1,7 @@
 {{ config(
-    tags=["product", "mnpi_exception"]
+    tags=["product", "mnpi_exception"],
+    materialized = "table"
 ) }}
-
-{{ config({
-    "materialized": "table"
-    })
-}}
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
