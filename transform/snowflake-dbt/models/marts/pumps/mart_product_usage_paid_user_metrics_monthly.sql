@@ -185,6 +185,22 @@
       monthly_sm_metrics.projects_compliance_framework_all_time_event,
       monthly_sm_metrics.commit_ci_config_file_28_days_user,
       monthly_sm_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      monthly_sm_metrics.dependency_scanning_jobs_28_days_user,
+      monthly_sm_metrics.analytics_devops_adoption_all_time_user,
+      monthly_sm_metrics.projects_imported_all_time_event,
+      monthly_sm_metrics.preferences_security_dashboard_28_days_user,
+      monthly_sm_metrics.web_ide_edit_28_days_user,
+      monthly_sm_metrics.auto_devops_pipelines_all_time_event,
+      monthly_sm_metrics.projects_prometheus_active_all_time_event,
+      monthly_sm_metrics.prometheus_enabled,
+      monthly_sm_metrics.prometheus_metrics_enabled,
+      monthly_sm_metrics.group_saml_enabled,
+      monthly_sm_metrics.jira_issue_imports_all_time_event,
+      monthly_sm_metrics.author_epic_all_time_user,
+      monthly_sm_metrics.author_issue_all_time_user,
+      monthly_sm_metrics.failed_deployments_28_days_user,
+      monthly_sm_metrics.successful_deployments_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -341,7 +357,23 @@
       monthly_saas_metrics.failed_deployments_28_days_event,
       monthly_saas_metrics.projects_compliance_framework_all_time_event,
       monthly_saas_metrics.commit_ci_config_file_28_days_user,
-      monthly_saas_metrics.view_audit_all_time_user,    
+      monthly_saas_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      monthly_sm_metrics.dependency_scanning_jobs_28_days_user,
+      monthly_sm_metrics.analytics_devops_adoption_all_time_user,
+      monthly_sm_metrics.projects_imported_all_time_event,
+      monthly_sm_metrics.preferences_security_dashboard_28_days_user,
+      monthly_sm_metrics.web_ide_edit_28_days_user,
+      monthly_sm_metrics.auto_devops_pipelines_all_time_event,
+      monthly_sm_metrics.projects_prometheus_active_all_time_event,
+      monthly_sm_metrics.prometheus_enabled,
+      monthly_sm_metrics.prometheus_metrics_enabled,
+      monthly_sm_metrics.group_saml_enabled,
+      monthly_sm_metrics.jira_issue_imports_all_time_event,
+      monthly_sm_metrics.author_epic_all_time_user,
+      monthly_sm_metrics.author_issue_all_time_user,
+      monthly_sm_metrics.failed_deployments_28_days_user,
+      monthly_sm_metrics.successful_deployments_28_days_user,    
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -371,5 +403,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-03-02"
+    updated_date="2022-03-28"
 ) }}
