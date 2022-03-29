@@ -186,7 +186,7 @@
       monthly_sm_metrics.commit_ci_config_file_28_days_user,
       monthly_sm_metrics.view_audit_all_time_user,
       -- Wave 5.2
-      monthly_sm_metrics.dependency_scanning_jobs_28_days_user,
+      monthly_sm_metrics.dependency_scanning_jobs_all_time_user,
       monthly_sm_metrics.analytics_devops_adoption_all_time_user,
       monthly_sm_metrics.projects_imported_all_time_event,
       monthly_sm_metrics.preferences_security_dashboard_28_days_user,
@@ -359,7 +359,7 @@
       monthly_saas_metrics.commit_ci_config_file_28_days_user,
       monthly_saas_metrics.view_audit_all_time_user,
       -- Wave 5.2
-      monthly_saas_metrics.dependency_scanning_jobs_28_days_user,
+      monthly_saas_metrics.dependency_scanning_jobs_all_time_user,
       monthly_saas_metrics.analytics_devops_adoption_all_time_user,
       monthly_saas_metrics.projects_imported_all_time_event,
       monthly_saas_metrics.preferences_security_dashboard_28_days_user,

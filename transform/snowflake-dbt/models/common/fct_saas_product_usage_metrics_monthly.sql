@@ -170,7 +170,7 @@
       "redis_hll_counters.pipeline_authoring.o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly" AS commit_ci_config_file_28_days_user,
       "compliance_unique_visits.g_compliance_audit_events"                                      AS view_audit_all_time_user,
       -- Wave 5.2
-      "usage_activity_by_stage_monthly.secure.user_dependency_scanning_jobs"                    AS dependency_scanning_jobs_28_days_user,
+      "usage_activity_by_stage.secure.user_dependency_scanning_jobs"                            AS dependency_scanning_jobs_all_time_user,
       "analytics_unique_visits.i_analytics_dev_ops_adoption"                                    AS analytics_devops_adoption_all_time_user,
       "usage_activity_by_stage.manage.project_imports.total"                                    AS projects_imported_all_time_event,
       "usage_activity_by_stage_monthly.secure.user_preferences_group_overview_security_dashboard"  AS preferences_security_dashboard_28_days_user,
