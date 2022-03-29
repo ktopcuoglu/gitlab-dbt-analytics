@@ -531,11 +531,11 @@
       {%- endif %}                                                                       
     FROM {{ event_cte.source_cte_name }}
     {%- if event_cte.project_column_name != 'NULL' %}
-    INNER JOIN dim_project 
+    LEFT JOIN dim_project 
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
     {%- endif %}
     {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-    INNER JOIN prep_namespace
+    LEFT JOIN prep_namespace
       ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace.dim_namespace_id
       AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN prep_user AS blocked_user
