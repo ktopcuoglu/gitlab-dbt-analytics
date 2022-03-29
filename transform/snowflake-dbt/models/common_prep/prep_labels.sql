@@ -15,7 +15,8 @@
       gitlab_dotcom_labels_source.label_id                              AS dim_label_id,
       -- FOREIGN KEYS
       gitlab_dotcom_labels_source.project_id                            AS dim_project_id,
-      IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)              AS ultimate_parent_namespace_id,
+      IFNULL(gitlab_dotcom_labels_source.project_id,
+            gitlab_dotcom_labels_source.group_id)                       AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                   AS dim_plan_id,
       --
       gitlab_dotcom_labels_source.group_id                              AS dim_namespace_id,
