@@ -3597,6 +3597,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - ofalkenhof:
+        member_of:
+            - analyst_finance
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -4478,6 +4485,11 @@ users:
         can_login: yes
         member_of:
             - nraisinghani
+
+    - ofalkenhof:
+        can_login: yes
+        member_of:
+            - ofalkenhof
 
     - parmstrong:
         can_login: yes
