@@ -94,7 +94,6 @@ renamed AS (
     vartopiadrs__partner_prospect_status__c AS partner_prospect_status,
     vartopiadrs__vartopia_prospect_id__c AS partner_prospect_id,
     vartopiadrs__partner_prospect_owner_name__c AS partner_prospect_owner_name,
-    region__c AS region,
     sequence_step_type2__c AS sequence_step_type,
     name_of_active_sequence__c AS name_of_active_sequence,
     sequence_task_due_date__c::DATE AS sequence_task_due_date,
