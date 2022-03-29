@@ -174,7 +174,14 @@ WITH first_contact  AS (
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_sdr_sao,
-      sfdc_opportunity.fpa_master_bookings_flag                                                   AS is_net_arr_closed_deal,
+      CASE 
+        WHEN sfdc_opportunity.is_edu_oss = FALSE
+          AND sfdc_opportunity_stage.is_won = TRUE
+          AND sfdc_opportunity_stage.is_closed = TRUE 
+          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
+          THEN TRUE 
+        ELSE FALSE
+      END                                                                                         AS is_net_arr_closed_deal,
       CASE
         WHEN sfdc_opportunity.new_logo_count = 1
           OR sfdc_opportunity.new_logo_count = -1
@@ -191,7 +198,7 @@ WITH first_contact  AS (
         ELSE FALSE
       END                                                                                         AS is_net_arr_pipeline_created,
       CASE
-        WHEN sfdc_opportunity.stage_name IN ('Closed Won', '8-Closed Lost')
+        WHEN sfdc_opportunity_stage.is_closed = TRUE
           AND sfdc_opportunity.amount >= 0
           AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
           AND sfdc_opportunity.is_edu_oss = 0
