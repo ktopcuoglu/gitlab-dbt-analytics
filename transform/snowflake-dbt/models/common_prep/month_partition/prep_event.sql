@@ -286,7 +286,7 @@
     "event_name": "epic_notes",
     "source_cte_name": "epic_notes_source",
     "user_column_name": "author_id",
-    "ultimate_parent_namespace_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "NULL",
     "primary_key": "dim_note_id",
     "stage_name": "plan"
@@ -457,16 +457,18 @@
       MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
       '{{ event_cte.stage_name }}'                                                                             AS stage_name,
+      {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
+      {{ event_cte.source_cte_name}}.created_date_id                                                           AS created_date_id,
       {%- if event_cte.project_column_name != 'NULL' %}
         {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                     AS dim_project_id,
         'project'                                                                                              AS parent_type,
         {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                     AS parent_id,
-        {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
+        {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id                                            AS ultimate_parent_namespace_id,
       {%- elif event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
         NULL                                                                                                   AS dim_project_id,
         'group'                                                                                                AS parent_type,
         {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                   AS parent_id, 
-        {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
+        {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id                                            AS ultimate_parent_namespace_id,
       {%- else %}
         NULL                                                                                                   AS dim_project_id,
         NULL                                                                                                   AS parent_type,
@@ -482,8 +484,6 @@
         'free'                                                                                                 AS plan_name_at_event_date,
         FALSE                                                                                                  AS plan_was_paid_at_event_date,
       {%- endif %}  
-      {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
-      {{ event_cte.source_cte_name}}.created_date_id,
       {%- if event_cte.user_column_name != 'NULL' %}
         {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                        AS dim_user_id,
         prep_user.created_at                                                                                   AS user_created_at,
@@ -497,7 +497,7 @@
         prep_namespace.created_at                                                                              AS namespace_created_at,
         TO_DATE(prep_namespace.created_at)                                                                     AS namespace_created_date,
         IFNULL(blocked_user.is_blocked_user, FALSE)                                                            AS is_blocked_namespace_creator,
-        prep_namespace.namespace_is_internal,
+        prep_namespace.namespace_is_internal                                                                   AS namespace_is_internal,
         FLOOR(
         DATEDIFF('hour',
                 prep_namespace.created_at,
