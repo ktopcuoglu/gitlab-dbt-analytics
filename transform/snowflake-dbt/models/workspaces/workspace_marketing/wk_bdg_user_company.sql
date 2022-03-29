@@ -2,43 +2,28 @@
     materialized='table'
 ) }}
 
-WITH users AS (
+{{ simple_cte([
+    ('users','gitlab_dotcom_users_source'),
+    ('sf_leads','sfdc_lead_source'),
+    ('sf_contacts','sfdc_contact_source')
+]) }},
 
-  SELECT *
-  FROM {{ ref('gitlab_dotcom_users_source') }}
-
-),
-
-users_enhance as (
+users_enhance AS (
 
   SELECT
     *
   FROM {{ ref('gitlab_contact_enhance_source') }}
-  WHERE zoominfo_company_id <> '0'
-    AND zoominfo_company_id <> ''
+  WHERE zoominfo_company_id != '0'
+    AND zoominfo_company_id != ''
 
 ),
 
-sf_leads as (
-
-  SELECT *
-  FROM {{ ref('sfdc_lead_source') }}
-
-),
-
-sf_contacts AS (
-
-  SELECT *
-  FROM {{ ref('sfdc_contact_source') }}
-
-),
-
-rpt as (
+rpt AS (
 
   SELECT
     users.user_id AS gitlab_dotcom_user_id,
     COALESCE(
-      sf_leads.zoominfo_company_id, 
+      sf_leads.zoominfo_company_id,
       sf_contacts.zoominfo_company_id,
       users_enhance.zoominfo_company_id
     ) AS company_id,
@@ -58,4 +43,4 @@ rpt as (
 
 )
 
-select * from rpt
+SELECT * FROM rpt
