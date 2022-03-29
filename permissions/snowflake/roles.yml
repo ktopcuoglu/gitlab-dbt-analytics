@@ -3597,6 +3597,13 @@ roles:
         warehouses:
             - analyst_xs
 
+    - ofalkenhof:
+        member_of:
+            - analyst_finance
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - parmstrong:
         member_of:
             - engineer
@@ -4128,6 +4135,13 @@ roles:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
 
+    - warias:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+        warehouses:
+            - analyst_xs
+
     - ysun:
         member_of:
             - analyst_finance
@@ -4472,6 +4486,11 @@ users:
         member_of:
             - nraisinghani
 
+    - ofalkenhof:
+        can_login: yes
+        member_of:
+            - ofalkenhof
+
     - parmstrong:
         can_login: yes
         member_of:
@@ -4588,6 +4607,11 @@ users:
         member_of:
             - vprakash
             - securityadmin
+
+    - warias:
+        can_login: yes
+        member_of:
+            - warias
 
     - ysun: # De provisioned as part of Quarterly audit and security check.
         can_login: yes

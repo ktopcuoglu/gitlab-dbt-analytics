@@ -127,7 +127,7 @@
       fct_crm_person.account_demographics_geo,
       fct_crm_person.account_demographics_region,
       fct_crm_person.account_demographics_area,
-      fct_crm_person.account_demographic_segment_region_grouped,
+      fct_crm_person.account_demographics_segment_region_grouped,
       fct_crm_person.account_demographics_territory,
       fct_crm_person.account_demographics_employee_count,
       fct_crm_person.account_demographics_max_family_employee,
