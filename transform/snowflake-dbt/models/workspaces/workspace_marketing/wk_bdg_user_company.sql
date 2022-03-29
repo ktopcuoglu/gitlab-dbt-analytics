@@ -4,23 +4,34 @@
 
 {{ simple_cte([
     ('users','gitlab_dotcom_users_source'),
-    ('sf_leads','sfdc_lead_source'),
-    ('sf_contacts','sfdc_contact_source')
+    ('users_enhance','gitlab_contact_enhance_source')
 ]) }},
 
-users_enhance AS (
+sf_leads AS (
 
   SELECT
-    *
-  FROM {{ ref('gitlab_contact_enhance_source') }}
-  WHERE zoominfo_company_id != '0'
-    AND zoominfo_company_id != ''
+    zoominfo_company_id,
+    lead_email
+  FROM {{ ref('sfdc_lead_source') }}
+  WHERE zoominfo_company_id IS NOT NULL
+  -- email is not unique, use the record created most recently
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY lead_email ORDER BY created_date DESC ) = 1
+),
 
+sf_contacts AS (
+
+  SELECT
+    zoominfo_company_id,
+    contact_email
+  FROM {{ ref('sfdc_contact_source') }}
+  WHERE zoominfo_company_id IS NOT NULL
+  -- email is not unique, use the record created most recently
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY contact_email ORDER BY created_date DESC ) = 1
 ),
 
 rpt AS (
 
-  SELECT
+  SELECT DISTINCT
     users.user_id AS gitlab_dotcom_user_id,
     COALESCE(
       sf_leads.zoominfo_company_id,
@@ -29,7 +40,7 @@ rpt AS (
     ) AS company_id,
     sf_leads.zoominfo_company_id AS sf_lead_company_id,
     sf_contacts.zoominfo_company_id AS sf_contact_company_id,
-    users_enhance.zoominfo_company_id AS enhance_company_id,
+    users_enhance.zoominfo_company_id AS gitlab_user_enhance_company_id,
     {{ dbt_utils.surrogate_key(['users.user_id']) }} AS dim_user_id,
     {{ dbt_utils.surrogate_key(['company_id']) }} AS dim_company_id
   FROM users
