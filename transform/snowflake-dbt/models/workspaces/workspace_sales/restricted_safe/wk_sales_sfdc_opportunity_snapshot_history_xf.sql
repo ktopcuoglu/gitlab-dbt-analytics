@@ -149,7 +149,6 @@ WITH date_details AS (
 
       sfdc_opportunity_snapshot_history.order_type_stamped AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
-      --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
       --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
       --sfdc_opportunity_snapshot_history.parent_segment,
