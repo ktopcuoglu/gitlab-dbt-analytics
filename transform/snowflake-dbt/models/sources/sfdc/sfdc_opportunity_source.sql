@@ -135,6 +135,7 @@ WITH source AS (
         arr_basis__c                                    AS arr_basis,
         arr__c                                          AS arr,
         days_in_sao__c                                  AS days_in_sao,
+        new_logo_count__c                               AS new_logo_count,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                         AS user_segment_stamped,
         CASE
@@ -144,9 +145,16 @@ WITH source AS (
         stamped_user_geo__c                             AS user_geo_stamped,
         stamped_user_region__c                          AS user_region_stamped,
         stamped_user_area__c                            AS user_area_stamped,
-        {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
+        {{ sales_segment_region_grouped('user_segment_stamped', 'user_geo_stamped', 'user_region_stamped') }}
                                                         AS user_segment_region_stamped_grouped,
-        --stamped_opp_owner_segment_geo_region_area__c    AS user_segment_go_region_area_stamped,
+        CONCAT(user_segment_stamped,
+               '-', 
+               user_geo_stamped,
+               '-',
+               user_region_stamped,
+               '-',
+               user_area_stamped
+              )                                         AS user_segment_geo_region_area_stamped,
         stamped_opp_owner_user_role_type__c             AS crm_opp_owner_user_role_type_stamped,
         stamped_opportunity_owner__c                    AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                        AS crm_account_owner_stamped_name,
@@ -161,7 +169,7 @@ WITH source AS (
         sao_user_geo__c                                 AS sao_crm_opp_owner_geo_stamped,
         sao_user_region__c                              AS sao_crm_opp_owner_region_stamped,
         sao_user_area__c                                AS sao_crm_opp_owner_area_stamped,
-        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_region_stamped') }}
+        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_geo_stamped', 'sao_crm_opp_owner_region_stamped') }}
                                                         AS sao_crm_opp_owner_segment_region_stamped_grouped,
         opportunity_category__c                         AS opportunity_category,
         opportunity_health__c                           AS opportunity_health,

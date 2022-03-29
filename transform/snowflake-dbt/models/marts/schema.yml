@@ -5,7 +5,7 @@ models:
     description: '{{ doc("mart_arr") }}'
     columns:
       - name: arr
-        description: "Calculated as 12 * MRR value"
+        description: "Calculated as 12 * MRR value"        
       - name: primary_key
         tests:
           - not_null
@@ -32,7 +32,7 @@ models:
       - name: subscription_cohort_quarter
       - name: mrr
         tests:
-          - not_null
+          - not_null 
       - name: months_since_subscription_cohort_start
       - name: quarters_since_subscription_cohort_start
       - name: dim_billing_account_id

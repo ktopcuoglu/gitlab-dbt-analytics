@@ -27,6 +27,11 @@ databases:
     - testing_db:
         shared: no
 
+    - brhea_prod:
+          shared: no
+    - brhea_prep:
+          shared: no
+
     - csharp_prod:
         shared: no
     - csharp_prep:
@@ -960,6 +965,7 @@ roles:
                     - prod
                     - raw
                     - prep
+                    - snowflake
             schemas:
                 read:
                     - prod.restricted_safe_common_mart_sales
@@ -967,13 +973,14 @@ roles:
                     - prod.common
                     - prod.legacy
                     - prod.workspace_data
-                    - raw.zuora_stitch
-                    - raw.tap_postgres
-                    - raw.snowplow
                     - raw.airflow_stitch
                     - raw.dbt
+                    - prep.zuora
+                    - prep.gitlab_dotcom
+                    - prep.snowplow
                     - prep.dbt
                     - prep.airflow
+                    - snowflake.account_usage
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -983,7 +990,7 @@ roles:
                     - prod.common.dim_billing_account
                     - prod.common.fct_usage_ping_payload
                     - prod.common.dim_date
-                    - prod.legacy.dim_subscriptions
+                    - prod.common.dim_subscription
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
@@ -994,11 +1001,6 @@ roles:
                     - prod.workspace_data.dbt_failing_tests
                     - prod.workspace_data.dbt_compilation_runtime
                     - prod.workspace_data.dbt_last_successful_test_runs
-                    - raw.zuora_stitch.account
-                    - raw.zuora_stitch.subscription
-                    - raw.tap_postgres.gitlab_db_ci_builds
-                    - raw.tap_postgres.gitlab_db_notes
-                    - raw.snowplow.gitlab_events
                     - raw.airflow_stitch.dag_run
                     - raw.airflow_stitch.dag
                     - raw.dbt.test_run_results
@@ -1011,10 +1013,13 @@ roles:
                     - prep.dbt.dbt_run_results_source
                     - prep.dbt.dbt_model_source
                     - prep.dbt.dbt_snapshots_results_source
-
-                    
-
-                    
+                    - prep.zuora.zuora_account_source
+                    - prep.zuora.zuora_subscription_source
+                    - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
+                    - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
+                    - prep.snowplow.snowplow_gitlab_good_events_source
+                    - snowflake.account_usage.query_history
+           
 # ==========================================
 # Object Roles
 # ==========================================
@@ -1908,6 +1913,7 @@ roles:
                     - prep.sensitive.qualtrics_mailing_contacts
                     - prep.sensitive.qualtrics_nps_answers
                     - prep.sensitive.qualtrics_nps_survey_responses
+                    - prep.sensitive.qualtrics_post_purchase_survey_responses_source
                     - raw.qualtrics.*
 
     - pmg:
@@ -2373,6 +2379,46 @@ roles:
         warehouses:
             - reporting
 
+    - brhea:
+        member_of:
+            - reporter
+            - qualtrics
+            - qualtrics_sensitive
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - brhea_prep
+                - brhea_prod
+            schemas:
+                - brhea_prep.*
+                - brhea_prod.*
+            tables:
+                - brhea_prep.*.*
+                - brhea_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - brhea_prep
+                    - brhea_prod
+                write:
+                    - brhea_prep
+                    - brhea_prod
+            schemas:
+                read:
+                    - brhea_prep.*
+                    - brhea_prod.*
+                write:
+                    - brhea_prep.*
+                    - brhea_prod.*
+            tables:
+                read:
+                    - brhea_prep.*.*
+                    - brhea_prod.*.*
+                write:
+                    - brhea_prep.*.*
+                    - brhea_prod.*.*
+
     - cbalane:
         member_of:
             - reporter
@@ -2817,11 +2863,8 @@ roles:
                     - jcaine_prod.*.*
 
     - joshua:
-        member_of:
-            - gitlab_dotcom
-            - reporter
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - jpeguero:
         member_of:
@@ -3496,6 +3539,7 @@ roles:
             - restricted_safe
             - data_team_analyst
             - bi_tool_eval_read
+            - xactly
         warehouses:
             - analyst_xs
         owns:
@@ -3550,6 +3594,13 @@ roles:
             - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
+        warehouses:
+            - analyst_xs
+
+    - ofalkenhof:
+        member_of:
+            - analyst_finance
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -4084,6 +4135,13 @@ roles:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
 
+    - warias:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+        warehouses:
+            - analyst_xs
+
     - ysun:
         member_of:
             - analyst_finance
@@ -4154,6 +4212,11 @@ users:
         can_login: yes
         member_of:
             - bbutterfield
+
+    - brhea:
+        can_login: yes
+        member_of:
+            - brhea
 
     - cbalane:
         can_login: yes
@@ -4264,9 +4327,8 @@ users:
             - jcaine
 
     - joshua:
-        can_login: yes
-        member_of:
-            - joshua
+        can_login: no
+        member_of: []
 
     - jpeguero:
         can_login: yes
@@ -4424,6 +4486,11 @@ users:
         member_of:
             - nraisinghani
 
+    - ofalkenhof:
+        can_login: yes
+        member_of:
+            - ofalkenhof
+
     - parmstrong:
         can_login: yes
         member_of:
@@ -4540,6 +4607,11 @@ users:
         member_of:
             - vprakash
             - securityadmin
+
+    - warias:
+        can_login: yes
+        member_of:
+            - warias
 
     - ysun: # De provisioned as part of Quarterly audit and security check.
         can_login: yes

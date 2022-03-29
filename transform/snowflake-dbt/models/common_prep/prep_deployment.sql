@@ -36,10 +36,10 @@
 
     SELECT 
       gitlab_dotcom_deployments_dedupe_source.id::NUMBER                                      AS dim_deployment_id,
-      prep_namespace.dim_namespace_id::NUMBER                                                 AS dim_project_id,
+      gitlab_dotcom_deployments_dedupe_source.project_id::NUMBER                              AS dim_project_id,
       prep_project.ultimate_parent_namespace_id::NUMBER                                       AS ultimate_parent_namespace_id,
       dim_date.date_id::NUMBER                                                                AS created_date_id,
-      IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)::NUMBER                                 AS dim_plan_id,
+      IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)::NUMBER                                AS dim_plan_id,
       prep_user.dim_user_id::NUMBER                                                           AS dim_user_id,
       gitlab_dotcom_deployments_dedupe_source.iid::NUMBER                                     AS deployment_internal_id,
       gitlab_dotcom_deployments_dedupe_source.environment_id::NUMBER                          AS environment_id,
@@ -66,7 +66,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@chrissharp",
     created_date="2021-07-26",
-    updated_date="2021-07-26"
+    updated_date="2022-03-09"
 ) }}
