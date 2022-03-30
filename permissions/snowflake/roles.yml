@@ -981,6 +981,7 @@ roles:
                     - prep.dbt
                     - prep.airflow
                     - snowflake.account_usage
+                    - raw.sheetload
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -1019,6 +1020,7 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
+                    - raw.sheetload.hp_dvr
            
 # ==========================================
 # Object Roles
