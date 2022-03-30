@@ -20,6 +20,7 @@ sources:
       - name: activity_add_to_list
       - name: activity_add_to_nurture
       - name: activity_add_to_sfdc_campaign
+      - name: activity_add_to_opportunity
       - name: activity_call_webhook
       - name: activity_change_data_value
       - name: activity_change_nurture_cadence

@@ -17,6 +17,15 @@ models:
       - name: lead_id
         tests:
           - not_null
+  - name: marketo_activity_add_to_opprtunity_source
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+      - name: lead_id
+        tests:
+          - not_null
   - name: marketo_activity_add_to_nurture_source
     columns:
       - name: id
