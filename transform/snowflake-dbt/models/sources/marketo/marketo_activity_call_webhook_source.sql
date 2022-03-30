@@ -7,15 +7,15 @@ WITH source AS (
 
     SELECT
 
-      id                                AS id,
-      lead_id                           AS lead_id,
-      activity_date                     AS activity_date,
-      activity_type_id                  AS activity_type_id,
-      campaign_id                       AS campaign_id,
-      primary_attribute_value_id        AS primary_attribute_value_id,
-      primary_attribute_value           AS primary_attribute_value,
-      response                          AS response,
-      error_type                        AS error_type
+      id::NUMBER                          AS id,
+      lead_id::NUMBER                     AS lead_id,
+      activity_date::TIMESTAMP_TZ         AS activity_date,
+      activity_type_id::NUMBER            AS activity_type_id,
+      campaign_id::NUMBER                 AS campaign_id,
+      primary_attribute_value_id::NUMBER  AS primary_attribute_value_id,
+      primary_attribute_value::TEXT       AS primary_attribute_value,
+      response::TEXT                      AS response,
+      error_type::NUMBER                  AS error_type
 
     FROM source
 )
