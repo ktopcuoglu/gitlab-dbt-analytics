@@ -113,7 +113,7 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "el_gitlab_com",
         "dbt_name": "gitlab_dotcom",
-        "env_vars": {"HOURS": "12"},
+        "env_vars": {"HOURS": "48"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
@@ -132,7 +132,7 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "el_gitlab_com_ci",
         "dbt_name": "none",
-        "env_vars": {"HOURS": "12"},
+        "env_vars": {"HOURS": "48"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_CI_DB_NAME,
