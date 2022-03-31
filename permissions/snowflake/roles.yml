@@ -82,6 +82,11 @@ databases:
     - jstark_prep:
         shared: no
 
+    - judume_prod:
+        shared: no
+    - judume_prep:
+        shared: no       
+
     - kaguilar_prod:
         shared: no
     - kaguilar_prep:
@@ -2984,6 +2989,47 @@ roles:
             - analyst_xs
             - jstemmer_xl
 
+    - judume:
+        member_of:
+            - data_team_analyst
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        owns:
+            databases:
+                - judume_prep
+                - judume_prod
+            schemas:
+                - judume_prep.*
+                - judume_prod.*
+            tables:
+                - judume_prep.*.*
+                - judume_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - judume_prep
+                    - judume_prod
+                write:
+                    - judume_prep
+                    - judume_prod
+            schemas:
+                read:
+                    - judume_prep.*
+                    - judume_prod.*
+                write:
+                    - judume_prep.*
+                    - judume_prod.*
+            tables:
+                read:
+                    - judume_prep.*.*
+                    - judume_prod.*.*
+                write:
+                    - judume_prep.*.*
+                    - judume_prod.*.*
+
     - kaguilar:
         member_of:
             - analyst_engineering
@@ -4360,6 +4406,11 @@ users:
         can_login: yes
         member_of:
             - jstemmer
+
+    - judume:
+        can_login: yes
+        member_of:
+            - judume
 
     - kaguilar:
         can_login: yes
