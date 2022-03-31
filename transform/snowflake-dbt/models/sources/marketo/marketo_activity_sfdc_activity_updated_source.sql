@@ -7,19 +7,19 @@ WITH source AS (
 
     SELECT
 
-      id                                AS id,
-      lead_id                           AS lead_id,
-      activity_date                     AS activity_date,
-      activity_type_id                  AS activity_type_id,
-      campaign_id                       AS campaign_id,
-      primary_attribute_value_id        AS primary_attribute_value_id,
-      primary_attribute_value           AS primary_attribute_value,
-      status                            AS status,
-      description                       AS description,
-      is_task                           AS is_task,
-      priority                          AS priority,
-      activity_owner                    AS activity_owner,
-      due_date                          AS due_date
+      id::TEXT                                  AS id,
+      lead_id::NUMBER                           AS lead_id,
+      activity_date::TIMESTAMP_TZ               AS activity_date,
+      activity_type_id::NUMBER                  AS activity_type_id,
+      campaign_id::NUMBER                       AS campaign_id,
+      primary_attribute_value_id::NUMBER        AS primary_attribute_value_id,
+      primary_attribute_value::TEXT             AS primary_attribute_value,
+      status::TEXT                              AS status,
+      description::TEXT                         AS description,
+      is_task::BOOLEAN                          AS is_task,
+      priority::TEXT                            AS priority,
+      activity_owner::TEXT                      AS activity_owner,
+      due_date::DATE                            AS due_date
 
     FROM source
 

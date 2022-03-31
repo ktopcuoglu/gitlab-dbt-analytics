@@ -7,9 +7,9 @@ WITH source AS (
 
     SELECT
 
-      id                    AS id,
-      name                  AS name,
-      description           AS description
+      id::NUMBER                AS id,
+      name::TEXT                AS name,
+      description::TEXT         AS description
 
     FROM source
 
