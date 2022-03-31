@@ -393,6 +393,9 @@ sources:
         freshness: null
       - name: cluster_providers_gcp
         identifier: gitlab_db_cluster_providers_gcp
+        freshness:
+          warn_after: { count: 10, period: day }
+          error_after: { count: 15, period: day }
       - name: clusters_applications_cilium
         identifier: gitlab_db_clusters_applications_cilium
         freshness: null
