@@ -5,7 +5,7 @@ WITH sfdc_user_roles AS (
     SELECT *
     FROM {{ ref('sfdc_user_roles_source')}}
 
-{%- if model_type == 'base' %}
+{%- if model_type == 'live' %}
 
 {%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
@@ -24,7 +24,7 @@ WITH sfdc_user_roles AS (
 ), sfdc_users AS (
 
     SELECT 
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
         *
       {%- elif model_type == 'snapshot' %}
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
@@ -32,7 +32,7 @@ WITH sfdc_user_roles AS (
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
       {{ ref('sfdc_users_source') }}
       {%- elif model_type == 'snapshot' %}
       {{ ref('sfdc_user_snapshots_source') }}
@@ -44,15 +44,15 @@ WITH sfdc_user_roles AS (
 ), final AS (
 
     SELECT
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
   
       {%- elif model_type == 'snapshot' %}
       sfdc_users.crm_user_snapshot_id,
       sfdc_users.snapshot_id,
       {%- endif %}
-      sfdc_users.user_id                                            AS dim_crm_user_id,
+      sfdc_users.user_id                                                                                                              AS dim_crm_user_id,
       sfdc_users.employee_number,
-      sfdc_users.name                                               AS user_name,
+      sfdc_users.name                                                                                                                 AS user_name,
       sfdc_users.title,
       sfdc_users.department,
       sfdc_users.team,
@@ -60,17 +60,22 @@ WITH sfdc_user_roles AS (
       sfdc_users.is_active,
       sfdc_users.start_date,
       sfdc_users.user_role_id,
-      sfdc_user_roles.name                                          AS user_role_name,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}    AS dim_crm_user_sales_segment_id,
-      sfdc_users.user_segment                                       AS crm_user_sales_segment,
-      sfdc_users.user_segment_grouped                               AS crm_user_sales_segment_grouped,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_geo']) }}        AS dim_crm_user_geo_id,
-      sfdc_users.user_geo                                           AS crm_user_geo,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_region']) }}     AS dim_crm_user_region_id,
-      sfdc_users.user_region                                        AS crm_user_region,
-      {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}       AS dim_crm_user_area_id,
-      sfdc_users.user_area                                          AS crm_user_area,
-      sfdc_users.user_segment_region_grouped                        AS crm_user_sales_segment_region_grouped,
+      sfdc_users.user_role_type,
+      sfdc_user_roles.name                                                                                                            AS user_role_name,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_segment']) }}                                                                      AS dim_crm_user_sales_segment_id,
+      sfdc_users.user_segment                                                                                                         AS crm_user_sales_segment,
+      sfdc_users.user_segment_grouped                                                                                                 AS crm_user_sales_segment_grouped,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_geo']) }}                                                                          AS dim_crm_user_geo_id,
+      sfdc_users.user_geo                                                                                                             AS crm_user_geo,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_region']) }}                                                                       AS dim_crm_user_region_id,
+      sfdc_users.user_region                                                                                                          AS crm_user_region,
+      {{ dbt_utils.surrogate_key(['sfdc_users.user_area']) }}                                                                         AS dim_crm_user_area_id,
+      sfdc_users.user_area                                                                                                            AS crm_user_area,
+      COALESCE(
+               sfdc_users.user_segment_geo_region_area,
+               CONCAT(sfdc_users.user_segment,'-' , sfdc_users.user_geo, '-', sfdc_users.user_region, '-', sfdc_users.user_area)
+               )                                                                                                                      AS crm_user_sales_segment_geo_region_area,
+      sfdc_users.user_segment_region_grouped                                                                                          AS crm_user_sales_segment_region_grouped,
       created_date
     FROM sfdc_users
     LEFT JOIN sfdc_user_roles

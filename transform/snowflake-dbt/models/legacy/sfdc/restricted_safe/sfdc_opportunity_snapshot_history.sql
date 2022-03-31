@@ -35,7 +35,6 @@ WITH sfdc_opportunity_snapshots AS (
       leadsource                     AS lead_source,
       merged_opportunity__c          AS merged_opportunity_id,
       opportunity_owner__c           AS opportunity_owner,
-      owner_team_o__c                AS opportunity_owner_team,
       account_owner__c               AS opportunity_owner_manager,
       sales_market__c                AS opportunity_owner_department,
       SDR_LU__c                      AS opportunity_sales_development_representative,
@@ -47,7 +46,7 @@ WITH sfdc_opportunity_snapshots AS (
       sales_accepted_date__c         AS sales_accepted_date,
       engagement_type__c             AS sales_path,
       sales_qualified_date__c        AS sales_qualified_date,
-      COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+      COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                      AS sales_segment,
       type                           AS sales_type,
       {{  sfdc_source_buckets('leadsource') }}
@@ -75,6 +74,7 @@ WITH sfdc_opportunity_snapshots AS (
       is_refund_opportunity__c       AS is_refund,
       is_downgrade_opportunity__c    AS is_downgrade,
       swing_deal__c                  AS is_swing_deal,
+      is_edu_oss_opportunity__c      AS is_edu_oss,
       net_iacv__c                    AS net_incremental_acv,
       nrv__c                         AS nrv,
       campaignid                     AS primary_campaign_source_id,
@@ -90,7 +90,6 @@ WITH sfdc_opportunity_snapshots AS (
       sql_source__c                  AS sales_qualified_source,
       IFF(sales_qualified_source = 'Channel Generated', 'Partner Sourced', 'Co-sell')
                                      AS sqs_bucket_engagement,
-      sales_segmentation_o__c        AS segment,
       solutions_to_be_replaced__c    AS solutions_to_be_replaced,
       amount                         AS total_contract_value,
       upside_iacv__c                 AS upside_iacv,
@@ -122,6 +121,7 @@ WITH sfdc_opportunity_snapshots AS (
       deal_path__c                                AS deal_path,
       dr_partner_deal_type__c                     AS dr_partner_deal_type,
       dr_partner_engagement__c                    AS dr_partner_engagement,
+      order_type_test__c                          AS order_type_stamped,
       {{ channel_type('sqs_bucket_engagement', 'order_type_stamped') }}
                                                   AS channel_type,
       impartnerprm__partneraccount__c             AS partner_account,

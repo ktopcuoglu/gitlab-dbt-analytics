@@ -1,4 +1,6 @@
 import os
+import string
+from tokenize import String
 import yaml
 from datetime import datetime, timedelta
 
@@ -14,6 +16,7 @@ from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
     gitlab_pod_env_vars,
+    run_command_test_exclude,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 from kube_secrets import (
@@ -184,7 +187,7 @@ config_dict = {
         "cloudsql_instance_name": "ops-db-restore",
         "dag_name": "el_gitlab_ops",
         "dbt_name": "gitlab_ops",
-        "env_vars": {"HOURS": "13"},
+        "env_vars": {"HOURS": "48"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GCP_PROJECT,
@@ -235,6 +238,15 @@ def use_cloudsql_proxy(dag_name, operation, instance_name):
             ../extract/postgres_pipeline/manifests_decomposed/{dag_name}_db_manifest.yaml {operation}
         "
     """
+
+
+def get_last_loaded(dag_name: String) -> string:
+    if dag_name == "el_gitlab_ops":
+        return None
+    else:
+        return "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
+            task_identifier + "-pgp-extract"
+        )
 
 
 def generate_cmd(dag_name, operation, cloudsql_instance_name):
@@ -340,7 +352,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     # Test all source models
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt test --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
+        dbt test --profiles-dir profile --target prod --models +sources.{dbt_name} {run_command_test_exclude}; ret=$?;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
     model_test = KubernetesPodOperator(
@@ -408,6 +420,7 @@ for source_name, config in config_dict.items():
             file_path = f"analytics/extract/postgres_pipeline/manifests_decomposed/{config['dag_name']}_db_manifest.yaml"
             manifest = extract_manifest(file_path)
             table_list = extract_table_list_from_manifest(manifest)
+
             for table in table_list:
                 # tables that aren't incremental won't be processed by the incremental dag
                 if not is_incremental(manifest["tables"][table]["import_query"]):
@@ -435,9 +448,7 @@ for source_name, config in config_dict.items():
                         **gitlab_pod_env_vars,
                         **config["env_vars"],
                         "TASK_INSTANCE": "{{ task_instance_key_str }}",
-                        "LAST_LOADED": "{{{{ task_instance.xcom_pull('{}', include_prior_dates=True)['max_data_available'] }}}}".format(
-                            task_identifier + "-pgp-extract"
-                        ),
+                        "LAST_LOADED": get_last_loaded(config["dag_name"]),
                     },
                     affinity=get_affinity(False),
                     tolerations=get_toleration(False),

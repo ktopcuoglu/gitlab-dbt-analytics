@@ -5,6 +5,7 @@
 {{ simple_cte([
     ('namespace_current', 'gitlab_dotcom_namespaces_source'),
     ('namespace_snapshots', 'prep_namespace_hist'),
+    ('namespace_settings', 'gitlab_dotcom_namespace_settings_source'),
     ('namespace_lineage_historical', 'gitlab_dotcom_namespace_lineage_historical_daily'),
     ('map_namespace_internal', 'map_namespace_internal'),
     ('plans', 'gitlab_dotcom_plans_source'),
@@ -12,7 +13,8 @@
     ('members_source', 'gitlab_dotcom_members_source'),
     ('projects_source', 'gitlab_dotcom_projects_source'),
     ('audit_events', 'gitlab_dotcom_audit_events_source'),
-    ('audit_event_details_clean', 'prep_audit_event_details_clean')
+    ('audit_event_details_clean', 'prep_audit_event_details_clean'),
+    ('users', 'prep_user')
 ]) }}
 
 , members AS (
@@ -114,6 +116,7 @@
       namespaces.is_membership_locked,
       namespaces.has_request_access_enabled,
       namespaces.has_share_with_group_locked,
+      namespace_settings.is_setup_for_company,
       namespaces.visibility_level,
       namespaces.ldap_sync_status,
       namespaces.ldap_sync_error,
@@ -131,6 +134,7 @@
       namespaces.project_creation_level,
       namespaces.push_rule_id,
       IFNULL(creators.creator_id, namespaces.owner_id)                                AS creator_id,
+      IFNULL(users.is_blocked_user, FALSE)                                            AS namespace_creator_is_blocked,
       namespace_lineage.ultimate_parent_plan_id                                       AS gitlab_plan_id,
       namespace_lineage.ultimate_parent_plan_title                                    AS gitlab_plan_title,
       namespace_lineage.ultimate_parent_plan_is_paid                                  AS gitlab_plan_is_paid,
@@ -145,12 +149,16 @@
     LEFT JOIN namespace_lineage
       ON namespaces.dim_namespace_id = namespace_lineage.namespace_id
       AND IFNULL(namespaces.parent_id, namespaces.dim_namespace_id) = IFNULL(namespace_lineage.parent_id, namespace_lineage.namespace_id)
+    LEFT JOIN namespace_settings
+      ON namespaces.dim_namespace_id = namespace_settings.namespace_id
     LEFT JOIN members
       ON namespaces.dim_namespace_id = members.source_id
     LEFT JOIN projects
       ON namespaces.dim_namespace_id = projects.namespace_id
     LEFT JOIN creators
       ON namespaces.dim_namespace_id = creators.group_id
+    LEFT JOIN users
+      ON creators.creator_id = users.dim_user_id
     LEFT JOIN map_namespace_internal
       ON namespace_lineage.ultimate_parent_id = map_namespace_internal.ultimate_parent_namespace_id
     LEFT JOIN product_tiers saas_product_tiers
@@ -171,7 +179,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@pempey",
+    updated_by="@jpeguero",
     created_date="2021-01-14",
-    updated_date="2021-11-10"
+    updated_date="2022-02-22"
 ) }}

@@ -1,39 +1,14 @@
-WITH gitlab_namespaces AS (
+{{ simple_cte ([
+  ('gitlab_namespaces', 'gitlab_dotcom_namespaces_source'),
+  ('gitlab_members', 'gitlab_dotcom_members_source'),
+  ('gitlab_users', 'gitlab_dotcom_users_source'),
+  ('customer_db_source', 'customers_db_customers_source'),
+  ('zuora_account', 'zuora_account_source'),
+  ('zuora_contact', 'zuora_contact_source'),
+  ('dim_marketing_contact', 'dim_marketing_contact')
+]) }}
 
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_namespaces_source') }}
-
-), gitlab_members AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_members_source') }}
-
-), gitlab_users AS (
-
-    SELECT *
-    FROM {{ ref('gitlab_dotcom_users_source') }}
-
-), customer_db_source AS (
-
-    SELECT *
-    FROM {{ ref('customers_db_customers_source') }}
-
-),zuora_account AS (
-
-    SELECT *
-    FROM {{ ref('zuora_account_source') }}
-
-),zuora_contact AS (
-
-    SELECT *
-    FROM {{ ref('zuora_contact_source') }}
-
-),dim_marketing_contact AS (
-
-    SELECT *
-    FROM {{ ref('dim_marketing_contact') }}
-
-), final AS (
+, final AS (
 
     SELECT
       dim_marketing_contact_id,
@@ -124,7 +99,7 @@ WITH gitlab_namespaces AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rmistry",
-    updated_by="@pempey",
+    updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2021-11-10"
+    updated_date="2022-02-28"
 ) }}

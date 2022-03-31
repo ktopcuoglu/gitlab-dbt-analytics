@@ -15,7 +15,7 @@ WITH source AS (
 
 ), renamed AS (
 
-    SELECT 
+    SELECT
       id::INTEGER            AS raw_usage_data_id,
       PARSE_JSON(payload)    AS raw_usage_data_payload,
       created_at::TIMESTAMP  AS created_at,

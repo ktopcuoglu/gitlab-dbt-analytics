@@ -5,7 +5,7 @@ WITH map_merged_crm_account AS (
     SELECT *
     FROM {{ ref('map_merged_crm_account') }}
 
-{%- if model_type == 'base' %}
+{%- if model_type == 'live' %}
 
 {%- elif model_type == 'snapshot' %}
 ), snapshot_dates AS (
@@ -24,7 +24,7 @@ WITH map_merged_crm_account AS (
 ), sfdc_account AS (
 
     SELECT 
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
         *
     {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_account_snapshots_source.account_id','snapshot_dates.date_id'])}}   AS crm_account_snapshot_id,
@@ -32,7 +32,7 @@ WITH map_merged_crm_account AS (
         sfdc_account_snapshots_source.*
      {%- endif %}
     FROM 
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
         {{ ref('sfdc_account_source') }}
     {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_account_snapshots_source') }}
@@ -45,7 +45,7 @@ WITH map_merged_crm_account AS (
 ), sfdc_users AS (
 
     SELECT 
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
         *
       {%- elif model_type == 'snapshot' %}
       {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.user_id','snapshot_dates.date_id'])}}    AS crm_user_snapshot_id,
@@ -53,7 +53,7 @@ WITH map_merged_crm_account AS (
       sfdc_user_snapshots_source.*
       {%- endif %}
     FROM
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
       {{ ref('sfdc_users_source') }}
       {%- elif model_type == 'snapshot' %}
       {{ ref('sfdc_user_snapshots_source') }}
@@ -70,7 +70,7 @@ WITH map_merged_crm_account AS (
 ), ultimate_parent_account AS (
 
     SELECT
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
 
       {%- elif model_type == 'snapshot' %}
       crm_account_snapshot_id,
@@ -118,7 +118,7 @@ WITH map_merged_crm_account AS (
 
     SELECT
       --crm account informtion
-      {%- if model_type == 'base' %}
+      {%- if model_type == 'live' %}
   
       {%- elif model_type == 'snapshot' %}
       sfdc_account.crm_account_snapshot_id,
@@ -172,7 +172,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.federal_account                                        AS federal_account,
       sfdc_account.is_jihu_account                                        AS is_jihu_account,
       sfdc_account.carr_this_account,
-      sfdc_account.carr_total,
+      sfdc_account.carr_account_family,
       sfdc_account.potential_arr_lam,
       sfdc_account.lam                                                    AS parent_crm_account_lam,
       sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
@@ -208,6 +208,7 @@ WITH map_merged_crm_account AS (
       ultimate_parent_account.billing_country                             AS parent_crm_account_billing_country,
       ultimate_parent_account.industry                                    AS parent_crm_account_industry,
       ultimate_parent_account.sub_industry                                AS parent_crm_account_sub_industry,
+      sfdc_account.parent_account_industry_hierarchy                      AS parent_crm_account_industry_hierarchy,
       ultimate_parent_account.account_owner_team                          AS parent_crm_account_owner_team,
       ultimate_parent_account.tsp_territory                               AS parent_crm_account_sales_territory,
       ultimate_parent_account.tsp_region                                  AS parent_crm_account_tsp_region,
@@ -240,7 +241,7 @@ WITH map_merged_crm_account AS (
       ON sfdc_account.account_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN sfdc_record_type
       ON sfdc_account.record_type_id = sfdc_record_type.record_type_id
-    {%- if model_type == 'base' %}
+    {%- if model_type == 'live' %}
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
     LEFT OUTER JOIN sfdc_users

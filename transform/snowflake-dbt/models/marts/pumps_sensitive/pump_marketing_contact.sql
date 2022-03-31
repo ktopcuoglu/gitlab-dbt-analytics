@@ -62,10 +62,15 @@ SELECT
   pql_list_stages,
   pql_nbr_stages,
   pql_nbr_namespace_users,
+  has_namespace_setup_for_company_use,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed
 
 FROM {{ ref('mart_marketing_contact' )}}
 WHERE rlike(email_address, '^[A-Z0-9.+_%-]+@[A-Z0-9.-]+\\.[A-Z]+$','i')
-  AND is_pql = TRUE
+  AND ( is_pql = TRUE
+    OR ( is_paid_tier = TRUE
+      AND sfdc_record_id IS NOT NULL
+    )
+  )

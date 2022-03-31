@@ -16,3 +16,4 @@ license_scanning_build_run,secure,composition_analysis,secure_protect,TRUE
 license_management_build_run,secure,composition_analysis,secure_protect,TRUE
 container_scanning,protect,container_security,secure_protect,TRUE
 package_creation,package,package,ops,TRUE
+action_monthly_active_users_project_repo,create,source_code,dev,TRUE

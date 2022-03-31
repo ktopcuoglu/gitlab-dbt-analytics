@@ -103,10 +103,6 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - gitlab_slack_stats
-  - name: google_referrals
-    owner: '@tayloramurphy'
-    tabs:
-      - google_referrals
   - name: headcount
     owner: '@wwright'
     tabs:
@@ -124,6 +120,10 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - infrastructure_missing_employees
+  - name: hp_dvr
+    owner: '@dvanrooijen2'
+    tabs:
+      - hp_dvr
   - name: job_roles_prior_to_2020_02
     owner: '@pluthra'
     tabs:
@@ -164,10 +164,6 @@ sheets:
     owner: '@jeanpeguero'
     tabs:
       - marketing_kpi_benchmarks
-  - name: marketing_pipe_to_spend_headcount
-    owner: '@tayloramurphy'
-    tabs:
-      - marketing_pipe_to_spend_headcount
   - name: maxmind_countries
     owner: '@snalamaru'
     tabs:

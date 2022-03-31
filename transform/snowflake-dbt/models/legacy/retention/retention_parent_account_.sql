@@ -1,6 +1,6 @@
 with mrr_totals_levelled AS (
 
-       SELECT * FROM {{ref('mrr_totals_levelled')}}
+       SELECT * FROM {{ref('mart_arr')}}
 
 ), current_arr_segmentation_all_levels AS (
 
@@ -9,9 +9,9 @@ with mrr_totals_levelled AS (
 
 ), list AS ( --get all the subscription + their lineage + the month we're looking for MRR for (12 month in the future)
 
-       SELECT ultimate_parent_account_id,
-              mrr_month as original_mrr_month,
-              dateadd('year', 1, mrr_month) AS retention_month,
+       SELECT dim_parent_crm_account_id AS ultimate_parent_account_id,
+              arr_month as original_mrr_month,
+              dateadd('year', 1, arr_month) AS retention_month,
               sum(mrr) as mrr
        FROM mrr_totals_levelled
        GROUP BY 1, 2, 3
@@ -47,7 +47,7 @@ with mrr_totals_levelled AS (
 
 SELECT finals.ultimate_parent_account_id as parent_account_id,
        finals.ultimate_parent_account_id as salesforce_account_id,
-       ultimate_parent_account_name as parent_account_name,
+       parent_crm_account_name as parent_account_name,
        dateadd('year', 1, finals.original_mrr_month) AS retention_month, --THIS IS THE RETENTION MONTH, NOT THE MRR MONTH!!
        original_mrr,
        net_retention_mrr,
@@ -59,7 +59,7 @@ SELECT finals.ultimate_parent_account_id as parent_account_id,
        {{ churn_type('original_mrr', 'net_retention_mrr') }}
 FROM finals
 LEFT JOIN mrr_totals_levelled
-ON finals.ultimate_parent_account_id = mrr_totals_levelled.ultimate_parent_account_id
+ON finals.ultimate_parent_account_id = mrr_totals_levelled.dim_parent_crm_account_id
 GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 )
 

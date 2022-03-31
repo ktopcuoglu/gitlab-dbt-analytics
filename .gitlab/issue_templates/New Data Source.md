@@ -22,7 +22,7 @@ To support the new data source triage process, try to complete the below checkli
   - `      `
  
  
-* [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-policy.html#data-classification-levels))?
+* [ ] Please list and describe any data from this source that is sensitive (Classified as Red or Orange in our [Data Classification Policy](https://about.gitlab.com/handbook/engineering/security/data-classification-standard.html#data-classification-levels#data-classification-levels))?
  - _`{data fields, columns, or objects}`_
 * [ ] Does this data have any agreed [SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#slos-service-level-objectives-by-data-source) attached to it? If not:
    * [ ] How often does the data need to be refreshed?
@@ -71,7 +71,10 @@ use contact the Data Engineer assigned below for confirmation.
 - [ ] Analyst: <!-- please tag them -->
 - [ ] Analytics Engineer <!-- please tag them -->
 - [ ] Data Engineer: <!-- please tag them -->
- 
+
+**Who can we contact in the case of external errors or source freshness problems**
+- [ ] Ensure the [data source contact sheet](https://docs.google.com/spreadsheets/d/1VKvqyn7wy6HqpWS9T3MdPnE6qbfH2kGPQDFg2qPcp6U/edit#gid=0) is updated. 
+
 <!-- Do not edit below this line -->
  
 /label ~"new data source" ~"workflow::1 - triage" ~"Team::Data Platform" ~"Priority::3-Other"

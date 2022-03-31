@@ -292,3 +292,13 @@ models:
         description: Flags if the email address is valid. Work in progress - full list of invalid emails is not loaded
       - name: wip_invalid_email_address_reason
         description: Reason why the email address is invalid. Work in progress - full list of invalid emails is not loaded
+      - name: pql_nbr_integrations_installed
+        description: Number of integrations services installed in all the namespaces the marketing contact is a member of
+      - name: pql_integrations_installed
+        description: List of all the integrations services installed in all the namespaces the marketing contact is a member of
+      - name: has_namespace_setup_for_company_use
+        description: If True, the marketing contact is a member of a namespace that has been checked for company use
+      - name: has_namespace_with_public_project
+        description: If True, the marketing contact is a member of a namespace that has at least one public project
+      - name: has_free_namespace_with_public_project
+        description: If True, the marketing contact is a member of a Free namespace that has at least one public project

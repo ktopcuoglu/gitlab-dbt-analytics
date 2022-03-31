@@ -22,7 +22,7 @@ def parse_string_to_timestamp(tstamp: str) -> datetime:
     """
     Parses a string from Qualtrics into a datetime using the standard Qualtrics timestamp datetime format.
     """
-    qualtrics_timestamp_format = "%Y-%m-%dT%H:%M:%S%z"
+    qualtrics_timestamp_format = "%Y-%m-%dT%H:%M:%S.%f%z"
     return datetime.strptime(tstamp, qualtrics_timestamp_format)
 
 
