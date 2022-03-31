@@ -29,7 +29,7 @@
     SELECT 
       boards_source.board_id                                     AS dim_board_id,
       IFNULL(dim_project.dim_project_id, -1)                     AS dim_project_id,
-      IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)       AS ultimate_parent_namespace_id,
+      IFNULL(dim_project.ultimate_parent_namespace_id, -1)       AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)            AS dim_plan_id,
       dim_date.date_id                                           AS created_date_id,
       boards_source.created_at::TIMESTAMP                        AS created_at,

@@ -30,7 +30,7 @@
     SELECT
       ci_job_artifact_id                                    AS dim_ci_job_artifact_id,
       project_id                                            AS dim_project_id,
-      IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)  AS ultimate_parent_namespace_id,
+      IFNULL(dim_project.ultimate_parent_namespace_id, -1)  AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)       AS dim_plan_id,
       file_type,
       ci_job_artifacts.created_at,
