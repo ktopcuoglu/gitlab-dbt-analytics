@@ -7,21 +7,21 @@ WITH source AS (
 
     SELECT
 
-      id                                AS id,
-      lead_id                           AS lead_id,
-      activity_date                     AS activity_date,
-      activity_type_id                  AS activity_type_id,
-      campaign_id                       AS campaign_id,
-      primary_attribute_value_id        AS primary_attribute_value_id,
-      primary_attribute_value           AS primary_attribute_value,
-      change_value                      AS change_value,
-      old_value                         AS old_value,
-      new_value                         AS new_value,
-      reason                            AS reason,
-      relative_urgency                  AS relative_urgency,
-      priority                          AS priority,
-      relative_score                    AS relative_score,
-      urgency                           AS urgency
+      id::NUMBER                                   AS id,
+      lead_id::NUMBER                              AS lead_id,
+      activity_date::TIMESTAMP_TZ                  AS activity_date,
+      activity_type_id::NUMBER                     AS activity_type_id,
+      campaign_id::NUMBER                          AS campaign_id,
+      primary_attribute_value_id::NUMBER           AS primary_attribute_value_id,
+      primary_attribute_value::TEXT                AS primary_attribute_value,
+      change_value::TEXT                           AS change_value,
+      old_value::NUMBER                            AS old_value,
+      new_value::NUMBER                            AS new_value,
+      reason::TEXT                                 AS reason,
+      relative_urgency::NUMBER                     AS relative_urgency,
+      priority::NUMBER                             AS priority,
+      relative_score::NUMBER                       AS relative_score,
+      urgency::FLOAT                               AS urgency
 
     FROM source
 
