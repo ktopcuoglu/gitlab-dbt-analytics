@@ -95,7 +95,22 @@
       {{ usage_ping_month_range('failed_deployments_28_days_event') }},
       {{ usage_ping_month_range('projects_compliance_framework_all_time_event') }},
       {{ usage_ping_month_range('commit_ci_config_file_28_days_user') }},
-      {{ usage_ping_month_range('view_audit_all_time_user') }}
+      {{ usage_ping_month_range('view_audit_all_time_user') }},
+      {{ usage_ping_month_range('dependency_scanning_jobs_all_time_user') }},
+      {{ usage_ping_month_range('analytics_devops_adoption_all_time_user') }},
+      {{ usage_ping_month_range('projects_imported_all_time_event') }},
+      {{ usage_ping_month_range('preferences_security_dashboard_28_days_user') }},
+      {{ usage_ping_month_range('web_ide_edit_28_days_user') }},
+      {{ usage_ping_month_range('auto_devops_pipelines_all_time_event') }},
+      {{ usage_ping_month_range('projects_prometheus_active_all_time_event') }},
+      {{ usage_ping_month_range('prometheus_enabled') }},
+      {{ usage_ping_month_range('prometheus_metrics_enabled') }},
+      {{ usage_ping_month_range('group_saml_enabled') }},
+      {{ usage_ping_month_range('jira_issue_imports_all_time_event') }},
+      {{ usage_ping_month_range('author_epic_all_time_user') }},
+      {{ usage_ping_month_range('author_issue_all_time_user') }},
+      {{ usage_ping_month_range('failed_deployments_28_days_user') }},
+      {{ usage_ping_month_range('successful_deployments_28_days_user') }}
     FROM monthly_metrics
 
 ), diffs AS (
@@ -174,7 +189,22 @@
       {{ usage_ping_over_ping_difference('failed_deployments_28_days_event') }},
       {{ usage_ping_over_ping_difference('projects_compliance_framework_all_time_event') }},
       {{ usage_ping_over_ping_difference('commit_ci_config_file_28_days_user') }},
-      {{ usage_ping_over_ping_difference('view_audit_all_time_user') }}
+      {{ usage_ping_over_ping_difference('view_audit_all_time_user') }},
+      {{ usage_ping_over_ping_difference('dependency_scanning_jobs_all_time_user') }},
+      {{ usage_ping_over_ping_difference('analytics_devops_adoption_all_time_user') }},
+      {{ usage_ping_over_ping_difference('projects_imported_all_time_event') }},
+      {{ usage_ping_over_ping_difference('preferences_security_dashboard_28_days_user') }},
+      {{ usage_ping_over_ping_difference('web_ide_edit_28_days_user') }},
+      {{ usage_ping_over_ping_difference('auto_devops_pipelines_all_time_event') }},
+      {{ usage_ping_over_ping_difference('projects_prometheus_active_all_time_event') }},
+      {{ usage_ping_over_ping_difference('prometheus_enabled') }},
+      {{ usage_ping_over_ping_difference('prometheus_metrics_enabled') }},
+      {{ usage_ping_over_ping_difference('group_saml_enabled') }},
+      {{ usage_ping_over_ping_difference('jira_issue_imports_all_time_event') }},
+      {{ usage_ping_over_ping_difference('author_epic_all_time_user') }},
+      {{ usage_ping_over_ping_difference('author_issue_all_time_user') }},
+      {{ usage_ping_over_ping_difference('failed_deployments_28_days_user') }},
+      {{ usage_ping_over_ping_difference('successful_deployments_28_days_user') }}
     FROM monthly_metrics
 
 ), smoothed_diffs AS (
@@ -247,7 +277,22 @@
       {{ usage_ping_over_ping_smoothed('failed_deployments_28_days_event') }},
       {{ usage_ping_over_ping_smoothed('projects_compliance_framework_all_time_event') }},
       {{ usage_ping_over_ping_smoothed('commit_ci_config_file_28_days_user') }},
-      {{ usage_ping_over_ping_smoothed('view_audit_all_time_user') }}
+      {{ usage_ping_over_ping_smoothed('view_audit_all_time_user') }},
+      {{ usage_ping_over_ping_smoothed('dependency_scanning_jobs_all_time_user') }},
+      {{ usage_ping_over_ping_smoothed('analytics_devops_adoption_all_time_user') }},
+      {{ usage_ping_over_ping_smoothed('projects_imported_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('preferences_security_dashboard_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('web_ide_edit_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('auto_devops_pipelines_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('projects_prometheus_active_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('prometheus_enabled') }},
+      {{ usage_ping_over_ping_smoothed('prometheus_metrics_enabled') }},
+      {{ usage_ping_over_ping_smoothed('group_saml_enabled') }},
+      {{ usage_ping_over_ping_smoothed('jira_issue_imports_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('author_epic_all_time_user') }},
+      {{ usage_ping_over_ping_smoothed('author_issue_all_time_user') }},
+      {{ usage_ping_over_ping_smoothed('failed_deployments_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('successful_deployments_28_days_user') }}
     FROM diffs
     INNER JOIN months
       ON diffs.snapshot_month = months.first_day_of_month
@@ -325,7 +370,22 @@
       {{ usage_ping_over_ping_estimated('failed_deployments_28_days_event') }},
       {{ usage_ping_over_ping_estimated('projects_compliance_framework_all_time_event') }},
       {{ usage_ping_over_ping_estimated('commit_ci_config_file_28_days_user') }},
-      {{ usage_ping_over_ping_estimated('view_audit_all_time_user') }}
+      {{ usage_ping_over_ping_estimated('view_audit_all_time_user') }},
+      {{ usage_ping_over_ping_estimated('dependency_scanning_jobs_all_time_user') }},
+      {{ usage_ping_over_ping_estimated('analytics_devops_adoption_all_time_user') }},
+      {{ usage_ping_over_ping_estimated('projects_imported_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('preferences_security_dashboard_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('web_ide_edit_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('auto_devops_pipelines_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('projects_prometheus_active_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('prometheus_enabled') }},
+      {{ usage_ping_over_ping_estimated('prometheus_metrics_enabled') }},
+      {{ usage_ping_over_ping_estimated('group_saml_enabled') }},
+      {{ usage_ping_over_ping_estimated('jira_issue_imports_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('author_epic_all_time_user') }},
+      {{ usage_ping_over_ping_estimated('author_issue_all_time_user') }},
+      {{ usage_ping_over_ping_estimated('failed_deployments_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('successful_deployments_28_days_user') }}
     FROM smoothed_diffs
     LEFT JOIN ping_ranges
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
@@ -349,5 +409,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-03-04",
-    updated_date="2022-03-02"
+    updated_date="2022-04-01"
 ) }}
