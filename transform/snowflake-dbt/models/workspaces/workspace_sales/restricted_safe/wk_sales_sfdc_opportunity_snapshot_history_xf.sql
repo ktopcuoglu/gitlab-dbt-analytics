@@ -824,6 +824,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.key_segment_geo_region_area,
       sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
       sfdc_opportunity_xf.key_segment_geo_region_area_ot,
+
+      sfdc_opportunity_xf.key_segment_geo_area,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    
