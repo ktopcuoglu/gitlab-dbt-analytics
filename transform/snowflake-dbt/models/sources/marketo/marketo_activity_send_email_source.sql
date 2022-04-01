@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
 
-      id::TEXT                                   AS id,
+      id::NUMBER                                 AS id,
       lead_id::NUMBER                            AS lead_id,
       activity_date::TIMESTAMP_TZ                AS activity_date,
       activity_type_id::NUMBER                   AS activity_type_id,
