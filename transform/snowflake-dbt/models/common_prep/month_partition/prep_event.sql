@@ -299,25 +299,7 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_board_id",
     "stage_name": "plan"
-  },
-  {
-    "event_name": "project_auto_devops",
-    "source_cte_name": "prep_project_auto_devops",
-    "user_column_name": "NULL",
-    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "dim_project_id",
-    "primary_key": "dim_auto_devops_id",
-    "stage_name": "configure"
-  },
-  {
-    "event_name": "services",
-    "source_cte_name": "prep_service",
-    "user_column_name": "NULL",
-    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "dim_project_id",
-    "primary_key": "dim_service_id",
-    "stage_name": "create"
-  },
+  }
 
 ]
 
@@ -350,9 +332,7 @@
     ('prep_resource_milestone', 'prep_resource_milestone'),
     ('prep_labels', 'prep_labels'),
     ('prep_ci_artifacts', 'prep_ci_artifacts'),
-    ('prep_user_event', 'prep_user'),
-    ('prep_board', 'prep_board'),
-    ('prep_project_auto_devops', 'prep_project_auto_devops')
+    ('prep_user_event', 'prep_user')
 ]) }}
 
 , dast_jobs AS (
