@@ -26,10 +26,15 @@ class ZuoraQueriesAPI:
             "Authorization": f"Bearer {zuora_token}",
         }
 
-    def authenticate_zuora(self, zuora_api_client_id, zuora_api_client_secret):
+    def authenticate_zuora(self, zuora_api_client_id: str, zuora_api_client_secret: str) -> str:
         """
         Written to encapsulate Zuora's authentication functionality
+        :param zuora_api_client_id:
+        :type zuora_api_client_id:
+        :param zuora_api_client_secret:
+        :type zuora_api_client_secret:
         :return:
+        :rtype:
         """
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -49,7 +54,7 @@ class ZuoraQueriesAPI:
             error("COULD NOT AUTHENTICATE")
             exit(1)
 
-    def request_data_query_data(self, query_string):
+    def request_data_query_data(self, query_string: str) -> str:
         """
 
         :param query_string: Written in ZQL (check Docs to make changes),
@@ -71,41 +76,6 @@ class ZuoraQueriesAPI:
             return response.json().get('data').get('id')
         else:
             logging.error(response.json)
-
-    def request_aqua_query_data(self, query_string, query_type):
-        """
-
-        :param query_string: Written in ZQL (check Docs to make changes),
-        :param query_type:
-        :return:
-        """
-        api_url = f"{self.base_url}/v1/batch-query/"
-
-        data_query_request = {
-            "format": "csv",
-            "version": "1.1",
-            "name": query_type,
-            "encrypted": "none",
-            "partner": "",
-            "project": "",
-            "notifyUrl": " ",
-            "queries": [
-                {"name": query_type, "query": query_string, "type": "zoqlexport"}
-            ],
-        }
-        info(f"{data_query_request}")
-        response = requests.post(
-            api_url,
-            headers=self.request_headers,
-            data=json.dumps(data_query_request),
-            verify=False,
-        ).json()
-
-        if response.get("id") is None:
-            warning(response)
-            raise Exception("Request unsuccessful")
-        else:
-            return response["id"]
 
     def wait_for_zuora_to_complete(self, job_id, wait_time=30):
         """ """
