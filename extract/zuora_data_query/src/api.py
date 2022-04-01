@@ -76,43 +76,62 @@ class ZuoraQueriesAPI:
             return response.json().get('data').get('id')
         else:
             logging.error(response.json)
-
-    def wait_for_zuora_to_complete(self, job_id, wait_time=30):
-        """ """
-        api_url = f"{self.base_url}/v1/batch-query/jobs/{job_id}"
-
-        response = requests.get(url=api_url, headers=self.request_headers).json()
-        file_id = response["batches"][0].get("fileId")
-        status = response["batches"][0].get("status")
-        file_type = response["name"]
-
-        while status == "pending":
-            time.sleep(wait_time)
-
-            response = requests.get(url=api_url, headers=self.request_headers).json()
-
-            file_id = response["batches"][0].get("fileId")
-            status = response["batches"][0].get("status")
-
-            info("Waiting for report to complete")
-        return file_id, file_type
-
-    def get_file_from_zuora(self, job_id):
+    
+    def get_job_data(self, job_id: object) -> object:
         """
+
         :param job_id:
+        :type job_id:
         :return:
+        :rtype:
         """
-        info("Retrieving file")
-        file_id, file_type = self.wait_for_zuora_to_complete(job_id)
-        info("File complete")
-        file_url = f"{self.base_url}/v1/file/{file_id}/"
-
-        response = requests.get(url=file_url, headers=self.request_headers)
-        if response.ok:
-            df = pd.read_csv(StringIO(response.text))
-            return df
+        api_url = f"{self.base_url}/query/jobs"
+        response = requests.get(
+            api_url,
+            headers=self.request_headers,
+        )
+        data = response.json()
+        job = [j for j in data.get('data') if j.get('id') == job_id]
+        if len(job) > 0:
+            return job
         else:
-            return False
+            logging.error('Didnt get job id, error ')
+            raise Exception
+        
+    def get_data_query_file(self, job_id: object, wait_time: object = 30) -> object:
+        """
+
+        :param job_id:
+        :type job_id:
+        :param wait_time:
+        :type wait_time:
+        :return:
+        :rtype:
+        """
+        job = self.get_job_data(job_id)
+        
+        job_status = job[0].get('queryStatus')
+
+        if job_status in ["failed", "cancelled"]:
+            logging.error("Job failed or cancelled")
+            raise Exception
+
+        while job_status in ["accepted", "in_progress"]:
+            time.sleep(wait_time)
+            
+            job = self.get_job_data(job_id)
+                                              
+            job_status = job[0].get('queryStatus')
+            info("Waiting for report to complete")
+           
+        if job_status == "completed":
+            print("Will download file")
+            file_url = job[0].get('dataFile')
+            response = requests.get(url=file_url)
+
+            df = pd.read_csv(StringIO(response.text))
+            return df 
+
 
     def process_scd(self, scd_file: str = "./zuora_data_query/src/scd_queries.yml"):
 
@@ -124,7 +143,8 @@ class ZuoraQueriesAPI:
             job_id = self.request_data_query_data(
                 query_string=tables.get(table_spec).get("query")
             )
-            df = self.get_file_from_zuora(job_id)
+            df = self.get_data_query_file(job_id)
+            df.to_csv(f"{table_spec}.csv")
 
     def main(self) -> None:
         """
