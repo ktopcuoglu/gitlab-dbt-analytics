@@ -17,9 +17,9 @@ models:
       - name: lead_id
         tests:
           - not_null
-  - name: marketo_activity_add_to_opprtunity_source
+  - name: marketo_activity_add_to_opportunity_source
     columns:
-      - name: marketo_activity_add_to_opprtunity_id
+      - name: marketo_activity_add_to_opportunity_id
         tests:
           - not_null
           - unique
@@ -64,7 +64,7 @@ models:
           - not_null
   - name: marketo_activity_change_nurture_cadence_source
     columns:
-      - name: marketo_activity_change_nurture_cadence_source_id
+      - name: marketo_activity_change_nurture_cadence_id
         tests:
           - not_null
           - unique
