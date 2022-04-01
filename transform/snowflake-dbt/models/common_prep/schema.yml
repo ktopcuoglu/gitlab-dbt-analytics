@@ -1884,3 +1884,19 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_service
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_service_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_issue_resource_weight
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_resource_weight_id
+        tests:
+          - not_null
+          - unique

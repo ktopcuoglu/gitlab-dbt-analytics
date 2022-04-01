@@ -37,9 +37,10 @@
     FROM  service_source
     LEFT JOIN dim_project 
       ON  service_source.project_id = dim_project.dim_project_id
-    LEFT JOIN dim_namespace_plan_hist ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
-        AND  service_source.created_at >= dim_namespace_plan_hist.valid_from
-        AND  service_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
+    LEFT JOIN dim_namespace_plan_hist 
+      ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
+      AND  service_source.created_at >= dim_namespace_plan_hist.valid_from
+      AND  service_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
     LEFT JOIN dim_date ON TO_DATE(service_source.created_at) = dim_date.date_day
 
 )
