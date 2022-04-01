@@ -3459,6 +3459,13 @@ roles:
                     - mlaanen_prep.*.*
                     - mlaanen_prod.*.*
 
+    - mpetersen:
+        member_of:
+            - analyst_growth
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - mramirez:
         member_of:
             - analyst_sales
@@ -4503,6 +4510,11 @@ users:
         can_login: yes
         member_of:
             - mlaanen
+
+    - mpetersen:
+        can_login: yes
+        member_of:
+            - mpetersen
 
     - mramirez: # De provisioned as part of Quarterly audit and security check.
         can_login: yes
