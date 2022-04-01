@@ -290,15 +290,6 @@
     "project_column_name": "NULL",
     "primary_key": "dim_note_id",
     "stage_name": "plan"
-  },
-  {
-    "event_name": "boards",
-    "source_cte_name": "prep_board",
-    "user_column_name": "NULL",
-    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
-    "project_column_name": "dim_project_id",
-    "primary_key": "dim_board_id",
-    "stage_name": "plan"
   }
 
 ]
