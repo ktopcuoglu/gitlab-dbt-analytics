@@ -1876,3 +1876,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_project_auto_devops
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_auto_devops_id
+        tests:
+          - not_null
+          - unique
