@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
 
-      id::NUMBER                AS id,
+      id::NUMBER                AS marketo_activity_type_id,
       name::TEXT                AS name,
       description::TEXT         AS description
 

@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
 
-      id::NUMBER                                AS id,
+      id::NUMBER                                AS marketo_activity_remove_from_sfdc_campaign_id,
       lead_id::NUMBER                           AS lead_id,
       activity_date::TIMESTAMP_TZ               AS activity_date,
       activity_type_id::NUMBER                  AS activity_type_id,
