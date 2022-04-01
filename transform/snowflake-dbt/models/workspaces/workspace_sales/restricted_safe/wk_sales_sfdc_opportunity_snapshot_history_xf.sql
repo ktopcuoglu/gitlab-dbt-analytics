@@ -149,7 +149,6 @@ WITH date_details AS (
 
       sfdc_opportunity_snapshot_history.order_type_stamped AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
-      --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
       --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
       --sfdc_opportunity_snapshot_history.parent_segment,
@@ -978,9 +977,7 @@ WITH date_details AS (
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-         AND (opp_snapshot.is_stage_1_plus = 1
-                OR opp_snapshot.is_lost = 1)
-          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
+          AND opp_snapshot.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
           AND (opp_snapshot.net_arr > 0 
             OR opp_snapshot.opportunity_category = 'Credit')
           -- exclude vision opps from FY21-Q2

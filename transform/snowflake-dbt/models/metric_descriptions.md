@@ -121,3 +121,65 @@ Monthly unique user count doing commits which contains the CI config file.[link]
 {% docs view_audit_all_time_user_desc %}
  Unique users who have viewed audit events. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216183906_g_compliance_audit_events.yml)
 {% enddocs %}
+
+{% docs dependency_scanning_jobs_all_time_user_desc %}
+ Total number of users running Dependency Scanning jobs. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216175216_user_dependency_scanning_jobs.yml)
+{% enddocs %}
+
+{% docs analytics_devops_adoption_all_time_user_desc %}
+ Unique users viewing analytics devops adoption. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210423005644_i_analytics_dev_ops_adoption.yml)
+{% enddocs %}
+
+{% docs projects_imported_all_time_event_desc %}
+ Number of projects imported. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210514141520_project_imports_total.yml)
+{% enddocs %}
+
+{% docs preferences_security_dashboard_28_days_user_desc %}
+Users who set personal preference to see Security Dashboard on Group
+ information page. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216182209_user_preferences_group_overview_security_dashboard.yml)
+{% enddocs %}
+
+{% docs web_ide_edit_28_days_user_desc %}
+ Number of unique users per month who edited a file from any web editor. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216180327_action_monthly_active_users_ide_edit.yml)
+{% enddocs %}
+
+{% docs auto_devops_pipelines_all_time_event_desc %}
+ Total pipelines from an Auto DevOps template. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216175516_ci_pipeline_config_auto_devops.yml)
+{% enddocs %}
+
+{% docs projects_prometheus_active_all_time_event_desc %}
+ Count of projects with active integrations for Prometheus. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216180931_projects_prometheus_active.yml)
+{% enddocs %}
+
+{% docs prometheus_enabled_desc %}
+ Whether the bundled Prometheus is enabled. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/settings/20210204124912_prometheus_enabled.yml)
+{% enddocs %}
+
+{% docs prometheus_metrics_enabled_desc %}
+ Whether Prometheus Metrics endpoint is enabled. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/settings/20210204124914_prometheus_metrics_enabled.yml)
+{% enddocs %}
+
+{% docs group_saml_enabled_desc %}
+ Has the instance enabled Group SAML SSO `https://docs.gitlab.com/ee/user/group/saml_sso/`
+ on at least 1 group? [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/settings/20210216180813_group_saml_enabled.yml)
+{% enddocs %}
+
+{% docs jira_issue_imports_all_time_event_desc %}
+ Count of projects imported from Jira. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216180654_jira.yml)
+{% enddocs %}
+
+{% docs author_epic_all_time_user_desc %}
+ Count distinct author ids from epics. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216181134_epics.yml)
+{% enddocs %}
+
+{% docs author_issue_all_time_user_desc %}
+ Count of users creating Issues. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216181115_issues.yml)
+{% enddocs %}
+
+{% docs failed_deployments_28_days_user_desc %}
+ Disinct users who initiated a failed deployment. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216181937_failed_deployments.yml)
+{% enddocs %}
+
+{% docs successful_deployments_28_days_user_desc %}
+ Disinct users who initiated a successful deployment. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216181941_successful_deployments.yml)
+{% enddocs %}

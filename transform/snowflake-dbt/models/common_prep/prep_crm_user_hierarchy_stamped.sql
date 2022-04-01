@@ -135,7 +135,7 @@
   The full outer join will allow all possible hierarchies to flow in from all three sources
 */
 
-    SELECT 
+    SELECT DISTINCT
       COALESCE(final_scd.user_segment, user_hierarchy_stamped_opportunity.user_segment, user_hierarchy_sheetload.user_segment)                                                                              AS user_segment,
       COALESCE(final_scd.user_geo, user_hierarchy_stamped_opportunity.user_geo, user_hierarchy_sheetload.user_geo)                                                                                          AS user_geo,
       COALESCE(final_scd.user_region, user_hierarchy_stamped_opportunity.user_region, user_hierarchy_sheetload.user_region)                                                                                 AS user_region,
@@ -182,5 +182,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2021-01-05",
-    updated_date="2022-03-17"
+    updated_date="2022-03-18"
 ) }}

@@ -1,4 +1,4 @@
-from airflow.kubernetes.secret import Secret
+from airflow.contrib.kubernetes.secret import Secret
 
 # BambooHR
 BAMBOOHR_API_TOKEN = Secret(
@@ -252,6 +252,27 @@ SALT_IP = Secret("env", "SALT_IP", "airflow", "SALT_IP")
 SALT_NAME = Secret("env", "SALT_NAME", "airflow", "SALT_NAME")
 
 SALT_PASSWORD = Secret("env", "SALT_PASSWORD", "airflow", "SALT_PASSWORD")
+
+
+# Bizible extract
+BIZIBLE_SNOWFLAKE_DATABASE = Secret(
+    "env", "BIZIBLE_SNOWFLAKE_DATABASE", "airflow", "BIZIBLE_SNOWFLAKE_DATABASE"
+)
+BIZIBLE_SNOWFLAKE_ROLE = Secret(
+    "env", "BIZIBLE_SNOWFLAKE_ROLE", "airflow", "BIZIBLE_SNOWFLAKE_ROLE"
+)
+BIZIBLE_SNOWFLAKE_PASSWORD = Secret(
+    "env", "BIZIBLE_SNOWFLAKE_PASSWORD", "airflow", "BIZIBLE_SNOWFLAKE_PASSWORD"
+)
+BIZIBLE_SNOWFLAKE_USER = Secret(
+    "env", "BIZIBLE_SNOWFLAKE_USER", "airflow", "BIZIBLE_SNOWFLAKE_USER"
+)
+BIZIBLE_SNOWFLAKE_WAREHOUSE = Secret(
+    "env", "BIZIBLE_SNOWFLAKE_WAREHOUSE", "airflow", "BIZIBLE_SNOWFLAKE_WAREHOUSE"
+)
+BIZIBLE_SNOWFLAKE_ACCOUNT = Secret(
+    "env", "BIZIBLE_SNOWFLAKE_ACCOUNT", "airflow", "BIZIBLE_SNOWFLAKE_ACCOUNT"
+)
 
 
 ZUORA_API_CLIENT_ID = Secret(

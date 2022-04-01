@@ -2,192 +2,378 @@ version: 2
 
 models:
   - name: zi_comp_with_linkages_global_source
-    description: International table, data ingested from Zoominfo inbound share.
+    description: International table, data ingested from Zoominfo inbound share.  Note that the company_id is defined at the headquarters level.
     columns:
-      - name: zi_c_location_id
-      - name: zi_c_company_id
-      - name: zi_c_is_hq
-      - name: zi_es_ecid
-      - name: zi_es_location_id
-      - name: zi_c_tier_grade
-      - name: zi_c_name
-      - name: zi_c_name_display
-      - name: zi_c_legal_entity_type
-      - name: zi_c_url
-      - name: zi_c_street
-      - name: zi_c_street_2
-      - name: zi_c_city
-      - name: zi_c_state
-      - name: zi_c_zip
-      - name: zi_c_country
-      - name: zi_c_cbsa_name
-      - name: zi_c_county
-      - name: zi_c_latitude
-      - name: zi_c_longitude
-      - name: zi_c_verified_address
-      - name: zi_c_employee_range
-      - name: zi_c_employees
-      - name: zi_c_revenue_range
-      - name: zi_c_revenue
-      - name: zi_c_phone
-      - name: zi_c_fax
-      - name: zi_c_industry_primary
-      - name: zi_c_sub_industry_primary
-      - name: zi_c_industries
-      - name: zi_c_sub_industries
-      - name: zi_es_industry
-      - name: zi_es_industries_top3
-      - name: zi_c_naics2
-      - name: zi_c_naics4
-      - name: zi_c_naics6
-      - name: zi_c_naics_top3
-      - name: zi_c_sic2
-      - name: zi_c_sic3
-      - name: zi_c_sic4
-      - name: zi_c_sic_top3
-      - name: zi_c_estimated_age
-      - name: zi_c_year_founded
-      - name: zi_c_is_b2b
-      - name: zi_c_is_b2c
-      - name: zi_es_hq_ecid
-      - name: zi_es_hq_location_id
-      - name: zi_c_company_name
-      - name: zi_c_company_url
-      - name: zi_c_company_street
-      - name: zi_c_company_street_2
-      - name: zi_c_company_city
-      - name: zi_c_company_state
-      - name: zi_c_company_zip
-      - name: zi_c_company_country
-      - name: zi_c_company_cbsa_name
-      - name: zi_c_company_county
-      - name: zi_c_company_latitude
-      - name: zi_c_company_longitude
-      - name: zi_c_company_verified_address
-      - name: zi_c_company_employee_range
-      - name: zi_c_company_employees
-      - name: zi_c_company_revenue_range
-      - name: zi_c_company_revenue
-      - name: zi_c_company_phone
-      - name: zi_c_company_fax
-      - name: zi_c_linkedin_url
-      - name: zi_c_facebook_url
-      - name: zi_c_twitter_url
-      - name: zi_c_yelp_url
-      - name: zi_c_alexa_rank
-      - name: zi_c_keywords
-      - name: zi_c_top_keywords
-      - name: zi_c_num_keywords
-      - name: zi_c_employee_growth_1yr
-      - name: zi_c_employee_growth_2yr
-      - name: zi_es_growth
-      - name: zi_es_employee_growth
-      - name: zi_es_revenue_growth
-      - name: zi_es_percent_employee_growth
-      - name: zi_es_percent_revenue_growth
-      - name: zi_c_name_confidence_score
-      - name: zi_c_url_confidence_score
-      - name: zi_c_address_confidence_score
-      - name: zi_c_phone_confidence_score
-      - name: zi_c_employees_confidence_score
-      - name: zi_c_revenue_confidence_score
-      - name: zi_es_industry_confidence_score
-      - name: zi_c_naics_confidence_score
-      - name: zi_c_sic_confidence_score
-      - name: zi_es_industries_top3_confidence_scores
-      - name: zi_c_naics_top3_confidence_scores
-      - name: zi_c_sic_top3_confidence_scores
-      - name: zi_c_ids_merged
-      - name: zi_c_names_other
-      - name: zi_c_url_status
-      - name: zi_c_urls_alt
-      - name: zi_c_url_last_updated
-      - name: zi_c_inactive_flag
-      - name: zi_c_ein
-      - name: zi_c_is_small_business
-      - name: zi_c_is_public
-      - name: zi_c_ticker
-      - name: zi_c_tickers_alt
-      - name: zi_c_has_mobile_app
-      - name: zi_c_currency_code
-      - name: zi_c_num_locations
-      - name: zi_c_hr_contacts
-      - name: zi_c_sales_contacts
-      - name: zi_c_marketing_contacts
-      - name: zi_c_finance_contacts
-      - name: zi_c_c_suite_contacts
-      - name: zi_c_engineering_contacts
-      - name: zi_c_it_contacts
-      - name: zi_c_operations_contacts
-      - name: zi_c_legal_contacts
-      - name: zi_c_medical_contacts
-      - name: zi_c_tech_ids
-      - name: zi_c_latest_funding_age
-      - name: zi_c_num_of_investors
-      - name: zi_c_investor_names
-      - name: zi_c_funding_strength
-      - name: zi_c_funding_type
-      - name: zi_c_total_funding_amount
-      - name: zi_c_latest_funding_amount
-      - name: zi_c_latest_funding_date
-      - name: zi_c_num_funding_rounds
-      - name: zi_c_is_fortune_100
-      - name: zi_c_is_fortune_500
-      - name: zi_c_is_s_and_p_500
-      - name: zi_c_is_domestic_hq
-      - name: zi_c_is_global_parent
-      - name: zi_c_is_subsidiary
-      - name: zi_c_is_franchisor
-      - name: zi_c_is_franchisee
-      - name: zi_c_hierarchy_code
-      - name: zi_c_hierarchy_level
-      - name: zi_c_parent_child_confidence_score
-      - name: zi_c_immediate_parent_company_id
-      - name: zi_es_immediate_parent_ecid
-      - name: zi_es_immediate_parent_location_id
-      - name: zi_c_immediate_parent_name
-      - name: zi_c_immediate_parent_url
-      - name: zi_c_immediate_parent_street
-      - name: zi_c_immediate_parent_street_2
-      - name: zi_c_immediate_parent_city
-      - name: zi_c_immediate_parent_zip
-      - name: zi_c_immediate_parent_state
-      - name: zi_c_immediate_parent_country
-      - name: zi_c_domestic_parent_company_id
-      - name: zi_es_domestic_parent_ecid
-      - name: zi_es_domestic_parent_location_id
-      - name: zi_c_domestic_parent_name
-      - name: zi_c_domestic_parent_url
-      - name: zi_c_domestic_parent_street
-      - name: zi_c_domestic_parent_street_2
-      - name: zi_c_domestic_parent_city
-      - name: zi_c_domestic_parent_zip
-      - name: zi_c_domestic_parent_state
-      - name: zi_c_domestic_parent_country
-      - name: zi_c_global_parent_company_id
-      - name: zi_es_global_parent_ecid
-      - name: zi_es_global_parent_location_id
-      - name: zi_c_global_parent_name
-      - name: zi_c_global_parent_url
-      - name: zi_c_global_parent_street
-      - name: zi_c_global_parent_street_2
-      - name: zi_c_global_parent_city
-      - name: zi_c_global_parent_zip
-      - name: zi_c_global_parent_state
-      - name: zi_c_global_parent_country
-      - name: zi_c_franchisor_company_id
-      - name: zi_es_franchisor_ecid
-      - name: zi_es_franchisor_location_id
-      - name: zi_c_franchisor_name
-      - name: zi_c_franchisor_url
-      - name: zi_c_franchisor_street
-      - name: zi_c_franchisor_street_2
-      - name: zi_c_franchisor_city
-      - name: zi_c_franchisor_zip
-      - name: zi_c_franchisor_state
-      - name: zi_c_franchisor_country
-      - name: zi_c_last_updated_date
-      - name: zi_c_release_date
+      - name: location_id
+        description: '{{ doc("zi_location_id") }}'
+        tests:
+          - unique
+      - name: company_id
+        description: '{{ doc("zi_company_id") }}'
+      - name: is_headquarters
+        description: '{{ doc("zi_is_headquarters") }}'
+      - name: everstring_company_id
+        description: '{{ doc("zi_everstring_company_id") }}'
+      - name: everstring_location_id
+        description: '{{ doc("zi_everstring_location_id") }}'
+      - name: tier_grade
+        description: '{{ doc("zi_tier_grade") }}'
+      - name: location_name
+        description: '{{ doc("zi_location_name") }}'
+      - name: colloquial_name
+        description: '{{ doc("zi_colloquial_name") }}'
+      - name: legal_entity_type
+        description: '{{ doc("zi_legal_entity_type") }}'
+      - name: company_url
+        description: '{{ doc("zi_company_url") }}'
+      - name: company_street
+        description: '{{ doc("zi_company_street") }}'
+      - name: company_street_2
+        description: '{{ doc("zi_company_street_2") }}'
+      - name: company_city
+        description: '{{ doc("zi_company_city") }}'
+      - name: company_state
+        description: '{{ doc("zi_company_state") }}'
+      - name: company_zip
+        description: '{{ doc("zi_company_zip") }}'
+      - name: company_country
+        description: '{{ doc("zi_company_country") }}'
+      - name: cbsa_name
+        description: '{{ doc("zi_cbsa_name") }}'
+      - name: company_county
+        description: '{{ doc("zi_company_county") }}'
+      - name: company_latitude
+        description: '{{ doc("zi_company_latitude") }}'
+      - name: company_longitude
+        description: '{{ doc("zi_company_longitude") }}'
+      - name: has_company_verified_address
+        description: '{{ doc("zi_has_company_verified_address") }}'
+      - name: employee_range
+        description: '{{ doc("zi_employee_range") }}'
+      - name: employees
+        description: '{{ doc("zi_employees") }}'
+      - name: revenue_range
+        description: '{{ doc("zi_revenue_range") }}'
+      - name: revenue
+        description: '{{ doc("zi_revenue") }}'
+      - name: company_phone
+        description: '{{ doc("zi_company_phone") }}'
+      - name: company_fax
+        description: '{{ doc("zi_company_fax") }}'
+      - name: industry_primary
+        description: '{{ doc("zi_industry_primary") }}'
+      - name: sub_industry_primary
+        description: '{{ doc("zi_sub_industry_primary") }}'
+      - name: industries
+        description: '{{ doc("zi_industries") }}'
+      - name: sub_industries
+        description: '{{ doc("zi_sub_industries") }}'
+      - name: everstring_industry
+        description: '{{ doc("zi_everstring_industry") }}'
+      - name: everstring_industries_top3
+        description: '{{ doc("zi_everstring_industries_top3") }}'
+      - name: naics_2_code
+        description: '{{ doc("zi_naics_2_code") }}'
+      - name: naics_4_code
+        description: '{{ doc("zi_naics_4_code") }}'
+      - name: naics_6_code
+        description: '{{ doc("zi_naics_6_code") }}'
+      - name: naics_top3
+        description: '{{ doc("zi_naics_top3") }}'
+      - name: sic_2_code
+        description: '{{ doc("zi_sic_2_code") }}'
+      - name: sic_3_code
+        description: '{{ doc("zi_sic_3_code") }}'
+      - name: sic_4_code
+        description: '{{ doc("zi_sic_4_code") }}'
+      - name: sic_top3
+        description: '{{ doc("zi_sic_top3") }}'
+      - name: estimated_age
+        description: '{{ doc("zi_estimated_age") }}'
+      - name: year_founded
+        description: '{{ doc("zi_year_founded") }}'
+      - name: is_b2b
+        description: '{{ doc("zi_is_b2b") }}'
+      - name: is_b2c
+        description: '{{ doc("zi_is_b2c") }}'
+      - name: everstring_headquarters_id
+        description: '{{ doc("zi_everstring_headquarters_id") }}'
+      - name: everstring_headquarters_location_id
+        description: '{{ doc("zi_everstring_headquarters_location_id") }}'
+      - name: headquarters_company_name
+        description: '{{ doc("zi_headquarters_company_name") }}'
+      - name: headquarters_company_url
+        description: '{{ doc("zi_headquarters_company_url") }}'
+      - name: headquarters_company_street
+        description: '{{ doc("zi_headquarters_company_street") }}'
+      - name: headquarters_company_street_2
+        description: '{{ doc("zi_headquarters_company_street_2") }}'
+      - name: headquarters_company_city
+        description: '{{ doc("zi_headquarters_company_city") }}'
+      - name: headquarters_company_state
+        description: '{{ doc("zi_headquarters_company_state") }}'
+      - name: headquarters_company_zip
+        description: '{{ doc("zi_headquarters_company_zip") }}'
+      - name: headquarters_company_country
+        description: '{{ doc("zi_headquarters_company_country") }}'
+      - name: headquarters_company_cbsa_name
+        description: '{{ doc("zi_headquarters_company_cbsa_name") }}'
+      - name: headquarters_company_county
+        description: '{{ doc("zi_headquarters_company_county") }}'
+      - name: headquarters_company_latitude
+        description: '{{ doc("zi_headquarters_company_latitude") }}'
+      - name: headquarters_company_longitude
+        description: '{{ doc("zi_headquarters_company_longitude") }}'
+      - name: has_headquarters_company_verified_address
+        description: '{{ doc("zi_has_headquarters_company_verified_address") }}'
+      - name: headquarters_employee_range
+        description: '{{ doc("zi_headquarters_employee_range") }}'
+      - name: headquarters_employees
+        description: '{{ doc("zi_headquarters_employees") }}'
+      - name: headquarters_revenue_range
+        description: '{{ doc("zi_headquarters_revenue_range") }}'
+      - name: headquarters_revenue
+        description: '{{ doc("zi_headquarters_revenue") }}'
+      - name: headquarters_company_phone
+        description: '{{ doc("zi_headquarters_company_phone") }}'
+      - name: headquarters_company_fax
+        description: '{{ doc("zi_headquarters_company_fax") }}'
+      - name: linkedin_url
+        description: '{{ doc("zi_linkedin_url") }}'
+      - name: facebook_url
+        description: '{{ doc("zi_facebook_url") }}'
+      - name: twitter_url
+        description: '{{ doc("zi_twitter_url") }}'
+      - name: yelp_url
+        description: '{{ doc("zi_yelp_url") }}'
+      - name: alexa_rank
+        description: '{{ doc("zi_alexa_rank") }}'
+      - name: company_keywords
+        description: '{{ doc("zi_company_keywords") }}'
+      - name: top_keywords
+        description: '{{ doc("zi_top_keywords") }}'
+      - name: number_of_keywords
+        description: '{{ doc("zi_number_of_keywords") }}'
+      - name: employee_growth_1yr
+        description: '{{ doc("zi_employee_growth_1yr") }}'
+      - name: employee_growth_2yr
+        description: '{{ doc("zi_employee_growth_2yr") }}'
+      - name: everstring_growth
+        description: '{{ doc("zi_everstring_growth") }}'
+      - name: everstring_employee_growth
+        description: '{{ doc("zi_everstring_employee_growth") }}'
+      - name: everstring_revenue_growth
+        description: '{{ doc("zi_everstring_revenue_growth") }}'
+      - name: everstring_percent_employee_growth
+        description: '{{ doc("zi_everstring_percent_employee_growth") }}'
+      - name: everstring_percent_revenue_growth
+        description: '{{ doc("zi_everstring_percent_revenue_growth") }}'
+      - name: company_name_confidence_score
+        description: '{{ doc("zi_company_name_confidence_score") }}'
+      - name: company_url_confidence_score
+        description: '{{ doc("zi_company_url_confidence_score") }}'
+      - name: company_address_confidence_score
+        description: '{{ doc("zi_company_address_confidence_score") }}'
+      - name: company_phone_confidence_score
+        description: '{{ doc("zi_company_phone_confidence_score") }}'
+      - name: employees_confidence_score
+        description: '{{ doc("zi_employees_confidence_score") }}'
+      - name: revenue_confidence_score
+        description: '{{ doc("zi_revenue_confidence_score") }}'
+      - name: everstring_industry_confidence_score
+        description: '{{ doc("zi_everstring_industry_confidence_score") }}'
+      - name: naics_confidence_score
+        description: '{{ doc("zi_naics_confidence_score") }}'
+      - name: sic_confidence_score
+        description: '{{ doc("zi_sic_confidence_score") }}'
+      - name: everstring_industries_top3_confidence_scores
+        description: '{{ doc("zi_everstring_industries_top3_confidence_scores") }}'
+      - name: naics_top3_confidence_scores
+        description: '{{ doc("zi_naics_top3_confidence_scores") }}'
+      - name: sic_top3_confidence_scores
+        description: '{{ doc("zi_sic_top3_confidence_scores") }}'
+      - name: merged_previous_company_ids
+        description: '{{ doc("zi_merged_previous_company_ids") }}'
+      - name: other_company_names
+        description: '{{ doc("zi_other_company_names") }}'
+      - name: company_url_status
+        description: '{{ doc("zi_company_url_status") }}'
+      - name: alternate_company_urls
+        description: '{{ doc("zi_alternate_company_urls") }}'
+      - name: url_last_updated
+        description: '{{ doc("zi_url_last_updated") }}'
+      - name: is_inactive
+        description: '{{ doc("zi_is_inactive") }}'
+      - name: company_ein
+        description: '{{ doc("zi_company_ein") }}'
+      - name: is_small_business
+        description: '{{ doc("zi_is_small_business") }}'
+      - name: is_public
+        description: '{{ doc("zi_is_public") }}'
+      - name: company_ticker
+        description: '{{ doc("zi_company_ticker") }}'
+      - name: alternate_company_tickers
+        description: '{{ doc("zi_alternate_company_tickers") }}'
+      - name: has_mobile_app
+        description: '{{ doc("zi_has_mobile_app") }}'
+      - name: currency_code
+        description: '{{ doc("zi_currency_code") }}'
+      - name: number_of_locations
+        description: '{{ doc("zi_number_of_locations") }}'
+      - name: number_of_hr_contacts
+        description: '{{ doc("zi_number_of_hr_contacts") }}'
+      - name: number_of_sales_contacts
+        description: '{{ doc("zi_number_of_sales_contacts") }}'
+      - name: number_of_marketing_contacts
+        description: '{{ doc("zi_number_of_marketing_contacts") }}'
+      - name: number_of_finance_contacts
+        description: '{{ doc("zi_number_of_finance_contacts") }}'
+      - name: number_of_c_suite_contacts
+        description: '{{ doc("zi_number_of_c_suite_contacts") }}'
+      - name: number_of_engineering_contacts
+        description: '{{ doc("zi_number_of_engineering_contacts") }}'
+      - name: number_of_it_contacts
+        description: '{{ doc("zi_number_of_it_contacts") }}'
+      - name: number_of_operations_contacts
+        description: '{{ doc("zi_number_of_operations_contacts") }}'
+      - name: number_of_legal_contacts
+        description: '{{ doc("zi_number_of_legal_contacts") }}'
+      - name: number_of_medical_contacts
+        description: '{{ doc("zi_number_of_medical_contacts") }}'
+      - name: tech_ids
+        description: '{{ doc("zi_tech_ids") }}'
+      - name: latest_funding_age
+        description: '{{ doc("zi_latest_funding_age") }}'
+      - name: number_of_investors
+        description: '{{ doc("zi_number_of_investors") }}'
+      - name: investor_names
+        description: '{{ doc("zi_investor_names") }}'
+      - name: funding_strength
+        description: '{{ doc("zi_funding_strength") }}'
+      - name: funding_type
+        description: '{{ doc("zi_funding_type") }}'
+      - name: total_funding_amount
+        description: '{{ doc("zi_total_funding_amount") }}'
+      - name: latest_funding_amount
+        description: '{{ doc("zi_latest_funding_amount") }}'
+      - name: latest_funding_date
+        description: '{{ doc("zi_latest_funding_date") }}'
+      - name: number_of_funding_rounds
+        description: '{{ doc("zi_number_of_funding_rounds") }}'
+      - name: is_fortune_100
+        description: '{{ doc("zi_is_fortune_100") }}'
+      - name: is_fortune_500
+        description: '{{ doc("zi_is_fortune_500") }}'
+      - name: is_s_and_p_500
+        description: '{{ doc("zi_is_s_and_p_500") }}'
+      - name: is_domestic_hq
+        description: '{{ doc("zi_is_domestic_hq") }}'
+      - name: is_global_parent
+        description: '{{ doc("zi_is_global_parent") }}'
+      - name: is_subsidiary
+        description: '{{ doc("zi_is_subsidiary") }}'
+      - name: is_franchisor
+        description: '{{ doc("zi_is_franchisor") }}'
+      - name: is_franchisee
+        description: '{{ doc("zi_is_franchisee") }}'
+      - name: hierarchy_code
+        description: '{{ doc("zi_hierarchy_code") }}'
+      - name: hierarchy_level
+        description: '{{ doc("zi_hierarchy_level") }}'
+      - name: parent_child_confidence_score
+        description: '{{ doc("zi_parent_child_confidence_score") }}'
+      - name: immediate_parent_company_id
+        description: '{{ doc("zi_immediate_parent_company_id") }}'
+      - name: everstring_immediate_parent_id
+        description: '{{ doc("zi_everstring_immediate_parent_id") }}'
+      - name: everstring_immediate_parent_location_id
+        description: '{{ doc("zi_everstring_immediate_parent_location_id") }}'
+      - name: immediate_parent_name
+        description: '{{ doc("zi_immediate_parent_name") }}'
+      - name: immediate_parent_url
+        description: '{{ doc("zi_immediate_parent_url") }}'
+      - name: immediate_parent_street
+        description: '{{ doc("zi_immediate_parent_street") }}'
+      - name: immediate_parent_street_2
+        description: '{{ doc("zi_immediate_parent_street_2") }}'
+      - name: immediate_parent_city
+        description: '{{ doc("zi_immediate_parent_city") }}'
+      - name: immediate_parent_zip
+        description: '{{ doc("zi_immediate_parent_zip") }}'
+      - name: immediate_parent_state
+        description: '{{ doc("zi_immediate_parent_state") }}'
+      - name: immediate_parent_country
+        description: '{{ doc("zi_immediate_parent_country") }}'
+      - name: domestic_parent_company_id
+        description: '{{ doc("zi_domestic_parent_company_id") }}'
+      - name: everstring_domestic_parent_id
+        description: '{{ doc("zi_everstring_domestic_parent_id") }}'
+      - name: everstring_domestic_parent_location_id
+        description: '{{ doc("zi_everstring_domestic_parent_location_id") }}'
+      - name: domestic_parent_name
+        description: '{{ doc("zi_domestic_parent_name") }}'
+      - name: domestic_parent_url
+        description: '{{ doc("zi_domestic_parent_url") }}'
+      - name: domestic_parent_street
+        description: '{{ doc("zi_domestic_parent_street") }}'
+      - name: domestic_parent_street_2
+        description: '{{ doc("zi_domestic_parent_street_2") }}'
+      - name: domestic_parent_city
+        description: '{{ doc("zi_domestic_parent_city") }}'
+      - name: domestic_parent_zip
+        description: '{{ doc("zi_domestic_parent_zip") }}'
+      - name: domestic_parent_state
+        description: '{{ doc("zi_domestic_parent_state") }}'
+      - name: domestic_parent_country
+        description: '{{ doc("zi_domestic_parent_country") }}'
+      - name: global_parent_company_id
+        description: '{{ doc("zi_global_parent_company_id") }}'
+      - name: everstring_global_parent_id
+        description: '{{ doc("zi_everstring_global_parent_id") }}'
+      - name: everstring_global_parent_location_id
+        description: '{{ doc("zi_everstring_global_parent_location_id") }}'
+      - name: global_parent_name
+        description: '{{ doc("zi_global_parent_name") }}'
+      - name: global_parent_url
+        description: '{{ doc("zi_global_parent_url") }}'
+      - name: global_parent_street
+        description: '{{ doc("zi_global_parent_street") }}'
+      - name: global_parent_street_2
+        description: '{{ doc("zi_global_parent_street_2") }}'
+      - name: global_parent_city
+        description: '{{ doc("zi_global_parent_city") }}'
+      - name: global_parent_zip
+        description: '{{ doc("zi_global_parent_zip") }}'
+      - name: global_parent_state
+        description: '{{ doc("zi_global_parent_state") }}'
+      - name: global_parent_country
+        description: '{{ doc("zi_global_parent_country") }}'
+      - name: franchisor_company_id
+        description: '{{ doc("zi_franchisor_company_id") }}'
+      - name: everstring_franchisor_id
+        description: '{{ doc("zi_everstring_franchisor_id") }}'
+      - name: everstring_franchisor_location_id
+        description: '{{ doc("zi_everstring_franchisor_location_id") }}'
+      - name: franchisor_name
+        description: '{{ doc("zi_franchisor_name") }}'
+      - name: franchisor_url
+        description: '{{ doc("zi_franchisor_url") }}'
+      - name: franchisor_street
+        description: '{{ doc("zi_franchisor_street") }}'
+      - name: franchisor_street_2
+        description: '{{ doc("zi_franchisor_street_2") }}'
+      - name: franchisor_city
+        description: '{{ doc("zi_franchisor_city") }}'
+      - name: franchisor_zip
+        description: '{{ doc("zi_franchisor_zip") }}'
+      - name: franchisor_state
+        description: '{{ doc("zi_franchisor_state") }}'
+      - name: franchisor_country
+        description: '{{ doc("zi_franchisor_country") }}'
+      - name: last_updated_date
+        description: '{{ doc("zi_last_updated_date") }}'
+      - name: release_date
+        description: '{{ doc("zi_release_date") }}'
 
   - name: zi_reference_techs_source
     description: Technograph table, data ingested from Zoominfo inbound share.

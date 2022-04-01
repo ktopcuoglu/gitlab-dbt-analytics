@@ -8,7 +8,6 @@
     })
 }}
 
-
 WITH usage_data AS (
 
     SELECT *
