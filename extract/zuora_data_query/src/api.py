@@ -1,3 +1,4 @@
+import logging
 import time
 import json
 from io import StringIO
@@ -48,7 +49,30 @@ class ZuoraQueriesAPI:
             error("COULD NOT AUTHENTICATE")
             exit(1)
 
-    def request_query_data(self, query_string, query_type):
+    def request_data_query_data(self, query_string):
+        """
+
+        :param query_string: Written in ZQL (check Docs to make changes),
+        :param query_type:
+        :return:
+        """
+        api_url = f"{self.base_url}/query/jobs"
+
+        payload = dict(compression="NONE", output=dict(target="S3"), outputFormat="CSV", query=query_string)
+
+        response = requests.post(
+            api_url,
+            headers=self.request_headers,
+            data=json.dumps(payload))
+
+        info(response.status_code)
+
+        if response.status_code == 200:
+            return response.json().get('data').get('id')
+        else:
+            logging.error(response.json)
+
+    def request_aqua_query_data(self, query_string, query_type):
         """
 
         :param query_string: Written in ZQL (check Docs to make changes),
@@ -127,8 +151,8 @@ class ZuoraQueriesAPI:
 
         tables = query_specs.get("tables")
         for table_spec in tables:
-            job_id = self.request_query_data(
-                query_string=tables.get(table_spec).get("query"), query_type=table_spec
+            job_id = self.request_data_query_data(
+                query_string=tables.get(table_spec).get("query")
             )
             df = self.get_file_from_zuora(job_id)
 
