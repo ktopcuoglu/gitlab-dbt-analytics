@@ -7,11 +7,16 @@
     ('dim_date', 'dim_date'),
     ('dim_crm_account', 'dim_crm_account'),
     ('dim_product_detail', 'dim_product_detail'),
-    ('dim_subscription', 'dim_subscription'),
-    ('fct_mrr', 'fct_mrr')
+    ('dim_subscription', 'dim_subscription')
 ]) }}
 
-, next_renewal_month AS (
+, fct_mrr AS (
+    
+    SELECT *
+    FROM {{ ref('fct_mrr') }}
+    WHERE subscription_status IN ('Active', 'Cancelled')
+        
+), next_renewal_month AS (
 
     SELECT DISTINCT
       merged_accounts.dim_parent_crm_account_id,
