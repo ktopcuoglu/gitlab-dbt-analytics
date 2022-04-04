@@ -65,8 +65,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_pipeline_schedules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_ci_pipeline_variables_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_pipelines_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_platform_metrics_dedupe_source
@@ -238,8 +236,6 @@ models:
   - name: gitlab_dotcom_pool_repositories_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_programming_languages_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_project_authorizations_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_project_auto_devops_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
