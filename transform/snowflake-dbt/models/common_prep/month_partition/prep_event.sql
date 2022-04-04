@@ -344,6 +344,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
     "stage_name": "create"
+  },
+  {
+    "event_name": "ci_pipeline_schedules",
+    "source_cte_name": "prep_ci_pipeline_schedule",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_pipeline_schedule_id",
+    "stage_name": "verify"
   }
 ]
 
@@ -379,7 +388,8 @@
     ('prep_project_auto_devops', 'prep_project_auto_devops'),
     ('prep_service', 'prep_service'),
     ('prep_issue_resource_weight', 'prep_issue_resource_weight'),
-    ('prep_milestone', 'prep_milestone')
+    ('prep_milestone', 'prep_milestone'),
+    ('prep_ci_pipeline_schedule', 'prep_ci_pipeline_schedule')
 ]) }}
 
 , dast_jobs AS (

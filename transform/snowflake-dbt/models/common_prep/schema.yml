@@ -1900,3 +1900,19 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_milestone
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_milestone_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ci_pipeline_schedule
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_pipeline_schedule_id
+        tests:
+          - not_null
+          - unique
