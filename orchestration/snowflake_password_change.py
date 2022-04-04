@@ -51,6 +51,7 @@ class SnowflakeManager:
             "SISENSE_RESTRICTED_SAFE",
             "MELTANO",
             "GRAFANA",
+            "DATA_OBS_USER_1",
         ]
         connection = self.engine.connect()
         for index, row in user_list.iterrows():
