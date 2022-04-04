@@ -1533,7 +1533,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_errors
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_validate
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_variables
                     - raw.tap_postgres.gitlab_db_ci_platform_metrics
                     - raw.tap_postgres.gitlab_db_ci_runners
                     - raw.tap_postgres.gitlab_db_ci_runner_projects
@@ -1618,7 +1617,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
-                    - raw.tap_postgres.gitlab_db_project_authorizations
                     - raw.tap_postgres.gitlab_db_project_auto_devops
                     - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics

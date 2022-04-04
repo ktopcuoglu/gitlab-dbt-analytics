@@ -78,8 +78,6 @@ sources:
         identifier: gitlab_db_ci_pipeline_schedule_variables
       - name: ci_pipeline_schedules
         identifier: gitlab_db_ci_pipeline_schedules
-      - name: ci_pipeline_variables
-        identifier: gitlab_db_ci_pipeline_variables
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
       - name: ci_platform_metrics
@@ -263,11 +261,6 @@ sources:
         identifier: gitlab_db_pages_domains
       - name: programming_languages
         identifier: gitlab_db_programming_languages
-      - name: project_authorizations
-        identifier: gitlab_db_project_authorizations
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}    
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
       - name: project_custom_attributes
