@@ -710,7 +710,7 @@ tables:
       , updated_at
       , active
       , properties
-      , template
+      , NULL AS template
       , push_events
       , issues_events
       , merge_requests_events
@@ -1777,7 +1777,7 @@ tables:
       , updated_at
       , active
       , properties
-      , template
+      , NULL AS template
       , push_events
       , issues_events
       , merge_requests_events
