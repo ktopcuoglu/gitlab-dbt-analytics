@@ -154,7 +154,7 @@ python_flake8:
   <<: *python_check
   script:
     - pip install flake8
-    - flake8 extract/ . --ignore=E501,W605
+    - flake8 extract/ . --ignore=E501,W605 --exit-zero
   when: manual
 
 python_mypy:
