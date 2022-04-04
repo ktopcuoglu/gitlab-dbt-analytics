@@ -150,6 +150,13 @@ python_black:
     - pip install black==22.1.0
     - black --check .
 
+python_flake8:
+  <<: *python_check
+  script:
+    - pip install flake8
+    - flake8 extract/ .
+  when: manual
+
 python_mypy:
   <<: *python_check
   script:
