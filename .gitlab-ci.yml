@@ -169,6 +169,7 @@ python_mypy:
 python_pylint:
   <<: *python_check
   script:
+    - pip install pylint --upgrade
     - pylint analytics/ . --ignore=dags --disable=C --disable=W1203 --disable=W1202 --reports=y --exit-zero
   when: manual
 
