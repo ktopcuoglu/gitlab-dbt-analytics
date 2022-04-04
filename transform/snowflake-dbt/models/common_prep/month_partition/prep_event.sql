@@ -335,6 +335,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_milestone_id",
     "stage_name": "plan"
+  },
+  {
+    "event_name": "action_monthly_active_users_design_management",
+    "source_cte_name": "action_monthly_active_users_design_management_source",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id",
+    "stage_name": "create"
   }
 ]
 
@@ -486,6 +495,13 @@
     SELECT *
     FROM prep_note
     WHERE noteable_type = 'Epic'
+
+), action_monthly_active_users_design_management_source AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE target_type = 'DesignManagement::Design'
+      AND event_action_type IN ('created', 'updated')
 
 ), data AS (
 
