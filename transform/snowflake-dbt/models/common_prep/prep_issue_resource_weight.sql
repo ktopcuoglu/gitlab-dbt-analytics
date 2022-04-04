@@ -44,7 +44,7 @@
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND  resource_weight_events.created_at >= dim_namespace_plan_hist.valid_from
       AND  resource_weight_events.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN PROD.COMMON.DIM_DATE as dim_date ON TO_DATE(resource_weight_events.created_at) = dim_date.date_day
+    LEFT JOIN dim_date ON TO_DATE(resource_weight_events.created_at) = dim_date.date_day
 
 )
 

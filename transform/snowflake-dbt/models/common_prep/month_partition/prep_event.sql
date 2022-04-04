@@ -326,6 +326,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_resource_weight_id",
     "stage_name": "plan"
+  },
+  {
+    "event_name": "milestones",
+    "source_cte_name": "prep_milestone",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_milestone_id",
+    "stage_name": "plan"
   }
 ]
 
@@ -360,7 +369,8 @@
     ('prep_board', 'prep_board'),
     ('prep_project_auto_devops', 'prep_project_auto_devops'),
     ('prep_service', 'prep_service'),
-    ('prep_issue_resource_weight', 'prep_issue_resource_weight')
+    ('prep_issue_resource_weight', 'prep_issue_resource_weight'),
+    ('prep_milestone', 'prep_milestone')
 ]) }}
 
 , dast_jobs AS (
