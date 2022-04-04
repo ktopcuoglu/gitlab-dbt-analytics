@@ -110,8 +110,9 @@ SELECT
     fct_service_ping.umau_value                                               AS umau_value,
     fct_service_ping.dim_subscription_license_id                              AS dim_subscription_license_id,
     fct_service_ping.data_source                                              AS data_source,
-    dim_service_ping.edition                                                  AS edition,
+    dim_service_ping.ping_edition                                             AS ping_edition,
     dim_service_ping.host_name                                                AS host_name,
+    dim_service_ping.product_tier                                              AS product_tier,
     dim_service_ping.major_version                                            AS major_version,
     dim_service_ping.minor_version                                            AS minor_version,
     dim_service_ping.major_minor_version                                      AS major_minor_version,
@@ -145,17 +146,15 @@ ON fct_pings_w_dims.metrics_path = dim_usage_ping_metric.metrics_path
 ), fct_w_product_tier AS (
 SELECT
   fct_w_metric_dims.*,
-  dim_product_tier.product_tier_name                                          AS product_tier,
-  fct_w_metric_dims.edition || ' - ' || dim_product_tier.product_tier_name    AS edition_product_tier
+  fct_w_metric_dims.ping_edition || ' - ' || fct_w_metric_dims.product_tier     AS ping_edition_product_tier
 FROM fct_w_metric_dims
-  LEFT JOIN dim_product_tier
-    ON fct_w_metric_dims.dim_product_tier_id = dim_product_tier.dim_product_tier_id
 
 ), joined AS (
 
     SELECT
       fct_w_product_tier.dim_service_ping_instance_id,
       fct_w_product_tier.dim_date_id,
+      fct_w_product_tier.dim_host_id,
       fct_w_product_tier.metrics_path,
       fct_w_product_tier.metric_value,
       fct_w_product_tier.product_section AS group_name,
@@ -188,9 +187,9 @@ FROM fct_w_metric_dims
       license_subscriptions.technical_account_manager,
       COALESCE(is_paid_subscription, FALSE)                         AS is_paid_subscription,
       COALESCE(is_program_subscription, FALSE)                      AS is_program_subscription,
-      fct_w_product_tier.edition,
+      fct_w_product_tier.ping_edition,
       fct_w_product_tier.product_tier                               AS ping_product_tier,
-      fct_w_product_tier.edition_product_tier                       AS ping_main_edition_product_tier,
+      fct_w_product_tier.ping_edition_product_tier                  AS ping_edition_product_tier,
       fct_w_product_tier.major_version,
       fct_w_product_tier.minor_version,
       fct_w_product_tier.major_minor_version,
@@ -235,9 +234,9 @@ FROM fct_w_metric_dims
       host_name,
       -- metadata usage ping
       service_ping_delivery_type,
-      edition,
+      ping_edition,
       ping_product_tier,
-      ping_main_edition_product_tier,
+      ping_edition_product_tier,
       major_version,
       minor_version,
       major_minor_version,
