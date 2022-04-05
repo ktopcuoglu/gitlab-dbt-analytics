@@ -172,10 +172,10 @@ python_pylint:
     - pip install pylint --upgrade
     - echo CI_COMMIT_SHA=${CI_COMMIT_SHA}
     - echo CI_MERGE_REQUEST_TARGET_BRANCH_NAME=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
-    - git fetch origin ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+    # - git fetch origin ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
     - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
     - echo "Changed files are $FILES"
-    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202 --reports=y --exit-zero
+    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202 --reports=y
   when: manual
 
 python_complexity:
