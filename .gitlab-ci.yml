@@ -175,7 +175,7 @@ python_pylint:
     - git fetch origin ${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
     - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
     - echo "Changed files are $FILES"
-    - pylint analytics/ . --ignore=dags --disable=W1203 --disable=W1202 --reports=y --exit-zero
+    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202 --reports=y --exit-zero
   when: manual
 
 python_complexity:
