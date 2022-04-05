@@ -94,7 +94,6 @@ renamed AS (
     vartopiadrs__partner_prospect_status__c AS partner_prospect_status,
     vartopiadrs__vartopia_prospect_id__c AS partner_prospect_id,
     vartopiadrs__partner_prospect_owner_name__c AS partner_prospect_owner_name,
-    region__c AS region,
     sequence_step_type2__c AS sequence_step_type,
     name_of_active_sequence__c AS name_of_active_sequence,
     sequence_task_due_date__c::DATE AS sequence_task_due_date,
@@ -105,9 +104,15 @@ renamed AS (
 
     -- account demographics fields
     account_demographics_sales_segment__c AS account_demographics_sales_segment,
+    CASE
+      WHEN account_demographics_sales_segment__c IN ('Large', 'PubSec') THEN 'Large'
+      ELSE account_demographics_sales_segment__c
+    END AS account_demographics_sales_segment_grouped,
     account_demographics_geo__c AS account_demographics_geo,
     account_demographics_region__c AS account_demographics_region,
     account_demographics_area__c AS account_demographics_area,
+    {{ sales_segment_region_grouped('account_demographics_sales_segment__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
+    AS account_demographics_segment_region_grouped,
     account_demographics_territory__c AS account_demographics_territory,
     account_demographic_employee_count__c AS account_demographics_employee_count,
     account_demographics_max_family_employe__c AS account_demographics_max_family_employee,

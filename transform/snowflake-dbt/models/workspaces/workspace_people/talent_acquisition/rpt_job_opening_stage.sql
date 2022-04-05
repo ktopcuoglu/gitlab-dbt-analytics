@@ -1,5 +1,6 @@
 {{ simple_cte([
-    ('job_openings','rpt_greenhouse_current_openings'),
+    ('job_openings','greenhouse_openings_source'),
+    ('jobs','greenhouse_jobs_source'),
     ('application_jobs','greenhouse_applications_jobs_source'),
     ('applications','greenhouse_applications_source'),
     ('sources','greenhouse_sources_source'),
@@ -37,16 +38,19 @@
     departments.level_2                          AS greenhouse_department_level_2,
     departments.level_3                          AS greenhouse_department_level_3
   FROM job_openings
+  LEFT JOIN jobs
+    ON job_openings.job_id = jobs.job_id
   LEFT JOIN application_jobs
     ON job_openings.job_id = application_jobs.job_id
   LEFT JOIN applications
     ON application_jobs.application_id = applications.application_id
   LEFT JOIN application_stages
-    ON application_jobs.application_id = application_stages.application_id 
-    AND application_stages.stage_entered_on IS NOT NULL
+    ON application_jobs.application_id = application_stages.application_id
   LEFT JOIN sources
     ON applications.source_id = sources.source_id
   LEFT JOIN job_departments
     ON job_openings.job_id = job_departments.job_id
   LEFT JOIN departments
     ON job_departments.department_id = departments.department_id
+  WHERE application_stages.stage_entered_on IS NOT NULL
+    AND jobs.job_opened_at IS NOT NULL

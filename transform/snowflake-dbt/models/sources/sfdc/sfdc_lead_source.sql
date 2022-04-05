@@ -64,7 +64,6 @@ renamed AS (
     buying_process_for_procuring_gitlab__c AS buying_process,
     core_check_in_notes__c AS core_check_in_notes,
     industry AS industry,
-    region__c AS region,
     largeaccount__c AS is_large_account,
     outreach_stage__c AS outreach_stage,
     sequence_step_number__c AS outreach_step_number,
@@ -117,9 +116,15 @@ renamed AS (
 
     -- account demographics fields
     account_demographics_sales_segment__c AS account_demographics_sales_segment,
+    CASE
+      WHEN account_demographics_sales_segment__c IN ('Large', 'PubSec') THEN 'Large'
+      ELSE account_demographics_sales_segment__c
+    END AS account_demographics_sales_segment_grouped,
     account_demographics_geo__c AS account_demographics_geo,
     account_demographics_region__c AS account_demographics_region,
     account_demographics_area__c AS account_demographics_area,
+    {{ sales_segment_region_grouped('account_demographics_sales_segment__c', 'account_demographics_geo__c', 'account_demographics_region__c') }}
+    AS account_demographics_segment_region_grouped,
     account_demographics_territory__c AS account_demographics_territory,
     account_demographics_employee_count__c AS account_demographics_employee_count,
     account_demographics_max_family_employe__c AS account_demographics_max_family_employee,

@@ -16,6 +16,16 @@
     FROM project
     GROUP BY 1
 
+), free_namespace_project_visibility AS (
+
+    SELECT
+      project.dim_namespace_id,
+      MAX(IFF(namespace_lineage.gitlab_plan_title = 'Free' AND project.visibility_level = 'public', TRUE, FALSE)) AS does_free_namespace_have_public_project
+    FROM project
+    LEFT JOIN namespace_lineage
+      ON project.dim_namespace_id = namespace_lineage.dim_namespace_id
+    GROUP BY 1
+
 ), saas_namespace_subscription AS (
     
     SELECT *
@@ -105,7 +115,8 @@
         ELSE 0 
       END                                                                                     AS is_group_namespace,
       namespace_lineage.is_setup_for_company                                                  AS is_setup_for_company,
-      namespace_project_visibility.does_namespace_have_public_project                          AS does_namespace_have_public_project,
+      namespace_project_visibility.does_namespace_have_public_project                         AS does_namespace_have_public_project,
+      free_namespace_project_visibility.does_free_namespace_have_public_project               AS does_free_namespace_have_public_project,
       marketing_contact_role.customer_db_customer_id                                          AS customer_id,
       marketing_contact_role.zuora_billing_account_id                                         AS dim_billing_account_id,
       CASE
@@ -244,6 +255,8 @@
       ON namespace_lineage.dim_namespace_id = gitlab_namespaces.namespace_id
     LEFT JOIN namespace_project_visibility
       ON namespace_lineage.dim_namespace_id = namespace_project_visibility.dim_namespace_id
+    LEFT JOIN free_namespace_project_visibility
+      ON namespace_lineage.dim_namespace_id = free_namespace_project_visibility.dim_namespace_id
       
 ), final AS (
 
@@ -302,5 +315,5 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-04",
-    updated_date="2022-03-16"
+    updated_date="2022-03-26"
 ) }}

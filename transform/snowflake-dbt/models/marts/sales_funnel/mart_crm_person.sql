@@ -104,7 +104,6 @@
       dim_crm_person.partner_prospect_owner_name,
       dim_crm_person.partner_prospect_id,
       dim_crm_person.sequence_step_type,
-      dim_crm_person.region,
       dim_crm_person.state,
       dim_crm_person.country,
       fct_crm_person.name_of_active_sequence,
@@ -124,9 +123,11 @@
       dim_crm_person.matched_account_type,
       dim_crm_person.matched_account_gtm_strategy,
       fct_crm_person.account_demographics_sales_segment,
+      fct_crm_person.account_demographics_sales_segment_grouped,
       fct_crm_person.account_demographics_geo,
       fct_crm_person.account_demographics_region,
       fct_crm_person.account_demographics_area,
+      fct_crm_person.account_demographics_segment_region_grouped,
       fct_crm_person.account_demographics_territory,
       fct_crm_person.account_demographics_employee_count,
       fct_crm_person.account_demographics_max_family_employee,
@@ -135,11 +136,6 @@
       fct_crm_person.account_demographics_upa_city,
       fct_crm_person.account_demographics_upa_street,
       fct_crm_person.account_demographics_upa_postal_code,
-      CASE
-        WHEN dim_sales_segment.sales_segment_name NOT IN ('Large', 'PubSec') THEN dim_sales_segment.sales_segment_name
-        WHEN dim_sales_segment.sales_segment_name IN ('Large', 'PubSec') THEN  'Large MQLs & Trials'
-        ELSE 'Missing sales_segment_region_mapped'
-      END                                      AS sales_segment_region_mapped,
       fct_crm_person.is_mql,
       fct_crm_person.is_inquiry,
       CASE
@@ -216,7 +212,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@degan",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2022-01-12",
+    updated_date="2022-03-17",
   ) }}

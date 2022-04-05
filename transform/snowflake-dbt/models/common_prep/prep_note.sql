@@ -13,6 +13,8 @@
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('prep_project', 'prep_project'),
+    ('dim_epic', 'dim_epic'),
+    ('dim_namespace', 'dim_namespace')
 ]) }}
 
 , gitlab_dotcom_notes_dedupe_source AS (
@@ -37,7 +39,8 @@
       gitlab_dotcom_notes_dedupe_source.id::NUMBER                                            AS dim_note_id,
       gitlab_dotcom_notes_dedupe_source.author_id::NUMBER                                     AS author_id,
       gitlab_dotcom_notes_dedupe_source.project_id::NUMBER                                    AS dim_project_id,
-      prep_project.ultimate_parent_namespace_id::NUMBER                                       AS ultimate_parent_namespace_id,
+      IFNULL(prep_project.ultimate_parent_namespace_id::NUMBER,
+              dim_namespace.ultimate_parent_namespace_id::NUMBER)                             AS ultimate_parent_namespace_id,
       gitlab_dotcom_notes_dedupe_source.noteable_id::NUMBER                                   AS noteable_id,
       dim_date.date_id::NUMBER                                                                AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)::NUMBER                                 AS dim_plan_id,
@@ -59,6 +62,9 @@
       gitlab_dotcom_notes_dedupe_source.resolved_by_push::BOOLEAN                             AS resolved_by_push
     FROM gitlab_dotcom_notes_dedupe_source
     LEFT JOIN prep_project ON gitlab_dotcom_notes_dedupe_source.project_id = prep_project.dim_project_id
+    LEFT JOIN dim_epic ON gitlab_dotcom_notes_dedupe_source.noteable_id = dim_epic.dim_epic_id
+    LEFT JOIN dim_namespace 
+        ON dim_epic.group_id = dim_namespace.dim_namespace_id
     LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_notes_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_notes_dedupe_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
@@ -70,7 +76,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@chrissharp",
     created_date="2021-06-22",
-    updated_date="2021-06-22"
+    updated_date="2022-03-29"
 ) }}

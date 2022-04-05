@@ -5,8 +5,9 @@
     unique_key = "dim_service_ping_instance_id"
 ) }}
 
+
 {{ simple_cte([
-    ('raw_usage_data', 'prep_service_ping_instance_flattened')
+    ('raw_usage_data', 'version_raw_usage_data_source')
     ])
 
 }}
@@ -21,10 +22,7 @@
     FROM {{ ref('version_usage_data_source') }} as usage
 
   {% if is_incremental() %}
-              WHERE
-                  created_at > (SELECT COALESCE(DATEADD(WEEK,-2,MAX(ping_created_at)),dateadd(month, -24, current_date()))            -- Check on First Time UUID/Instance_IDs returns '2000-01-01'
-                              FROM {{this}} AS usage_ping
-                              WHERE usage.uuid  = usage_ping.uuid)
+          WHERE ping_created_at >= COALESCE((SELECT MAX(ping_created_at) FROM {{this}}), '2021-01-01')
   {% endif %}
 
 ), usage_data AS (
@@ -59,10 +57,8 @@
         WHEN original_edition = 'EES'                                    THEN 'Starter'
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
-        ELSE NULL END                                                                                      AS product_tier,
-      raw_usage_data.metrics_path,
-      raw_usage_data.metric_value,
-      raw_usage_data.raw_usage_data_payload
+        ELSE NULL END                                                                                        AS product_tier,
+        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id

@@ -9,7 +9,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id"
+    "primary_key": "dim_action_id",
+    "stage_name": "manage"
   },
   {
     "event_name": "dast_build_run",
@@ -17,7 +18,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   },
   {
     "event_name": "dependency_scanning_build_run",
@@ -25,7 +27,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   },
   {
     "event_name": "deployment_creation",
@@ -33,7 +36,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_deployment_id"
+    "primary_key": "dim_deployment_id",
+    "stage_name": "release"
   },
   {
     "event_name": "epic_creation",
@@ -41,7 +45,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "group_id",
     "project_column_name": "NULL",
-    "primary_key": "dim_epic_id"
+    "primary_key": "dim_epic_id",
+    "stage_name": "plan"
   },
   {
     "event_name": "issue_creation",
@@ -49,7 +54,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_issue_id"
+    "primary_key": "dim_issue_id",
+    "stage_name": "plan"
   },
   {
     "event_name": "issue_note_creation",
@@ -57,7 +63,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_note_id"
+    "primary_key": "dim_note_id",
+    "stage_name": "plan"
   },
   {
     "event_name": "license_scanning_build_run",
@@ -65,7 +72,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   },
   {
     "event_name": "merge_request_creation",
@@ -73,7 +81,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_merge_request_id"
+    "primary_key": "dim_merge_request_id",
+    "stage_name": "create"
   },
   {
     "event_name": "merge_request_note_creation",
@@ -81,7 +90,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_note_id"
+    "primary_key": "dim_note_id",
+    "stage_name": "create"
   },
   {
     "event_name": "ci_pipeline_creation",
@@ -89,7 +99,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_pipeline_id"
+    "primary_key": "dim_ci_pipeline_id",
+    "stage_name": "verify"
   },
   {
     "event_name": "package_creation",
@@ -97,7 +108,8 @@
     "user_column_name": "creator_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_package_id"
+    "primary_key": "dim_package_id",
+    "stage_name": "package"
   },
   {
     "event_name": "protect_ci_build_creation",
@@ -105,7 +117,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "protect"
   },
   {
     "event_name": "push_action",
@@ -113,7 +126,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id"
+    "primary_key": "dim_action_id",
+    "stage_name": "create"
   },
   {
     "event_name": "release_creation",
@@ -121,7 +135,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_release_id"
+    "primary_key": "dim_release_id",
+    "stage_name": "release"
   },
   {
     "event_name": "requirement_creation",
@@ -129,7 +144,8 @@
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_requirement_id"
+    "primary_key": "dim_requirement_id",
+    "stage_name": "plan"
   },
   {
     "event_name": "sast_build_run",
@@ -137,7 +153,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   },
   {
     "event_name": "secret_detection_build_run",
@@ -145,7 +162,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   },
   {
     "event_name": "secure_ci_build_creation",
@@ -153,7 +171,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_build_id"
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   },
   {
     "event_name": "successful_ci_pipeline_creation",
@@ -161,7 +180,8 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_ci_pipeline_id"
+    "primary_key": "dim_ci_pipeline_id",
+    "stage_name": "verify"
   },
   {
     "event_name": "action_monthly_active_users_project_repo",
@@ -169,8 +189,109 @@
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
-    "primary_key": "dim_action_id"
+    "primary_key": "dim_action_id",
+    "stage_name": "create"
   },
+  {
+    "event_name": "ci_stages",
+    "source_cte_name": "prep_ci_stage",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_stage_id",
+    "stage_name": "configure"
+  },
+  {
+    "event_name": "notes",
+    "source_cte_name": "prep_note",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_note_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "todos",
+    "source_cte_name": "prep_todo",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_todo_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "issue_resource_label_events",
+    "source_cte_name": "issue_resource_label_events",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_issue_label_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "environments",
+    "source_cte_name": "prep_environment_event",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_environment_id",
+    "stage_name": "release"
+  },
+  {
+    "event_name": "issue_resource_milestone_events",
+    "source_cte_name": "issue_resource_milestone",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_resource_milestone_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "labels",
+    "source_cte_name": "prep_labels",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_label_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "terraform_reports",
+    "source_cte_name": "terraform_reports_events",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_job_artifact_id",
+    "stage_name": "configure"
+  },
+  {
+    "event_name": "users_created",
+    "source_cte_name": "prep_user_event",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "NULL",
+    "project_column_name": "NULL",
+    "primary_key": "dim_user_id",
+    "stage_name": "manage"
+  },
+  {
+    "event_name": "action_monthly_active_users_wiki_repo",
+    "source_cte_name": "action_monthly_active_users_wiki_repo_source",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id",
+    "stage_name": "create"
+  },
+  {
+    "event_name": "epic_notes",
+    "source_cte_name": "epic_notes_source",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "NULL",
+    "primary_key": "dim_note_id",
+    "stage_name": "plan"
+  }
+
 ]
 
 -%}
@@ -192,8 +313,17 @@
     ('prep_user', 'prep_user'),
     ('prep_plan', 'prep_gitlab_dotcom_plan'),
     ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
+    ('prep_ci_stage', 'prep_ci_stage'),
+    ('prep_note', 'prep_note'),
+    ('prep_todo', 'prep_todo'),
+    ('prep_resource_label', 'prep_resource_label'),
     ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
-    ('map_saas_event_to_smau','map_saas_event_to_smau')
+    ('map_saas_event_to_smau','map_saas_event_to_smau'),
+    ('prep_environment_event', 'prep_environment_event'),
+    ('prep_resource_milestone', 'prep_resource_milestone'),
+    ('prep_labels', 'prep_labels'),
+    ('prep_ci_artifacts', 'prep_ci_artifacts'),
+    ('prep_user_event', 'prep_user')
 ]) }}
 
 , dast_jobs AS (
@@ -279,16 +409,36 @@
     WHERE target_type IS NULL
       AND event_action_type = 'pushed'
 
-), stage_mapping AS (
+), issue_resource_label_events AS (
 
-    SELECT DISTINCT *
-    FROM (
-        SELECT event_name, stage_name
-        FROM map_saas_event_to_gmau
-        UNION ALL
-        SELECT event_name, stage_name
-        FROM map_saas_event_to_smau
-    )
+    SELECT *
+    FROM prep_resource_label
+    WHERE dim_issue_id IS NOT NULL
+
+), issue_resource_milestone AS (
+
+    SELECT *
+    FROM prep_resource_milestone
+    WHERE issue_id IS NOT NULL
+
+), terraform_reports_events AS (
+
+    SELECT *
+    FROM prep_ci_artifacts
+    WHERE file_type = 18
+
+), action_monthly_active_users_wiki_repo_source AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE target_type = 'WikiPage::Meta'
+      AND event_action_type IN ('created', 'updated')
+
+), epic_notes_source AS (
+
+    SELECT *
+    FROM prep_note
+    WHERE noteable_type = 'Epic'
 
 ), data AS (
 
@@ -297,56 +447,83 @@
     SELECT
       MD5({{ event_cte.source_cte_name}}.{{ event_cte.primary_key }} || '-' || '{{ event_cte.event_name }}')   AS event_id,
       '{{ event_cte.event_name }}'                                                                             AS event_name,
-      stage_mapping.stage_name,
-      {%- if event_cte.project_column_name != 'NULL' %}
-      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS dim_project_id,
-      'project'                                                                                                AS parent_type,
-      {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                       AS parent_id, 
-      {%- else %}
-      NULL                                                                                                     AS dim_project_id,
-      'group'                                                                                                  AS parent_type,
-      {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                     AS parent_id, 
-      {%- endif %}
-      {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id,
-      {{ event_cte.source_cte_name}}.dim_plan_id                                                               AS plan_id_at_event_date,
-      prep_plan.plan_name                                                                                      AS plan_name_at_event_date,
-      IFNULL(prep_plan.plan_is_paid, FALSE)                                                                    AS plan_was_paid_at_event_date,
+      '{{ event_cte.stage_name }}'                                                                             AS stage_name,
       {{ event_cte.source_cte_name}}.created_at                                                                AS event_created_at,
-      {{ event_cte.source_cte_name}}.created_date_id,
-      {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                          AS dim_user_id,
-      prep_user.created_at                                                                                     AS user_created_at,
-      TO_DATE(prep_user.created_at)                                                                            AS user_created_date,
-      prep_namespace.created_at                                                                                AS namespace_created_at,
-      TO_DATE(prep_namespace.created_at)                                                                       AS namespace_created_date,
-      IFNULL(blocked_user.is_blocked_user, FALSE)                                                              AS is_blocked_namespace_creator,
-      prep_namespace.namespace_is_internal,
-      FLOOR(
-      DATEDIFF('hour',
-              prep_namespace.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_namespace_creation_at_event_date,
-      FLOOR(
-      DATEDIFF('hour',
-              prep_user.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_user_creation_at_event_date,
+      {{ event_cte.source_cte_name}}.created_date_id                                                           AS created_date_id,
       {%- if event_cte.project_column_name != 'NULL' %}
-      FLOOR(
-      DATEDIFF('hour',
-              dim_project.created_at,
-              {{ event_cte.source_cte_name}}.created_at)/24)                                                   AS days_since_project_creation_at_event_date, 
-      IFNULL(dim_project.is_imported, FALSE)                                                                   AS project_is_imported,
-      dim_project.is_learn_gitlab                                                                              AS project_is_learn_gitlab
+        {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                     AS dim_project_id,
+        'project'                                                                                              AS parent_type,
+        {{ event_cte.source_cte_name}}.{{ event_cte.project_column_name }}                                     AS parent_id,
+        {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id                                            AS ultimate_parent_namespace_id,
+      {%- elif event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
+        NULL                                                                                                   AS dim_project_id,
+        'group'                                                                                                AS parent_type,
+        {{ event_cte.source_cte_name}}.{{ event_cte.ultimate_parent_namespace_column_name }}                   AS parent_id, 
+        {{ event_cte.source_cte_name}}.ultimate_parent_namespace_id                                            AS ultimate_parent_namespace_id,
       {%- else %}
-      NULL,
-      NULL,
-      NULL
+        NULL                                                                                                   AS dim_project_id,
+        NULL                                                                                                   AS parent_type,
+        NULL                                                                                                   AS parent_id, 
+        NULL                                                                                                   AS ultimate_parent_namespace_id,
+      {%- endif %}
+      {%- if event_cte.project_column_name != 'NULL' or event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
+        {{ event_cte.source_cte_name}}.dim_plan_id                                                             AS plan_id_at_event_date,
+        prep_plan.plan_name                                                                                    AS plan_name_at_event_date,
+        prep_plan.plan_is_paid                                                                                 AS plan_was_paid_at_event_date,
+      {%- else %}
+        34                                                                                                     AS plan_id_at_event_date,
+        'free'                                                                                                 AS plan_name_at_event_date,
+        FALSE                                                                                                  AS plan_was_paid_at_event_date,
+      {%- endif %}  
+      {%- if event_cte.user_column_name != 'NULL' %}
+        {{ event_cte.source_cte_name}}.{{ event_cte.user_column_name }}                                        AS dim_user_id,
+        prep_user.created_at                                                                                   AS user_created_at,
+        TO_DATE(prep_user.created_at)                                                                          AS user_created_date,
+        FLOOR(
+        DATEDIFF('hour',
+                prep_user.created_at,
+                {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_user_creation_at_event_date,
+      {%- else %}
+        NULL                                                                                                   AS dim_user_id,
+        NULL                                                                                                   AS user_created_at,
+        NULL                                                                                                   AS user_created_date,
+        NULL                                                                                                   AS days_since_user_creation_at_event_date,
+      {%- endif %}
+      {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
+        prep_namespace.created_at                                                                              AS namespace_created_at,
+        TO_DATE(prep_namespace.created_at)                                                                     AS namespace_created_date,
+        IFNULL(blocked_user.is_blocked_user, FALSE)                                                            AS is_blocked_namespace_creator,
+        prep_namespace.namespace_is_internal                                                                   AS namespace_is_internal,
+        FLOOR(
+        DATEDIFF('hour',
+                prep_namespace.created_at,
+                {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_namespace_creation_at_event_date,
+      {%- else %}
+        NULL                                                                                                   AS namespace_created_at,
+        NULL                                                                                                   AS namespace_created_date,
+        NULL                                                                                                   AS is_blocked_namespace_creator,
+        NULL                                                                                                   AS namespace_is_internal,
+        NULL                                                                                                   AS days_since_namespace_creation_at_event_date,
+      {%- endif %}   
+      {%- if event_cte.project_column_name != 'NULL' %}
+        FLOOR(
+        DATEDIFF('hour',
+                dim_project.created_at,
+                {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_project_creation_at_event_date, 
+        IFNULL(dim_project.is_imported, FALSE)                                                                 AS project_is_imported,
+        dim_project.is_learn_gitlab                                                                            AS project_is_learn_gitlab
+      {%- else %}
+        NULL                                                                                                   AS days_since_project_creation_at_event_date,
+        NULL                                                                                                   AS project_is_imported,
+        NULL                                                                                                   AS project_is_learn_gitlab
       {%- endif %}                                                                       
     FROM {{ event_cte.source_cte_name }}
     {%- if event_cte.project_column_name != 'NULL' %}
-    INNER JOIN dim_project 
+    LEFT JOIN dim_project 
       ON {{event_cte.source_cte_name}}.{{event_cte.project_column_name}} = dim_project.dim_project_id
     {%- endif %}
     {%- if event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-    INNER JOIN prep_namespace
+    LEFT JOIN prep_namespace
       ON {{event_cte.source_cte_name}}.{{event_cte.ultimate_parent_namespace_column_name}} = prep_namespace.dim_namespace_id
       AND prep_namespace.is_currently_valid = TRUE
     LEFT JOIN prep_user AS blocked_user
@@ -356,16 +533,16 @@
     LEFT JOIN prep_user
       ON {{event_cte.source_cte_name}}.{{event_cte.user_column_name}} = prep_user.dim_user_id
     {%- endif %}
+    {%- if event_cte.project_column_name != 'NULL' or event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
     LEFT JOIN prep_plan
       ON {{event_cte.source_cte_name}}.dim_plan_id = prep_plan.dim_plan_id
-    LEFT JOIN stage_mapping
-      ON '{{ event_cte.event_name }}' = stage_mapping.event_name
+    {%- endif%}
     WHERE DATE_PART('year', {{ event_cte.source_cte_name}}.created_at) = {{year_value}}
       AND DATE_PART('month', {{ event_cte.source_cte_name}}.created_at) = {{month_value}}
     {% if not loop.last %}
     UNION ALL
     {% endif %}
-    {%- endfor %}
+{%- endfor %}
 
 )
 

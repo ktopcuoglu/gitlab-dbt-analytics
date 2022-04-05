@@ -13,6 +13,7 @@ gitlab-org/ci-cd/gitlab-runner-ubi-images,17019611
 gitlab-org/ci-cd/runner-release-helper,11173751
 gitlab-org/ci-cd/shared-runners/images/gcp/windows-containers,13815397
 gitlab-org/ci-cd/shared-runners/images/macstadium/orka,19922160
+gitlab-org/cli,34675721
 gitlab-org/cloud-deploy,15363819
 gitlab-org/cluster-integration/auto-build-image,10400718
 gitlab-org/cluster-integration/auto-deploy-image,11688089

@@ -193,7 +193,7 @@
       usage_ping.commit_ci_config_file_28_days_user,
       usage_ping.view_audit_all_time_user,
       --Wave 5.2
-      usage_ping.dependency_scanning_jobs_28_days_user,
+      usage_ping.dependency_scanning_jobs_all_time_user,
       usage_ping.analytics_devops_adoption_all_time_user,
       usage_ping.projects_imported_all_time_event,
       usage_ping.preferences_security_dashboard_28_days_user,
