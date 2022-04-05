@@ -30,10 +30,14 @@ sources:
       - name: activity_change_segment
       - name: activity_change_status_in_progression
       - name: activity_change_status_in_sfdc_campaign
+        freshness:
+          error_after: {}
       - name: activity_click_email
       - name: activity_click_link
       - name: activity_convert_lead
       - name: activity_delete_lead
+        freshness:
+          error_after: {}
       - name: activity_email_bounced
       - name: activity_email_bounced_soft
       - name: activity_email_delivered
