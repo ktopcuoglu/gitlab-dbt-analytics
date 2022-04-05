@@ -136,7 +136,7 @@ clone_stop:
   stage: 🐍 Python
   image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20
   before_script:
-    - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
     - analytics
   only:
@@ -156,8 +156,8 @@ clone_stop:
   <<: *python_check
   script:
     - pip install flake8
-    - echo "Changed files are $FILES"
-    - flake8 $FILES --ignore=E501,W605,E203
+    - echo "Changed files are $CHANGED_FILES"
+    - flake8 $CHANGED_FILES --ignore=E501,W605,E203
 
 ✏️python_mypy:
   <<: *python_check
@@ -172,8 +172,8 @@ clone_stop:
   <<: *python_check
   script:
     - pip install pylint --upgrade
-    - echo "Changed files are $FILES"
-    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202 --disable=line-too-long
+    - echo "Changed files are $CHANGED_FILES"
+    - pylint $CHANGED_FILES --ignore=dags --disable=W1203 --disable=W1202 --disable=line-too-long
 
 🤔python_complexity:
   <<: *python_check
