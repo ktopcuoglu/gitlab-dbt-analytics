@@ -940,7 +940,12 @@
       'usage_issues_28_days_user',
       'usage_instance_user_count_not_aligned',
       'usage_historical_max_users_not_aligned',
-      'has_namespace_setup_for_company_use'
+      'has_namespace_setup_for_company_use',
+      'pql_namespace_id',
+      'pql_namespace_name',
+      'pql_nbr_integrations_installed',
+      'pql_integrations_installed',
+      'pql_namespace_creator_job_description'
       ]
 ) }}
 
