@@ -353,6 +353,24 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_pipeline_schedule_id",
     "stage_name": "verify"
+  },
+  {
+    "event_name": "snippets",
+    "source_cte_name": "prep_snippet",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_snippet_id",
+    "stage_name": "create"
+  },
+  {
+    "event_name": "projects_prometheus_active",
+    "source_cte_name": "project_prometheus_source",
+    "user_column_name": "dim_user_id_creator",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_project_id",
+    "stage_name": "monitor"
   }
 ]
 
@@ -389,7 +407,9 @@
     ('prep_service', 'prep_service'),
     ('prep_issue_resource_weight', 'prep_issue_resource_weight'),
     ('prep_milestone', 'prep_milestone'),
-    ('prep_ci_pipeline_schedule', 'prep_ci_pipeline_schedule')
+    ('prep_ci_pipeline_schedule', 'prep_ci_pipeline_schedule'),
+    ('prep_snippet', 'prep_snippet'),
+    ('prep_project', 'prep_project')
 ]) }}
 
 , dast_jobs AS (
@@ -512,6 +532,13 @@
     FROM  prep_action
     WHERE target_type = 'DesignManagement::Design'
       AND event_action_type IN ('created', 'updated')
+
+), project_prometheus_source AS (
+
+    SELECT *, 
+      dim_date_id AS created_date_id
+    FROM  prep_project
+    WHERE ARRAY_CONTAINS('PrometheusService'::VARIANT, active_service_types_array)
 
 ), data AS (
 
