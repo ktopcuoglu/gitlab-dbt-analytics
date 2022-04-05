@@ -8,3 +8,4 @@ def WRONG_NAMING():
 
 if __name__ == "__main__":
     test_routine("This is TEST")
+    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
