@@ -458,6 +458,11 @@ models:
           - relationships:
               to: ref('dim_license')
               field: dim_license_id
+#      - name: dim_installation_id
+#        tests:
+#          - relationships:
+#              to: ref('dim_installation')
+#              field: dim_installation_id
 
   - name: dim_service_ping_instance
     description: ' {{ doc("dim_service_ping_instance") }} '
@@ -494,11 +499,11 @@ models:
           - relationships:
               to: ref('dim_service_ping_instance')
               field: dim_service_ping_instance_id
-#      - name: dim_host_id
-#        tests:
-#          - relationships:
-#              to: ref('dim_host')
-#              field: dim_host_id
+      - name: dim_host_id
+        tests:
+          - relationships:
+              to: ref('dim_host')
+              field: dim_host_id
       - name: dim_instance_id
         tests:
           - relationships:

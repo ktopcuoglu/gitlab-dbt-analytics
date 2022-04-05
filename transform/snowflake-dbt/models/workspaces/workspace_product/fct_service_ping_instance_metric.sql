@@ -98,22 +98,22 @@
 
 ), flattened_high_level as (
     SELECT
-      dim_service_ping_instance_id          AS dim_service_ping_instance_id,
-      metrics_path                          AS metrics_path,
-      metric_value                          AS metric_value,
-      dim_product_tier_id                   AS dim_product_tier_id,
-      dim_subscription_id                   AS dim_subscription_id,
-      dim_location_country_id               AS dim_location_country_id,
-      dim_date_id                           AS dim_date_id,
-      dim_instance_id                       AS dim_instance_id,
-      dim_host_id                           AS dim_host_id,
-      dim_host_id || dim_instance_id        AS dim_installation_id,
-      dim_license_id                        AS dim_license_id,
-      ping_created_at                       AS ping_created_at,
-      ping_created_at_date                  AS ping_created_at_date,
-      umau_value                            AS umau_value,
-      license_subscription_id               AS dim_subscription_license_id,
-      'VERSION_DB'                          AS data_source
+      dim_service_ping_instance_id                                                    AS dim_service_ping_instance_id,
+      metrics_path                                                                    AS metrics_path,
+      metric_value                                                                    AS metric_value,
+      dim_product_tier_id                                                             AS dim_product_tier_id,
+      dim_subscription_id                                                             AS dim_subscription_id,
+      dim_location_country_id                                                         AS dim_location_country_id,
+      dim_date_id                                                                     AS dim_date_id,
+      dim_instance_id                                                                 AS dim_instance_id,
+      dim_host_id                                                                     AS dim_host_id,
+      {{ dbt_utils.surrogate_key(['dim_host_id', 'dim_instance_id'])}}                AS dim_installation_id,
+      dim_license_id                                                                  AS dim_license_id,
+      ping_created_at                                                                 AS ping_created_at,
+      ping_created_at_date                                                            AS ping_created_at_date,
+      umau_value                                                                      AS umau_value,
+      license_subscription_id                                                         AS dim_subscription_license_id,
+      'VERSION_DB'                                                                    AS data_source
   FROM joined_payload
 
 ), metric_attributes AS (

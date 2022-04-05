@@ -228,9 +228,8 @@ FROM fct_w_metric_dims
       latest_active_subscription_id,
       dim_billing_account_id,
       dim_parent_crm_account_id,
-      major_minor_version_id
-      dim_host_id,
       major_minor_version_id,
+      dim_host_id,
       host_name,
       -- metadata usage ping
       service_ping_delivery_type,
