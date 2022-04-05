@@ -1,15 +1,24 @@
-'''
-Test file no2
-'''
-def test_routine2(input_string: str):
+"""
+Better!
+"""
+
+
+def test_routine(input_string: str):
+    """
+    @param input_string:
+    @return:
+    """
     return f"This is result: {input_string}"
 
 
-def WRONG_NAMING2():
+def wrong_naming():
+    """
+
+    @return:
+    """
     return "THIS IS WRONG NAMING "
 
 
 if __name__ == "__main__":
-    test_routine2("This is TEST")
-    # something new like a comment
-    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+    test_routine("This is TEST")
+    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
