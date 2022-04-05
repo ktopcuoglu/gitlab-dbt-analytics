@@ -154,7 +154,11 @@ python_flake8:
   <<: *python_check
   script:
     - pip install flake8
-    - flake8 extract/ . --ignore=E501,W605 --exit-zero
+    - echo CI_COMMIT_SHA=${CI_COMMIT_SHA}
+    - echo CI_MERGE_REQUEST_TARGET_BRANCH_NAME=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}
+    - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
+    - echo "Changed files are $FILES"
+    - flake8 $FILES --ignore=E501,W605 --exit-zero
   when: manual
 
 python_mypy:
