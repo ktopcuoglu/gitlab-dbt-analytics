@@ -6,7 +6,7 @@
 ) }}
 
 {{ simple_cte([
-    ('fct_service_ping_instance', 'fct_service_ping_instance'),
+    ('fct_service_ping_instance_metric', 'fct_service_ping_instance_metric'),
     ('dim_service_ping', 'dim_service_ping_instance'),
     ('dim_product_tier', 'dim_product_tier'),
     ('dim_date', 'dim_date'),
@@ -83,7 +83,7 @@
 ), fct_service_ping AS  (
 
   SELECT
-    * FROM fct_service_ping_instance
+    * FROM fct_service_ping_instance_metric
     {% if is_incremental() %}
                 WHERE ping_created_at >= COALESCE((SELECT MAX(ping_created_at) FROM {{this}}), '2020-01-01')
     {% endif %}
@@ -91,7 +91,7 @@
 ), fct_pings_w_dims AS  (
 
 SELECT
-    fct_service_ping.fct_service_ping_instance_id                             AS fct_service_ping_instance_id,
+    fct_service_ping.fct_service_ping_instance_metric_id                      AS fct_service_ping_instance_metric_id,
     fct_service_ping.dim_service_ping_instance_id                             AS dim_service_ping_instance_id,
     fct_service_ping.metrics_path                                             AS metrics_path,
     fct_service_ping.metric_value                                             AS metric_value,
@@ -215,7 +215,7 @@ FROM fct_w_metric_dims
     SELECT
 
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'metrics_path']) }} AS mart_service_ping_instance_id,
+      {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'metrics_path']) }} AS mart_service_ping_instance_metric_id,
       dim_date_id,
       metrics_path,
       metric_value,

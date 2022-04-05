@@ -124,7 +124,7 @@
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_instance_id,
+        {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_instance_metric_id,
         flattened_high_level.*,
         metric_attributes.time_frame
     FROM flattened_high_level
