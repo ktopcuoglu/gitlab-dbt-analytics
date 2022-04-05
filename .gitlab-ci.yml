@@ -149,7 +149,7 @@ clone_stop:
 python_black:
   <<: *python_check
   script:
-    - pip install black==22.1.0
+    - pip install black==22.3.0
     - black --check .
 
 python_flake8:
@@ -171,7 +171,7 @@ python_pylint:
   <<: *python_check
   script:
     - pip install pylint --upgrade
-    - echo "Changed files are $FILES"
+    - echo "Changed files are\n $FILES"
     - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202
 
 python_complexity:
