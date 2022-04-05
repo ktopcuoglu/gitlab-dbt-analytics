@@ -3,22 +3,14 @@ Better!
 """
 
 
-def test_routine(input_string: str):
+def avoid_duplicates(input_string: str):
     """
     @param input_string:
     @return:
     """
-    return f"This is result: {input_string}"
-
-
-def wrong_naming():
-    """
-
-    @return:
-    """
-    return "THIS IS WRONG NAMING "
+    return f"Tavoid_duplicates: {input_string}"
 
 
 if __name__ == "__main__":
-    test_routine("This is TEST")
+    avoid_duplicates("This is TEST")
     print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
