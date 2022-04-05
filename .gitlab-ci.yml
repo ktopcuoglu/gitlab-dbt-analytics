@@ -171,8 +171,8 @@ python_pylint:
   <<: *python_check
   script:
     - pip install pylint --upgrade
-    - echo "Changed files are\n $FILES"
-    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202
+    - echo "Changed files are $FILES"
+    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202 --disable=line-too-long
 
 python_complexity:
   <<: *python_check
