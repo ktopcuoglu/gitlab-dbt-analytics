@@ -150,6 +150,21 @@ tables:
       , table_schema
       FROM information_schema.columns
     import_schema: information_schema
+  clusters_integration_prometheus:
+    advanced_metadata: true
+    export_schema: 'gitlab_com'
+    export_table: 'clusters_integration_prometheus'
+    export_table_primary_key: cluster_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT cluster_id
+      , enabled
+      , encrypted_alert_manager_token
+      , encrypted_alert_manager_token_iv
+      , health_status
+      , created_at
+      , updated_at
+      FROM clusters_integration_prometheus
   deployment_merge_requests:
     dbt_source_model: true
     export_schema: 'gitlab_com'
