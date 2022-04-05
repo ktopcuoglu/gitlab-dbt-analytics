@@ -135,6 +135,8 @@ clone_stop:
 .python_check: &python_check
   stage: 🐍 Python
   image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20
+  before_script:
+    - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
     - analytics
   only:
@@ -154,9 +156,7 @@ python_flake8:
   <<: *python_check
   script:
     - pip install flake8
-    - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
-    - echo "Changed files are $FILES"
-    - flake8 $FILES --ignore=E501,W605 --exit-zero
+    - flake8 $FILES --ignore=E501,W605
 
 python_mypy:
   <<: *python_check
@@ -171,9 +171,8 @@ python_pylint:
   <<: *python_check
   script:
     - pip install pylint --upgrade
-    - FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
     - echo "Changed files are $FILES"
-    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202 --reports=y
+    - pylint $FILES --ignore=dags --disable=W1203 --disable=W1202
 
 python_complexity:
   <<: *python_check
