@@ -20,7 +20,7 @@
     FROM {{ ref('gitlab_dotcom_ci_job_artifacts_source')}}
     {% if is_incremental() %}
 
-      WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
 
     {% endif %}
 
