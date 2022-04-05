@@ -1,12 +1,24 @@
+"""
+Better!
+"""
+
+
 def test_routine(input_string: str):
+    """
+    @param input_string:
+    @return:
+    """
     return f"This is result: {input_string}"
 
 
-def WRONG_NAMING():
+def wrong_naming():
+    """
+
+    @return:
+    """
     return "THIS IS WRONG NAMING "
- 
+
 
 if __name__ == "__main__":
     test_routine("This is TEST")
-    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
-    # something new like a comment
+    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
