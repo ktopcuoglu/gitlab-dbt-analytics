@@ -173,7 +173,7 @@ clone_stop:
   script:
     - pip install pylint --upgrade
     - echo "Changed files are $CHANGED_FILES"
-    - pylint $CHANGED_FILES --ignore=dags --disable=W1203 --disable=W1202 --disable=line-too-long
+    - pylint $CHANGED_FILES --ignore=dags --disable=E0401,W1203,W1202,line-too-long,import_error
 
 🤔python_complexity:
   <<: *python_check
@@ -209,7 +209,7 @@ clone_stop:
       - merge_request
   allow_failure: true
 
-📁 yaml_validation:
+📁yaml_validation:
   <<: *yaml_validate
   script:
     - python -c 'import yaml, sys; print(yaml.safe_load(sys.stdin))' < permissions/snowflake/roles.yml

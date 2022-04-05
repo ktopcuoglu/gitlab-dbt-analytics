@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from os import environ as env
 
@@ -11,7 +11,6 @@ from gitlabdata.orchestration_utils import (
 from qualtrics_client import QualtricsClient
 
 from dateutil import parser as date_parser
-
 
 def timestamp_in_interval(tstamp: datetime, start: datetime, end: datetime) -> bool:
     """
