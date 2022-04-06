@@ -107,7 +107,7 @@ class UsagePing(object):
         query to then upload to a table in raw.
         """
         saas_queries = self._get_instance_queries()
-        print("TEST CODE for linters")
+
         connection = self.loader_engine.connect()
 
         results_all = {}

@@ -1,4 +1,9 @@
-from datetime import datetime, timedelta
+"""
+Main unit for qualitrcs
+"""
+
+
+from datetime import datetime
 import json
 from os import environ as env
 
@@ -12,11 +17,14 @@ from qualtrics_client import QualtricsClient
 
 from dateutil import parser as date_parser
 
+ENCODING = "utf-8"
+
+
 def timestamp_in_interval(tstamp: datetime, start: datetime, end: datetime) -> bool:
     """
     Returns true if tstamp is in the interval [`start`, `end`)
     """
-    return tstamp >= start and tstamp < end
+    return end > tstamp >= start
 
 
 def parse_string_to_timestamp(tstamp: str) -> datetime:
@@ -31,9 +39,9 @@ def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:
     Retrieves all surveys from Qualtrics and writes their json out to `surveys.json`.
     Returns a list of all of the survey ids.
     """
-    surveys_to_write = [survey for survey in qualtrics_client.get_surveys()]
+    surveys_to_write_list = qualtrics_client.get_surveys()
     if surveys_to_write:
-        with open("surveys.json", "w") as out_file:
+        with open("surveys.json", "w", encoding=ENCODING) as out_file:
             json.dump(surveys_to_write, out_file)
         snowflake_stage_load_copy_remove(
             "surveys.json",
@@ -41,7 +49,7 @@ def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:
             "raw.qualtrics.survey",
             snowflake_engine,
         )
-    return [survey["id"] for survey in surveys_to_write]
+    return [survey["id"] for survey in surveys_to_write_list]
 
 
 def get_distributions(
@@ -51,9 +59,7 @@ def get_distributions(
     Gets all distributions for the given survey id.
     Returns the entire distribution object.
     """
-    return [
-        distribution for distribution in qualtrics_client.get_distributions(survey_id)
-    ]
+    return list(qualtrics_client.get_distributions(survey_id))
 
 
 def chunk_list(
@@ -66,14 +72,14 @@ def chunk_list(
 
 def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
     """Gets all distributions for the given surveys and writes them to Snowflake as well as returns them."""
-    all_distributions: List[Dict[Any, Any]] = []
+    all_distributions_list: List[Dict[Any, Any]] = []
     for survey_id in survey_ids:
         current_distributions = get_distributions(client, survey_id)
-        all_distributions = all_distributions + current_distributions
+        all_distributions_list = all_distributions_list + current_distributions
         if current_distributions:
 
             for chunk in chunk_list(current_distributions, 100):
-                with open("distributions.json", "w") as out_file:
+                with open("distributions.json", "w", encoding=ENCODING) as out_file:
                     json.dump(chunk, out_file)
 
                 snowflake_stage_load_copy_remove(
@@ -82,20 +88,20 @@ def get_and_write_distributions(survey_ids: List[str]) -> List[Dict[Any, Any]]:
                     "raw.qualtrics.distribution",
                     snowflake_engine,
                 )
-    return all_distributions
+    return all_distributions_list
 
 
 def get_and_write_contacts(distributions: List[Dict[Any, Any]]) -> List[Dict[Any, Any]]:
     """Gets all contacts associated with the mailing lists of the given distributions and writes them to Snowflake as well as returns them."""
     contacts_to_write = []
-    for distribution in distributions_with_mailings_to_write:
+    for distribution in distributions:
         mailing_list_id = distribution["recipients"]["mailingListId"]
         if mailing_list_id:
             for contact in client.get_contacts(POOL_ID, mailing_list_id):
                 contact["mailingListId"] = mailing_list_id
                 contacts_to_write.append(contact)
     if len(contacts_to_write) > 0:
-        with open("contacts.json", "w") as out_file:
+        with open("contacts.json", "w", encoding=ENCODING) as out_file:
             json.dump(contacts_to_write, out_file)
 
         snowflake_stage_load_copy_remove(
