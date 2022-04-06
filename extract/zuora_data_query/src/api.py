@@ -147,7 +147,7 @@ class ZuoraQueriesAPI:
                 query_string=tables.get(table_spec).get("query")
             )
             df = self.get_data_query_file(job_id)
-            dataframe_uploader(df, self.snowflake_engine, table_spec)
+            dataframe_uploader(df, self.snowflake_engine, table_spec, schema="ZUORA_QUERY_API")
 
     def main(self) -> None:
         """
