@@ -34,6 +34,7 @@
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)       AS dim_plan_id,
       file_type,
       ci_job_artifacts.created_at,
+      ci_job_artifacts.updated_at,
       dim_date.date_id                                      AS created_date_id
     FROM ci_job_artifacts
     LEFT JOIN dim_project 
