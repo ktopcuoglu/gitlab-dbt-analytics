@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_resource_weight_id"
+    "unique_key": "dim_milestone_id"
     })
 }}
 
