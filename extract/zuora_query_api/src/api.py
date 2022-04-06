@@ -92,6 +92,7 @@ class ZuoraQueriesAPI:
             return response.json().get("data").get("id")
         else:
             logging.error(response.json)
+            raise ConnectionError("Error requesting job")
 
     def get_job_data(self, job_id: str) -> Dict:
         """
@@ -140,7 +141,7 @@ class ZuoraQueriesAPI:
 
         if job_status == "completed":
             info("File ready")
-            file_url = job.get("dataFile")
+            file_url = job["dataFile"]
             response = requests.get(url=file_url)
 
             df = pd.read_csv(StringIO(response.text))
