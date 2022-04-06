@@ -1,4 +1,12 @@
+"""
+Some description
+"""
 def print_something(input_str: str):
+    """
+
+    @param input_str:
+    @return:
+    """
     return f"This is result {input_str}"
 
 
