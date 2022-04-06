@@ -129,11 +129,12 @@ class ZuoraQueriesAPI:
             info("Waiting for report to complete")
            
         if job_status == "completed":
-            print("Will download file")
+            info("File ready")
             file_url = job[0].get('dataFile')
             response = requests.get(url=file_url)
 
             df = pd.read_csv(StringIO(response.text))
+            info("File downloaded")
             return df 
 
     def process_scd(self, scd_file: str = "./zuora_query_api/src/scd_queries.yml"):
