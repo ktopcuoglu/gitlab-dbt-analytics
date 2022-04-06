@@ -1,10 +1,10 @@
 version: 2
 
 sources:
-  - name: zuora_data_query
+  - name: zuora_query_api
     tags: ["tdf","zuora"]
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
-    schema: zuora_data_query
+    schema: zuora_query_api
     loader: Stitch
     loaded_at_field: _sdc_batched_at
 
