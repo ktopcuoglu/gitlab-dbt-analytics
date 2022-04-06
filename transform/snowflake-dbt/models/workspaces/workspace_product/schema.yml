@@ -494,50 +494,17 @@ models:
         tests:
           - not_null
           #- unique
-      - name: dim_service_ping_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_service_ping_instance')
-              field: dim_service_ping_instance_id
-      - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
-      - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: instance_id
-      - name: dim_date_id
-        tests:
-          - relationships:
-              to: ref('dim_date')
-              field: date_id
-      - name: dim_license_id
-        tests:
-          - relationships:
-              to: ref('dim_license')
-              field: dim_license_id
-
-
-
-      - name: dim_billing_account_id
-        tests:
-          - relationships:
-              to: ref('dim_billing_account')
-              field: dim_billing_account_id
 
   - name: mart_xmau_metric_monthly
     description: '{{ doc("mart_xmau_metric_monthly") }}'
     columns:
       - name: mart_xmau_metric_monthly_id
-        description: the unique ID of a montthly xMAU metric in mart_xmau_metric_monthly
+        description: the unique ID of a monthly xMAU metric in mart_xmau_metric_monthly
         tests:
           - not_null
           - unique
       - name: reporting_month
-        description: Month in which the product usage was reported. (this model only looks at the last 28 days of the month.)
+        description: Month in which the product usage was reported. (this model only looks at d      the last 28 days of the month.)
       - name: is_smau
         description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_gmau
