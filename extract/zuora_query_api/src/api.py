@@ -64,8 +64,9 @@ class ZuoraQueriesAPI:
             info("Successful auth")
             return response.json()["access_token"]
         else:
-            error("COULD NOT AUTHENTICATE")
-            exit(1)
+            logging.error(response.status_code)
+            logging.error(response.json())
+            raise ConnectionError("COULD NOT AUTHENTICATE")
 
     def request_data_query_data(self, query_string: str) -> str:
         """
@@ -86,8 +87,6 @@ class ZuoraQueriesAPI:
         response = requests.post(
             api_url, headers=self.request_headers, data=json.dumps(payload)
         )
-
-        info(response.status_code)
 
         if response.status_code == 200:
             return response.json().get("data").get("id")
