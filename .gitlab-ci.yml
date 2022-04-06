@@ -157,7 +157,7 @@ clone_stop:
   script:
     - pip install flake8
     - echo "Changed files are $CHANGED_FILES"
-    - flake8 $CHANGED_FILES --ignore=E501,W605,E203
+    - flake8 $CHANGED_FILES --ignore=E203,E501,W503,W605
 
 ✏️python_mypy:
   <<: *python_check
@@ -173,12 +173,19 @@ clone_stop:
   script:
     - pip install pylint --upgrade
     - echo "Changed files are $CHANGED_FILES"
-    - pylint $CHANGED_FILES --ignore=dags --disable=E0401,W1203,W1202,line-too-long,import_error
+    - pylint $CHANGED_FILES --disable=line-too-long,E0401,E0611,W1203,W1202
 
 🤔python_complexity:
   <<: *python_check
   script:
     -  xenon --max-absolute B --max-modules A --max-average A . -i transform,shared_modules
+
+🦅python_vulture:
+  <<: *python_check
+  script:
+    - pip install vulture
+    - echo "Changed files are $CHANGED_FILES"
+    - vulture $CHANGED_FILES
 
 ✅python_pytest:
   <<: *python_check
