@@ -33,8 +33,8 @@
       IFNULL(dim_namespace_plan_hist.dim_namespace_id, -1)              AS ultimate_parent_namespace_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                   AS dim_plan_id,
       dim_date.date_id                                                  AS created_date_id,
-      snippet_source.created_date                                       AS created_at,
-      snippet_source.updated_date                                       AS updated_at
+      snippet_source.created_at                                         AS created_at,
+      snippet_source.updated_at                                         AS updated_at
     FROM snippet_source
     LEFT JOIN dim_project 
       ON snippet_source.project_id = dim_project.dim_project_id
