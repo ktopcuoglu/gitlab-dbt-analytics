@@ -310,6 +310,10 @@ models:
         +schema: zuora
         +tags: ["zuora"]
 
+      zuora_query_api:
+        +schema: zuora_query_api
+        +tags: ["zuora_query_api"]
+
       zuora_central_sandbox:
         +schema: zuora_central_sandbox
         +tags: [ "zuora_central_sandbox" ]
