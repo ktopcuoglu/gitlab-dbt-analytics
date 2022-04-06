@@ -74,7 +74,7 @@ task_secrets = [
 default_args = {
     "catchup": False,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task("#analytics-pipelines"),
+    "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "start_date": datetime(2019, 1, 1, 0, 0, 0),
 }
