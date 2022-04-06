@@ -58,8 +58,8 @@ zuora_data_query_extract_cmd = f"""
 zuora_data_query_extract_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id="zuora-data-query-extract",
-    name="zuora-data-query-extract",
+    task_id="zuora-query-api-extract",
+    name="zuora-query-api-extract",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
