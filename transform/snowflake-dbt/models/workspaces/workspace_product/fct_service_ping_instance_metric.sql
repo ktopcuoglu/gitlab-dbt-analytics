@@ -1,5 +1,6 @@
 {{ config(
     tags=["product", "mnpi_exception"],
+    full_refresh = false,
     materialized = "incremental",
     unique_key = "fct_service_ping_instance_id"
 ) }}
@@ -72,7 +73,8 @@
       product_tier,
       main_edition,
       metrics_path,
-      metric_value
+      metric_value,
+      has_timed_out
     FROM add_country_info_to_usage_ping
     INNER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -100,6 +102,7 @@
       dim_service_ping_instance_id                                                    AS dim_service_ping_instance_id,
       metrics_path                                                                    AS metrics_path,
       metric_value                                                                    AS metric_value,
+      has_timed_out                                                                   AS has_timed_out,
       dim_product_tier_id                                                             AS dim_product_tier_id,
       dim_subscription_id                                                             AS dim_subscription_id,
       dim_location_country_id                                                         AS dim_location_country_id,

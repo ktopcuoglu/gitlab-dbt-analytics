@@ -30,23 +30,6 @@
       OR zuora_renewal_subscription_name_slugify IS NULL)
       AND subscription_status NOT IN ('Draft', 'Expired')
 
-),  zuora_subscription_snapshots AS (
-
-  /*
-  This partition handles duplicates and hard deletes by taking only the latest subscription version snapshot
-   */
-
-  SELECT
-    rank() OVER (
-      PARTITION BY subscription_name
-      ORDER BY DBT_VALID_FROM DESC) AS rank,
-    subscription_id,
-    subscription_name
-  FROM {{ ref('zuora_subscription_snapshots_source') }}
-  WHERE subscription_status NOT IN ('Draft', 'Expired')
-    AND CURRENT_TIMESTAMP()::TIMESTAMP_TZ >= dbt_valid_from
-    AND {{ coalesce_to_infinity('dbt_valid_to') }} > current_timestamp()::TIMESTAMP_TZ
-
 ), fct_service_ping AS  (
 
   SELECT
@@ -102,9 +85,6 @@
       ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
     LEFT JOIN subscription_source AS all_subscriptions
       ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
-    LEFT JOIN zuora_subscription_snapshots
-      ON zuora_subscription_snapshots.subscription_id = dim_subscription.dim_subscription_id
-      AND zuora_subscription_snapshots.rank = 1
     INNER JOIN fct_charge
       ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
         AND charge_type = 'Recurring'
@@ -130,6 +110,7 @@
         fct_service_ping.dim_service_ping_instance_id,
         fct_service_ping.metrics_path,
         fct_service_ping.metric_value,
+        fct_service_ping.has_timed_out,
         dim_usage_ping_metric.product_group,
         dim_usage_ping_metric.product_stage,
         dim_usage_ping_metric.product_section,
@@ -207,6 +188,7 @@
       dim_date_id,
       metrics_path,
       metric_value,
+      has_timed_out,
       dim_service_ping_instance_id,
 
       --Foreign Key
