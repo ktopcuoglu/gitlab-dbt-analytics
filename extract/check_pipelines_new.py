@@ -1,6 +1,8 @@
 """
 Some description
 """
+
+
 def print_something(input_str: str):
     """
 
