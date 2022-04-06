@@ -132,6 +132,7 @@ class ZuoraQueriesAPI:
             raise ValueError(f"Job {job_status}")
 
         while job_status in ["accepted", "in_progress"]:
+            # If job is not yet available, wait for 30 seconds.
             time.sleep(wait_time)
 
             job = self.get_job_data(job_id)
