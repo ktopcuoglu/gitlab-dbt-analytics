@@ -19,8 +19,17 @@ ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.2
 DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
 DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
-analytics_pipelines_task = ['dbt','dbt_full_refresh','dbt_full_refresh_weekly','dbt_netsuite_actuals_income_cogs_opex','dbt_snowplow_backfill',
-        'dbt_snowplow_backfill_specific_model','dbt_snowplow_full_refresh','saas_usage_ping','t_prep_dotcom_usage_events_backfill']
+analytics_pipelines_dag = [
+    "dbt",
+    "dbt_full_refresh",
+    "dbt_full_refresh_weekly",
+    "dbt_netsuite_actuals_income_cogs_opex",
+    "dbt_snowplow_backfill",
+    "dbt_snowplow_backfill_specific_model",
+    "dbt_snowplow_full_refresh",
+    "saas_usage_ping",
+    "t_prep_dotcom_usage_events_backfill",
+]
 
 
 def split_date_parts(day: date, partition: str) -> Dict:
@@ -121,7 +130,7 @@ def slack_defaults(context, task_type):
         task_text = "Task succeeded!"
 
     if task_type == "failure":
-        if task_name in  analytics_pipelines_task:
+        if dag_id in analytics_pipelines_dag:
             slack_channel = "#analytics-pipelines"
         else:
             slack_channel = dag_context.params.get(
@@ -144,7 +153,7 @@ def slack_defaults(context, task_type):
                 {"title": "Timestamp", "value": execution_date_pretty, "short": True},
             ],
             "footer": "Airflow",
-            "footer_icon": "https://airflow.gitlabdata/static/pin_100.png",
+            "footer_icon": "http://35.233.169.210:8080/static/pin_100.png",
             "ts": execution_date_epoch,
         }
     ]
@@ -167,7 +176,7 @@ def slack_webhook_conn(slack_channel):
     if slack_channel == "#analytics-pipelines":
         slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
     else:
-        slack_webhook = Variable.get("AIRFLOW_VAR_DATA_PIPELINES")   
+        slack_webhook = Variable.get("AIRFLOW_VAR_DATA_PIPELINES")
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
     return airflow_http_con_id, slack_webhook
 
@@ -183,7 +192,7 @@ def slack_failed_task(context):
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
-        channel=channel,
+        channel=slack_channel,
         task_id=task_id,
         message=task_text,
         http_conn_id=airflow_http_con_id,
