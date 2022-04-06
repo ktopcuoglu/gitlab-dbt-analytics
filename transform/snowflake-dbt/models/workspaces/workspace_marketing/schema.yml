@@ -45,3 +45,39 @@ models:
   - name: wk_bizible_touchpoints
   - name: wk_bizible_urls
   - name: wk_bizible_user_touchpoints
+
+  - name: wk_dim_company
+    description: The description
+    columns:
+      - name: dim_company_id
+        description: The surrogate key for the dimension table. Derived from the `company_id` column.
+        tests:
+          - unique
+      - name: company_id
+        description: A unique id for the headquarters of a company. Taken from the ZoomInfo company ID.
+        tests:
+          - not_null
+      - name: source_company_id
+        description: The current company_id for the IDs that have been merged together.
+      - name: company_name
+        description: '{{ doc("zi_headquarters_company_name") }}'
+      - name: company_revenue
+        description: '{{ doc("zi_headquarters_revenue") }}'
+      - name: company_employee_count
+        description: '{{ doc("zi_headquarters_employees") }}'
+      - name: company_industry
+        description: '{{ doc("zi_industry_primary") }}'
+      - name: company_country
+        description: '{{ doc("zi_headquarters_company_country") }}'
+      - name: company_state_province
+        description: '{{ doc("zi_headquarters_company_state") }}'
+      - name: has_crm_account
+        description: A flag to indicate if the company id is matched to a CRM account
+      - name: has_crm_lead
+        description: A flag to indicate if the company id is matched to a CRM lead
+      - name: has_crm_contact
+        description: A flag to indicate if the company id is matched to a CRM contact
+      - name: is_company_hq
+        description: A flag to indicate if the company id matched directly to the list of source company headquarter ids/
+      - name: is_merged_company_id
+        description: A flag to indicate if the company id is derived from a list of merged company ids.

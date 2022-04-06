@@ -81,7 +81,7 @@ include:
 📈⚙clone_prep_specific_schema:
   <<: *snowflake_start_clone
   script:
-    - manage_snowflake.py manage_clones --database prep--schema $SCHEMA_NAME
+    - manage_snowflake.py manage_clones --database prep --schema $SCHEMA_NAME
 
 📈⚙clone_prod_specific_schema:
   <<: *snowflake_start_clone

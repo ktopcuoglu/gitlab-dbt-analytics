@@ -2573,7 +2573,7 @@ models:
       - name: event_created_date
         tests:
           - not_null
-      - name: is_blocked_namespace
+      - name: is_blocked_namespace_creator
         tests:
           - not_null
       - name: namespace_created_date
@@ -2613,8 +2613,6 @@ models:
         test:
           - unique
       - name: ultimate_parent_namespace_id
-        tests:
-          - not_null
       - name: dim_user_id
         tests:
           - not_null
@@ -2624,24 +2622,14 @@ models:
       - name: event_created_date
         tests:
           - not_null
-      - name: is_blocked_namespace
-        tests:
-          - not_null
+      - name: is_blocked_namespace_creator
       - name: namespace_created_date
-        tests:
-          - not_null
       - name: namespace_is_internal
-        tests:
-          - not_null
       - name: user_created_date
         tests:
           - not_null
       - name: days_since_namespace_creation
-        tests:
-          - not_null
       - name: weeks_since_namespace_creation
-        tests:
-          - not_null
       - name: days_since_user_creation
         tests:
           - not_null

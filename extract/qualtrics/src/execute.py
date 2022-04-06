@@ -10,6 +10,7 @@ from gitlabdata.orchestration_utils import (
 )
 from qualtrics_client import QualtricsClient
 
+from dateutil import parser as date_parser
 
 def timestamp_in_interval(tstamp: datetime, start: datetime, end: datetime) -> bool:
     """
@@ -22,8 +23,7 @@ def parse_string_to_timestamp(tstamp: str) -> datetime:
     """
     Parses a string from Qualtrics into a datetime using the standard Qualtrics timestamp datetime format.
     """
-    qualtrics_timestamp_format = "%Y-%m-%dT%H:%M:%S%z"
-    return datetime.strptime(tstamp, qualtrics_timestamp_format)
+    return date_parser.parse(tstamp)
 
 
 def get_and_write_surveys(qualtrics_client: QualtricsClient) -> List[str]:

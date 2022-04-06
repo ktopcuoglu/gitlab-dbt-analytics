@@ -40,7 +40,6 @@ SELECT
         duplicate_opportunity__c                        AS duplicate_opportunity_id,
         account_owner__c                                AS account_owner,
         opportunity_owner__c                            AS opportunity_owner,
-        owner_team_o__c                                 AS opportunity_owner_team,
         manager_current__c                              AS opportunity_owner_manager,
         sales_market__c                                 AS opportunity_owner_department,
         SDR_LU__c                                       AS opportunity_sales_development_representative,
@@ -195,8 +194,7 @@ SELECT
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
       -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
-        sales_segmentation_o__c                         AS segment,
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                                         AS sales_segment,
         {{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}
                                                         AS parent_segment,
@@ -221,7 +219,7 @@ SELECT
         x7_closed_lost_date__c                          AS stage_6_closed_lost_date,
 
         -- sales segment fields
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                                         AS division_sales_segment_stamped,
         -- channel reporting
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072

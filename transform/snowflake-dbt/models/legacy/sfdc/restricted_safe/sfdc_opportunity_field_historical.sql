@@ -2,8 +2,7 @@
 {% set fields_to_use = [
     'amount','closedate','forecastcategoryname','incremental_acv_2__c',
     'leadsource','renewal_acv__c','renewal_amount__c','sales_accepted_date__c',
-    'sales_qualified_date__c','sales_segmentation_employees_o__c',
-    'sales_segmentation_o__c','sql_source__c','stagename','swing_deal__c',
+    'sales_qualified_date__c','sales_segmentation_employees_o__c','sql_source__c','stagename','swing_deal__c',
     'type','ultimate_parent_sales_segment_emp_o__c','ultimate_parent_sales_segment_o__c',
     'upside_iacv__c', 'recurring_amount__c', 'true_up_amount__c', 'proserv_amount__c',
     'other_non_recurring_amount__c', 'arr_net__c', 'arr_basis__c', 'arr__c', 'start_date__c',
@@ -124,7 +123,7 @@ WITH date_spine AS (
       start_date__c::DATE                AS subscription_start_date,
       end_date__c::DATE                  AS subscription_end_date,
       COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }},
-               {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown')
+                'Unknown')
                                          AS sales_segment,
       type                               AS sales_type,
       {{  sfdc_source_buckets('leadsource') }}
@@ -135,7 +134,6 @@ WITH date_spine AS (
       swing_deal__c                      AS is_swing_deal,
       renewal_acv__c::FLOAT              AS renewal_acv,
       renewal_amount__c::FLOAT           AS renewal_amount,
-      sales_segmentation_o__c            AS segment,
       amount::FLOAT                      AS total_contract_value,
       amount::FLOAT                      AS amount,
       upside_iacv__c::FLOAT              AS upside_iacv,

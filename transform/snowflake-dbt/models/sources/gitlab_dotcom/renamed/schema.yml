@@ -260,14 +260,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_ci_pipeline_variables_source
-    description: Base model for Gitlab.com ci_pipeline_variables
-    columns:
-      - name: ci_pipeline_variable_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_dast_profiles_source
     description: Base model for Gitlab.com dast_profiles
     columns:
@@ -1353,32 +1345,6 @@ models:
         tests:
           - not_null
           - unique
-
-  - name: gitlab_dotcom_project_authorizations_source
-    description: >-
-      Base model for Gitlab.com authorizations, duplicate rows have not been
-      included.
-    columns:
-      - name: user_project_access_relation_id
-        description: >-
-          unique key created with an md5 hash of user_id, project_id and
-          access_level
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: user_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: project_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: access_level
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_project_auto_devops_source
     description: Base model for Gitlab.com auto devops
