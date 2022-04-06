@@ -29,12 +29,12 @@ env = os.environ.copy()
 default_args = {
     "catchup": True,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task("#data-pipelines"),
+    "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     # "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=24),
-    "sla_miss_callback": slack_failed_task("#data-pipelines"),
+    "sla_miss_callback": slack_failed_task,
     # Want to extract the last year
     "start_date": datetime(2020, 1, 1),
 }

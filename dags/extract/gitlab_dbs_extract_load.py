@@ -373,7 +373,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
 sync_dag_args = {
     "catchup": False,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task("#data-pipelines"),
+    "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=3),
@@ -384,12 +384,12 @@ sync_dag_args = {
 extract_dag_args = {
     "catchup": True,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task("#data-pipelines"),
+    "on_failure_callback": slack_failed_task,
     "owner": "airflow",
     "retries": 1,
     "retry_delay": timedelta(minutes=1),
     "sla": timedelta(hours=8),
-    "sla_miss_callback": slack_failed_task("#data-pipelines"),
+    "sla_miss_callback": slack_failed_task,
     "dagrun_timeout": timedelta(hours=6),
     "trigger_rule": "all_success",
 }

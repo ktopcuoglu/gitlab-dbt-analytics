@@ -28,7 +28,7 @@ env = os.environ.copy()
 default_args = {
     "catchup": False,
     "depends_on_past": False,
-    "on_failure_callback": slack_failed_task("#data-pipelines"),
+    "on_failure_callback": slack_failed_task,
     "on_success_callback": slack_succeeded_task,
     "owner": "airflow",
     "retries": 0,
