@@ -16,7 +16,7 @@ from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_
 
 
 class ZuoraQueriesAPI:
-    def __init__(self, config_dict: object) -> object:
+    def __init__(self, config_dict: Dict):
         """
 
         :param config_dict: 
@@ -148,10 +148,11 @@ class ZuoraQueriesAPI:
             info("File downloaded")
             return df
 
-    def process_queries(self, query_spec_file: str = "./zuora_query_api/src/scd_queries.yml") -> None:
+    def process_queries(self, query_spec_file: str = "./zuora_query_api/src/queries.yml") -> None:
         """
-
-        :param query_spec_file:
+            Written with downloading only the users table in mind, this table is ±200 rows and will likely not grow further,
+            If any further files are added to the query spec verify that the data set size is small enough to be processed by this function.
+        :param query_spec_file: Yaml file specifying queries to run in Zuora.
         :type query_spec_file:
         """
         with open(query_spec_file) as file:
@@ -173,16 +174,3 @@ class ZuoraQueriesAPI:
             )
             info(f"Processed {table_spec}")
 
-    def main(self) -> None:
-        """
-        Read data from a postgres DB and upload it directly to Snowflake.
-        """
-        info("Procesing Zuora queries")
-        self.process_queries()
-        info("Zuora queries processed")
-
-
-if __name__ == "__main__":
-    config_dict = env.copy()
-    zq = ZuoraQueriesAPI(env)
-    zq.main()

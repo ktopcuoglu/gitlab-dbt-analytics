@@ -5,4 +5,4 @@ from api import ZuoraQueriesAPI
 if __name__ == "__main__":
     config_dict = env.copy()
     zq = ZuoraQueriesAPI(env)
-    zq.main()
+    zq.process_queries()
