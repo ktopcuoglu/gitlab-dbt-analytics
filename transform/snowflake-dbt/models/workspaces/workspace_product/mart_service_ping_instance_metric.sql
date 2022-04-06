@@ -33,8 +33,7 @@
 ),  zuora_subscription_snapshots AS (
 
   /*
-  This partition handles duplicates and hard deletes by taking only
-    the latest subscription version snapshot
+  This partition handles duplicates and hard deletes by taking only the latest subscription version snapshot
    */
 
   SELECT
