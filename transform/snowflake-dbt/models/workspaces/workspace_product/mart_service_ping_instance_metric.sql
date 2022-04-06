@@ -1,5 +1,6 @@
 {{ config(
     tags=["product", "mnpi_exception"],
+    full_refresh = false,
     materialized = "incremental",
     unique_key = "mart_service_ping_instance_id"
 ) }}
