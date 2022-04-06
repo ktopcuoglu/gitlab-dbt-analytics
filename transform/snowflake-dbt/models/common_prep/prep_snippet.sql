@@ -4,7 +4,7 @@
 
 {{ config({
     "materialized": "incremental",
-    "unique_key": "dim_todo_id"
+    "unique_key": "dim_snippet_id"
     })
 }}
 
