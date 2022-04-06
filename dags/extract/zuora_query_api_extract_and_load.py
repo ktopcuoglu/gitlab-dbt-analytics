@@ -46,7 +46,7 @@ airflow_home = env["AIRFLOW_HOME"]
 dag = DAG(
     "zuora_query_api_extract_and_load",
     default_args=default_args,
-    schedule_interval="0 */2 * * *",
+    schedule_interval="0 3 * * *",
 )
 
 zuora_data_query_extract_cmd = f"""
