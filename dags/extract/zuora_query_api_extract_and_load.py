@@ -44,14 +44,14 @@ airflow_home = env["AIRFLOW_HOME"]
 
 # Create the DAG
 dag = DAG(
-    "zuora_data_query_extract_and_load",
+    "zuora_query_api_extract_and_load",
     default_args=default_args,
     schedule_interval="0 */2 * * *",
 )
 
 zuora_data_query_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python zuora_data_query/src/api.py
+    python zuora_query_api/src/api.py
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated

@@ -136,7 +136,7 @@ class ZuoraQueriesAPI:
             df = pd.read_csv(StringIO(response.text))
             return df 
 
-    def process_scd(self, scd_file: str = "./zuora_data_query/src/scd_queries.yml"):
+    def process_scd(self, scd_file: str = "./zuora_query_api/src/scd_queries.yml"):
 
         with open(scd_file) as file:
             query_specs = yaml.load(file, Loader=yaml.FullLoader)
