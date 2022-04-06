@@ -51,7 +51,7 @@ dag = DAG(
 
 zuora_data_query_extract_cmd = f"""
     {clone_and_setup_extraction_cmd} &&
-    python zuora_query_api/src/api.py
+    python zuora_query_api/src/main.py
 """
 
 # having both xcom flag flavors since we're in an airflow version where one is being deprecated

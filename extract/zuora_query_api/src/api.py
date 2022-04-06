@@ -10,16 +10,23 @@ import yaml
 from logging import info, error, warning
 from os import environ as env
 
-from gitlabdata.orchestration_utils import (dataframe_uploader, snowflake_engine_factory)
+from typing import Dict
+
+from gitlabdata.orchestration_utils import dataframe_uploader, snowflake_engine_factory
+
 
 class ZuoraQueriesAPI:
-    def __init__(self, config_dict):
+    def __init__(self, config_dict: object) -> object:
+        """
+
+        :param config_dict: 
+        :type config_dict: 
+        """
         zuora_api_client_id = env["ZUORA_API_CLIENT_ID"]
         zuora_api_client_secret = env["ZUORA_API_CLIENT_SECRET"]
         self.base_url = "https://rest.zuora.com"
 
         self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-
 
         zuora_token = self.authenticate_zuora(
             zuora_api_client_id, zuora_api_client_secret
@@ -30,7 +37,9 @@ class ZuoraQueriesAPI:
             "Authorization": f"Bearer {zuora_token}",
         }
 
-    def authenticate_zuora(self, zuora_api_client_id: str, zuora_api_client_secret: str) -> str:
+    def authenticate_zuora(
+        self, zuora_api_client_id: str, zuora_api_client_secret: str
+    ) -> str:
         """
         Written to encapsulate Zuora's authentication functionality
         :param zuora_api_client_id:
@@ -67,21 +76,25 @@ class ZuoraQueriesAPI:
         """
         api_url = f"{self.base_url}/query/jobs"
 
-        payload = dict(compression="NONE", output=dict(target="S3"), outputFormat="CSV", query=query_string)
+        payload = dict(
+            compression="NONE",
+            output=dict(target="S3"),
+            outputFormat="CSV",
+            query=query_string,
+        )
 
         response = requests.post(
-            api_url,
-            headers=self.request_headers,
-            data=json.dumps(payload))
+            api_url, headers=self.request_headers, data=json.dumps(payload)
+        )
 
         info(response.status_code)
 
         if response.status_code == 200:
-            return response.json().get('data').get('id')
+            return response.json().get("data").get("id")
         else:
             logging.error(response.json)
-    
-    def get_job_data(self, job_id: str) -> str:
+
+    def get_job_data(self, job_id: str) -> Dict:
         """
 
         :param job_id:
@@ -95,13 +108,12 @@ class ZuoraQueriesAPI:
             headers=self.request_headers,
         )
         data = response.json()
-        job = [j for j in data.get('data') if j.get('id') == job_id]
+        job = [j for j in data.get("data") if j.get("id") == job_id]
         if len(job) > 0:
-            return job
+            return job[0]
         else:
-            logging.error('Didnt get job id, error ')
-            raise Exception
-        
+            raise ReferenceError("Job not found")
+
     def get_data_query_file(self, job_id: str, wait_time: int = 30) -> pd.DataFrame:
         """
 
@@ -113,33 +125,36 @@ class ZuoraQueriesAPI:
         :rtype:
         """
         job = self.get_job_data(job_id)
-        
-        job_status = job[0].get('queryStatus')
+
+        job_status = job.get("queryStatus")
 
         if job_status in ["failed", "cancelled"]:
-            logging.error("Job failed or cancelled")
-            raise Exception
+            raise ValueError(f"Job {job_status}")
 
         while job_status in ["accepted", "in_progress"]:
             time.sleep(wait_time)
-            
+
             job = self.get_job_data(job_id)
-                                              
-            job_status = job[0].get('queryStatus')
+
+            job_status = job.get("queryStatus")
             info("Waiting for report to complete")
-           
+
         if job_status == "completed":
             info("File ready")
-            file_url = job[0].get('dataFile')
+            file_url = job.get("dataFile")
             response = requests.get(url=file_url)
 
             df = pd.read_csv(StringIO(response.text))
             info("File downloaded")
-            return df 
+            return df
 
-    def process_scd(self, scd_file: str = "./zuora_query_api/src/scd_queries.yml"):
+    def process_queries(self, query_spec_file: str = "./zuora_query_api/src/scd_queries.yml") -> None:
+        """
 
-        with open(scd_file) as file:
+        :param query_spec_file:
+        :type query_spec_file:
+        """
+        with open(query_spec_file) as file:
             query_specs = yaml.load(file, Loader=yaml.FullLoader)
 
         tables = query_specs.get("tables")
@@ -149,7 +164,13 @@ class ZuoraQueriesAPI:
                 query_string=tables.get(table_spec).get("query")
             )
             df = self.get_data_query_file(job_id)
-            dataframe_uploader(df, self.snowflake_engine, table_spec, schema="ZUORA_QUERY_API", if_exists='replace')
+            dataframe_uploader(
+                df,
+                self.snowflake_engine,
+                table_spec,
+                schema="ZUORA_QUERY_API",
+                if_exists="replace",
+            )
             info(f"Processed {table_spec}")
 
     def main(self) -> None:
@@ -157,7 +178,7 @@ class ZuoraQueriesAPI:
         Read data from a postgres DB and upload it directly to Snowflake.
         """
         info("Procesing Zuora queries")
-        self.process_scd()
+        self.process_queries()
         info("Zuora queries processed")
 
 
