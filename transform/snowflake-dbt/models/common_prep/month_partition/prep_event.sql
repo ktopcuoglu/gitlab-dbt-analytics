@@ -384,6 +384,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_trigger_id",
     "stage_name": "verify"
+  },
+  {
+    "event_name": "incident_labeled_issues",
+    "source_cte_name": "incident_labeled_issues_source",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_issue_id",
+    "stage_name": "monitor"
   }
 ]
 
@@ -553,6 +562,13 @@
       dim_date_id AS created_date_id
     FROM  prep_project
     WHERE ARRAY_CONTAINS('PrometheusService'::VARIANT, active_service_types_array)
+
+), incident_labeled_issues_source AS (
+
+    SELECT
+      *
+    FROM prep_issue
+    WHERE ARRAY_CONTAINS('incident'::variant, labels)
 
 ), data AS (
 
