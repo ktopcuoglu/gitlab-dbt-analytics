@@ -375,6 +375,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_project_id",
     "stage_name": "monitor"
+  },
+  {
+    "event_name": "ci_triggers",
+    "source_cte_name": "prep_ci_trigger",
+    "user_column_name": "owner_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_trigger_id",
+    "stage_name": "verify"
   }
 ]
 
@@ -413,7 +422,8 @@
     ('prep_milestone', 'prep_milestone'),
     ('prep_ci_pipeline_schedule', 'prep_ci_pipeline_schedule'),
     ('prep_snippet', 'prep_snippet'),
-    ('prep_project', 'prep_project')
+    ('prep_project', 'prep_project'),
+    ('prep_ci_trigger', 'prep_ci_trigger')
 ]) }}
 
 , dast_jobs AS (
