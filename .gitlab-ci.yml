@@ -185,7 +185,7 @@ clone_stop:
   script:
     - pip install vulture
     - echo "Changed files are $CHANGED_FILES"
-    - vulture $CHANGED_FILES
+    - vulture $CHANGED_FILES --min-confidence 100
 
 ✅python_pytest:
   <<: *python_check
