@@ -18,6 +18,9 @@ ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.2
 DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
 DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
+analytics_pipelines_task = ['dbt','dbt_full_refresh','dbt_full_refresh_weekly','dbt_netsuite_actuals_income_cogs_opex','dbt_snowplow_backfill',
+        'dbt_snowplow_backfill_specific_model','dbt_snowplow_full_refresh','saas_usage_ping','t_prep_dotcom_usage_events_backfill']
+
 
 def split_date_parts(day: date, partition: str) -> Dict:
 
@@ -117,11 +120,11 @@ def slack_defaults(context, task_type):
         task_text = "Task succeeded!"
 
     if task_type == "failure":
-        if task_name == "monitor-dbt-source-freshness":
+        if task_name in  analytics_pipelines_task:
             slack_channel = "#analytics-pipelines"
         else:
             slack_channel = dag_context.params.get(
-                "slack_channel_override", "#analytics-pipelines"
+                "slack_channel_override", "#data-pipelines"
             )
         color = "#a62d19"
         fallback = "An Airflow DAG has failed!"
@@ -160,13 +163,15 @@ def slack_snapshot_failed_task(context):
 
 
 def slack_webhook_conn(slack_channel):
-    slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-
+    if slack_channel == "#analytics-pipelines":
+        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+    else:
+        slack_webhook = Variable.get("AIRFLOW_VAR_DATA_PIPELINES")   
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
     return airflow_http_con_id, slack_webhook
 
 
-def slack_failed_task(context, channel="#data-pipelines"):
+def slack_failed_task(context):
     """
     Function to be used as a callable for on_failure_callback.
     Send a Slack alert.
