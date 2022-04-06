@@ -1,6 +1,5 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    full_refresh = false,
     materialized = "incremental",
     unique_key = "fct_service_ping_instance_id"
 ) }}
@@ -75,10 +74,10 @@
       metrics_path,
       metric_value
     FROM add_country_info_to_usage_ping
-    LEFT OUTER JOIN dim_product_tier
+    INNER JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
     AND IFF( add_country_info_to_usage_ping.dim_instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f','SaaS','Self-Managed') = dim_product_tier.product_delivery_type
-    AND main_edition = 'EE'
+    --AND main_edition = 'EE'
 
 ), joined_payload AS (
 

@@ -1,6 +1,5 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    full_refresh = false,
     materialized = "incremental",
     unique_key = "mart_service_ping_instance_id"
 ) }}
@@ -32,7 +31,7 @@
 
 ),  zuora_subscription_snapshots AS (
 
-  /*
+  /**
   This partition handles duplicates and hard deletes by taking only
     the latest subscription version snapshot
    */
