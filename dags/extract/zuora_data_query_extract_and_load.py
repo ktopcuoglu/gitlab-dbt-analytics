@@ -73,6 +73,5 @@ zuora_data_query_extract_extract = KubernetesPodOperator(
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     arguments=[zuora_data_query_extract_cmd],
-    do_xcom_push=True,
     dag=dag,
 )
