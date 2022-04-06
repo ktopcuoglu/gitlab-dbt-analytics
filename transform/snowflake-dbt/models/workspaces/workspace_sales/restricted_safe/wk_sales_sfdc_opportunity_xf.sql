@@ -1125,6 +1125,8 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         COALESCE(agg_demo_keys.key_segment_geo_region_area,'other')     AS key_segment_geo_region_area,
         COALESCE(agg_demo_keys.key_segment_geo_region_area_sqs,'other') AS key_segment_geo_region_area_sqs,
         COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
+        
+        COALESCE(agg_demo_keys.key_segment_geo_area,'other')  AS key_segment_geo_area,
 
         COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')   AS sales_team_cro_level,
      

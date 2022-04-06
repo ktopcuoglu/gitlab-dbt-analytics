@@ -229,6 +229,12 @@ WITH date_details AS (
         base.close_day_of_fiscal_quarter_normalised,
 
         ----------------------------------------
+
+        agg_demo_keys.report_opportunity_user_segment,     
+        agg_demo_keys.report_opportunity_user_geo,
+        agg_demo_keys.report_opportunity_user_region,    
+        agg_demo_keys.report_opportunity_user_area,  
+
         agg_demo_keys.sales_team_cro_level,
         agg_demo_keys.sales_team_vp_level,
         agg_demo_keys.sales_team_avp_rd_level,
@@ -256,6 +262,8 @@ WITH date_details AS (
         agg_demo_keys.key_segment_geo_region_area,
         agg_demo_keys.key_segment_geo_region_area_sqs,
         agg_demo_keys.key_segment_geo_region_area_ot,
+
+        agg_demo_keys.key_segment_geo_area,
 
         agg_demo_keys.report_user_segment_geo_region_area,
         ----------------------------------------

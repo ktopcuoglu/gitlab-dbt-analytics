@@ -58,6 +58,12 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
 |  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
+|  Slack alias: `gtmanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `randdanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `peopleanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `engineeringanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `datacollaborationtriage` | No | Yes | No | No | No |  PeopleOps Onboarding |
+|  Slack alias: `dataplatformtriage` | No | No | No | No | Yes |  PeopleOps Onboarding |
 |  Project: `GitLab Data Team` | Developer | Developer | Developer | Developer | Developer |
 |  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Namespace: `gitlab-data` |  Developer | Developer | Developer | Developer | Developer | ? |
@@ -116,12 +122,6 @@ There are many slack channels for communication of data team needs and informati
 | `analytics-pipelines` | No | No | No | No | Yes |
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
-| `gtmanalyticstriage` | Yes | Yes | Yes | No | No |
-| `randdanalyticstriage` | Yes | Yes | Yes | No | No |
-| `peopleanalyticstriage` | Yes | Yes | Yes | No | No |
-| `engineeringanalyticstriage` | Yes | Yes | Yes | No | No |
-| `datacollaborationtriage` | No | Yes | No | No | No |
-| `dataplatformtriage` | No | No | No | No | Yes |
 
 </details>
 

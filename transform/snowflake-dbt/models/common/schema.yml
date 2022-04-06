@@ -2623,8 +2623,6 @@ models:
         tests:
           - not_null
       - name: is_blocked_namespace_creator
-        tests:
-          - not_null
       - name: namespace_created_date
       - name: namespace_is_internal
       - name: user_created_date

@@ -269,9 +269,9 @@
     "stage_name": "configure"
   },
   {
-    "event_name": "users",
+    "event_name": "users_created",
     "source_cte_name": "prep_user_event",
-    "user_column_name": "NULL",
+    "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "NULL",
     "project_column_name": "NULL",
     "primary_key": "dim_user_id",
