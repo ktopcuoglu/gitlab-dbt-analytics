@@ -555,17 +555,6 @@ tables:
       SELECT id
       , name
       FROM programming_languages
-  project_authorizations:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_authorizations'
-    export_table_primary_key: user_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT user_id
-      , project_id
-      , access_level
-      FROM project_authorizations
   project_compliance_framework_settings:
     export_schema: "gitlab_com"
     export_table: project_compliance_framework_settings

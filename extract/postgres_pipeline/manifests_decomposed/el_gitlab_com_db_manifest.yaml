@@ -320,29 +320,6 @@ tables:
       FROM cluster_providers_aws
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  cluster_providers_gcp:
-    export_schema: "gitlab_com"
-    export_table: cluster_providers_gcp
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , num_nodes
-      , created_at
-      , updated_at
-      , status_reason
-      , gcp_project_id
-      , zone
-      , machine_type
-      , operation_id
-      , endpoint
-      , legacy_abac
-      , cloud_run
-      FROM cluster_providers_gcp
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   clusters:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -710,7 +687,7 @@ tables:
       , updated_at
       , active
       , properties
-      , template
+      , NULL AS template
       , push_events
       , issues_events
       , merge_requests_events
@@ -1777,7 +1754,7 @@ tables:
       , updated_at
       , active
       , properties
-      , template
+      , NULL AS template
       , push_events
       , issues_events
       , merge_requests_events

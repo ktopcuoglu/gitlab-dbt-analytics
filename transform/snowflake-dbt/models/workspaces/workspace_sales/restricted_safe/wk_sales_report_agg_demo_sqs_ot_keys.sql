@@ -138,6 +138,8 @@ WITH sfdc_account_xf AS (
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group                 AS key_segment_geo_region_area_ot,
 
 
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area                                       AS key_segment_geo_area,
+
         COALESCE(report_opportunity_user_segment ,'other')                                    AS sales_team_cro_level,
      
         -- NF: This code replicates the reporting structured of FY22, to keep current tools working
