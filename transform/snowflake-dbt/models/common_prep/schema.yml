@@ -1916,3 +1916,19 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_ci_trigger
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_trigger_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_snippet
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_snippet_id
+        tests:
+          - not_null
+          - unique
