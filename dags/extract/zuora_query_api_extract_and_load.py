@@ -54,7 +54,6 @@ zuora_data_query_extract_cmd = f"""
     python zuora_query_api/src/main.py
 """
 
-# having both xcom flag flavors since we're in an airflow version where one is being deprecated
 zuora_data_query_extract_extract = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
