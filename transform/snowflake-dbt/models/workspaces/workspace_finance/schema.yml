@@ -1056,8 +1056,6 @@ models:
         tests:
           - not_null:
               severity: warn
-          - unique:
-              severity: warn
       - name: order_state
         tests:
           - not_null:
