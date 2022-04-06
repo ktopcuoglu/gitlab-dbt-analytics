@@ -19,8 +19,8 @@ class ZuoraQueriesAPI:
     def __init__(self, config_dict: Dict):
         """
 
-        :param config_dict: 
-        :type config_dict: 
+        :param config_dict:
+        :type config_dict:
         """
         zuora_api_client_id = env["ZUORA_API_CLIENT_ID"]
         zuora_api_client_secret = env["ZUORA_API_CLIENT_SECRET"]
@@ -148,7 +148,9 @@ class ZuoraQueriesAPI:
             info("File downloaded")
             return df
 
-    def process_queries(self, query_spec_file: str = "./zuora_query_api/src/queries.yml") -> None:
+    def process_queries(
+        self, query_spec_file: str = "./zuora_query_api/src/queries.yml"
+    ) -> None:
         """
             Written with downloading only the users table in mind, this table is ±200 rows and will likely not grow further,
             If any further files are added to the query spec verify that the data set size is small enough to be processed by this function.
@@ -173,4 +175,3 @@ class ZuoraQueriesAPI:
                 if_exists="replace",
             )
             info(f"Processed {table_spec}")
-
