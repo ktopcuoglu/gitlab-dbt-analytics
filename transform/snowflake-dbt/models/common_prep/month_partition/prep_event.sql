@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {% set year_value = var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) %}
 {% set month_value = var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) %}
    
@@ -400,7 +404,7 @@
     ('prep_environment_event', 'prep_environment_event'),
     ('prep_resource_milestone', 'prep_resource_milestone'),
     ('prep_labels', 'prep_labels'),
-    ('prep_ci_artifacts', 'prep_ci_artifacts'),
+    ('prep_ci_artifact', 'prep_ci_artifact'),
     ('prep_user_event', 'prep_user'),
     ('prep_board', 'prep_board'),
     ('prep_project_auto_devops', 'prep_project_auto_devops'),
@@ -510,7 +514,7 @@
 ), terraform_reports_events AS (
 
     SELECT *
-    FROM prep_ci_artifacts
+    FROM prep_ci_artifact
     WHERE file_type = 18
 
 ), action_monthly_active_users_wiki_repo_source AS (
