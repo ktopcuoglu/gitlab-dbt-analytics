@@ -278,6 +278,7 @@ roles:
           - gitlab_dotcom
           - qualtrics
           - zuora_revenue
+          - zuora_query_api
         privileges:
             databases:
                 read:
