@@ -719,6 +719,9 @@ models:
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
 
+  - name: dim_marketing_contact_no_pii
+    description: Non sensitive version of the dim_marketing_contact model.
+
   - name: dim_product_detail
     description: '{{ doc("dim_product_detail") }}'
     columns:
