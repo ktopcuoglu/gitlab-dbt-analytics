@@ -10,12 +10,16 @@ import yaml
 from logging import info, error, warning
 from os import environ as env
 
+from gitlabdata.orchestration_utils import (dataframe_uploader, snowflake_engine_factory)
 
 class ZuoraQueriesAPI:
-    def __init__(self):
+    def __init__(self, config_dict):
         zuora_api_client_id = env["ZUORA_API_CLIENT_ID"]
         zuora_api_client_secret = env["ZUORA_API_CLIENT_SECRET"]
         self.base_url = "https://rest.zuora.com"
+
+        self.snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
+
 
         zuora_token = self.authenticate_zuora(
             zuora_api_client_id, zuora_api_client_secret
@@ -77,7 +81,7 @@ class ZuoraQueriesAPI:
         else:
             logging.error(response.json)
     
-    def get_job_data(self, job_id: object) -> object:
+    def get_job_data(self, job_id: str) -> str:
         """
 
         :param job_id:
@@ -98,7 +102,7 @@ class ZuoraQueriesAPI:
             logging.error('Didnt get job id, error ')
             raise Exception
         
-    def get_data_query_file(self, job_id: object, wait_time: object = 30) -> object:
+    def get_data_query_file(self, job_id: str, wait_time: int = 30) -> pd.DataFrame:
         """
 
         :param job_id:
@@ -132,7 +136,6 @@ class ZuoraQueriesAPI:
             df = pd.read_csv(StringIO(response.text))
             return df 
 
-
     def process_scd(self, scd_file: str = "./zuora_data_query/src/scd_queries.yml"):
 
         with open(scd_file) as file:
@@ -144,7 +147,7 @@ class ZuoraQueriesAPI:
                 query_string=tables.get(table_spec).get("query")
             )
             df = self.get_data_query_file(job_id)
-            df.to_csv(f"{table_spec}.csv")
+            dataframe_uploader(df, self.engine, table_spec)
 
     def main(self) -> None:
         """
@@ -154,5 +157,6 @@ class ZuoraQueriesAPI:
 
 
 if __name__ == "__main__":
-    zq = ZuoraQueriesAPI()
+    config_dict = env.copy()
+    zq = ZuoraQueriesAPI(env)
     zq.main()
