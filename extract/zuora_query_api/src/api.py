@@ -143,17 +143,21 @@ class ZuoraQueriesAPI:
 
         tables = query_specs.get("tables")
         for table_spec in tables:
+            info(f"Processing {table_spec}")
             job_id = self.request_data_query_data(
                 query_string=tables.get(table_spec).get("query")
             )
             df = self.get_data_query_file(job_id)
             dataframe_uploader(df, self.snowflake_engine, table_spec, schema="ZUORA_QUERY_API", if_exists='replace')
+            info(f"Processed {table_spec}")
 
     def main(self) -> None:
         """
         Read data from a postgres DB and upload it directly to Snowflake.
         """
+        info("Procesing Zuora queries")
         self.process_scd()
+        info("Zuora queries processed")
 
 
 if __name__ == "__main__":
