@@ -5,7 +5,7 @@ models:
     description: Source layer for Zuora Users
     columns:
       - name: zuora_user_id
-        tags: ["tdf","zuora"]
+        tags: ["tdf", "zuora", "zuora_query_api"]
         tests:
           - not_null
           - unique
