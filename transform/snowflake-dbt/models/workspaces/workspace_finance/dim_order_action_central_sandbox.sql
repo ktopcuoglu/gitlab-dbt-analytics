@@ -8,16 +8,16 @@ WITH base AS (
 
     SELECT
       
-      dim_order_action_id,
-      dim_order_id,
-      dim_subscription_id,
-      dim_amendment_id,
-      order_action_type,
-      order_action_sequence,
-      is_auto_renew,
+      order_action_id                   AS dim_order_action_id,
+      order_id                          AS dim_order_id,
+      subscription_id                   AS dim_subscription_id,
+      subscription_version_amendment_id AS dim_amendment_id,
+      type                              AS order_action_type,
+      sequence                          AS order_action_sequence,
+      auto_renew                        AS is_auto_renew,
       cancellation_policy,
       term_type,
-      order_action_created_date,
+      created_date                      AS order_action_created_date,
       customer_acceptance_date,
       contract_effective_date,
       service_activation_date,
@@ -25,7 +25,7 @@ WITH base AS (
       current_term_period_type,
       renewal_term,
       renewal_term_period_type,
-      renewal_setting,
+      renew_setting                     AS renewal_setting,
       term_start_date
 
     FROM base

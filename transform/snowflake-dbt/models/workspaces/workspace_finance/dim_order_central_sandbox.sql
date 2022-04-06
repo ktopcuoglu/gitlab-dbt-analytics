@@ -8,14 +8,14 @@ WITH base AS (
 
     SELECT
       
-      dim_order_id,
-      order_description,
-      order_created_date,
+      order_id              AS dim_order_id,
+      description           AS order_description,
+      created_date          AS order_created_date,
       order_date,
       order_number,
-      order_state,
-      order_status,
-      is_created_by_migration
+      state                 AS order_state,
+      status                AS order_status,
+      created_by_migration  AS is_created_by_migration
 
     FROM base
 
