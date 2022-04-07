@@ -1,7 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "mart_service_ping_instance_id"
+    unique_key = "mart_service_ping_instance_metric_id"
 ) }}
 
 {{ simple_cte([
