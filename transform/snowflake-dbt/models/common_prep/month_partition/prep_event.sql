@@ -1,3 +1,7 @@
+{{ config(
+    tags=["product"]
+) }}
+
 {% set year_value = var('year', (run_started_at - modules.datetime.timedelta(2)).strftime('%Y')) %}
 {% set month_value = var('month', (run_started_at - modules.datetime.timedelta(2)).strftime('%m')) %}
    
@@ -290,8 +294,106 @@
     "project_column_name": "NULL",
     "primary_key": "dim_note_id",
     "stage_name": "plan"
+  },
+  {
+    "event_name": "boards",
+    "source_cte_name": "prep_board",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_board_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "project_auto_devops",
+    "source_cte_name": "prep_project_auto_devops",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_auto_devops_id",
+    "stage_name": "configure"
+  },
+  {
+    "event_name": "services",
+    "source_cte_name": "prep_service",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_service_id",
+    "stage_name": "create"
+  },
+  {
+    "event_name": "issue_resource_weight_events",
+    "source_cte_name": "prep_issue_resource_weight",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_resource_weight_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "milestones",
+    "source_cte_name": "prep_milestone",
+    "user_column_name": "NULL",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_milestone_id",
+    "stage_name": "plan"
+  },
+  {
+    "event_name": "action_monthly_active_users_design_management",
+    "source_cte_name": "action_monthly_active_users_design_management_source",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_action_id",
+    "stage_name": "create"
+  },
+  {
+    "event_name": "ci_pipeline_schedules",
+    "source_cte_name": "prep_ci_pipeline_schedule",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_pipeline_schedule_id",
+    "stage_name": "verify"
+  },
+  {
+    "event_name": "snippets",
+    "source_cte_name": "prep_snippet",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_snippet_id",
+    "stage_name": "create"
+  },
+  {
+    "event_name": "projects_prometheus_active",
+    "source_cte_name": "project_prometheus_source",
+    "user_column_name": "dim_user_id_creator",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_project_id",
+    "stage_name": "monitor"
+  },
+  {
+    "event_name": "ci_triggers",
+    "source_cte_name": "prep_ci_trigger",
+    "user_column_name": "owner_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_trigger_id",
+    "stage_name": "verify"
+  },
+  {
+    "event_name": "incident_labeled_issues",
+    "source_cte_name": "incident_labeled_issues_source",
+    "user_column_name": "author_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_issue_id",
+    "stage_name": "monitor"
   }
-
 ]
 
 -%}
@@ -317,13 +419,20 @@
     ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
     ('prep_resource_label', 'prep_resource_label'),
-    ('map_saas_event_to_gmau','map_saas_event_to_gmau'),
-    ('map_saas_event_to_smau','map_saas_event_to_smau'),
     ('prep_environment_event', 'prep_environment_event'),
     ('prep_resource_milestone', 'prep_resource_milestone'),
     ('prep_labels', 'prep_labels'),
-    ('prep_ci_artifacts', 'prep_ci_artifacts'),
-    ('prep_user_event', 'prep_user')
+    ('prep_ci_artifact', 'prep_ci_artifact'),
+    ('prep_user_event', 'prep_user'),
+    ('prep_board', 'prep_board'),
+    ('prep_project_auto_devops', 'prep_project_auto_devops'),
+    ('prep_service', 'prep_service'),
+    ('prep_issue_resource_weight', 'prep_issue_resource_weight'),
+    ('prep_milestone', 'prep_milestone'),
+    ('prep_ci_pipeline_schedule', 'prep_ci_pipeline_schedule'),
+    ('prep_snippet', 'prep_snippet'),
+    ('prep_project', 'prep_project'),
+    ('prep_ci_trigger', 'prep_ci_trigger')
 ]) }}
 
 , dast_jobs AS (
@@ -424,7 +533,7 @@
 ), terraform_reports_events AS (
 
     SELECT *
-    FROM prep_ci_artifacts
+    FROM prep_ci_artifact
     WHERE file_type = 18
 
 ), action_monthly_active_users_wiki_repo_source AS (
@@ -439,6 +548,27 @@
     SELECT *
     FROM prep_note
     WHERE noteable_type = 'Epic'
+
+), action_monthly_active_users_design_management_source AS (
+
+    SELECT *
+    FROM  prep_action
+    WHERE target_type = 'DesignManagement::Design'
+      AND event_action_type IN ('created', 'updated')
+
+), project_prometheus_source AS (
+
+    SELECT *, 
+      dim_date_id AS created_date_id
+    FROM  prep_project
+    WHERE ARRAY_CONTAINS('PrometheusService'::VARIANT, active_service_types_array)
+
+), incident_labeled_issues_source AS (
+
+    SELECT
+      *
+    FROM prep_issue
+    WHERE ARRAY_CONTAINS('incident'::variant, labels)
 
 ), data AS (
 
