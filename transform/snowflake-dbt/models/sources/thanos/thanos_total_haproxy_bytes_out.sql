@@ -20,5 +20,6 @@ WITH source AS (
     WHERE result_type IS NOT NULL AND status_type IS NOT NULL
 
 ) 
-    SELECT * FROM 
-    parsed
+
+SELECT * FROM 
+parsed
