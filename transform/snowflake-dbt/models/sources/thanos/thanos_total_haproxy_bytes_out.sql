@@ -8,7 +8,7 @@ WITH source AS (
     SELECT 
         pq_2.value['metric']['backend']::VARCHAR                     AS metric_backend,
         PARSE_JSON(pq_2.value['value'][0]::FLOAT)::NUMBER::TIMESTAMP AS metric_created_at,
-+       NULLIF(pq_2.value['value'][1], 'NaN')::FLOAT                 AS metric_value,
+        NULLIF(pq_2.value['value'][1], 'NaN')::FLOAT                 AS metric_value,
         pq_1.value['data']['resultType']::VARCHAR                    AS result_type,
         pq_1.value['status']:: VARCHAR                               AS status_type,
         pq_1.this['message']:: VARCHAR                               AS message_type,
