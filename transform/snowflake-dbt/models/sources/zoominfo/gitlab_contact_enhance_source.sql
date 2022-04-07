@@ -9,7 +9,7 @@ renamed AS (
 
   SELECT
     "Record ID"::VARCHAR AS record_id,
-    row_integer::VARCHAR AS row_integer,
+    row_integer::VARCHAR AS user_id,
     first_name::VARCHAR AS first_name,
     last_name::VARCHAR AS last_name,
     users_name::VARCHAR AS users_name,

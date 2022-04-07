@@ -49,7 +49,7 @@ rpt AS (
   LEFT JOIN sf_contacts
     ON users.email = sf_contacts.contact_email
   LEFT JOIN users_enhance
-    ON users.user_id = users_enhance.row_integer
+    ON users.user_id = users_enhance.user_id
   WHERE company_id IS NOT NULL
 
 )
