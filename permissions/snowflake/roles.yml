@@ -2361,6 +2361,15 @@ roles:
         warehouses:
             - analyst_xs
 
+    - alpcohen: 
+        member_of: 
+            - reporter
+            - restricted_safe
+            - xactly
+
+        warehouses: 
+            - analyst_xs
+
     - amartin:
         member_of:
             - analyst_finance
@@ -4251,6 +4260,11 @@ users:
         can_login: yes
         member_of:
             - alcurtis
+
+    - alpcohen:
+        can_login: yes
+        member_of:
+            - alpcohen
 
     - amartin:
         can_login: yes
