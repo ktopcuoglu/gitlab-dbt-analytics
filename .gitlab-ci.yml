@@ -149,7 +149,7 @@ clone_stop:
 ⚫python_black:
   <<: *python_check
   script:
-    - pip install black==22.3.0
+    - pip install black
     - black --check .
 
 🌽python_flake8:
