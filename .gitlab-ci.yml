@@ -171,7 +171,7 @@ clone_stop:
 🗒️python_pylint:
   <<: *python_check
   script:
-    - pip install pylint --upgrade
+    - pip install pylint
     - echo "Changed files are $CHANGED_FILES"
     - pylint $CHANGED_FILES --disable=line-too-long,E0401,E0611,W1203,W1202
 
