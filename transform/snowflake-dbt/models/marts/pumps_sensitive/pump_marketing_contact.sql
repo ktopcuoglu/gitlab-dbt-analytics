@@ -63,6 +63,11 @@ SELECT
   pql_nbr_stages,
   pql_nbr_namespace_users,
   has_namespace_setup_for_company_use,
+  pql_namespace_id,
+  pql_namespace_name,
+  pql_nbr_integrations_installed,
+  pql_integrations_installed,
+  pql_namespace_creator_job_description,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed

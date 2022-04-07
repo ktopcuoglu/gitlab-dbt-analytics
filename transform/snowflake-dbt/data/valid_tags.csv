@@ -59,3 +59,4 @@ zuora,Relates to Zuora data
 zuora_api_sandbox, Relates to Zuora API Sandbox data
 zuora_central_sandbox, Relates to Central Sandbox data
 zuora_revenue, Relates to Zuora Revenue data
+zuora_query_api, Relates to Zuora Query API data

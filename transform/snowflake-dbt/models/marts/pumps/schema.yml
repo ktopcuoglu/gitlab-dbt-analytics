@@ -846,6 +846,134 @@ models:
         description: All-time count of service desk issues ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsservice_desk_issues))
       - name: service_desk_issues_all_time_event_since_last_ping
       - name: service_desk_issues_all_time_event_estimated_monthly
+      - name: protected_branches_28_days_user
+        description: '{{ doc("protected_branches_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_cd_lead_time_usage_28_days_event
+        description: '{{ doc("ci_cd_lead_time_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: ci_cd_deployment_frequency_usage_28_days_event
+        description: '{{ doc("ci_cd_deployment_frequency_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_with_repositories_enabled_all_time_user
+        description: '{{ doc("projects_with_repositories_enabled_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_jobs_usage_28_days_user
+        description: '{{ doc("api_fuzzing_jobs_usage_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_pipeline_usage_28_days_event
+        description: '{{ doc("coverage_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_pipeline_usage_28_days_event
+        description: '{{ doc("api_fuzzing_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_pipeline_usage_28_days_event
+        description: '{{ doc("container_scanning_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_pipeline_usage_28_days_event
+        description: '{{ doc("dependency_scanning_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_pipeline_usage_28_days_event
+        description: '{{ doc("sast_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_pipeline_usage_28_days_event
+        description: '{{ doc("secret_detection_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_pipeline_usage_28_days_event
+        description: '{{ doc("dast_pipeline_usage_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_jobs_28_days_user
+        description: '{{ doc("coverage_fuzzing_jobs_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: environments_all_time_event
+        description: '{{ doc("environments_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: feature_flags_all_time_event
+        description: '{{ doc("feature_flags_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: successful_deployments_28_days_event
+        description: '{{ doc("successful_deployments_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: failed_deployments_28_days_event
+        description: '{{ doc("failed_deployments_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_compliance_framework_all_time_event
+        description: '{{ doc("projects_compliance_framework_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: commit_ci_config_file_28_days_user
+        description: '{{ doc("commit_ci_config_file_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: view_audit_all_time_user
+        description: '{{ doc("view_audit_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_jobs_all_time_user
+        description: '{{ doc("dependency_scanning_jobs_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one          
+      - name: analytics_devops_adoption_all_time_user
+        description: '{{ doc("analytics_devops_adoption_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_imported_all_time_event
+        description: '{{ doc("projects_imported_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one          
+      - name: preferences_security_dashboard_28_days_user
+        description: '{{ doc("preferences_security_dashboard_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: web_ide_edit_28_days_user  
+        description: '{{ doc("web_ide_edit_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one          
+      - name: auto_devops_pipelines_all_time_event  
+        description: '{{ doc("auto_devops_pipelines_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one          
+      - name: projects_prometheus_active_all_time_event  
+        description: '{{ doc("projects_prometheus_active_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: jira_issue_imports_all_time_event  
+        description: '{{ doc("jira_issue_imports_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: author_epic_all_time_user  
+        description: '{{ doc("author_epic_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: author_issue_all_time_user  
+        description: '{{ doc("author_issue_all_time_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one                   
+      - name: failed_deployments_28_days_user  
+        description: '{{ doc("failed_deployments_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: successful_deployments_28_days_user  
+        description: '{{ doc("successful_deployments_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
 
   - name: mart_saas_product_usage_metrics_monthly
     description: '{{ doc("mart_saas_product_usage_metrics_monthly") }}'

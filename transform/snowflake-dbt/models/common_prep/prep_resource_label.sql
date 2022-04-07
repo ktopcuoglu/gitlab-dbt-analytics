@@ -38,9 +38,9 @@
                 dim_issue.ultimate_parent_namespace_id,
                 dim_merge_request.ultimate_parent_namespace_id)             AS ultimate_parent_namespace_id,
       user_id                                                               AS dim_user_id,
-      issue_id                                                              AS dim_issue_id,
-      merge_request_id                                                      AS dim_merge_request_id,
-      epic_id                                                               AS dim_epic_id,
+      dim_issue.dim_issue_id                                                AS dim_issue_id,
+      dim_merge_request.dim_merge_request_id                                AS dim_merge_request_id,
+      dim_epic.dim_epic_id                                                  AS dim_epic_id,
       resource_label_events.created_at::TIMESTAMP                           AS created_at,
       dim_date.date_id                                                      AS created_date_id
     FROM resource_label_events
