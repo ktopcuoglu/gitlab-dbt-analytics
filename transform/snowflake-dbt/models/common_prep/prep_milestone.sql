@@ -22,7 +22,7 @@
     FROM {{ ref('gitlab_dotcom_milestones_source') }} 
     {% if is_incremental() %}
 
-    WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -31,6 +31,7 @@
     SELECT 
       milestone_id                                                                      AS dim_milestone_id,
       milestones.created_at,
+      milestones.updated_at,
       dim_date.date_id                                                                  AS created_date_id,
       IFNULL(dim_project.dim_project_id, -1)                                            AS dim_project_id,
       COALESCE(dim_project.ultimate_parent_namespace_id, milestones.group_id, -1)       AS ultimate_parent_namespace_id,

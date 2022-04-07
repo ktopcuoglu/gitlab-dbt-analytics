@@ -20,7 +20,7 @@
     FROM {{ ref('gitlab_dotcom_ci_pipeline_schedules_source') }} 
     {% if is_incremental() %}
 
-    WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -30,6 +30,7 @@
       ci_pipeline_schedule_id                                       AS dim_ci_pipeline_schedule_id,
       pipeline_schedule.owner_id                                    AS dim_user_id,
       pipeline_schedule.created_at,
+      pipeline_schedule.updated_at,
       dim_date.date_id                                              AS created_date_id,
       IFNULL(dim_project.dim_project_id, -1)                        AS dim_project_id,
       IFNULL(dim_project.ultimate_parent_namespace_id, -1)          AS ultimate_parent_namespace_id,
