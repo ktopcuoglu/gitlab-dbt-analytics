@@ -1551,7 +1551,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_clusters_applications_knative
                     - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
                     - raw.tap_postgres.gitlab_db_clusters_applications_runners
-                    - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
