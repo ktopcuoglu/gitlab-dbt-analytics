@@ -46,3 +46,15 @@ models:
         - name: message_type
         - name: status_code
         - name: is_success
+    - name: thanos_total_haproxy_bytes_out
+      columns:
+        - name: metric_backend
+        - name: metric_created_at
+        - name: metric_value
+          tests:
+              - not_null
+        - name: result_type
+        - name: status_type
+        - name: message_type
+        - name: status_code
+        - name: is_success
