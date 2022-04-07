@@ -22,7 +22,7 @@
       prep_charge.dim_crm_account_id,
       prep_charge.subscription_status,
       SUM(prep_charge.mrr)                                                                  AS mrr,
-      SUM(prep_charge.mrr) * 12                                                             AS arr,
+      SUM(prep_charge.arr)                                                                  AS arr,
       SUM(prep_charge.quantity)                                                             AS quantity,
       ARRAY_AGG(prep_charge.unit_of_measure)                                                AS unit_of_measure
     FROM prep_charge

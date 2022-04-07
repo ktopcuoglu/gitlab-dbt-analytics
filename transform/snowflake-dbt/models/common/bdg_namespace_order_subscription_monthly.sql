@@ -9,7 +9,7 @@
     ('dates', 'dim_date'),
     ('product_tiers', 'prep_product_tier'),
     ('product_details', 'dim_product_detail'),
-    ('fct_mrr_all', 'fct_mrr_all'),
+    ('fct_mrr_with_zero_dollar_charges', 'fct_mrr_with_zero_dollar_charges'),
     ('trial_histories', 'customers_db_trial_histories_source'),
     ('subscription_delivery_types', 'bdg_subscription_product_rate_plan')
 ]) }}
@@ -43,11 +43,11 @@
 ), current_recurring AS (
 
     SELECT DISTINCT
-      fct_mrr_all.dim_subscription_id
-    FROM fct_mrr_all
+      fct_mrr_with_zero_dollar_charges.dim_subscription_id
+    FROM fct_mrr_with_zero_dollar_charges
     INNER JOIN product_details
-      ON fct_mrr_all.dim_product_detail_id = product_details.dim_product_detail_id
-    WHERE fct_mrr_all.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+      ON fct_mrr_with_zero_dollar_charges.dim_product_detail_id = product_details.dim_product_detail_id
+    WHERE fct_mrr_with_zero_dollar_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
       AND product_details.product_delivery_type = 'SaaS'
       AND subscription_status IN ('Active', 'Cancelled')
 

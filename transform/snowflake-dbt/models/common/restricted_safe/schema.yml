@@ -451,7 +451,7 @@ models:
       - name: quantity
         description: Total quantity
         
-  - name: fct_mrr_all
+  - name: fct_mrr_with_zero_dollar_charges
     description: One row represents Monthly Recurring Revenue per month, by rate plan charge. Includes charges with $0 MRR such as EDU/OSS charges.
     columns:
       - name: mrr_id
