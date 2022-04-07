@@ -14,7 +14,7 @@ WITH source AS (
         pq_1.this['message']:: VARCHAR                               AS message_type,
         pq_1.this['status_code']:: NUMBER                            AS status_code,
         pq_1.this['success']:: BOOLEAN                               AS is_success
-    FROM source pq ,
+    FROM source pq,
         lateral flatten(input => pq.jsontext['total_haproxy_bytes_out']) pq_1,
         lateral flatten(input => pq.jsontext['total_haproxy_bytes_out']['body']['data']['result'],outer => true) pq_2
     WHERE result_type IS NOT NULL AND status_type IS NOT NULL
