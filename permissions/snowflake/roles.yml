@@ -4211,7 +4211,6 @@ roles:
             - data_team_analyst
             - analyst_core
             - restricted_safe
-            - dbt_data_science
         warehouses:
             - analyst_xs
 
