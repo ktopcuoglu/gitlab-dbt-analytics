@@ -21,5 +21,5 @@ WITH source AS (
 
 ) 
 
-SELECT * FROM 
-parsed
+SELECT * 
+FROM parsed
