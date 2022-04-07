@@ -131,4 +131,14 @@
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['failed_deployments']") }}                           AS failed_deployments_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['release']['successful_deployments']") }}                       AS successful_deployments_28_days_user
 
+    -- 5.3 metrics
+    {{ convert_variant_to_boolean_field("raw_usage_data_payload['geo_enabled']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['geo_nodes']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_config_auto_devops']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_instance_type_active']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_group_type_active']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_project_type_active']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['gitaly']['version']") }},
+    {{ null_negative_numbers("raw_usage_data_payload['gitaly']['servers']") }}
+    
 {%- endmacro -%}

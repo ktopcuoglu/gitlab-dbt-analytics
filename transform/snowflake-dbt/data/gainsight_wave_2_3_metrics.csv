@@ -122,3 +122,11 @@ wave,metric_name
 5.2,usage_activity_by_stage.plan.issues
 5.2,usage_activity_by_stage_monthly.release.failed_deployments
 5.2,usage_activity_by_stage_monthly.release.successful_deployments
+5.3,geo_enabled
+5.3,counts.geo_nodes
+5.3,usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops
+5.3,counts.ci_runners_instance_type_active
+5.3,counts.ci_runners_group_type_active
+5.3,counts.ci_runners_project_type_active
+5.3,gitaly.version
+5.3,gitaly.servers
