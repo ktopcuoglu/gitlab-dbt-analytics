@@ -278,6 +278,7 @@ roles:
           - gitlab_dotcom
           - qualtrics
           - zuora_revenue
+          - zuora_query_api
         privileges:
             databases:
                 read:
@@ -1533,7 +1534,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_errors
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_validate
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_variables
                     - raw.tap_postgres.gitlab_db_ci_platform_metrics
                     - raw.tap_postgres.gitlab_db_ci_runners
                     - raw.tap_postgres.gitlab_db_ci_runner_projects
@@ -1618,7 +1618,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
-                    - raw.tap_postgres.gitlab_db_project_authorizations
                     - raw.tap_postgres.gitlab_db_project_auto_devops
                     - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics
@@ -2306,6 +2305,23 @@ roles:
             tables:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
+
+    - zuora_query_api:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.zuora_query_api
+                    - prep.zuora_query_api
+            tables:
+                read:
+                    - raw.zuora_query_api.*
+                    - prep.zuora_query_api.*
 
     - zuora_revenue: # This is done to provide access to Data team analyst as 3530
         warehouses:

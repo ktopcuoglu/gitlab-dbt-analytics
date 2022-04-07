@@ -147,7 +147,23 @@
       sm_free_users.failed_deployments_28_days_event,
       sm_free_users.projects_compliance_framework_all_time_event,
       sm_free_users.commit_ci_config_file_28_days_user,
-      sm_free_users.view_audit_all_time_user,    
+      sm_free_users.view_audit_all_time_user,   
+      -- Wave 5.2
+      sm_free_users.dependency_scanning_jobs_all_time_user,
+      sm_free_users.analytics_devops_adoption_all_time_user,
+      sm_free_users.projects_imported_all_time_event,
+      sm_free_users.preferences_security_dashboard_28_days_user,
+      sm_free_users.web_ide_edit_28_days_user,
+      sm_free_users.auto_devops_pipelines_all_time_event,
+      sm_free_users.projects_prometheus_active_all_time_event,
+      sm_free_users.prometheus_enabled,
+      sm_free_users.prometheus_metrics_enabled,
+      sm_free_users.group_saml_enabled,
+      sm_free_users.jira_issue_imports_all_time_event,
+      sm_free_users.author_epic_all_time_user,
+      sm_free_users.author_issue_all_time_user,
+      sm_free_users.failed_deployments_28_days_user,
+      sm_free_users.successful_deployments_28_days_user,       
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.hostname
                              ORDER BY sm_free_users.ping_created_at DESC
@@ -288,6 +304,22 @@
       "usage_activity_by_stage_monthly.manage.projects_with_compliance_framework"               AS projects_compliance_framework_all_time_event,
       "redis_hll_counters.pipeline_authoring.o_pipeline_authoring_unique_users_committing_ciconfigfile_monthly"  AS commit_ci_config_file_28_days_user,
       "compliance_unique_visits.g_compliance_audit_events"                                      AS view_audit_all_time_user,
+      --Wave 5.2
+      "usage_activity_by_stage.secure.user_dependency_scanning_jobs"                            AS dependency_scanning_jobs_all_time_user,
+      "analytics_unique_visits.i_analytics_dev_ops_adoption"                                    AS analytics_devops_adoption_all_time_user,
+      "usage_activity_by_stage.manage.project_imports.total"                                    AS projects_imported_all_time_event,
+      "usage_activity_by_stage_monthly.secure.user_preferences_group_overview_security_dashboard"  AS preferences_security_dashboard_28_days_user,
+      "usage_activity_by_stage_monthly.create.action_monthly_active_users_ide_edit"             AS web_ide_edit_28_days_user,
+      "counts.ci_pipeline_config_auto_devops"                                                   AS auto_devops_pipelines_all_time_event,
+      "counts.projects_prometheus_active"                                                       AS projects_prometheus_active_all_time_event,
+      "prometheus_enabled"                                                                      AS prometheus_enabled,
+      "prometheus_metrics_enabled"                                                              AS prometheus_metrics_enabled,
+      "usage_activity_by_stage.manage.group_saml_enabled"                                       AS group_saml_enabled,
+      "usage_activity_by_stage.manage.issue_imports.jira"                                       AS jira_issue_imports_all_time_event,
+      "usage_activity_by_stage.plan.epics"                                                      AS author_epic_all_time_user,
+      "usage_activity_by_stage.plan.issues"                                                     AS author_issue_all_time_user,
+      "usage_activity_by_stage_monthly.release.failed_deployments"                              AS failed_deployments_28_days_user,
+      "usage_activity_by_stage_monthly.release.successful_deployments"                          AS successful_deployments_28_days_user,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
@@ -310,5 +342,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2022-03-02"
+    updated_date="2022-04-01"
 ) }}

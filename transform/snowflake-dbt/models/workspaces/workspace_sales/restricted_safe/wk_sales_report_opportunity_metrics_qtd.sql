@@ -3,10 +3,18 @@
 WITH sfdc_opportunity_xf AS (
   
     SELECT * 
-    FROM {{ ref('wk_sales_sfdc_opportunity_xf')}} 
+    FROM {{ ref('wk_sales_sfdc_opportunity_xf') }} 
     WHERE is_edu_oss = 0
     AND is_deleted = 0
   
+), sfdc_opportunity_snapshot_history_xf AS (
+   
+   
+    SELECT * 
+    FROM {{ ref('wk_sales_sfdc_opportunity_snapshot_history_xf') }} 
+    WHERE is_edu_oss = 0
+    AND is_deleted = 0
+
 ), date_details AS (
   
     SELECT *
@@ -245,12 +253,13 @@ WITH sfdc_opportunity_xf AS (
     -- identify todays quarter and fiscal quarter
         CROSS JOIN today
    GROUP BY 1,2,3
+
 ), pipe_gen_yoy AS (
   
     SELECT 
       opp_snapshot.report_user_segment_geo_region_area_sqs_ot,
       SUM(opp_snapshot.net_arr)                            AS minus_1_year_pipe_gen_net_arr
-    FROM restricted_safe_workspace_sales.sfdc_opportunity_snapshot_history_xf opp_snapshot
+    FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
       CROSS JOIN today
     WHERE opp_snapshot.snapshot_fiscal_quarter_date = opp_snapshot.pipeline_created_fiscal_quarter_date
       AND opp_snapshot.is_eligible_created_pipeline_flag = 1

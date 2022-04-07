@@ -296,53 +296,6 @@ tables:
       FROM cluster_projects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  cluster_providers_aws:
-    export_schema: "gitlab_com"
-    export_table: cluster_providers_aws
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , num_nodes
-      , status
-      , created_at
-      , updated_at
-      , key_name
-      , role_arn
-      , region
-      , vpc_id
-      , subnet_ids
-      , security_group_id
-      , instance_type
-      , status_reason
-      , kubernetes_version
-      FROM cluster_providers_aws
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  cluster_providers_gcp:
-    export_schema: "gitlab_com"
-    export_table: cluster_providers_gcp
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , num_nodes
-      , created_at
-      , updated_at
-      , status_reason
-      , gcp_project_id
-      , zone
-      , machine_type
-      , operation_id
-      , endpoint
-      , legacy_abac
-      , cloud_run
-      FROM cluster_providers_gcp
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   clusters:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -370,21 +323,6 @@ tables:
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_cilium:
-    export_schema: "gitlab_com"
-    export_table: clusters_applications_cilium
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , created_at
-      , updated_at
-      , status
-      , status_reason
-      FROM clusters_applications_cilium
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   clusters_applications_elastic_stacks:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -400,22 +338,6 @@ tables:
       , updated_at
       , status_reason
       FROM clusters_applications_elastic_stacks
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  clusters_kubernetes_namespaces:
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_kubernetes_namespaces'
-    export_table_primary_key: cluster_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT cluster_id
-      , project_id
-      , cluster_project_id
-      , created_at
-      , updated_at
-      , namespace
-      , service_account_name
-      FROM clusters_kubernetes_namespaces
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   clusters_integration_elasticstack:
