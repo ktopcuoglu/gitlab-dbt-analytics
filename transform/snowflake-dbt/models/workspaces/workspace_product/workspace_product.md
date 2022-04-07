@@ -68,7 +68,7 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 
 {% enddocs %}
 
-{% docs fct_service_ping_instance %}
+{% docs fct_service_ping_instance_metric %}
 
 Version source, self managed usage data fact table.
 
@@ -80,7 +80,7 @@ Version source, self managed usage data dim table.
 
 {% enddocs %}
 
-{% docs mart_service_ping_instance %}
+{% docs mart_service_ping_instance_metric %}
 
 Version source, self managed usage data mart table.
 

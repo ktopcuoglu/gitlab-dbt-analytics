@@ -1,6 +1,5 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    full_refresh = false,
     materialized = "incremental",
     unique_key = "prep_service_ping_instance_flattened_id"
 ) }}
@@ -30,7 +29,8 @@ WITH source AS (
         (source.raw_usage_data_payload:license_subscription_id::TEXT)                          AS license_subscription_id,
         source.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER    AS umau_value,
         path                                  AS metrics_path,
-        value                                 AS metric_value
+        IFF(value = -1, 0, value)             AS metric_value,
+        IFF(value = -1, TRUE, FALSE)          AS has_timed_out
       FROM source,
         LATERAL FLATTEN(input => raw_usage_data_payload,
         RECURSIVE => true)
