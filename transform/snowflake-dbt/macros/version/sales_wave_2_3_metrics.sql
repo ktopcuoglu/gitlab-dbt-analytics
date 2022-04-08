@@ -138,7 +138,7 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_instance_type_active']") }}                                                  AS active_instance_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_group_type_active']") }}                                                     AS active_group_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_project_type_active']") }}                                                   AS active_project_runners_all_time_event,
-    "raw_usage_data_payload['gitaly']['version']"::VARCHAR                                                                                              AS gitaly_version,
+    raw_usage_data_payload['gitaly']['version']::VARCHAR                                                                                              AS gitaly_version,
     {{ null_negative_numbers("raw_usage_data_payload['gitaly']['servers']") }}                                                                          AS gitaly_servers_all_time_event
     
 {%- endmacro -%}
