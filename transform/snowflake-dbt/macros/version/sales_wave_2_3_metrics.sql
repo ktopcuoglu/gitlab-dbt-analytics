@@ -134,7 +134,7 @@
     -- 5.3 metrics
     {{ convert_variant_to_boolean_field("raw_usage_data_payload['geo_enabled']") }}                                                                     AS geo_enabled,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['geo_nodes']") }}                                                                        AS geo_nodes_all_time_event,
-    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_config_auto_devops']") }}                AS auto_devops_pipelines_all_time_user,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['verify']['ci_pipeline_config_auto_devops']") }}                AS auto_devops_pipelines_28_days_user,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_instance_type_active']") }}                                                  AS active_instance_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_group_type_active']") }}                                                     AS active_group_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_project_type_active']") }}                                                   AS active_project_runners_all_time_event,
