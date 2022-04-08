@@ -1628,7 +1628,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_project_statistics
                     - raw.tap_postgres.gitlab_db_prometheus_alerts
                     - raw.tap_postgres.gitlab_db_protected_branches
-                    - raw.tap_postgres.gitlab_db_protected_environments
                     - raw.tap_postgres.gitlab_db_push_rules
                     - raw.tap_postgres.gitlab_db_releases
                     - raw.tap_postgres.gitlab_db_repository_languages
@@ -1671,9 +1670,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers_errors
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines_validate
                     - raw.tap_postgres.gitlab_db_vulnerability_scanners
                     - raw.tap_postgres.gitlab_db_vulnerability_scanners_errors
                     - raw.tap_postgres.gitlab_db_vulnerability_scanners_validate
