@@ -1,5 +1,5 @@
 ## Generating Periscope Embed Links
-
+# TODO: rbacovic
 Edit the `chart_slide_deck.csv` file to include the chart name, the dashboard ID, and the widget ID.
 These all come from the chart's URL.
 Follow the example in the csv here.
