@@ -20,3 +20,5 @@ There are currently different metrics being pulled from Graphite, all having to 
 Every DAG run, the metric values are pulled for a number of different web pages.  
 
 There are different statistics available from Graphite for each webpage.  For example, the mean AND median LCP for the GitLab Home Page is available from Graphite.  For maximum data availability, this extract is setup to pull all possible aggregations/statistics by using the `.*` at the end of the requested metric name.
+
+> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).

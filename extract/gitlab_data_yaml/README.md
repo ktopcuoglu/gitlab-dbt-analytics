@@ -7,3 +7,5 @@ Current files are:
 * [Location Factors](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/location_factors.yml)
 * [Roles](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/roles.yml)
 * [Team](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/team.yml)
+
+> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).

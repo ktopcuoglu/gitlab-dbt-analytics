@@ -6,3 +6,5 @@ Current files are:
 
 * [FOSS Feature Flags](https://gitlab.com/gitlab-org/gitlab/-/tree/master/config/feature_flags/)
 * [EE Feature Flags](https://gitlab.com/gitlab-org/gitlab/-/tree/master/ee/config/feature_flags/)
+
+> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).

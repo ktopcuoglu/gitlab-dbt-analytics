@@ -10,3 +10,5 @@ Reports to be extracted are defined in [reports.yml](reports.yml) file.
  
 
 [Link to issue](https://gitlab.com/gitlab-data/analytics/-/issues/6007)
+
+> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).

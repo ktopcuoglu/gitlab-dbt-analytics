@@ -7,4 +7,6 @@ create or replace table raw.engineering_extracts.red_master_stats (
     jsontext variant,
     uploaded_at timestamp_ntz(9) default CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
   );
-  ```
+```
+
+> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).

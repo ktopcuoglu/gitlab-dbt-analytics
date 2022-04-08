@@ -72,3 +72,5 @@ There is also a process in place to recreate SaaS service pings from the past.
 There is a separate backfill `DAG` that allows back filling service pings for the last `12` months.
 The process backfills by filtering the queries to only those that query over a specific timeframe, and then passing in the month it is backfilling for as the timeframe.
 As a future iteration, we may add the ability to backfill metrics that do not query just over a specific timeframe _(all-time metrics)_.
+
+> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
