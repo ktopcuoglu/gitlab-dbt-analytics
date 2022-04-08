@@ -73,8 +73,8 @@ WITH customers AS (
       zuora_rp.rate_plan_id,
       
       -- Financial Info
-      IFF(zuora_rpc.created_by_id = '2c92a0fd55822b4d015593ac264767f2',
-            TRUE, FALSE)                                                 AS is_purchased_through_subscription_portal,
+      IFF(zuora_rpc.created_by_id IN ('2c92a0fd55822b4d015593ac264767f2','2c92a0107bde3653017bf00cd8a86d5a'),
+           TRUE, FALSE)                                                 AS is_purchased_through_subscription_portal,
       
       -- Orders metadata
       FIRST_VALUE(orders_with_subscription.customer_id) 

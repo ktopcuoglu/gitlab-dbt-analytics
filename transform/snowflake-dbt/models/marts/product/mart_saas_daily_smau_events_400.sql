@@ -22,7 +22,7 @@
       map_saas_event_to_smau.stage_name,
       map_saas_event_to_smau.is_smau,
       map_saas_event_to_smau.is_umau,
-      fct_daily_event_400.is_blocked_namespace,
+      fct_daily_event_400.is_blocked_namespace_creator,
       fct_daily_event_400.namespace_created_date,
       fct_daily_event_400.namespace_is_internal,
       fct_daily_event_400.user_created_date,

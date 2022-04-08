@@ -17,10 +17,10 @@ WITH source AS (
 
 ), raw_usage_data_payload AS (
 
-    SELECT 
+    SELECT
       *,
       OBJECT_CONSTRUCT(
-        {% for column in columns %}  
+        {% for column in columns %}
           '{{ column.name | lower }}', COALESCE(TRY_PARSE_JSON({{ column.name | lower }}), {{ column.name | lower }}::VARIANT)
           {% if not loop.last %}
             ,
@@ -41,7 +41,7 @@ WITH source AS (
         --licensee // removed for PII
         license_user_count::NUMBER                   AS license_user_count,
         TRY_CAST(license_starts_at AS TIMESTAMP)     AS license_starts_at,
-        CASE 
+        CASE
             WHEN license_expires_at IS NULL                               THEN NULL::TIMESTAMP
             WHEN SPLIT_PART(license_expires_at, '-', 1)::NUMBER > 9999    THEN '9999-12-30 00:00:00.000 +00'::TIMESTAMP
                                                                           ELSE license_expires_at::TIMESTAMP END
@@ -90,7 +90,7 @@ WITH source AS (
         stats_used                                   AS counts,
         ingress_modsecurity_enabled::boolean         AS is_ingress_modsecurity_enabled,
         PARSE_JSON(topology)                         AS topology,
-        grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled, 
+        grafana_link_enabled::BOOLEAN                AS is_grafana_link_enabled,
         PARSE_JSON(analytics_unique_visits)          AS analytics_unique_visits,
         raw_usage_data_id::INTEGER                   AS raw_usage_data_id,
         container_registry_vendor::VARCHAR           AS container_registry_vendor,

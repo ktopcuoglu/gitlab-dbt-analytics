@@ -1,0 +1,40 @@
+version: 2
+
+sources:
+  - name: adaptive
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: tap_adaptive
+    loader: Meltano
+    loaded_at_field: __loaded_at
+
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 36, period: hour}
+
+    tables:
+      - name: accounts
+      - name: active_currencies
+      - name: attributes
+      - name: customer_logo
+      - name: dimensions
+      - name: dimension_families
+      - name: dimension_mapping
+      - name: groups
+        freshness: null
+      - name: instances
+      - name: levels
+      - name: locales
+      - name: modeled_sheet
+      - name: permission_sets
+      - name: roles
+      - name: security_audit
+      - name: sheets
+      - name: sheet_definition
+      - name: time
+      - name: transaction_definition
+      - name: users
+      - name: versions

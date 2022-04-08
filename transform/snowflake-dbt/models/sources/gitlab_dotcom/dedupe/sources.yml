@@ -78,8 +78,6 @@ sources:
         identifier: gitlab_db_ci_pipeline_schedule_variables
       - name: ci_pipeline_schedules
         identifier: gitlab_db_ci_pipeline_schedules
-      - name: ci_pipeline_variables
-        identifier: gitlab_db_ci_pipeline_variables
       - name: ci_pipelines
         identifier: gitlab_db_ci_pipelines
       - name: ci_platform_metrics
@@ -183,6 +181,9 @@ sources:
         identifier: gitlab_db_experiments
       - name: external_status_checks 
         identifier: gitlab_db_external_status_checks
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 15, period: day}
       - name: gitlab_subscription_histories
         identifier: gitlab_db_gitlab_subscription_histories
       - name: gitlab_subscriptions
@@ -260,11 +261,6 @@ sources:
         identifier: gitlab_db_pages_domains
       - name: programming_languages
         identifier: gitlab_db_programming_languages
-      - name: project_authorizations
-        identifier: gitlab_db_project_authorizations
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 30, period: day}    
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
       - name: project_custom_attributes
@@ -387,14 +383,6 @@ sources:
         freshness:
           warn_after: { count: 3, period: day }
           error_after: { count: 7, period: day }
-      - name: cluster_providers_aws
-        identifier: gitlab_db_cluster_providers_aws
-        freshness: null
-      - name: cluster_providers_gcp
-        identifier: gitlab_db_cluster_providers_gcp
-      - name: clusters_applications_cilium
-        identifier: gitlab_db_clusters_applications_cilium
-        freshness: null
       - name: container_expiration_policies
         identifier: gitlab_db_container_expiration_policies
       - name: compliance_management_frameworks

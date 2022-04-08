@@ -82,6 +82,11 @@ databases:
     - jstark_prep:
         shared: no
 
+    - judume_prod:
+        shared: no
+    - judume_prep:
+        shared: no       
+
     - kaguilar_prod:
         shared: no
     - kaguilar_prep:
@@ -273,6 +278,7 @@ roles:
           - gitlab_dotcom
           - qualtrics
           - zuora_revenue
+          - zuora_query_api
         privileges:
             databases:
                 read:
@@ -965,6 +971,7 @@ roles:
                     - prod
                     - raw
                     - prep
+                    - snowflake
             schemas:
                 read:
                     - prod.restricted_safe_common_mart_sales
@@ -979,6 +986,8 @@ roles:
                     - prep.snowplow
                     - prep.dbt
                     - prep.airflow
+                    - snowflake.account_usage
+                    - raw.sheetload
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -1016,11 +1025,9 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
-
-
-                    
-
-                    
+                    - snowflake.account_usage.query_history
+                    - raw.sheetload.hp_dvr
+           
 # ==========================================
 # Object Roles
 # ==========================================
@@ -1527,7 +1534,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_errors
                     - raw.tap_postgres.gitlab_db_ci_pipeline_schedule_variables_validate
-                    - raw.tap_postgres.gitlab_db_ci_pipeline_variables
                     - raw.tap_postgres.gitlab_db_ci_platform_metrics
                     - raw.tap_postgres.gitlab_db_ci_runners
                     - raw.tap_postgres.gitlab_db_ci_runner_projects
@@ -1545,7 +1551,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_clusters_applications_knative
                     - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
                     - raw.tap_postgres.gitlab_db_clusters_applications_runners
-                    - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
@@ -1612,7 +1617,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
-                    - raw.tap_postgres.gitlab_db_project_authorizations
                     - raw.tap_postgres.gitlab_db_project_auto_devops
                     - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics
@@ -2301,6 +2305,23 @@ roles:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
 
+    - zuora_query_api:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.zuora_query_api
+                    - prep.zuora_query_api
+            tables:
+                read:
+                    - raw.zuora_query_api.*
+                    - prep.zuora_query_api.*
+
     - zuora_revenue: # This is done to provide access to Data team analyst as 3530
         warehouses:
             - analyst_xs
@@ -2338,6 +2359,15 @@ roles:
             - bamboohr_analytics
             - restricted_safe
         warehouses:
+            - analyst_xs
+
+    - alpcohen: 
+        member_of: 
+            - reporter
+            - restricted_safe
+            - xactly
+
+        warehouses: 
             - analyst_xs
 
     - amartin:
@@ -2864,11 +2894,8 @@ roles:
                     - jcaine_prod.*.*
 
     - joshua:
-        member_of:
-            - gitlab_dotcom
-            - reporter
-        warehouses:
-            - analyst_xs
+        member_of: []
+        warehouses: []
 
     - jpeguero:
         member_of:
@@ -2985,6 +3012,47 @@ roles:
         warehouses:
             - analyst_xs
             - jstemmer_xl
+
+    - judume:
+        member_of:
+            - data_team_analyst
+            - analyst_sales
+            - restricted_safe
+        warehouses:
+            - engineer_xs
+            - engineer_xl
+        owns:
+            databases:
+                - judume_prep
+                - judume_prod
+            schemas:
+                - judume_prep.*
+                - judume_prod.*
+            tables:
+                - judume_prep.*.*
+                - judume_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - judume_prep
+                    - judume_prod
+                write:
+                    - judume_prep
+                    - judume_prod
+            schemas:
+                read:
+                    - judume_prep.*
+                    - judume_prod.*
+                write:
+                    - judume_prep.*
+                    - judume_prod.*
+            tables:
+                read:
+                    - judume_prep.*.*
+                    - judume_prod.*.*
+                write:
+                    - judume_prep.*.*
+                    - judume_prod.*.*
 
     - kaguilar:
         member_of:
@@ -3415,6 +3483,13 @@ roles:
                     - mlaanen_prep.*.*
                     - mlaanen_prod.*.*
 
+    - mpetersen:
+        member_of:
+            - analyst_growth
+            - restricted_safe
+        warehouses:
+            - analyst_xs
+
     - mramirez:
         member_of:
             - analyst_sales
@@ -3598,6 +3673,13 @@ roles:
             - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
+        warehouses:
+            - analyst_xs
+
+    - ofalkenhof:
+        member_of:
+            - analyst_finance
+            - restricted_safe
         warehouses:
             - analyst_xs
 
@@ -4132,6 +4214,16 @@ roles:
                     - vprakash_prep.*.*
                     - vprakash_prod.*.*
 
+    - warias:
+        member_of:
+            - data_team_analyst
+            - analyst_core
+            - restricted_safe
+            - dbt_data_science
+
+        warehouses:
+            - analyst_xs
+
     - ysun:
         member_of:
             - analyst_finance
@@ -4171,6 +4263,11 @@ users:
         can_login: yes
         member_of:
             - alcurtis
+
+    - alpcohen:
+        can_login: yes
+        member_of:
+            - alpcohen
 
     - amartin:
         can_login: yes
@@ -4317,9 +4414,8 @@ users:
             - jcaine
 
     - joshua:
-        can_login: yes
-        member_of:
-            - joshua
+        can_login: no
+        member_of: []
 
     - jpeguero:
         can_login: yes
@@ -4349,6 +4445,11 @@ users:
         can_login: yes
         member_of:
             - jstemmer
+
+    - judume:
+        can_login: yes
+        member_of:
+            - judume
 
     - kaguilar:
         can_login: yes
@@ -4442,6 +4543,11 @@ users:
         member_of:
             - mlaanen
 
+    - mpetersen:
+        can_login: yes
+        member_of:
+            - mpetersen
+
     - mramirez: # De provisioned as part of Quarterly audit and security check.
         can_login: yes
         member_of:
@@ -4476,6 +4582,11 @@ users:
         can_login: yes
         member_of:
             - nraisinghani
+
+    - ofalkenhof:
+        can_login: yes
+        member_of:
+            - ofalkenhof
 
     - parmstrong:
         can_login: yes
@@ -4593,6 +4704,11 @@ users:
         member_of:
             - vprakash
             - securityadmin
+
+    - warias:
+        can_login: yes
+        member_of:
+            - warias
 
     - ysun: # De provisioned as part of Quarterly audit and security check.
         can_login: yes

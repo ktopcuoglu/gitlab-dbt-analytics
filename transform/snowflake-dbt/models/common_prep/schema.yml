@@ -1822,3 +1822,113 @@ models:
           - not_null
           - unique
       - name: host_name
+
+  - name: prep_todo
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_todo_id
+        tests:
+          - not_null
+          - unique
+      - name: author_id
+        description: The user id of the todo author
+      - name: target_type
+        description: The type of item the todo was created on
+      - name: state
+        description: Can be either 'pending' or 'done'
+
+  - name: prep_resource_label
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_issue_label_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_environment_event
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_environment_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_resource_milestone
+    desctiption: Prep table used in `prep_event`
+    columns:
+      - name: dim_resource_milestone_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ci_artifact
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_job_artifact_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_board
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_board_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_project_auto_devops
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_auto_devops_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_service
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_service_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_issue_resource_weight
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_resource_weight_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_milestone
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_milestone_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ci_pipeline_schedule
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_pipeline_schedule_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_ci_trigger
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_ci_trigger_id
+        tests:
+          - not_null
+          - unique
+
+  - name: prep_snippet
+    description: Prep table used in `prep_event`
+    columns:
+      - name: dim_snippet_id
+        tests:
+          - not_null
+          - unique
