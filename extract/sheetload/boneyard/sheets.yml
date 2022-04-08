@@ -73,3 +73,7 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - us_cities_latitude_longitude
+  - name: namespace_segmentation
+    owner: '@kmagda'
+    tabs:
+      - namespace_segmentation_202202  
