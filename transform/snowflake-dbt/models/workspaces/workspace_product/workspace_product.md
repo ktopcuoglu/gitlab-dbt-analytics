@@ -86,6 +86,24 @@ Version source, self managed usage data mart table.
 
 {% enddocs %}
 
+{% docs mart_service_ping_instance_metric_28_day %}
+
+Version source, self managed usage data mart table for 28 day time frame.
+
+{% enddocs %}
+
+{% docs rpt_service_ping_instance_metric_adoption_monthly %}
+
+Model used to determine active seats and subscriptions reporting on any given metric
+
+{% enddocs %}
+
+{% docs rpt_service_ping_instance_metric_estimated_monthly %}
+
+Model used to estimate usage based upon reported and unreported seats/subscriptions for any given metric.
+
+{% enddocs %}
+
 {% docs prep_service_ping_instance %}
 
 Version source, self managed usage data prep table.
@@ -95,5 +113,11 @@ Version source, self managed usage data prep table.
 {% docs prep_service_ping_instance_flattened %}
 
 Version source, self managed usage data prep table.
+
+{% enddocs %}
+
+{% docs mart_service_ping_estimations_monthly %}
+
+Estimation model to estimate the usage for unreported self-managed instances.
 
 {% enddocs %}

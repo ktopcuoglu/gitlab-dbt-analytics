@@ -495,6 +495,30 @@ models:
           - not_null
           #- unique
 
+  - name: mart_service_ping_instance_metric_28_day
+    description: ' {{ doc("mart_service_ping_instance_metric_28_day") }} '
+    columns:
+      - name: mart_service_ping_instance_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_metric_adoption_monthly
+    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_metric_adoption_monthly_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_metric_estimated_monthly
+    description: ' {{ doc("rpt_service_ping_instance_metric_estimated_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_metric_estimated_monthly_id
+        tests:
+          - not_null
+          - unique
+
   - name: mart_xmau_metric_monthly
     description: '{{ doc("mart_xmau_metric_monthly") }}'
     columns:

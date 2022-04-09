@@ -1,6 +1,5 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    full_refresh = false,
     materialized = "incremental",
     unique_key = "dim_service_ping_instance_id"
 ) }}
@@ -28,12 +27,12 @@
 ), usage_data AS (
 
     SELECT
-      dim_service_ping_instance_id                                                                    AS dim_service_ping_instance_id,
-      host_id                                                                                         AS dim_host_id,
-      uuid                                                                                            AS dim_instance_id,
-      ping_created_at,
-      source_ip_hash                                                                                  AS ip_address_hash,
-      edition                                                                                         AS original_edition,
+      dim_service_ping_instance_id                                                                                            AS dim_service_ping_instance_id,
+      host_id                                                                                                                 AS dim_host_id,
+      uuid                                                                                                                    AS dim_instance_id,
+      ping_created_at                                                                                                         AS ping_created_at,
+      source_ip_hash                                                                                                          AS ip_address_hash,
+      edition                                                                                                                 AS original_edition,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }}
     FROM source
     WHERE uuid IS NOT NULL
@@ -42,13 +41,15 @@
 ), joined_ping AS (
 
     SELECT
-      dim_service_ping_instance_id,
-      dim_host_id,
-      usage_data.dim_instance_id,
-      ping_created_at,
-      ip_address_hash,
+      dim_service_ping_instance_id                                                                                                                AS dim_service_ping_instance_id,
+      dim_host_id                                                                                                                                 AS dim_host_id,
+      usage_data.dim_instance_id                                                                                                                  AS dim_instance_id,
+      {{ dbt_utils.surrogate_key(['dim_host_id', 'dim_instance_id'])}}                                                                            AS dim_installation_id,
+      ping_created_at                                                                                                                             AS ping_created_at,
+      ip_address_hash                                                                                                                             AS ip_address_hash,
+      original_edition                                                                                                                            AS original_edition,
       {{ dbt_utils.star(from=ref('version_usage_data_source'), relation_alias='usage_data', except=['EDITION', 'CREATED_AT', 'SOURCE_IP']) }},
-      IFF(original_edition = 'CE', 'CE', 'EE')                                                            AS main_edition,
+      IFF(original_edition = 'CE', 'CE', 'EE')                                                                                                    AS main_edition,
       CASE
         WHEN original_edition = 'CE'                                     THEN 'Core'
         WHEN original_edition = 'EE Free'                                THEN 'Core'
@@ -57,8 +58,8 @@
         WHEN original_edition = 'EES'                                    THEN 'Starter'
         WHEN original_edition = 'EEP'                                    THEN 'Premium'
         WHEN original_edition = 'EEU'                                    THEN 'Ultimate'
-        ELSE NULL END                                                                                        AS product_tier,
-        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)     AS raw_usage_data_payload
+        ELSE NULL END                                                                                                                             AS product_tier,
+        COALESCE(raw_usage_data.raw_usage_data_payload, usage_data.raw_usage_data_payload_reconstructed)                                          AS raw_usage_data_payload
     FROM usage_data
     LEFT JOIN raw_usage_data
       ON usage_data.raw_usage_data_id = raw_usage_data.raw_usage_data_id
