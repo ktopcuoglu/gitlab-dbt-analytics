@@ -356,6 +356,15 @@ models:
         +tags: ["safe"]
         secure: true
 
+    common_mart:
+      +materialized: table    
+      +schema: common_mart
+      +tags: ["product"]
+      
+    common_mart_product:
+      +materialized: table
+      +schema: common_mart_product
+      +tags: ["product"]
 
     # ------------------
     # Legacy (formerly Staging)
@@ -539,7 +548,7 @@ models:
     # ------------------
     marts:
       +materialized: table
-
+          
       arr:
         +schema: restricted_safe_legacy
         +tags: ["safe"]

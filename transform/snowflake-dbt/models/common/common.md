@@ -519,6 +519,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_usage_event %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: Event
+
+Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 

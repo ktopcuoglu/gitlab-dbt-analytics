@@ -9,9 +9,6 @@
 
 {{ simple_cte([
     ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
-    ('usage_data_events', 'gitlab_dotcom_usage_data_events'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric'),
-    ('dim_license', 'dim_license'),
     ('dim_date', 'dim_date'),
     ('namespace_order_subscription', 'bdg_namespace_order_subscription'),
     ('dim_subscription', 'dim_subscription'),
@@ -20,22 +17,28 @@
 
 }}
 
-, fct_events AS  (
+, prep_event_800 AS (
+    
+    SELECT *
+    FROM {{ ref('prep_event_all') }} 
+    WHERE event_created_at >= dateadd('day', -800, CURRENT_DATE())
+    
+), fct_events AS  (
 
     SELECT
-      event_primary_key                                               AS event_primary_key,
-      usage_data_events.event_name                                    AS event_name,
-      namespace_id                                                    AS namespace_id, -- make empty namespace = null
+      event_id                                                        AS event_primary_key,
+      prep_event_800.event_name                                       AS event_name,
+      ultimate_parent_namespace_id                                    AS namespace_id, -- make empty namespace = null
       'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'                          AS dim_instance_id,
-      user_id                                                         AS user_id,
+      dim_user_id                                                     AS dim_user_id,
       parent_type                                                     AS parent_type,
       parent_id                                                       AS parent_id,
-      IFF(usage_data_events.parent_type = 'project', parent_id, NULL) AS project_id,
+      dim_project_id                                                  AS dim_project_id,
       event_created_at                                                AS event_created_at,
       CASE
-          WHEN usage_data_events.stage_name IS NULL
+          WHEN prep_event_800.stage_name IS NULL
             THEN xmau_metrics.stage_name
-          ELSE usage_data_events.stage_name
+          ELSE prep_event_800.stage_name
          end                                                        AS stage_name,
       group_name                                                    AS group_name,
       section_name                                                  AS section_name,
@@ -43,21 +46,21 @@
       gmau                                                          AS gmau,
       is_umau                                                       AS umau,
       project_is_learn_gitlab                                       AS project_is_learn_gitlab
-    FROM usage_data_events
+    FROM prep_event_800
     LEFT JOIN xmau_metrics
-      ON usage_data_events.event_name = xmau_metrics.events_to_include
+      ON prep_event_800.event_name = xmau_metrics.events_to_include
 
 ), paid_flag_by_day AS (
 
     SELECT
-        namespace_id,
+        ultimate_parent_namespace_id                                    AS namespace_id,
         CAST(event_created_at AS DATE)                                  AS event_date,
         plan_was_paid_at_event_date                                     AS plan_was_paid_at_event_date,
         plan_id_at_event_date                                           AS plan_id_at_event_date,
         plan_name_at_event_date                                         AS plan_name_at_event_date,
         event_created_at
-    FROM usage_data_events
-        QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace_id, event_date
+    FROM prep_event_800
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY ultimate_parent_namespace_id, event_date
                                    ORDER BY event_created_at DESC) = 1
 
 ), fct_events_w_plan_was_paid AS (
@@ -118,8 +121,8 @@
       dim_crm_account_id                      AS dim_crm_account_id,
       dim_billing_account_id                  AS dim_billing_account_id,
       namespace_id                            AS dim_namespace_id,
-      project_id                              AS dim_project_id,
-      user_id                                 AS dim_user_id,
+      dim_project_id                          AS dim_project_id,
+      dim_user_id                             AS dim_user_id,
       stage_name                              AS stage_name,
       section_name                            AS section_name,
       group_name                              AS group_name,
@@ -143,7 +146,7 @@
 {{ dbt_audit(
     cte_ref="results",
     created_by="@icooper-acp",
-    updated_by="@icooper-acp",
+    updated_by="@iweeks",
     created_date="2022-01-20",
-    updated_date="2022-02-10"
+    updated_date="2022-04-09"
 ) }}

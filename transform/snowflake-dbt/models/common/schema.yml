@@ -1913,6 +1913,61 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
+  - name: fct_usage_event
+    description: '{{ doc("fct_usage_event") }}'
+    columns:
+      - name: event_id
+        description: The unique ID of an event.
+        tests:
+          - not_null
+          - unique
+      - name: event_name
+        description: The name tied to an event
+      - name: dim_instance_id
+        description: The unique id of an instance from the dim_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_event_date_id
+        description: The unique date id of an event to join to dim_date.
+      - name: dim_crm_account_id
+        description: The unique id of a crm account in the dim_crm_account model.
+      - name: dim_billing_account_id
+        description: The unqiue id of a billing account in the dim_billing_account model.
+      - name: dim_namespace_id
+        description: The unique id of the ultimate parent namespace from the dim_namespace model.
+      - name: dim_project_id
+        description: The unique id of a project from the dim_project model.
+      - name: dim_user_id
+        description: The unique id of a user from the dim_user model.
+      - name: stage_name
+        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      - name: section_name
+        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      - name: group_name
+        description: The name of the group (A stage has one or more groups.).
+      - name: event_created_at
+        description: The date at which the event was created
+      - name: plan_id_at_event_date
+        description: The id of the plan on the day the event was created.
+      - name: plan_name_at_event_date
+        description: The name of the plan type when the event was created
+      - name: plan_was_paid_at_event_date
+        description: Defines whether the plan was paid or free when the event was created
+      - name: project_is_learn_gitlab
+        description: Denotes whether the event is related to a Learn GitLab project, one created for the user during new user onboarding.
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: created_by
+        description: Who created this model?
+      - name: update_by
+        description: Who updated this model last?
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model code was last updated
+  
   - name: fct_usage_ping_payload
     description: '{{ doc("fct_usage_ping_payload") }}'
     columns:

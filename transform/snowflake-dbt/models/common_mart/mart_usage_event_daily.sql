@@ -93,7 +93,7 @@
 {{ dbt_audit(
     cte_ref="results",
     created_by="@dihle",
-    updated_by="@dihle",
+    updated_by="@iweeks",
     created_date="2022-02-11",
-    updated_date="2022-02-15"
+    updated_date="2022-04-09"
 ) }}
