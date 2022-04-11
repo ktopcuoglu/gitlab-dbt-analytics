@@ -17,7 +17,7 @@ prep_event_24_months AS (
 
   SELECT *
   FROM {{ ref('prep_event_all') }}
-  WHERE event_created_at::DATE > DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE))
+  WHERE DATE_TRUNC(MONTH,event_created_at::DATE) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE))
 
 ),
 
@@ -151,6 +151,8 @@ gitlab_dotcom_fact AS (
     final.reporting_year,
     
     --Degenerate Dimensions (No stand-alone, promoted dimension table)
+    final.parent_id,
+    final.parent_type,
     final.is_smau,
     final.is_gmau,
     final.is_umau,

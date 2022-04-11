@@ -35,7 +35,7 @@ mart_usage_namespace_daily AS (
       is_umau,
       COUNT(*) AS event_count,
       COUNT(DISTINCT(dim_user_id)) AS distinct_user_count
-    FROM usage_events
+    FROM mart_usage_event
     WHERE dim_user_id IS NOT NULL
     {{ dbt_utils.group_by(n=21) }}
         
