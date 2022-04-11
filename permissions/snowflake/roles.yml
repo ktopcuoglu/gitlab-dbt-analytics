@@ -1001,6 +1001,7 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
+                    - prod.legacy.sheetload_hp_dvr
                     - prod.workspace_data.airflow_dag
                     - prod.workspace_data.airflow_dag_run
                     - prod.workspace_data.dbt_test_results
