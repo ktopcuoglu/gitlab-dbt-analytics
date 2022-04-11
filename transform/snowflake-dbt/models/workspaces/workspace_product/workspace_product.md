@@ -92,6 +92,18 @@ Version source, self managed usage data mart table for 28 day time frame.
 
 {% enddocs %}
 
+{% docs mart_service_ping_instance_metric_7_day %}
+
+Version source, self managed usage data mart table for 7 day time frame.
+
+{% enddocs %}
+
+{% docs mart_service_ping_instance_metric_all_time %}
+
+Version source, self managed usage data mart table for 'all'' time frame.
+
+{% enddocs %}
+
 {% docs rpt_service_ping_instance_metric_adoption_monthly %}
 
 Model used to determine active seats and subscriptions reporting on any given metric

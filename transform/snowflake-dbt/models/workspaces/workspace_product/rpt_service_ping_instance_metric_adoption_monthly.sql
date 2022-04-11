@@ -210,7 +210,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['month', 'metrics_path']) }}      AS rpt_service_ping_instance_metric_adoption_monthly_id,
+    {{ dbt_utils.surrogate_key(['month', 'metrics_path', 'adoption_grain']) }}      AS rpt_service_ping_instance_metric_adoption_monthly_id,
     *,
     {{ pct_w_counters('active_count', 'inactive_count') }}        AS pct_with_counters
  FROM unioned_counts

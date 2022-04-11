@@ -109,7 +109,7 @@
         fct_service_ping.metrics_path                                                 AS metrics_path,
         fct_service_ping.metric_value                                                 AS metric_value,
         fct_service_ping.has_timed_out                                                AS has_timed_out,
-        dim_usage_ping_metric.product_group                                           AS group_name,
+        SPLIT_PART(dim_usage_ping_metric.product_group, ':', 3)                       AS group_name,
         dim_usage_ping_metric.product_stage                                           AS stage_name,
         dim_usage_ping_metric.product_section                                         AS section_name,
         dim_usage_ping_metric.is_smau                                                 AS is_smau,

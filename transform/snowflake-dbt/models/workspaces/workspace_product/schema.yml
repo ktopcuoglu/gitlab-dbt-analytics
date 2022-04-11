@@ -458,11 +458,21 @@ models:
           - relationships:
               to: ref('dim_license')
               field: dim_license_id
-#      - name: dim_installation_id
-#        tests:
-#          - relationships:
-#              to: ref('dim_installation')
-#              field: dim_installation_id
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('dim_installation')
+              field: dim_installation_id
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('dim_service_ping_instance')
+              field: dim_installation_id
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('mart_service_ping_instance_metric')
+              field: dim_installation_id
 
   - name: dim_service_ping_instance
     description: ' {{ doc("dim_service_ping_instance") }} '
@@ -486,6 +496,16 @@ models:
           - relationships:
               to: ref('dim_date')
               field: date_id
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('fct_service_ping_instance_metric')
+              field: dim_installation_id
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('mart_service_ping_instance_metric')
+              field: dim_installation_id
 
   - name: mart_service_ping_instance_metric
     description: ' {{ doc("mart_service_ping_instance_metric") }} '
@@ -494,9 +514,40 @@ models:
         tests:
           - not_null
           #- unique
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('fct_service_ping_instance_metric')
+              field: dim_installation_id
+      - name: dim_installation_id
+        tests:
+          - relationships:
+              to: ref('dim_service_ping_instance')
+              field: dim_installation_id
+      - name: dim_service_ping_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_service_ping_instance')
+              field: dim_service_ping_instance_id
 
   - name: mart_service_ping_instance_metric_28_day
     description: ' {{ doc("mart_service_ping_instance_metric_28_day") }} '
+    columns:
+      - name: mart_service_ping_instance_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_service_ping_instance_metric_7_day
+    description: ' {{ doc("mart_service_ping_instance_metric_7_day") }} '
+    columns:
+      - name: mart_service_ping_instance_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_service_ping_instance_metric_all_time
+    description: ' {{ doc("mart_service_ping_instance_metric_all_time") }} '
     columns:
       - name: mart_service_ping_instance_metric_id
         tests:
