@@ -4224,15 +4224,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - ysun:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-            - bi_tool_eval_read
-        warehouses:
-            - analyst_xs
-
     - zzhang:
         member_of:
             - adaptive
@@ -4709,11 +4700,6 @@ users:
         can_login: yes
         member_of:
             - warias
-
-    - ysun: # De provisioned as part of Quarterly audit and security check.
-        can_login: yes
-        member_of:
-            - ysun
 
     - zzhang:
         can_login: yes
