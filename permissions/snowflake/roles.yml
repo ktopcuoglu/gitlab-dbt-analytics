@@ -2353,14 +2353,6 @@ roles:
             - transforming_l
             - transforming_xl
 
-    - alcurtis:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
-
     - alpcohen: 
         member_of: 
             - reporter
@@ -4258,11 +4250,6 @@ users:
             - reporter
             - sysadmin
             - transformer
-
-    - alcurtis:
-        can_login: yes
-        member_of:
-            - alcurtis
 
     - alpcohen:
         can_login: yes
