@@ -5,62 +5,44 @@
 
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
-    ('fct_usage_event', 'fct_usage_event'),
-    ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
+    ('fct_usage_event', 'fct_usage_event')
     ])
-}}
+}},
 
-, fact_with_date AS (
+fact_with_date AS (
 
-    SELECT
-      event_id,
-      TO_DATE(event_created_at)                                    AS event_date,
-      dim_user_id,
-      event_name,
-      dim_product_tier_id,
-      dim_subscription_id,
-      dim_crm_account_id,
-      dim_billing_account_id,
-      stage_name,
-      section_name,
-      group_name,
-      data_source,
-      plan_id_at_event_date,
-      plan_name_at_event_date,
-      plan_was_paid_at_event_date,
-      dim_namespace_id,
-      dim_instance_id
-    FROM fct_usage_event
+  /*
+  Mart Usage Event is at the atomic grain of event_id and event_created_at timestamp. All other Marts in the GitLab.com usage events 
+  lineage are built from this Mart. This CTE pulls in ALL of the columns from the fct_usage_event as a base data set to join to the 
+  dimensions. It uses the dbt_utils.star function to select all columns except the meta data table related columns from the fact.
+  The CTE also filters out imported projects and events with data quality issues by filtering out negative days since user creation at
+  event date.
+  */
+  SELECT
+    {{ dbt_utils.star(from=ref('fct_usage_event'), except=["CREATED_BY",
+        "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
+  FROM fct_usage_event
+  WHERE days_since_user_creation_at_event_date >= 0
+  
+),
 
-), fact_with_namespace AS (
+fact_with_namespace AS (
 
-    SELECT
-        fact.*,
-        TO_DATE(namespace.created_at)                              AS namespace_created_at,
-        DATEDIFF(day, namespace_created_at,GETDATE())              AS days_since_namespace_created
-    FROM fact_with_date as fact
-    LEFT JOIN dim_namespace as namespace
-        ON fact.dim_namespace_id = namespace.dim_namespace_id
-
-), fact_with_xmau_flags AS (
-    SELECT
-        fact.*,
-        xmau.smau                                                  AS is_smau,
-        xmau.gmau                                                  AS is_gmau,
-        xmau.is_umau                                               AS is_umau
-    FROM fact_with_namespace AS fact
-    LEFT JOIN xmau_metrics AS xmau
-        ON fact.event_name = xmau.events_to_include
-
-), results AS (
-
-    SELECT *
-    FROM fact_with_xmau_flags
+  SELECT
+    fact_with_date.*,
+    dim_namespace.namespace_is_internal,
+    dim_namespace.created_at AS namespace_created_at,
+    CAST(dim_namespace.created_at AS DATE) AS namespace_created_date,
+    DATEDIFF(DAY, namespace_created_date, GETDATE()) AS days_since_namespace_created,
+    DATEDIFF(DAY, namespace_created_date, event_date) AS days_since_namespace_creation_at_event_date
+  FROM fact_with_date
+  LEFT JOIN dim_namespace
+    ON fact_with_date.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
 
 )
 
 {{ dbt_audit(
-    cte_ref="results",
+    cte_ref="fact_with_namespace",
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-01-28",

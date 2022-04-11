@@ -65,7 +65,7 @@ models:
   description: '{{ doc("mart_usage_namespace_daily") }}'
   columns:
     - name: mart_usage_namespace_id
-      description: the unique ID combination of the event_date, event_name, na ddim_namespace_id in mart_usage_namespace.
+      description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_usage_namespace_daily.
       tests:
         - not_null
         - unique
@@ -126,7 +126,7 @@ models:
   description: '{{ doc("mart_usage_instance_daily") }}'
   columns:
     - name: mart_usage_instance_id
-      description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance.
+      description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
       tests:
         - not_null
         - unique
@@ -155,7 +155,7 @@ models:
   description: '{{ doc("mart_usage_event_daily") }}'
   columns:
     - name: mart_usage_event_daily_id
-      description: the unique composite ID for the mart_usage_event_daily model consisting of event_date, dim_user_id, dim_namespace_id, and event_name.
+      description: the unique composite ID for the mart_usage_event_daily model consisting of event_date, dim_user_id, dim_ultimate_parent_namespace_id, and event_name.
       tests:
         - not_null
         - unique
