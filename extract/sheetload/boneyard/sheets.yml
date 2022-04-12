@@ -61,6 +61,10 @@ sheets:
     owner: '@rbacovic'
     tabs:
       - individual_questions_analysis
+  - name: registry_transfer_namespaces
+    owner: '@joshua'
+    tabs:
+      - registry_transfer_namespaces 
   - name: test_sheet
     owner: '@taylormurphy'
     tabs:
