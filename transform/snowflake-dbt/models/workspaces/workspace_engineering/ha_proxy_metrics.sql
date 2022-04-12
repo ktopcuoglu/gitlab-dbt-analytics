@@ -20,6 +20,7 @@ report AS (
       WHEN REGEXP_LIKE(metric_backend, '.*ssh$') THEN 'SSH Data Transfer'
       ELSE 'TBD'
     END AS backend_category,
+    metric_value AS egress_bytes,
     metric_value / (1000 * 1000 * 1000) AS egress_gigabytes,
     metric_value / (1024 * 1024 * 1024) AS egress_gibibytes
   FROM source
