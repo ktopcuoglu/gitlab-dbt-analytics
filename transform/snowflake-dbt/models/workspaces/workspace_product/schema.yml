@@ -391,7 +391,7 @@ models:
         tests:
           - relationships:
               to: ref('dim_instances')
-              field: dim_instance_id
+              field: instance_id
 
   - name: prep_service_ping_instance_flattened
     description: ' {{ doc("prep_service_ping_instance_flattened") }} '
@@ -409,7 +409,7 @@ models:
         tests:
           - relationships:
               to: ref('dim_instances')
-              field: dim_instance_id
+              field: instance_id
       - name: dim_service_ping_instance_id
         tests:
           - relationships:

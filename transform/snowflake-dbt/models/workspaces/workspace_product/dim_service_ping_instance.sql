@@ -47,7 +47,7 @@ SELECT DISTINCT
 ), final AS (
 
     SELECT DISTINCT
-      id                                                                                                            AS dim_service_ping_instance_id,
+      dim_service_ping_instance_id                                                                                  AS dim_service_ping_instance_id,
       dim_date_id                                                                                                   AS dim_date_id,
       dim_host_id                                                                                                   AS dim_host_id,
       dim_instance_id                                                                                               AS dim_instance_id,
