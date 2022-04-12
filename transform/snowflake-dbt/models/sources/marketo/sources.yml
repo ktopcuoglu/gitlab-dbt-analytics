@@ -34,6 +34,7 @@ sources:
       - name: activity_click_email
       - name: activity_click_link
       - name: activity_convert_lead
+        freshness: null
       - name: activity_delete_lead
         freshness: null
       - name: activity_email_bounced
@@ -49,6 +50,7 @@ sources:
       - name: activity_push_lead_to_marketo
       - name: activity_remove_from_list
       - name: activity_remove_from_sfdc_campaign
+        freshness: null
       - name: activity_request_campaign
       - name: activity_send_alert
       - name: activity_send_email
