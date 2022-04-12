@@ -192,7 +192,7 @@
       "counts.ci_runners_instance_type_active"                                                  AS active_instance_runners_all_time_event,
       "counts.ci_runners_group_type_active"                                                     AS active_group_runners_all_time_event,
       "counts.ci_runners_project_type_active"                                                   AS active_project_runners_all_time_event,
-      "gitaly.version"                                                                          AS gitaly_version,
+      "gitaly.version"::VARCHAR                                                                 AS gitaly_version,
       "gitaly.servers"                                                                          AS gitaly_servers_all_time_event,
       -- Data Quality Flags
       IFF(license_utilization = 0
@@ -224,5 +224,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2021-12-23"
+    updated_date="2021-04-12"
 ) }}
