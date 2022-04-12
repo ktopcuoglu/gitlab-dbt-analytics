@@ -64,7 +64,7 @@ sheets:
   - name: registry_transfer_namespaces
     owner: '@joshua'
     tabs:
-      - namespaces 
+      - registry_transfer_namespaces 
   - name: test_sheet
     owner: '@taylormurphy'
     tabs:
