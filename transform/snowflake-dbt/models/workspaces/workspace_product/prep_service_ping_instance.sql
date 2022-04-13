@@ -21,7 +21,7 @@
     FROM {{ ref('version_usage_data_source') }} as usage
 
   {% if is_incremental() %}
-          WHERE ping_created_at >= COALESCE((SELECT MAX(ping_created_at) FROM {{this}}), '2021-01-01')
+          WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
   {% endif %}
 
 ), usage_data AS (

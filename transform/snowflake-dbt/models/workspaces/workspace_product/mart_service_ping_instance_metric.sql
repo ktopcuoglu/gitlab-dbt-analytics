@@ -35,7 +35,7 @@
     * FROM fct_service_ping_instance_metric
     WHERE IS_REAL(TO_VARIANT(metric_value))
     {% if is_incremental() %}
-                AND ping_created_at >= COALESCE((SELECT MAX(ping_created_at) FROM {{this}}), '2020-01-01')
+                AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
     {% endif %}
 
 ), subscription_source AS (

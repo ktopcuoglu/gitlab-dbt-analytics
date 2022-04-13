@@ -39,7 +39,7 @@
 
     SELECT
         metrics_path                      AS metrics_path,
-        dim_date.first_day_of_month       AS month,
+        dim_date.first_day_of_month       AS reporting_month,
         ping_edition                      AS ping_edition,
         ping_product_tier                 AS ping_product_tier,
         ping_edition_product_tier         AS ping_edition_product_tier,
@@ -61,21 +61,21 @@
 
   SELECT
       fact_w_month.*,
-      mart_pct.active_count         AS active_count,
-      mart_pct.inactive_count       AS inactive_count,
-      mart_pct.pct_with_counters    AS pct_with_counters,
-      mart_pct.adoption_grain       AS adoption_grain
+      mart_pct.reporting_count          AS reporting_count,
+      mart_pct.no_reporting_count       AS no_reporting_count,
+      mart_pct.pct_with_counters        AS pct_with_counters,
+      mart_pct.adoption_grain           AS adoption_grain
     FROM fact_w_month
       LEFT JOIN mart_pct
-    ON fact_w_month.month = mart_pct.month
+    ON fact_w_month.reporting_month = mart_pct.reporting_month
       AND fact_w_month.metrics_path = mart_pct.metrics_path
 
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['month', 'metrics_path', 'adoption_grain', 'ping_edition_product_tier']) }}     AS rpt_service_ping_instance_metric_estimated_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'adoption_grain', 'ping_edition_product_tier']) }}     AS rpt_service_ping_instance_metric_estimated_monthly_id,
     *,
-    {{ usage_estimation('metric_value', 'pct_with_counters') }}                                                 AS estimated_usage
+    {{ usage_estimation('metric_value', 'pct_with_counters') }}                                                           AS estimated_usage
  FROM joined_counts_w_percentage
 
 )

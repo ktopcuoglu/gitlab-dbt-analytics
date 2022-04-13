@@ -155,7 +155,7 @@
 ), joined_counts AS (
 
     SELECT
-        count_tbl.arr_month                  AS month,
+        count_tbl.arr_month                  AS reporting_month,
         count_tbl.metrics_path               AS metrics_path,
         count_tbl.stage_name                 AS stage_name,
         count_tbl.section_name               AS section_name,
@@ -176,7 +176,7 @@
 ), unioned_counts AS (
 
   SELECT
-    month                                   AS month,
+    reporting_month                         AS reporting_month,
     metrics_path                            AS metrics_path,
     stage_name                              AS stage_name,
     section_name                            AS section_name,
@@ -185,15 +185,15 @@
     is_gmau                                 AS is_gmau,
     is_paid_gmau                            AS is_paid_gmau,
     is_umau                                 AS is_umau,
-    active_subscription_count               AS active_count,
-    inactive_subscription_count             AS inactive_count,
+    active_subscription_count               AS reporting_count,
+    inactive_subscription_count             AS no_reporting_count,
     'subscription'                          AS adoption_grain
   FROM joined_counts
 
   UNION ALL
 
   SELECT
-    month                                   AS month,
+    reporting_month                         AS reporting_month,
     metrics_path                            AS metrics_path,
     stage_name                              AS stage_name,
     section_name                            AS section_name,
@@ -202,17 +202,18 @@
     is_gmau                                 AS is_gmau,
     is_paid_gmau                            AS is_paid_gmau,
     is_umau                                 AS is_umau,
-    active_seat_count                       AS active_count,
-    inactive_seat_count                     AS inactive_count,
+    active_seat_count                       AS reporting_count,
+    inactive_seat_count                     AS no_reporting_count,
     'seats'                                 AS adoption_grain
   FROM joined_counts
 
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['month', 'metrics_path', 'adoption_grain']) }}      AS rpt_service_ping_instance_metric_adoption_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'adoption_grain']) }}            AS rpt_service_ping_instance_metric_adoption_monthly_id,
     *,
-    {{ pct_w_counters('active_count', 'inactive_count') }}        AS pct_with_counters
+    reporting_count + no_reporting_count                                                            AS total_count,
+    {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                   AS pct_with_counters
  FROM unioned_counts
 
 )

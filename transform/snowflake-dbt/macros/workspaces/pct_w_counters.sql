@@ -1,5 +1,5 @@
-{% macro pct_w_counters(active_count, inactive_count) -%}
+{% macro pct_w_counters(reporting_count, no_reporting_count) -%}
 
-DIV0({{ active_count }},({{ active_count }}+{{ inactive_count }}))
+DIV0({{ reporting_count }},({{ reporting_count }}+{{ no_reporting_count }}))
 
 {%- endmacro %}

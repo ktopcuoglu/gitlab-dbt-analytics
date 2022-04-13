@@ -6,10 +6,15 @@
 
 {%- set columns = adapter.get_columns_in_relation( source('version', 'usage_data') ) -%}
 
-WITH source AS (
+WITH data AS (
+  SELECT *
+  FROM {{ source('version', 'usage_data') }}
+    WHERE created_at >= '2022-01-01' and created_at < '2022-02-01'
+
+), source AS (
 
     SELECT *
-    FROM {{ source('version', 'usage_data') }}
+    FROM data
     {% if is_incremental() %}
     WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
     {% endif %}
