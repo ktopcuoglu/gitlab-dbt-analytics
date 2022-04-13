@@ -216,6 +216,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
     - `sudo chmod +x /usr/local/bin/docker-compose`
     - Confirm install
     - `docker-compose --version`
+    - Optionally, install [command completion](https://docs.docker.com/compose/completion/) for the bash and zsh shell.
 - [ ] Run `make init-airflow` from the base of the analytics directory, this sets up the Airflow db locally. 
 - [ ] Run `make airflow` from the base of the analytics directory, this will spin up Airflow at localhost:8080. The default local credentials are specified in the Makefile. 
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
