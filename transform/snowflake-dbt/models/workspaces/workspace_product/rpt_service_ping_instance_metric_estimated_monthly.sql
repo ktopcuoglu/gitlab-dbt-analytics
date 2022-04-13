@@ -17,6 +17,7 @@
         metrics_path,
         metric_value,
         latest_active_subscription_id,
+        service_ping_delivery_type,
         dim_date_id,
         ping_edition,
         ping_product_tier,
@@ -29,9 +30,8 @@
         is_paid_gmau,
         is_umau
     FROM mart_service_ping_instance_metric_28_day
-        WHERE latest_active_subscription_id IS NOT NULL
-            AND is_last_ping_of_month = TRUE
-            AND service_ping_delivery_type = 'Self-Managed'
+        WHERE is_last_ping_of_month = TRUE
+            --AND service_ping_delivery_type = 'Self-Managed'
             AND has_timed_out = FALSE
 
 
@@ -40,6 +40,7 @@
     SELECT
         metrics_path                      AS metrics_path,
         dim_date.first_day_of_month       AS reporting_month,
+        service_ping_delivery_type        AS service_ping_delivery_type,
         ping_edition                      AS ping_edition,
         ping_product_tier                 AS ping_product_tier,
         ping_edition_product_tier         AS ping_edition_product_tier,
@@ -55,9 +56,9 @@
         INNER JOIN dim_date
             ON fact.dim_date_id = dim_date.date_id
     WHERE metric_value is not null
-    {{ dbt_utils.group_by(n=12)}}
+    {{ dbt_utils.group_by(n=13)}}
 
-), joined_counts_w_percentage AS (
+), sm_joined_counts_w_percentage AS (
 
   SELECT
       fact_w_month.*,
@@ -69,6 +70,37 @@
       LEFT JOIN mart_pct
     ON fact_w_month.reporting_month = mart_pct.reporting_month
       AND fact_w_month.metrics_path = mart_pct.metrics_path
+  WHERE service_ping_delivery_type = 'Self-Managed'
+
+), saas_joined_counts_w_percentage AS (
+
+  SELECT
+      fact_w_month.*,
+      1                                 AS reporting_count,
+      0                                 AS no_reporting_count,
+      1                                 AS pct_with_counters,
+      'subscription'                    AS adoption_grain
+    FROM fact_w_month
+  WHERE service_ping_delivery_type = 'SaaS'
+
+  UNION ALL
+
+  SELECT
+      fact_w_month.*,
+      1                                 AS reporting_count,
+      0                                 AS no_reporting_count,
+      1                                 AS pct_with_counters,
+      'seats'                           AS adoption_grain
+    FROM fact_w_month
+  WHERE service_ping_delivery_type = 'SaaS'
+
+), joined_counts_w_percentage AS (
+
+  SELECT * FROM saas_joined_counts_w_percentage
+
+  UNION ALL
+
+  SELECT * FROM sm_joined_counts_w_percentage
 
 ), final AS (
 

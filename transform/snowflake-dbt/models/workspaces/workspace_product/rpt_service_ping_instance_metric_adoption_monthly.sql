@@ -87,7 +87,8 @@
 
 ), fact_w_month AS (
 
-    SELECT metrics_path,
+    SELECT
+        metrics_path,
         dim_date.first_day_of_month,
         latest_active_subscription_id,
         ping_edition,
