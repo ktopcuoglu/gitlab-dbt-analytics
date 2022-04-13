@@ -57,8 +57,8 @@ WITH prep_amendment_central_sandbox AS (
     subscription_central_sandbox.auto_renew_native_hist,
     subscription_central_sandbox.auto_renew_customerdot_hist,
     subscription_central_sandbox.turn_on_cloud_licensing,
-    -- subscription_central_sandbox.turn_on_operational_metrics,
-    -- subscription_central_sandbox.contract_operational_metrics,
+    subscription_central_sandbox.turn_on_operational_metrics,
+    subscription_central_sandbox.contract_operational_metrics,
     subscription_central_sandbox.contract_auto_renewal,
     subscription_central_sandbox.turn_on_auto_renewal,
     subscription_central_sandbox.contract_seat_reconciliation,
@@ -98,5 +98,5 @@ WITH prep_amendment_central_sandbox AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-03-31",
-    updated_date="2022-03-31"
+    updated_date="2022-04-13"
 ) }}
