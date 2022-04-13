@@ -208,7 +208,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 ### Airflow
 
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
-- [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda. In case you have an issue with the Airflow setup, read this instruction [Troubleshooting local Airflow config](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#troubleshooting-local-airflow-config)
+
 ### Jupyter
 
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
