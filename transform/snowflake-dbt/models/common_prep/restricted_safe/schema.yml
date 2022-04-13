@@ -325,13 +325,3 @@ models:
       - name: dbt_valid_from
         tests:
           - not_null
-
-  - name: prep_fct_retention_parent_account_snapshot_base
-    description: Base model for the fct_retention snapshot data
-    columns:
-      - name: fct_retention_id
-        tests:
-          - not_null
-      - name: dbt_valid_from
-        tests:
-          - not_null
