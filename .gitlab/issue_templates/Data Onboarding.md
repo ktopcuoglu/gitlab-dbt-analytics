@@ -210,7 +210,7 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 - [ ] Install [Rancher Desktop](https://rancherdesktop.io/) using the UI install specified for your system
   - [ ] Airflow does not require a huge amount of resources, 4GB of RAM and 2 CPUs should be sufficient.  
   - [ ] Ensure that you select the `dockerd` container runtime in `Kubernetes Settings`. 
-  - [ ] Ensure that you select to create symbologic links to the docker command line path (`/usr/local/bin/docker`)
+  - [ ] Ensure that you select to create symbologic links to the docker command line path (`/usr/local/bin/docker`) in the `Supporting Utilities` section. 
   - [ ] Install the docker-compose cli by running through the below: 
     - `sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
     - `sudo chmod +x /usr/local/bin/docker-compose`
