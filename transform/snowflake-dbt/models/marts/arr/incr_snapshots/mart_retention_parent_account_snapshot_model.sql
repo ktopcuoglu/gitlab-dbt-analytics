@@ -1,7 +1,7 @@
 {{ config({
         "materialized": "incremental",
         "unique_key": "mart_retention_parent_account_snapshot_id",
-        "tags": ["edm_snapshot", "arr_snapshots"],
+        "tags": ["edm_snapshot", "retention_snapshots"],
         "schema": "restricted_safe_common_mart_sales"
     })
 }}

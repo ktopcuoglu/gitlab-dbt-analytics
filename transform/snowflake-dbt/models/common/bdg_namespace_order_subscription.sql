@@ -8,7 +8,7 @@
     ('orders', 'customers_db_orders_source'),
     ('product_tiers', 'prep_product_tier'),
     ('product_details', 'dim_product_detail'),
-    ('recurring_charges', 'prep_recurring_charge'),
+    ('fct_mrr_with_zero_dollar_charges', 'fct_mrr_with_zero_dollar_charges'),
     ('trial_histories', 'customers_db_trial_histories_source'),
     ('subscription_delivery_types', 'bdg_subscription_product_rate_plan')
 ]) }}
@@ -42,14 +42,14 @@
 ), current_recurring AS (
 
     SELECT DISTINCT
-      recurring_charges.dim_subscription_id,
+      fct_mrr_with_zero_dollar_charges.dim_subscription_id,
       product_details.product_rate_plan_id,
       product_details.dim_product_tier_id
-    FROM recurring_charges
+    FROM fct_mrr_with_zero_dollar_charges 
     INNER JOIN product_details
-      ON recurring_charges.dim_product_detail_id = product_details.dim_product_detail_id
+      ON fct_mrr_with_zero_dollar_charges.dim_product_detail_id = product_details.dim_product_detail_id
       AND product_details.product_delivery_type = 'SaaS'
-    WHERE recurring_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
+    WHERE fct_mrr_with_zero_dollar_charges.dim_date_id = {{ get_date_id("DATE_TRUNC('month', CURRENT_DATE)") }}
       AND subscription_status IN ('Active', 'Cancelled')
 
 ), namespace_list AS (
@@ -218,7 +218,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@ischweickartDD",
+    updated_by="@iweeks",
     created_date="2021-01-14",
-    updated_date="2021-06-17"
+    updated_date="2022-04-04"
 ) }}

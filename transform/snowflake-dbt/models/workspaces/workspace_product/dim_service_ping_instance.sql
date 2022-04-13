@@ -26,13 +26,13 @@ SELECT DISTINCT
     usage_data_w_date.uuid,
     usage_data_w_date.host_id,
     usage_data_w_date.ping_created_at::TIMESTAMP(0)   AS ping_created_at,
-    dim_date.month_actual,
-    TRUE                      AS last_ping_of_month_flag
+    dim_date.first_day_of_month,
+    TRUE                                              AS last_ping_of_month_flag
   FROM usage_data_w_date
     INNER JOIN dim_date
   ON usage_data_w_date.dim_date_id = dim_date.date_id
   QUALIFY ROW_NUMBER() OVER (
-          PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.month_actual
+          PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.first_day_of_month
           ORDER BY ping_created_at DESC) = 1
 
 ), fct_w_month_flag AS (
@@ -69,9 +69,10 @@ SELECT DISTINCT
       mattermost_enabled,
       uuid                                                                      AS dim_instance_id,
       host_id || dim_instance_id                                                AS dim_installation_id,
-      main_edition                                                              AS edition,
+      main_edition                                                              AS ping_edition,
       hostname                                                                  AS host_name,
       host_id                                                                   AS dim_host_id,
+      product_tier,
       license_trial                                                             AS is_trial,
       source_license_id,
       installation_type,
@@ -109,7 +110,7 @@ SELECT DISTINCT
       raw_usage_data_id,
       container_registry_vendor,
       container_registry_version,
-      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
+      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')             AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                                       AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,

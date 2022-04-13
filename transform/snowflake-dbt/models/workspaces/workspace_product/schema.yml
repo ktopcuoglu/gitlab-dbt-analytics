@@ -62,7 +62,7 @@ models:
         tests:
           - not_null
           - unique
-      
+
 
   - name: fct_usage_event
     description: '{{ doc("fct_usage_event") }}'
@@ -177,7 +177,7 @@ models:
         description: The date at which the model was created
       - name: model_updated_date
         description: The date at which the model code was last updated
-        
+
 
   - name: mart_usage_namespace_daily
     description: '{{ doc("mart_usage_namespace_daily") }}'
@@ -382,6 +382,16 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_host_id
+        tests:
+          - relationships:
+              to: ref('dim_host')
+              field: dim_host_id
+      - name: dim_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_instances')
+              field: dim_instance_id
 
   - name: prep_service_ping_instance_flattened
     description: ' {{ doc("prep_service_ping_instance_flattened") }} '
@@ -389,16 +399,70 @@ models:
       - name: prep_service_ping_instance_flattened_id
         tests:
           - not_null
-          - unique
+          #- unique
+      - name: dim_host_id
+        tests:
+          - relationships:
+              to: ref('dim_host')
+              field: dim_host_id
+      - name: dim_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_instances')
+              field: dim_instance_id
+      - name: dim_service_ping_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_service_ping_instance')
+              field: dim_service_ping_instance_id
 
-
-  - name: fct_service_ping_instance
-    description: ' {{ doc("fct_service_ping_instance") }} '
+  - name: fct_service_ping_instance_metric
+    description: ' {{ doc("fct_service_ping_instance_metric") }} '
     columns:
-      - name: fct_service_ping_instance_id
+      - name: fct_service_ping_instance_metric_id
         tests:
           - not_null
-          - unique
+          #- unique
+      - name: dim_service_ping_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_service_ping_instance')
+              field: dim_service_ping_instance_id
+      - name: dim_product_tier_id
+        tests:
+          - relationships:
+              to: ref('dim_product_tier')
+              field: dim_product_tier_id
+      - name: dim_location_country_id
+        tests:
+          - relationships:
+              to: ref('dim_location_country')
+              field: dim_location_country_id
+      - name: dim_host_id
+        tests:
+          - relationships:
+              to: ref('dim_host')
+              field: dim_host_id
+      - name: dim_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_instances')
+              field: instance_id
+      - name: dim_date_id
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: date_id
+      - name: dim_license_id
+        tests:
+          - relationships:
+              to: ref('dim_license')
+              field: dim_license_id
+#      - name: dim_installation_id
+#        tests:
+#          - relationships:
+#              to: ref('dim_installation')
+#              field: dim_installation_id
 
   - name: dim_service_ping_instance
     description: ' {{ doc("dim_service_ping_instance") }} '
@@ -407,25 +471,40 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_host_id
+        tests:
+          - relationships:
+              to: ref('dim_host')
+              field: dim_host_id
+      - name: dim_instance_id
+        tests:
+          - relationships:
+              to: ref('dim_instances')
+              field: instance_id
+      - name: dim_date_id
+        tests:
+          - relationships:
+              to: ref('dim_date')
+              field: date_id
 
-  - name: mart_service_ping_instance
-    description: ' {{ doc("dim_service_ping_instance") }} '
+  - name: mart_service_ping_instance_metric
+    description: ' {{ doc("mart_service_ping_instance_metric") }} '
     columns:
-      - name: mart_service_ping_instance_id
+      - name: mart_service_ping_instance_metric_id
         tests:
           - not_null
-          - unique
+          #- unique
 
   - name: mart_xmau_metric_monthly
     description: '{{ doc("mart_xmau_metric_monthly") }}'
     columns:
       - name: mart_xmau_metric_monthly_id
-        description: the unique ID of a montthly xMAU metric in mart_xmau_metric_monthly 
+        description: the unique ID of a monthly xMAU metric in mart_xmau_metric_monthly
         tests:
           - not_null
           - unique
       - name: reporting_month
-        description: Month in which the product usage was reported. (this model only looks at the last 28 days of the month.)
+        description: Month in which the product usage was reported. (this model only looks at d      the last 28 days of the month.)
       - name: is_smau
         description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: is_gmau
