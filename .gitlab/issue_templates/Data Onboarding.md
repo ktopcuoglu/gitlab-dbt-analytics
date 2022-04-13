@@ -207,6 +207,9 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 
 ### Airflow
 
+- [ ] Install [Rancher Desktop](https://rancherdesktop.io/). 
+- [ ] Run `make init-airflow` from the base of the analytics directory, this sets up the Airflow db locally. 
+- [ ] Run `make airflow` from the base of the analytics directory, this will spin up Airflow at localhost:8080. The default local credentials are specified in the Makefile. 
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
 
 ### Jupyter
