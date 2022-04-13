@@ -1,7 +1,6 @@
 {{config({
     "materialized": "table",
-    "transient": false,
-    "schema": "restricted_safe_common_mart_sales"
+    "transient": false
   })
 }}
 
