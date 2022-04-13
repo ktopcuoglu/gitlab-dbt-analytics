@@ -167,35 +167,6 @@ models:
         tests:
           - not_null
 
-  - name: prep_recurring_charge
-    description: '{{ doc("prep_recurring_charge") }}'
-    columns:
-      - name: mrr_id
-        description: The unique identifier of the MRR.
-        tests:
-          - not_null
-          - unique
-      - name: dim_date_id
-        description: The identifier of date month in dim_date
-      - name: dim_subscription_id
-        description: The identifier of subscription in dim_subscriptions table
-        tests:
-          - not_null
-      - name: dim_product_detail_id
-        description: The identifier of product details in dim_product_detail
-        tests:
-          - not_null
-      - name: dim_billing_account_id
-        description: Zuora account id
-      - name:  dim_crm_account_id
-        description: account id frm crm
-      - name: mrr
-        description: Monthly Recurring Revenue value for given month
-      - name: arr
-        description: Annual Recurring Revenue value for given month
-      - name: quantity
-        description: Total quantity
-
   - name: prep_sfdc_account
     description: '{{ doc("prep_sfdc_account") }}'
     columns:
@@ -349,16 +320,6 @@ models:
     description: Base model for the fct_mrr snapshot data
     columns:
       - name: mrr_id
-        tests:
-          - not_null
-      - name: dbt_valid_from
-        tests:
-          - not_null
-
-  - name: prep_fct_retention_parent_account_snapshot_base
-    description: Base model for the fct_retention snapshot data
-    columns:
-      - name: fct_retention_id
         tests:
           - not_null
       - name: dbt_valid_from

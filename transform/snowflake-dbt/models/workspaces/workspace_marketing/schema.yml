@@ -81,3 +81,26 @@ models:
         description: A flag to indicate if the company id matched directly to the list of source company headquarter ids/
       - name: is_merged_company_id
         description: A flag to indicate if the company id is derived from a list of merged company ids.
+
+  - name: wk_bdg_user_company
+    description: A table to be used to connect GitLab[dot]com users to companies
+    columns:
+      - name: dim_company_id
+        description: The surrogate key for the dimension table. Derived from the `company_id` column.
+        tests:
+          - not_null
+      - name: dim_user_id
+        description: The surrogate key for the dimension table. Derived from the gitlab_dotcom_user_id column.
+        tests:
+          - not_null
+          - unique
+      - name: gitlab_dotcom_user_id
+        description: The user id from the GitLab[dot]com application.
+      - name: company_id
+        description: A COALESCE of the `sf_lead_company_id`, `sf_contact_company_id`, and `gitlab_user_enhance_company_id` columns.
+      - name: sf_lead_company_id
+        description: The Zoom Info company ID derived from the Salesforce lead object.
+      - name: sf_contact_company_id
+        description: The Zoom Info company ID derived from the Salesforce contact object.
+      - name: gitlab_user_enhance_company_id
+        description: The Zoom Info company ID derived from the a list of GitLab[dot]com users enhanced directly by Zoom Info.

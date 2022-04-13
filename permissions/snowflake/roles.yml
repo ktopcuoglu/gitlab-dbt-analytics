@@ -1001,6 +1001,7 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
+                    - prod.legacy.sheetload_hp_dvr
                     - prod.workspace_data.airflow_dag
                     - prod.workspace_data.airflow_dag_run
                     - prod.workspace_data.dbt_test_results
@@ -2352,14 +2353,6 @@ roles:
             - transforming_s
             - transforming_l
             - transforming_xl
-
-    - alcurtis:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-        warehouses:
-            - analyst_xs
 
     - alpcohen: 
         member_of: 
@@ -4224,15 +4217,6 @@ roles:
         warehouses:
             - analyst_xs
 
-    - ysun:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
-            - bi_tool_eval_read
-        warehouses:
-            - analyst_xs
-
     - zzhang:
         member_of:
             - adaptive
@@ -4258,11 +4242,6 @@ users:
             - reporter
             - sysadmin
             - transformer
-
-    - alcurtis:
-        can_login: yes
-        member_of:
-            - alcurtis
 
     - alpcohen:
         can_login: yes
@@ -4709,11 +4688,6 @@ users:
         can_login: yes
         member_of:
             - warias
-
-    - ysun: # De provisioned as part of Quarterly audit and security check.
-        can_login: yes
-        member_of:
-            - ysun
 
     - zzhang:
         can_login: yes

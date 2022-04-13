@@ -1,5 +1,5 @@
 {{ config({
-    "alias": "fct_mrr",
+    "alias": "fct_mrr_all",
     "post-hook": '{{ apply_dynamic_data_masking(columns = [{"arr":"float"},{"dim_charge_id":"string"},{"dim_product_detail_id":"string"},{"created_by":"string"},{"dim_billing_account_id":"string"},{"dim_crm_account_id":"string"},{"dim_subscription_id":"string"},{"mrr":"float"},{"mrr_id":"string"},{"updated_by":"string"}]) }}'
 }) }}
 
@@ -33,16 +33,13 @@
       AND dim_date.day_of_month = 1
     WHERE subscription_status NOT IN ('Draft')
       AND charge_type = 'Recurring'
-      /* This excludes Education customers (charge name EDU or OSS) with free subscriptions.
-         Pull in seats from Paid EDU Plans with no ARR */
-      AND (mrr != 0 OR LOWER(prep_charge.rate_plan_charge_name) = 'max enrollment')
     {{ dbt_utils.group_by(n=8) }}
 )
 
 {{ dbt_audit(
     cte_ref="mrr",
-    created_by="@msendal",
+    created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2020-09-10",
+    created_date="2022-04-04",
     updated_date="2022-04-04",
 ) }}

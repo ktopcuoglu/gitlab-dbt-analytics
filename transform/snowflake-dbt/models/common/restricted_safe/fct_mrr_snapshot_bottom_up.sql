@@ -71,7 +71,9 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('zuora_rate_plan_charge_snapshots_source') }}
     WHERE charge_type = 'Recurring'
-      AND mrr != 0 /* This excludes Education customers (charge name EDU or OSS) with free subscriptions */
+      /* This excludes Education customers (charge name EDU or OSS) with free subscriptions.
+       Pull in seats from Paid EDU Plans with no ARR */
+      AND (mrr != 0 OR LOWER(rate_plan_charge_name) = 'max enrollment')
 
 ), zuora_rate_plan_charge_spined AS (
 
@@ -219,7 +221,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-07-29",
-    updated_date="2021-08-24",
+    updated_date="2022-04-02",
  	) }}

@@ -416,12 +416,6 @@ Fact table representing quotes pulled from the Zuora billing system. These are a
 
 {% enddocs %}
 
-{% docs fct_retention_parent_account %}
-
-Fact table representing retentions months, currently based on the highest possible level (Parent account).
-
-{% enddocs %}
-
 {% docs fct_revenue_contract_hold %}
 
 Details of holds placed on revenue contracts. In the future this will also connect to revenue contract lines that have been placed on hold, but the business does not currently operate this way.
