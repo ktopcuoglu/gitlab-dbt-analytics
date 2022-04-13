@@ -211,6 +211,11 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
   - [ ] Airflow does not require a huge amount of resources, 4GB of RAM and 2 CPUs should be sufficient.  
   - [ ] Ensure that you select the `dockerd` container runtime in `Kubernetes Settings`. 
   - [ ] Ensure that you select to create symbologic links to the docker command line path (`/usr/local/bin/docker`)
+  - [ ] Install the docker-compose cli by running through the below: 
+    - `sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
+    - `sudo chmod +x /usr/local/bin/docker-compose`
+    - Confirm install
+    - `docker-compose --version`
 - [ ] Run `make init-airflow` from the base of the analytics directory, this sets up the Airflow db locally. 
 - [ ] Run `make airflow` from the base of the analytics directory, this will spin up Airflow at localhost:8080. The default local credentials are specified in the Makefile. 
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
