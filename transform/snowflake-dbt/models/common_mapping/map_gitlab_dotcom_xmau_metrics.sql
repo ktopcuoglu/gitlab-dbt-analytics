@@ -1,6 +1,6 @@
 {{ simple_cte([
     ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
-    ('dotcom_event_to_edm_event', 'legacy_dotcom_event_name_to_edm_event_name_mapping'),
+    ('dotcom_event_to_edm_event', 'legacy_dotcom_event_name_to_edm_event_name_mapping')
 ]) }},
 
 mapping_table AS (
@@ -17,7 +17,7 @@ mapping_table AS (
     gitlab_dotcom_xmau_metrics.is_umau
   FROM gitlab_dotcom_xmau_metrics
   LEFT JOIN dotcom_event_to_edm_event
-    ON gitlab_dotcom_xmau_metrics.events_to_include = dotcom_event_to_edm_event.dotcom_event_name
+    ON gitlab_dotcom_xmau_metrics.events_to_include = dotcom_event_to_edm_event.legacy_dotcom_event_name
 
 )
 
