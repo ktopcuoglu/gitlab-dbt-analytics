@@ -10,7 +10,7 @@ models:
         - not_null
         - unique
     - name: reporting_month
-      description: Month in which the product usage was reported. (this model only looks at d      the last 28 days of the month.)
+      description: Month in which the product usage was reported. This model only looks at the last 28 days of the month.
     - name: is_smau
       description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
     - name: is_gmau
