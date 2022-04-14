@@ -57,7 +57,7 @@ def load_incremental(
         replication_time = query_executor(source_engine, replication_check_query)[
             0
         ][0]
-        replication_timestamp= datetime.datetime.strptime(replication_time, "%Y-%m-%dT%H:%M:%S.%f%z")
+        replication_timestamp= datetime.datetime.strptime(replication_time, "%Y-%m-%d %H:%M:%S.%f%z")
         last_load_time = get_last_load_time()
 
         hours_looking_back = int(env["HOURS"])
