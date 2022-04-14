@@ -71,6 +71,8 @@ WITH date_details AS (
       key_segment_geo_region_area_sqs,
       key_segment_geo_region_area_ot,
 
+      key_segment_geo_area,
+      
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -149,7 +151,6 @@ WITH date_details AS (
 
       sfdc_opportunity_snapshot_history.order_type_stamped AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
-      --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
       --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
       --sfdc_opportunity_snapshot_history.parent_segment,
@@ -824,6 +825,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.key_segment_geo_region_area,
       sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
       sfdc_opportunity_xf.key_segment_geo_region_area_ot,
+
+      sfdc_opportunity_xf.key_segment_geo_area,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    
@@ -1178,6 +1181,10 @@ WITH date_details AS (
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
                 AND vision_opps.opportunity_id IS NOT NULL
           THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN opp_snapshot.opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+          THEN 1
+      
         ELSE 0
       END                                                         AS is_excluded_flag
 

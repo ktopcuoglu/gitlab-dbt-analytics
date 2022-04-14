@@ -186,7 +186,7 @@
       monthly_sm_metrics.commit_ci_config_file_28_days_user,
       monthly_sm_metrics.view_audit_all_time_user,
       -- Wave 5.2
-      monthly_sm_metrics.dependency_scanning_jobs_28_days_user,
+      monthly_sm_metrics.dependency_scanning_jobs_all_time_user,
       monthly_sm_metrics.analytics_devops_adoption_all_time_user,
       monthly_sm_metrics.projects_imported_all_time_event,
       monthly_sm_metrics.preferences_security_dashboard_28_days_user,
@@ -201,6 +201,15 @@
       monthly_sm_metrics.author_issue_all_time_user,
       monthly_sm_metrics.failed_deployments_28_days_user,
       monthly_sm_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_sm_metrics.geo_enabled,
+      monthly_sm_metrics.geo_nodes_all_time_event,
+      monthly_sm_metrics.auto_devops_pipelines_28_days_user,
+      monthly_sm_metrics.active_instance_runners_all_time_event,
+      monthly_sm_metrics.active_group_runners_all_time_event,
+      monthly_sm_metrics.active_project_runners_all_time_event,
+      monthly_sm_metrics.gitaly_version,
+      monthly_sm_metrics.gitaly_servers_all_time_event,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -359,7 +368,7 @@
       monthly_saas_metrics.commit_ci_config_file_28_days_user,
       monthly_saas_metrics.view_audit_all_time_user,
       -- Wave 5.2
-      monthly_saas_metrics.dependency_scanning_jobs_28_days_user,
+      monthly_saas_metrics.dependency_scanning_jobs_all_time_user,
       monthly_saas_metrics.analytics_devops_adoption_all_time_user,
       monthly_saas_metrics.projects_imported_all_time_event,
       monthly_saas_metrics.preferences_security_dashboard_28_days_user,
@@ -373,7 +382,16 @@
       monthly_saas_metrics.author_epic_all_time_user,
       monthly_saas_metrics.author_issue_all_time_user,
       monthly_saas_metrics.failed_deployments_28_days_user,
-      monthly_saas_metrics.successful_deployments_28_days_user,    
+      monthly_saas_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_saas_metrics.geo_enabled,
+      monthly_saas_metrics.geo_nodes_all_time_event,
+      monthly_saas_metrics.auto_devops_pipelines_28_days_user,
+      monthly_saas_metrics.active_instance_runners_all_time_event,
+      monthly_saas_metrics.active_group_runners_all_time_event,
+      monthly_saas_metrics.active_project_runners_all_time_event,
+      monthly_saas_metrics.gitaly_version,
+      monthly_saas_metrics.gitaly_servers_all_time_event,    
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -403,5 +421,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-03-10"
+    updated_date="2022-04-12"
 ) }}

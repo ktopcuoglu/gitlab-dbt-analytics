@@ -35,7 +35,6 @@ renamed AS (
     business_development_rep__c AS business_development_rep,
     dedicated_service_engineer__c AS dedicated_service_engineer,
     sdr_assigned__c AS sales_development_rep,
-    sdr_account_team__c AS sales_development_rep_team,
     -- solutions_architect__c                     AS solutions_architect,
     technical_account_manager_lu__c AS technical_account_manager_id,
 
@@ -54,8 +53,6 @@ renamed AS (
     carr_acct_family__c AS carr_account_family,
     next_renewal_date__c AS next_renewal_date,
     license_utilization__c AS license_utilization,
-    region__c AS account_region,
-    sub_region__c AS account_sub_region,
     support_level__c AS support_level,
     named_account__c AS named_account,
     billingcountry AS billing_country,
@@ -82,7 +79,6 @@ renamed AS (
     -- territory success planning fields
     atam_approved_next_owner__c AS tsp_approved_next_owner,
     atam_next_owner_role__c AS tsp_next_owner_role,
-    atam_next_owner_team__c AS tsp_next_owner_team,
     atam_account_employees__c AS tsp_account_employees,
     jb_max_family_employees__c AS tsp_max_family_employees,
     TRIM(SPLIT_PART(atam_region__c, '-', 1)) AS tsp_region,
@@ -174,12 +170,6 @@ renamed AS (
     -- New SFDC Account Fields for FY22 Planning
     next_fy_account_owner_temp__c AS next_fy_account_owner_temp,
     next_fy_planning_notes_temp__c AS next_fy_planning_notes_temp,
-    next_fy_tsp_territory_temp__c AS next_fy_tsp_territory_temp,
-    next_fy_user_area_temp__c AS next_fy_user_area_temp,
-    next_fy_user_geo_temp__c AS next_fy_user_geo_temp,
-    next_fy_user_region_temp__c AS next_fy_user_region_temp,
-    next_fy_user_segment_temp__c AS next_fy_user_segment_temp,
-
     --*************************************
     -- Partner Account fields
     partner_track__c AS partner_track,

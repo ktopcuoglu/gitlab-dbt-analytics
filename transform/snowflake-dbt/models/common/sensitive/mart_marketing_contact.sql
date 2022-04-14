@@ -630,6 +630,11 @@
           THEN TRUE
         ELSE FALSE
       END                                                                                        AS has_namespace_with_public_project,
+      CASE
+        WHEN MAX(marketing_contact_order.does_free_namespace_have_public_project) = TRUE
+          THEN TRUE
+        ELSE FALSE
+      END                                                                                        AS has_free_namespace_with_public_project,
       ARRAY_AGG(
                 DISTINCT IFNULL(marketing_contact_order.marketing_contact_role || ': ' || 
                   IFNULL(marketing_contact_order.saas_product_tier, '') || IFNULL(marketing_contact_order.self_managed_product_tier, ''), 'No Role') 
@@ -935,7 +940,12 @@
       'usage_issues_28_days_user',
       'usage_instance_user_count_not_aligned',
       'usage_historical_max_users_not_aligned',
-      'has_namespace_setup_for_company_use'
+      'has_namespace_setup_for_company_use',
+      'pql_namespace_id',
+      'pql_namespace_name',
+      'pql_nbr_integrations_installed',
+      'pql_integrations_installed',
+      'pql_namespace_creator_job_description'
       ]
 ) }}
 
@@ -944,7 +954,7 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-03-16"
+    updated_date="2022-03-26"
 ) }}
 
 

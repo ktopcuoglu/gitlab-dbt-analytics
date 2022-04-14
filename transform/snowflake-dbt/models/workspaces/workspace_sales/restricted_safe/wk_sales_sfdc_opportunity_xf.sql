@@ -62,7 +62,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.opportunity_owner_department,
       sfdc_opportunity_xf.opportunity_owner_manager,
       sfdc_opportunity_xf.opportunity_owner_role,
-      sfdc_opportunity_xf.opportunity_owner_team,
       sfdc_opportunity_xf.opportunity_owner_title,
       sfdc_opportunity_xf.opportunity_sales_development_representative,
       sfdc_opportunity_xf.opportunity_development_representative,
@@ -203,7 +202,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.tsp_max_hierarchy_sales_segment,
       sfdc_opportunity_xf.division_sales_segment,
       sfdc_opportunity_xf.ultimate_parent_sales_segment,
-      sfdc_opportunity_xf.segment,
       sfdc_opportunity_xf.sales_segment,
       sfdc_opportunity_xf.parent_segment,
 
@@ -787,6 +785,9 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         -- NF 2021 - Pubsec extreme deals
         WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
           THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+          THEN 1
         ELSE 0
       END                                                                       AS is_excluded_flag,
 
@@ -1127,6 +1128,8 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         COALESCE(agg_demo_keys.key_segment_geo_region_area,'other')     AS key_segment_geo_region_area,
         COALESCE(agg_demo_keys.key_segment_geo_region_area_sqs,'other') AS key_segment_geo_region_area_sqs,
         COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
+        
+        COALESCE(agg_demo_keys.key_segment_geo_area,'other')  AS key_segment_geo_area,
 
         COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')   AS sales_team_cro_level,
      

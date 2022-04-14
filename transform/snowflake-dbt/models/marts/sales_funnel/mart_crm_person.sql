@@ -104,7 +104,6 @@
       dim_crm_person.partner_prospect_owner_name,
       dim_crm_person.partner_prospect_id,
       dim_crm_person.sequence_step_type,
-      dim_crm_person.region,
       dim_crm_person.state,
       dim_crm_person.country,
       fct_crm_person.name_of_active_sequence,

@@ -58,11 +58,17 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
 |  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
+|  Slack alias: `gtmanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `randdanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `peopleanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `engineeringanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
+|  Slack alias: `datacollaborationtriage` | No | Yes | No | No | No |  PeopleOps Onboarding |
+|  Slack alias: `dataplatformtriage` | No | No | No | No | Yes |  PeopleOps Onboarding |
 |  Project: `GitLab Data Team` | Developer | Developer | Developer | Developer | Developer |
 |  1password vault: `Data Team` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
 |  Namespace: `gitlab-data` |  Developer | Developer | Developer | Developer | Developer | ? |
 | daily Geekbot standup  | No | Optional | Optional | Yes | Yes | [Instructions](https://geekbot.com/faq/#:~:text=How%20can%20i%20add%20new,participants%20with%20the%20broadcast%20channel.)  |
-|  Data Team calendar |  No |Yes | Yes | Yes | Yes | ?  |
+|  Data Program calendar |  Yes | Yes | Yes | Yes | Yes | ?  |
 |  Lucidchart folder: `Data Team` | Yes |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: SheetLoad | No |Yes | Yes | Yes | Yes |  ? |
 |  Google Drive folder: Boneyard | No |Yes | Yes | Yes | Yes |  ? |
@@ -116,7 +122,6 @@ There are many slack channels for communication of data team needs and informati
 | `analytics-pipelines` | No | No | No | No | Yes |
 | `data-prom-alerts` | No | No | No | No | Yes |
 | `bt-data-science` | No | No | No | Yes | No |
-
 
 </details>
 
@@ -202,8 +207,20 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 
 ### Airflow
 
+- [ ] Install [Rancher Desktop](https://rancherdesktop.io/) using the UI install specified for your system
+  - [ ] Airflow does not require a huge amount of resources, 4GB of RAM and 2 CPUs should be sufficient.  
+  - [ ] Ensure that you select the `dockerd` container runtime in `Kubernetes Settings`. 
+  - [ ] Ensure that you select to create symbologic links to the docker command line path (`/usr/local/bin/docker`) in the `Supporting Utilities` section. 
+  - [ ] Install the docker-compose cli by running through the below: 
+    - `sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
+    - `sudo chmod +x /usr/local/bin/docker-compose`
+    - Confirm install
+    - `docker-compose --version`
+    - Optionally, install [command completion](https://docs.docker.com/compose/completion/) for the bash and zsh shell.
+- [ ] Run `make init-airflow` from the base of the analytics directory, this sets up the Airflow db locally. 
+- [ ] Run `make airflow` from the base of the analytics directory, this will spin up Airflow at localhost:8080. The default local credentials are specified in the Makefile. 
 - [ ] Read the Airflow section on the [Data Infrastructure page](https://about.gitlab.com/handbook/business-ops/data-team/platform/infrastructure/#airflow)
-- [ ] Watch the [Airflow Setup Walkthrough](https://www.youtube.com/watch?v=3Ym40gRHtvk&feature=youtu.be) with Taylor and Magda. In case you have an issue with the Airflow setup, read this instruction [Troubleshooting local Airflow config](https://about.gitlab.com/handbook/business-technology/data-team/platform/infrastructure/#troubleshooting-local-airflow-config)
+
 ### Jupyter
 
 - [ ] Ensure you've setup your dbt for running locally as mentioned above. The ./.dbt/profiles.yml file is a pre-requisite for this process. If you do not want dbt you can manually create the ./.dbt/profiles.yml file based off the [sample profile](https://gitlab.com/gitlab-data/analytics/-/blob/master/admin/sample_profiles.yml)
