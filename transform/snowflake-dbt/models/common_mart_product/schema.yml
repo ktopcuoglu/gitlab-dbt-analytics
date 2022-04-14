@@ -18,7 +18,7 @@ models:
     - name: is_umau
       description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
     - name: stage_name
-      description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      description: The name of the product stage
     - name: section_name
       description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
     - name: group_name
@@ -55,7 +55,7 @@ models:
     - name: event_name
       description: The name tied to an event
     - name: stage_name
-      description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      description: The name of the product stage 
     - name: section_name
       description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
     - name: group_name

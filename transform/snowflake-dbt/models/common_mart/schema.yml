@@ -24,7 +24,7 @@ models:
     - name: dim_billing_account_id
       description: The unqiue id of a billing account in the dim_billing_account model.
     - name: stage_name
-      description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      description: The name of the product stage
     - name: section_name
       description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
     - name: group_name
@@ -82,7 +82,7 @@ models:
     - name: dim_billing_account_id
       description: The unqiue id of a billing account in the dim_billing_account model.
     - name: stage_name
-      description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      description: The name of the product stage
     - name: section_name
       description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
     - name: group_name
@@ -180,7 +180,7 @@ models:
     - name: dim_billing_account_id
       description: The unqiue id of a billing account in the dim_billing_account model.
     - name: stage_name
-      description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      description: The name of the product stage
     - name: section_name
       description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
     - name: group_name

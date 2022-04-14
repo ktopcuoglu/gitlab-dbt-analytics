@@ -59,8 +59,8 @@ fact_with_project AS (
     
     SELECT
       fact_with_user.*,
-      dim_project.is_learn_gitlab AS project_is_learn_gitlab,
-      dim_project.is_imported AS project_is_imported
+      COALESCE(dim_project.is_learn_gitlab, FALSE) AS project_is_learn_gitlab,
+      COALESCE(dim_project.is_imported, FALSE) AS project_is_imported
     FROM fact_with_user
     LEFT JOIN dim_project
       ON fact_with_user.dim_project_id = dim_project.dim_project_id

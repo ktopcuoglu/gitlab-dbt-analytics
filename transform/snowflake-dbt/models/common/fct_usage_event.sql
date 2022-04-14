@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('xmau_metrics', 'gitlab_dotcom_xmau_metrics'),
+    ('xmau_metrics', 'map_gitlab_dotcom_xmau_metrics'),
     ('dim_date', 'dim_date'),
     ('namespace_order_subscription', 'bdg_namespace_order_subscription'),
     ('dim_subscription', 'dim_subscription'),
@@ -44,7 +44,7 @@ fct_events AS (
     CAST(prep_event_24_months.event_created_at AS DATE) AS event_date
   FROM prep_event_24_months
   LEFT JOIN xmau_metrics
-    ON prep_event_24_months.event_name = xmau_metrics.events_to_include
+    ON prep_event_24_months.event_name = xmau_metrics.common_events_to_include
 
 ),
 
