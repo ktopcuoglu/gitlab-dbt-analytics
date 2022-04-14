@@ -27,24 +27,21 @@ fct_events AS (
     prep_event_24_months.event_id,
     prep_event_24_months.event_name,
     prep_event_24_months.ultimate_parent_namespace_id,
-    'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' AS dim_instance_id,
     prep_event_24_months.dim_user_id,
     prep_event_24_months.parent_type,
     prep_event_24_months.parent_id,
     prep_event_24_months.dim_project_id,
     prep_event_24_months.event_created_at,
     prep_event_24_months.days_since_user_creation_at_event_date,
+    prep_event_24_months.days_since_namespace_creation_at_event_date,
+    prep_event_24_months.days_since_project_creation_at_event_date,
     xmau_metrics.group_name,
     xmau_metrics.section_name,
-    xmau_metrics.smau AS is_smau,
-    xmau_metrics.gmau AS is_gmau,
-    xmau_metrics.is_umau,
-    prep_event_24_months.project_is_learn_gitlab,
+    COALESCE(xmau_metrics.smau, FALSE) AS is_smau,
+    COALESCE(xmau_metrics.gmau, FALSE) AS is_gmau,
+    COALESCE(xmau_metrics.is_umau, FALSE) AS is_umau,
     COALESCE(prep_event_24_months.stage_name, xmau_metrics.stage_name) AS stage_name,
-    CAST(prep_event_24_months.event_created_at AS DATE) AS event_date,
-    DATE_TRUNC('MONTH', event_date) AS reporting_month,
-    QUARTER(event_date) AS reporting_quarter,
-    YEAR(event_date) AS reporting_year
+    CAST(prep_event_24_months.event_created_at AS DATE) AS event_date
   FROM prep_event_24_months
   LEFT JOIN xmau_metrics
     ON prep_event_24_months.event_name = xmau_metrics.events_to_include
@@ -133,7 +130,6 @@ gitlab_dotcom_fact AS (
     final.event_id,
     
     --Foreign Keys
-    final.dim_instance_id,
     final.dim_active_product_tier_id,
     final.dim_active_subscription_id,
     dim_date.date_id AS dim_event_date_id,
@@ -146,9 +142,6 @@ gitlab_dotcom_fact AS (
     --Time attributes
     final.event_created_at,
     final.event_date,
-    final.reporting_month,
-    final.reporting_quarter,
-    final.reporting_year,
     
     --Degenerate Dimensions (No stand-alone, promoted dimension table)
     final.parent_id,
@@ -163,8 +156,9 @@ gitlab_dotcom_fact AS (
     final.plan_id_at_event_date,
     final.plan_name_at_event_date,
     final.plan_was_paid_at_event_date,
-    final.project_is_learn_gitlab,
     final.days_since_user_creation_at_event_date,
+    final.days_since_namespace_creation_at_event_date,
+    final.days_since_project_creation_at_event_date,
     'GITLAB_DOTCOM' AS data_source
   FROM final
   LEFT JOIN dim_date

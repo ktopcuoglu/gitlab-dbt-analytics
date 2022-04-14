@@ -38,10 +38,10 @@ paid_flag_by_month AS (
 
   SELECT
     dim_ultimate_parent_namespace_id,
-    reporting_month,
+    event_calendar_month,
     plan_was_paid_at_event_date
   FROM mart_with_date_range
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_ultimate_parent_namespace_id, reporting_month
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_ultimate_parent_namespace_id, event_calendar_month
       ORDER BY event_created_at DESC) = 1
 
 ),
@@ -64,21 +64,21 @@ mart_w_paid_deduped AS (
     mart_with_date_range.section_name,
     mart_with_date_range.stage_name,
     mart_with_date_range.group_name,
-    mart_with_date_range.reporting_month,
-    mart_with_date_range.reporting_quarter,
-    mart_with_date_range.reporting_year,
+    mart_with_date_range.event_calendar_month,
+    mart_with_date_range.event_calendar_quarter,
+    mart_with_date_range.event_calendar_year,
     paid_flag_by_month.plan_was_paid_at_event_date
   FROM mart_with_date_range
   LEFT JOIN paid_flag_by_month
     ON mart_with_date_range.dim_ultimate_parent_namespace_id = paid_flag_by_month.dim_ultimate_parent_namespace_id
-      AND mart_with_date_range.reporting_month = paid_flag_by_month.reporting_month
+      AND mart_with_date_range.event_calendar_month = paid_flag_by_month.event_calendar_month
 
 ),
 
 total_results AS (
 
   SELECT
-    reporting_month,
+    event_calendar_month,
     is_umau,
     is_gmau,
     is_smau,
@@ -88,18 +88,18 @@ total_results AS (
     'total' AS user_group,
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
-    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS namespace_count,
+    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
     COUNT(DISTINCT(dim_user_id)) AS user_count
   FROM mart_w_paid_deduped
   {{ dbt_utils.group_by(n=8) }}
-  ORDER BY reporting_month DESC
+  ORDER BY event_calendar_month DESC
 
 ),
 
 free_results AS (
 
   SELECT
-    reporting_month,
+    event_calendar_month,
     is_umau,
     is_gmau,
     is_smau,
@@ -109,19 +109,19 @@ free_results AS (
     'free' AS user_group,
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
-    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS namespace_count,
+    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
     COUNT(DISTINCT(dim_user_id)) AS user_count
   FROM mart_w_paid_deduped
   WHERE plan_was_paid_at_event_date = FALSE
   {{ dbt_utils.group_by(n=8) }}
-  ORDER BY reporting_month DESC
+  ORDER BY event_calendar_month DESC
 
 ),
 
 paid_results AS (
 
   SELECT
-    reporting_month,
+    event_calendar_month,
     is_umau,
     is_gmau,
     is_smau,
@@ -131,12 +131,12 @@ paid_results AS (
     'paid' AS user_group,
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
-    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS namespace_count,
+    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
     COUNT(DISTINCT(dim_user_id)) AS user_count
   FROM mart_w_paid_deduped
   WHERE plan_was_paid_at_event_date = TRUE
   {{ dbt_utils.group_by(n=8) }}
-  ORDER BY reporting_month DESC
+  ORDER BY event_calendar_month DESC
 
 ),
 
@@ -160,7 +160,7 @@ results_wo_pk AS (
 results AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS mart_xmau_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS rpt_xmau_metric_monthly_id,
     results_wo_pk.*
   FROM results_wo_pk
 

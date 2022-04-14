@@ -17,13 +17,11 @@ mart_usage_namespace_daily AS (
       dim_active_subscription_id,
       dim_crm_account_id,
       dim_billing_account_id, 
-      dim_instance_id,
       dim_ultimate_parent_namespace_id,  
       plan_id_at_event_date,
       plan_name_at_event_date,
       plan_was_paid_at_event_date,
-      namespace_created_at,
-      days_since_namespace_created,                                   
+      namespace_created_at,                             
       event_date,
       event_name,
       stage_name,
@@ -34,10 +32,10 @@ mart_usage_namespace_daily AS (
       is_gmau,
       is_umau,
       COUNT(*) AS event_count,
-      COUNT(DISTINCT(dim_user_id)) AS distinct_user_count
+      COUNT(DISTINCT(dim_user_id)) AS user_count
     FROM mart_usage_event
     WHERE dim_user_id IS NOT NULL
-    {{ dbt_utils.group_by(n=21) }}
+    {{ dbt_utils.group_by(n=19) }}
         
 )
 

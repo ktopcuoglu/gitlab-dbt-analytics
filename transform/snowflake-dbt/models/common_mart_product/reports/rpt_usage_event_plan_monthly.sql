@@ -26,10 +26,10 @@ mart_with_date_range AS (
 mart_usage_event_plan_monthly AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'plan_id_at_event_date', 'event_name']) }} AS mart_usage_event_plan_monthly_id,
-    reporting_month,
-    reporting_quarter,
-    reporting_year,
+    {{ dbt_utils.surrogate_key(['event_calendar_month', 'plan_id_at_event_date', 'event_name']) }} AS rpt_usage_event_plan_monthly_id,
+    event_calendar_month,
+    event_calendar_quarter,
+    event_calendar_year,
     plan_id_at_event_date,
     event_name,
     stage_name,
@@ -39,11 +39,11 @@ mart_usage_event_plan_monthly AS (
     is_gmau,
     is_umau,
     COUNT(*) AS event_count,
-    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS namespace_count,
+    COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
     COUNT(DISTINCT(dim_user_id)) AS user_count
   FROM mart_with_date_range
   {{ dbt_utils.group_by(n=12) }}
-  ORDER BY reporting_month DESC, plan_id_at_event_date DESC
+  ORDER BY event_calendar_month DESC, plan_id_at_event_date DESC
 
 )
 
