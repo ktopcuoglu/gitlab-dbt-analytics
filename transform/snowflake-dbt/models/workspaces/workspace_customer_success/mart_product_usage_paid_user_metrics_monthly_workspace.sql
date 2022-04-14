@@ -13,7 +13,7 @@
     ('subscriptions', 'dim_subscription'),
     ('namespaces', 'dim_namespace'),
     ('charges', 'mart_charge'),
-    ('dates', 'dim_dates')
+    ('dates', 'dim_date')
 ]) }}
 
 
