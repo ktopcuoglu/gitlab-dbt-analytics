@@ -570,6 +570,14 @@ models:
           - not_null
           - unique
 
+  - name: dim_service_ping_metric
+    description: ' {{ doc("dim_service_ping_metric") }} '
+    columns:
+      - name: dim_service_ping_metric_id
+        tests:
+          - not_null
+          - unique
+
   - name: mart_xmau_metric_monthly
     description: '{{ doc("mart_xmau_metric_monthly") }}'
     columns:

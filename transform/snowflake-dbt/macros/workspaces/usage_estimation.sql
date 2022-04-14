@@ -1,5 +1,5 @@
-{% macro usage_estimation(active_metric_count, percent_active) -%}
+{% macro usage_estimation(reporting_metric_count, percent_reporting) -%}
 
-{{ active_metric_count }} + DIV0(({{ active_metric_count }} * (1 - {{ percent_active }} )),{{ percent_active }} )
+{{ reporting_metric_count }} + DIV0(({{ reporting_metric_count }} * (1 - {{ percent_reporting }} )),{{ percent_reporting }} )
 
 {%- endmacro %}

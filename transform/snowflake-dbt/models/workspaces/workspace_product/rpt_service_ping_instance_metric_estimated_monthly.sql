@@ -18,7 +18,7 @@
         metric_value,
         latest_active_subscription_id,
         service_ping_delivery_type,
-        dim_date_id,
+        dim_service_ping_date_id,
         ping_edition,
         ping_product_tier,
         ping_edition_product_tier,
@@ -54,7 +54,7 @@
         SUM(metric_value)                 AS metric_value
     FROM fact
         INNER JOIN dim_date
-            ON fact.dim_date_id = dim_date.date_id
+            ON fact.dim_service_ping_date_id = dim_date.date_id
     WHERE metric_value is not null
     {{ dbt_utils.group_by(n=13)}}
 
@@ -65,7 +65,7 @@
       mart_pct.reporting_count          AS reporting_count,
       mart_pct.no_reporting_count       AS no_reporting_count,
       mart_pct.pct_with_counters        AS pct_with_counters,
-      mart_pct.adoption_grain           AS adoption_grain
+      mart_pct.estimation_grain         AS estimation_grain
     FROM fact_w_month
       LEFT JOIN mart_pct
     ON fact_w_month.reporting_month = mart_pct.reporting_month
@@ -79,7 +79,7 @@
       1                                 AS reporting_count,
       0                                 AS no_reporting_count,
       1                                 AS pct_with_counters,
-      'subscription'                    AS adoption_grain
+      'subscription based estimation'   AS estimation_grain
     FROM fact_w_month
   WHERE service_ping_delivery_type = 'SaaS'
 
@@ -90,7 +90,7 @@
       1                                 AS reporting_count,
       0                                 AS no_reporting_count,
       1                                 AS pct_with_counters,
-      'seats'                           AS adoption_grain
+      'seat based estimation'           AS estimation_grain
     FROM fact_w_month
   WHERE service_ping_delivery_type = 'SaaS'
 
@@ -105,7 +105,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'adoption_grain', 'ping_edition_product_tier']) }}     AS rpt_service_ping_instance_metric_estimated_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain', 'ping_edition_product_tier']) }}   AS rpt_service_ping_instance_metric_estimated_monthly_id,
     *,
     {{ usage_estimation('metric_value', 'pct_with_counters') }}                                                           AS estimated_usage
  FROM joined_counts_w_percentage

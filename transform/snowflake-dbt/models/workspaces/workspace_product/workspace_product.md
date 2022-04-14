@@ -133,3 +133,8 @@ Version source, self managed usage data prep table.
 Estimation model to estimate the usage for unreported self-managed instances.
 
 {% enddocs %}
+
+{% docs dim_service_ping_metric %}
+
+New dimension table to replace dim_usage_ping_metric with some enhancements: surrogate key, cleaning of groups, and renamed.
+{% enddocs %}

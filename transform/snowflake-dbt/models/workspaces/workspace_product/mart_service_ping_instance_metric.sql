@@ -16,7 +16,7 @@
     ('dim_license', 'dim_license'),
     ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+    ('dim_service_ping_metric', 'dim_service_ping_metric')
     ])
 
 }}
@@ -48,7 +48,7 @@
 ), license_subscriptions AS (
 
     SELECT DISTINCT
-      dim_date.date_day                                                           AS reporting_month,
+      dim_date.first_day_of_month                                                 AS reporting_month,
       dim_license_id                                                              AS license_id,
       dim_license.license_md5                                                     AS license_md5,
       dim_license.company                                                         AS license_company_name,
@@ -102,68 +102,70 @@
   ), joined AS (
 
       SELECT
-        fct_service_ping.dim_date_id                                                  AS dim_date_id,
-        fct_service_ping.dim_license_id                                               AS dim_license_id,
-        fct_service_ping.dim_installation_id                                          AS dim_installation_id,
-        fct_service_ping.dim_service_ping_instance_id                                 AS dim_service_ping_instance_id,
-        fct_service_ping.metrics_path                                                 AS metrics_path,
-        fct_service_ping.metric_value                                                 AS metric_value,
-        fct_service_ping.has_timed_out                                                AS has_timed_out,
-        SPLIT_PART(dim_usage_ping_metric.product_group, ':', 3)                       AS group_name,
-        dim_usage_ping_metric.product_stage                                           AS stage_name,
-        dim_usage_ping_metric.product_section                                         AS section_name,
-        dim_usage_ping_metric.is_smau                                                 AS is_smau,
-        dim_usage_ping_metric.is_gmau                                                 AS is_gmau,
-        dim_usage_ping_metric.is_paid_gmau                                            AS is_paid_gmau,
-        dim_usage_ping_metric.is_umau                                                 AS is_umau,
-        dim_service_ping.license_md5                                                  AS license_md5,
-        dim_service_ping.is_trial                                                     AS is_trial,
-        fct_service_ping.umau_value                                                   AS umau_value,
-        license_subscriptions.license_id                                              AS license_id,
-        license_subscriptions.license_company_name                                    AS license_company_name,
-        license_subscriptions.latest_active_subscription_id                           AS latest_active_subscription_id,
-        license_subscriptions.original_subscription_name_slugify                      AS original_subscription_name_slugify,
-        license_subscriptions.product_category_array                                  AS product_category_array,
-        license_subscriptions.product_rate_plan_name_array                            AS product_rate_plan_name_array,
-        license_subscriptions.subscription_start_month                                AS subscription_start_month,
-        license_subscriptions.subscription_end_month                                  AS subscription_end_month,
-        license_subscriptions.dim_billing_account_id                                  AS dim_billing_account_id,
-        license_subscriptions.crm_account_name                                        AS crm_account_name,
-        license_subscriptions.dim_parent_crm_account_id                               AS dim_parent_crm_account_id,
-        license_subscriptions.parent_crm_account_name                                 AS parent_crm_account_name,
-        license_subscriptions.parent_crm_account_billing_country                      AS parent_crm_account_billing_country,
-        license_subscriptions.parent_crm_account_sales_segment                        AS parent_crm_account_sales_segment,
-        license_subscriptions.parent_crm_account_industry                             AS parent_crm_account_industry,
-        license_subscriptions.parent_crm_account_owner_team                           AS parent_crm_account_owner_team,
-        license_subscriptions.parent_crm_account_sales_territory                      AS parent_crm_account_sales_territory,
-        license_subscriptions.technical_account_manager                               AS technical_account_manager,
-        COALESCE(is_paid_subscription, FALSE)                                         AS is_paid_subscription,
-        COALESCE(is_program_subscription, FALSE)                                      AS is_program_subscription,
-        dim_service_ping.service_ping_delivery_type                                   AS service_ping_delivery_type,
-        dim_service_ping.ping_edition                                                 AS ping_edition,
-        dim_service_ping.product_tier                                                 AS ping_product_tier,
-        dim_service_ping.ping_edition || ' - ' || dim_service_ping.product_tier       AS ping_edition_product_tier,
-        dim_service_ping.major_version                                                AS major_version,
-        dim_service_ping.minor_version                                                AS minor_version,
-        dim_service_ping.major_minor_version                                          AS major_minor_version,
-        dim_service_ping.major_minor_version_id                                       AS major_minor_version_id,
-        dim_service_ping.version_is_prerelease                                        AS version_is_prerelease,
-        dim_service_ping.is_internal                                                  AS is_internal,
-        dim_service_ping.is_staging                                                   AS is_staging,
-        dim_service_ping.instance_user_count                                          AS instance_user_count,
-        dim_service_ping.ping_created_at                                              AS ping_created_at,
-        dim_service_ping.ping_created_at_month                                        AS ping_created_at_month,
-        fct_service_ping.time_frame                                                   AS time_frame,
-        fct_service_ping.dim_host_id                                                  AS dim_host_id,
-        fct_service_ping.dim_instance_id                                              AS dim_instance_id,
-        dim_service_ping.host_name                                                    AS host_name,
-        dim_service_ping.is_last_ping_of_month                                        AS is_last_ping_of_month,
-        fct_service_ping.dim_location_country_id                                      AS dim_location_country_id,
-        dim_location.country_name                                                     AS country_name,
-        dim_location.iso_2_country_code                                               AS iso_2_country_code
+        fct_service_ping.dim_service_ping_date_id                                                                                               AS dim_service_ping_date_id,
+        fct_service_ping.dim_license_id                                                                                                         AS dim_license_id,
+        fct_service_ping.dim_installation_id                                                                                                    AS dim_installation_id,
+        fct_service_ping.dim_service_ping_instance_id                                                                                           AS dim_service_ping_instance_id,
+        fct_service_ping.metrics_path                                                                                                           AS metrics_path,
+        fct_service_ping.metric_value                                                                                                           AS metric_value,
+        fct_service_ping.has_timed_out                                                                                                          AS has_timed_out,
+        dim_service_ping_metric.group_name                                                                                                      AS group_name,
+        dim_service_ping_metric.stage_name                                                                                                      AS stage_name,
+        dim_service_ping_metric.section_name                                                                                                    AS section_name,
+        dim_service_ping_metric.is_smau                                                                                                         AS is_smau,
+        dim_service_ping_metric.is_gmau                                                                                                         AS is_gmau,
+        dim_service_ping_metric.is_paid_gmau                                                                                                    AS is_paid_gmau,
+        dim_service_ping_metric.is_umau                                                                                                         AS is_umau,
+        dim_service_ping.license_md5                                                                                                            AS license_md5,
+        dim_service_ping.is_trial                                                                                                               AS is_trial,
+        fct_service_ping.umau_value                                                                                                             AS umau_value,
+        license_subscriptions.license_id                                                                                                        AS license_id,
+        license_subscriptions.license_company_name                                                                                              AS license_company_name,
+        license_subscriptions.latest_active_subscription_id                                                                                     AS latest_active_subscription_id,
+        license_subscriptions.original_subscription_name_slugify                                                                                AS original_subscription_name_slugify,
+        license_subscriptions.product_category_array                                                                                            AS product_category_array,
+        license_subscriptions.product_rate_plan_name_array                                                                                      AS product_rate_plan_name_array,
+        license_subscriptions.subscription_start_month                                                                                          AS subscription_start_month,
+        license_subscriptions.subscription_end_month                                                                                            AS subscription_end_month,
+        license_subscriptions.dim_billing_account_id                                                                                            AS dim_billing_account_id,
+        license_subscriptions.crm_account_name                                                                                                  AS crm_account_name,
+        license_subscriptions.dim_parent_crm_account_id                                                                                         AS dim_parent_crm_account_id,
+        license_subscriptions.parent_crm_account_name                                                                                           AS parent_crm_account_name,
+        license_subscriptions.parent_crm_account_billing_country                                                                                AS parent_crm_account_billing_country,
+        license_subscriptions.parent_crm_account_sales_segment                                                                                  AS parent_crm_account_sales_segment,
+        license_subscriptions.parent_crm_account_industry                                                                                       AS parent_crm_account_industry,
+        license_subscriptions.parent_crm_account_owner_team                                                                                     AS parent_crm_account_owner_team,
+        license_subscriptions.parent_crm_account_sales_territory                                                                                AS parent_crm_account_sales_territory,
+        license_subscriptions.technical_account_manager                                                                                         AS technical_account_manager,
+        COALESCE(is_paid_subscription, FALSE)                                                                                                   AS is_paid_subscription,
+        COALESCE(is_program_subscription, FALSE)                                                                                                AS is_program_subscription,
+        dim_service_ping.service_ping_delivery_type                                                                                             AS service_ping_delivery_type,
+        dim_service_ping.ping_edition                                                                                                           AS ping_edition,
+        dim_service_ping.product_tier                                                                                                           AS ping_product_tier,
+        dim_service_ping.ping_edition || ' - ' || dim_service_ping.product_tier                                                                 AS ping_edition_product_tier,
+        dim_service_ping.major_version                                                                                                          AS major_version,
+        dim_service_ping.minor_version                                                                                                          AS minor_version,
+        dim_service_ping.major_minor_version                                                                                                    AS major_minor_version,
+        dim_service_ping.major_minor_version_id                                                                                                 AS major_minor_version_id,
+        dim_service_ping.version_is_prerelease                                                                                                  AS version_is_prerelease,
+        dim_service_ping.is_internal                                                                                                            AS is_internal,
+        dim_service_ping.is_staging                                                                                                             AS is_staging,
+        dim_service_ping.instance_user_count                                                                                                    AS instance_user_count,
+        dim_service_ping.ping_created_at                                                                                                        AS ping_created_at,
+        dim_date.first_day_of_month                                                                                                             AS ping_created_at_month,
+        fct_service_ping.time_frame                                                                                                             AS time_frame,
+        fct_service_ping.dim_host_id                                                                                                            AS dim_host_id,
+        fct_service_ping.dim_instance_id                                                                                                        AS dim_instance_id,
+        dim_service_ping.host_name                                                                                                              AS host_name,
+        dim_service_ping.is_last_ping_of_month                                                                                                  AS is_last_ping_of_month,
+        fct_service_ping.dim_location_country_id                                                                                                AS dim_location_country_id,
+        dim_location.country_name                                                                                                               AS country_name,
+        dim_location.iso_2_country_code                                                                                                         AS iso_2_country_code
       FROM fct_service_ping
-      LEFT JOIN dim_usage_ping_metric
-        ON fct_service_ping.metrics_path = dim_usage_ping_metric.metrics_path
+      LEFT JOIN dim_service_ping_metric
+        ON fct_service_ping.metrics_path = dim_service_ping_metric.metrics_path
+      INNER JOIN dim_date
+        ON fct_service_ping.dim_service_ping_date_id = dim_date.date_id
       LEFT JOIN dim_service_ping
         ON fct_service_ping.dim_service_ping_instance_id = dim_service_ping.dim_service_ping_instance_id
       LEFT JOIN dim_hosts
@@ -172,7 +174,7 @@
           AND dim_service_ping.dim_instance_id = dim_hosts.instance_id
       LEFT JOIN license_subscriptions
         ON dim_service_ping.license_md5 = license_subscriptions.license_md5
-          AND dim_service_ping.ping_created_at_month = license_subscriptions.reporting_month
+          AND dim_date.first_day_of_month = license_subscriptions.reporting_month
       LEFT JOIN dim_location
         ON fct_service_ping.dim_location_country_id = dim_location.dim_location_country_id
 
@@ -182,7 +184,7 @@
 
       -- Primary Key
       {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'metrics_path']) }} AS mart_service_ping_instance_metric_id,
-      dim_date_id,
+      dim_service_ping_date_id,
       metrics_path,
       metric_value,
       has_timed_out,

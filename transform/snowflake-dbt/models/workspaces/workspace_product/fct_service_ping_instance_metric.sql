@@ -14,7 +14,7 @@
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
     ('prep_service_ping_instance', 'prep_service_ping_instance_flattened'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+    ('dim_service_ping_metric', 'dim_service_ping_metric')
     ])
 
 }}
@@ -81,7 +81,7 @@
     SELECT
       prep_usage_ping_cte.*,
       prep_license.dim_license_id                                                                          AS dim_license_id,
-      dim_date.date_id                                                                                     AS dim_date_id,
+      dim_date.date_id                                                                                     AS dim_service_ping_date_id,
       COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                             AS dim_subscription_id,
       IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial
     FROM prep_usage_ping_cte
@@ -101,7 +101,7 @@
       dim_product_tier_id                                                             AS dim_product_tier_id,
       dim_subscription_id                                                             AS dim_subscription_id,
       dim_location_country_id                                                         AS dim_location_country_id,
-      dim_date_id                                                                     AS dim_date_id,
+      dim_service_ping_date_id                                                        AS dim_service_ping_date_id,
       dim_instance_id                                                                 AS dim_instance_id,
       dim_host_id                                                                     AS dim_host_id,
       dim_installation_id                                                             AS dim_installation_id,
@@ -114,7 +114,7 @@
 
 ), metric_attributes AS (
 
-    SELECT * FROM dim_usage_ping_metric
+    SELECT * FROM dim_service_ping_metric
       -- WHERE time_frame != 'none'
 
 ), final AS (

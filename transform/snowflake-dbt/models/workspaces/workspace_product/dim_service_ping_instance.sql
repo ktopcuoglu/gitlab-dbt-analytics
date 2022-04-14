@@ -13,7 +13,7 @@
 , usage_data_w_date AS (
   SELECT
     prep_service_ping_instance.*,
-    dim_date.date_id                                 AS dim_date_id
+    dim_date.date_id                                 AS dim_service_ping_date_id
   FROM prep_service_ping_instance
   LEFT JOIN dim_date
     ON TO_DATE(ping_created_at) = dim_date.date_day
@@ -22,7 +22,7 @@
 
 SELECT DISTINCT
     usage_data_w_date.id                              AS id,
-    usage_data_w_date.dim_date_id                     AS dim_date_id,
+    usage_data_w_date.dim_service_ping_date_id        AS dim_service_ping_date_id,
     usage_data_w_date.uuid                            AS uuid,
     usage_data_w_date.host_id                         AS host_id,
     usage_data_w_date.ping_created_at::TIMESTAMP(0)   AS ping_created_at,
@@ -30,7 +30,7 @@ SELECT DISTINCT
     TRUE                                              AS last_ping_of_month_flag
   FROM usage_data_w_date
     INNER JOIN dim_date
-  ON usage_data_w_date.dim_date_id = dim_date.date_id
+  ON usage_data_w_date.dim_service_ping_date_id = dim_date.date_id
   QUALIFY ROW_NUMBER() OVER (
           PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.first_day_of_month
           ORDER BY ping_created_at DESC) = 1
@@ -48,7 +48,7 @@ SELECT DISTINCT
 
     SELECT DISTINCT
       dim_service_ping_instance_id                                                                                  AS dim_service_ping_instance_id,
-      dim_date_id                                                                                                   AS dim_date_id,
+      dim_service_ping_date_id                                                                                      AS dim_service_ping_date_id,
       dim_host_id                                                                                                   AS dim_host_id,
       dim_instance_id                                                                                               AS dim_instance_id,
       dim_installation_id                                                                                           AS dim_installation_id,

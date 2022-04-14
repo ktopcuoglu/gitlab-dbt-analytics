@@ -9,13 +9,11 @@
     ('dim_subscription', 'dim_subscription'),
     ('dim_date', 'dim_date'),
     ('dim_product_detail', 'dim_product_detail'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric'),
-    ('dim_product_detail', 'dim_product_detail'),
     ('mart_service_ping_instance_metric_28_day', 'mart_service_ping_instance_metric_28_day'),
     ('dim_license', 'dim_license'),
     ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
-    ('dim_usage_ping_metric', 'dim_usage_ping_metric')
+    ('dim_service_ping_metric', 'dim_service_ping_metric')
     ])
 
 }}
@@ -52,7 +50,7 @@
 
     SELECT *,
         1 AS key
-    FROM dim_usage_ping_metric
+    FROM dim_service_ping_metric
 
 ), sub_combo AS (
 
@@ -69,7 +67,7 @@
         metrics_path,
         metric_value,
         latest_active_subscription_id,
-        dim_date_id,
+        dim_service_ping_date_id,
         ping_edition,
         stage_name,
         section_name,
@@ -102,7 +100,7 @@
         SUM(metric_value)               AS metric_value
     FROM fact
         INNER JOIN dim_date
-            ON fact.dim_date_id = dim_date.date_id
+            ON fact.dim_service_ping_date_id = dim_date.date_id
     {{ dbt_utils.group_by(n=11)}}
 
 ), subs_w_fct AS (
@@ -165,10 +163,10 @@
         count_tbl.is_gmau                    AS is_gmau,
         count_tbl.is_paid_gmau               AS is_paid_gmau,
         count_tbl.is_umau                    AS is_umau,
-        count_tbl.subscription_count         AS active_subscription_count,
-        count_tbl.seat_count                 AS active_seat_count,
-        subs_wo_counts.subscription_count    AS inactive_subscription_count,
-        subs_wo_counts.seat_count            AS inactive_seat_count
+        count_tbl.subscription_count         AS reported_subscription_count,
+        count_tbl.seat_count                 AS reported_seat_count,
+        subs_wo_counts.subscription_count    AS no_reporting_subscription_count,
+        subs_wo_counts.seat_count            AS no_reporting_seat_count
     FROM count_tbl
         LEFT JOIN subs_wo_counts
     ON count_tbl.arr_month = subs_wo_counts.arr_month
@@ -186,9 +184,9 @@
     is_gmau                                 AS is_gmau,
     is_paid_gmau                            AS is_paid_gmau,
     is_umau                                 AS is_umau,
-    active_subscription_count               AS reporting_count,
-    inactive_subscription_count             AS no_reporting_count,
-    'subscription'                          AS adoption_grain
+    reported_subscription_count             AS reporting_count,
+    no_reporting_subscription_count         AS no_reporting_count,
+    'subscription'                          AS estimation_grain
   FROM joined_counts
 
   UNION ALL
@@ -203,15 +201,15 @@
     is_gmau                                 AS is_gmau,
     is_paid_gmau                            AS is_paid_gmau,
     is_umau                                 AS is_umau,
-    active_seat_count                       AS reporting_count,
-    inactive_seat_count                     AS no_reporting_count,
-    'seats'                                 AS adoption_grain
+    reported_seat_count                     AS reporting_count,
+    no_reporting_seat_count                 AS no_reporting_count,
+    'seats'                                 AS estimation_grain
   FROM joined_counts
 
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'adoption_grain']) }}            AS rpt_service_ping_instance_metric_adoption_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_service_ping_instance_metric_adoption_monthly_id,
     *,
     reporting_count + no_reporting_count                                                            AS total_count,
     {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                   AS pct_with_counters
