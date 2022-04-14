@@ -53,10 +53,13 @@ def load_incremental(
     if table_dict["export_schema"] == "gitlab_com":
 
         #replication_check_query = "select pg_last_xat_replay_timestamp();"
-        replication_check_query = "SELECT '2022-04-14T00:00:22+00:00';"    
-        replication_timestamp = query_executor(source_engine, replication_check_query)[
-            0
-        ][0]
+        #replication_check_query = "SELECT '2022-04-14 00:00:22+00:00'::timestamp;"    
+        #replication_timestamp = query_executor(source_engine, replication_check_query)[
+        #    0
+        #][0]
+        replication_timestamp=datetime.datetime.strptime(
+                '2022-04-14 00:00:22+00:00', "%Y-%m-%d %H:%M:%S%z"
+            )
         last_load_time = get_last_load_time()
 
         hours_looking_back = int(env["HOURS"])
