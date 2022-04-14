@@ -175,10 +175,8 @@ WITH first_contact  AS (
         ELSE FALSE
       END                                                                                         AS is_sdr_sao,
       CASE 
-        WHEN sfdc_opportunity.is_edu_oss = FALSE
-          AND sfdc_opportunity_stage.is_won = TRUE
-          AND sfdc_opportunity_stage.is_closed = TRUE 
-          AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
+        WHEN (sfdc_opportunity.sales_type = 'Renewal' AND stage_name = '8-Closed Lost')
+          OR sfdc_opportunity.stage_name = 'Closed Won'
           THEN TRUE 
         ELSE FALSE
       END                                                                                         AS is_net_arr_closed_deal,
