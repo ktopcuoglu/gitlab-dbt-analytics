@@ -43,7 +43,7 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
 [dbt]
 /transform/                                         @jjstark @paul_armstrong @vedprakash2021
 /transform/general/                                 @jjstark @paul_armstrong @vedprakash2021
-/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021
+/transform/snowflake-dbt/                           @jjstark @paul_armstrong @vedprakash2021 @iweeks
 /transform/snowflake-dbt/snowflake-dbt-ci.yml       @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/generate_dbt_schema.py     @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/periscope_check.py         @jjstark @paul_armstrong @vedprakash2021
