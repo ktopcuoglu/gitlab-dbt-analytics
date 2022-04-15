@@ -966,6 +966,7 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
+            - data_obs_wh_2
         privileges:
             databases:
                 read:
@@ -4705,6 +4706,11 @@ users:
         can_login: yes
         member_of:
             - data_observability
+  
+     - data_obs_user_2: # External user - Data Observability Vendor 
+        can_login: yes
+        member_of:
+            - data_observability   
 
 # ==========================================
 # Warehouses
@@ -4789,4 +4795,7 @@ warehouses:
         size: small
 
     - data_obs_wh_1:
+        size: x-small
+
+    - data_obs_wh_2:
         size: x-small
