@@ -25,9 +25,19 @@ META_API_COLUMNS = [
 ]
 
 TRANSFORMED_INSTANCE_QUERIES_FILE = "transformed_instance_queries.json"
+USAGE_PING_NAMESPACE_QUERIES_FILE = "usage_ping_namespace_queries.json"
 META_DATA_INSTANCE_QUERIES_FILE = "meta_data_instance_queries.json"
 HAVING_CLAUSE_PATTERN = re.compile(
     "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED", re.IGNORECASE
+)
+
+METRICS_EXCEPTION = (
+    "counts.clusters_platforms_eks",
+    "counts.clusters_platforms_gke",
+    "usage_activity_by_stage.configure.clusters_platforms_gke",
+    "usage_activity_by_stage.configure.clusters_platforms_eks",
+    "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
+    "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
 )
 
 
