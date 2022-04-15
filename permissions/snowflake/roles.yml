@@ -4144,7 +4144,7 @@ roles:
 
     - vagrawal:
         member_of:
-            - addaptive
+            - adaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
