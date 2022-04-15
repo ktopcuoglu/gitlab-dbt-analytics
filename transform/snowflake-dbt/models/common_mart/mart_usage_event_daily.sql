@@ -26,7 +26,6 @@ mart_usage_event_daily AS (
     plan_was_paid_at_event_date,
     namespace_is_internal,
     namespace_created_at,
-    days_since_namespace_creation_at_event_date,
     stage_name,
     section_name,
     group_name,
@@ -37,7 +36,7 @@ mart_usage_event_daily AS (
     COUNT(*) AS event_count
   FROM mart_usage_event
   WHERE dim_user_id IS NOT NULL
-  {{ dbt_utils.group_by(n=22) }}
+  {{ dbt_utils.group_by(n=21) }}
 
 )
 

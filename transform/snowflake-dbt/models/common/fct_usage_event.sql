@@ -32,9 +32,6 @@ fct_events AS (
     prep_event_24_months.parent_id,
     prep_event_24_months.dim_project_id,
     prep_event_24_months.event_created_at,
-    prep_event_24_months.days_since_user_creation_at_event_date,
-    prep_event_24_months.days_since_namespace_creation_at_event_date,
-    prep_event_24_months.days_since_project_creation_at_event_date,
     xmau_metrics.group_name,
     xmau_metrics.section_name,
     COALESCE(xmau_metrics.smau, FALSE) AS is_smau,
@@ -156,9 +153,6 @@ gitlab_dotcom_fact AS (
     final.plan_id_at_event_date,
     final.plan_name_at_event_date,
     final.plan_was_paid_at_event_date,
-    final.days_since_user_creation_at_event_date,
-    final.days_since_namespace_creation_at_event_date,
-    final.days_since_project_creation_at_event_date,
     'GITLAB_DOTCOM' AS data_source
   FROM final
   LEFT JOIN dim_date
