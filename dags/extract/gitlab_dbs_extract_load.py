@@ -556,7 +556,7 @@ for source_name, config in config_dict.items():
                         image=DATA_IMAGE,
                         task_id=task_identifier,
                         name=task_identifier,
-                        pool=f"{config['task_name']}_pool",
+                        pool=f"{config['task_name']}_scd_pool",
                         secrets=standard_secrets + config["secrets"],
                         env_vars={
                             **gitlab_pod_env_vars,
