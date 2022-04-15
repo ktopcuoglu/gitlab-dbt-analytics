@@ -1,6 +1,6 @@
 {{ config(
     materialized='table',
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception", "product"]
 ) }}
 
 {{ simple_cte([
@@ -19,7 +19,6 @@ mart_usage_instance_daily AS (
     COUNT(DISTINCT(dim_user_id)) AS user_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count
   FROM mart_usage_event
-  WHERE dim_user_id IS NOT NULL
   {{ dbt_utils.group_by(n=4) }}
   
 )

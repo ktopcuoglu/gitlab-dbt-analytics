@@ -1,6 +1,6 @@
 {{ config(
     materialized='table',
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception", "product"]
 ) }}
 
 {{ simple_cte([
@@ -14,9 +14,11 @@ mart_raw AS (
   SELECT
     {{ dbt_utils.star(ref('mart_usage_event')) }}
   FROM mart_usage_event
-  WHERE is_umau = TRUE 
-    OR is_gmau = TRUE 
-    OR is_smau = TRUE
+  WHERE dim_user_id IS NOT NULL
+    AND (is_umau = TRUE 
+         OR is_gmau = TRUE 
+         OR is_smau = TRUE
+        )
 
 ),
 
