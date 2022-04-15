@@ -4707,7 +4707,7 @@ users:
         member_of:
             - data_observability
   
-     - data_obs_user_2: # External user - Data Observability Vendor 
+    - data_obs_user_2: # External user - Data Observability Vendor 
         can_login: yes
         member_of:
             - data_observability   
