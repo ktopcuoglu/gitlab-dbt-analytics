@@ -45,6 +45,7 @@ WITH source AS (
 ), final AS (
 
     SELECT
+      {{ dbt_utils.surrogate_key(['metrics_path']) }}                                                                                         AS dim_service_ping_metric_id,
       metrics_path                                                                                                                            AS metrics_path,
       data_source                                                                                                                             AS data_source,
       description                                                                                                                             AS description,
