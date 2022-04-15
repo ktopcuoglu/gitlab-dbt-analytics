@@ -140,5 +140,5 @@ SELECT
      created_by="@icooper-acp",
      updated_by="@icooper-acp",
      created_date="2022-04-07",
-     updated_date="2022-04-07"
+     updated_date="2022-04-15"
  ) }}
