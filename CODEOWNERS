@@ -17,13 +17,13 @@
 /analyze/       @mlaanen
 
 CODEOWNERS         @rparker2 @iweeks @dvanrooijen2 @mlaanen
-.gitignore         @jjstark @paul_armstrong
+.gitignore         @jjstark @paul_armstrong @vedprakash2021
 CONTRIBUTING.md    @rparker2
 LICENSE.md         @rparker2
 README.md          @rparker2
 
 [Data Engineering]
-/dags/              @paul_armstrong
+/dags/              @paul_armstrong @vedprakash2021
 /extract/           @jjstark @paul_armstrong @vedprakash2021
 /load/              @jjstark @paul_armstrong @vedprakash2021
 /orchestrate/       @jjstark @paul_armstrong @vedprakash2021
