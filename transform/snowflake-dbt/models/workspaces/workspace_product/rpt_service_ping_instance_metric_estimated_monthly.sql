@@ -51,7 +51,7 @@
         is_gmau                           AS is_gmau,
         is_paid_gmau                      AS is_paid_gmau,
         is_umau                           AS is_umau,
-        SUM(metric_value)                 AS metric_value
+        SUM(metric_value)                 AS actual_usage
     FROM fact
         INNER JOIN dim_date
             ON fact.dim_service_ping_date_id = dim_date.date_id
@@ -64,7 +64,7 @@
       fact_w_month.*,
       mart_pct.reporting_count          AS reporting_count,
       mart_pct.no_reporting_count       AS no_reporting_count,
-      mart_pct.pct_with_counters        AS pct_with_counters,
+      mart_pct.percent_reporting        AS percent_reporting,
       mart_pct.estimation_grain         AS estimation_grain
     FROM fact_w_month
       LEFT JOIN mart_pct
@@ -78,7 +78,7 @@
       fact_w_month.*,
       1                                 AS reporting_count,
       0                                 AS no_reporting_count,
-      1                                 AS pct_with_counters,
+      1                                 AS percent_reporting,
       'subscription based estimation'   AS estimation_grain
     FROM fact_w_month
   WHERE service_ping_delivery_type = 'SaaS'
@@ -89,7 +89,7 @@
       fact_w_month.*,
       1                                 AS reporting_count,
       0                                 AS no_reporting_count,
-      1                                 AS pct_with_counters,
+      1                                 AS percent_reporting,
       'seat based estimation'           AS estimation_grain
     FROM fact_w_month
   WHERE service_ping_delivery_type = 'SaaS'
@@ -107,7 +107,8 @@
 SELECT
     {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain', 'ping_edition_product_tier']) }}   AS rpt_service_ping_instance_metric_estimated_monthly_id,
     *,
-    {{ usage_estimation('metric_value', 'pct_with_counters') }}                                                           AS estimated_usage
+    {{ usage_estimation('actual_usage', 'percent_reporting') }}                                                           AS total_estimated_usage,
+    total_estimated_usage - actual_usage                                                                                  AS estimated_usage
  FROM joined_counts_w_percentage
 
 )

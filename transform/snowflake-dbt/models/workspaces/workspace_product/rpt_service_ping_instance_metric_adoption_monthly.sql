@@ -186,7 +186,7 @@
     is_umau                                 AS is_umau,
     reported_subscription_count             AS reporting_count,
     no_reporting_subscription_count         AS no_reporting_count,
-    'subscription'                          AS estimation_grain
+    'subscription based estimation'         AS estimation_grain
   FROM joined_counts
 
   UNION ALL
@@ -203,7 +203,7 @@
     is_umau                                 AS is_umau,
     reported_seat_count                     AS reporting_count,
     no_reporting_seat_count                 AS no_reporting_count,
-    'seats'                                 AS estimation_grain
+    'seat based estimation'                 AS estimation_grain
   FROM joined_counts
 
 ), final AS (
@@ -212,7 +212,7 @@ SELECT
     {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_service_ping_instance_metric_adoption_monthly_id,
     *,
     reporting_count + no_reporting_count                                                            AS total_count,
-    {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                   AS pct_with_counters
+    {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                   AS percent_reporting
  FROM unioned_counts
 
 )
