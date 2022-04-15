@@ -224,11 +224,13 @@ config_dict = {
     },
 }
 
+
 def get_task_pool(task_name) -> string:
-    if task_name =='gitlab-com':
+    if task_name == "gitlab-com":
         return f"{config['task_name']}_scd_pool"
     else:
         return f"{config['task_name']}_pool"
+
 
 def is_incremental(raw_query):
     return "{EXECUTION_DATE}" in raw_query or "{BEGIN_TIMESTAMP}" in raw_query
@@ -561,7 +563,7 @@ for source_name, config in config_dict.items():
                         image=DATA_IMAGE,
                         task_id=task_identifier,
                         name=task_identifier,
-                        pool=get_task_pool(config['task_name']),
+                        pool=get_task_pool(config["task_name"]),
                         secrets=standard_secrets + config["secrets"],
                         env_vars={
                             **gitlab_pod_env_vars,
