@@ -3190,12 +3190,14 @@ roles:
 
     - kchen:
         member_of:
+            - adaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4002,6 +4004,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4141,12 +4144,14 @@ roles:
 
     - vagrawal:
         member_of:
+            - addaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4227,6 +4232,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
