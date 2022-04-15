@@ -11,7 +11,9 @@
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
     ('subscriptions', 'dim_subscription'),
-    ('namespaces', 'dim_namespace')
+    ('namespaces', 'dim_namespace'),
+    ('charges', 'mart_charge'),
+    ('dates', 'dim_date')
 ]) }}
 
 
@@ -38,9 +40,24 @@
       ORDER BY
         subscription_version DESC
     ) = 1
-)
-
-, sm_paid_user_metrics AS (
+    
+), zuora_licenses_per_subscription AS (
+  
+    SELECT
+      dates.first_day_of_month AS month,
+      subscriptions.dim_subscription_id_original,
+      SUM(charges.quantity) AS zuora_licenses
+    FROM charges
+    JOIN dates ON charges.effective_start_month <= dates.date_actual
+      AND (charges.effective_end_month > dates.date_actual
+       OR charges.effective_end_month IS NULL)
+      AND dates.day_of_month = 1
+    LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
+    WHERE charges.subscription_status IN ('Active','Cancelled')
+      AND charges.product_tier_name != 'Storage'
+    {{ dbt_utils.group_by(n = 2) }}
+  
+), sm_paid_user_metrics AS (
 
     SELECT
       monthly_sm_metrics.snapshot_month,
@@ -414,12 +431,32 @@
     SELECT *
     FROM saas_paid_user_metrics
 
+), final AS (
+  
+    SELECT
+      unioned.*,
+      {{ dbt_utils.surrogate_key(
+        [
+          'snapshot_month',
+          'dim_subscription_id',
+          'delivery_type',
+          'uuid',
+          'hostname',
+          'dim_namespace_id'
+        ]
+      ) }} AS surrogate_key,
+      zuora_licenses_per_subscription.zuora_licenses
+    FROM unioned
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = unioned.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = unioned.snapshot_month
+  
 )
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="final",
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-04-12"
+    updated_date="2022-04-14"
 ) }}
