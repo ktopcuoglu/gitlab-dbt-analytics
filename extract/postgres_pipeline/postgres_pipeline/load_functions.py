@@ -119,7 +119,6 @@ def load_incremental(
     return True
 
 
-
 def trusted_data_pgp(
     source_engine: Engine,
     target_engine: Engine,
