@@ -52,24 +52,16 @@ def load_incremental(
     """
     if table_dict["export_schema"] == "gitlab_com":
 
-        #replication_check_query = "select pg_last_xat_replay_timestamp();"
-        #replication_timestamp = query_executor(source_engine, replication_check_query)[
-        #    0
-        #][0]
-        """
-        Hard coded logic to make incremental run work.
-        """
-        replication_timestamp=datetime.datetime.strptime(
-                '2022-04-14 00:00:22+00:00', "%Y-%m-%d %H:%M:%S%z"
-            )
+        replication_check_query = "select pg_last_xact_replay_timestamp();"
 
-        logging.info(f'replication_timestamp hard coded:{replication_timestamp}')
-        
+        replication_timestamp = query_executor(source_engine, replication_check_query)[
+            0
+        ][0]
+
         last_load_time = get_last_load_time()
 
         hours_looking_back = int(env["HOURS"])
         logging.info(env["EXECUTION_DATE"])
-        
         try:
             execution_date = datetime.datetime.strptime(
                 env["EXECUTION_DATE"], "%Y-%m-%dT%H:%M:%S%z"
@@ -125,6 +117,7 @@ def load_incremental(
     chunk_and_upload(query, source_engine, target_engine, table_name, source_table_name)
 
     return True
+
 
 
 def trusted_data_pgp(
