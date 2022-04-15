@@ -105,7 +105,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain', 'ping_edition_product_tier']) }}   AS rpt_service_ping_instance_metric_estimated_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain', 'ping_edition_product_tier', 'service_ping_delivery_type']) }}   AS rpt_service_ping_instance_metric_estimated_monthly_id,
     *,
     {{ usage_estimation('actual_usage', 'percent_reporting') }}                                                           AS total_estimated_usage,
     total_estimated_usage - actual_usage                                                                                  AS estimated_usage
