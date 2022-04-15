@@ -43,6 +43,7 @@
       dim_date.date_actual <= DATE_TRUNC('month',CURRENT_DATE)
       AND product_tier_name != 'Storage'
       AND product_delivery_type = 'Self-Managed'
+      AND subscription_status NOT IN ('Draft', 'Expired')
     GROUP BY 1,2,3
     ORDER BY 1 DESC, 2 --68.8
 
@@ -127,6 +128,7 @@
     SELECT
         arr_month                             AS arr_month,
         metrics_path                          AS metrics_path,
+        --ping_edition                          AS ping_edition
         stage_name                            AS stage_name,
         section_name                          AS section_name,
         group_name                            AS group_name,

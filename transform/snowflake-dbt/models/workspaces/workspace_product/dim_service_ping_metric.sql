@@ -66,7 +66,7 @@ WITH source AS (
       snapshot_date                                                                                                                           AS snapshot_date,
       uploaded_at                                                                                                                             AS uploaded_at
     FROM renamed
-    QUALIFY MAX(uploaded_at) OVER() = uploaded_at
+      QUALIFY MAX(uploaded_at) OVER() = uploaded_at
 
 )
 
