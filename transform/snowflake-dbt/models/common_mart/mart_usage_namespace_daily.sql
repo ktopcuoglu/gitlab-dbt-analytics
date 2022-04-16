@@ -11,7 +11,7 @@
 mart_usage_namespace_daily AS (
     
     SELECT 
-      {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_ultimate_parent_namespace_id']) }}       
+      {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_ultimate_parent_namespace_id', 'namespace_created_at']) }}       
                                             AS mart_usage_namespace_id,
       dim_active_product_tier_id,
       dim_active_subscription_id,
@@ -21,7 +21,8 @@ mart_usage_namespace_daily AS (
       plan_id_at_event_date,
       plan_name_at_event_date,
       plan_was_paid_at_event_date,
-      namespace_created_at,                             
+      namespace_created_at,
+      days_since_namespace_creation_at_event_date,                            
       event_date,
       event_name,
       stage_name,
@@ -34,7 +35,7 @@ mart_usage_namespace_daily AS (
       COUNT(*) AS event_count,
       COUNT(DISTINCT(dim_user_id)) AS user_count
     FROM mart_usage_event
-    {{ dbt_utils.group_by(n=19) }}
+    {{ dbt_utils.group_by(n=20) }}
         
 )
 

@@ -37,7 +37,8 @@ fact_with_namespace AS (
     dim_namespace.namespace_is_internal,
     dim_namespace.namespace_creator_is_blocked,
     dim_namespace.created_at AS namespace_created_at,
-    CAST(dim_namespace.created_at AS DATE) AS namespace_created_date
+    CAST(dim_namespace.created_at AS DATE) AS namespace_created_date,
+    DATEDIFF(DAY, namespace_created_date, event_date) AS days_since_namespace_creation_at_event_date
   FROM fact_with_date
   LEFT JOIN dim_namespace
     ON fact_with_date.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
