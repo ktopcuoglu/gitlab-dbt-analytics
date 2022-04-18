@@ -772,6 +772,110 @@ models:
         tests:
           - not_null
           - unique
+        description: the unique composite ID for the mart_service_ping_instance_metric model consisting of dim_service_ping_instance_id and metrics_path
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: metrics_path
+        description: The path that the metric is applied along
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_service_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_service_ping_instance model.
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: dim_installation_id
+        description: The unique id of a instalation from the dim_installation model
+      - name: latest_active_subscription_id
+        description:  The unique id of the latest active subscription 
+      - name: dim_billing_account_id
+        description: The unqiue id of a billing account in the dim_billing_account model.
+      - name: dim_parent_crm_account_id
+        description: The unique id of a parent crm account in the dim_parent_crm_account model.
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: major_minor_version_id
+        description:  The unique id of the major minor version
+      - name: host_name
+        description: The name of the host
+      - name: service_ping_delivery_type
+        description: The type of delivery method of the service ping (i.e. Self-Managed, SaaS)
+      - name: edition
+        description: The edition associated with the instance (EE, CE)
+      - name: ping_product_tier
+        description: The product tier of the ping (i.e. Self-Managed - Free, Self-Managed - Premium, Self-Managed - Ultimate)
+      - name: ping_main_edition_product_tier
+        description: A combination of the main_edition and the ping_product_tier (EE - Self-Managed - Free, EE - Self-Managed - Premium, EE - Self-Managed - Ultimate)
+      - name: major_version
+        description: The major version associated with this instance (i.e. 14, 11)
+      - name: minor_version
+        description: The minor version associated with this instance (i.e. 6, 10, 9)
+      - name: major_minor_version
+        description: The major minor version associated with this instance (i.e. 14.6, 11.1, 14.9)
+      - name: version_is_prerelease
+        description: Denotes whether the version is prerelaease
+      - name: is_internal
+        description: Denotes whether the instacnce is internal
+      - name: is_staging
+        description: Denotes whether the instance is associated with a stage
+      - name: is_trial
+        description: Denotes wherther the account is a trial
+      - name: umau_value
+        description: The unique monthly active user value
+      - name: stage_name
+        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      - name: section_name
+        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      - name: group_name
+        description: The name of the group (A stage has one or more groups.).
+      - name: is_smau
+        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      - name: is_gmau
+        description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      - name: is_paid_gmau
+        description: Denotes whether the instance is paid gmau
+      - name: is_umau
+        description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions 
+      - name: time_frame
+        description: The time frame associated with the instance
+      - name: instance_user_count
+        description: The user count for the instance
+      - name: subscription_name_slugify
+      - name: subscription_start_month
+        description: The month the subscription started
+      - name: subscription_end_month
+        description: The month th esubscription ended
+      - name: product_category_array
+        description: The array for the product category associated with the instance
+      - name: product_rate_plan_name_array
+        description: The array for the product rate plan name associated with the instance
+      - name: is_paid_subscription
+        description: Denotes whether the instance has a paid subscription
+      - name: is_program_subscription
+        description: Denotes whether the instance has a program subscription
+      - name: crm_account_name
+        description: The name of the crm account
+      - name: parent_crm_account_name
+        description: The name of the parent crm account
+      - name: parent_crm_account_billing_country
+        description: The billing country associated with the parent crm account
+      - name: parent_crm_account_sales_segment
+        description: The sales segment associated witht he parent crm account
+      - name: parent_crm_account_industry
+        description: The industry associated with the parent crm account
+      - name: parent_crm_account_owner_team
+        description: The team that owns the parent crm account
+      - name: parent_crm_account_sales_territory
+        description: The sales territoy where the parent crm account is located
+      - name: technical_account_manager
+        description: The name of the techincal account manager
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_month
+        description: The month when the ping was created
+      - name: is_last_ping_of_month
+        description: Denotes whether this ping associated with the data is the last ping of the month
 
   - name: mart_service_ping_instance_metric_7_day
     description: ' {{ doc("mart_service_ping_instance_metric_7_day") }} '
@@ -796,6 +900,31 @@ models:
         tests:
           - not_null
           - unique
+        description: the unique composite ID for the rpt_service_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
+      - name: reporting_month
+        description: The month the dat was reported
+      - name: reporting_count
+        description: The number of seats/subscriptions that reported the metric
+      - name: no_reporting_count
+        description: The number of seats/subscriptions that didn't report the metric, but should have
+      - name: estimation_grain
+        description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+      - name: percent_reporting
+        description: The percentage of events being reported      
+      - name: stage_name
+        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      - name: section_name
+        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      - name: group_name
+        description: The name of the group (A stage has one or more groups.).
+      - name: is_smau
+        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      - name: is_gmau
+        description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      - name: is_paid_gmau
+        description: Denotes whether the instance is paid gmau
+      - name: is_umau
+        description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions 
 
   - name: rpt_service_ping_instance_metric_estimated_monthly
     description: ' {{ doc("rpt_service_ping_instance_metric_estimated_monthly") }} '
@@ -804,6 +933,45 @@ models:
         tests:
           - not_null
           - unique
+        description: the unique composite ID for the rpt_service_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+      - name: metrics_path
+        description: The path that the metric is applied along
+      - name: reporting_month
+        description: The month the data was reported
+      - name: ping_edition
+        description: The edition associated with the instance (EE, CE)
+      - name: actual_usage
+        description: The number of events that were reported
+      - name: estimated_usage
+        description: The estimated number of events that happened. but were not actually reported
+      - name: reporting_count
+        description: The number of seats/subscriptions that reported the metric
+      - name: no_reporting_count
+        description: The number of seats/subscriptions that didn't report the metric, but should have
+      - name: estimation_grain
+        description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+      - name: percent_reporting
+        description: The percentage of events being reported
+      - name: total_estimated_usage
+        description: The total estimated number of events that happened. but were not actually reported
+      - name: ping_product_tier
+        description: The product tier of the ping (i.e. Self-Managed - Free, Self-Managed - Premium, Self-Managed - Ultimate)
+      - name: ping_main_edition_product_tier
+        description: A combination of the main_edition and the ping_product_tier (EE - Self-Managed - Free, EE - Self-Managed - Premium, EE - Self-Managed - Ultimate)
+      - name: stage_name
+        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
+      - name: section_name
+        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      - name: group_name
+        description: The name of the group (A stage has one or more groups.).
+      - name: is_smau
+        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      - name: is_gmau
+        description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      - name: is_paid_gmau
+        description: Denotes whether the instance is paid gmau
+      - name: is_umau
+        description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions 
 
   - name: dim_service_ping_metric
     description: ' {{ doc("dim_service_ping_metric") }} '
