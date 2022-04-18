@@ -507,6 +507,7 @@ models:
           - relationships:
               to: ref('dim_location_country')
               field: dim_location_country_id
+      - name: dim_service_ping_date_id
         description: The unique id of a country from the dim_location_country model
       - name: dim_host_id
         tests:
@@ -569,6 +570,7 @@ models:
         tests:
           - not_null
           - unique
+      - name: dim_service_ping_date_id
         description: the unique id associated with the dim_service_ping_instance
       - name: dim_host_id
         tests:
@@ -762,6 +764,54 @@ models:
         description: The month when the ping was created
       - name: is_last_ping_of_month
         description: Denotes whether this ping associated with the data is the last ping of the month
+
+  - name: mart_service_ping_instance_metric_28_day
+    description: ' {{ doc("mart_service_ping_instance_metric_28_day") }} '
+    columns:
+      - name: mart_service_ping_instance_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_service_ping_instance_metric_7_day
+    description: ' {{ doc("mart_service_ping_instance_metric_7_day") }} '
+    columns:
+      - name: mart_service_ping_instance_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: mart_service_ping_instance_metric_all_time
+    description: ' {{ doc("mart_service_ping_instance_metric_all_time") }} '
+    columns:
+      - name: mart_service_ping_instance_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_metric_adoption_monthly
+    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_metric_adoption_monthly_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_metric_estimated_monthly
+    description: ' {{ doc("rpt_service_ping_instance_metric_estimated_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_metric_estimated_monthly_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_service_ping_metric
+    description: ' {{ doc("dim_service_ping_metric") }} '
+    columns:
+      - name: dim_service_ping_metric_id
+        tests:
+          - not_null
+          - unique
 
   - name: mart_xmau_metric_monthly
     description: '{{ doc("mart_xmau_metric_monthly") }}'
