@@ -70,61 +70,93 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 
 {% docs fct_service_ping_instance_metric %}
 
-Version source, self managed usage data fact table.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id and flattened_high_level.metrics_path
+Time Grain: None
+Use case: Self managed usage data fact table
 
 {% enddocs %}
 
 {% docs dim_service_ping_instance %}
 
-Version source, self managed usage data dim table.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id
+Time Grain: None
+Use case: Self managed usage data dim table
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric %}
 
-Version source, self managed usage data mart table.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id and metrics_path
+Time Grain: None
+Use case: Self managed usage data mart table
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric_28_day %}
 
-Version source, self managed usage data mart table for 28 day time frame.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id and metrics_path
+Time Grain: 28 day time frame
+Use case: Self managed usage data mart table
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric_7_day %}
 
-Version source, self managed usage data mart table for 7 day time frame.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id and metrics_path
+Time Grain: 7 day time frame
+Use case: Self managed usage data mart table
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric_all_time %}
 
-Version source, self managed usage data mart table for 'all'' time frame.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id and metrics_path
+Time Grain: 'all' time frame
+Use case: Self managed usage data mart table
 
 {% enddocs %}
 
 {% docs rpt_service_ping_instance_metric_adoption_monthly %}
 
-Model used to determine active seats and subscriptions reporting on any given metric
+
+Type of Data: Version app
+Aggregate Grain: reporting_month, metrics_path, and estimation_grain
+Time Grain: None
+Use case: Model used to determine active seats and subscriptions reporting on any given metric
+
 
 {% enddocs %}
 
 {% docs rpt_service_ping_instance_metric_estimated_monthly %}
 
-Model used to estimate usage based upon reported and unreported seats/subscriptions for any given metric.
+Type of Data: Version app
+Aggregate Grain: reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+Time Grain: None
+Use case: Model used to estimate usage based upon reported and unreported seats/subscriptions for any given metric.
 
 {% enddocs %}
 
 {% docs prep_service_ping_instance %}
 
-Version source, self managed usage data prep table.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id
+Time Grain: None
+Use case: Self managed usage data prep table
 
 {% enddocs %}
 
 {% docs prep_service_ping_instance_flattened %}
 
-Version source, self managed usage data prep table.
+Type of Data: Version app
+Aggregate Grain: dim_service_ping_instance_id and path
+Time Grain: None
+Use case: Self managed usage data prep table
 
 {% enddocs %}
 
