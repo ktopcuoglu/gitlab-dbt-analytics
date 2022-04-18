@@ -609,7 +609,6 @@ models:
       - name: event_primary_key
         tests:
           - not_null
-          - unique
       - name: event_name
         tests:
           - not_null

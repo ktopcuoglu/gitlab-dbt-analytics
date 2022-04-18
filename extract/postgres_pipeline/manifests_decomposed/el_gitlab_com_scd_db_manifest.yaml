@@ -802,25 +802,3 @@ tables:
       SELECT user_id
       , project_id
       FROM users_security_dashboard_projects
-  vulnerability_occurrences:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_occurrences'
-    export_table_primary_key: 'id'
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , severity
-      , confidence
-      , report_type
-      , project_id
-      , scanner_id
-      , primary_identifier_id
-      , uuid
-      , name
-      , metadata_version
-      , raw_metadata
-      , vulnerability_id
-      FROM vulnerability_occurrences

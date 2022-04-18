@@ -137,3 +137,13 @@ models:
             combination_of_columns:
               - note_id
               - award_emoji_id
+
+    - name: ha_proxy_metrics
+      description: > 
+        A table of the total bytes out various back end sources in HA Proxy.
+        Bases on the query defined at: https://gitlab.com/gitlab-com/runbooks/-/blob/master/periodic-thanos-queries/daily-haproxy-bytes.queries.jsonnet        
+      tests:
+        - dbt_utils.unique_combination_of_columns:
+            combination_of_columns:
+              - backend
+              - recorded_at

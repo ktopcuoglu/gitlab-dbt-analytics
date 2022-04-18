@@ -33,3 +33,7 @@ models:
       - name: delivery_type
         tests:
           - not_null
+      - name: surrogate_key
+        tests:
+          - unique
+          - not_null
