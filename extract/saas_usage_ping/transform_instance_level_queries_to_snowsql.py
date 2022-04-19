@@ -25,7 +25,6 @@ META_API_COLUMNS = [
 ]
 
 TRANSFORMED_INSTANCE_QUERIES_FILE = "transformed_instance_queries.json"
-USAGE_PING_NAMESPACE_QUERIES_FILE = "usage_ping_namespace_queries.json"
 META_DATA_INSTANCE_QUERIES_FILE = "meta_data_instance_queries.json"
 HAVING_CLAUSE_PATTERN = re.compile(
     "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED", re.IGNORECASE

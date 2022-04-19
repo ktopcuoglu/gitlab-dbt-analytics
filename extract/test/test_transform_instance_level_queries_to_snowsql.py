@@ -17,7 +17,6 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
     META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
-    USAGE_PING_NAMESPACE_QUERIES_FILE,
     HAVING_CLAUSE_PATTERN,
     METRICS_EXCEPTION,
 )
@@ -430,7 +429,6 @@ def test_transform_having_clause(test_cases_dict_transformed, metric_list):
 
 def test_constants():
     assert TRANSFORMED_INSTANCE_QUERIES_FILE is not None
-    assert USAGE_PING_NAMESPACE_QUERIES_FILE is not None
     assert META_DATA_INSTANCE_QUERIES_FILE is not None
     assert HAVING_CLAUSE_PATTERN is not None
     assert METRICS_EXCEPTION is not None
