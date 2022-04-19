@@ -38,6 +38,8 @@ METRICS_EXCEPTION = (
     "usage_activity_by_stage.configure.clusters_platforms_eks",
     "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
     "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
+    "usage_activity_by_stage.release.users_creating_deployment_approvals",
+    "usage_activity_by_stage_monthly.release.users_creating_deployment_approvals",
 )
 
 
@@ -355,8 +357,8 @@ def save_json_file(file_name: str, json_file: dict) -> None:
     param json_file: dict
     rtype: None
     """
-    with open(file=file_name, mode="w", encoding="utf-8") as f:
-        json.dump(json_file, f)
+    with open(file=file_name, mode="w", encoding="utf-8") as file_to_save:
+        json.dump(json_file, file_to_save)
 
 
 def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:

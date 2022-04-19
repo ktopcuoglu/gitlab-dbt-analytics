@@ -1,5 +1,11 @@
+"""
+Main routine for Automated Service Ping load:
+- instance SQL metrics
+- Redis metrics
+- Namespace metrics
+"""
 from os import environ as env
-from typing import Dict, List
+from typing import Dict
 from hashlib import md5
 
 from logging import info
@@ -26,6 +32,7 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.exc import SQLAlchemyError
 
+encoding = "utf-8"
 
 class UsagePing(object):
     """
@@ -94,7 +101,7 @@ class UsagePing(object):
             current timestamp: 1629986268.131019
             md5 timestamp: 54da37683078de0c1360a8e76d942227
         """
-        encoding = "utf-8"
+
         timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
 
         return md5(timestamp_encoded).hexdigest()
@@ -132,7 +139,7 @@ class UsagePing(object):
         param file_name: str
         return: dict
         """
-        with open(os.path.join(os.path.dirname(__file__), file_name)) as file:
+        with open(os.path.join(os.path.dirname(__file__), file_name), encoding=encoding) as file:
             meta_data = json.load(file)
 
         return meta_data
@@ -157,10 +164,10 @@ class UsagePing(object):
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
-            except KeyError as k:
+            except KeyError:
                 data_to_write = "0"
-            except SQLAlchemyError as e:
-                error_data_to_write = str(e.__dict__["orig"])
+            except SQLAlchemyError as sql_error:
+                error_data_to_write = str(sql_error.__dict__["orig"])
 
             if data_to_write:
                 results_all[key] = data_to_write
@@ -207,6 +214,7 @@ class UsagePing(object):
                 json.dumps(errors_data_all),
                 self.end_date,
             ]
+
             error_data_to_upload = self._prepare_dataframe_to_upload(
                 columns=error_columns, content=error_content
             )
@@ -249,7 +257,7 @@ class UsagePing(object):
             table_name="instance_redis_metrics",
         )
 
-    def _get_namespace_queries(self) -> List[Dict]:
+    def _get_namespace_queries(self):
         """
         can be updated to query an end point or query other functions
         to generate:
@@ -268,7 +276,10 @@ class UsagePing(object):
 
         return namespace_queries
 
-    def process_namespace_ping(self, query_dict, connection):
+    def process_namespace_ping(self, query_dict, connection) -> None:
+        """
+        Routine to calculate and load namespace data
+        """
         base_query = query_dict.get("counter_query")
         ping_name = query_dict.get("counter_name", "Missing Name")
         logging.info(f"Running ping {ping_name}...")
