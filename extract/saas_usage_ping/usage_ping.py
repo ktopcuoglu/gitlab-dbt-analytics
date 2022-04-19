@@ -32,7 +32,8 @@ from gitlabdata.orchestration_utils import (
 )
 from sqlalchemy.exc import SQLAlchemyError
 
-encoding = "utf-8"
+ENCODING = "utf-8"
+
 
 class UsagePing(object):
     """
@@ -102,7 +103,7 @@ class UsagePing(object):
             md5 timestamp: 54da37683078de0c1360a8e76d942227
         """
 
-        timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
+        timestamp_encoded = str(input_timestamp).encode(encoding=ENCODING)
 
         return md5(timestamp_encoded).hexdigest()
 
@@ -139,7 +140,9 @@ class UsagePing(object):
         param file_name: str
         return: dict
         """
-        with open(os.path.join(os.path.dirname(__file__), file_name), encoding=encoding) as file:
+        with open(
+            os.path.join(os.path.dirname(__file__), file_name), encoding=ENCODING
+        ) as file:
             meta_data = json.load(file)
 
         return meta_data
