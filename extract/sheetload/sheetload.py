@@ -278,9 +278,9 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
                 dw_uploader(engine, table, sheet_df, truncate=True)
 
                 check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
+
             except ParserError as p:
                 error(f"Problem processing {file}")
-                error(p.msg)
 
 
 def csv_loader(
