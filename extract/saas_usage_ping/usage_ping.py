@@ -1,11 +1,5 @@
-"""
-Main routine for Automated Service Ping load:
-- instance SQL metrics
-- Redis metrics
-- Namespace metrics
-"""
 from os import environ as env
-from typing import Dict
+from typing import Dict, List
 from hashlib import md5
 
 from logging import info
@@ -21,7 +15,6 @@ import pandas as pd
 from transform_instance_level_queries_to_snowsql import (
     META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
-    USAGE_PING_NAMESPACE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
     METRICS_EXCEPTION,
 )
@@ -31,8 +24,6 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
 )
 from sqlalchemy.exc import SQLAlchemyError
-
-ENCODING = "utf-8"
 
 
 class UsagePing(object):
@@ -53,24 +44,24 @@ class UsagePing(object):
         self.start_date_28 = self.end_date - datetime.timedelta(28)
         self.dataframe_api_columns = META_API_COLUMNS
 
-    def _get_instance_sql_queries(self) -> Dict:
+    def _get_instance_queries(self) -> Dict:
         """
         can be updated to query an end point or query other functions
         to generate the {ping_name: sql_query} dictionary
         """
-
-        instance_sql_queries = self._get_json_data_from_file(
-            TRANSFORMED_INSTANCE_QUERIES_FILE
-        )
+        with open(
+            os.path.join(os.path.dirname(__file__), TRANSFORMED_INSTANCE_QUERIES_FILE)
+        ) as f:
+            saas_queries = json.load(f)
 
         # exclude metrics we do not want to track
-        instance_sql_queries = {
+        saas_queries = {
             metrics_name: metrics_sql
-            for metrics_name, metrics_sql in instance_sql_queries.items()
+            for metrics_name, metrics_sql in saas_queries.items()
             if not metrics_name.lower() in METRICS_EXCEPTION
         }
 
-        return instance_sql_queries
+        return saas_queries
 
     def _get_dataframe_api_values(self, input_json: dict) -> list:
         """
@@ -102,48 +93,19 @@ class UsagePing(object):
             current timestamp: 1629986268.131019
             md5 timestamp: 54da37683078de0c1360a8e76d942227
         """
-
-        timestamp_encoded = str(input_timestamp).encode(encoding=ENCODING)
+        encoding = "utf-8"
+        timestamp_encoded = str(input_timestamp).encode(encoding=encoding)
 
         return md5(timestamp_encoded).hexdigest()
 
-    def _upload_dataframe(
-        self,
-        usage_ping_dataframe: pd.DataFrame,
-        table_name: str,
-        schema_name="saas_usage_ping",
-    ) -> None:
-        """
-        Routine to upload DataFrame to Snowflake
-        """
-
-        dataframe_uploader(
-            dataframe=usage_ping_dataframe,
-            engine=self.loader_engine,
-            schema=schema_name,
-            table_name=table_name,
-        )
-
-    def _prepare_dataframe_to_upload(self, columns: list, content: list):
-        """
-        Make a proper structure for dataframe to upload into snowflake
-        """
-        prepared_dataframe = pd.DataFrame(columns)
-
-        prepared_dataframe.loc[0] = content
-
-        return prepared_dataframe
-
-    def _get_json_data_from_file(self, file_name: str) -> dict:
+    def _get_meta_data(self, file_name: str) -> dict:
         """
         Load meta data from .json file from the file system
         param file_name: str
         return: dict
         """
-        with open(
-            os.path.join(os.path.dirname(__file__), file_name), encoding=ENCODING
-        ) as file:
-            meta_data = json.load(file)
+        with open(os.path.join(os.path.dirname(__file__), file_name)) as f:
+            meta_data = json.load(f)
 
         return meta_data
 
@@ -152,7 +114,7 @@ class UsagePing(object):
         Take a dictionary of {ping_name: sql_query} and run each
         query to then upload to a table in raw.
         """
-        saas_queries = self._get_instance_sql_queries()
+        saas_queries = self._get_instance_queries()
 
         connection = self.loader_engine.connect()
 
@@ -167,10 +129,10 @@ class UsagePing(object):
                 info(results)
                 counter_value = results.loc[0, "counter_value"]
                 data_to_write = str(counter_value)
-            except KeyError:
+            except KeyError as k:
                 data_to_write = "0"
-            except SQLAlchemyError as sql_error:
-                error_data_to_write = str(sql_error.__dict__["orig"])
+            except SQLAlchemyError as e:
+                error_data_to_write = str(e.__dict__["orig"])
 
             if data_to_write:
                 results_all[key] = data_to_write
@@ -182,49 +144,46 @@ class UsagePing(object):
         connection.close()
         self.loader_engine.dispose()
 
-        columns = [
-            "query_map",
-            "run_results",
-            "ping_date",
-            "run_id",
-        ] + self.dataframe_api_columns
+        ping_to_upload = pd.DataFrame(
+            columns=["query_map", "run_results", "ping_date", "run_id"]
+            + self.dataframe_api_columns
+        )
 
-        content = [
+        ping_to_upload.loc[0] = [
             saas_queries,
             json.dumps(results_all),
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
         ] + self._get_dataframe_api_values(
-            self._get_json_data_from_file(META_DATA_INSTANCE_QUERIES_FILE)
+            self._get_meta_data(META_DATA_INSTANCE_QUERIES_FILE)
         )
 
-        instance_sql_metrics_to_upload = self._prepare_dataframe_to_upload(
-            columns=columns, content=content
-        )
-
-        self._upload_dataframe(
-            usage_ping_dataframe=instance_sql_metrics_to_upload,
-            table_name="instance_sql_metrics",
+        dataframe_uploader(
+            ping_to_upload,
+            self.loader_engine,
+            "instance_sql_metrics",
+            "saas_usage_ping",
         )
 
         """
         Handling error data part to load data into table: raw.saas_usage_ping.instance_sql_errors
         """
         if errors_data_all:
-            error_columns = ["run_id", "sql_errors", "ping_date"]
-            error_content = [
+            error_data_to_upload = pd.DataFrame(
+                columns=["run_id", "sql_errors", "ping_date"]
+            )
+
+            error_data_to_upload.loc[0] = [
                 self._get_md5(datetime.datetime.utcnow().timestamp()),
                 json.dumps(errors_data_all),
                 self.end_date,
             ]
 
-            error_data_to_upload = self._prepare_dataframe_to_upload(
-                columns=error_columns, content=error_content
-            )
-
-            self._upload_dataframe(
-                usage_ping_dataframe=error_data_to_upload,
-                table_name="instance_sql_errors",
+            dataframe_uploader(
+                error_data_to_upload,
+                self.loader_engine,
+                "instance_sql_errors",
+                "saas_usage_ping",
             )
 
         self.loader_engine.dispose()
@@ -244,23 +203,24 @@ class UsagePing(object):
         )
         json_data = json.loads(response.text)
 
-        columns = ["jsontext", "ping_date", "run_id"] + self.dataframe_api_columns
-        content = [
+        redis_data_to_upload = pd.DataFrame(
+            columns=["jsontext", "ping_date", "run_id"] + self.dataframe_api_columns
+        )
+
+        redis_data_to_upload.loc[0] = [
             json.dumps(json_data),
             self.end_date,
             self._get_md5(datetime.datetime.utcnow().timestamp()),
         ] + self._get_dataframe_api_values(json_data)
 
-        redis_data_to_upload = self._prepare_dataframe_to_upload(
-            columns=columns, content=content
+        dataframe_uploader(
+            redis_data_to_upload,
+            self.loader_engine,
+            "instance_redis_metrics",
+            "saas_usage_ping",
         )
 
-        self._upload_dataframe(
-            usage_ping_dataframe=redis_data_to_upload,
-            table_name="instance_redis_metrics",
-        )
-
-    def _get_namespace_queries(self):
+    def _get_namespace_queries(self) -> List[Dict]:
         """
         can be updated to query an end point or query other functions
         to generate:
@@ -272,17 +232,14 @@ class UsagePing(object):
             }
         }
         """
+        with open(
+            os.path.join(os.path.dirname(__file__), "usage_ping_namespace_queries.json")
+        ) as namespace_file:
+            saas_queries = json.load(namespace_file)
 
-        namespace_queries = self._get_json_data_from_file(
-            USAGE_PING_NAMESPACE_QUERIES_FILE
-        )
+        return saas_queries
 
-        return namespace_queries
-
-    def process_namespace_ping(self, query_dict, connection) -> None:
-        """
-        Routine to calculate and load namespace data
-        """
+    def process_namespace_ping(self, query_dict, connection):
         base_query = query_dict.get("counter_query")
         ping_name = query_dict.get("counter_name", "Missing Name")
         logging.info(f"Running ping {ping_name}...")
@@ -316,8 +273,11 @@ class UsagePing(object):
         results["error"] = error
         results["ping_date"] = self.end_date
 
-        self._upload_dataframe(
-            usage_ping_dataframe=results, table_name="gitlab_dotcom_namespace"
+        dataframe_uploader(
+            results,
+            self.loader_engine,
+            "gitlab_dotcom_namespace",
+            "saas_usage_ping",
         )
 
     def saas_namespace_ping(self, filter=lambda _: True):
