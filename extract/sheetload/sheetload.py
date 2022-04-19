@@ -279,7 +279,7 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
                 check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
 
-            except ParserError as p:
+            except ParserError:
                 error(f"Problem processing {file}")
 
 
