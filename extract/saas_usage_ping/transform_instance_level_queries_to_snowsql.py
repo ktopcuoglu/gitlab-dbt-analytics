@@ -356,8 +356,8 @@ def save_json_file(file_name: str, json_file: dict) -> None:
     param json_file: dict
     rtype: None
     """
-    with open(file=file_name, mode="w", encoding="utf-8") as file_to_save:
-        json.dump(json_file, file_to_save)
+    with open(file=file_name, mode="w", encoding="utf-8") as f:
+        json.dump(json_file, f)
 
 
 def main(json_query_list: Dict[Any, Any]) -> Dict[Any, Any]:
