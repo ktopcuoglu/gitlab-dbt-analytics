@@ -49,3 +49,11 @@ sources:
       - name: xc_quota_totals
         freshness: null
       - name: xc_role
+      - name: xc_participant
+      - name: xc_period
+      - name: xc_period_type
+      - name: xc_plan
+      - name: xc_plan_assignment
+      - name: xc_user 
+      - name: xc_comp_order_item
+      - name: xc_comp_order_item_detail
