@@ -22,6 +22,7 @@ from sheetload_dataframe_utils import dw_uploader
 from sheetload_dataframe_utils import dw_uploader_append_only
 from qualtrics_sheetload import qualtrics_loader
 
+from pandas.errors import ParserError
 
 def sheet_loader(
     sheet_file: str,
@@ -267,16 +268,19 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
             csv_obj = s3_client.get_object(Bucket=bucket, Key=file)
             body = csv_obj["Body"]
             csv_string = body.read().decode("utf-8")
+            try:
+                sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
 
-            sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
+                table_name, extension = file.split(".")[0:2]
+                # To pick up the file name alone  not the whole path to the file for as table name
+                table = table_name.split("/")[-1]
 
-            table_name, extension = file.split(".")[0:2]
-            # To pick up the file name alone  not the whole path to the file for as table name
-            table = table_name.split("/")[-1]
+                dw_uploader(engine, table, sheet_df, truncate=True)
 
-            dw_uploader(engine, table, sheet_df, truncate=True)
-
-            check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
+                check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
+            except ParserError as p:
+                error(f"Problem processing {file}")
+                error(p.msg)
 
 
 def csv_loader(
