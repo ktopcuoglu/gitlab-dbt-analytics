@@ -247,7 +247,6 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
     # Create Snowflake engine
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
-    info(engine)
 
     # Set S3 Client variable
     aws_access_key_id, aws_secret_access_key, path_prefix = get_s3_credentials(schema)
@@ -281,7 +280,6 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
             except ParserError:
                 error(f"Problem processing {file}")
-
 
 def csv_loader(
     filename: str,
