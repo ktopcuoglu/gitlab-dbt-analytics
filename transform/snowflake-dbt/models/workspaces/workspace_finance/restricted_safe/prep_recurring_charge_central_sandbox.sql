@@ -9,29 +9,29 @@ WITH dim_date AS (
     SELECT *
     FROM {{ ref('map_merged_crm_account') }}
 
-), zuora_account AS (
+), zuora_central_sandbox_account AS (
 
     SELECT *
-    FROM {{ ref('zuora_account_source') }}
+    FROM {{ ref('zuora_central_sandbox_account_source') }}
     WHERE is_deleted = FALSE
-    --Exclude Batch20 which are the test accounts. This method replaces the manual dbt seed exclusion file.
-      AND LOWER(batch) != 'batch20'
+    --Keep the Batch20 test accounts since they would be in scope for this sandbox model.
+      --AND LOWER(batch) != 'batch20'
 
-), zuora_rate_plan AS (
-
-    SELECT *
-    FROM {{ ref('zuora_rate_plan_source') }}
-
-), zuora_rate_plan_charge AS (
+), zuora_central_sandbox_rate_plan AS (
 
     SELECT *
-    FROM {{ ref('zuora_rate_plan_charge_source') }}
+    FROM {{ ref('zuora_central_sandbox_rate_plan_source') }}
+
+), zuora_central_sandbox_rate_plan_charge AS (
+
+    SELECT *
+    FROM {{ ref('zuora_central_sandbox_rate_plan_charge_source') }}
     WHERE charge_type = 'Recurring'
 
-), zuora_subscription AS (
+), zuora_central_sandbox_subscription AS (
 
     SELECT *
-    FROM {{ ref('zuora_subscription_source') }}
+    FROM {{ ref('zuora_central_sandbox_subscription_source') }}
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
       AND subscription_status NOT IN ('Draft')
@@ -39,14 +39,14 @@ WITH dim_date AS (
 ), active_zuora_subscription AS (
 
     SELECT *
-    FROM zuora_subscription
+    FROM zuora_central_sandbox_subscription
     WHERE subscription_status IN ('Active', 'Cancelled')
 
 ), revenue_contract_line AS (
 
     SELECT *
     FROM {{ ref('zuora_revenue_revenue_contract_line_source') }}
-  
+
 ), mje AS (
 
     SELECT 
@@ -75,7 +75,7 @@ WITH dim_date AS (
     SELECT 
       revenue_contract_line_id,
       revenue_contract_id,
-      zuora_account.account_id                              AS dim_billing_account_id,
+      zuora_central_sandbox_account.account_id                              AS dim_billing_account_id,
       map_merged_crm_account.dim_crm_account_id             AS dim_crm_account_id,
       MD5(rate_plan_charge_id)                              AS dim_charge_id,
       active_zuora_subscription.subscription_id             AS dim_subscription_id,
@@ -87,10 +87,10 @@ WITH dim_date AS (
     FROM revenue_contract_line
     INNER JOIN active_zuora_subscription
       ON revenue_contract_line.subscription_name = active_zuora_subscription.subscription_name
-    INNER JOIN zuora_account
-      ON revenue_contract_line.customer_number = zuora_account.account_number
+    INNER JOIN zuora_central_sandbox_account
+      ON revenue_contract_line.customer_number = zuora_central_sandbox_account.account_number
     LEFT JOIN map_merged_crm_account
-      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
+      ON zuora_central_sandbox_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN true_up_lines_dates
       ON revenue_contract_line.subscription_name = true_up_lines_dates.subscription_name
         AND revenue_contract_line.revenue_contract_line_attribute_16 = true_up_lines_dates.revenue_contract_line_attribute_16
@@ -148,28 +148,28 @@ WITH dim_date AS (
 ), rate_plan_charge_filtered AS (
 
     SELECT
-      zuora_account.account_id                            AS billing_account_id,
+      zuora_central_sandbox_account.account_id                            AS billing_account_id,
       map_merged_crm_account.dim_crm_account_id           AS crm_account_id,
-      zuora_rate_plan_charge.rate_plan_charge_id,
-      zuora_subscription.subscription_id,
-      zuora_subscription.subscription_name,
-      zuora_subscription.subscription_status,
-      zuora_rate_plan_charge.product_rate_plan_charge_id  AS product_details_id,
-      zuora_rate_plan_charge.mrr,
-      zuora_rate_plan_charge.delta_tcv,
-      zuora_rate_plan_charge.unit_of_measure,
-      zuora_rate_plan_charge.quantity,
-      zuora_rate_plan_charge.effective_start_month,
-      zuora_rate_plan_charge.effective_end_month
-    FROM zuora_rate_plan_charge
-    INNER JOIN zuora_rate_plan
-      ON zuora_rate_plan.rate_plan_id = zuora_rate_plan_charge.rate_plan_id
-    INNER JOIN zuora_subscription
-      ON zuora_rate_plan.subscription_id = zuora_subscription.subscription_id
-    INNER JOIN zuora_account
-      ON zuora_account.account_id = zuora_subscription.account_id
+      zuora_central_sandbox_rate_plan_charge.rate_plan_charge_id,
+      zuora_central_sandbox_subscription.subscription_id,
+      zuora_central_sandbox_subscription.subscription_name,
+      zuora_central_sandbox_subscription.subscription_status,
+      zuora_central_sandbox_rate_plan_charge.product_rate_plan_charge_id  AS product_details_id,
+      zuora_central_sandbox_rate_plan_charge.mrr,
+      zuora_central_sandbox_rate_plan_charge.delta_tcv,
+      zuora_central_sandbox_rate_plan_charge.unit_of_measure,
+      zuora_central_sandbox_rate_plan_charge.quantity,
+      zuora_central_sandbox_rate_plan_charge.effective_start_month,
+      zuora_central_sandbox_rate_plan_charge.effective_end_month
+    FROM zuora_central_sandbox_rate_plan_charge
+    INNER JOIN zuora_central_sandbox_rate_plan
+      ON zuora_central_sandbox_rate_plan.rate_plan_id = zuora_central_sandbox_rate_plan_charge.rate_plan_id
+    INNER JOIN zuora_central_sandbox_subscription
+      ON zuora_central_sandbox_rate_plan.subscription_id = zuora_central_sandbox_subscription.subscription_id
+    INNER JOIN zuora_central_sandbox_account
+      ON zuora_central_sandbox_account.account_id = zuora_central_sandbox_subscription.account_id
     LEFT JOIN map_merged_crm_account
-      ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
+      ON zuora_central_sandbox_account.crm_id = map_merged_crm_account.sfdc_account_id
 
 ), combined_rate_plans AS (
 
@@ -225,8 +225,9 @@ WITH dim_date AS (
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@mcooperDD",
+    created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2021-01-04",
-    updated_date="2022-02-03",
+    created_date="2022-03-31",
+    updated_date="2022-03-31",
 ) }}
+

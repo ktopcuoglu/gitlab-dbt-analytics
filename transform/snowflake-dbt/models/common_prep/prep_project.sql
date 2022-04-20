@@ -53,6 +53,7 @@
 
       -- plan/product tier metadata at creation
       prep_namespace.dim_product_tier_id                             AS dim_product_tier_id_at_creation,
+      prep_namespace.gitlab_plan_id                                  AS dim_plan_id,
       -- projects metadata
       projects_source.created_at                                     AS created_at,
       projects_source.updated_at                                     AS updated_at,
@@ -134,7 +135,7 @@
         AND projects_source.created_at >= gitlab_subscriptions.valid_from AND projects_source.created_at < {{ coalesce_to_infinity("gitlab_subscriptions.valid_to") }}
     LEFT JOIN active_services
       ON projects_source.project_id = active_services.project_id
-    {{ dbt_utils.group_by(n=62) }}
+    {{ dbt_utils.group_by(n=63) }}
 
 )
 

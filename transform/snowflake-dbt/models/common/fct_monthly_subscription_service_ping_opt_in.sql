@@ -6,7 +6,7 @@
   ('dim_product_detail', 'dim_product_detail'),
   ('prep_usage_ping_payload', 'prep_usage_ping_payload'),
   ('map_usage_ping_active_subscription', 'map_usage_ping_active_subscription'),
-  ('prep_recurring_charge', 'prep_recurring_charge'),
+  ('prep_charge', 'prep_charge'),
 ])
 }}
 
@@ -19,16 +19,23 @@
 ), self_managed_active_subscriptions AS (
 
     SELECT
-      dim_date_id,
-      dim_subscription_id,
-          
-      SUM(mrr)              AS mrr,
-      SUM(quantity)         AS quantity
-    FROM prep_recurring_charge
+      dim_date.date_id                                                                      AS dim_date_id,
+      prep_charge.dim_subscription_id,
+      SUM(prep_charge.mrr)                                                                  AS mrr,
+      SUM(prep_charge.quantity)                                                             AS quantity
+    FROM prep_charge
+    INNER JOIN dim_date
+      ON prep_charge.effective_start_month <= dim_date.date_actual
+      AND (prep_charge.effective_end_month > dim_date.date_actual
+        OR prep_charge.effective_end_month IS NULL)
+      AND dim_date.day_of_month = 1
     INNER JOIN dim_product_detail
-      ON prep_recurring_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+      ON prep_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
       AND product_delivery_type = 'Self-Managed'
     WHERE subscription_status IN ('Active', 'Cancelled')
+      /* This excludes Education customers (charge name EDU or OSS) with free subscriptions.
+         Pull in seats from Paid EDU Plans with no ARR */
+      AND (mrr != 0 OR LOWER(prep_charge.rate_plan_charge_name) = 'max enrollment')
     {{ dbt_utils.group_by(n=2) }}
 
 ), mau AS (
@@ -93,7 +100,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@iweeks",
     created_date="2021-06-21",
-    updated_date="2021-07-22"
+    updated_date="2022-04-04"
 ) }}

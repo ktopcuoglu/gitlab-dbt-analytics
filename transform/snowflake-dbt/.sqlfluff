@@ -21,3 +21,8 @@ capitalisation_policy = upper
 [sqlfluff:rules:L040]
 # Null & Boolean Literals
 capitalisation_policy = upper
+
+[sqlfluff:rules:L057]
+# Special Characters in Identifiers
+allow_space_in_identifier = True
+additional_allowed_characters = ['.','(',')','-']

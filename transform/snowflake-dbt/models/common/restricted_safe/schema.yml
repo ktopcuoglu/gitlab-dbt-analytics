@@ -399,7 +399,60 @@ models:
     description: '{{ doc("fct_mrr_snapshot_model") }}'
 
   - name: fct_mrr
-    description: One row represents Monthly Recurring Revenue per month, by rate plan charge.
+    description: One row represents Monthly Recurring Revenue per month, by rate plan charge. Excludes charges with $0 MRR.
+    columns:
+      - name: mrr_id
+        description: The unique identifier of the MRR.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_date_id
+        description: The identifier of date month in dim_date
+      - name: dim_charge_id
+        description: join key for dim_charge
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        description: join key for dim_billing_account
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_billing_account')
+              field: dim_billing_account_id
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_crm_account_id
+        description: join key for dim_crm_account
+        tests:
+          - relationships:
+              to: ref('dim_crm_account')
+              field: dim_crm_account_id
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_subscription_id
+        description: The identifier of subscription in dim_subscription table
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_subscription')
+              field: dim_subscription_id
+        tags: ["tdf", "common", "mrr"]
+      - name: dim_product_detail_id
+        description: The identifier of product details in dim_product_detail
+        tests:
+          - not_null
+      - name: dim_billing_account_id
+        description: Zuora account id
+      - name:  dim_crm_account_id
+        description: account id frm crm
+      - name: mrr
+        description: Monthly Recurring Revenue value for given month
+      - name: arr
+        description: Annual Recurring Revenue value for given month
+      - name: quantity
+        description: Total quantity
+        
+  - name: fct_mrr_with_zero_dollar_charges
+    description: One row represents Monthly Recurring Revenue per month, by rate plan charge. Includes charges with $0 MRR such as EDU/OSS charges.
     columns:
       - name: mrr_id
         description: The unique identifier of the MRR.
@@ -467,25 +520,6 @@ models:
         tests:
           - not_null
           - unique
-
-  - name: fct_retention_crm_account
-    columns:
-    - name: fct_retention_id
-      description: A unique identifier of the retention record.
-      tests:
-        - not_null
-        - unique
-      tags: ["tdf", "mart", "arr", "retention"]
-  
-  - name: fct_retention_parent_account
-    description: '{{ doc("fct_retention_parent_account") }}'
-    columns:
-    - name: fct_retention_id
-      description: A unique identifier of the retention record.
-      tests:
-        - not_null
-        - unique
-      tags: ["tdf", "mart", "arr", "retention"]
 
   - name: fct_revenue_contract_hold
     description: '{{ doc("fct_revenue_contract_hold") }}'

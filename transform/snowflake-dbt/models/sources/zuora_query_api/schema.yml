@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: zuora_query_api_users_source
+    description: Source layer for Zuora Users
+    columns:
+      - name: zuora_user_id
+        tags: ["tdf", "zuora", "zuora_query_api"]
+        tests:
+          - not_null
+          - unique

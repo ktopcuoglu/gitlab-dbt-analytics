@@ -185,6 +185,15 @@
       "usage_activity_by_stage.plan.issues"                                                     AS author_issue_all_time_user,
       "usage_activity_by_stage_monthly.release.failed_deployments"                              AS failed_deployments_28_days_user,
       "usage_activity_by_stage_monthly.release.successful_deployments"                          AS successful_deployments_28_days_user,
+      -- Wave 5.3
+      "geo_enabled"                                                                             AS geo_enabled,
+      "counts.geo_nodes"                                                                        AS geo_nodes_all_time_event,
+      "usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops"                   AS auto_devops_pipelines_28_days_user,
+      "counts.ci_runners_instance_type_active"                                                  AS active_instance_runners_all_time_event,
+      "counts.ci_runners_group_type_active"                                                     AS active_group_runners_all_time_event,
+      "counts.ci_runners_project_type_active"                                                   AS active_project_runners_all_time_event,
+      "gitaly.version"::VARCHAR                                                                 AS gitaly_version,
+      "gitaly.servers"                                                                          AS gitaly_servers_all_time_event,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
@@ -215,5 +224,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2021-12-23"
+    updated_date="2021-04-12"
 ) }}

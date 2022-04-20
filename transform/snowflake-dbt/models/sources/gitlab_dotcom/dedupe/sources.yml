@@ -383,12 +383,6 @@ sources:
         freshness:
           warn_after: { count: 3, period: day }
           error_after: { count: 7, period: day }
-      - name: cluster_providers_aws
-        identifier: gitlab_db_cluster_providers_aws
-        freshness: null
-      - name: clusters_applications_cilium
-        identifier: gitlab_db_clusters_applications_cilium
-        freshness: null
       - name: container_expiration_policies
         identifier: gitlab_db_container_expiration_policies
       - name: compliance_management_frameworks
