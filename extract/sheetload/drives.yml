@@ -7,7 +7,7 @@ folders:
   - name: email_domain_classification
     owner: '@jeanpeguero'
     folder_name: email_domain_classification
-    table_name: email_domain_classifications
+    table_name: email_domain_classification
     table_replace_append: 0
   - name: financial_metrics_program_phase_1
     owner: '@paul_armmstrong'
