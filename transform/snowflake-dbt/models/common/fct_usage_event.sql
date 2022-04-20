@@ -157,6 +157,8 @@ gitlab_dotcom_fact AS (
     final.plan_name_at_event_date,
     final.plan_was_paid_at_event_date,
     final.days_since_user_creation_at_event_date,
+    final.days_since_namespace_creation_at_event_date,
+    final.days_since_project_creation_at_event_date,
     'GITLAB_DOTCOM' AS data_source
   FROM final
   LEFT JOIN dim_date
