@@ -23,18 +23,19 @@ SALT_PASSWORD=416C736F4E6F745365637265FFFFFFAB
 VENV_NAME?=dbt
 
 .DEFAULT: help
+
 help:
 	@echo "\n \
 	------------------------------ \n \
 	++ Airflow Related ++ \n \
-	airflow: attaches a shell to the airflow deployment in docker-compose.yml. Access the webserver at localhost:8080\n \
-	init-airflow: initializes a new Airflow db and creates a generic admin user, required on a fresh db. \n \
+	- airflow: attaches a shell to the airflow deployment in docker-compose.yml. Access the webserver at localhost:8080\n \
+	- init-airflow: initializes a new Airflow db and creates a generic admin user, required on a fresh db. \n \
 	\n \
 	++ dbt Related ++ \n \
-	run-dbt: attaches a shell to the dbt virtual environment and changes to the dbt directory. \n \
-	run-dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
-	clean-dbt: deletes all virtual environment artifacts \n \
-	pip-dbt-shell: opens the pipenv environment in the dbt folder. Primarily for use with sql fluff. \n \
+	- run-dbt: attaches a shell to the dbt virtual environment and changes to the dbt directory. \n \
+	- run-dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
+	- clean-dbt: deletes all virtual environment artifacts \n \
+	- pip-dbt-shell: opens the pipenv environment in the dbt folder. Primarily for use with sql fluff. \n \
 	\n \
 	++ Python Related ++ \n \
 	data-image: attaches to a shell in the data-image and mounts the repo for testing. \n \
@@ -69,14 +70,6 @@ data-image:
 	@echo "Attaching to data-image and mounting repo..."
 	@"$(DOCKER_RUN)" data_image bash
 
-dbt-docs:
-	@echo "Generating docs and spinning up the a webserver on port 8081..."
-	@"$(DOCKER_RUN)" -p "8081:8081" dbt_image bash -c "dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081"
-
-dbt-image:
-	@echo "Attaching to dbt-image and mounting repo..."
-	@"$(DOCKER_RUN)" dbt_image bash -c "dbt clean && dbt deps && /bin/bash"
-
 prepare-dbt:
 	which pipenv || python3 -m pip install pipenv
 	pipenv install
@@ -101,6 +94,13 @@ init-airflow:
 	@"$(DOCKER_RUN)" airflow_scheduler airflow db init
 	@"$(DOCKER_RUN)" airflow_scheduler airflow users create --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
 	@"$(DOCKER_DOWN)"
+
+update-containers:
+	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
+	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
 
 lint:
 	@echo "Linting the repo..."
@@ -127,13 +127,11 @@ radon:
 	@echo "Run Radon to compute complexity..."
 	@radon cc . --total-average -nb
 
-update-containers:
-	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
-	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
-
 xenon:
 	@echo "Running Xenon..."
 	@xenon --max-absolute B --max-modules A --max-average A . -i transform,shared_modules
+
+pytest:
+	@echo "Running pytest..."
+	@python -m pytest -vv -x
+

@@ -12,6 +12,7 @@ from qualtrics_client import QualtricsClient
 
 from dateutil import parser as date_parser
 
+
 def timestamp_in_interval(tstamp: datetime, start: datetime, end: datetime) -> bool:
     """
     Returns true if tstamp is in the interval [`start`, `end`)
