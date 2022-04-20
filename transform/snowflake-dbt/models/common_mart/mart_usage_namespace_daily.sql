@@ -11,7 +11,7 @@
 mart_usage_namespace_daily AS (
     
     SELECT 
-      {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_ultimate_parent_namespace_id', 'namespace_created_at']) }}       
+      {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_ultimate_parent_namespace_id']) }}       
                                             AS mart_usage_namespace_id,
       dim_active_product_tier_id,
       dim_active_subscription_id,
