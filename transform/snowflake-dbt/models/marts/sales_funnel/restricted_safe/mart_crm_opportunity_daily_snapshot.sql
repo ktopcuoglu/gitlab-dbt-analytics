@@ -124,20 +124,6 @@
 
       --crm owner/sales rep live fields
       fct_crm_opportunity.user_segment                                    AS crm_user_sales_segment,
-      --fct_crm_opportunity.user_sales_segment_grouped                                        AS crm_user_sales_segment_grouped,
-      fct_crm_opportunity.user_geo                                        AS crm_user_geo,
-      fct_crm_opportunity.user_region                                     AS crm_user_region,
-      fct_crm_opportunity.user_area                                       AS crm_user_area,
-      {{ sales_segment_region_grouped('fct_crm_opportunity.crm_user_sales_segment',
-        'fct_crm_opportunity.crm_user_geo', 'fct_crm_opportunity.crm_user_region') }}
-                                                                           AS crm_user_sales_segment_region_grouped,
-
-      --  -- crm account owner/sales rep live fields
-      -- fct_crm_opportunity.crm_user_sales_segment                            AS crm_account_user_sales_segment,
-      -- fct_crm_opportunity.crm_user_sales_segment_grouped   AS crm_account_user_sales_segment_grouped,
-      -- fct_crm_opportunity.crm_user_geo                               AS crm_account_user_geo,
-      -- fct_crm_opportunity.crm_user_region                         AS crm_account_user_region,
-      -- fct_crm_opportunity.crm_user_area                             AS crm_account_user_area,
 
       -- channel fields
       fct_crm_opportunity.lead_source,
