@@ -38,7 +38,7 @@
         is_gmau                                                       AS is_gmau,
         is_paid_gmau                                                  AS is_paid_gmau,
         is_umau                                                       AS is_umau,
-        COUNT(latest_active_subscription_id)                          AS subscription_count,
+        COUNT(DISTINCT latest_active_subscription_id)                 AS subscription_count,
         SUM(quantity)                                                 AS seat_count
     FROM arr_joined
             WHERE latest_active_subscription_id IS NOT NULL
@@ -65,8 +65,8 @@
         reported_actuals.subscription_count                            AS reported_subscription_count, -- actually reported
         reported_actuals.seat_count                                    AS reported_seat_count, -- actually reported
         potential_report_counts.total_licensed_users                   AS total_licensed_users,  -- could have reported
-        potential_report_counts.total_subscriptions_count              AS total_subscriptions_count, -- could have reported
-        total_subscriptions_count - reported_subscription_count        AS no_reporting_subscription_count, -- could have reported, but didn't
+        potential_report_counts.total_subscription_count              AS total_subscription_count, -- could have reported
+        total_subscription_count - reported_subscription_count        AS no_reporting_subscription_count, -- could have reported, but didn't
         total_licensed_users - reported_seat_count                     AS no_reporting_seat_count -- could have reported, but didn't
     FROM reported_actuals
         LEFT JOIN potential_report_counts
@@ -89,7 +89,7 @@
     is_umau                                                         AS is_umau,
     reported_subscription_count                                     AS reporting_count,
     no_reporting_subscription_count                                 AS no_reporting_count,
-    total_subscriptions_count                                       AS total_count,
+    total_subscription_count                                       AS total_count,
     'metric/version check - subscription based estimation'          AS estimation_grain
   FROM joined_counts
 

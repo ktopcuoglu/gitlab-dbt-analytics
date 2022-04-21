@@ -18,7 +18,7 @@
     arr_month                                             AS arr_month,
     SUM(arr)                                              AS arr,
     SUM(quantity)                                         AS total_licensed_users,
-    COUNT(DISTINCT dim_subscription_id)                   AS total_subscriptions_count
+    COUNT(DISTINCT dim_subscription_id)                   AS total_subscription_count
   FROM mart_arr
   WHERE product_tier_name != 'Storage'
     AND product_delivery_type = 'Self-Managed'

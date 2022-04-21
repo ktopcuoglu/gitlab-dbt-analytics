@@ -60,18 +60,7 @@
       1                                         AS reporting_count,
       0                                         AS no_reporting_count,
       1                                         AS percent_reporting,
-      'SaaS - subscription based estimation'    AS estimation_grain
-    FROM fact
-  WHERE service_ping_delivery_type = 'SaaS'
-
-  UNION ALL
-
-  SELECT
-      fact.*,
-      1                                         AS reporting_count,
-      0                                         AS no_reporting_count,
-      1                                         AS percent_reporting,
-      'SaaS - seat based estimation'            AS estimation_grain
+      'SaaS'    AS estimation_grain
     FROM fact
   WHERE service_ping_delivery_type = 'SaaS'
 

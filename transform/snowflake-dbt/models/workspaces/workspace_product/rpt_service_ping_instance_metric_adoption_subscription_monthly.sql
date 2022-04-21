@@ -57,17 +57,17 @@
 ), count_tbl AS (
 
     SELECT
-        ping_created_at_month                 AS arr_month,
-        metrics_path                          AS metrics_path,
-        stage_name                            AS stage_name,
-        section_name                          AS section_name,
-        group_name                            AS group_name,
-        is_smau                               AS is_smau,
-        is_gmau                               AS is_gmau,
-        is_paid_gmau                          AS is_paid_gmau,
-        is_umau                               AS is_umau,
-        COUNT(latest_active_subscription_id)  AS subscription_count,
-        SUM(quantity)                         AS seat_count
+        ping_created_at_month                           AS arr_month,
+        metrics_path                                    AS metrics_path,
+        stage_name                                      AS stage_name,
+        section_name                                    AS section_name,
+        group_name                                      AS group_name,
+        is_smau                                         AS is_smau,
+        is_gmau                                         AS is_gmau,
+        is_paid_gmau                                    AS is_paid_gmau,
+        is_umau                                         AS is_umau,
+        COUNT(DISTINCT latest_active_subscription_id)   AS subscription_count,
+        SUM(quantity)                                   AS seat_count
     FROM arr_joined
             WHERE latest_active_subscription_id IS NOT NULL
                 AND is_last_ping_of_month = TRUE
@@ -93,8 +93,8 @@
         count_tbl.subscription_count                            AS reported_subscription_count,
         count_tbl.seat_count                                    AS reported_seat_count,
         sub_combo.total_licensed_users                          AS total_licensed_users,
-        sub_combo.total_subscriptions_count                     AS total_subscriptions_count,
-        total_subscriptions_count - reported_subscription_count AS no_reporting_subscription_count,
+        sub_combo.total_subscription_count                      AS total_subscription_count,
+        total_subscription_count - reported_subscription_count  AS no_reporting_subscription_count,
         total_licensed_users - reported_seat_count              AS no_reporting_seat_count
     FROM count_tbl
         LEFT JOIN sub_combo
@@ -117,8 +117,8 @@
     is_umau                                                     AS is_umau,
     reported_subscription_count                                 AS reporting_count,
     no_reporting_subscription_count                             AS no_reporting_count,
-    total_subscriptions_count                                   AS total_count,
-    'valid subscription - subscription based estimation'        AS estimation_grain
+    total_subscription_count                                    AS total_count,
+    'reported metric - subscription based estimation'           AS estimation_grain
   FROM joined_counts
 
   UNION ALL
@@ -136,7 +136,7 @@
     reported_seat_count                                         AS reporting_count,
     no_reporting_seat_count                                     AS no_reporting_count,
     total_licensed_users                                        AS total_count,
-    'valid subscription - seat based estimation'                AS estimation_grain
+    'reported metric - seat based estimation'                   AS estimation_grain
   FROM joined_counts
 
 -- Create PK and use macro for percent_reporting
