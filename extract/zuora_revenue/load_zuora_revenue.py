@@ -28,7 +28,6 @@ def get_gcs_bucket(bucket_name: str) -> Bucket:
     return storage_client.get_bucket(bucket_name)
 
 
-
 def move_to_processed(bucket: str, table_name: str, list_of_files: list):
     """
     Move the file to process folder.
