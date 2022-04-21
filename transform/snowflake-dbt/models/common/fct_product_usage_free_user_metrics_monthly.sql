@@ -163,7 +163,16 @@
       sm_free_users.author_epic_all_time_user,
       sm_free_users.author_issue_all_time_user,
       sm_free_users.failed_deployments_28_days_user,
-      sm_free_users.successful_deployments_28_days_user,       
+      sm_free_users.successful_deployments_28_days_user, 
+      -- Wave 5.3
+      sm_free_users.geo_enabled,
+      sm_free_users.geo_nodes_all_time_event,
+      sm_free_users.auto_devops_pipelines_28_days_user,
+      sm_free_users.active_instance_runners_all_time_event,
+      sm_free_users.active_group_runners_all_time_event,
+      sm_free_users.active_project_runners_all_time_event,
+      sm_free_users.gitaly_version,
+      sm_free_users.gitaly_servers_all_time_event,      
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.hostname
                              ORDER BY sm_free_users.ping_created_at DESC
@@ -320,6 +329,15 @@
       "usage_activity_by_stage.plan.issues"                                                     AS author_issue_all_time_user,
       "usage_activity_by_stage_monthly.release.failed_deployments"                              AS failed_deployments_28_days_user,
       "usage_activity_by_stage_monthly.release.successful_deployments"                          AS successful_deployments_28_days_user,
+      -- Wave 5.3
+      "geo_enabled"                                                                             AS geo_enabled,
+      "counts.geo_nodes"                                                                        AS geo_nodes_all_time_event,
+      "usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops"                   AS auto_devops_pipelines_28_days_user,
+      "counts.ci_runners_instance_type_active"                                                  AS active_instance_runners_all_time_event,
+      "counts.ci_runners_group_type_active"                                                     AS active_group_runners_all_time_event,
+      "counts.ci_runners_project_type_active"                                                   AS active_project_runners_all_time_event,
+      "gitaly.version"::VARCHAR                                                                 AS gitaly_version,
+      "gitaly.servers"                                                                          AS gitaly_servers_all_time_event,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
@@ -342,5 +360,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2022-04-01"
+    updated_date="2022-04-21"
 ) }}
