@@ -384,16 +384,8 @@ models:
           - unique
         description: the unique id associated with the dim_service_ping_instance
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: dim_instance_id
         description:  The uuid of an instance from the dim_instances model.
       - name: ping_created_at
         description: The time when the ping was created
@@ -447,22 +439,10 @@ models:
           #- unique
         description: The unique ID of the prep_service_ping_instance_flattenned model consisting of dim_service_ping_instance_id and path
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: dim_instance_id
         description: The unique uuid of an instance from the dim_instances model.
       - name: dim_service_ping_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_service_ping_instance')
-              field: dim_service_ping_instance_id
       - name: ping_created_at
         description: The time when the ping was created
       - name: main_edition
@@ -488,58 +468,22 @@ models:
       - name: fct_service_ping_instance_metric_id
         tests:
           - not_null
-          #- unique
-<<<<<<< HEAD
-=======
         description: the unique composite ID for the fct_service_ping_instance_metric model consisting of dim_service_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_service_ping_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_service_ping_instance')
-              field: dim_service_ping_instance_id
         description: The unqiue id of a service ping insatnce in the dim_service_ping_instance model.
       - name: dim_product_tier_id
-        tests:
-          - relationships:
-              to: ref('dim_product_tier')
-              field: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
-        tests:
-          - relationships:
-              to: ref('dim_location_country')
-              field: dim_location_country_id
       - name: dim_service_ping_date_id
         description: The unique id of a country from the dim_location_country model
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: instance_id
         description: The unique uuid of an instance from the dim_instances model.
       - name: dim_date_id
-        tests:
-          - relationships:
-              to: ref('dim_date')
-              field: date_id
         description: The unqiue id of a date in the dim_date model.
       - name: dim_license_id
-        tests:
-          - relationships:
-              to: ref('dim_license')
-              field: dim_license_id
         description:  The unique id of a license from the dim_license model.
-#      - name: dim_installation_id
-#        tests:
-#          - relationships:
-#              to: ref('dim_installation')
-#              field: dim_installation_id
       - name: metrics_path
         description: The path that the metric is applied along
       - name: metric_value
@@ -564,7 +508,6 @@ models:
         description: The time frame associated with the instance
       - name: umau_value
         description: The unique monthly active user value
->>>>>>> 9e873c437f0cd4d7b6c99a1bfe41faba6c450c06
 
   - name: dim_service_ping_instance
     description: ' {{ doc("dim_service_ping_instance") }} '
@@ -573,27 +516,13 @@ models:
         tests:
           - not_null
           - unique
-<<<<<<< HEAD
-=======
       - name: dim_service_ping_date_id
         description: the unique id associated with the dim_service_ping_instance
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: instance_id
         description: The unique id of an instance (brought in from usage_data source data).
       - name: dim_date_id
-        tests:
-          - relationships:
-              to: ref('dim_date')
-              field: date_id
         description: The unqiue id of a date in the dim_date model.
       - name: ping_created_at
         description: The time when the ping was created
@@ -657,7 +586,6 @@ models:
         description: Denotes whether the instacnce is internal
       - name: is_staging
         description: Denotes whether the instance is associated with a stage
->>>>>>> 9e873c437f0cd4d7b6c99a1bfe41faba6c450c06
 
   - name: mart_service_ping_instance_metric
     description: ' {{ doc("mart_service_ping_instance_metric") }} '
