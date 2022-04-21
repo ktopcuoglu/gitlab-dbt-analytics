@@ -4,10 +4,14 @@
     })
 }}
 
-WITH source AS (
+WITH source2 AS (
+
+  SELECT * FROM {{ source('version', 'raw_usage_data') }} WHERE created_at between '2022-01-01' and '2022-02-01'
+
+), source AS (
 
     SELECT *
-    FROM {{ source('version', 'raw_usage_data') }}
+    FROM source2
     {% if is_incremental() %}
     WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
     {% endif %}
