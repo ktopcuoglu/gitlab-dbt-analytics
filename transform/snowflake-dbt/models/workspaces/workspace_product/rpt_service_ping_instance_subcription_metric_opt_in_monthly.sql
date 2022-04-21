@@ -5,6 +5,7 @@
 
 {{ simple_cte([
     ('metric_opt_in', 'rpt_service_ping_counter_statistics'),
+    ('mart_arr', 'mart_arr'),
     ('mart_service_ping_instance_metric_28_day', 'mart_service_ping_instance_metric_28_day')
     ])
 
@@ -29,7 +30,7 @@ Determine latest version for each subscription to determine if the potential met
         AND latest_active_subscription_id IS NOT NULL
       QUALIFY ROW_NUMBER() OVER (
             PARTITION BY ping_created_at_month, latest_active_subscription_id, dim_service_ping_instance_id
-              ORDER BY major_minor_version DESC) = 1
+              ORDER BY major_minor_version_id DESC) = 1
 
 /*
 Grab just the metrics relevant to the subscription based upon version
@@ -47,6 +48,16 @@ Grab just the metrics relevant to the subscription based upon version
       ON subscriptions_w_versions.major_minor_version
         BETWEEN metric_opt_in.first_version_with_counter AND metric_opt_in.last_version_with_counter
 
+), arr_counts_joined AS (
+
+  SELECT
+    active_subscriptions_by_metric.*,
+    quantity
+  FROM active_subscriptions_by_metric
+    INNER JOIN mart_arr
+  ON active_subscriptions_by_metric.latest_active_subscription_id = mart_arr.dim_subscription_id
+      AND active_subscriptions_by_metric.ping_created_at_month = mart_arr.arr_month
+
 /*
 Aggregate for subscription and user counters
 */
@@ -58,8 +69,8 @@ SELECT
     ping_created_at_month                                                             AS arr_month,
     metrics_path                                                                      AS metrics_path,
     COUNT(latest_active_subscription_id)                                              AS total_subscriptions_count,
-    SUM(instance_user_count)                                                          AS total_licensed_users
-FROM active_subscriptions_by_metric
+    SUM(quantity)                                                                     AS total_licensed_users
+FROM arr_counts_joined
     {{ dbt_utils.group_by(n=3)}}
 
 )

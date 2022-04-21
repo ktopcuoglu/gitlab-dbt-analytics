@@ -254,7 +254,7 @@
 
     FROM joined
       WHERE time_frame != 'none'
-        AND TRY_TO_DECIMAL(metric_value::TEXT) > 0
+        AND TRY_TO_DECIMAL(metric_value::TEXT) >= 0
 
 )
 

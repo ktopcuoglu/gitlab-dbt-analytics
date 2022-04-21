@@ -6,6 +6,7 @@
 {{ simple_cte([
     ('mart_service_ping_instance_metric_28_day', 'mart_service_ping_instance_metric_28_day'),
     ('rpt_service_ping_instance_subcription_opt_in_monthly', 'rpt_service_ping_instance_subcription_opt_in_monthly'),
+    ('mart_arr', 'mart_arr'),
     ('dim_service_ping_metric', 'dim_service_ping_metric')
     ])
 
@@ -39,6 +40,18 @@
         INNER JOIN metrics
     ON subscription_info.key = metrics.key
 
+-- Get value from mart_arr
+
+), arr_joined AS (
+
+  SELECT
+    mart_service_ping_instance_metric_28_day.*,
+    mart_arr.quantity
+  FROM mart_service_ping_instance_metric_28_day
+    INNER JOIN mart_arr
+  ON mart_service_ping_instance_metric_28_day.latest_active_subscription_id = mart_arr.dim_subscription_id
+      AND mart_service_ping_instance_metric_28_day.ping_created_at_month = mart_arr.arr_month
+
 -- Get actual count of subs/users for a given month/metric
 
 ), count_tbl AS (
@@ -54,8 +67,8 @@
         is_paid_gmau                          AS is_paid_gmau,
         is_umau                               AS is_umau,
         COUNT(latest_active_subscription_id)  AS subscription_count,
-        SUM(instance_user_count)              AS seat_count
-    FROM mart_service_ping_instance_metric_28_day
+        SUM(quantity)                         AS seat_count
+    FROM arr_joined
             WHERE latest_active_subscription_id IS NOT NULL
                 AND is_last_ping_of_month = TRUE
                 AND service_ping_delivery_type = 'Self-Managed'
