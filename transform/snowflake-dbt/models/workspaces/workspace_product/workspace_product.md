@@ -70,55 +70,60 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 
 {% docs fct_service_ping_instance_metric %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id and flattened_high_level.metrics_path
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per metric (metrics_path)
 Time Grain: None
-Use case: Self managed usage data fact table
+Use case: Service Ping metric-level analysis
+Notes: Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0.
 
 {% enddocs %}
 
 {% docs dim_service_ping_instance %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id)
 Time Grain: None
-Use case: Self managed usage data dim table
+Use case: Service Ping dimension analysis (ex: edition, installation_type)
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id and metrics_path
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per metric (metrics_path)
 Time Grain: None
-Use case: Self managed usage data mart table
+Use case: Service Ping metric exploration and analysis
+Note: This model is filtered to metrics that return numeric values. Metrics that timed out are set to a value of 0.
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric_28_day %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id and metrics_path
-Time Grain: 28 day time frame
-Use case: Self managed usage data mart table
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per 28-day metric (metrics_path)
+Time Grain: None
+Use case: Service Ping 28-day metric exploration and analysis
+Note: This model is filtered to metrics where time_frame = 28d (https://metrics.gitlab.com/?q=28d). Metrics that timed out are set to a value of 0.
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric_7_day %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id and metrics_path
-Time Grain: 7 day time frame
-Use case: Self managed usage data mart table
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per 28-day metric (metrics_path)
+Time Grain: None
+Use case: Service Ping 7-day metric exploration and analysis
+Note: This model is filtered to metrics where time_frame = 7d (https://metrics.gitlab.com/?q=7d). Metrics that timed out are set to a value of 0.
 
 {% enddocs %}
 
 {% docs mart_service_ping_instance_metric_all_time %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id and metrics_path
-Time Grain: 'all' time frame
-Use case: Self managed usage data mart table
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per 28-day metric (metrics_path)
+Time Grain: None
+Use case: Service Ping all-time metric exploration and analysis
+Note: This model is filtered to metrics where time_frame = all (https://metrics.gitlab.com/?q=all). Metrics that timed out are set to a value of 0.
 
 {% enddocs %}
 
@@ -144,19 +149,19 @@ Use case: Model used to estimate usage based upon reported and unreported seats/
 
 {% docs prep_service_ping_instance %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id)
 Time Grain: None
-Use case: Self managed usage data prep table
+Use case: Service Ping prep table
 
 {% enddocs %}
 
 {% docs prep_service_ping_instance_flattened %}
 
-Type of Data: Version app
-Aggregate Grain: dim_service_ping_instance_id and path
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per metric (metrics_path)
 Time Grain: None
-Use case: Self managed usage data prep table
+Use case: Service Ping metric-level prep table
 
 {% enddocs %}
 
