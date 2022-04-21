@@ -1,5 +1,5 @@
 <!---
-  Use this template when adding a sheetload file or making changes to a sheetload file
+  Use this template when adding a driveload file or making changes to a driveload file
 --->
 
 ## Issue
@@ -17,8 +17,46 @@ Describe the solution. Include links to any related MRs and/or issues.
   - [ ] I don't know
 * [ ]  How long will this data need to reside in the Data team's data warehouse? Expiration Date: ______ 
 
-## Adding/Updating a new sheetload file*
- 
+
+## Adding/Updating a new Driveload file
+<details><summary>Click on Dropdown for Process</summary>
+<br>
+
+* [ ] Step 1: Create a new folder in Google Drive and upload your file to it. Files can only be .csv format currently.  
+
+* [ ] Step 2: Share the file with the required service account - [Email Address to share with](https://docs.google.com/document/d/1m8kky3DPv2yvH63W4NDYFURrhUwRiMKHI-himxn1r7k/edit?usp=sharing) (GitLab Internal)
+
+* [ ] Step 3: Open up the web ide and let's start the MR! Update extract--> sheetload--> [sheets.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/extract/sheetload/drives.yml)
+    * Add the name of the file_name (i.e. kpi_status)
+    * Add the name of the newly created folder, folder names need to unique here so ensure you do not conflict with any existing folders. 
+    * Add yourself as an owner
+    * Decide on a loading strategy for table_replace_append. 
+      * If set to 1, all files which are uploaded to the folder will be **appended** to the table. 
+      * If set to 0, the files which are uploaded to the folder will **replace** the data in the table. 
+
+
+* [ ] Step 4: Next in this MR, head to transform --> snowflake-dbt --> models --> sources --> driveload--> [Edit the sources.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/driveload/sources.yml). Add the file name as `driveload_file_name_source`
+
+* [ ] Step 5: In the same repoistory folder as the sources.yml file, you will [add the base model to sources.driveload repository](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/driveload). Naming the file as driveload_file_name_sources.sql.
+        This file will have the following code, but can also be restricted down to specific columns. Update data type of columns in this file (i.e converting value to decimal or varchar)
+```sql
+        WITH source AS (
+
+        SELECT * 
+        FROM {{ source('driveload','file_name') }}
+
+        )
+        SELECT * 
+        FROM source
+```
+* [ ] Step 6: In the sources.driveload repository [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/driveload/schema.yml) to explain the source model. 
+
+* [ ] Step 7: Next we'll head to head to transform --> snowflake-dbt --> models --> legacy --> driveload--> [Add a new file for the model in legacy.driveload](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/legacy/driveload). This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update. Name the file `driveload_file_name`
+
+* [ ] Step 8: [Update driveload.sheetload schema.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/legacy/driveload/schema.yml) to add description of the staging model. 
+
+To understand the difference between source and staging models, please refer to these sources: [source models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#source-models) vs [staging models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#staging)
+</details>
 
 #### Testing
 
