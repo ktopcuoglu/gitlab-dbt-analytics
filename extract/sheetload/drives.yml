@@ -16,11 +16,11 @@ folders:
     table_replace_append: 0 # For Append 1 and to replace 0 , This is the old behavior of this table where it will replace the table and reload not modifying the same.
   - name: ssa_coverage_fitted_curves
     owner: '@jeanpeguero'
-    folder_name: fitted_coverage_curves_and_quaterly_data
+    folder_name: ssa_coverage_fitted_curves
     table_name: ssa_coverage_fitted_curves
     table_replace_append: 0
   - name: ssa_quarterly_aggregated_metrics_for_coverage
     owner: '@jeanpeguero'
-    folder_name: fitted_coverage_curves_and_quaterly_data
+    folder_name: ssa_quarterly_aggregated_metrics_for_coverage
     table_name: ssa_quarterly_aggregated_metrics_for_coverage
     table_replace_append: 0
