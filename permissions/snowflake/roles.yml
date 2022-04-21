@@ -1973,7 +1973,6 @@ roles:
                     - prod.restricted_safe_common_mart_product
                     - prod.workspace_data_science
 
-
             tables:
                 read:
                     - prod.restricted_safe_common.*
@@ -1986,7 +1985,6 @@ roles:
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_product.*
                     - prod.workspace_data_science.*
-
 
     - salesforce:
         warehouses:
