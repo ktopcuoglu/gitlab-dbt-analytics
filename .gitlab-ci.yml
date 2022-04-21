@@ -273,6 +273,8 @@ yaml_validation:
 pages:
   <<: *pages_job_template
   only:
+    changes:
+      - "transform/snowflake-dbt/*"
     refs:
       - master
     variables:
