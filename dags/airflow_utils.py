@@ -4,7 +4,6 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
@@ -245,7 +244,7 @@ gitlab_pod_env_vars = {
 }
 
 # git commands
-data_test_ssh_key_cmd = f"""
+data_test_ssh_key_cmd = """
     export DATA_TEST_BRANCH="main" &&
     export DATA_SIREN_BRANCH="master" &&
     mkdir ~/.ssh/ &&
