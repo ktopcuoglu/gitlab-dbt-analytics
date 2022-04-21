@@ -1181,6 +1181,10 @@ WITH date_details AS (
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
                 AND vision_opps.opportunity_id IS NOT NULL
           THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN opp_snapshot.opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+          THEN 1
+      
         ELSE 0
       END                                                         AS is_excluded_flag
 

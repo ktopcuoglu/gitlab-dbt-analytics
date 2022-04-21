@@ -14,7 +14,7 @@
 
 , final AS (
 
-    SELECT
+    SELECT DISTINCT
       DATE_TRUNC('month',mart_crm_touchpoint.bizible_touchpoint_date)::date AS bizible_touchpoint_date_month_yr,
       mart_crm_touchpoint.bizible_touchpoint_date::date AS bizible_touchpoint_date_normalized,
       mart_crm_touchpoint.bizible_touchpoint_date,

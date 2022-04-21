@@ -208,6 +208,15 @@
       usage_ping.author_issue_all_time_user,
       usage_ping.failed_deployments_28_days_user,
       usage_ping.successful_deployments_28_days_user,
+      -- Wave 5.3
+      usage_ping.geo_enabled,
+      usage_ping.geo_nodes_all_time_event,
+      usage_ping.auto_devops_pipelines_28_days_user,
+      usage_ping.active_instance_runners_all_time_event,
+      usage_ping.active_group_runners_all_time_event,
+      usage_ping.active_project_runners_all_time_event,
+      usage_ping.gitaly_version,
+      usage_ping.gitaly_servers_all_time_event,
       -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
           usage_ping.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -250,5 +259,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-02-08",
-    updated_date="2021-12-23"
+    updated_date="2021-04-12"
 ) }}

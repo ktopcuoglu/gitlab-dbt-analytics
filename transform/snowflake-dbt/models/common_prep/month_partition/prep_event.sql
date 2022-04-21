@@ -47,7 +47,7 @@
     "event_name": "epic_creation",
     "source_cte_name": "prep_epic",
     "user_column_name": "author_id",
-    "ultimate_parent_namespace_column_name": "group_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "NULL",
     "primary_key": "dim_epic_id",
     "stage_name": "plan"
@@ -610,9 +610,9 @@
         prep_user.created_at                                                                                   AS user_created_at,
         TO_DATE(prep_user.created_at)                                                                          AS user_created_date,
         FLOOR(
-        DATEDIFF('hour',
-                prep_user.created_at,
-                {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_user_creation_at_event_date,
+        DATEDIFF('day',
+                prep_user.created_at::DATE,
+                {{ event_cte.source_cte_name}}.created_at::DATE))                                              AS days_since_user_creation_at_event_date,
       {%- else %}
         NULL                                                                                                   AS dim_user_id,
         NULL                                                                                                   AS user_created_at,
@@ -625,9 +625,9 @@
         IFNULL(blocked_user.is_blocked_user, FALSE)                                                            AS is_blocked_namespace_creator,
         prep_namespace.namespace_is_internal                                                                   AS namespace_is_internal,
         FLOOR(
-        DATEDIFF('hour',
-                prep_namespace.created_at,
-                {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_namespace_creation_at_event_date,
+        DATEDIFF('day',
+                prep_namespace.created_at::DATE,
+                {{ event_cte.source_cte_name}}.created_at::DATE))                                              AS days_since_namespace_creation_at_event_date,
       {%- else %}
         NULL                                                                                                   AS namespace_created_at,
         NULL                                                                                                   AS namespace_created_date,
@@ -637,9 +637,9 @@
       {%- endif %}   
       {%- if event_cte.project_column_name != 'NULL' %}
         FLOOR(
-        DATEDIFF('hour',
-                dim_project.created_at,
-                {{ event_cte.source_cte_name}}.created_at)/24)                                                 AS days_since_project_creation_at_event_date, 
+        DATEDIFF('day',
+                dim_project.created_at::DATE,
+                {{ event_cte.source_cte_name}}.created_at::DATE))                                              AS days_since_project_creation_at_event_date, 
         IFNULL(dim_project.is_imported, FALSE)                                                                 AS project_is_imported,
         dim_project.is_learn_gitlab                                                                            AS project_is_learn_gitlab
       {%- else %}
