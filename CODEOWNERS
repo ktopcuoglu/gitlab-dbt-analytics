@@ -7,10 +7,6 @@
 # Ending a path in a `/` will specify the code owners for every file
 # nested in that directory, on any level
 
-[Default]
-* @rparker2 @iweeks @dvanrooijen2 @mlaanen
-
-
 [Admin]
 /.gitlab/       @rparker2 @iweeks @dvanrooijen2 @mlaanen
 /admin/         @iweeks @dvanrooijen2 @mlaanen
