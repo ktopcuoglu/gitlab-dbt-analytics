@@ -370,7 +370,7 @@ def drive_loader(
 
         info(f"Processing folder {folder_name}")
 
-        folder_id = google_drive_client.get_item_id(item_name=folder_name)
+        folder_id = google_drive_client.get_item_id(item_name=folder_name, is_folder=True)
         archive_folder_id = google_drive_client.get_archive_folder_id(
             in_folder_id=folder_id
         )
