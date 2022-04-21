@@ -963,10 +963,10 @@ roles:
                     - prod.*.*
                     - raw.snapshots.*
 
+
     - data_observability:
         warehouses:
             - data_obs_wh_1
-            - data_obs_wh_2
         privileges:
             databases:
                 read:
@@ -1030,7 +1030,31 @@ roles:
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
                     - raw.sheetload.hp_dvr
-           
+
+    - data_observability_2:
+        warehouses:
+            - data_obs_wh_2
+        privileges:
+            databases:
+                read:
+                    - prod
+                    - raw
+                    - prep
+                    - snowflake
+            schemas:
+                read:
+                    - prod.*
+                    - prep.*
+                    - raw.*
+                    - snowflake.*
+            tables:
+                read:
+                    - prod.*.*
+                    - prep.*.*
+                    - raw.*.*
+                    - snowflake.*.*
+
+
 # ==========================================
 # Object Roles
 # ==========================================
@@ -4710,7 +4734,7 @@ users:
     - data_obs_user_2: # External user - Data Observability Vendor 
         can_login: yes
         member_of:
-            - data_observability   
+            - data_observability_2   
 
 # ==========================================
 # Warehouses
