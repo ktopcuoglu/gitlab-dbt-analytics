@@ -967,7 +967,6 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
-            - data_obs_wh_2
         privileges:
             databases:
                 read:
@@ -991,7 +990,6 @@ roles:
                     - prep.airflow
                     - snowflake.account_usage
                     - raw.sheetload
-                    - raw.snapshots
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -1032,6 +1030,19 @@ roles:
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
                     - raw.sheetload.hp_dvr
+
+    - data_observability_2:
+        warehouses:
+            - data_obs_wh_2
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.snapshots
+            tables:
+                read:
                     - raw.snapshots.fct_mrr_snapshot
                     - raw.snapshots.mart_arr_snapshot
                     - raw.snapshots.dim_subscription_snapshot
@@ -4720,6 +4731,7 @@ users:
         can_login: yes
         member_of:
             - data_observability   
+            - data_observability_2
 
 # ==========================================
 # Warehouses
