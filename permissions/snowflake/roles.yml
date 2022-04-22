@@ -963,10 +963,10 @@ roles:
                     - prod.*.*
                     - raw.snapshots.*
 
+
     - data_observability:
         warehouses:
             - data_obs_wh_1
-            - data_obs_wh_2
         privileges:
             databases:
                 read:
@@ -1030,7 +1030,27 @@ roles:
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
                     - raw.sheetload.hp_dvr
-           
+
+    - data_observability_2:
+        warehouses:
+            - data_obs_wh_2
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.snapshots
+            tables:
+                read:
+                    - raw.snapshots.fct_mrr_snapshot
+                    - raw.snapshots.mart_arr_snapshot
+                    - raw.snapshots.dim_subscription_snapshot
+                    - raw.snapshots.gitlab_dotcom_namespaces_snapshots
+                    - raw.snapshots.zuora_subscription_snapshots
+                    - raw.snapshots.zuora_account_snapshots
+
+
 # ==========================================
 # Object Roles
 # ==========================================
@@ -4728,6 +4748,7 @@ users:
         can_login: yes
         member_of:
             - data_observability   
+            - data_observability_2
 
 # ==========================================
 # Warehouses
