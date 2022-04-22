@@ -1035,9 +1035,9 @@ roles:
                     - raw.snapshots.fct_mrr_snapshots
                     - raw.snapshots.mart_arr_snapshots
                     - raw.snapshots.dim_subscription_snapshots
-                    - raw.gitlab_dotcom_namespaces_snapshots
-                    - raw.zuora_subscription_snapshots
-                    - raw.zuora_account_snapshots
+                    - raw.snapshots.gitlab_dotcom_namespaces_snapshots
+                    - raw.snapshots.zuora_subscription_snapshots
+                    - raw.snapshots.zuora_account_snapshots
 
 
 # ==========================================
