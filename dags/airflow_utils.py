@@ -20,7 +20,9 @@ DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 
 def split_date_parts(day: date, partition: str) -> Dict:
+    """
 
+    """
     if partition == "month":
         split_dict = {
             "year": day.strftime("%Y"),
