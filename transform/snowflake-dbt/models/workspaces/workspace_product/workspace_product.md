@@ -127,7 +127,7 @@ Note: This model is filtered to metrics where time_frame = all (https://metrics.
 
 {% enddocs %}
 
-{% docs rpt_service_ping_instance_metric_adoption_monthly %}
+{% docs rpt_service_ping_instance_metric_adoption_monthly_all %}
 
 
 Type of Data: Version app
@@ -137,6 +137,20 @@ Use case: Model used to determine active seats and subscriptions reporting on an
 
 
 {% enddocs %}
+
+{% docs rpt_service_ping_instance_metric_adoption_subscription_monthly %}
+
+Model used to determine active seats and subscriptions reporting on any given metric
+
+{% enddocs %}
+
+
+{% docs rpt_service_ping_instance_metric_adoption_subscription_metric_monthly %}
+
+Model used to determine active seats and subscriptions reporting on any given metric
+
+{% enddocs %}
+
 
 {% docs rpt_service_ping_instance_metric_estimated_monthly %}
 
@@ -174,4 +188,36 @@ Estimation model to estimate the usage for unreported self-managed instances.
 {% docs dim_service_ping_metric %}
 
 New dimension table to replace dim_usage_ping_metric with some enhancements: surrogate key, cleaning of groups, and renamed.
+
+{% enddocs %}
+
+{% docs rpt_service_ping_counter_statistics %}
+
+Data mart to explore statistics around usage ping counters. This includes the following statistics:
+
+  * first version
+  * first major version
+  * first minor version
+  * last version
+  * last major version
+  * last minor version
+
+{% enddocs %}
+
+{% docs rpt_service_ping_instance_subcription_opt_in_monthly %}
+
+Monthly counts of active subscriptions.
+
+{% enddocs %}
+
+{% docs rpt_service_ping_instance_subcription_metric_opt_in_monthly %}
+
+Monthly counts of active subscriptions.
+
+{% enddocs %}
+
+{% docs fct_performance_indicator_targets %}
+
+New fact table to replace performance_indicators_yaml_historical. This new table will include all flattened target values for each metric for each month. Can just filter this fact table down in td_xmau 2.0 snippet
+
 {% enddocs %}
