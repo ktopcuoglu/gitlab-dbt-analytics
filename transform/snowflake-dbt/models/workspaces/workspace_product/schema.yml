@@ -384,16 +384,8 @@ models:
           - unique
         description: the unique id associated with the dim_service_ping_instance
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: dim_instance_id
         description:  The uuid of an instance from the dim_instances model.
       - name: ping_created_at
         description: The time when the ping was created
@@ -416,7 +408,7 @@ models:
       - name: license_add_ons
         description: the add ones associated with the license
       - name: mattermost_enabled
-        description: denotes whether mattermost is enabled 
+        description: denotes whether mattermost is enabled
       - name: uuid
         description: the unique id of the instance from the dim_instances model
       - name: hostname
@@ -447,22 +439,10 @@ models:
           #- unique
         description: The unique ID of the prep_service_ping_instance_flattenned model consisting of dim_service_ping_instance_id and path
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: dim_instance_id
         description: The unique uuid of an instance from the dim_instances model.
       - name: dim_service_ping_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_service_ping_instance')
-              field: dim_service_ping_instance_id
       - name: ping_created_at
         description: The time when the ping was created
       - name: main_edition
@@ -488,56 +468,22 @@ models:
       - name: fct_service_ping_instance_metric_id
         tests:
           - not_null
-          #- unique
         description: the unique composite ID for the fct_service_ping_instance_metric model consisting of dim_service_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_service_ping_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_service_ping_instance')
-              field: dim_service_ping_instance_id
         description: The unqiue id of a service ping insatnce in the dim_service_ping_instance model.
       - name: dim_product_tier_id
-        tests:
-          - relationships:
-              to: ref('dim_product_tier')
-              field: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
-        tests:
-          - relationships:
-              to: ref('dim_location_country')
-              field: dim_location_country_id
       - name: dim_service_ping_date_id
         description: The unique id of a country from the dim_location_country model
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: instance_id
         description: The unique uuid of an instance from the dim_instances model.
       - name: dim_date_id
-        tests:
-          - relationships:
-              to: ref('dim_date')
-              field: date_id
         description: The unqiue id of a date in the dim_date model.
       - name: dim_license_id
-        tests:
-          - relationships:
-              to: ref('dim_license')
-              field: dim_license_id
         description:  The unique id of a license from the dim_license model.
-#      - name: dim_installation_id
-#        tests:
-#          - relationships:
-#              to: ref('dim_installation')
-#              field: dim_installation_id
       - name: metrics_path
         description: The path that the metric is applied along
       - name: metric_value
@@ -573,22 +519,10 @@ models:
       - name: dim_service_ping_date_id
         description: the unique id associated with the dim_service_ping_instance
       - name: dim_host_id
-        tests:
-          - relationships:
-              to: ref('dim_host')
-              field: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        tests:
-          - relationships:
-              to: ref('dim_instances')
-              field: instance_id
         description: The unique id of an instance (brought in from usage_data source data).
       - name: dim_date_id
-        tests:
-          - relationships:
-              to: ref('dim_date')
-              field: date_id
         description: The unqiue id of a date in the dim_date model.
       - name: ping_created_at
         description: The time when the ping was created
@@ -676,7 +610,7 @@ models:
       - name: dim_installation_id
         description: The unique id of a instalation from the dim_installation model
       - name: latest_active_subscription_id
-        description:  The unique id of the latest active subscription 
+        description:  The unique id of the latest active subscription
       - name: dim_billing_account_id
         description: The unqiue id of a billing account in the dim_billing_account model.
       - name: dim_parent_crm_account_id
@@ -724,7 +658,7 @@ models:
       - name: is_paid_gmau
         description: Denotes whether the instance is paid gmau
       - name: is_umau
-        description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions 
+        description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
       - name: time_frame
         description: The time frame associated with the instance
       - name: instance_user_count
@@ -789,10 +723,26 @@ models:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_monthly") }} '
+  - name: rpt_service_ping_instance_metric_adoption_monthly_all
+    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_monthly_all") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_monthly_id
+      - name: rpt_service_ping_instance_metric_adoption_monthly_all_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_metric_adoption_subscription_monthly
+    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_subscription_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_metric_adoption_subscription_monthly_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_metric_adoption_subscription_metric_monthly
+    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_subscription_metric_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_metric_adoption_subscription_metric_monthly_id
         tests:
           - not_null
           - unique
@@ -809,6 +759,30 @@ models:
     description: ' {{ doc("dim_service_ping_metric") }} '
     columns:
       - name: dim_service_ping_metric_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_counter_statistics
+    description: ' {{ doc("rpt_service_ping_counter_statistics") }} '
+    columns:
+      - name: rpt_service_ping_counter_statistics_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_subcription_opt_in_monthly
+    description: ' {{ doc("rpt_service_ping_instance_subcription_opt_in_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_subcription_opt_in_monthly_id
+        tests:
+          - not_null
+          - unique
+
+  - name: rpt_service_ping_instance_subcription_metric_opt_in_monthly
+    description: ' {{ doc("rpt_service_ping_instance_subcription_metric_opt_in_monthly") }} '
+    columns:
+      - name: rpt_service_ping_instance_subcription_metric_opt_in_monthly_id
         tests:
           - not_null
           - unique
@@ -851,3 +825,10 @@ models:
         description: The date at which the model was created
       - name: model_updated_date
         description: The date at which the model code was last updated
+
+  - name: fct_performance_indicator_targets
+    description: '{{ doc("fct_performance_indicator_targets") }}'
+    columns:
+      - name: fct_performance_indicator_targets_id
+        description: the unique ID of a month/metric record in fct_performance_indicator_targets
+        tests:
