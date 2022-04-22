@@ -967,6 +967,7 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
+            - data_obs_wh_2
         privileges:
             databases:
                 read:
@@ -990,6 +991,7 @@ roles:
                     - prep.airflow
                     - snowflake.account_usage
                     - raw.sheetload
+                    - raw.snapshots
             tables:
                 read:
                     - prod.restricted_safe_common_mart_sales.mart_arr
@@ -1030,29 +1032,12 @@ roles:
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
                     - raw.sheetload.hp_dvr
-
-    - data_observability_2:
-        warehouses:
-            - data_obs_wh_2
-        privileges:
-            databases:
-                read:
-                    - prod
-                    - raw
-                    - prep
-                    - snowflake
-            schemas:
-                read:
-                    - prod.*
-                    - prep.*
-                    - raw.*
-                    - snowflake.*
-            tables:
-                read:
-                    - prod.*.*
-                    - prep.*.*
-                    - raw.*.*
-                    - snowflake.*.*
+                    - raw.snapshots.fct_mrr_snapshots
+                    - raw.snapshots.mart_arr_snapshots
+                    - raw.snapshots.dim_subscription_snapshots
+                    - raw.gitlab_dotcom_namespaces_snapshots
+                    - raw.zuora_subscription_snapshots
+                    - raw.zuora_account_snapshots
 
 
 # ==========================================
@@ -4734,7 +4719,7 @@ users:
     - data_obs_user_2: # External user - Data Observability Vendor 
         can_login: yes
         member_of:
-            - data_observability_2   
+            - data_observability   
 
 # ==========================================
 # Warehouses
