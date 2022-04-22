@@ -2562,6 +2562,13 @@ roles:
                     - david_prep.*.*
                     - david_prod.*.*
 
+    - dcharukulvanich:
+        member_of:
+            - reporter
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
+
     - degan:
         member_of:
             - reporter
@@ -4326,6 +4333,11 @@ users:
         can_login: yes
         member_of:
             - david
+
+    - dcharukulvanich:
+        can_login: yes
+        member_of:
+            - dcharukulvanich
 
     - degan:
         can_login: yes
