@@ -2906,6 +2906,7 @@ roles:
             - gainsight
             - restricted_safe
             - dbt_data_science
+            - snowplow
         warehouses:
             - analyst_xs
             - analyst_l
@@ -3103,6 +3104,7 @@ roles:
             - restricted_safe
             - dbt_data_science
             - bi_tool_eval_read
+            - snowplow
         warehouses:
             - analyst_xs
         owns:
@@ -3148,6 +3150,7 @@ roles:
             - analyst_core
             - restricted_safe
             - dbt_data_science
+            - snowplow
         warehouses:
             - analyst_xs
         owns:
@@ -4222,7 +4225,7 @@ roles:
             - analyst_core
             - restricted_safe
             - dbt_data_science
-
+            - snowplow
         warehouses:
             - analyst_xs
 
