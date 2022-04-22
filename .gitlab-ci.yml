@@ -134,7 +134,7 @@ clone_stop:
 
 .python_check: &python_check
   stage: 🐍 Python
-  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:correct_ci_image
+  image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v0.0.30
   before_script:
     - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
   tags:
@@ -182,7 +182,7 @@ clone_stop:
 ✅python_pytest:
   <<: *python_check
   script:
-    - python -m pytest -vv -x --no-print-logs --junitxml=report.xml
+    - python -m pytest -vv -x --junitxml=report.xml
   artifacts:
       reports:
           junit: ${CI_PROJECT_DIR}/report.xml
