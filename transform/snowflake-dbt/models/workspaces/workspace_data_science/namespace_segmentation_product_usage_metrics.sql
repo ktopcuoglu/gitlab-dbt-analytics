@@ -1,5 +1,6 @@
 {{ config(
-     materialized = "table"
+     materialized = "table",
+     tags=["mnpi_exception"]
 ) }}
 
 WITH days_of_usage AS (
