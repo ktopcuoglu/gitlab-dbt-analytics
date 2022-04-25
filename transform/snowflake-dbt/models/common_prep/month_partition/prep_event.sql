@@ -170,8 +170,8 @@
     "stage_name": "secure"
   },
   {
-    "event_name": "secure_ci_build_creation",
-    "source_cte_name": "secure_ci_build",
+    "event_name": "other_ci_build_creation",
+    "source_cte_name": "other_ci_build",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -478,7 +478,7 @@
 
     SELECT *
     FROM prep_ci_build
-    WHERE secure_ci_build_type IN ('container_scanning')
+    WHERE secure_ci_build_type = 'container_scanning'
     
 ), sast_jobs AS (
 
@@ -492,18 +492,11 @@
     FROM prep_ci_build
     WHERE secure_ci_build_type = 'secret_detection'
 
-), secure_ci_build AS (
+), other_ci_build AS (
 
     SELECT *
     FROM prep_ci_build
-    WHERE secure_ci_build_type IN ('api_fuzzing',
-                                    'dast',
-                                    'dependency_scanning',
-                                    'license_management',
-                                    'license_scanning',
-                                    'sast',
-                                    'secret_detection'
-                                    )
+    WHERE secure_ci_build_type IS NULL
     
 ), successful_ci_pipelines AS (
 
