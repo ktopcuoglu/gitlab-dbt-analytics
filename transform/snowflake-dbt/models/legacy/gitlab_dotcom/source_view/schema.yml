@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: gitlab_dotcom_project_group_links
-    description: '{{ doc("gitlab_dotcom_project_group_links") }}'
+    description: "gitlab_dotcom_project_group_links"
     columns:
       - name: group_id
         description: External group namespace receiving access to the original project namespace.
@@ -12,7 +12,7 @@ models:
         description: The maximum level of access granted to the external group defined by the originator of the connection. 
 
   - name: gitlab_dotcom_group_group_links
-    description: '{{ doc("gitlab_dotcom_group_group_links") }}'
+    description: "gitlab_dotcom_group_group_links"
     columns:
       - name: shared_with_group_id
         description: External group namespace receiving access to the original group namespace.
