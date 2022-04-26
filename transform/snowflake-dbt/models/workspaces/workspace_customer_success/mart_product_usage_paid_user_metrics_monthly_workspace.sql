@@ -444,7 +444,7 @@
           'hostname',
           'dim_namespace_id'
         ]
-      ) }} AS surrogate_key,
+      ) }} AS primary_key,
       zuora_licenses_per_subscription.zuora_licenses
     FROM unioned
     LEFT JOIN zuora_licenses_per_subscription 
@@ -458,5 +458,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-04-14"
+    updated_date="2022-04-26"
 ) }}
