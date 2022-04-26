@@ -100,7 +100,7 @@ tables:
       , glm_content
       , glm_source
       , sent_at
-      , websiteurl
+      , website_url
       , role
       , jtbd
       FROM leads
