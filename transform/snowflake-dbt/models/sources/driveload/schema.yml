@@ -6,3 +6,12 @@ models:
     - name: user
       tests:
       - not_null
+- name: driveload_email_domain_classification_source
+  description: SSOT for email domain classification around personal and business domains.
+  columns:
+    - name: domain
+      tests:
+      - not_null
+    - name: classification
+      tests:
+      - not_null
