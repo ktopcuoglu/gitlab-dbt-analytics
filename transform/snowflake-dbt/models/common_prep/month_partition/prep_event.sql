@@ -590,9 +590,9 @@
         NULL                                                                                                   AS ultimate_parent_namespace_id,
       {%- endif %}
       {%- if event_cte.project_column_name != 'NULL' or event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-        {{ event_cte.source_cte_name}}.dim_plan_id                                                             AS plan_id_at_event_date,
-        prep_plan.plan_name                                                                                    AS plan_name_at_event_date,
-        prep_plan.plan_is_paid                                                                                 AS plan_was_paid_at_event_date,
+        COALESCE({{ event_cte.source_cte_name}}.dim_plan_id, 34)                                               AS plan_id_at_event_date,
+        COALESCE(prep_plan.plan_name, 'free')                                                                  AS plan_name_at_event_date,
+        COALESCE(prep_plan.plan_is_paid, FALSE)                                                                AS plan_was_paid_at_event_date,
       {%- else %}
         34                                                                                                     AS plan_id_at_event_date,
         'free'                                                                                                 AS plan_name_at_event_date,
