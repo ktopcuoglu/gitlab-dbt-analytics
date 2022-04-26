@@ -28,12 +28,12 @@
 
     SELECT
       resource_milestone_events.resource_milestone_event_id                                 AS dim_resource_milestone_id,
-      IFNULL(COALESCE(dim_issue.dim_project_id, 
-                dim_merge_request.dim_project_id), -1)                                      AS dim_project_id,
-      IFNULL(COALESCE(dim_issue.dim_plan_id,
-                dim_merge_request.dim_plan_id), -1)                                         AS dim_plan_id,
-      IFNULL(COALESCE(dim_issue.ultimate_parent_namespace_id,
-                dim_merge_request.ultimate_parent_namespace_id), -1)                        AS ultimate_parent_namespace_id,
+      COALESCE(dim_issue.dim_project_id, 
+                dim_merge_request.dim_project_id)                                           AS dim_project_id,
+      COALESCE(dim_issue.dim_plan_id,
+                dim_merge_request.dim_plan_id)                                              AS dim_plan_id,
+      COALESCE(dim_issue.ultimate_parent_namespace_id,
+                dim_merge_request.ultimate_parent_namespace_id)                             AS ultimate_parent_namespace_id,
       user_id                                                                               AS dim_user_id,
       issue_id,
       merge_request_id,
