@@ -52,6 +52,13 @@ help:
 	update-containers: Pulls fresh versions of all of the containers used in the repo. \n \
 	------------------------------ \n"
 
+########################################################################################################################
+# Airflow
+########################################################################################################################
+
+########################################################################################################################
+# Airflow
+########################################################################################################################
 airflow:
 	@if [ "$(GIT_BRANCH)" = "master" ]; then echo "GIT_BRANCH must not be master" && exit 1; fi
 	@echo "Attaching to the Webserver container..."
@@ -60,6 +67,14 @@ airflow:
 	@sleep 5
 	@docker-compose exec airflow_scheduler gcloud auth activate-service-account --key-file=/root/gcp_service_creds.json --project=gitlab-analysis
 	@docker-compose exec airflow_webserver bash
+
+init-airflow:
+	@echo "Initializing the Airflow DB..."
+	@"$(DOCKER_UP)" -d airflow_db
+	@sleep 5
+	@"$(DOCKER_RUN)" airflow_scheduler airflow db init
+	@"$(DOCKER_RUN)" airflow_scheduler airflow users create --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
+	@"$(DOCKER_DOWN)"
 
 cleanup:
 	@echo "Cleaning things up..."
@@ -70,6 +85,16 @@ data-image:
 	@echo "Attaching to data-image and mounting repo..."
 	@"$(DOCKER_RUN)" data_image bash
 
+update-containers:
+	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
+	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
+	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+
+########################################################################################################################
+# DBT
+########################################################################################################################
 prepare-dbt:
 	which pipenv || python3 -m pip install pipenv
 	pipenv install
@@ -87,24 +112,28 @@ clean-dbt:
 	find . -name '*.pyc' -delete
 	rm -rf $(VENV_NAME) *.eggs *.egg-info
 
-init-airflow:
-	@echo "Initializing the Airflow DB..."
-	@"$(DOCKER_UP)" -d airflow_db
-	@sleep 5
-	@"$(DOCKER_RUN)" airflow_scheduler airflow db init
-	@"$(DOCKER_RUN)" airflow_scheduler airflow users create --role Admin -u admin -p admin -e datateam@gitlab.com -f admin -l admin
-	@"$(DOCKER_DOWN)"
+########################################################################################################################
+# Python
+########################################################################################################################
+black:
+	@echo "Running lint (black)..."
+	@black --check .
 
-update-containers:
-	@echo "Pulling latest containers for airflow-image, analyst-image, data-image and dbt-image..."
-	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+flake8:
+	@echo "Running flake8..."
+	@flake8 . --ignore=E203,E501,W503,W605
 
-lint:
-	@echo "Linting the repo..."
-	@black .
+mypy:
+	@echo "Running mypy..."
+	@mypy extract/ --ignore-missing-imports
+
+pylint:
+	@echo "Running pylint..."
+	@pylint . --disable=line-too-long,E0401,E0611,W1203,W1202
+
+complexity:
+	@echo "Running complexity (Xenon)..."
+	@xenon --max-absolute B --max-modules B --max-average A . -i transform,shared_modules
 
 yq-lint:
 ifdef YAML
@@ -115,23 +144,20 @@ else
 	@echo "No file. Exiting."
 endif
 
-mypy:
-	@echo "Running mypy..."
-	@mypy extract/ --ignore-missing-imports
-
-pylint:
-	@echo "Running pylint..."
-	@pylint ../analytics/ --ignore=dags --disable=C --disable=W1203 --disable=W1202 --reports=y
-
-radon:
+radon:  ## TODO: rbacovic - delete???
 	@echo "Run Radon to compute complexity..."
 	@radon cc . --total-average -nb
 
-xenon:
-	@echo "Running Xenon..."
-	@xenon --max-absolute B --max-modules A --max-average A . -i transform,shared_modules
+vulture:
+	@echo "Running vulture..."
+	@vulture . --min-confidence 100
 
 pytest:
 	@echo "Running pytest..."
 	@python -m pytest -vv -x
 
+python_code_quality: black mypy pylint radon xenon flake8 vulture pytest
+	@echo "Running python_code_quality..."
+
+clean-python:
+	find . -name '*_cache*' -type d -exec rm -rf {} \;
