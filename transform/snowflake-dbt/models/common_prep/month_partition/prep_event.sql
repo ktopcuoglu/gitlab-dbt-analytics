@@ -176,7 +176,7 @@
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "stage_name": "verify"
   },
   {
     "event_name": "successful_ci_pipeline_creation",
