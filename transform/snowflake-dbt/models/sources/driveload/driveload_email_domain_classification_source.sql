@@ -1,11 +1,11 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('driveload', 'clari_export_forecast_net_iacv') }}
+    FROM {{ source('driveload', 'email_domain_classification') }}
 
 )
 
 SELECT
   domain::VARCHAR               AS domain,
-  classification::VARACHAR      AS classification
+  classification::VARCHAR       AS classification
 FROM source
