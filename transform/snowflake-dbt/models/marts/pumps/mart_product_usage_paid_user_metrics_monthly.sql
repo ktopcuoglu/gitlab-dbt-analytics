@@ -427,7 +427,7 @@
           'hostname',
           'dim_namespace_id'
         ]
-      ) }} AS surrogate_key
+      ) }} AS primary_key
     FROM unioned
   
 )
@@ -437,5 +437,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-04-21"
+    updated_date="2022-04-26"
 ) }}

@@ -431,7 +431,7 @@ models:
           - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
-      - name: surrogate_key
+      - name: primary_key
         tests:
           - unique
           - not_null
