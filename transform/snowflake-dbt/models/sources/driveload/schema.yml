@@ -15,3 +15,15 @@ models:
     - name: classification
       tests:
       - not_null
+- name: driveload_ssa_coverage_fitted_curves_source
+  description: E
+  columns:
+    - name: key_agg_day
+      tests:
+      - not_null
+- name: driveload_ssa_quarterly_aggregated_metrics_for_coverage_source
+  description: E
+  columns:
+    - name: agg_key_value
+      tests:
+      - not_null

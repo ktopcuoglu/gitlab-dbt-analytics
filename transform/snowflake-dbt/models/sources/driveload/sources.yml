@@ -15,5 +15,7 @@ sources:
 
     tables:
       - name: clari_export_forecast_net_iacv
-      - name: financial_metrics_program_phase_1
       - name: email_domain_classification
+      - name: financial_metrics_program_phase_1
+      - name: ssa_coverage_fitted_curves
+      - name: ssa_quarterly_aggregated_metrics_for_coverage
