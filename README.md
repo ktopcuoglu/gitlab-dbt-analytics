@@ -1,6 +1,6 @@
 ## Data Team
-# TODO: rbacovic
-The [handbook](https://about.gitlab.com/handbook/business-ops/data-team/) is the single source of truth for all of our documentation. 
+
+The [Data Team main handbook page](https://about.gitlab.com/handbook/business-technology/data-team/) is the single source of truth for all of our documentation. 
 
 ### Contributing
 
