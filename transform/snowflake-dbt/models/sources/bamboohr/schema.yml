@@ -47,7 +47,7 @@ models:
       - name: prior_bamboohr_annual_salary     
 
   - name: bamboohr_custom_bonus_source
-    description: There are multiple bonuses that a team member can earn that are captured here.
+    description: There are multiple bonuses that a team member can earn that are captured here. Raw JSON format changed on 2022-04-22.
     columns:
       - name: bonus_id
         tests:
