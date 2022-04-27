@@ -190,7 +190,9 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.cp_why_do_anything_at_all,
       sfdc_opportunity_xf.cp_why_gitlab,
       sfdc_opportunity_xf.cp_why_now,
-      
+      sfdc_opportunity.cp_score,
+      sfdc_opportunity.cp_last_modified_date,
+
       -----------------------------------------------------------
       -----------------------------------------------------------
 

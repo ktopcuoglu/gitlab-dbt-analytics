@@ -236,7 +236,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.other_non_recurring_amount,
       sfdc_opportunity_snapshot_history.subscription_start_date,
       sfdc_opportunity_snapshot_history.subscription_end_date,
-      /*
+      
       sfdc_opportunity_snapshot_history.cp_champion,
       sfdc_opportunity_snapshot_history.cp_close_plan,
       sfdc_opportunity_snapshot_history.cp_competition,
@@ -246,13 +246,15 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.cp_identify_pain,
       sfdc_opportunity_snapshot_history.cp_metrics,
       sfdc_opportunity_snapshot_history.cp_risks,
-      */
+      
       sfdc_opportunity_snapshot_history.cp_use_cases,
-      /*sfdc_opportunity_snapshot_history.cp_value_driver,
+      sfdc_opportunity_snapshot_history.cp_value_driver,
       sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
       sfdc_opportunity_snapshot_history.cp_why_gitlab,
       sfdc_opportunity_snapshot_history.cp_why_now,
-      */
+      sfdc_opportunity_snapshot_history.cp_score,
+      sfdc_opportunity_snapshot_history.cp_last_modified_date,
+      
       sfdc_opportunity_snapshot_history._last_dbt_run,
       sfdc_opportunity_snapshot_history.is_deleted,
       sfdc_opportunity_snapshot_history.last_activity_date,
