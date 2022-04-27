@@ -1,10 +1,13 @@
+"""
+Main module for sheetload
+"""
 import sys
 import re
 from io import StringIO
 import json
-from logging import error, info, basicConfig, getLogger, warning
+from logging import error, info, basicConfig, getLogger
 from os import environ as env
-from typing import Dict, Tuple, List
+from typing import Dict
 from yaml import load, safe_load, YAMLError, FullLoader
 
 import boto3
@@ -54,7 +57,7 @@ def sheet_loader(
     python sheetload.py sheets <sheet_file>
     """
 
-    with open(sheet_file, "r") as file:
+    with open(file=sheet_file, mode="r", encoding="utf-8") as file:
         try:
             stream = safe_load(file)
         except YAMLError as exc:
@@ -147,7 +150,7 @@ def gcs_loader(
             chunksize=chunksize,
         )
     except FileNotFoundError:
-        info("File {} not found.".format(path))
+        info(f"File {path} not found.")
 
     # Upload each chunk of the file
     for chunk in sheet_df:
@@ -273,7 +276,7 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
                     StringIO(csv_string), engine="c", low_memory=False
                 )
 
-                table_name, extension = file.split(".")[0:2]
+                table_name = file.split(".")[0:1]
                 # To pick up the file name alone  not the whole path to the file for as table name
                 table = table_name.split("/")[-1]
 
@@ -354,7 +357,7 @@ def drive_loader(
 
     google_drive_client = GoogleDriveClient(gapi_keyfile)
 
-    with open(drive_file, "r") as yaml_file:
+    with open(file=drive_file, mode="r", encoding="utf-8") as yaml_file:
         stream = safe_load(yaml_file)
 
         folders = [
