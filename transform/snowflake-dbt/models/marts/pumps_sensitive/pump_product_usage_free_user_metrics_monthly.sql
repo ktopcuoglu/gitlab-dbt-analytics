@@ -135,6 +135,14 @@
       author_issue_all_time_user,
       failed_deployments_28_days_user,
       successful_deployments_28_days_user,
+      geo_enabled,
+      geo_nodes_all_time_event,
+      auto_devops_pipelines_28_days_user,
+      active_instance_runners_all_time_event,
+      active_group_runners_all_time_event,
+      active_project_runners_all_time_event,
+      gitaly_version,
+      gitaly_servers_all_time_event,
       is_latest_data,
 
       -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)

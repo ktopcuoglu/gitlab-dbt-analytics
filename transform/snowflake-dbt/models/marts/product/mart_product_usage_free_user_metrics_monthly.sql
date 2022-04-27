@@ -155,6 +155,15 @@
       free_user_metrics.author_issue_all_time_user,
       free_user_metrics.failed_deployments_28_days_user,
       free_user_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      free_user_metrics.geo_enabled,
+      free_user_metrics.geo_nodes_all_time_event,
+      free_user_metrics.auto_devops_pipelines_28_days_user,
+      free_user_metrics.active_instance_runners_all_time_event,
+      free_user_metrics.active_group_runners_all_time_event,
+      free_user_metrics.active_project_runners_all_time_event,
+      free_user_metrics.gitaly_version,
+      free_user_metrics.gitaly_servers_all_time_event, 
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
@@ -301,6 +310,14 @@
         'author_issue_all_time_user',
         'failed_deployments_28_days_user',
         'successful_deployments_28_days_user',
+        'geo_enabled',
+        'geo_nodes_all_time_event',
+        'auto_devops_pipelines_28_days_user',
+        'active_instance_runners_all_time_event',
+        'active_group_runners_all_time_event',
+        'active_project_runners_all_time_event',
+        'gitaly_version',
+        'gitaly_servers_all_time_event',
         'is_latest_data'
     ]
 ) }}
@@ -310,5 +327,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2022-04-01"
+    updated_date="2022-04-21"
 ) }}
