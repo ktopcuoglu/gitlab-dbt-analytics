@@ -171,7 +171,7 @@ clone_stop:
 🤔python_complexity:
   <<: *python_check
   script:
-    - xenon --max-absolute B --max-modules A --max-average A . -i transform,shared_modules
+    - xenon --max-absolute B --max-modules B --max-average A . -i transform,shared_modules
 
 🦅python_vulture:
   <<: *python_check
