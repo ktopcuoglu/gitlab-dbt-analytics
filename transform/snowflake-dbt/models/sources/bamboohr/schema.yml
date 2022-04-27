@@ -135,7 +135,7 @@ models:
       - name: job_role      
 
   - name: bamboohr_ote_source
-    description: Provides on-target-earning as related to sales roles.
+    description: Provides on-target-earning as related to sales roles.  Raw data format changes on 2022-04-22.
     columns:
       - name: target_earnings_update_id
         tests:
