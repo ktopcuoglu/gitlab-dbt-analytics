@@ -393,6 +393,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_id",
     "stage_name": "monitor"
+  },
+  {
+    "event_name": "api_fuzzing_build_run",
+    "source_cte_name": "api_fuzzing_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   }
 ]
 
@@ -497,7 +506,13 @@
     SELECT *
     FROM prep_ci_build
     WHERE secure_ci_build_type IS NULL
-    
+
+), api_fuzzing_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type = 'api_fuzzing'
+
 ), successful_ci_pipelines AS (
 
     SELECT *
