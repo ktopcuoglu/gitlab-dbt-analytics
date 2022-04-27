@@ -174,7 +174,15 @@ WITH first_contact  AS (
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_sdr_sao,
-      sfdc_opportunity.fpa_master_bookings_flag                                                   AS is_net_arr_closed_deal,
+      CASE 
+        WHEN (
+               (sfdc_opportunity.sales_type = 'Renewal' AND stage_name = '8-Closed Lost')
+                 OR sfdc_opportunity.stage_name = 'Closed Won'
+              )
+            AND sfdc_account.is_jihu_account = FALSE
+          THEN TRUE 
+        ELSE FALSE
+      END                                                                                         AS is_net_arr_closed_deal,
       CASE
         WHEN sfdc_opportunity.new_logo_count = 1
           OR sfdc_opportunity.new_logo_count = -1
@@ -191,7 +199,7 @@ WITH first_contact  AS (
         ELSE FALSE
       END                                                                                         AS is_net_arr_pipeline_created,
       CASE
-        WHEN sfdc_opportunity.stage_name IN ('Closed Won', '8-Closed Lost')
+        WHEN sfdc_opportunity_stage.is_closed = TRUE
           AND sfdc_opportunity.amount >= 0
           AND (sfdc_opportunity.reason_for_loss IS NULL OR sfdc_opportunity.reason_for_loss != 'Merged into another opportunity')
           AND sfdc_opportunity.is_edu_oss = 0
@@ -506,6 +514,11 @@ WITH first_contact  AS (
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+    {%- endif %}
+    LEFT JOIN sfdc_account
+      ON sfdc_opportunity.dim_crm_account_id= sfdc_account.account_id
+    {%- if model_type == 'snapshot' %}
+        AND sfdc_opportunity.snapshot_id = sfdc_account.snapshot_id
     {%- endif %}
 
 )

@@ -100,6 +100,9 @@ tables:
       , glm_content
       , glm_source
       , sent_at
+      , website_url
+      , role
+      , jtbd
       FROM leads
   license_seat_links:
     advanced_metadata: true

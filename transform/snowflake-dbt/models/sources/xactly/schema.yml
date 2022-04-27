@@ -69,3 +69,23 @@ models:
         - name: assignment_name
           meta:
             sensitive: true
+    - name: xactly_participant_source
+      columns:
+        - name: name
+          meta:
+            sensitive: true
+        - name: first_name
+          meta:
+            sensitive: true       
+        - name: middle_name
+          meta:
+            sensitive: true   
+        - name: last_name
+          meta:
+            sensitive: true
+        - name: salary
+          meta:
+            sensitive: true   
+        - name: employee_id
+          meta:
+            sensitive: true   

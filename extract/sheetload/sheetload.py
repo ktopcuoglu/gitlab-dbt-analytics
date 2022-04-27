@@ -22,6 +22,7 @@ from sheetload_dataframe_utils import dw_uploader
 from sheetload_dataframe_utils import dw_uploader_append_only
 from qualtrics_sheetload import qualtrics_loader
 
+from pandas.errors import ParserError
 
 def sheet_loader(
     sheet_file: str,
@@ -246,7 +247,6 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
     # Create Snowflake engine
     engine = snowflake_engine_factory(conn_dict or env, "LOADER", schema)
-    info(engine)
 
     # Set S3 Client variable
     aws_access_key_id, aws_secret_access_key, path_prefix = get_s3_credentials(schema)
@@ -267,17 +267,19 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
             csv_obj = s3_client.get_object(Bucket=bucket, Key=file)
             body = csv_obj["Body"]
             csv_string = body.read().decode("utf-8")
+            try:
+                sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
 
-            sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
+                table_name, extension = file.split(".")[0:2]
+                # To pick up the file name alone  not the whole path to the file for as table name
+                table = table_name.split("/")[-1]
 
-            table_name, extension = file.split(".")[0:2]
-            # To pick up the file name alone  not the whole path to the file for as table name
-            table = table_name.split("/")[-1]
+                dw_uploader(engine, table, sheet_df, truncate=True)
 
-            dw_uploader(engine, table, sheet_df, truncate=True)
+                check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
 
-            check_s3_csv_count_integrity(bucket, file, s3_client, engine, table)
-
+            except ParserError:
+                error(f"Problem processing {file}")
 
 def csv_loader(
     filename: str,
@@ -368,7 +370,7 @@ def drive_loader(
 
         info(f"Processing folder {folder_name}")
 
-        folder_id = google_drive_client.get_item_id(item_name=folder_name)
+        folder_id = google_drive_client.get_item_id(item_name=folder_name, is_folder=True)
         archive_folder_id = google_drive_client.get_archive_folder_id(
             in_folder_id=folder_id
         )
@@ -382,9 +384,11 @@ def drive_loader(
             file_id = file.get("id", "")
             data = google_drive_client.get_data_frame_from_file_id(file_id=file_id)
             dw_uploader_append_only(engine, table=table_name, data=data, chunk=chunk)
-            google_drive_client.move_file_to_folder(
-                file_id=file_id, to_folder_id=archive_folder_id
-            )
+
+            if archive_folder_id:
+                google_drive_client.move_file_to_folder(
+                    file_id=file_id, to_folder_id=archive_folder_id
+                )
 
 
 if __name__ == "__main__":
