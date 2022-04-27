@@ -345,32 +345,40 @@ WITH sfdc_opportunity AS (
    
 
       -- Team Segment / ASM - RD 
-      --  NF 2022-01-28 Data seems clean in SFDC, but leving the fallback just in case
+      -- NF 2022-01-28 Data seems clean in SFDC, but leving the fallback just in case
+      -- NF 2022-04-27 There are issues with the stamped field not reflecting the real owner of the opportunity
+      --                adding is_open check here to default open deals to opportunity owners fields (instead of stamped)
       CASE 
         WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
+            OR sfdc_opportunity_xf.is_open = 1
           THEN opportunity_owner.user_segment 
         ELSE sfdc_opportunity_xf.user_segment_stamped
       END                                                                   AS opportunity_owner_user_segment,
 
       CASE 
         WHEN sfdc_opportunity_xf.user_geo_stamped IS NULL 
+            OR sfdc_opportunity_xf.is_open = 1
           THEN opportunity_owner.user_geo
         ELSE sfdc_opportunity_xf.user_geo_stamped
       END                                                                   AS opportunity_owner_user_geo,
 
       CASE 
         WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
+             OR sfdc_opportunity_xf.is_open = 1
           THEN opportunity_owner.user_region
           ELSE sfdc_opportunity_xf.user_region_stamped
       END                                                                   AS opportunity_owner_user_region,
 
       CASE
         WHEN sfdc_opportunity_xf.user_area_stamped IS NULL
+             OR sfdc_opportunity_xf.is_open = 1
           THEN opportunity_owner.user_area
         ELSE sfdc_opportunity_xf.user_area_stamped
       END                                                                   AS opportunity_owner_user_area,
       -- opportunity_owner_subarea_stamped
 
+      ---------------------------
+      ---------------------------
 
       -- NF: 20210827 Fields for competitor analysis 
       CASE
