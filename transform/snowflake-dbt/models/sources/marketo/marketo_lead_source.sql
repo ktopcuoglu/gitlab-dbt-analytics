@@ -11,6 +11,7 @@ WITH source AS (
 
       --Info
       email::VARCHAR                            AS email,
+      {{ hash_of_column('EMAIL') }}
       first_name::VARCHAR                       AS first_name,
       last_name::VARCHAR                        AS last_name,
       company::VARCHAR                          AS company_name,

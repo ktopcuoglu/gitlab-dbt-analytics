@@ -4,6 +4,7 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
+from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
@@ -18,11 +19,21 @@ ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.2
 DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
 DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
+analytics_pipelines_dag = [
+    "dbt",
+    "dbt_full_refresh",
+    "dbt_full_refresh_weekly",
+    "dbt_netsuite_actuals_income_cogs_opex",
+    "dbt_snowplow_backfill",
+    "dbt_snowplow_backfill_specific_model",
+    "dbt_snowplow_full_refresh",
+    "saas_usage_ping",
+    "t_prep_dotcom_usage_events_backfill",
+]
+
 
 def split_date_parts(day: date, partition: str) -> Dict:
-    """
-    Split dates in parts
-    """
+
     if partition == "month":
         split_dict = {
             "year": day.strftime("%Y"),
@@ -60,14 +71,10 @@ class MultiSlackChannelOperator:
     """
 
     def __init__(self, channels, context):
-        """ """
         self.channels = channels
         self.context = context
 
     def execute(self):
-        """
-        Execute operator
-        """
         attachment, slack_channel, task_id, task_text = slack_defaults(
             self.context, "failure"
         )
@@ -123,11 +130,11 @@ def slack_defaults(context, task_type):
         task_text = "Task succeeded!"
 
     if task_type == "failure":
-        if task_name == "monitor-dbt-source-freshness":
+        if dag_id in analytics_pipelines_dag:
             slack_channel = "#analytics-pipelines"
         else:
             slack_channel = dag_context.params.get(
-                "slack_channel_override", "#analytics-pipelines"
+                "slack_channel_override", "#data-pipelines"
             )
         color = "#a62d19"
         fallback = "An Airflow DAG has failed!"
@@ -146,7 +153,7 @@ def slack_defaults(context, task_type):
                 {"title": "Timestamp", "value": execution_date_pretty, "short": True},
             ],
             "footer": "Airflow",
-            "footer_icon": "https://airflow.gitlabdata/static/pin_100.png",
+            "footer_icon": "http://35.233.169.210:8080/static/pin_100.png",
             "ts": execution_date_epoch,
         }
     ]
@@ -166,11 +173,10 @@ def slack_snapshot_failed_task(context):
 
 
 def slack_webhook_conn(slack_channel):
-    """
-    Slack webhook
-    """
-    slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
-
+    if slack_channel == "#analytics-pipelines":
+        slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
+    else:
+        slack_webhook = Variable.get("AIRFLOW_VAR_DATA_PIPELINES")
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
     return airflow_http_con_id, slack_webhook
 
@@ -186,7 +192,7 @@ def slack_failed_task(context):
 
     slack_alert = SlackWebhookOperator(
         attachments=attachment,
-        channel="#analytics-pipelines",
+        channel=slack_channel,
         task_id=task_id,
         message=task_text,
         http_conn_id=airflow_http_con_id,
@@ -253,7 +259,7 @@ gitlab_pod_env_vars = {
 }
 
 # git commands
-data_test_ssh_key_cmd = """
+data_test_ssh_key_cmd = f"""
     export DATA_TEST_BRANCH="main" &&
     export DATA_SIREN_BRANCH="master" &&
     mkdir ~/.ssh/ &&
@@ -341,7 +347,4 @@ run_command_test_exclude = "--exclude staging.gitlab_com edm_snapshot"
 
 
 def number_of_dbt_threads_argument(number_of_threads):
-    """
-    Number of threads
-    """
     return f"--threads {number_of_threads}"
