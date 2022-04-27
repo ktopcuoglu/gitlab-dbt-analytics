@@ -182,15 +182,7 @@ clone_stop:
 ✅python_pytest:
   <<: *python_check
   script:
-    - python -m pytest -vv -x --junitxml=report.xml
-  artifacts:
-      reports:
-          junit: ${CI_PROJECT_DIR}/report.xml
-      paths:
-          - ${CI_PROJECT_DIR}/.coverage.${CI_JOB_ID}
-      expire_in: 1 day
-      when: on_success
-
+    - python -m pytest -vv -x
 
 # ======
 # Snowflake Permissions Validator
