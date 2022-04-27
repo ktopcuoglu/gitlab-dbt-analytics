@@ -220,7 +220,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.cp_why_gitlab,
       sfdc_opportunity.cp_why_now,
       sfdc_opportunity.cp_score,
-      sfdc_opportunity.cp_last_modified_date,
 
       -- User Segment Hierarchy fields
       sfdc_opportunity.user_segment_stamped,
