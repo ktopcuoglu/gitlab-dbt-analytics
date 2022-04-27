@@ -29,7 +29,7 @@ models:
       - name: uploaded_at    
 
   - name: bamboohr_currency_conversion_source
-    description: This table tells us what the conversion is for local salary to USD.
+    description: This table tells us what the conversion is for local salary to USD.  Raw data format changed on 2022-04-22.
     columns:
       - name: conversion_id
         tests:
