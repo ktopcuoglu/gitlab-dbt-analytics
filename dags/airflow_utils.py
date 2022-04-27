@@ -21,7 +21,7 @@ DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 def split_date_parts(day: date, partition: str) -> Dict:
     """
-
+    Split dates in parts
     """
     if partition == "month":
         split_dict = {
@@ -60,10 +60,14 @@ class MultiSlackChannelOperator:
     """
 
     def __init__(self, channels, context):
+        """ """
         self.channels = channels
         self.context = context
 
     def execute(self):
+        """
+        Execute operator
+        """
         attachment, slack_channel, task_id, task_text = slack_defaults(
             self.context, "failure"
         )
@@ -162,6 +166,9 @@ def slack_snapshot_failed_task(context):
 
 
 def slack_webhook_conn(slack_channel):
+    """
+    Slack webhook
+    """
     slack_webhook = Variable.get("AIRFLOW_VAR_ANALYTICS_PIPELINES")
 
     airflow_http_con_id = Variable.get("AIRFLOW_VAR_SLACK_CONNECTION")
@@ -334,4 +341,7 @@ run_command_test_exclude = "--exclude staging.gitlab_com edm_snapshot"
 
 
 def number_of_dbt_threads_argument(number_of_threads):
+    """
+    Number of threads
+    """
     return f"--threads {number_of_threads}"
