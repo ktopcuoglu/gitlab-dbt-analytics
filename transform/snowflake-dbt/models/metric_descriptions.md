@@ -183,3 +183,35 @@ Users who set personal preference to see Security Dashboard on Group
 {% docs successful_deployments_28_days_user_desc %}
  Disinct users who initiated a successful deployment. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216181941_successful_deployments.yml)
 {% enddocs %}
+
+{% docs geo_enabled_desc %}
+ Is Geo enabled? [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/settings/20210216180406_geo_enabled.yml)
+{% enddocs %}
+
+{% docs geo_nodes_all_time_event_desc %}
+ Total number of sites in a Geo deployment. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210201124936_geo_nodes.yml)
+{% enddocs %}
+
+{% docs auto_devops_pipelines_28_days_user_desc %}
+ Distinct users that ran an auto DevOps pipeline without a .gitlab-ci.yml file. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_28d/20210216175548_ci_pipeline_config_auto_devops.yml)
+{% enddocs %}
+
+{% docs active_instance_runners_all_time_event_desc %}
+ Total active Shared (Instance) Runners. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210502045402_ci_runners_instance_type_active.yml)
+{% enddocs %}
+
+{% docs active_group_runners_all_time_event_desc %}
+ Total active Group Runners. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210502050341_ci_runners_group_type_active.yml)
+{% enddocs %}
+
+{% docs active_project_runners_all_time_event_desc %}
+ Total active Specific (Project) Runners. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210502050834_ci_runners_project_type_active.yml)
+{% enddocs %}
+
+{% docs gitaly_version_desc %}
+ Version of Gitaly. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/license/20210204124928_version.yml)
+{% enddocs %}
+
+{% docs gitaly_servers_all_time_event_desc %}
+ Total Gitalty Servers. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210204124930_servers.yml)
+{% enddocs %}

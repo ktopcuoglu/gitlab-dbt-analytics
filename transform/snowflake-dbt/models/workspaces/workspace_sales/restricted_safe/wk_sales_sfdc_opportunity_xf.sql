@@ -785,6 +785,9 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
         -- NF 2021 - Pubsec extreme deals
         WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
           THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN sfdc_opportunity_xf.opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+          THEN 1
         ELSE 0
       END                                                                       AS is_excluded_flag,
 

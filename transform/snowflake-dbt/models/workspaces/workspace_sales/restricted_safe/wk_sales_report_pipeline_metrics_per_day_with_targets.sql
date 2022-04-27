@@ -394,12 +394,12 @@ WITH date_details AS (
         AND targets.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- quarter plus 1 targets
     LEFT JOIN consolidated_targets_per_day rq_plus_one
-      ON rq_plus_one.close_fiscal_quarter_date = base.close_fiscal_quarter_date
+      ON rq_plus_one.close_fiscal_quarter_date = base.rq_plus_1_close_fiscal_quarter_date
         AND rq_plus_one.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
         AND rq_plus_one.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- quarter plus 2 targets
     LEFT JOIN consolidated_targets_per_day rq_plus_two
-      ON rq_plus_two.close_fiscal_quarter_date = base.close_fiscal_quarter_date
+      ON rq_plus_two.close_fiscal_quarter_date = base.rq_plus_2_close_fiscal_quarter_date
         AND rq_plus_two.close_day_of_fiscal_quarter_normalised = base.close_day_of_fiscal_quarter_normalised
         AND rq_plus_two.report_user_segment_geo_region_area_sqs_ot = base.report_user_segment_geo_region_area_sqs_ot
     -- qtd allocated targets

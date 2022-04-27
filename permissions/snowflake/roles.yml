@@ -524,6 +524,7 @@ roles:
             - analytics_engineer_core
             - analyst_people
             - analyst_engineering
+            - prometheus
 
     - analytics_engineer_gtm:
         member_of:
@@ -965,6 +966,7 @@ roles:
     - data_observability:
         warehouses:
             - data_obs_wh_1
+            - data_obs_wh_2
         privileges:
             databases:
                 read:
@@ -1001,6 +1003,7 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
+                    - prod.legacy.sheetload_hp_dvr
                     - prod.workspace_data.airflow_dag
                     - prod.workspace_data.airflow_dag_run
                     - prod.workspace_data.dbt_test_results
@@ -1551,7 +1554,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_clusters_applications_knative
                     - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
                     - raw.tap_postgres.gitlab_db_clusters_applications_runners
-                    - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
@@ -2354,12 +2356,13 @@ roles:
             - transforming_l
             - transforming_xl
 
-    - alcurtis:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
+    - alpcohen: 
+        member_of: 
+            - reporter
             - restricted_safe
-        warehouses:
+            - xactly
+
+        warehouses: 
             - analyst_xs
 
     - amartin:
@@ -3188,12 +3191,14 @@ roles:
 
     - kchen:
         member_of:
+            - adaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4000,6 +4005,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4139,12 +4145,14 @@ roles:
 
     - vagrawal:
         member_of:
+            - adaptive
             - analyst_finance
             - bamboohr_analytics
             - customers_db
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4210,15 +4218,9 @@ roles:
         member_of:
             - data_team_analyst
             - analyst_core
-        warehouses:
-            - analyst_xs
-
-    - ysun:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
             - restricted_safe
-            - bi_tool_eval_read
+            - dbt_data_science
+
         warehouses:
             - analyst_xs
 
@@ -4231,6 +4233,7 @@ roles:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
+            - xactly
         warehouses:
             - analyst_xs
 
@@ -4248,10 +4251,10 @@ users:
             - sysadmin
             - transformer
 
-    - alcurtis:
+    - alpcohen:
         can_login: yes
         member_of:
-            - alcurtis
+            - alpcohen
 
     - amartin:
         can_login: yes
@@ -4694,11 +4697,6 @@ users:
         member_of:
             - warias
 
-    - ysun: # De provisioned as part of Quarterly audit and security check.
-        can_login: yes
-        member_of:
-            - ysun
-
     - zzhang:
         can_login: yes
         member_of:
@@ -4708,6 +4706,11 @@ users:
         can_login: yes
         member_of:
             - data_observability
+  
+    - data_obs_user_2: # External user - Data Observability Vendor 
+        can_login: yes
+        member_of:
+            - data_observability   
 
 # ==========================================
 # Warehouses
@@ -4792,4 +4795,7 @@ warehouses:
         size: small
 
     - data_obs_wh_1:
+        size: x-small
+
+    - data_obs_wh_2:
         size: x-small

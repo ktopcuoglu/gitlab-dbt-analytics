@@ -13,7 +13,7 @@
 , usage_data_w_date AS (
   SELECT
     prep_service_ping_instance.*,
-    dim_date.date_id              AS dim_date_id
+    dim_date.date_id                                 AS dim_service_ping_date_id
   FROM prep_service_ping_instance
   LEFT JOIN dim_date
     ON TO_DATE(ping_created_at) = dim_date.date_day
@@ -21,25 +21,25 @@
 ), last_ping_of_month_flag AS (
 
 SELECT DISTINCT
-    usage_data_w_date.id,
-    usage_data_w_date.dim_date_id,
-    usage_data_w_date.uuid,
-    usage_data_w_date.host_id,
+    usage_data_w_date.id                              AS id,
+    usage_data_w_date.dim_service_ping_date_id        AS dim_service_ping_date_id,
+    usage_data_w_date.uuid                            AS uuid,
+    usage_data_w_date.host_id                         AS host_id,
     usage_data_w_date.ping_created_at::TIMESTAMP(0)   AS ping_created_at,
-    dim_date.month_actual,
-    TRUE                      AS last_ping_of_month_flag
+    dim_date.first_day_of_month                       AS first_day_of_month,
+    TRUE                                              AS last_ping_of_month_flag
   FROM usage_data_w_date
     INNER JOIN dim_date
-  ON usage_data_w_date.dim_date_id = dim_date.date_id
+  ON usage_data_w_date.dim_service_ping_date_id = dim_date.date_id
   QUALIFY ROW_NUMBER() OVER (
-          PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.month_actual
+          PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.first_day_of_month
           ORDER BY ping_created_at DESC) = 1
 
 ), fct_w_month_flag AS (
 
   SELECT
       usage_data_w_date.*,
-      last_ping_of_month_flag.last_ping_of_month_flag
+      last_ping_of_month_flag.last_ping_of_month_flag   AS last_ping_of_month_flag
     FROM usage_data_w_date
       LEFT JOIN last_ping_of_month_flag
         ON usage_data_w_date.id = last_ping_of_month_flag.id
@@ -47,69 +47,70 @@ SELECT DISTINCT
 ), final AS (
 
     SELECT DISTINCT
-      id                                                                        AS dim_service_ping_instance_id,
-      dim_date_id                                                               AS dim_date_id,
-      ping_created_at::TIMESTAMP(0)                                             AS ping_created_at,
-      DATEADD('days', -28, ping_created_at)                                     AS ping_created_at_28_days_earlier,
-      DATE_TRUNC('YEAR', ping_created_at)                                       AS ping_created_at_year,
-      DATE_TRUNC('MONTH', ping_created_at)                                      AS ping_created_at_month,
-      DATE_TRUNC('WEEK', ping_created_at)                                       AS ping_created_at_week,
-      DATE_TRUNC('DAY', ping_created_at)                                        AS ping_created_at_date,
-      ip_address_hash                                                           AS ip_address_hash,
-      version,
-      instance_user_count,
-      license_md5,
-      historical_max_users,
-      license_user_count,
-      license_starts_at,
-      license_expires_at,
-      license_add_ons,
-      recorded_at,
-      updated_at,
-      mattermost_enabled,
-      uuid                                                                      AS dim_instance_id,
-      host_id || dim_instance_id                                                AS dim_installation_id,
-      main_edition                                                              AS edition,
-      hostname                                                                  AS host_name,
-      host_id                                                                   AS dim_host_id,
-      license_trial                                                             AS is_trial,
-      source_license_id,
-      installation_type,
-      license_plan,
-      database_adapter,
-      database_version,
-      git_version,
-      gitlab_pages_enabled,
-      gitlab_pages_version,
-      container_registry_enabled,
-      elasticsearch_enabled,
-      geo_enabled,
-      gitlab_shared_runners_enabled,
-      gravatar_enabled,
-      ldap_enabled,
-      omniauth_enabled,
-      reply_by_email_enabled,
-      signup_enabled,
-      prometheus_metrics_enabled,
-      usage_activity_by_stage,
-      usage_activity_by_stage_monthly,
-      gitaly_clusters,
-      gitaly_version,
-      gitaly_servers,
-      gitaly_filesystems,
-      gitpod_enabled,
-      object_store,
-      is_dependency_proxy_enabled,
-      recording_ce_finished_at,
-      recording_ee_finished_at,
-      is_ingress_modsecurity_enabled,
-      topology,
-      is_grafana_link_enabled,
-      analytics_unique_visits,
-      raw_usage_data_id,
-      container_registry_vendor,
-      container_registry_version,
-      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, edition, 'EE Free')                  AS cleaned_edition,
+      dim_service_ping_instance_id                                                                                  AS dim_service_ping_instance_id,
+      dim_service_ping_date_id                                                                                      AS dim_service_ping_date_id,
+      dim_host_id                                                                                                   AS dim_host_id,
+      dim_instance_id                                                                                               AS dim_instance_id,
+      dim_installation_id                                                                                           AS dim_installation_id,
+      TO_DATE(ping_created_at)                                                                                      AS ping_created_at,
+      TO_DATE(DATEADD('days', -28, ping_created_at))                                                                AS ping_created_at_28_days_earlier,
+      TO_DATE(DATE_TRUNC('YEAR', ping_created_at))                                                                  AS ping_created_at_year,
+      TO_DATE(DATE_TRUNC('MONTH', ping_created_at))                                                                 AS ping_created_at_month,
+      TO_DATE(DATE_TRUNC('WEEK', ping_created_at))                                                                  AS ping_created_at_week,
+      TO_DATE(DATE_TRUNC('DAY', ping_created_at))                                                                   AS ping_created_at_date,
+      ip_address_hash                                                                                               AS ip_address_hash,
+      version                                                                                                       AS version,
+      instance_user_count                                                                                           AS instance_user_count,
+      license_md5                                                                                                   AS license_md5,
+      historical_max_users                                                                                          AS historical_max_users,
+      license_user_count                                                                                            AS license_user_count,
+      license_starts_at                                                                                             AS license_starts_at,
+      license_expires_at                                                                                            AS license_expires_at,
+      license_add_ons                                                                                               AS license_add_ons,
+      recorded_at                                                                                                   AS recorded_at,
+      updated_at                                                                                                    AS updated_at,
+      mattermost_enabled                                                                                            AS mattermost_enabled,
+      main_edition                                                                                                  AS ping_edition,
+      hostname                                                                                                      AS host_name,
+      product_tier                                                                                                  AS product_tier,
+      license_trial                                                                                                 AS is_trial,
+      source_license_id                                                                                             AS source_license_id,
+      installation_type                                                                                             AS installation_type,
+      license_plan                                                                                                  AS license_plan,
+      database_adapter                                                                                              AS database_adapter,
+      database_version                                                                                              AS database_version,
+      git_version                                                                                                   AS git_version,
+      gitlab_pages_enabled                                                                                          AS gitlab_pages_enabled,
+      gitlab_pages_version                                                                                          AS gitlab_pages_version,
+      container_registry_enabled                                                                                    AS container_registry_enabled,
+      elasticsearch_enabled                                                                                         AS elasticsearch_enabled,
+      geo_enabled                                                                                                   AS geo_enabled,
+      gitlab_shared_runners_enabled                                                                                 AS gitlab_shared_runners_enabled,
+      gravatar_enabled                                                                                              AS gravatar_enabled,
+      ldap_enabled                                                                                                  AS ldap_enabled,
+      omniauth_enabled                                                                                              AS omniauth_enabled,
+      reply_by_email_enabled                                                                                        AS reply_by_email_enabled,
+      signup_enabled                                                                                                AS signup_enabled,
+      prometheus_metrics_enabled                                                                                    AS prometheus_metrics_enabled,
+      usage_activity_by_stage                                                                                       AS usage_activity_by_stage,
+      usage_activity_by_stage_monthly                                                                               AS usage_activity_by_stage_monthly,
+      gitaly_clusters                                                                                               AS gitaly_clusters,
+      gitaly_version                                                                                                AS gitaly_version,
+      gitaly_servers                                                                                                AS gitaly_servers,
+      gitaly_filesystems                                                                                            AS gitaly_filesystems,
+      gitpod_enabled                                                                                                AS gitpod_enabled,
+      object_store                                                                                                  AS object_store,
+      is_dependency_proxy_enabled                                                                                   AS is_dependency_proxy_enabled,
+      recording_ce_finished_at                                                                                      AS recording_ce_finished_at,
+      recording_ee_finished_at                                                                                      AS recording_ee_finished_at,
+      is_ingress_modsecurity_enabled                                                                                AS is_ingress_modsecurity_enabled,
+      topology                                                                                                      AS topology,
+      is_grafana_link_enabled                                                                                       AS is_grafana_link_enabled,
+      analytics_unique_visits                                                                                       AS analytics_unique_visits,
+      raw_usage_data_id                                                                                             AS raw_usage_data_id,
+      container_registry_vendor                                                                                     AS container_registry_vendor,
+      container_registry_version                                                                                    AS container_registry_version,
+      IFF(license_expires_at >= ping_created_at OR license_expires_at IS NULL, ping_edition, 'EE Free')             AS cleaned_edition,
       REGEXP_REPLACE(NULLIF(version, ''), '[^0-9.]+')                                                               AS cleaned_version,
       IFF(version ILIKE '%-pre', True, False)                                                                       AS version_is_prerelease,
       SPLIT_PART(cleaned_version, '.', 1)::NUMBER                                                                   AS major_version,
@@ -143,8 +144,8 @@ SELECT DISTINCT
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@@icooper-acp",
-    updated_by="@@icooper-acp",
+    created_by="@icooper-acp",
+    updated_by="@icooper-acp",
     created_date="2022-03-08",
     updated_date="2022-03-11"
 ) }}
