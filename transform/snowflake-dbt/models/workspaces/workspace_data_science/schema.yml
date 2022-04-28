@@ -19,5 +19,4 @@ models:
       Intermediary model used to create monthly_stage_usage_by_namespace.
       It flattens the SaaS metrics from `prep_saas_usage_ping_namespace`.
       By doing this step in a separate model from `prep_saas_usage_ping_namespace` we get performance gains.
-  - name: pte_training_model
   - name: pte_scores
