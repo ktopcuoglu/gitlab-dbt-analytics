@@ -12,6 +12,7 @@ models:
     - name: domain
       tests:
       - not_null
+      - unique
     - name: classification
       tests:
       - not_null
