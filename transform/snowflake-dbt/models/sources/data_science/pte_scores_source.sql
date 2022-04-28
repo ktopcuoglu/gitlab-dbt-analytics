@@ -19,6 +19,7 @@ WITH source AS (
       data_by_row['group']::INT                             AS score_group,
       data_by_row['importance']::INT                        AS importance,
       data_by_row['score']::NUMBER                          AS score,
+      data_by_row['insights']::VARCHAR                      AS insights,
       uploaded_at::TIMESTAMP                                AS uploaded_at
 
     FROM intermediate
