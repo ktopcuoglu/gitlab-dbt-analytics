@@ -14,6 +14,14 @@
     ('email_classification', 'driveload_email_domain_classification_source')
 ]) }}
 
+, email_classification_dedup AS (
+
+    SELECT *
+    FROM email_classification
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY domain ORDER BY domain DESC) = 1
+
+)
+
 , renamed AS (
 
     SELECT
@@ -43,13 +51,13 @@
     FROM source
     LEFT JOIN dim_date
       ON TO_DATE(source.created_at) = dim_date.date_day
-    LEFT JOIN email_classification AS notification_email_domain
+    LEFT JOIN email_classification_dedup AS notification_email_domain
       ON notification_email_domain.domain = source.notification_email_domain
-    LEFT JOIN email_classification AS email_domain
+    LEFT JOIN email_classification_dedup AS email_domain
       ON email_domain.domain = source.email_domain
-    LEFT JOIN email_classification AS public_email_domain
+    LEFT JOIN email_classification_dedup AS public_email_domain
       ON public_email_domain.domain = source.public_email_domain
-    LEFT JOIN email_classification AS commit_email_domain
+    LEFT JOIN email_classification_dedup AS commit_email_domain
       ON commit_email_domain.domain = source.commit_email_domain
     
 )
