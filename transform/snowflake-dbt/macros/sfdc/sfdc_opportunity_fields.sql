@@ -336,6 +336,11 @@ WITH first_contact  AS (
           THEN 1
         ELSE 0
       END                                                                                         AS is_renewal,
+      CASE 
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')  
+          THEN 1 
+        ELSE 0
+      END                                                                                         AS is_lost,
       CASE
         WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
           THEN 1
@@ -350,6 +355,24 @@ WITH first_contact  AS (
           THEN '0. Open' 
         ELSE 'N/A'
       END                                                                                         AS stage_category,
+      CASE 
+            WHEN sfdc_opportunity.order_type = '3. Growth' 
+                THEN '2. Growth'
+            WHEN sfdc_opportunity.order_type = '1. New - First Order' 
+                THEN '1. New'
+              ELSE '3. Other'
+          END                                                                                    AS deal_group,
+       CASE 
+          WHEN sfdc_opportunity.order_type = '1. New - First Order' 
+            THEN '1. New'
+          WHEN sfdc_opportunity.order_type IN ('2. New - Connected', '3. Growth') 
+            THEN '2. Growth' 
+          WHEN sfdc_opportunity.order_type IN ('4. Contraction')
+            THEN '3. Contraction'
+          WHEN sfdc_opportunity.order_type IN ('5. Churn - Partial','6. Churn - Final')
+            THEN '4. Churn'
+          ELSE '5. Other' 
+        END                                                                                       AS deal_category,
       CASE 
         WHEN lower(sfdc_opportunity.order_type_grouped) LIKE ANY ('%growth%', '%new%')
           AND sfdc_opportunity.is_edu_oss = 0
