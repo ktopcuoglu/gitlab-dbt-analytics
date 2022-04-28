@@ -160,10 +160,11 @@ vulture:
 
 pytest:
 	@echo "Running pytest..."
-	@pytest -vv -x
+	@python3 -m pytest -vv -x .
 
 python_code_quality: black mypy pylint complexity flake8 vulture pytest
 	@echo "Running python_code_quality..."
 
 clean-python:
-	find . -name '*_cache*' -type d -exec rm -rf {} \;
+	@echo "Running pytest..."
+	@find . -name "*_cache*" -type d -exec rm -rf "{}" +
