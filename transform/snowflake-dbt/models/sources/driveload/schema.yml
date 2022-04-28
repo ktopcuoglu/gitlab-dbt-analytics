@@ -16,13 +16,13 @@ models:
       tests:
       - not_null
 - name: driveload_ssa_coverage_fitted_curves_source
-  description: E
+  description: Stores the result of fitting a curve to multiple metrics using the last 4 quarters as data points. These curves are leverage in the X-Ray dashboard and Quarterly Coverage metric reports.
   columns:
     - name: key_agg_day
       tests:
       - not_null
 - name: driveload_ssa_quarterly_aggregated_metrics_for_coverage_source
-  description: E
+  description: Quarterly pre-aggregated metrics per business grouping, used to fit a curve for performance tracking.
   columns:
     - name: agg_key_value
       tests:
