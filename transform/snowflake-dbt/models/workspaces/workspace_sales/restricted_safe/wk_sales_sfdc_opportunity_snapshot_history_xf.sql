@@ -253,7 +253,6 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.cp_why_gitlab,
       sfdc_opportunity_snapshot_history.cp_why_now,
       sfdc_opportunity_snapshot_history.cp_score,
-      sfdc_opportunity_snapshot_history.cp_last_modified_date,
       
       sfdc_opportunity_snapshot_history._last_dbt_run,
       sfdc_opportunity_snapshot_history.is_deleted,
