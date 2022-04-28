@@ -107,7 +107,13 @@
       {{ usage_ping_month_range('author_epic_all_time_user') }},
       {{ usage_ping_month_range('author_issue_all_time_user') }},
       {{ usage_ping_month_range('failed_deployments_28_days_user') }},
-      {{ usage_ping_month_range('successful_deployments_28_days_user') }}
+      {{ usage_ping_month_range('successful_deployments_28_days_user') }},
+      {{ usage_ping_month_range('geo_nodes_all_time_event') }},
+      {{ usage_ping_month_range('auto_devops_pipelines_28_days_user') }},
+      {{ usage_ping_month_range('active_instance_runners_all_time_event') }},
+      {{ usage_ping_month_range('active_group_runners_all_time_event') }},
+      {{ usage_ping_month_range('active_project_runners_all_time_event') }},
+      {{ usage_ping_month_range('gitaly_servers_all_time_event') }}
     FROM monthly_metrics
 
 ), diffs AS (
@@ -198,7 +204,13 @@
       {{ usage_ping_over_ping_difference('author_epic_all_time_user') }},
       {{ usage_ping_over_ping_difference('author_issue_all_time_user') }},
       {{ usage_ping_over_ping_difference('failed_deployments_28_days_user') }},
-      {{ usage_ping_over_ping_difference('successful_deployments_28_days_user') }}
+      {{ usage_ping_over_ping_difference('successful_deployments_28_days_user') }},
+      {{ usage_ping_over_ping_difference('geo_nodes_all_time_event') }},
+      {{ usage_ping_over_ping_difference('auto_devops_pipelines_28_days_user') }},
+      {{ usage_ping_over_ping_difference('active_instance_runners_all_time_event') }},
+      {{ usage_ping_over_ping_difference('active_group_runners_all_time_event') }},
+      {{ usage_ping_over_ping_difference('active_project_runners_all_time_event') }},
+      {{ usage_ping_over_ping_difference('gitaly_servers_all_time_event') }}
     FROM monthly_metrics
 
 ), smoothed_diffs AS (
@@ -283,7 +295,13 @@
       {{ usage_ping_over_ping_smoothed('author_epic_all_time_user') }},
       {{ usage_ping_over_ping_smoothed('author_issue_all_time_user') }},
       {{ usage_ping_over_ping_smoothed('failed_deployments_28_days_user') }},
-      {{ usage_ping_over_ping_smoothed('successful_deployments_28_days_user') }}
+      {{ usage_ping_over_ping_smoothed('successful_deployments_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('geo_nodes_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('auto_devops_pipelines_28_days_user') }},
+      {{ usage_ping_over_ping_smoothed('active_instance_runners_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('active_group_runners_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('active_project_runners_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('gitaly_servers_all_time_event') }}
     FROM diffs
     INNER JOIN months
       ON diffs.snapshot_month = months.first_day_of_month
@@ -373,7 +391,13 @@
       {{ usage_ping_over_ping_estimated('author_epic_all_time_user') }},
       {{ usage_ping_over_ping_estimated('author_issue_all_time_user') }},
       {{ usage_ping_over_ping_estimated('failed_deployments_28_days_user') }},
-      {{ usage_ping_over_ping_estimated('successful_deployments_28_days_user') }}
+      {{ usage_ping_over_ping_estimated('successful_deployments_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('geo_nodes_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('auto_devops_pipelines_28_days_user') }},
+      {{ usage_ping_over_ping_estimated('active_instance_runners_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('active_group_runners_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('active_project_runners_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('gitaly_servers_all_time_event') }}
     FROM smoothed_diffs
     LEFT JOIN ping_ranges
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
@@ -397,5 +421,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-03-04",
-    updated_date="2022-04-01"
+    updated_date="2022-04-21"
 ) }}
