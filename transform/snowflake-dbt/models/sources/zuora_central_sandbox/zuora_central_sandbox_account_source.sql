@@ -47,6 +47,8 @@ WITH source AS (
       sales_rep_name                                         AS sales_rep_name,
       additional_email_addresses                             AS additional_email_addresses,
       parent_c                                               AS sfdc_parent,
+      sspchannel_c                                           AS ssp_channel,
+      porequired_c                                           AS po_required,
 
       -- financial info
       last_invoice_date                                      AS last_invoice_date,

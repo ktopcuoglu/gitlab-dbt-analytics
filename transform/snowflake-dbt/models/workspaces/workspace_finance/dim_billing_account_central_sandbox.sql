@@ -28,7 +28,9 @@
       zuora_central_sandbox_account.currency                                AS account_currency,
       zuora_central_sandbox_contact.country                                 AS sold_to_country,
       zuora_central_sandbox_account.is_deleted,
-      zuora_central_sandbox_account.batch
+      zuora_central_sandbox_account.batch,
+      zuora_central_sandbox_account.ssp_channel,
+      zuora_central_sandbox_account.po_required
     FROM zuora_central_sandbox_account
     LEFT JOIN zuora_central_sandbox_contact
       ON COALESCE(zuora_central_sandbox_account.sold_to_contact_id, zuora_central_sandbox_account.bill_to_contact_id) = zuora_central_sandbox_contact.contact_id
@@ -42,5 +44,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-03-31",
-    updated_date="2022-03-31"
+    updated_date="2022-04-13"
 ) }}

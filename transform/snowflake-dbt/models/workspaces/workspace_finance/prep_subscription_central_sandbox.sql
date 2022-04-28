@@ -76,7 +76,9 @@ WITH date_details AS (
       zuora_central_sandbox_subscription.contract_seat_reconciliation,
       zuora_central_sandbox_subscription.turn_on_seat_reconciliation,
       zuora_central_sandbox_subscription.created_date::DATE                                     AS subscription_created_date,
-      zuora_central_sandbox_subscription.updated_date::DATE                                     AS subscription_updated_date
+      zuora_central_sandbox_subscription.updated_date::DATE                                     AS subscription_updated_date,
+      zuora_central_sandbox_subscription.turn_on_operational_metrics,
+      zuora_central_sandbox_subscription.contract_operational_metrics
     FROM zuora_central_sandbox_subscription
     INNER JOIN zuora_central_sandbox_account
       ON zuora_central_sandbox_subscription.account_id = zuora_central_sandbox_account.account_id
@@ -92,5 +94,5 @@ WITH date_details AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-03-31",
-    updated_date="2022-03-31"
+    updated_date="2022-04-13"
 ) }}
