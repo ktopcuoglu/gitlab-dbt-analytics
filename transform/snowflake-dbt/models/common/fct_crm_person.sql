@@ -214,6 +214,11 @@ WITH account_dims_mapping AS (
       COALESCE(sfdc_contacts.mql_datetime_inferred, sfdc_leads.mql_datetime_inferred)                           AS mql_inferred_datetime,
       {{ get_date_id('mql_inferred_date') }}                                                                    AS mql_inferred_date_id,
       {{ get_date_pt_id('mql_inferred_date') }}                                                                 AS mql_inferred_date_pt_id,
+      LEAST(COALESCE(mql_datetime_first,'9999-01-01'),COALESCE(mql_inferred_datetime,'9999-01-01'))             AS prep_true_mql_date,
+      CASE 
+        WHEN prep_true_mql_date != '9999-01-01'
+        THEN prep_true_mql_date
+      END                                                                                                       AS true_mql_date,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)::DATE                             AS accepted_date,
       COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime)                                   AS accepted_datetime,
       CONVERT_TIMEZONE('America/Los_Angeles', COALESCE(sfdc_contacts.accepted_datetime, sfdc_leads.accepted_datetime))
