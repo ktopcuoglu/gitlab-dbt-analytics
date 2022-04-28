@@ -1,6 +1,7 @@
 .PHONY: build
 
-PATH := $(PATH):$(PWD)
+TEST_FOLDERS_PATH := $(shell eval find . -name "test" -type d)
+PATH := $(PATH):$(PWD):$(TEST_FOLDERS_PATH)
 GIT_BRANCH = $$(git symbolic-ref --short HEAD)
 DOCKER_UP = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose up"
 DOCKER_DOWN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose down"
@@ -160,11 +161,11 @@ vulture:
 
 pytest:
 	@echo "Running pytest..."
-	@python3 -m pytest -vv -x .
+	@python3 -m pytest -vv -x
 
 python_code_quality: black mypy pylint complexity flake8 vulture pytest
 	@echo "Running python_code_quality..."
 
 clean-python:
-	@echo "Running pytest..."
+	@echo "Running clean-python..."
 	@find . -name "*_cache*" -type d -exec rm -rf "{}" +
