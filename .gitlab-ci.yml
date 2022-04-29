@@ -184,6 +184,7 @@ clone_stop:
   script:
     - pip install flatten_dict==0.3.0
     - pip install sqlparse==0.4.1
+    - pip install fire==0.1.3
     - python -m pytest -vv -x --junitxml=report.xml
   artifacts:
     reports:
