@@ -74,6 +74,7 @@ Please add a number for days you'll be working this milestone. Data Analysts and
 - @tpoole1:
 - @pempey: 
 - @mdrussell:  
+- @snalamaru: 
 
 **Total Analytics days**: <!-- sum the above analytics days -->
 
