@@ -267,7 +267,7 @@
       fct_crm_opportunity.cp_review_notes,
 
       -- Pipeline Velocity Fields
-      sfdc_opportunity.dim_crm_account_id                                                                                                                                                                             AS raw_account_id,
+      fct_crm_opportunity.dim_crm_account_id                                                                                                                                                                             AS raw_account_id,
       LOWER(fct_crm_opportunity.user_segment_stamped)                                                                                                                                                                 AS report_opportunity_user_segment,
       LOWER(fct_crm_opportunity.user_geo_stamped)                                                                                                                                                                     AS report_opportunity_user_geo,
       LOWER(fct_crm_opportunity.user_region_stamped)                                                                                                                                                                  AS report_opportunity_user_region,
@@ -379,102 +379,102 @@
         END                                                         AS is_stage_4_plus,
         -- competitor flags
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Other') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Other') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_other_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitLab Core') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'GitLab Core') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_gitlab_core_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'None') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'None') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_none_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitHub Enterprise') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'GitHub Enterprise') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_github_enterprise_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'BitBucket Server') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'BitBucket Server') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_bitbucket_server_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Unknown') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Unknown') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_unknown_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitHub.com') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'GitHub.com') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_github_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitLab.com') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'GitLab.com') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_gitlab_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Jenkins') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Jenkins') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_jenkins_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Azure DevOps') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Azure DevOps') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_azure_devops_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'SVN') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'SVN') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_svn_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'BitBucket.Org') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'BitBucket.Org') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_bitbucket_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Atlassian') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Atlassian') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_atlassian_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Perforce') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Perforce') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_perforce_flag, 
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Visual Studio Team Services') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Visual Studio Team Services') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_visual_studio_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Azure') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Azure') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_azure_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Amazon Code Commit') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Amazon Code Commit') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_amazon_code_commit_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'CircleCI') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'CircleCI') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_circleci_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Bamboo') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'Bamboo') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_bamboo_flag,
         CASE
-          WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'AWS') 
+          WHEN CONTAINS (fct_crm_opportunity.competitors, 'AWS') 
             THEN 1 
           ELSE 0
         END                                 AS competitors_aws_flag,
