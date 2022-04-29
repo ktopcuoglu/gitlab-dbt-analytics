@@ -182,6 +182,7 @@ clone_stop:
 ✅python_pytest:
   <<: *python_check
   script:
+    - pip install flatten_dict==0.3.0
     - python -m pytest -vv -x --junitxml=report.xml
   artifacts:
     reports:
