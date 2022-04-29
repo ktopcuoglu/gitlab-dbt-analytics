@@ -180,11 +180,8 @@ clone_stop:
     - vulture $CHANGED_FILES --min-confidence 100
 
 ✅python_pytest:
-  <<: *python_check
-  script:
-    - pip install flatten_dict==0.3.0
-    - pip install sqlparse==0.4.1
-    - pip install fire==0.1.3
+  stage: 🐍 Python
+  image: registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.20
     - python -m pytest -vv -x --junitxml=report.xml
   artifacts:
     reports:
