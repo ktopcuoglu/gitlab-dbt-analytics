@@ -79,6 +79,7 @@ WITH first_contact  AS (
     {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
         snapshot_dates.date_id                                                                                        AS snapshot_id,
+        snapshot_dates.date_actual                                                                                    AS snapshot_date,
         {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE"])}}
      {%- endif %}
     FROM 
@@ -336,11 +337,6 @@ WITH first_contact  AS (
           THEN 1
         ELSE 0
       END                                                                                         AS is_renewal,
-      CASE 
-        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')  
-          THEN 1 
-        ELSE 0
-      END                                                                                         AS is_lost,
       CASE
         WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
           THEN 1
@@ -510,7 +506,107 @@ WITH first_contact  AS (
         WHEN is_credit = 1
           THEN 0
         ELSE 1
-      END                                                                                       AS calculated_deal_count
+      END                                                                                       AS calculated_deal_count,
+      CASE 
+        WHEN net_arr > 0 AND net_arr < 1000 
+          THEN '1. (0k -1k)'
+        WHEN net_arr >=1000 AND net_arr < 10000 
+          THEN '2. (1k - 10k)'
+        WHEN net_arr >=10000 AND net_arr < 50000 
+          THEN '3. (10k - 50k)'
+        WHEN net_arr >=50000 AND net_arr < 100000 
+          THEN '4. (50k - 100k)'
+        WHEN net_arr >= 100000 AND net_arr < 250000 
+          THEN '5. (100k - 250k)'
+        WHEN net_arr >= 250000 AND net_arr < 500000 
+          THEN '6. (250k - 500k)'
+        WHEN net_arr >= 500000 AND net_arr < 1000000 
+          THEN '7. (500k-1000k)'
+        WHEN net_arr >= 1000000 
+          THEN '8. (>1000k)'
+        ELSE 'Other' 
+      END                                                                                         AS calculated_deal_size,
+      CASE 
+        WHEN is_eligible_open_pipeline = 1
+          AND is_stage_1_plus = 1
+            THEN calculated_deal_count  
+        ELSE 0
+      END                                               AS open_1plus_deal_count,
+
+      CASE 
+        WHEN is_eligible_open_pipeline = 1
+          AND is_stage_3_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_3plus_deal_count,
+
+      CASE 
+        WHEN is_eligible_open_pipeline = 1
+          AND is_stage_4_plus = 1
+            THEN calculated_deal_count
+        ELSE 0
+      END                                               AS open_4plus_deal_count,
+      CASE 
+        WHEN sfdc_opportunity_stage.is_won = 1
+          THEN calculated_deal_count
+        ELSE 0
+      END                                               AS booked_deal_count,
+      CASE
+        WHEN (
+               (
+                is_renewal = 1
+                 AND is_lost = 1
+               )
+                OR sfdc_opportunity_stage.is_won = 1 
+             )
+            AND sfdc_opportunity.order_type IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN calculated_deal_count
+        ELSE 0
+      END                                               AS churned_contraction_deal_count,
+      CASE 
+        WHEN is_eligible_open_pipeline = 1
+          THEN sfdc_opportunity.net_arr
+        ELSE 0                                                                                              
+      END                                                AS open_1plus_net_arr,
+
+      CASE 
+        WHEN is_eligible_open_pipeline = 1
+          AND is_stage_3_plus = 1   
+            THEN sfdc_opportunity.net_arr
+        ELSE 0
+      END                                                AS open_3plus_net_arr,
+  
+      CASE 
+        WHEN is_eligible_open_pipeline = 1  
+          AND is_stage_4_plus = 1
+            THEN sfdc_opportunity.net_arr
+        ELSE 0
+      END                                                AS open_4plus_net_arr,
+      CASE
+        WHEN (
+                sfdc_opportunity_stage.is_won = 1 
+                OR (
+                    is_renewal = 1 
+                      AND is_lost = 1
+                   )
+             )
+          THEN sfdc_opportunity.net_arr
+        ELSE 0 
+      END                                                 AS booked_net_arr,
+
+      -- churned contraction deal count as OT
+      CASE
+        WHEN (
+               (
+                 is_renewal = 1
+                   AND is_lost = 1
+                )
+               OR sfdc_opportunity_stage.is_won = 1 
+              )
+            AND sfdc_opportunity.order_type IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
+        THEN sfdc_opportunity.net_arr
+        ELSE 0
+      END                                                 AS churned_contraction_net_arr
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
