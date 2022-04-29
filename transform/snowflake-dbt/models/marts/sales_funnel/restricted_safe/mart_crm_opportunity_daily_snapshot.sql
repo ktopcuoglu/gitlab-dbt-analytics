@@ -8,86 +8,86 @@
 , net_iacv_to_net_arr_ratio AS (
 
     SELECT 
-      '2. New - Connected'      AS "order_type", 
-      'Mid-Market'              AS "user_segment_stamped", 
-      0.999691784               AS "ratio_net_iacv_to_net_arr" 
+      '2. New - Connected'      AS order_type, 
+      'Mid-Market'              AS user_segment_stamped, 
+      0.999691784               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '1. New - First Order'    AS "order_type", 
-      'SMB'                     AS "user_segment_stamped", 
-      0.998590143               AS "ratio_net_iacv_to_net_arr" 
+      '1. New - First Order'    AS order_type, 
+      'SMB'                     AS user_segment_stamped, 
+      0.998590143               AS ratio_net_iacv_to_net_arr
     
     UNION
 
     SELECT 
-      '1. New - First Order'    AS "order_type", 
-      'Large'                   AS "user_segment_stamped", 
-      0.992289340               AS "ratio_net_iacv_to_net_arr" 
+      '1. New - First Order'    AS order_type, 
+      'Large'                   AS user_segment_stamped, 
+      0.992289340               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '3. Growth'               AS "order_type", 
-      'SMB'                     AS "user_segment_stamped", 
-      0.927846192               AS "ratio_net_iacv_to_net_arr" 
+      '3. Growth'               AS order_type, 
+      'SMB'                     AS user_segment_stamped, 
+      0.927846192               AS ratio_net_iacv_to_net_arr
     
     UNION
 
     SELECT 
-      '3. Growth'               AS "order_type", 
-      'Large'                   AS "user_segment_stamped", 
-      0.852915435               AS "ratio_net_iacv_to_net_arr" 
+      '3. Growth'               AS order_type, 
+      'Large'                   AS user_segment_stamped, 
+      0.852915435               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '2. New - Connected'      AS "order_type", 
-      'SMB'                     AS "user_segment_stamped", 
-      1.009262672               AS "ratio_net_iacv_to_net_arr" 
+      '2. New - Connected'      AS order_type, 
+      'SMB'                     AS user_segment_stamped, 
+      1.009262672               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '3. Growth'               AS "order_type", 
-      'Mid-Market'              AS "user_segment_stamped", 
-      0.793618079               AS "ratio_net_iacv_to_net_arr" 
+      '3. Growth'               AS order_type, 
+      'Mid-Market'              AS user_segment_stamped, 
+      0.793618079               AS ratio_net_iacv_to_net_arr
     
     UNION
 
     SELECT 
-      '1. New - First Order'    AS "order_type", 
-      'Mid-Market'              AS "user_segment_stamped", 
-      0.988527875               AS "ratio_net_iacv_to_net_arr" 
+      '1. New - First Order'    AS order_type, 
+      'Mid-Market'              AS user_segment_stamped, 
+      0.988527875               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '2. New - Connected'      AS "order_type", 
-      'Large'                   AS "user_segment_stamped", 
-      1.010081083               AS "ratio_net_iacv_to_net_arr" 
+      '2. New - Connected'      AS order_type, 
+      'Large'                   AS user_segment_stamped, 
+      1.010081083               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '1. New - First Order'    AS "order_type", 
-      'PubSec'                  AS "user_segment_stamped", 
-      1.000000000               AS "ratio_net_iacv_to_net_arr" 
+      '1. New - First Order'    AS order_type, 
+      'PubSec'                  AS user_segment_stamped, 
+      1.000000000               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '2. New - Connected'      AS "order_type", 
-      'PubSec'                  AS "user_segment_stamped", 
-      1.002741689               AS "ratio_net_iacv_to_net_arr" 
+      '2. New - Connected'      AS order_type, 
+      'PubSec'                  AS user_segment_stamped, 
+      1.002741689               AS ratio_net_iacv_to_net_arr 
     
     UNION
 
     SELECT 
-      '3. Growth'               AS "order_type", 
-      'PubSec'                  AS "user_segment_stamped", 
-      0.965670500               AS "ratio_net_iacv_to_net_arr" 
+      '3. Growth'               AS order_type, 
+      'PubSec'                  AS user_segment_stamped, 
+      0.965670500               AS ratio_net_iacv_to_net_arr 
 
 ), final AS (
  
@@ -296,10 +296,10 @@
       report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  fct_crm_opportunity.sales_qualified_source     AS key_segment_geo_region_area_sqs,
       report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  fct_crm_opportunity.deal_group                 AS key_segment_geo_region_area_ot,
       report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area                                                                                                    AS key_segment_geo_area,
-      COALESCE(fct_crm_opportunity.user_segment_stamped, opportunity_owner_live.crm_user_sales_segment) AS opportunity_owner_user_segment,
-      COALESCE(fct_crm_opportunity.user_geo_stamped, opportunity_owner_live.crm_user_geo) AS opportunity_owner_user_geo,
-      COALESCE(fct_crm_opportunity.user_region_stamped, opportunity_owner_live.crm_user_region) AS opportunity_owner_user_region,
-      COALESCE(fct_crm_opportunity.user_area_stamped, opportunity_owner_live.crm_user_area) AS opportunity_owner_user_area,
+      COALESCE(fct_crm_opportunity.user_segment_stamped, opp_owner_live.crm_user_sales_segment) AS opportunity_owner_user_segment,
+      COALESCE(fct_crm_opportunity.user_geo_stamped, opp_owner_live.crm_user_geo) AS opportunity_owner_user_geo,
+      COALESCE(fct_crm_opportunity.user_region_stamped, opp_owner_live.crm_user_region) AS opportunity_owner_user_region,
+      COALESCE(fct_crm_opportunity.user_area_stamped, opp_owner_live.crm_user_area) AS opportunity_owner_user_area,
       COALESCE(report_opportunity_user_segment ,'other')                                                                                                                                                              AS sales_team_cro_level,
       -- NF: This code replicates the reporting structured of FY22, to keep current tools working
       CASE 
@@ -523,7 +523,6 @@ fct_crm_opportunity.last_activity_date,
 fct_crm_opportunity.record_type_id,
 fct_crm_opportunity.dr_partner_engagement,
 fct_crm_opportunity.deal_path_engagement,
-
 fct_crm_opportunity.stage_0_pending_acceptance_date,
 fct_crm_opportunity.stage_1_discovery_date,
 fct_crm_opportunity.stage_2_scoping_date,
@@ -540,7 +539,7 @@ CASE
   ELSE 0
 END                       AS is_open,
 fct_crm_opportunity.is_renewal,
-
+fct_crm_opportunity.snapshot_date,
 snapshot_date.first_day_of_month                            AS snapshot_date_month,
 snapshot_date.fiscal_year                                   AS snapshot_fiscal_year,
 snapshot_date.fiscal_quarter_name_fy                        AS snapshot_fiscal_quarter_name,
@@ -610,69 +609,102 @@ stage_1_date.first_day_of_month                         AS stage_1_date_month,
 stage_1_date.fiscal_year                                AS stage_1_fiscal_year,
 stage_1_date.fiscal_quarter_name_fy                     AS stage_1_fiscal_quarter_name,
 stage_1_date.first_day_of_fiscal_quarter                AS stage_1_fiscal_quarter_date,
+CASE 
+  WHEN opp_snapshot.pipeline_created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
+      AND opp_snapshot.is_won = 1 
+        THEN opp_snapshot.incremental_acv
+    ELSE 0
+  END                                                         AS created_and_won_same_quarter_iacv,
+CASE
+  WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
+    THEN opp_snapshot.incremental_acv 
+  ELSE 0 
+END                                                         AS created_in_snapshot_quarter_iacv,
+fct_crm_opportunity.account_owner_team_stamped,
+fct_crm_opportunity.account_owner_team_stamped_cro_level,
+fct_crm_opportunity.sales_team_rd_asm_level,
+fct_crm_opportunity.sales_team_cro_level,
+fct_crm_opportunity.sales_team_vp_level,
+fct_crm_opportunity.sales_team_avp_rd_level,
+fct_crm_opportunity.sales_team_asm_level,
+fct_crm_opportunity.order_type AS order_type_stamped,
+fct_crm_opportunity.is_duplicate AS current_is_duplicate_flag,
+fct_crm_opportunity.opportunity_owner,
+dim_crm_account.crm_account_name AS account_name,
+dim_crm_account.crm_account_tsp_region AS tsp_region,
+dim_crm_account.crm_account_tsp_sub_region AS tsp_sub_region,
+dim_crm_account.parent_crm_account_sales_segment AS ultimate_parent_sales_segment,
+dim_crm_account.tsp_max_hierarchy_sales_segment,
+dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_account_id,
+dim_crm_account.parent_crm_account_name AS ultimate_parent_account_name,
+dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_id, -- why do we have this twice? This is the same as ultimate_parent_account_id
+dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
+dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
+dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
+dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
+dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
+dim_crm_account.parent_crm_account_demographics_sales_segment AS upa_demographics_segment,
+dim_crm_account.parent_crm_account_demographics_geo AS upa_demographics_geo,
+dim_crm_account.parent_crm_account_demographics_region AS upa_demographics_region,
+dim_crm_account.parent_crm_account_demographics_area AS upa_demographics_area,
+dim_crm_account.parent_crm_account_demographics_territory AS upa_demographics_territory,
+fct_crm_opportunity.deal_size,
+fct_crm_opportunity.calculated_deal_size,
+fct_crm_opportunity.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
+fct_crm_opportunity.is_eligible_created_pipeline AS is_eligible_created_pipeline_flag,
+fct_crm_opportunity.is_eligible_sao AS is_eligible_sao_flag,
+fct_crm_opportunity.is_eligible_asp_analysis AS is_eligible_asp_analysis_flag,
+fct_crm_opportunity.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
+fct_crm_opportunity.is_booked_net_arr AS is_booked_net_arr_flag,
+fct_crm_opportunity.is_eligible_churn_contraction_flag,
+CASE
+  WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
+    AND fct_crm_opportunity.is_eligible_created_pipeline_flag = 1
+      THEN fct_crm_opportunity.net_arr
+  ELSE 0 
+END                                                 AS created_in_snapshot_quarter_net_arr,
+CASE 
+  WHEN net_arr_created_date.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
+     AND fct_crm_opportunity.is_won = 1
+     AND fct_crm_opportunity.is_eligible_created_pipeline_flag = 1
+      THEN opp_snapshot.net_arr
+  ELSE 0
+END                                                 AS created_and_won_same_quarter_net_arr,
+CASE
+  WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
+    AND fct_crm_opportunity.is_eligible_created_pipeline_flag = 1
+      THEN fct_crm_opportunity.calculated_deal_count
+  ELSE 0 
+END                                                 AS created_in_snapshot_quarter_deal_count,
 
-
-created_and_won_same_quarter_iacv,
-created_in_snapshot_quarter_iacv,
-account_owner_team_stamped,
-account_owner_team_stamped_cro_level,
-sales_team_rd_asm_level,
-sales_team_cro_level,
-sales_team_vp_level,
-sales_team_avp_rd_level,
-sales_team_asm_level,
-order_type_stamped,
-deal_group,
-deal_category,
-current_is_duplicate_flag,
-opportunity_owner,
-account_name,
-tsp_region,
-tsp_sub_region,
-ultimate_parent_sales_segment,
-tsp_max_hierarchy_sales_segment,
-ultimate_parent_account_id,
-ultimate_parent_account_name,
-ultimate_parent_id,
-is_jihu_account,
-account_owner_user_segment,
-account_owner_user_geo,
-account_owner_user_region,
-account_owner_user_area,
-account_demographics_segment,
-account_demographics_geo,
-account_demographics_region,
-account_demographics_area,
-account_demographics_territory,
-upa_demographics_segment,
-upa_demographics_geo,
-upa_demographics_region,
-upa_demographics_area,
-upa_demographics_territory,
-deal_size,
-calculated_deal_size,
-is_eligible_open_pipeline_flag,
-is_eligible_created_pipeline_flag,
-is_eligible_sao_flag,
-is_eligible_asp_analysis_flag,
-is_eligible_age_analysis_flag,
-is_booked_net_arr_flag,
-is_eligible_churn_contraction_flag,
-created_in_snapshot_quarter_net_arr,
-created_and_won_same_quarter_net_arr,
-created_in_snapshot_quarter_deal_count,
-open_1plus_deal_count,
-open_3plus_deal_count,
-open_4plus_deal_count,
-booked_deal_count,
-churned_contraction_deal_count,
-open_1plus_net_arr,
-open_3plus_net_arr,
-open_4plus_net_arr,
-booked_net_arr,
-churned_contraction_net_arr,
-is_excluded_flag,
-
+fct_crm_opportunity.open_1plus_deal_count,
+fct_crm_opportunity.open_3plus_deal_count,
+fct_crm_opportunity.open_4plus_deal_count,
+fct_crm_opportunity.booked_deal_count,
+fct_crm_opportunity.churned_contraction_deal_count,
+fct_crm_opportunity.open_1plus_net_arr,
+fct_crm_opportunity.open_3plus_net_arr,
+fct_crm_opportunity.open_4plus_net_arr,
+fct_crm_opportunity.booked_net_arr,
+fct_crm_opportunity.churned_contraction_net_arr,
+CASE 
+  WHEN fct_crm_opportunity.dim_parent_crm_account_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+    AND fct_crm_opportunity.close_date < '2020-08-01' 
+      THEN 1
+  -- NF 2021 - Pubsec extreme deals
+  WHEN fct_crm_opportunity.dim_crm_opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+    AND fct_crm_opportunity.snapshot_date < '2021-05-01' 
+    THEN 1
+  -- exclude vision opps from FY21-Q2
+  WHEN net_arr_created_date.fiscal_quarter_name_fy = 'FY21-Q2'
+    AND snapshot_date.day_of_fiscal_year_normalised = 90
+    AND fct_crm_opportunity.stage_name in ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying')
+    THEN 1
+  -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+  WHEN fct_crm_opportunity.dim_crm_opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+    THEN 1
+  ELSE 0
+END                                                         AS is_excluded_flag
 
     FROM fct_crm_opportunity
     LEFT JOIN dim_crm_account
@@ -685,7 +717,7 @@ is_excluded_flag,
       ON dim_crm_account.dim_crm_user_id = account_owner_live.dim_crm_user_id 
         AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
     LEFT JOIN dim_date snapshot_date
-      ON fct_crm_opportunity.date_actual::DATE = snapshot_date.date_actual
+      ON fct_crm_opportunity.snapshot_date::DATE = snapshot_date.date_actual
     LEFT JOIN dim_date close_date_detail
       ON fct_crm_opportunity.close_date::DATE = close_date_detail.date_actual
     LEFT JOIN dim_date created_date_detail
@@ -697,8 +729,8 @@ is_excluded_flag,
     LEFT JOIN dim_date stage_1_date 
       ON fct_crm_opportunity.stage_1_discovery_date::DATE = stage_1_date.date_actual
     LEFT JOIN net_iacv_to_net_arr_ratio
-      ON fct_crm_opportunity.opportunity_owner_user_segment = net_iacv_to_net_arr_ratio.user_segment_stamped
-      AND fct_crm_opportunity.order_type_stamped = net_iacv_to_net_arr_ratio.order_type_stamped
+      ON COALESCE(fct_crm_opportunity.user_segment_stamped, opp_owner_live.crm_user_sales_segment) = net_iacv_to_net_arr_ratio.user_segment_stamped
+      AND fct_crm_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
 
 
 )
@@ -707,6 +739,6 @@ is_excluded_flag,
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2022-04-27",
-    updated_date="2022-04-27"
+    created_date="2022-04-29",
+    updated_date="2022-04-29"
   ) }} 
