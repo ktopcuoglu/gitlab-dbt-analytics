@@ -293,6 +293,8 @@ clone_stop:
 pages:
   <<: *pages_job_template
   only:
+    changes:
+      - "transform/snowflake-dbt/*"
     refs:
       - master
     variables:

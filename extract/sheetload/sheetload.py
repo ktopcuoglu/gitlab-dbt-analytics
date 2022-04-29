@@ -1,13 +1,10 @@
-"""
-Main module for sheetload
-"""
 import sys
 import re
 from io import StringIO
 import json
-from logging import error, info, basicConfig, getLogger
+from logging import error, info, basicConfig, getLogger, warning
 from os import environ as env
-from typing import Dict
+from typing import Dict, Tuple, List
 from yaml import load, safe_load, YAMLError, FullLoader
 
 import boto3
@@ -26,7 +23,6 @@ from sheetload_dataframe_utils import dw_uploader_append_only
 from qualtrics_sheetload import qualtrics_loader
 
 from pandas.errors import ParserError
-
 
 def sheet_loader(
     sheet_file: str,
@@ -57,7 +53,7 @@ def sheet_loader(
     python sheetload.py sheets <sheet_file>
     """
 
-    with open(file=sheet_file, mode="r", encoding="utf-8") as file:
+    with open(sheet_file, "r") as file:
         try:
             stream = safe_load(file)
         except YAMLError as exc:
@@ -150,7 +146,7 @@ def gcs_loader(
             chunksize=chunksize,
         )
     except FileNotFoundError:
-        info(f"File {path} not found.")
+        info("File {} not found.".format(path))
 
     # Upload each chunk of the file
     for chunk in sheet_df:
@@ -272,11 +268,9 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
             body = csv_obj["Body"]
             csv_string = body.read().decode("utf-8")
             try:
-                sheet_df = pd.read_csv(
-                    StringIO(csv_string), engine="c", low_memory=False
-                )
+                sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
 
-                table_name = file.split(".")[0:1]
+                table_name, extension = file.split(".")[0:2]
                 # To pick up the file name alone  not the whole path to the file for as table name
                 table = table_name.split("/")[-1]
 
@@ -286,7 +280,6 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
             except ParserError:
                 error(f"Problem processing {file}")
-
 
 def csv_loader(
     filename: str,
@@ -357,7 +350,7 @@ def drive_loader(
 
     google_drive_client = GoogleDriveClient(gapi_keyfile)
 
-    with open(file=drive_file, mode="r", encoding="utf-8") as yaml_file:
+    with open(drive_file, "r") as yaml_file:
         stream = safe_load(yaml_file)
 
         folders = [
@@ -377,9 +370,7 @@ def drive_loader(
 
         info(f"Processing folder {folder_name}")
 
-        folder_id = google_drive_client.get_item_id(
-            item_name=folder_name, is_folder=True
-        )
+        folder_id = google_drive_client.get_item_id(item_name=folder_name, is_folder=True)
         archive_folder_id = google_drive_client.get_archive_folder_id(
             in_folder_id=folder_id
         )
