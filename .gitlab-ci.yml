@@ -183,6 +183,7 @@ clone_stop:
   <<: *python_check
   script:
     - pip install flatten_dict==0.3.0
+    - pip install sqlparse==0.4.1
     - python -m pytest -vv -x --junitxml=report.xml
   artifacts:
     reports:
