@@ -16,6 +16,7 @@ from transform_instance_level_queries_to_snowsql import (
     META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
+    METRICS_EXCEPTION,
 )
 from fire import Fire
 from gitlabdata.orchestration_utils import (
@@ -52,6 +53,13 @@ class UsagePing(object):
             os.path.join(os.path.dirname(__file__), TRANSFORMED_INSTANCE_QUERIES_FILE)
         ) as f:
             saas_queries = json.load(f)
+
+        # exclude metrics we do not want to track
+        saas_queries = {
+            metrics_name: metrics_sql
+            for metrics_name, metrics_sql in saas_queries.items()
+            if not metrics_name.lower() in METRICS_EXCEPTION
+        }
 
         return saas_queries
 

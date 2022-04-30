@@ -170,13 +170,13 @@
     "stage_name": "secure"
   },
   {
-    "event_name": "secure_ci_build_creation",
-    "source_cte_name": "secure_ci_build",
+    "event_name": "other_ci_build_creation",
+    "source_cte_name": "other_ci_build",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_ci_build_id",
-    "stage_name": "secure"
+    "stage_name": "verify"
   },
   {
     "event_name": "successful_ci_pipeline_creation",
@@ -393,6 +393,15 @@
     "project_column_name": "dim_project_id",
     "primary_key": "dim_issue_id",
     "stage_name": "monitor"
+  },
+  {
+    "event_name": "api_fuzzing_build_run",
+    "source_cte_name": "api_fuzzing_jobs",
+    "user_column_name": "dim_user_id",
+    "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
+    "project_column_name": "dim_project_id",
+    "primary_key": "dim_ci_build_id",
+    "stage_name": "secure"
   }
 ]
 
@@ -478,7 +487,7 @@
 
     SELECT *
     FROM prep_ci_build
-    WHERE secure_ci_build_type IN ('container_scanning')
+    WHERE secure_ci_build_type = 'container_scanning'
     
 ), sast_jobs AS (
 
@@ -492,19 +501,18 @@
     FROM prep_ci_build
     WHERE secure_ci_build_type = 'secret_detection'
 
-), secure_ci_build AS (
+), other_ci_build AS (
 
     SELECT *
     FROM prep_ci_build
-    WHERE secure_ci_build_type IN ('api_fuzzing',
-                                    'dast',
-                                    'dependency_scanning',
-                                    'license_management',
-                                    'license_scanning',
-                                    'sast',
-                                    'secret_detection'
-                                    )
-    
+    WHERE secure_ci_build_type IS NULL
+
+), api_fuzzing_jobs AS (
+
+    SELECT *
+    FROM prep_ci_build
+    WHERE secure_ci_build_type = 'api_fuzzing'
+
 ), successful_ci_pipelines AS (
 
     SELECT *
@@ -597,9 +605,9 @@
         NULL                                                                                                   AS ultimate_parent_namespace_id,
       {%- endif %}
       {%- if event_cte.project_column_name != 'NULL' or event_cte.ultimate_parent_namespace_column_name != 'NULL' %}
-        {{ event_cte.source_cte_name}}.dim_plan_id                                                             AS plan_id_at_event_date,
-        prep_plan.plan_name                                                                                    AS plan_name_at_event_date,
-        prep_plan.plan_is_paid                                                                                 AS plan_was_paid_at_event_date,
+        COALESCE({{ event_cte.source_cte_name}}.dim_plan_id, 34)                                               AS plan_id_at_event_date,
+        COALESCE(prep_plan.plan_name, 'free')                                                                  AS plan_name_at_event_date,
+        COALESCE(prep_plan.plan_is_paid, FALSE)                                                                AS plan_was_paid_at_event_date,
       {%- else %}
         34                                                                                                     AS plan_id_at_event_date,
         'free'                                                                                                 AS plan_name_at_event_date,

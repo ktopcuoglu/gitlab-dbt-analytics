@@ -9,7 +9,15 @@ WITH prep_user AS (
       created_at,
       updated_at,
       is_admin,
-      is_blocked_user
+      is_blocked_user,
+      notification_email_domain,
+      notification_email_domain_classification,
+      email_domain,
+      email_domain_classification,
+      public_email_domain,
+      public_email_domain_classification,
+      commit_email_domain,
+      commit_email_domain_classification
     FROM {{ ref('prep_user') }}
 
 )
@@ -17,7 +25,7 @@ WITH prep_user AS (
 {{ dbt_audit(
     cte_ref="prep_user",
     created_by="@mpeychet_",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-06-28",
-    updated_date="2022-03-18"
+    updated_date="2022-04-26"
 ) }}

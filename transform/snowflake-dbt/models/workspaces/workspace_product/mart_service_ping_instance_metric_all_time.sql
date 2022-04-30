@@ -14,7 +14,11 @@
 
     SELECT
         {{ dbt_utils.star(from=ref('mart_service_ping_instance_metric'), except=['CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
-    FROM mart_service_ping_instance_metric WHERE time_frame = 'all'
+    FROM mart_service_ping_instance_metric
+      WHERE time_frame = 'all'
+    {% if is_incremental() %}
+                AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+    {% endif %}
 
 )
 

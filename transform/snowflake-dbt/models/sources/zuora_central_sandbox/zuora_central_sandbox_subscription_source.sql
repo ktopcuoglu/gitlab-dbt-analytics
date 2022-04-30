@@ -38,6 +38,8 @@ WITH source AS (
                                                     AS turn_on_cloud_licensing,
       turn_on_seat_reconciliation_c                 AS turn_on_seat_reconciliation,
       turn_on_auto_renew_c                          AS turn_on_auto_renewal,
+      turn_on_operational_metrics_c                 AS turn_on_operational_metrics,
+      contract_operational_metrics_c                AS contract_operational_metrics,
 
       --key_dates
       cancelled_date                                AS cancelled_date,
