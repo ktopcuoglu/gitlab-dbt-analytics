@@ -61,11 +61,7 @@ models:
         tests:
           - not_null
           - unique
-<<<<<<< HEAD
           
-=======
-
-
   - name: fct_usage_event
     description: '{{ doc("fct_usage_event") }}'
     columns:
@@ -377,7 +373,6 @@ models:
       - name: model_updated_date
         description: The date at which the model code was last updated
 
->>>>>>> master
   - name: prep_service_ping_instance
     description: ' {{ doc("prep_service_ping_instance") }} '
     columns:
@@ -934,9 +929,6 @@ models:
       - name: dim_service_ping_metric_id
         tests:
           - not_null
-<<<<<<< HEAD
-          - unique
-=======
           - unique
 
   - name: rpt_service_ping_counter_statistics
@@ -1008,4 +1000,3 @@ models:
       - name: fct_performance_indicator_targets_id
         description: the unique ID of a month/metric record in fct_performance_indicator_targets
         tests:
->>>>>>> master

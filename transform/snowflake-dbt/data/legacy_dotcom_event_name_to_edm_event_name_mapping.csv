@@ -2,7 +2,9 @@
 action_monthly_active_users_design_management,action_monthly_active_users_design_management
 action_monthly_active_users_project_repo,action_monthly_active_users_project_repo
 action_monthly_active_users_wiki_repo,action_monthly_active_users_wiki_repo
+,api_fuzzing_build_run
 boards,boards
+ci_builds,other_ci_build_creation
 ci_pipeline_schedules,ci_pipeline_schedules
 ci_pipelines,ci_pipeline_creation
 ci_stages,ci_stages
@@ -35,7 +37,7 @@ releases,release_creation
 requirements,requirement_creation
 sast,sast_build_run
 secret_detection,secret_detection_build_run
-secure_stage_ci_jobs,secure_ci_build_creation
+secure_stage_ci_jobs,
 services,services
 snippets,snippets
 successful_ci_pipelines,successful_ci_pipeline_creation
