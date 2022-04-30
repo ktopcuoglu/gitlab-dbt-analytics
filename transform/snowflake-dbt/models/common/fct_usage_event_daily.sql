@@ -21,7 +21,6 @@ fct_usage_event_daily AS (
     dim_user_id,
     dim_ultimate_parent_namespace_id,
     dim_event_date_id,
-    dim_project_id,
     event_date,
     event_name,
     plan_id_at_event_date,
@@ -37,7 +36,7 @@ fct_usage_event_daily AS (
     COUNT(*) AS event_count
   FROM fct_usage_event
   WHERE dim_user_id IS NOT NULL
-  {{ dbt_utils.group_by(n=21) }}
+  {{ dbt_utils.group_by(n=20) }}
 
 )
 

@@ -7,7 +7,6 @@
     ('dim_namespace', 'dim_namespace'),
     ('fct_usage_event_daily', 'fct_usage_event_daily'),
     ('dim_user', 'dim_user'),
-    ('dim_project', 'dim_project'),
     ('dim_date', 'dim_date')
     ])
 }},
@@ -46,28 +45,16 @@ fact_with_user AS (
         
 ),
 
-fact_with_project AS (
-    
-    SELECT
-      fact_with_user.*,
-      COALESCE(dim_project.is_learn_gitlab, FALSE) AS project_is_learn_gitlab,
-      COALESCE(dim_project.is_imported, FALSE) AS project_is_imported
-    FROM fact_with_user
-    LEFT JOIN dim_project
-      ON fact_with_user.dim_project_id = dim_project.dim_project_id
-        
-),
-
 fact_with_dim_date AS (
     
     SELECT
-      fact_with_project.*,
+      fact_with_user.*,
       dim_date.first_day_of_month AS event_calendar_month,
       dim_date.quarter_name AS event_calendar_quarter,
       dim_date.year_actual AS event_calendar_year
-    FROM fact_with_project
+    FROM fact_with_user
     LEFT JOIN dim_date
-      ON fact_with_project.dim_event_date_id = dim_date.date_id
+      ON fact_with_user.dim_event_date_id = dim_date.date_id
         
 )
 
