@@ -525,7 +525,53 @@ Type of Data: gitlab.com db usage events
 
 Aggregate Grain: Event
 
+Use case: fct_usage_event is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
+data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
+
+{% enddocs %}
+
+{% docs fct_usage_event_core %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: Event
+
 Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
+
+{% enddocs %}
+
+{% docs fct_usage_event_daily %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_date, dim_user_id, dim_namespace_id, and event_name
+
+Time Grain: Day
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+{% enddocs %}
+
+{% docs fct_usage_instance_daily %}
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_date, event_name, dim_instance_id (all od SaaS)
+
+Time Grain: Day
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+{% enddocs %}
+
+{% docs fct_usage_namespace_daily %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_date, event_name, and dim_ultimate_parent_namespace_id
+
+Time Grain: Day
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
 
 {% enddocs %}
 

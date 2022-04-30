@@ -64,7 +64,7 @@ models:
 - name: mart_usage_namespace_daily
   description: '{{ doc("mart_usage_namespace_daily") }}'
   columns:
-    - name: mart_usage_namespace_id
+    - name: usage_namespace_daily_id
       description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_usage_namespace_daily.
       tests:
         - not_null
@@ -122,39 +122,10 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
 
-- name: mart_usage_instance_daily
-  description: '{{ doc("mart_usage_instance_daily") }}'
-  columns:
-    - name: mart_usage_instance_id
-      description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
-      tests:
-        - not_null
-        - unique
-    - name: event_date
-      description: The date when the event was created.
-    - name: event_name
-      description: The name tied to an event
-    - name: data_source
-      description: The source application where the data was extracted from.
-    - name: dim_instance_id
-      description: The unique id of an instance from the dim_instance model.
-    - name: event_count
-      description: The count of events
-    - name: distinct_user_count
-      description: The count of distinct users
-    - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
-    - name: model_created_date
-      description: The date at which the model was created
-    - name: model_updated_date
-      description: The date at which the model code was last updated
-
 - name: mart_usage_event_daily
   description: '{{ doc("mart_usage_event_daily") }}'
   columns:
-    - name: mart_usage_event_daily_id
+    - name: usage_event_daily_id
       description: the unique composite ID for the mart_usage_event_daily model consisting of event_date, dim_user_id, dim_ultimate_parent_namespace_id, and event_name.
       tests:
         - not_null

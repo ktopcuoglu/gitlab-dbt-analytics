@@ -12,18 +12,7 @@ Use case: Everyday analysis and dashboards; flexibility in aggregating by sets o
 {% docs mart_usage_namespace_daily %}
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: event_date, event_name, and dim_namespace_id
-
-Time Grain: Day
-
-Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
-
-{% enddocs %}
-
-{% docs mart_usage_instance_daily %}
-Type of Data: gitlab.com db usage events
-
-Aggregate Grain: event_date, event_name, dim_instance_id (all od SaaS)
+Aggregate Grain: event_date, event_name, and dim_ultimate_parent_namespace_id
 
 Time Grain: Day
 

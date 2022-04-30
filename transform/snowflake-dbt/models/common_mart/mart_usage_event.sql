@@ -15,18 +15,14 @@
 fact_with_date AS (
 
   /*
-  Mart Usage Event is at the atomic grain of event_id and event_created_at timestamp. All other Marts in the GitLab.com usage events 
-  lineage are built from this Mart. This CTE pulls in ALL of the columns from the fct_usage_event as a base data set to join to the 
-  dimensions. It uses the dbt_utils.star function to select all columns except the meta data table related columns from the fact.
-  The CTE also filters out imported projects and events with data quality issues by filtering out negative days since user creation at
-  event date.
+  Mart Usage Event is at the atomic grain of event_id and event_created_at timestamp. This CTE pulls in ALL of the columns 
+  from the fct_usage_event as a base data set to join to the dimensions. It uses the dbt_utils.star function to select all 
+  columns except the meta data table related columns from the fact.
   */
   SELECT
     {{ dbt_utils.star(from=ref('fct_usage_event'), except=["CREATED_BY",
         "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM fct_usage_event
-  WHERE days_since_user_creation_at_event_date >= 0
-    OR days_since_user_creation_at_event_date IS NULL
   
 ),
 
@@ -77,8 +73,7 @@ fact_with_dim_date AS (
     FROM fact_with_project
     LEFT JOIN dim_date
       ON fact_with_project.dim_event_date_id = dim_date.date_id
-    
-    
+        
 )
 
 {{ dbt_audit(

@@ -4,43 +4,50 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_usage_event', 'mart_usage_event'),
+    ('dim_namespace', 'dim_namespace'),
+    ('fct_usage_namespace_daily', 'fct_usage_namespace_daily'),
+    ('dim_date', 'dim_date')
     ])
 }},
 
-mart_usage_namespace_daily AS (
+fact_with_date AS (
+
+  SELECT
+    {{ dbt_utils.star(from=ref('fct_usage_namespace_daily'), except=["CREATED_BY",
+        "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
+  FROM fct_usage_namespace_daily
+  
+),
+
+fact_with_namespace AS (
+
+  SELECT
+    fact_with_date.*,
+    dim_namespace.namespace_is_internal,
+    dim_namespace.namespace_creator_is_blocked,
+    dim_namespace.created_at AS namespace_created_at,
+    CAST(dim_namespace.created_at AS DATE) AS namespace_created_date
+  FROM fact_with_date
+  LEFT JOIN dim_namespace
+    ON fact_with_date.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
+
+),
+
+fact_with_dim_date AS (
     
-    SELECT 
-      {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_ultimate_parent_namespace_id']) }}       
-                                            AS mart_usage_namespace_id,
-      dim_active_product_tier_id,
-      dim_active_subscription_id,
-      dim_crm_account_id,
-      dim_billing_account_id, 
-      dim_ultimate_parent_namespace_id,  
-      plan_id_at_event_date,
-      plan_name_at_event_date,
-      plan_was_paid_at_event_date,
-      namespace_created_at,
-      days_since_namespace_creation_at_event_date,                            
-      event_date,
-      event_name,
-      stage_name,
-      section_name,
-      group_name,
-      data_source,
-      is_smau,
-      is_gmau,
-      is_umau,
-      COUNT(*) AS event_count,
-      COUNT(DISTINCT(dim_user_id)) AS user_count
-    FROM mart_usage_event
-    {{ dbt_utils.group_by(n=20) }}
+    SELECT
+      fact_with_namespace.*,
+      dim_date.first_day_of_month AS event_calendar_month,
+      dim_date.quarter_name AS event_calendar_quarter,
+      dim_date.year_actual AS event_calendar_year
+    FROM fact_with_namespace
+    LEFT JOIN dim_date
+      ON fact_with_namespace.dim_event_date_id = dim_date.date_id
         
 )
 
 {{ dbt_audit(
-    cte_ref="mart_usage_namespace_daily",
+    cte_ref="fact_with_dim_date",
     created_by="@icooper-acp",
     updated_by="@iweeks",
     created_date="2022-02-15",
