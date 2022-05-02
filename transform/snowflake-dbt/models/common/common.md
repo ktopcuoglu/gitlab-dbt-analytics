@@ -536,7 +536,9 @@ data quality issues by filtering out negative days since user creation at event 
 
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: Event
+Aggregate Grain: None
+
+Time Grain: None
 
 Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
 
@@ -546,22 +548,26 @@ Use case: Source of truth (atomic), contains foreign keys to easily join to DIM 
 
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: event_date, dim_user_id, dim_namespace_id, and event_name
+Aggregate Grain: event_name, dim_ultimate_parent_namespace_id, dim_user_id
 
-Time Grain: Day
+Time Grain: event_date
 
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_usage_event for more details). Events not tied to a specific user are excluded.
 
 {% enddocs %}
 
 {% docs fct_usage_instance_daily %}
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: event_date, event_name, dim_instance_id (all od SaaS)
+Aggregate Grain: event_name, dim_instance_id (all of gitlab.com/SaaS)
 
-Time Grain: Day
+Time Grain: event_date
 
-Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+Use case: everyday analysis and dashboards; SaaS-wide analysis
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_usage_event for more details). Events not tied to a specific user are included.
 
 {% enddocs %}
 
@@ -569,11 +575,13 @@ Use case: everyday analysis and dashboards; flexibility in aggregating by sets o
 
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: event_date, event_name, and dim_ultimate_parent_namespace_id
+Aggregate Grain: event_name, dim_ultimate_parent_namespace_id
 
-Time Grain: Day
+Time Grain: event_date
 
 Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_usage_event for more details). Events not tied to a specific user are included.
 
 {% enddocs %}
 
