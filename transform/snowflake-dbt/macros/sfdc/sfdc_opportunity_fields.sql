@@ -508,6 +508,18 @@ WITH first_contact  AS (
         ELSE 1
       END                                                                                       AS calculated_deal_count,
       CASE 
+        WHEN sfdc_opportunity.deal_path = 'Direct'
+          THEN 'Direct'
+        WHEN sfdc_opportunity.deal_path = 'Web Direct'
+          THEN 'Web Direct' 
+        WHEN sfdc_opportunity.deal_path = 'Channel' 
+            AND sfdc_opportunity.sales_qualified_source = 'Channel Generated' 
+          THEN 'Partner Sourced'
+        WHEN sfdc_opportunity.deal_path = 'Channel' 
+            AND sfdc_opportunity.sales_qualified_source != 'Channel Generated' 
+          THEN 'Partner Co-Sell'
+      END                                                                                       AS deal_path_engagement,
+      CASE 
         WHEN net_arr > 0 AND net_arr < 1000 
           THEN '1. (0k -1k)'
         WHEN net_arr >=1000 AND net_arr < 10000 
