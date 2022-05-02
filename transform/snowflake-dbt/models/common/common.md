@@ -523,7 +523,9 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: Event
+Aggregate Grain: None
+
+Time Grain: None
 
 Use case: fct_usage_event is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
 data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
