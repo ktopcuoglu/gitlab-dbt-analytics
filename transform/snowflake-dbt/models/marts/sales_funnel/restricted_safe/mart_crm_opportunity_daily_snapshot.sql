@@ -267,7 +267,7 @@
       fct_crm_opportunity.cp_review_notes,
 
       -- Pipeline Velocity Fields
-      fct_crm_opportunity.dim_crm_account_id                                                                                                                                                                             AS raw_account_id,
+      fct_crm_opportunity.dim_crm_account_id                                                                                                                                                                          AS raw_account_id,
       LOWER(fct_crm_opportunity.user_segment_stamped)                                                                                                                                                                 AS report_opportunity_user_segment,
       LOWER(fct_crm_opportunity.user_geo_stamped)                                                                                                                                                                     AS report_opportunity_user_geo,
       LOWER(fct_crm_opportunity.user_region_stamped)                                                                                                                                                                  AS report_opportunity_user_region,
@@ -482,14 +482,11 @@
 
 
 
-fct_crm_opportunity.crm_opportunity_id AS opportunity_snapshot_id,
+fct_crm_opportunity.crm_opportunity_snapshot_id AS opportunity_snapshot_id,
 fct_crm_opportunity.dim_crm_opportunity_id AS opportunity_id,
 fct_crm_opportunity.dim_crm_user_id AS owner_id,
 fct_crm_opportunity.merged_opportunity_id,
 fct_crm_opportunity.opportunity_owner_department,
-fct_crm_opportunity.opportunity_sales_development_representative,
-fct_crm_opportunity.opportunity_business_development_representative,
-fct_crm_opportunity.opportunity_development_representative,
 fct_crm_opportunity.order_type AS snapshot_order_type_stamped,
 fct_crm_opportunity.acv,
 fct_crm_opportunity.competitors,
@@ -569,7 +566,6 @@ net_arr_created_date.first_day_of_month                     AS pipeline_created_
 net_arr_created_date.fiscal_year                            AS pipeline_created_fiscal_year,
 net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
 net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
-sales_accepted_date.first_day_of_month                      AS sales_accepted_month,
 sales_accepted_date.fiscal_year                             AS sales_accepted_fiscal_year,
 sales_accepted_date.fiscal_quarter_name_fy                  AS sales_accepted_fiscal_quarter_name,
 sales_accepted_date.first_day_of_fiscal_quarter             AS sales_accepted_fiscal_quarter_date,
@@ -602,32 +598,33 @@ CASE
 END                                                                     AS calculated_from_ratio_net_arr,
 fct_crm_opportunity.calculated_deal_count,
 fct_crm_opportunity.opportunity_owner_manager,
-fct_crm_opportunity.dim_crm_account AS account_id,
-fct_crm_opportunity.stage_1_discovery_date AS stage_1_date,
+fct_crm_opportunity.dim_crm_account_id AS account_id,
 stage_1_date.date_actual                                AS stage_1_date,
 stage_1_date.first_day_of_month                         AS stage_1_date_month,
 stage_1_date.fiscal_year                                AS stage_1_fiscal_year,
 stage_1_date.fiscal_quarter_name_fy                     AS stage_1_fiscal_quarter_name,
 stage_1_date.first_day_of_fiscal_quarter                AS stage_1_fiscal_quarter_date,
 CASE 
-  WHEN opp_snapshot.pipeline_created_fiscal_quarter_name= opp_snapshot.close_fiscal_quarter_name
-      AND opp_snapshot.is_won = 1 
-        THEN opp_snapshot.incremental_acv
+  WHEN net_arr_created_date.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
+      AND fct_crm_opportunity.is_won = 1 
+        THEN fct_crm_opportunity.incremental_acv
     ELSE 0
   END                                                         AS created_and_won_same_quarter_iacv,
 CASE
-  WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = opp_snapshot.snapshot_fiscal_quarter_name
-    THEN opp_snapshot.incremental_acv 
+  WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
+    THEN fct_crm_opportunity.incremental_acv 
   ELSE 0 
 END                                                         AS created_in_snapshot_quarter_iacv,
 fct_crm_opportunity.account_owner_team_stamped,
-fct_crm_opportunity.account_owner_team_stamped_cro_level,
-fct_crm_opportunity.sales_team_rd_asm_level,
-fct_crm_opportunity.sales_team_cro_level,
-fct_crm_opportunity.sales_team_vp_level,
-fct_crm_opportunity.sales_team_avp_rd_level,
-fct_crm_opportunity.sales_team_asm_level,
-fct_crm_opportunity.order_type AS order_type_stamped,
+CASE 
+  WHEN fct_crm_opportunity.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
+    THEN 'SMB'
+  WHEN fct_crm_opportunity.account_owner_team_stamped IN ('APAC','EMEA','Channel','US West','US East','Public Sector')
+    THEN 'Large'
+  WHEN fct_crm_opportunity.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
+    THEN 'Mid-Market'
+  ELSE 'SMB'
+END                                                         AS account_owner_team_stamped_cro_level,
 fct_crm_opportunity.is_duplicate AS current_is_duplicate_flag,
 fct_crm_opportunity.opportunity_owner,
 dim_crm_account.crm_account_name AS account_name,
@@ -637,7 +634,7 @@ dim_crm_account.parent_crm_account_sales_segment AS ultimate_parent_sales_segmen
 dim_crm_account.tsp_max_hierarchy_sales_segment,
 dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_account_id,
 dim_crm_account.parent_crm_account_name AS ultimate_parent_account_name,
-dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_id, -- why do we have this twice? This is the same as ultimate_parent_account_id
+dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_id,
 dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
 dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
 dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
@@ -655,24 +652,24 @@ fct_crm_opportunity.is_eligible_created_pipeline AS is_eligible_created_pipeline
 fct_crm_opportunity.is_eligible_sao AS is_eligible_sao_flag,
 fct_crm_opportunity.is_eligible_asp_analysis AS is_eligible_asp_analysis_flag,
 fct_crm_opportunity.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
-fct_crm_opportunity.is_booked_net_arr AS is_booked_net_arr_flag,
-fct_crm_opportunity.is_eligible_churn_contraction_flag,
+fct_crm_opportunity.fpa_master_bookings_flag AS is_booked_net_arr_flag,
+fct_crm_opportunity.is_eligible_churn_contraction AS is_eligible_churn_contraction_flag,
 CASE
   WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
-    AND fct_crm_opportunity.is_eligible_created_pipeline_flag = 1
+    AND fct_crm_opportunity.is_eligible_created_pipeline = 1
       THEN fct_crm_opportunity.net_arr
   ELSE 0 
 END                                                 AS created_in_snapshot_quarter_net_arr,
 CASE 
   WHEN net_arr_created_date.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
      AND fct_crm_opportunity.is_won = 1
-     AND fct_crm_opportunity.is_eligible_created_pipeline_flag = 1
-      THEN opp_snapshot.net_arr
+     AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+      THEN fct_crm_opportunity.net_arr
   ELSE 0
 END                                                 AS created_and_won_same_quarter_net_arr,
 CASE
   WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
-    AND fct_crm_opportunity.is_eligible_created_pipeline_flag = 1
+    AND fct_crm_opportunity.is_eligible_created_pipeline = 1
       THEN fct_crm_opportunity.calculated_deal_count
   ELSE 0 
 END                                                 AS created_in_snapshot_quarter_deal_count,
@@ -688,7 +685,7 @@ fct_crm_opportunity.open_4plus_net_arr,
 fct_crm_opportunity.booked_net_arr,
 fct_crm_opportunity.churned_contraction_net_arr,
 CASE 
-  WHEN fct_crm_opportunity.dim_parent_crm_account_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+  WHEN dim_crm_account.dim_parent_crm_account_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
     AND fct_crm_opportunity.close_date < '2020-08-01' 
       THEN 1
   -- NF 2021 - Pubsec extreme deals
