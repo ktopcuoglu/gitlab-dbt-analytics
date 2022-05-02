@@ -210,35 +210,34 @@
       ON gitlab_dotcom_namespaces_source.namespace_id = pqls_with_product_information.pql_namespace_id
     QUALIFY ROW_NUMBER() OVER(PARTITION BY email ORDER BY pql_event_created_at DESC) = 1
 
-)
--------------------------- End of PQL logic --------------------------
-
-, services_by_marketing_contact_id AS (
+), services_by_email AS (
 
     SELECT
-      marketing_contact_order.dim_marketing_contact_id                                           AS dim_marketing_contact_id,
+      latest_pql.email                                                                           AS email,
       COUNT(*)                                                                                   AS pql_nbr_integrations_installed,
       ARRAY_AGG(DISTINCT services.service_type) WITHIN GROUP (ORDER BY services.service_type)    AS pql_integrations_installed
     FROM services
     LEFT JOIN project
       ON services.project_id = project.dim_project_id
-    LEFT JOIN marketing_contact_order
-      ON marketing_contact_order.dim_namespace_id = project.dim_namespace_id
+    LEFT JOIN latest_pql
+      ON latest_pql.pql_namespace_id = project.dim_namespace_id
     GROUP BY 1
 
-), users_role_by_marketing_contact_id AS (
+), users_role_by_email AS (
 
     SELECT
-      marketing_contact_order.dim_marketing_contact_id,
-      ARRAY_AGG(DISTINCT marketing_contact.job_title) WITHIN GROUP (ORDER BY marketing_contact.job_title) AS pql_namespace_creator_job_description
-    FROM marketing_contact_order 
+      latest_pql.email,
+      marketing_contact.job_title AS pql_namespace_creator_job_description
+    FROM latest_pql 
     INNER JOIN dim_namespace
-      ON marketing_contact_order.dim_namespace_id = dim_namespace.dim_namespace_id
+      ON latest_pql.pql_namespace_id = dim_namespace.dim_namespace_id
     INNER JOIN marketing_contact
       ON dim_namespace.creator_id = marketing_contact.gitlab_dotcom_user_id
-    GROUP BY 1
 
-), subscription_aggregate AS (
+)
+-------------------------- End of PQL logic --------------------------
+
+, subscription_aggregate AS (
 
     SELECT
       dim_marketing_contact_id,
@@ -765,9 +764,9 @@
       latest_pql.pql_trial_start_date,
       latest_pql.pql_min_subscription_start_date,
       latest_pql.pql_event_created_at,
-      services_by_marketing_contact_id.pql_nbr_integrations_installed,
-      services_by_marketing_contact_id.pql_integrations_installed,
-      users_role_by_marketing_contact_id.pql_namespace_creator_job_description,
+      services_by_email.pql_nbr_integrations_installed,
+      services_by_email.pql_integrations_installed,
+      users_role_by_email.pql_namespace_creator_job_description,
       marketing_contact.days_since_self_managed_owner_signup,
       marketing_contact.days_since_self_managed_owner_signup_bucket,
       marketing_contact.zuora_contact_id,
@@ -825,12 +824,12 @@
       ON paid_subscription_aggregate.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN usage_metrics
       ON usage_metrics.dim_marketing_contact_id = prep.dim_marketing_contact_id
-    LEFT JOIN services_by_marketing_contact_id
-      ON services_by_marketing_contact_id.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
     LEFT JOIN latest_pql
       ON latest_pql.email = marketing_contact.email_address
-    LEFT JOIN users_role_by_marketing_contact_id
-      ON users_role_by_marketing_contact_id.dim_marketing_contact_id = marketing_contact.dim_marketing_contact_id
+    LEFT JOIN services_by_email
+      ON services_by_email.email = marketing_contact.email_address
+    LEFT JOIN users_role_by_email
+      ON users_role_by_email.email = marketing_contact.email_address
 )
 
 {{ hash_diff(
