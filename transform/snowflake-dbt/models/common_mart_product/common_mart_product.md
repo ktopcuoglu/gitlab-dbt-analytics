@@ -1,9 +1,9 @@
 {% docs rpt_xmau_metric_monthly %}
 Type of Data: gitlab.com db usage events
 
-Aggregate Grain: reporting_month, user_group, section_name, stage_name, and group_name
+Aggregate Grain: user_group (total, free, paid), section_name, stage_name, and group_name
 
-Time Grain: Last 28 days of the month
+Time Grain: reporting_month (defined as the last 28 days of the calendar month). This is intended to match the instance-level service ping metrics by getting a 28-day count of each event.
 
 Use case: Paid SaaS xMAU, SaaS SpO
 
