@@ -1,8 +1,8 @@
 version: 2
 
 models:
-- name: rpt_xmau_metric_monthly
-  description: '{{ doc("rpt_xmau_metric_monthly") }}'
+- name: rpt_usage_xmau_metric_monthly
+  description: '{{ doc("rpt_usage_xmau_metric_monthly") }}'
   columns:
     - name: rpt_xmau_metric_monthly_id
       description: the unique ID of a monthly xMAU metric in rpt_xmau_metric_monthly

@@ -1,4 +1,4 @@
-{% docs rpt_xmau_metric_monthly %}
+{% docs rpt_usage_xmau_metric_monthly %}
 Reporting model that calculates unique user and namespace counts for GitLab.com xMAU metrics.
 
 Type of Data: gitlab.com db usage events

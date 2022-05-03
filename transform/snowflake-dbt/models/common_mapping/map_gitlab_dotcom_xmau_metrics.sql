@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics_new'),
+    ('gitlab_dotcom_xmau_metrics', 'gitlab_dotcom_xmau_metrics_common'),
     ('dotcom_event_to_edm_event', 'legacy_dotcom_event_name_to_edm_event_name_mapping')
 ]) }},
 
