@@ -2324,7 +2324,7 @@ models:
       - name: dim_ultimate_parent_namespace_id
         description: The unique identifier of the ultimate parent namespace in which the event was generated, easily joined to dim_namespace
       - name: dim_project_id
-        description: The unique identifier of the project in which the event was generated, easily joined to dim_project. This will be NULL if the event is not tied to a project (ex: epics)
+        description: The unique identifier of the project in which the event was generated, easily joined to dim_project. This will be NULL if the event is not tied to a project. ex. epics.
       - name: dim_user_id
         description: The unique identifier of the user who generated the event, easily joined to dim_user. This will be NULL if the event is not tied to a specific user
       - name: stage_name
