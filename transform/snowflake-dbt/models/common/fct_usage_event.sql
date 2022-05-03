@@ -10,7 +10,6 @@
     ('dim_subscription', 'dim_subscription'),
     ('dim_namespace', 'dim_namespace')
     ])
-
 }},
 
 prep_event_24_months AS (

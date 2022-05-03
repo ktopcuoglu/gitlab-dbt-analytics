@@ -6,7 +6,6 @@
 {{ simple_cte([
     ('fct_usage_event_with_valid_user', 'fct_usage_event_with_valid_user')
     ])
-
 }},
 
 fct_usage_event_daily AS (
