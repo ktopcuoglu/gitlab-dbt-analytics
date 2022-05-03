@@ -744,6 +744,7 @@ roles:
             schemas:
                 read:
                     - prep.gitlab_dotcom
+                    - prep.data_science
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
@@ -758,6 +759,7 @@ roles:
             tables:
                 read:
                     - prep.gitlab_dotcom.*
+                    - prep.data_science.*
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.workspace_data_science.*
@@ -1403,6 +1405,7 @@ roles:
                       - prod.restricted_safe_workspace_sales
                       - prod.common_mart_product
                       - prod.common_mart_marketing
+                      - prep.data_science
               tables:
                   read:
                       - prod.workspace_data_science.*
@@ -1410,6 +1413,7 @@ roles:
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_product.*
                       - prod.common_mart_marketing.*
+                      - prep.data_science.*
 
 
     - demandbase:
