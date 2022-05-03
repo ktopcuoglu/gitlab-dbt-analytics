@@ -2292,8 +2292,8 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_usage_event
-    description: '{{ doc("fct_usage_event") }}'
+  - name: fct_usage_event_with_valid_user
+    description: '{{ doc("fct_usage_event_with_valid_user") }}'
     columns:
       - name: event_id
         description: The unique ID of an event.
@@ -2301,8 +2301,8 @@ models:
           - not_null
           - unique
   
-  - name: fct_usage_event_core
-    description: '{{ doc("fct_usage_event_core") }}'
+  - name: fct_usage_event
+    description: '{{ doc("fct_usage_event") }}'
     columns:
       - name: event_id
         description: The unique identifier of an event. This is a generated primary key and will not join back to the source models.

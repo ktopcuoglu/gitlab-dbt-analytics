@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('fct_usage_event', 'fct_usage_event')
+    ('fct_usage_event_with_valid_user', 'fct_usage_event_with_valid_user')
     ])
 
 }},
@@ -34,7 +34,7 @@ fct_usage_event_daily AS (
     is_umau,
     data_source,
     COUNT(*) AS event_count
-  FROM fct_usage_event
+  FROM fct_usage_event_with_valid_user
   WHERE dim_user_id IS NOT NULL
   {{ dbt_utils.group_by(n=20) }}
 
