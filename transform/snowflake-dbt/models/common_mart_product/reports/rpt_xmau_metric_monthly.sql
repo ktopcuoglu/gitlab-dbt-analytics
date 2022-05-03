@@ -12,7 +12,10 @@
 mart_raw AS (
 
   SELECT
-    {{ dbt_utils.star(ref('mart_usage_event')) }}
+    {{ dbt_utils.star(from=ref('mart_usage_event'), except=["STAGE_NAME"]) }},
+    CASE
+      WHEN stage_name = 'manage' THEN NULL ELSE stage_name
+    END AS stage_name
   FROM mart_usage_event
   WHERE dim_user_id IS NOT NULL
     AND (is_umau = TRUE 

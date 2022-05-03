@@ -6,8 +6,7 @@
 mapping_table AS (
 
   SELECT
-    gitlab_dotcom_xmau_metrics.event_name,
-    gitlab_dotcom_xmau_metrics.events_to_include,
+    gitlab_dotcom_xmau_metrics.events_to_include AS legacy_events_to_include,
     dotcom_event_to_edm_event.prep_event_name AS common_events_to_include,
     gitlab_dotcom_xmau_metrics.stage_name,
     gitlab_dotcom_xmau_metrics.smau,
@@ -26,5 +25,5 @@ mapping_table AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2021-04-09"
+    updated_date="2022-04-09"
 ) }}
