@@ -1,4 +1,6 @@
 {% docs rpt_xmau_metric_monthly %}
+Reporting model that calculates unique user and namespace counts for GitLab.com xMAU metrics.
+
 Type of Data: gitlab.com db usage events
 
 Aggregate Grain: user_group (total, free, paid), section_name, stage_name, and group_name
@@ -7,8 +9,7 @@ Time Grain: reporting_month (defined as the last 28 days of the calendar month).
 
 Use case: Paid SaaS xMAU, SaaS SpO
 
-Usage is attributed to a namespace's last reported plan (free vs paid)
-(GitLab.com mart that determines unique namespace and user counts for total, free and paid metrics.)
+Note: Usage is attributed to a namespace's last reported plan (free vs paid)
 {% enddocs %}
 
 {% docs rpt_usage_event_plan_monthly %}
