@@ -34,7 +34,7 @@
       mql_date_latest_pt.date_day              AS mql_date_lastest_pt,
       mql_date_latest.first_day_of_month       AS mql_month_latest,
       mql_date_latest_pt.first_day_of_month    AS mql_month_latest_pt,
-      fct_crm_person.true_mql_date             AS true_mql_date,
+      fct_crm_person.legacy_mql_date           AS legacy_mql_date,
       created_date.date_day                    AS created_date,
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,

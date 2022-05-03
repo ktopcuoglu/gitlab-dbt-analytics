@@ -81,7 +81,7 @@
       fct_crm_person.inquiry_date,
       fct_crm_person.mql_date_first,
       fct_crm_person.mql_date_latest,
-      fct_crm_person.true_mql_date,
+      fct_crm_person.legacy_mql_date,
       fct_crm_person.accepted_date,
       fct_crm_person.qualifying_date,
       fct_crm_person.qualified_date,
