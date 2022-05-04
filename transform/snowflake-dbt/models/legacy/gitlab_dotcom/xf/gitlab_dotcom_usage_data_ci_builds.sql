@@ -217,7 +217,9 @@ joins AS (
       LEFT JOIN plans
         ON gitlab_subscriptions.plan_id = plans.plan_id
       LEFT JOIN blocked_users
-        ON ultimate_namespace.creator_id = blocked_users.user_id
+        ON ultimate_namespace.creator_id = blocked_users.user_id 
+      WHERE {{ filter_out_blocked_users('data' , 'user_id') }}
+      
 
 
 )
@@ -252,7 +254,6 @@ joins AS (
     FROM joins
     LEFT JOIN users
       ON joins.user_id = users.user_id
-      AND users.state != 'blocked'
     WHERE event_created_at < CURRENT_DATE()
 
 )
