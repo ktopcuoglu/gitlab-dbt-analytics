@@ -1489,7 +1489,15 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
-
+  
+  - name: prep_event_all
+    description: '{{ doc("prep_event_all") }}'
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+  
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'
     columns:
