@@ -72,6 +72,11 @@ databases:
     - jcaine_prep:
         shared: no
 
+    - jkim_prod:
+        shared: no
+    - jkim_prep:
+        shared: no   
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
@@ -2976,6 +2981,48 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jkim:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - jkim_prep
+                - jkim_prod
+            schemas:
+                - jkim_prep.*
+                - jkim_prod.*
+            tables:
+                - jkim_prep.*.*
+                - jkim_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jkim_prep
+                    - jkim_prod
+                write:
+                    - jkim_prep
+                    - jkim_prod
+            schemas:
+                read:
+                    - jkim_prep.*
+                    - jkim_prod.*
+                write:
+                    - jkim_prep.*
+                    - jkim_prod.*
+            tables:
+                read:
+                    - jkim_prep.*.*
+                    - jkim_prod.*.*
+                write:
+                    - jkim_prep.*.*
+                    - jkim_prod.*.*
+
     - joshua:
         member_of: []
         warehouses: []
@@ -4495,6 +4542,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jkim:
+        can_login: yes
+        member_of:
+            - jkim
 
     - joshua:
         can_login: no
