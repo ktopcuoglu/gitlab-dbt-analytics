@@ -1283,14 +1283,20 @@ roles:
                 read:
                     - prod.common
                     - prod.common_mapping
+                    - prod.common_mart
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
+                    - prod.common_mart_product
+                    - prod.common_prep
             tables:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
+                    - prod.common_mart.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
+                    - prod.common_mart_product.*
+                    - prod.common_prep.*
 
     - date:
         privileges:
@@ -1320,6 +1326,7 @@ roles:
                 read:
                     - prod.common
                     - prod.common_mapping
+                    - prod.common_mart
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
@@ -1342,6 +1349,7 @@ roles:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
+                    - prod.common_mart.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
