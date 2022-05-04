@@ -78,6 +78,36 @@ Notes: Includes non-numeric metric values (ex: instance settings). Metrics that 
 
 {% enddocs %}
 
+{% docs fct_service_ping_instance_metric_28_day %}
+
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per metric (metrics_path)
+Time Grain: None
+Use case: Service Ping metric-level analysis
+Notes: Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day time_frame.
+
+{% enddocs %}
+
+{% docs fct_service_ping_instance_metric_7_day %}
+
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per metric (metrics_path)
+Time Grain: None
+Use case: Service Ping metric-level analysis
+Notes: Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 7 day time_frame.
+
+{% enddocs %}
+
+{% docs fct_service_ping_instance_metric_all_time %}
+
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_service_ping_instance_id) per metric (metrics_path)
+Time Grain: None
+Use case: Service Ping metric-level analysis
+Notes: Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to all time time_frame.
+
+{% enddocs %}
+
 {% docs dim_service_ping_instance %}
 
 Type of Data: Instance-level Service Ping from Versions app
