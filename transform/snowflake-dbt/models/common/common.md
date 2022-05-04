@@ -519,6 +519,72 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_event_with_valid_user %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: None
+
+Time Grain: None
+
+Use case: fct_event_with_valid_user is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
+data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
+
+{% enddocs %}
+
+{% docs fct_event %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: None
+
+Time Grain: None
+
+Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
+
+{% enddocs %}
+
+{% docs fct_event_daily %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_name, dim_ultimate_parent_namespace_id, dim_user_id
+
+Time Grain: event_date
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are excluded.
+
+{% enddocs %}
+
+{% docs fct_event_instance_daily %}
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_name, dim_instance_id (all of gitlab.com/SaaS)
+
+Time Grain: event_date
+
+Use case: everyday analysis and dashboards; SaaS-wide analysis
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+
+{% enddocs %}
+
+{% docs fct_event_namespace_daily %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_name, dim_ultimate_parent_namespace_id
+
+Time Grain: event_date
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 

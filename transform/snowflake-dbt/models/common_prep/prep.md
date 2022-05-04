@@ -427,6 +427,12 @@ The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
 
+{% docs prep_event_all %}
+
+Prep table that unions together all of the monthly partitions created from the [prep_event model](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_event)
+
+{% enddocs %}
+
 {% docs prep_ci_pipeline %}
 
 Creates a base view of CI pipelines. More info about CI pipelines [is available here](https://docs.gitlab.com/ee/ci/pipelines/)
