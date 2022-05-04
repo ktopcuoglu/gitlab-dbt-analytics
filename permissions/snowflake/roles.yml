@@ -927,6 +927,7 @@ roles:
             schemas:
                 - prod.common
                 - prod.common_mapping
+                - prod.common_mart
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
                 - prod.common_mart_product
@@ -935,6 +936,7 @@ roles:
             tables:
                 - prod.common.*
                 - prod.common_mapping.*
+                - prod.common_mart.*
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
                 - prod.common_mart_product.*
