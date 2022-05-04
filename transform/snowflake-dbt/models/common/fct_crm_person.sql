@@ -70,13 +70,27 @@ WITH account_dims_mapping AS (
 
 ), sfdc_contacts AS (
 
-    SELECT *
+    SELECT *,
+          LEAST(COALESCE(marketo_qualified_lead_date::timestamp,'9999-01-01'),COALESCE(mql_datetime_inferred::timestamp,'9999-01-01'))             
+            AS prep_true_mql_date,
+
+      CASE 
+        WHEN prep_true_mql_date != '9999-01-01'
+        THEN prep_true_mql_date::timestamp
+      END                                                                                                                 AS true_mql_date,
     FROM {{ ref('sfdc_contact_source') }}
     WHERE is_deleted = 'FALSE'
 
 ), sfdc_leads AS (
 
-    SELECT *
+    SELECT *,
+          LEAST(COALESCE(marketo_qualified_lead_date::timestamp,'9999-01-01'),COALESCE(mql_datetime_inferred::timestamp,'9999-01-01'))             
+            AS prep_true_mql_date,
+
+      CASE 
+        WHEN prep_true_mql_date != '9999-01-01'
+        THEN prep_true_mql_date::timestamp
+      END                                                                                                                 AS true_mql_date,
     FROM {{ ref('sfdc_lead_source') }}
     WHERE is_deleted = 'FALSE'
 
@@ -92,14 +106,7 @@ WITH account_dims_mapping AS (
     SELECT
 
       {{ dbt_utils.surrogate_key(['COALESCE(converted_contact_id, lead_id)','marketo_qualified_lead_date::timestamp']) }} AS event_id,
-      LEAST(COALESCE(marketo_qualified_lead_date::timestamp,'9999-01-01'),COALESCE(mql_datetime_inferred::timestamp,'9999-01-01'))             
-            AS prep_true_mql_date,
 
-      CASE 
-        WHEN prep_true_mql_date != '9999-01-01'
-        THEN prep_true_mql_date::timestamp
-      END                                                                                                                 AS true_mql_date,
-      
 true_mql_date::timestamp                                                                                            AS event_timestamp,
       lead_id                                                                                                             AS sfdc_record_id,
       'lead'                                                                                                              AS sfdc_record,
@@ -110,20 +117,13 @@ true_mql_date::timestamp                                                        
       person_score                                                                                                        AS person_score
 
     FROM sfdc_leads
-    WHERE (marketo_qualified_lead_date IS NOT NULL
-          OR mql_datetime_inferred IS NOT null)
+    WHERE true_mql_date IS NOT NULL
 
 ), marketing_qualified_contacts AS(
 
     SELECT
 
       {{ dbt_utils.surrogate_key(['contact_id','marketo_qualified_lead_date::timestamp']) }}                              AS event_id,
-      
-LEAST(COALESCE(marketo_qualified_lead_date::timestamp,'9999-01-01'),COALESCE(mql_datetime_inferred::timestamp,'9999-01-01'))             AS prep_true_mql_date,
-      CASE 
-        WHEN prep_true_mql_date != '9999-01-01'
-        THEN prep_true_mql_date::timestamp
-      END                                                                                                       AS true_mql_date::timestamp,
       
 true_mql_date                                                                                                       AS event_timestamp,
       contact_id                                                                                                          AS sfdc_record_id,
@@ -135,8 +135,7 @@ true_mql_date                                                                   
       person_score                                                                                                        AS person_score
 
     FROM sfdc_contacts
-    WHERE (marketo_qualified_lead_date IS NOT NULL
-          OR mql_datetime_inferred IS NOT null)
+    WHERE true_mql_date IS NOT NULL
     HAVING event_id NOT IN (
                          SELECT event_id
                          FROM marketing_qualified_leads
