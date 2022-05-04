@@ -1,7 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "prep_service_ping_instance_flattened_id"
+    unique_key = "prep_ping_instance_flattened_id"
 ) }}
 
 
@@ -9,15 +9,15 @@ WITH source AS (
 
     SELECT
         *
-    FROM {{ ref('prep_service_ping_instance')}} as usage
+    FROM {{ ref('prep_ping_instance')}} as usage
     {% if is_incremental() %}
           WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
     {% endif %}
 
 ) , flattened_high_level as (
       SELECT
-        {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'path']) }}                 AS prep_service_ping_instance_flattened_id,
-        dim_service_ping_instance_id                                                            AS dim_service_ping_instance_id,
+        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'path']) }}                         AS prep_ping_instance_flattened_id,
+        dim_ping_instance_id                                                                    AS dim_ping_instance_id,
         dim_host_id                                                                             AS dim_host_id,
         dim_instance_id                                                                         AS dim_instance_id,
         dim_installation_id                                                                     AS dim_installation_id,

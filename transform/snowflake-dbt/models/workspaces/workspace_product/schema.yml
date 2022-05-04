@@ -63,10 +63,10 @@ models:
           - not_null
           - unique
 
-  - name: prep_service_ping_instance
-    description: ' {{ doc("prep_service_ping_instance") }} '
+  - name: prep_ping_instance
+    description: ' {{ doc("prep_ping_instance") }} '
     columns:
-      - name: dim_service_ping_instance_id
+      - name: dim_ping_instance_id
         tests:
           - not_null
           - unique
@@ -118,19 +118,19 @@ models:
       - name: git_version
         description: the version of gitlab the instance is running (i.e. 2.17.0, 2.33.1, 2.23.0)
 
-  - name: prep_service_ping_instance_flattened
-    description: ' {{ doc("prep_service_ping_instance_flattened") }} '
+  - name: prep_ping_instance_flattened
+    description: ' {{ doc("prep_ping_instance_flattened") }} '
     columns:
-      - name: prep_service_ping_instance_flattened_id
+      - name: prep_ping_instance_flattened_id
         tests:
           - not_null
           #- unique
-        description: The unique ID of the prep_service_ping_instance_flattenned model consisting of dim_service_ping_instance_id and path
+        description: The unique ID of the prep_ping_instance_flattenned model consisting of dim_ping_instance_id and path
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
         description: The unique uuid of an instance from the dim_instances model.
-      - name: dim_service_ping_instance_id
+      - name: dim_ping_instance_id
       - name: ping_created_at
         description: The time when the ping was created
       - name: main_edition
@@ -150,19 +150,19 @@ models:
       - name: has_timed_out
         description: A flag to denote that it has timed out
 
-  - name: fct_service_ping_instance_metric
-    description: ' {{ doc("fct_service_ping_instance_metric") }} '
+  - name: fct_ping_instance_metric
+    description: ' {{ doc("fct_ping_instance_metric") }} '
     columns:
-      - name: fct_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
-        description: the unique composite ID for the fct_service_ping_instance_metric model consisting of dim_service_ping_instance_id and flattened_high_level.metrics_path
-      - name: dim_service_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_service_ping_instance model.
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
-      - name: dim_service_ping_date_id
+      - name: dim_ping_date_id
         description: The unique id of a country from the dim_location_country model
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
@@ -195,16 +195,151 @@ models:
       - name: umau_value
         description: The unique monthly active user value for the instance
 
-  - name: dim_service_ping_instance
-    description: ' {{ doc("dim_service_ping_instance") }} '
+  - name: fct_ping_instance_metric_28_day
+    description: ' {{ doc("fct_ping_instance_metric_28_day") }} '
     columns:
-      - name: dim_service_ping_instance_id
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_7_day
+    description: ' {{ doc("fct_ping_instance_metric_7_day") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_all_time
+    description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: dim_ping_instance
+    description: ' {{ doc("dim_ping_instance") }} '
+    columns:
+      - name: dim_ping_instance_id
         tests:
           - not_null
           - unique
         description: The unique identifier of the ping
-      - name: dim_service_ping_date_id
-        description: the unique id associated with the dim_service_ping_instance
+      - name: dim_ping_date_id
+        description: the unique id associated with the dim_ping_instance
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
@@ -268,27 +403,27 @@ models:
       - name: minor_version
         description: The major version of GitLab on the instance. For example, for 13.6.2, minor_version is 6. See details here (https://docs.gitlab.com/ee/policy/maintenance.html)
       - name: major_minor_version
-        description: The concatenation of major and minor version. For example, for 13.6.2, 
+        description: The concatenation of major and minor version. For example, for 13.6.2,
       - name: version_is_prerelease
         description: Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details here (https://docs.gitlab.com/ee/policy/maintenance.html)
       - name: is_internal
         description: Denotes whether the instance is internal
 
-  - name: mart_service_ping_instance_metric
-    description: ' {{ doc("mart_service_ping_instance_metric") }} '
+  - name: mart_ping_instance_metric
+    description: ' {{ doc("mart_ping_instance_metric") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           #- unique
-        description: the unique composite ID for the mart_service_ping_instance_metric model consisting of dim_service_ping_instance_id and metrics_path
+        description: the unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
       - name: dim_date_id
         description: The unqiue id of a date in the dim_date model.
       - name: metrics_path
         description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
       - name: metric_value
         description: The value associated with the metric path
-      - name: dim_service_ping_instance_id
+      - name: dim_ping_instance_id
         description: The unique identifier of the ping
       - name: dim_instance_id
         description: The unique identifier of the instance, easily joined to dim_installation. This id is store in the database of the instance and appears as uuid in the ping payload
@@ -387,21 +522,21 @@ models:
       - name: is_last_ping_of_month
         description: Boolean flag set to True if this is the instance's (defined by dim_installation_id) last ping of the calendar month (defined by ping_created_at)
 
-  - name: mart_service_ping_instance_metric_28_day
-    description: ' {{ doc("mart_service_ping_instance_metric_28_day") }} '
+  - name: mart_ping_instance_metric_28_day
+    description: ' {{ doc("mart_ping_instance_metric_28_day") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           - unique
-        description: the unique composite ID for the mart_service_ping_instance_metric model consisting of dim_service_ping_instance_id and metrics_path
+        description: the unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
       - name: dim_date_id
         description: The unqiue id of a date in the dim_date model.
       - name: metrics_path
         description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
       - name: metric_value
         description: The value associated with the metric path
-      - name: dim_service_ping_instance_id
+      - name: dim_ping_instance_id
         description: The unique identifier of the ping
       - name: dim_instance_id
         description: The unique identifier of the instance, easily joined to dim_installation. This id is store in the database of the instance and appears as uuid in the ping payload
@@ -458,7 +593,7 @@ models:
       - name: is_paid_gmau
         description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
       - name: is_umau
-        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation 
+        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
       - name: time_frame
         description: The time frame associated with the metric, as defined in the metric definition YAML file
       - name: instance_user_count
@@ -500,46 +635,46 @@ models:
       - name: is_last_ping_of_month
         description: Boolean flag set to True if this is the instance's (defined by dim_installation_id) last ping of the calendar month (defined by ping_created_at)
 
-  - name: mart_service_ping_instance_metric_7_day
-    description: ' {{ doc("mart_service_ping_instance_metric_7_day") }} '
+  - name: mart_ping_instance_metric_7_day
+    description: ' {{ doc("mart_ping_instance_metric_7_day") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           - unique
 
-  - name: mart_service_ping_instance_metric_all_time
-    description: ' {{ doc("mart_service_ping_instance_metric_all_time") }} '
+  - name: mart_ping_instance_metric_all_time
+    description: ' {{ doc("mart_ping_instance_metric_all_time") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_monthly_all
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_monthly_all") }} '
+  - name: rpt_ping_instance_metric_adoption_monthly_all
+    description: ' {{ doc("rpt_ping_instance_metric_adoption_monthly_all") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_monthly_all_id
+      - name: rpt_ping_instance_metric_adoption_monthly_all_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_subscription_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_subscription_monthly") }} '
+  - name: rpt_ping_instance_metric_adoption_subscription_monthly
+    description: ' {{ doc("rpt_ping_instance_metric_adoption_subscription_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_subscription_monthly_id
+      - name: rpt_ping_instance_metric_adoption_subscription_monthly_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_subscription_metric_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_subscription_metric_monthly") }} '
+  - name: rpt_ping_instance_metric_adoption_subscription_metric_monthly
+    description: ' {{ doc("rpt_ping_instance_metric_adoption_subscription_metric_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_subscription_metric_monthly_id
+      - name: rpt_ping_instance_metric_adoption_subscription_metric_monthly_id
         tests:
           - not_null
           - unique
-        description: the unique composite ID for the rpt_service_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
+        description: the unique composite ID for the rpt_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
       - name: reporting_month
         description: The month the dat was reported
       - name: reporting_count
@@ -549,7 +684,7 @@ models:
       - name: estimation_grain
         description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
       - name: percent_reporting
-        description: The percentage of events being reported      
+        description: The percentage of events being reported
       - name: stage_name
         description: The name of the product stage responsible for the metric
       - name: section_name
@@ -563,17 +698,17 @@ models:
       - name: is_paid_gmau
         description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
       - name: is_umau
-        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation 
+        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
 
 
-  - name: rpt_service_ping_instance_metric_estimated_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_estimated_monthly") }} '
+  - name: rpt_ping_instance_metric_estimated_monthly
+    description: ' {{ doc("rpt_ping_instance_metric_estimated_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_estimated_monthly_id
+      - name: rpt_ping_instance_metric_estimated_monthly_id
         tests:
           - not_null
           - unique
-        description: the unique composite ID for the rpt_service_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+        description: the unique composite ID for the rpt_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
       - name: metrics_path
         description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
       - name: reporting_month
@@ -611,37 +746,37 @@ models:
       - name: is_paid_gmau
         description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
       - name: is_umau
-        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation 
+        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
 
 
-  - name: dim_service_ping_metric
-    description: ' {{ doc("dim_service_ping_metric") }} '
+  - name: dim_ping_metric
+    description: ' {{ doc("dim_ping_metric") }} '
     columns:
-      - name: dim_service_ping_metric_id
+      - name: dim_ping_metric_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_counter_statistics
-    description: ' {{ doc("rpt_service_ping_counter_statistics") }} '
+  - name: rpt_ping_counter_statistics
+    description: ' {{ doc("rpt_ping_counter_statistics") }} '
     columns:
-      - name: rpt_service_ping_counter_statistics_id
+      - name: rpt_ping_counter_statistics_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_subcription_opt_in_monthly
-    description: ' {{ doc("rpt_service_ping_instance_subcription_opt_in_monthly") }} '
+  - name: rpt_ping_instance_subcription_opt_in_monthly
+    description: ' {{ doc("rpt_ping_instance_subcription_opt_in_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_subcription_opt_in_monthly_id
+      - name: rpt_ping_instance_subcription_opt_in_monthly_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_subcription_metric_opt_in_monthly
-    description: ' {{ doc("rpt_service_ping_instance_subcription_metric_opt_in_monthly") }} '
+  - name: rpt_ping_instance_subcription_metric_opt_in_monthly
+    description: ' {{ doc("rpt_ping_instance_subcription_metric_opt_in_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_subcription_metric_opt_in_monthly_id
+      - name: rpt_ping_instance_subcription_metric_opt_in_monthly_id
         tests:
           - not_null
           - unique

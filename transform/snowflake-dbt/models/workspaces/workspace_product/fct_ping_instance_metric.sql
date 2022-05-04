@@ -1,7 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "fct_service_ping_instance_metric_id"
+    unique_key = "ping_instance_metric_id"
 ) }}
 
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
@@ -13,8 +13,8 @@
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
-    ('prep_service_ping_instance', 'prep_service_ping_instance_flattened'),
-    ('dim_service_ping_metric', 'dim_service_ping_metric')
+    ('prep_ping_instance', 'prep_ping_instance_flattened'),
+    ('dim_ping_metric', 'dim_ping_metric')
     ])
 
 }}
@@ -31,8 +31,8 @@
 ), source AS (
 
     SELECT
-      prep_service_ping_instance.*
-    FROM prep_service_ping_instance
+      prep_ping_instance.*
+    FROM prep_ping_instance
       {% if is_incremental() %}
                   WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
       {% endif %}
@@ -54,7 +54,7 @@
 ), prep_usage_ping_cte AS (
 
     SELECT
-      dim_service_ping_instance_id                        AS dim_service_ping_instance_id,
+      dim_ping_instance_id                        AS dim_ping_instance_id,
       dim_host_id                                         AS dim_host_id,
       dim_instance_id                                     AS dim_instance_id,
       dim_installation_id                                 AS dim_installation_id,
@@ -81,7 +81,7 @@
     SELECT
       prep_usage_ping_cte.*,
       prep_license.dim_license_id                                                                          AS dim_license_id,
-      dim_date.date_id                                                                                     AS dim_service_ping_date_id,
+      dim_date.date_id                                                                                     AS dim_ping_date_id,
       COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                             AS dim_subscription_id,
       IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial
     FROM prep_usage_ping_cte
@@ -94,14 +94,14 @@
 
 ), flattened_high_level as (
     SELECT
-      dim_service_ping_instance_id                                                    AS dim_service_ping_instance_id,
+      dim_ping_instance_id                                                    AS dim_ping_instance_id,
       metrics_path                                                                    AS metrics_path,
       metric_value                                                                    AS metric_value,
       has_timed_out                                                                   AS has_timed_out,
       dim_product_tier_id                                                             AS dim_product_tier_id,
       dim_subscription_id                                                             AS dim_subscription_id,
       dim_location_country_id                                                         AS dim_location_country_id,
-      dim_service_ping_date_id                                                        AS dim_service_ping_date_id,
+      dim_ping_date_id                                                        AS dim_ping_date_id,
       dim_instance_id                                                                 AS dim_instance_id,
       dim_host_id                                                                     AS dim_host_id,
       dim_installation_id                                                             AS dim_installation_id,
@@ -114,13 +114,13 @@
 
 ), metric_attributes AS (
 
-    SELECT * FROM dim_service_ping_metric
+    SELECT * FROM dim_ping_metric
       -- WHERE time_frame != 'none'
 
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['dim_service_ping_instance_id', 'flattened_high_level.metrics_path']) }}       AS fct_service_ping_instance_metric_id,
+        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'flattened_high_level.metrics_path']) }}       AS ping_instance_metric_id,
         flattened_high_level.*,
         metric_attributes.time_frame                                                                               AS time_frame
     FROM flattened_high_level

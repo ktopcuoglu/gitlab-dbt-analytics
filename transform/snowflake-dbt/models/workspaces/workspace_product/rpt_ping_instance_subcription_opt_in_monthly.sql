@@ -14,7 +14,7 @@
 , subscription_info AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['arr_month']) }}          AS rpt_service_ping_instance_subcription_opt_in_monthly_id,
+    {{ dbt_utils.surrogate_key(['arr_month']) }}          AS rpt_ping_instance_subcription_opt_in_monthly_id,
     arr_month                                             AS arr_month,
     SUM(arr)                                              AS arr,
     SUM(quantity)                                         AS total_licensed_users,

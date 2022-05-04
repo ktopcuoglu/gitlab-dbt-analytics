@@ -4,9 +4,9 @@
 ) }}
 
 {{ simple_cte([
-    ('metric_opt_in', 'rpt_service_ping_counter_statistics'),
+    ('metric_opt_in', 'rpt_ping_counter_statistics'),
     ('mart_arr', 'mart_arr'),
-    ('mart_service_ping_instance_metric_28_day', 'mart_service_ping_instance_metric_28_day')
+    ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day')
     ])
 
 }}
@@ -19,18 +19,18 @@ Determine latest version for each subscription to determine if the potential met
 
   SELECT
       ping_created_at_month             AS ping_created_at_month,
-      dim_service_ping_instance_id      AS dim_service_ping_instance_id,
+      dim_ping_instance_id              AS dim_ping_instance_id,
       latest_active_subscription_id     AS latest_active_subscription_id,
       ping_edition                      AS ping_edition,
       major_minor_version               AS major_minor_version,
       instance_user_count               AS instance_user_count
-  FROM mart_service_ping_instance_metric_28_day
+  FROM mart_ping_instance_metric_28_day
       WHERE is_last_ping_of_month = TRUE
-        AND service_ping_delivery_type = 'Self-Managed'
+        AND ping_delivery_type = 'Self-Managed'
         AND ping_product_tier != 'Storage'
         AND latest_active_subscription_id IS NOT NULL
       QUALIFY ROW_NUMBER() OVER (
-            PARTITION BY ping_created_at_month, latest_active_subscription_id, dim_service_ping_instance_id
+            PARTITION BY ping_created_at_month, latest_active_subscription_id, dim_ping_instance_id
               ORDER BY major_minor_version_id DESC) = 1
 
 /*
@@ -67,7 +67,7 @@ Aggregate for subscription and user counters
 ), agg_subscriptions AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path']) }}          AS rpt_service_ping_instance_subcription_metric_opt_in_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path']) }}          AS rpt_ping_instance_subcription_metric_opt_in_monthly_id,
     ping_created_at_month                                                             AS arr_month,
     metrics_path                                                                      AS metrics_path,
     COUNT(latest_active_subscription_id)                                              AS total_subscription_count,
