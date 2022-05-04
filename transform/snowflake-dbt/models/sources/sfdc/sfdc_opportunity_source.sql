@@ -272,6 +272,7 @@ WITH source AS (
         fp_a_master_bookings_flag__c::BOOLEAN           AS fpa_master_bookings_flag,
 
         downgrade_reason__c                             AS downgrade_reason,
+        ssp_id__c                                       AS ssp_id
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
