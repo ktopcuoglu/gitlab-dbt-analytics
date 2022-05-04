@@ -11,7 +11,7 @@
     ])
 }},
 
-fact_with_date AS (
+fact AS (
 
   SELECT
     {{ dbt_utils.star(from=ref('fct_usage_event_daily'), except=["CREATED_BY",
@@ -20,46 +20,30 @@ fact_with_date AS (
   
 ),
 
-fact_with_namespace AS (
+fact_with_dims AS (
 
   SELECT
-    fact_with_date.*,
+    fact.*,
     dim_namespace.namespace_is_internal,
     dim_namespace.namespace_creator_is_blocked,
     dim_namespace.created_at AS namespace_created_at,
-    CAST(dim_namespace.created_at AS DATE) AS namespace_created_date
-  FROM fact_with_date
+    CAST(dim_namespace.created_at AS DATE) AS namespace_created_date,
+    dim_user.created_at AS user_created_at,
+    dim_date.first_day_of_month AS event_calendar_month,
+    dim_date.quarter_name AS event_calendar_quarter,
+    dim_date.year_actual AS event_calendar_year
+  FROM fact
   LEFT JOIN dim_namespace
-    ON fact_with_date.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
+    ON fact.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
+  LEFT JOIN dim_user
+    ON fact.dim_user_id = dim_user.dim_user_id
+  LEFT JOIN dim_date
+    ON fact.dim_event_date_id = dim_date.date_id
 
-),
-
-fact_with_user AS (
-    
-    SELECT
-      fact_with_namespace.*,
-      dim_user.created_at AS user_created_at
-    FROM fact_with_namespace
-    LEFT JOIN dim_user
-      ON fact_with_namespace.dim_user_id = dim_user.dim_user_id
-        
-),
-
-fact_with_dim_date AS (
-    
-    SELECT
-      fact_with_user.*,
-      dim_date.first_day_of_month AS event_calendar_month,
-      dim_date.quarter_name AS event_calendar_quarter,
-      dim_date.year_actual AS event_calendar_year
-    FROM fact_with_user
-    LEFT JOIN dim_date
-      ON fact_with_user.dim_event_date_id = dim_date.date_id
-        
 )
 
 {{ dbt_audit(
-    cte_ref="fact_with_dim_date",
+    cte_ref="fact_with_dims",
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-01-28",
