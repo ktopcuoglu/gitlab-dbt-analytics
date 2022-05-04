@@ -1,4 +1,4 @@
-{% docs fct_service_ping_instance_metric %}
+{% docs fct_ping_instance_metric %}
 
 Type of Data: Instance-level Service Ping from Versions app
 Aggregate Grain: One record per service ping (dim_ping_instance_id) per metric (metrics_path)

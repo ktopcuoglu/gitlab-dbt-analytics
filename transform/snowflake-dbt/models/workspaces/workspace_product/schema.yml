@@ -63,8 +63,8 @@ models:
           - not_null
           - unique
 
-  - name: prep_service_ping_instance
-    description: ' {{ doc("prep_service_ping_instance") }} '
+  - name: prep_ping_instance
+    description: ' {{ doc("prep_ping_instance") }} '
     columns:
       - name: dim_ping_instance_id
         tests:
