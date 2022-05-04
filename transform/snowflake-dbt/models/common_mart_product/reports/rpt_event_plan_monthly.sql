@@ -5,28 +5,28 @@
 
 {{ simple_cte([
     ('dim_date','dim_date'),
-    ('mart_usage_event', 'mart_usage_event')
+    ('mart_event', 'mart_event')
     ])
 }},
 
 mart_with_date_range AS (
 
   SELECT
-    mart_usage_event.*,
+    mart_event.*,
     dim_date.last_day_of_month AS last_day_of_month,
     dim_date.last_day_of_quarter AS last_day_of_quarter,
     dim_date.last_day_of_fiscal_year AS last_day_of_fiscal_year
-  FROM mart_usage_event
+  FROM mart_event
   LEFT JOIN dim_date
-    ON mart_usage_event.event_date = dim_date.date_actual
-  WHERE mart_usage_event.event_date BETWEEN DATEADD('day', -27, last_day_of_month) AND last_day_of_month
+    ON mart_event.event_date = dim_date.date_actual
+  WHERE mart_event.event_date BETWEEN DATEADD('day', -27, last_day_of_month) AND last_day_of_month
 
 ),
 
 mart_usage_event_plan_monthly AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['event_calendar_month', 'plan_id_at_event_date', 'event_name']) }} AS rpt_usage_event_plan_monthly_id,
+    {{ dbt_utils.surrogate_key(['event_calendar_month', 'plan_id_at_event_date', 'event_name']) }} AS event_plan_monthly_id,
     event_calendar_month,
     event_calendar_quarter,
     event_calendar_year,

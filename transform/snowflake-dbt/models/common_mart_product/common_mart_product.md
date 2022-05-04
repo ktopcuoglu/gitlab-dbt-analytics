@@ -1,4 +1,4 @@
-{% docs rpt_usage_xmau_metric_monthly %}
+{% docs rpt_event_xmau_metric_monthly %}
 Reporting model that calculates unique user and namespace counts for GitLab.com xMAU metrics.
 
 Type of Data: gitlab.com db usage events
@@ -12,7 +12,7 @@ Use case: Paid SaaS xMAU, SaaS SpO
 Note: Usage is attributed to a namespace's last reported plan (free vs paid)
 {% enddocs %}
 
-{% docs rpt_usage_event_plan_monthly %}
+{% docs rpt_event_plan_monthly %}
 Type of Data: gitlab.com db usage events
 
 Aggregate Grain: plan_id_at_event_date, event_name

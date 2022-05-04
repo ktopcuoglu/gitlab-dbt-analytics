@@ -5,18 +5,18 @@
 
 {{ simple_cte([
     ('dim_date','dim_date'),
-    ('mart_usage_event', 'mart_usage_event')
+    ('mart_event', 'mart_event')
     ])
 }},
 
 mart_raw AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('mart_usage_event'), except=["STAGE_NAME"]) }},
+    {{ dbt_utils.star(from=ref('mart_event'), except=["STAGE_NAME"]) }},
     CASE
       WHEN stage_name = 'manage' THEN NULL ELSE stage_name
     END AS stage_name
-  FROM mart_usage_event
+  FROM mart_event
   WHERE dim_user_id IS NOT NULL
     AND (is_umau = TRUE 
          OR is_gmau = TRUE 
@@ -165,7 +165,7 @@ results_wo_pk AS (
 results AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS rpt_xmau_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS xmau_metric_monthly_id,
     results_wo_pk.*
   FROM results_wo_pk
 

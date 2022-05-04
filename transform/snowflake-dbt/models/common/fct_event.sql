@@ -16,7 +16,6 @@ prep_event_24_months AS (
 
   SELECT *
   FROM {{ ref('prep_event_all') }}
-  WHERE DATE_TRUNC(MONTH,event_created_at::DATE) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE))
 
 ),
 

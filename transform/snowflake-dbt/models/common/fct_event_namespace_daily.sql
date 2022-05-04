@@ -4,15 +4,15 @@
 ) }}
 
 {{ simple_cte([
-    ('fct_usage_event_with_valid_user', 'fct_usage_event_with_valid_user')
+    ('fct_event_with_valid_user', 'fct_event_with_valid_user')
     ])
 }},
 
-fct_usage_namespace_daily AS (
+fct_event_namespace_daily AS (
     
     SELECT 
       {{ dbt_utils.surrogate_key(['event_date', 'event_name', 'dim_ultimate_parent_namespace_id']) }}       
-                                            AS usage_namespace_daily_id,
+                                            AS event_namespace_daily_id,
       dim_active_product_tier_id,
       dim_active_subscription_id,
       dim_crm_account_id,
@@ -34,13 +34,13 @@ fct_usage_namespace_daily AS (
       is_umau,
       COUNT(*) AS event_count,
       COUNT(DISTINCT(dim_user_id)) AS user_count
-    FROM fct_usage_event_with_valid_user
+    FROM fct_event_with_valid_user
     {{ dbt_utils.group_by(n=20) }}
         
 )
 
 {{ dbt_audit(
-    cte_ref="fct_usage_namespace_daily",
+    cte_ref="fct_event_namespace_daily",
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",

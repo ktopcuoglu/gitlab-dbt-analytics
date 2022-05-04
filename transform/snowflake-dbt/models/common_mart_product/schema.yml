@@ -1,10 +1,10 @@
 version: 2
 
 models:
-- name: rpt_usage_xmau_metric_monthly
-  description: '{{ doc("rpt_usage_xmau_metric_monthly") }}'
+- name: rpt_event_xmau_metric_monthly
+  description: '{{ doc("rpt_event_xmau_metric_monthly") }}'
   columns:
-    - name: rpt_xmau_metric_monthly_id
+    - name: xmau_metric_monthly_id
       description: the unique ID of a monthly xMAU metric in rpt_xmau_metric_monthly
       tests:
         - not_null
@@ -40,10 +40,10 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
       
-- name: rpt_usage_event_plan_monthly
-  description: '{{ doc("rpt_usage_event_plan_monthly") }}'
+- name: rpt_event_plan_monthly
+  description: '{{ doc("rpt_event_plan_monthly") }}'
   columns:
-    - name: rpt_usage_event_plan_monthly_id
+    - name: event_plan_monthly_id
       description: the unique ID of a montthly usage event plan in rpt_usage_event_plan_monthly
       tests:
         - not_null

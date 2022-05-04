@@ -2292,8 +2292,8 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_usage_event_with_valid_user
-    description: '{{ doc("fct_usage_event_with_valid_user") }}'
+  - name: fct_event_with_valid_user
+    description: '{{ doc("fct_event_with_valid_user") }}'
     columns:
       - name: event_id
         description: The unique ID of an event.
@@ -2301,8 +2301,8 @@ models:
           - not_null
           - unique
   
-  - name: fct_usage_event
-    description: '{{ doc("fct_usage_event") }}'
+  - name: fct_event
+    description: '{{ doc("fct_event") }}'
     columns:
       - name: event_id
         description: The unique identifier of an event. This is a generated primary key and will not join back to the source models.
@@ -2352,19 +2352,19 @@ models:
       - name: model_updated_date
         description: The date at which the model code was last updated
   
-  - name: fct_usage_event_daily
-    description: '{{ doc("fct_usage_event_daily") }}'
+  - name: fct_event_daily
+    description: '{{ doc("fct_event_daily") }}'
     columns:
-      - name: usage_event_daily_id
+      - name: event_daily_id
         description: The unique ID of a daily event.
         tests:
           - not_null
           - unique
           
-  - name: fct_usage_instance_daily
-    description: '{{ doc("fct_usage_instance_daily") }}'
+  - name: fct_event_instance_daily
+    description: '{{ doc("fct_event_instance_daily") }}'
     columns:
-      - name: usage_instance_daily_id
+      - name: event_instance_daily_id
         description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
         tests:
           - not_null
@@ -2390,10 +2390,10 @@ models:
       - name: model_updated_date
         description: The date at which the model code was last updated
 
-  - name: fct_usage_namespace_daily
-    description: '{{ doc("fct_usage_namespace_daily") }}'
+  - name: fct_event_namespace_daily
+    description: '{{ doc("fct_event_namespace_daily") }}'
     columns:
-      - name: usage_namespace_daily_id
+      - name: event_namespace_daily_id
         description: The unique ID of a daily namespace level event.
         tests:
           - not_null
