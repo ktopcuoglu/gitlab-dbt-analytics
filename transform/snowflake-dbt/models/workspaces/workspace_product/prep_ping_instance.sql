@@ -1,7 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "dim_service_ping_instance_id"
+    unique_key = "dim_ping_instance_id"
 ) }}
 
 
@@ -14,7 +14,7 @@
 , source AS (
 
     SELECT
-      id                                                                        AS dim_service_ping_instance_id,
+      id                                                                        AS dim_ping_instance_id,
       created_at::TIMESTAMP(0)                                                  AS ping_created_at,
       *,
       {{ nohash_sensitive_columns('version_usage_data_source', 'source_ip') }}  AS ip_address_hash
@@ -27,7 +27,7 @@
 ), usage_data AS (
 
     SELECT
-      dim_service_ping_instance_id                                                                                            AS dim_service_ping_instance_id,
+      dim_ping_instance_id                                                                                                    AS dim_ping_instance_id,
       host_id                                                                                                                 AS dim_host_id,
       uuid                                                                                                                    AS dim_instance_id,
       ping_created_at                                                                                                         AS ping_created_at,
@@ -41,7 +41,7 @@
 ), joined_ping AS (
 
     SELECT
-      dim_service_ping_instance_id                                                                                                                AS dim_service_ping_instance_id,
+      dim_ping_instance_id                                                                                                                        AS dim_ping_instance_id,
       dim_host_id                                                                                                                                 AS dim_host_id,
       usage_data.dim_instance_id                                                                                                                  AS dim_instance_id,
       {{ dbt_utils.surrogate_key(['dim_host_id', 'dim_instance_id'])}}                                                                            AS dim_installation_id,

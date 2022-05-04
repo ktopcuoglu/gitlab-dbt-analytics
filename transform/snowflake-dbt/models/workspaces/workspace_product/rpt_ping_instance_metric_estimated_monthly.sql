@@ -4,20 +4,20 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_service_ping_instance_metric_28_day', 'mart_service_ping_instance_metric_28_day'),
-    ('mart_pct', 'rpt_service_ping_instance_metric_adoption_monthly_all')
+    ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
+    ('mart_pct', 'rpt_ping_instance_metric_adoption_monthly_all')
     ])
 
 }}
 
--- Fact data from mart_service_ping_instance_metric_28_day, bringing in only last ping of months which are valid
+-- Fact data from mart_ping_instance_metric_28_day, bringing in only last ping of months which are valid
 
 , fact AS (
 
     SELECT
       metrics_path                      AS metrics_path,
       ping_created_at_month             AS reporting_month,
-      service_ping_delivery_type        AS service_ping_delivery_type,
+      ping_delivery_type                AS ping_delivery_type,
       ping_edition                      AS ping_edition,
       ping_product_tier                 AS ping_product_tier,
       ping_edition_product_tier         AS ping_edition_product_tier,
@@ -29,7 +29,7 @@
       is_paid_gmau                      AS is_paid_gmau,
       is_umau                           AS is_umau,
       SUM(metric_value)                 AS actual_usage
-    FROM mart_service_ping_instance_metric_28_day
+    FROM mart_ping_instance_metric_28_day
         WHERE is_last_ping_of_month = TRUE
             AND has_timed_out = FALSE
             AND metric_value is not null
@@ -49,7 +49,7 @@
       INNER JOIN mart_pct
     ON fact.reporting_month = mart_pct.reporting_month
       AND fact.metrics_path = mart_pct.metrics_path
-  WHERE service_ping_delivery_type = 'Self-Managed'
+  WHERE ping_delivery_type = 'Self-Managed'
 
 -- No need to join in SaaS, it is what it is (all reported and accurate)
 
@@ -62,7 +62,7 @@
       1                                         AS percent_reporting,
       'SaaS'    AS estimation_grain
     FROM fact
-  WHERE service_ping_delivery_type = 'SaaS'
+  WHERE ping_delivery_type = 'SaaS'
 
 -- Union SaaS and Self Managed tables
 
@@ -79,11 +79,11 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain', 'ping_edition_product_tier', 'service_ping_delivery_type']) }}   AS rpt_service_ping_instance_metric_estimated_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type']) }}           AS rpt_ping_instance_metric_estimated_monthly_id,
     -- identifiers
     metrics_path                                                                                                                                        AS metrics_path,
     reporting_month                                                                                                                                     AS reporting_month,
-    service_ping_delivery_type                                                                                                                          AS service_ping_delivery_type,
+    ping_delivery_type                                                                                                                                  AS ping_delivery_type,
     -- ping attributes
     ping_edition                                                                                                                                        AS ping_edition,
     ping_product_tier                                                                                                                                   AS ping_product_tier,

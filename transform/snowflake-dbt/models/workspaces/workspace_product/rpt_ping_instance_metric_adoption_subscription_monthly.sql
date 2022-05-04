@@ -4,10 +4,10 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_service_ping_instance_metric_28_day', 'mart_service_ping_instance_metric_28_day'),
-    ('rpt_service_ping_instance_subcription_opt_in_monthly', 'rpt_service_ping_instance_subcription_opt_in_monthly'),
+    ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
+    ('rpt_ping_instance_subcription_opt_in_monthly', 'rpt_ping_instance_subcription_opt_in_monthly'),
     ('mart_arr', 'mart_arr'),
-    ('dim_service_ping_metric', 'dim_service_ping_metric')
+    ('dim_ping_metric', 'dim_ping_metric')
     ])
 
 }}
@@ -19,7 +19,7 @@
     SELECT
     *,
     1                                         AS key
-  FROM rpt_service_ping_instance_subcription_opt_in_monthly
+  FROM rpt_ping_instance_subcription_opt_in_monthly
 
 -- Assign key to metric info (all metrics)
 
@@ -28,7 +28,7 @@
     SELECT
         *,
         1                                     AS key
-    FROM dim_service_ping_metric
+    FROM dim_ping_metric
 
 -- Join to get combo of all possible subscriptions and the metrics
 
@@ -45,12 +45,12 @@
 ), arr_joined AS (
 
   SELECT
-    mart_service_ping_instance_metric_28_day.*,
+    mart_ping_instance_metric_28_day.*,
     mart_arr.quantity
-  FROM mart_service_ping_instance_metric_28_day
+  FROM mart_ping_instance_metric_28_day
     INNER JOIN mart_arr
-  ON mart_service_ping_instance_metric_28_day.latest_active_subscription_id = mart_arr.dim_subscription_id
-      AND mart_service_ping_instance_metric_28_day.ping_created_at_month = mart_arr.arr_month
+  ON mart_ping_instance_metric_28_day.latest_active_subscription_id = mart_arr.dim_subscription_id
+      AND mart_ping_instance_metric_28_day.ping_created_at_month = mart_arr.arr_month
 
 -- Get actual count of subs/users for a given month/metric
 
@@ -71,7 +71,7 @@
     FROM arr_joined
             WHERE latest_active_subscription_id IS NOT NULL
                 AND is_last_ping_of_month = TRUE
-                AND service_ping_delivery_type = 'Self-Managed'
+                AND ping_delivery_type = 'Self-Managed'
                 AND has_timed_out = FALSE
                 AND metric_value is not null
     {{ dbt_utils.group_by(n=9)}}
@@ -144,7 +144,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_service_ping_instance_metric_adoption_subscription_monthly_id,
+    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_subscription_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                   AS percent_reporting
  FROM unioned_counts
