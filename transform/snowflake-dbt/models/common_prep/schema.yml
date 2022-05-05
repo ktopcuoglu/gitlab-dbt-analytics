@@ -1962,7 +1962,7 @@ models:
       - name: instance_user_count
         description: The total count of users on the instance
       - name: license_md5
-        description: The license_md5 associated with teh instance
+        description: The license_md5 associated with the instance
       - name: historical_max_users
         description: The max user number the instance has had
       - name: license_user_count
@@ -1990,7 +1990,7 @@ models:
       - name: license_plan
         description: The license plan associated with the instance (i.e. Ultimate, Premium)
       - name: database_adapter
-        description: The type of database adapter being usedd (i.e. mysql2, postgresql)
+        description: The type of database adapter being used (i.e. mysql2, postgresql)
       - name: database_version
         description: The database version associated with the instance (i.e. 9.5.3)
       - name: git_version
