@@ -23,18 +23,29 @@
       dim_crm_person.dim_crm_account_id,
       mql_date_first.date_id                   AS mql_date_first_id,
       mql_date_first.date_day                  AS mql_date_first,
+      legacy_mql_date_first.date_id            AS legacy_mql_date_first_id,
+      legacy_mql_date_first.date_day           AS legacy_mql_date_first,
       fct_crm_person.mql_datetime_first,
       fct_crm_person.mql_datetime_first_pt,
       mql_date_first_pt.date_day               AS mql_date_first_pt,
       mql_date_first.first_day_of_month        AS mql_month_first,
       mql_date_first_pt.first_day_of_month     AS mql_month_first_pt,
       mql_date_latest.date_day                 AS mql_date_lastest,
+      legacy_mql_date_first_pt.date_day        AS legacy_mql_date_first_pt,
+      legacy_mql_date_first.first_day_of_month AS legacy_mql_month_first,
+      legacy_mql_date_first_pt.first_day_of_month
+                                               AS legacy_mql_month_first_pt,
+      legacy_mql_date_latest.date_day          AS legacy_mql_date_lastest,
       fct_crm_person.mql_datetime_latest,
       fct_crm_person.mql_datetime_latest_pt,
       mql_date_latest_pt.date_day              AS mql_date_lastest_pt,
       mql_date_latest.first_day_of_month       AS mql_month_latest,
       mql_date_latest_pt.first_day_of_month    AS mql_month_latest_pt,
-      fct_crm_person.legacy_mql_date           AS legacy_mql_date,
+      legacy_mql_date_latest_pt.date_day       AS legacy_mql_date_lastest_pt,
+      legacy_mql_date_latest.first_day_of_month
+                                               AS legacy_mql_month_latest,
+      legacy_mql_date_latest_pt.first_day_of_month
+                                               AS legacy_mql_month_latest_pt,
       created_date.date_day                    AS created_date,
       created_date_pt.date_day                 AS created_date_pt,
       created_date.first_day_of_month          AS created_month,
@@ -179,6 +190,14 @@
       ON fct_crm_person.mql_date_latest_id = mql_date_latest.date_id
     LEFT JOIN dim_date AS mql_date_latest_pt
       ON fct_crm_person.mql_date_latest_pt_id = mql_date_latest_pt.date_id  
+    LEFT JOIN dim_date AS legacy_mql_date_first
+      ON fct_crm_person.legacy_mql_date_first_id = legacy_mql_date_first.date_id
+    LEFT JOIN dim_date AS legacy_mql_date_first_pt
+      ON fct_crm_person.legacy_mql_date_first_pt_id = legacy_mql_date_first_pt.date_id
+    LEFT JOIN dim_date AS legacy_mql_date_latest
+      ON fct_crm_person.legacy_mql_date_latest_id = legacy_mql_date_latest.date_id
+    LEFT JOIN dim_date AS legacy_mql_date_latest_pt
+      ON fct_crm_person.legacy_mql_date_latest_pt_id = legacy_mql_date_latest_pt.date_id   
     LEFT JOIN dim_date AS mql_sfdc_date
       ON fct_crm_person.mql_sfdc_date_id = mql_sfdc_date.date_id
     LEFT JOIN dim_date AS mql_sfdc_date_pt
@@ -213,7 +232,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2022-03-17",
+    updated_date="2022-05-05",
   ) }}
