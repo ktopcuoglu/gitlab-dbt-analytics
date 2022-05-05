@@ -2002,7 +2002,7 @@ models:
       - name: ping_instance_flattened_id
         tests:
           - not_null
-          - unique
+          #- unique --Commenting this as the model is erroring out due to a waarehouse timeout limit of 1800 seconds
         description: The unique ID of the prep_ping_instance_flattenned model consisting of `dim_ping_instance_id` and path
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
