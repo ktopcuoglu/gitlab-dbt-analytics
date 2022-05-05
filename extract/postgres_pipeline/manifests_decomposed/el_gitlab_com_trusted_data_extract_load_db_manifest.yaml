@@ -92,14 +92,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_issues_prometheus_alert_events' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM issues_prometheus_alert_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_clusters_applications_elastic_stacks' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -188,14 +180,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_epic_metrics' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM epic_metrics
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_project_tracing_settings' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -228,14 +212,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_issues_self_managed_prometheus_alert_events' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM issues_self_managed_prometheus_alert_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_ldap_group_links' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -265,14 +241,6 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM status_page_settings
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_licenses' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM licenses
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
   cluster_2:
@@ -359,14 +327,6 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM vulnerability_feedback
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_approver_groups' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM approver_groups
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
