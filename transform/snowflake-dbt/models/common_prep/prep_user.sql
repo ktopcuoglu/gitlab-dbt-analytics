@@ -11,7 +11,16 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('source', 'gitlab_dotcom_users_source'),
+    ('email_classification', 'driveload_email_domain_classification_source')
 ]) }}
+
+, email_classification_dedup AS (
+
+    SELECT *
+    FROM email_classification
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY domain ORDER BY domain DESC) = 1
+
+)
 
 , renamed AS (
 
@@ -29,17 +38,34 @@
       CASE 
         WHEN state in ('blocked', 'banned') THEN TRUE
         ELSE FALSE 
-      END                                                              AS is_blocked_user
+      END                                                              AS is_blocked_user,
+      source.notification_email_domain                                 AS notification_email_domain,
+      notification_email_domain.classification                         AS notification_email_domain_classification,
+      source.email_domain                                              AS email_domain,
+      email_domain.classification                                      AS email_domain_classification,
+      source.public_email_domain                                       AS public_email_domain,
+      public_email_domain.classification                               AS public_email_domain_classification,
+      source.commit_email_domain                                       AS commit_email_domain,
+      commit_email_domain.classification                               AS commit_email_domain_classification
+
     FROM source
     LEFT JOIN dim_date
       ON TO_DATE(source.created_at) = dim_date.date_day
+    LEFT JOIN email_classification_dedup AS notification_email_domain
+      ON notification_email_domain.domain = source.notification_email_domain
+    LEFT JOIN email_classification_dedup AS email_domain
+      ON email_domain.domain = source.email_domain
+    LEFT JOIN email_classification_dedup AS public_email_domain
+      ON public_email_domain.domain = source.public_email_domain
+    LEFT JOIN email_classification_dedup AS commit_email_domain
+      ON commit_email_domain.domain = source.commit_email_domain
     
 )
 
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet",
-    updated_by="@chrissharp",
+    updated_by="@jpeguero",
     created_date="2021-05-31",
-    updated_date="2022-03-23"
+    updated_date="2022-04-26"
 ) }}

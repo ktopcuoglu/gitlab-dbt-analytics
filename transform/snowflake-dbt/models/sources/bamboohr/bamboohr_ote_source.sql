@@ -1,5 +1,5 @@
 {{ config({
-    "materialized": "ephemeral"
+    "materialized": "table"
     })
 }}
 
@@ -23,8 +23,7 @@ WITH source AS (
       data_by_row.value['customType']::VARCHAR              AS ote_type,
       data_by_row.value['customVariablePay']::VARCHAR       AS variable_pay
     FROM source,
-    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true)initial_unnest,
-    LATERAL FLATTEN(INPUT => parse_json(initial_unnest.value), OUTER => true)data_by_row
+    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) data_by_row
 
 ), final AS (
 

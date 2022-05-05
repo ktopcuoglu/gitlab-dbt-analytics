@@ -57,3 +57,4 @@ sources:
       - name: xc_user 
       - name: xc_comp_order_item
       - name: xc_comp_order_item_detail
+        freshness: null
