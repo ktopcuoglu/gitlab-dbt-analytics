@@ -88,4 +88,16 @@ sources:
               - not_null
           - name: updated_at
             tests:
-              - not_null            
+              - not_null        
+
+      - name: usage_ping_errors
+        freshness:
+          warn_after: {count: 14, period: day}
+          error_after: {count: 21, period: day}
+        columns:
+          - name: id
+            tests:
+              - not_null
+          - name: created_at
+            tests:
+              - not_null   
