@@ -50,10 +50,10 @@ Describe the solution. Include links to any related MRs and/or issues.
         FROM source
 ```
 * [ ] Step 6: In the sources.driveload repository [Edit the schema.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/driveload/schema.yml) to explain the source model. 
-
-* [ ] Step 7: Next we'll head to head to transform --> snowflake-dbt --> models --> legacy --> driveload--> [Add a new file for the model in legacy.driveload](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/legacy/driveload). This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update. Name the file `driveload_file_name`
-
-* [ ] Step 8: [Update driveload.sheetload schema.yml file](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/legacy/driveload/schema.yml) to add description of the staging model. 
+* [ ] Step 6.5: (If you do not have an applicable workspace model folder, create a workspace folder under models/workspaces)
+* [ ] Step 7: Next we'll head to head to transform --> snowflake-dbt --> models --> workspaces --> <YourWorkspace>--> Schema.yaml. Add your model name here, along with a .sql file to select the model into this layer. 
+  * This will make the model accesible in Sisense. If any transformations are needed, this would be the file to update. Name the file `driveload_file_name`
+* [ ] Step 8: Update the schema.yaml to add description of the workspace model. 
 
 To understand the difference between source and staging models, please refer to these sources: [source models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#source-models) vs [staging models](https://about.gitlab.com/handbook/business-ops/data-team/platform/dbt-guide/#staging)
 </details>
@@ -71,7 +71,7 @@ To understand the difference between source and staging models, please refer to 
 </details>
 
 
-## CI Jobs to run*
+## CI Jobs to run
 Run the following CI Jobs on the MR: 
 
 * [ ] `❄️ Snowflake: clone_raw_specific_schema` 
