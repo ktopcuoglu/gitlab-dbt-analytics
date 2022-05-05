@@ -15,10 +15,10 @@ WITH first_contact  AS (
     FROM {{ ref('sfdc_bizible_attribution_touchpoint_source') }}
     WHERE is_deleted = 'FALSE'
 
-), date_details AS (
+), dim_date AS (
 
-    SELECT * 
-    FROM {{ ref('date_details') }}
+    SELECT *
+    FROM {{ ref('dim_date') }}
 
 ), linear_attribution_base AS ( --the number of attribution touches a given opp has in total
     --linear attribution IACV of an opp / all touches (count_touches) for each opp - weighted by the number of touches in the given bucket (campaign,channel,etc)
@@ -55,6 +55,91 @@ WITH first_contact  AS (
    AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
 
    {% endif %}
+
+), net_iacv_to_net_arr_ratio AS (
+
+  SELECT
+    '2. New - Connected' AS order_type,
+    'Mid-Market' AS user_segment_stamped,
+    0.999691784 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '1. New - First Order' AS order_type,
+    'SMB' AS user_segment_stamped,
+    0.998590143 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '1. New - First Order' AS order_type,
+    'Large' AS user_segment_stamped,
+    0.992289340 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '3. Growth' AS order_type,
+    'SMB' AS user_segment_stamped,
+    0.927846192 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '3. Growth' AS order_type,
+    'Large' AS user_segment_stamped,
+    0.852915435 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '2. New - Connected' AS order_type,
+    'SMB' AS user_segment_stamped,
+    1.009262672 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '3. Growth' AS order_type,
+    'Mid-Market' AS user_segment_stamped,
+    0.793618079 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '1. New - First Order' AS order_type,
+    'Mid-Market' AS user_segment_stamped,
+    0.988527875 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '2. New - Connected' AS order_type,
+    'Large' AS user_segment_stamped,
+    1.010081083 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '1. New - First Order' AS order_type,
+    'PubSec' AS user_segment_stamped,
+    1.000000000 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '2. New - Connected' AS order_type,
+    'PubSec' AS user_segment_stamped,
+    1.002741689 AS ratio_net_iacv_to_net_arr
+
+  UNION
+
+  SELECT
+    '3. Growth' AS order_type,
+    'PubSec' AS user_segment_stamped,
+    0.965670500 AS ratio_net_iacv_to_net_arr
+
 {%- endif %}
 
 ), sfdc_opportunity AS (
@@ -74,13 +159,20 @@ WITH first_contact  AS (
       created_date::DATE                                                 AS created_date,
       sales_accepted_date::DATE                                          AS sales_accepted_date,
       close_date::DATE                                                   AS close_date,
+      net_arr                                                            AS raw_net_arr,
     {%- if model_type == 'live' %}
-        {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE"])}}
+        {{ dbt_utils.star(from=ref('sfdc_opportunity_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM","SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR"])}}
     {%- elif model_type == 'snapshot' %}
         {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
         snapshot_dates.date_id                                                                                        AS snapshot_id,
         snapshot_dates.date_actual                                                                                    AS snapshot_date,
-        {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE"])}}
+        snapshot_dates.first_day_of_month                                                                             AS snapshot_date_month,
+        snapshot_dates.fiscal_year                                                                                    AS snapshot_fiscal_year,
+        snapshot_dates.fiscal_quarter_name_fy                                                                         AS snapshot_fiscal_quarter_name,
+        snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
+        snapshot_dates.day_of_fiscal_quarter_normalised                                                               AS snapshot_day_of_fiscal_quarter_normalised,
+        snapshot_dates.day_of_fiscal_year_normalised                                                                  AS snapshot_day_of_fiscal_year_normalised,
+        {{ dbt_utils.star(from=ref('sfdc_opportunity_snapshots_source'), except=["ACCOUNT_ID", "OPPORTUNITY_ID", "OWNER_ID", "ORDER_TYPE_STAMPED", "IS_WON", "ORDER_TYPE", "OPPORTUNITY_TERM", "SALES_QUALIFIED_SOURCE", "DBT_UPDATED_AT", "CREATED_DATE", "SALES_ACCEPTED_DATE", "CLOSE_DATE", "NET_ARR"])}}
      {%- endif %}
     FROM 
     {%- if model_type == 'live' %}
@@ -136,11 +228,137 @@ WITH first_contact  AS (
     {%- endif %}
     WHERE account_id IS NOT NULL
 
+), sfdc_user AS (
+
+    SELECT 
+    {%- if model_type == 'live' %}
+        *
+    {%- elif model_type == 'snapshot' %}
+        {{ dbt_utils.surrogate_key(['sfdc_user_snapshots_source.account_id','snapshot_dates.date_id'])}}      AS crm_user_snapshot_id,
+        snapshot_dates.date_id                                                                                AS snapshot_id,
+        sfdc_user_snapshots_source.*
+     {%- endif %}
+    FROM 
+    {%- if model_type == 'live' %}
+        {{ ref('sfdc_account_source') }}
+    {%- elif model_type == 'snapshot' %}
+        {{ ref('sfdc_user_snapshots_source') }}
+         INNER JOIN snapshot_dates
+           ON snapshot_dates.date_actual >= sfdc_user_snapshots_source.dbt_valid_from
+           AND snapshot_dates.date_actual < COALESCE(sfdc_user_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+    {%- endif %}
+    WHERE account_id IS NOT NULL
+
 ), final AS (
 
     SELECT
       -- opportunity information
       sfdc_opportunity.*,
+
+      -- dates & date ids
+      {{ get_date_id('sfdc_opportunity.created_date') }}                                          AS created_date_id,
+      {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                                   AS sales_accepted_date_id,
+      {{ get_date_id('sfdc_opportunity.close_date') }}                                            AS close_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_0_pending_acceptance_date') }}                       AS stage_0_pending_acceptance_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_1_discovery_date') }}                                AS stage_1_discovery_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_2_scoping_date') }}                                  AS stage_2_scoping_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_3_technical_evaluation_date') }}                     AS stage_3_technical_evaluation_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_4_proposal_date') }}                                 AS stage_4_proposal_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}                              AS stage_5_negotiating_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}                               AS stage_6_closed_won_date_id,
+      {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
+
+      close_date_detail.first_day_of_month                                                        AS close_month,
+      close_date_detail.fiscal_year                                                               AS close_fiscal_year,
+      close_date_detail.fiscal_quarter_name_fy                                                    AS close_fiscal_quarter_name,
+      close_date_detail.first_day_of_fiscal_quarter                                               AS close_fiscal_quarter_date,
+      {%- if model_type == 'snapshot' %}
+      90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date_detail.last_day_of_fiscal_quarter) AS close_day_of_fiscal_quarter_normalised,
+      {%- endif %}
+
+      created_date_detail.first_day_of_month                                                      AS created_month,
+      created_date_detail.fiscal_year                                                             AS created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                                                  AS created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter                                             AS created_fiscal_quarter_date,
+
+      net_arr_created_date.first_day_of_month                                                     AS iacv_created_month,
+      net_arr_created_date.fiscal_year                                                            AS iacv_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
+
+      created_date_detail.date_actual                                                             AS net_arr_created_date,
+      created_date_detail.first_day_of_month                                                      AS net_arr_created_month,
+      created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
+      created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
+      created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
+
+      net_arr_created_date.date_actual                                                            AS pipeline_created_date,
+      net_arr_created_date.first_day_of_month                                                     AS pipeline_created_month,
+      net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
+      net_arr_created_date.fiscal_quarter_name_fy                                                 AS pipeline_created_fiscal_quarter_name,
+      net_arr_created_date.first_day_of_fiscal_quarter                                            AS pipeline_created_fiscal_quarter_date,
+
+      sales_accepted_date.first_day_of_month                                                      AS sales_accepted_month,
+      sales_accepted_date.fiscal_year                                                             AS sales_accepted_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                                                  AS sales_accepted_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
+
+      start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
+      start_date.first_day_of_fiscal_quarter                                                      AS subscription_start_date_fiscal_quarter_date,
+      start_date.fiscal_year                                                                      AS subscription_start_date_fiscal_year,
+      start_date.first_day_of_month                                                               AS subscription_start_month,
+
+      stage_1_date.first_day_of_month                                                             AS stage_1_discovery_month,
+      stage_1_date.fiscal_year                                                                    AS stage_1_discovery_fiscal_year,
+      stage_1_date.fiscal_quarter_name_fy                                                         AS stage_1_discovery_fiscal_quarter_name,
+      stage_1_date.first_day_of_fiscal_quarter                                                    AS stage_1_discovery_fiscal_quarter_date,
+
+      -- net arr
+      {%- if model_type == 'live' %}
+        raw_net_arr                                                                             AS net_arr,
+      {%- elif model_type == 'snapshot' %}
+      CASE 
+        WHEN sfdc_opportunity_stage.is_won = 1 -- only consider won deals
+          AND sfdc_opportunity.opportunity_category <> 'Contract Reset' -- contract resets have a special way of calculating net iacv
+          AND COALESCE(sfdc_opportunity.raw_net_arr,0) <> 0
+          AND COALESCE(sfdc_opportunity.net_incremental_acv,0) <> 0
+            THEN COALESCE(sfdc_opportunity.raw_net_arr / sfdc_opportunity.net_incremental_acv,0)
+        ELSE NULL 
+      END                                                                     AS opportunity_based_iacv_to_net_arr_ratio,
+      -- If there is no opportunity, use a default table ratio
+      -- I am faking that using the upper CTE, that should be replaced by the official table
+      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)         AS segment_order_type_iacv_to_net_arr_ratio,
+      -- calculated net_arr
+      -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
+      -- if there is an opportunity based ratio, use that, if not, use default from segment / order type
+      -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
+      -- Using opty ratio for open deals doesn't seem to work well
+      CASE 
+        WHEN sfdc_opportunity.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
+            THEN COALESCE(sfdc_opportunity.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
+          AND COALESCE(sfdc_opportunity.net_incremental_acv,0) = 0
+            THEN COALESCE(sfdc_opportunity.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
+            THEN COALESCE(sfdc_opportunity.net_incremental_acv,0) * COALESCE(opportunity_based_iacv_to_net_arr_ratio,segment_order_type_iacv_to_net_arr_ratio)
+        ELSE NULL
+      END                                                                     AS calculated_from_ratio_net_arr,
+      -- For opportunities before start of FY22, as Net ARR was WIP, there are a lot of opties with IACV or Net IACV and no Net ARR
+      -- Those were later fixed in the opportunity object but stayed in the snapshot table.
+      -- To account for those issues and give a directionally correct answer, we apply a ratio to everything before FY22
+      CASE
+        WHEN  sfdc_opportunity.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff and that were not updated to Net ARR
+          THEN calculated_from_ratio_net_arr
+        WHEN  sfdc_opportunity.snapshot_date >= '2021-02-01'::DATE  -- After cutoff date, for all deals earlier than FY19 that are closed and have no net arr
+              AND sfdc_opportunity.close_date < '2018-02-01'::DATE 
+              AND sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+              AND COALESCE(sfdc_opportunity.raw_net_arr,0) = 0 
+          THEN calculated_from_ratio_net_arr
+        ELSE COALESCE(sfdc_opportunity.raw_net_arr,0) -- Rest of deals after cut off date
+      END                                                                     AS net_arr,
+     {%- endif %}
+     
+      -- opportunity flags
       CASE
         WHEN (sfdc_opportunity.days_in_stage > 30
           OR sfdc_opportunity.incremental_acv > 100000
@@ -157,6 +375,43 @@ WITH first_contact  AS (
       sfdc_opportunity_stage.is_active                                                            AS stage_is_active,
       sfdc_opportunity_stage.is_closed                                                            AS stage_is_closed,
       sfdc_opportunity_stage.is_won                                                               AS is_won,
+      CASE
+        WHEN sfdc_opportunity.stage_name
+          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
+            THEN 1
+        ELSE 0
+      END                                                                                         AS is_stage_1_plus,
+      CASE 
+        WHEN sfdc_opportunity.stage_name 
+          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1                                                 
+        ELSE 0
+      END                                                                                         AS is_stage_3_plus, 
+      CASE 
+        WHEN sfdc_opportunity.stage_name 
+          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
+            THEN 1                                                 
+        ELSE 0
+      END                                                                                         AS is_stage_4_plus,
+      CASE 
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')  
+          THEN 1 ELSE 0
+      END                                                                                         AS is_lost,
+      CASE 
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+            THEN 0
+        ELSE 1  
+      END                                                                                         AS is_open,
+      CASE 
+        WHEN LOWER(sfdc_opportunity.sales_type) like '%renewal%' 
+          THEN 1
+        ELSE 0
+      END                                                                                         AS is_renewal,
+      CASE
+        WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
+          THEN 1
+        ELSE 0
+      END                                                                                         AS is_decommissed,
 
      -- flags
       CASE
@@ -214,161 +469,6 @@ WITH first_contact  AS (
             THEN TRUE
         ELSE FALSE
       END                                                                                         AS is_closed_won,
-      CASE
-        WHEN sfdc_opportunity.days_in_sao < 0                  THEN '1. Closed in < 0 days'
-        WHEN sfdc_opportunity.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
-        WHEN sfdc_opportunity.days_in_sao BETWEEN 31 AND 60    THEN '3. Closed in 31-60 days'
-        WHEN sfdc_opportunity.days_in_sao BETWEEN 61 AND 90    THEN '4. Closed in 61-90 days'
-        WHEN sfdc_opportunity.days_in_sao BETWEEN 91 AND 180   THEN '5. Closed in 91-180 days'
-        WHEN sfdc_opportunity.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
-        WHEN sfdc_opportunity.days_in_sao > 270                THEN '7. Closed in > 270 days'
-        ELSE NULL
-      END                                                                                         AS closed_buckets,
-      CASE
-        WHEN sfdc_opportunity.created_date < '2022-02-01' 
-          THEN 'Legacy'
-        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL AND sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
-          THEN 'SDR & BDR'
-        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL
-          THEN 'SDR'
-        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
-          THEN 'BDR'
-        WHEN sfdc_opportunity.opportunity_business_development_representative IS NULL AND sfdc_opportunity.opportunity_sales_development_representative IS NULL
-          THEN 'No XDR Assigned'
-      END                                               AS sdr_or_bdr,
-
-      -- alliance type fields
-      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
-      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
-
-      -- date ids
-      {{ get_date_id('sfdc_opportunity.created_date') }}                                          AS created_date_id,
-      {{ get_date_id('sfdc_opportunity.sales_accepted_date') }}                                   AS sales_accepted_date_id,
-      {{ get_date_id('sfdc_opportunity.close_date') }}                                            AS close_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_0_pending_acceptance_date') }}                       AS stage_0_pending_acceptance_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_1_discovery_date') }}                                AS stage_1_discovery_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_2_scoping_date') }}                                  AS stage_2_scoping_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_3_technical_evaluation_date') }}                     AS stage_3_technical_evaluation_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_4_proposal_date') }}                                 AS stage_4_proposal_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}                              AS stage_5_negotiating_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}                               AS stage_6_closed_won_date_id,
-      {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
-
-      --  quote information
-      quote.dim_quote_id,
-      quote.quote_start_date,
-
-      -- contact information
-      first_contact.dim_crm_person_id,
-      first_contact.sfdc_contact_id,
-
-      -- attribution information
-      linear_attribution_base.count_crm_attribution_touchpoints,
-      campaigns_per_opp.count_campaigns,
-      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv,
-
-      -- Noel's fields
-      close_date_detail.first_day_of_month                                                        AS close_date_month,
-      close_date_detail.fiscal_year                                                               AS close_fiscal_year,
-      close_date_detail.fiscal_quarter_name_fy                                                    AS close_fiscal_quarter_name,
-      close_date_detail.first_day_of_fiscal_quarter                                               AS close_fiscal_quarter_date,
-
-      created_date_detail.first_day_of_month                                                      AS created_date_month,
-      created_date_detail.fiscal_year                                                             AS created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                                                  AS created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter                                             AS created_fiscal_quarter_date,
-
-      net_arr_created_date.first_day_of_month                                                     AS iacv_created_date_month,
-      net_arr_created_date.fiscal_year                                                            AS iacv_created_fiscal_year,
-      net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
-      net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
-
-      created_date_detail.date_actual                                                             AS net_arr_created_date,
-      created_date_detail.first_day_of_month                                                      AS net_arr_created_date_month,
-      created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
-
-      net_arr_created_date.date_actual                                                            AS pipeline_created_date,
-      net_arr_created_date.first_day_of_month                                                     AS pipeline_created_date_month,
-      net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
-      net_arr_created_date.fiscal_quarter_name_fy                                                 AS pipeline_created_fiscal_quarter_name,
-      net_arr_created_date.first_day_of_fiscal_quarter                                            AS pipeline_created_fiscal_quarter_date,
-
-      sales_accepted_date.first_day_of_month                                                      AS sales_accepted_month,
-      sales_accepted_date.fiscal_year                                                             AS sales_accepted_fiscal_year,
-      sales_accepted_date.fiscal_quarter_name_fy                                                  AS sales_accepted_fiscal_quarter_name,
-      sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
-
-      start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
-      start_date.first_day_of_fiscal_quarter                                                      AS subscription_start_date_fiscal_quarter_date,
-      start_date.fiscal_year                                                                      AS subscription_start_date_fiscal_year,
-      start_date.first_day_of_month                                                               AS subscription_start_date_month,
-
-      CASE
-        WHEN sfdc_opportunity.stage_name
-          IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
-            THEN 1
-        ELSE 0
-      END                                                                                         AS is_stage_1_plus,
-      CASE 
-        WHEN sfdc_opportunity.stage_name 
-          IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
-            THEN 1                                                 
-        ELSE 0
-      END                                                                                         AS is_stage_3_plus, 
-      CASE 
-        WHEN sfdc_opportunity.stage_name 
-          IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')                               
-            THEN 1                                                 
-        ELSE 0
-      END                                                                                         AS is_stage_4_plus,
-      CASE 
-        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')  
-          THEN 1 ELSE 0
-      END                                                                                         AS is_lost,
-      CASE 
-        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
-            THEN 0
-        ELSE 1  
-      END                                                                                         AS is_open,
-      CASE 
-        WHEN LOWER(sfdc_opportunity.sales_type) like '%renewal%' 
-          THEN 1
-        ELSE 0
-      END                                                                                         AS is_renewal,
-      CASE
-        WHEN sfdc_opportunity.opportunity_category IN ('Decommission')
-          THEN 1
-        ELSE 0
-      END                                                                                         AS is_decommissed,
-      CASE 
-        WHEN is_won = 1  
-          THEN '1.Won'
-        WHEN is_lost = 1 
-          THEN '2.Lost'
-        WHEN is_open = 1 
-          THEN '0. Open' 
-        ELSE 'N/A'
-      END                                                                                         AS stage_category,
-      CASE 
-            WHEN sfdc_opportunity.order_type = '3. Growth' 
-                THEN '2. Growth'
-            WHEN sfdc_opportunity.order_type = '1. New - First Order' 
-                THEN '1. New'
-              ELSE '3. Other'
-          END                                                                                    AS deal_group,
-       CASE 
-          WHEN sfdc_opportunity.order_type = '1. New - First Order' 
-            THEN '1. New'
-          WHEN sfdc_opportunity.order_type IN ('2. New - Connected', '3. Growth') 
-            THEN '2. Growth' 
-          WHEN sfdc_opportunity.order_type IN ('4. Contraction')
-            THEN '3. Contraction'
-          WHEN sfdc_opportunity.order_type IN ('5. Churn - Partial','6. Churn - Final')
-            THEN '4. Churn'
-          ELSE '5. Other' 
-        END                                                                                       AS deal_category,
       CASE 
         WHEN lower(sfdc_opportunity.order_type_grouped) LIKE ANY ('%growth%', '%new%')
           AND sfdc_opportunity.is_edu_oss = 0
@@ -386,7 +486,7 @@ WITH first_contact  AS (
           AND (is_stage_1_plus = 1
             OR is_lost = 1)
           AND sfdc_opportunity.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
-          AND (sfdc_opportunity.net_arr > 0 
+          AND (net_arr > 0 
             OR sfdc_opportunity.opportunity_category = 'Credit')
           -- -- exclude vision opps from FY21-Q2
           -- AND (sfdc_opportunity.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
@@ -409,7 +509,7 @@ WITH first_contact  AS (
           AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth')
           AND sfdc_opportunity.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
           AND ((sfdc_opportunity.is_web_portal_purchase = 1 
-                AND sfdc_opportunity.net_arr > 0)
+                AND net_arr > 0)
                 OR sfdc_opportunity.is_web_portal_purchase = 0)
             THEN 1
           ELSE 0
@@ -455,6 +555,74 @@ WITH first_contact  AS (
           THEN 1
         ELSE 0
       END                                                                                         AS is_contract_reset,
+
+      -- alliance type fields
+      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+
+      --  quote information
+      quote.dim_quote_id,
+      quote.quote_start_date,
+
+      -- contact information
+      first_contact.dim_crm_person_id,
+      first_contact.sfdc_contact_id,
+
+      -- attribution information
+      linear_attribution_base.count_crm_attribution_touchpoints,
+      campaigns_per_opp.count_campaigns,
+      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv,
+
+     -- opportunity attributes
+      CASE
+        WHEN sfdc_opportunity.days_in_sao < 0                  THEN '1. Closed in < 0 days'
+        WHEN sfdc_opportunity.days_in_sao BETWEEN 0 AND 30     THEN '2. Closed in 0-30 days'
+        WHEN sfdc_opportunity.days_in_sao BETWEEN 31 AND 60    THEN '3. Closed in 31-60 days'
+        WHEN sfdc_opportunity.days_in_sao BETWEEN 61 AND 90    THEN '4. Closed in 61-90 days'
+        WHEN sfdc_opportunity.days_in_sao BETWEEN 91 AND 180   THEN '5. Closed in 91-180 days'
+        WHEN sfdc_opportunity.days_in_sao BETWEEN 181 AND 270  THEN '6. Closed in 181-270 days'
+        WHEN sfdc_opportunity.days_in_sao > 270                THEN '7. Closed in > 270 days'
+        ELSE NULL
+      END                                                                                         AS closed_buckets,
+      CASE
+        WHEN sfdc_opportunity.created_date < '2022-02-01' 
+          THEN 'Legacy'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL AND sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'SDR & BDR'
+        WHEN sfdc_opportunity.opportunity_sales_development_representative IS NOT NULL
+          THEN 'SDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NOT NULL
+          THEN 'BDR'
+        WHEN sfdc_opportunity.opportunity_business_development_representative IS NULL AND sfdc_opportunity.opportunity_sales_development_representative IS NULL
+          THEN 'No XDR Assigned'
+      END                                               AS sdr_or_bdr,
+      CASE 
+        WHEN is_won = 1  
+          THEN '1.Won'
+        WHEN is_lost = 1 
+          THEN '2.Lost'
+        WHEN is_open = 1 
+          THEN '0. Open' 
+        ELSE 'N/A'
+      END                                                                                         AS stage_category,
+      CASE 
+            WHEN sfdc_opportunity.order_type = '3. Growth' 
+                THEN '2. Growth'
+            WHEN sfdc_opportunity.order_type = '1. New - First Order' 
+                THEN '1. New'
+              ELSE '3. Other'
+          END                                                                                    AS deal_group,
+       CASE 
+          WHEN sfdc_opportunity.order_type = '1. New - First Order' 
+            THEN '1. New'
+          WHEN sfdc_opportunity.order_type IN ('2. New - Connected', '3. Growth') 
+            THEN '2. Growth' 
+          WHEN sfdc_opportunity.order_type IN ('4. Contraction')
+            THEN '3. Contraction'
+          WHEN sfdc_opportunity.order_type IN ('5. Churn - Partial','6. Churn - Final')
+            THEN '4. Churn'
+          ELSE '5. Other' 
+        END                                                                                       AS deal_category,
       COALESCE(sfdc_opportunity.reason_for_loss, sfdc_opportunity.downgrade_reason)               AS reason_for_loss_staged,
       CASE 
         WHEN reason_for_loss_staged IN ('Do Nothing','Other','Competitive Loss','Operational Silos') 
@@ -500,13 +668,6 @@ WITH first_contact  AS (
         WHEN net_arr < -100000 
           THEN '5. 100k+'
       END                                                                                       AS churned_contraction_net_arr_bucket,
-       CASE 
-        WHEN is_decommissed = 1
-          THEN -1
-        WHEN is_credit = 1
-          THEN 0
-        ELSE 1
-      END                                                                                       AS calculated_deal_count,
       CASE 
         WHEN sfdc_opportunity.deal_path = 'Direct'
           THEN 'Direct'
@@ -538,6 +699,66 @@ WITH first_contact  AS (
           THEN '8. (>1000k)'
         ELSE 'Other' 
       END                                                                                         AS calculated_deal_size,
+      CASE
+        WHEN
+          sfdc_opportunity.stage_name IN (
+            '00-Pre Opportunity',
+            '0-Pending Acceptance',
+            '0-Qualifying',
+            'Developing',
+            '1-Discovery',
+            '2-Developing',
+            '2-Scoping'
+          )
+          THEN 'Pipeline'
+        WHEN
+          sfdc_opportunity.stage_name IN (
+            '3-Technical Evaluation',
+            '4-Proposal',
+            '5-Negotiating',
+            '6-Awaiting Signature',
+            '7-Closing'
+          )
+          THEN '3+ Pipeline'
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')
+          THEN 'Lost'
+        WHEN sfdc_opportunity.stage_name IN ('Closed Won')
+          THEN 'Closed Won'
+        ELSE 'Other'
+      END AS stage_name_3plus,
+      CASE
+        WHEN
+          sfdc_opportunity.stage_name IN (
+            '00-Pre Opportunity',
+            '0-Pending Acceptance',
+            '0-Qualifying',
+            'Developing',
+            '1-Discovery',
+            '2-Developing',
+            '2-Scoping',
+            '3-Technical Evaluation'
+          )
+          THEN 'Pipeline'
+        WHEN
+          sfdc_opportunity.stage_name IN (
+            '4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing'
+          )
+          THEN '4+ Pipeline'
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')
+          THEN 'Lost'
+        WHEN sfdc_opportunity.stage_name IN ('Closed Won')
+          THEN 'Closed Won'
+        ELSE 'Other'
+      END AS stage_name_4plus,
+
+      -- counts and arr totals by pipeline stage
+       CASE 
+        WHEN is_decommissed = 1
+          THEN -1
+        WHEN is_credit = 1
+          THEN 0
+        ELSE 1
+      END                                                                                       AS calculated_deal_count,
       CASE 
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_1_plus = 1
@@ -577,21 +798,21 @@ WITH first_contact  AS (
       END                                               AS churned_contraction_deal_count,
       CASE 
         WHEN is_eligible_open_pipeline = 1
-          THEN sfdc_opportunity.net_arr
+          THEN net_arr
         ELSE 0                                                                                              
       END                                                AS open_1plus_net_arr,
 
       CASE 
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_3_plus = 1   
-            THEN sfdc_opportunity.net_arr
+            THEN net_arr
         ELSE 0
       END                                                AS open_3plus_net_arr,
   
       CASE 
         WHEN is_eligible_open_pipeline = 1  
           AND is_stage_4_plus = 1
-            THEN sfdc_opportunity.net_arr
+            THEN net_arr
         ELSE 0
       END                                                AS open_4plus_net_arr,
       CASE
@@ -602,11 +823,9 @@ WITH first_contact  AS (
                       AND is_lost = 1
                    )
              )
-          THEN sfdc_opportunity.net_arr
+          THEN net_arr
         ELSE 0 
       END                                                 AS booked_net_arr,
-
-      -- churned contraction deal count as OT
       CASE
         WHEN (
                (
@@ -616,9 +835,18 @@ WITH first_contact  AS (
                OR sfdc_opportunity_stage.is_won = 1 
               )
             AND sfdc_opportunity.order_type IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
-        THEN sfdc_opportunity.net_arr
+        THEN net_arr
         ELSE 0
-      END                                                 AS churned_contraction_net_arr
+      END                                                 AS churned_contraction_net_arr,
+      {%- if model_type == 'snapshot' %}
+      CASE
+        WHEN is_open = 1
+          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
+        WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < close_date_detail.date_actual
+          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
+        ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
+      END                                                       AS calculated_age_in_days
+      {%- endif %}
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -631,16 +859,18 @@ WITH first_contact  AS (
       ON sfdc_opportunity.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
-    LEFT JOIN date_details AS close_date_detail
+    LEFT JOIN dim_date AS close_date_detail
       ON sfdc_opportunity.close_date = close_date_detail.date_actual
-    LEFT JOIN date_details AS created_date_detail
+    LEFT JOIN dim_date AS created_date_detail
       ON sfdc_opportunity.created_date = created_date_detail.date_actual
-    LEFT JOIN date_details AS net_arr_created_date
+    LEFT JOIN dim_date AS net_arr_created_date
       ON sfdc_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual 
-    LEFT JOIN date_details AS sales_accepted_date
+    LEFT JOIN dim_date AS sales_accepted_date
       ON sfdc_opportunity.sales_accepted_date = sales_accepted_date.date_actual
-    LEFT JOIN date_details AS start_date
+    LEFT JOIN dim_date AS start_date
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
+    LEFT JOIN dim_date AS stage_1_date
+      ON sfdc_opportunity.stage_1_discovery_date::DATE = stage_1_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}
@@ -650,6 +880,16 @@ WITH first_contact  AS (
       ON sfdc_opportunity.dim_crm_account_id= sfdc_account.account_id
     {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = sfdc_account.snapshot_id
+    {%- endif %}
+    LEFT JOIN sfdc_user
+      ON sfdc_opportunity.dim_crm_user_id= sfdc_user.user_id
+    {%- if model_type == 'snapshot' %}
+        AND sfdc_opportunity.snapshot_id = sfdc_user.snapshot_id
+    {%- endif %}
+    {%- if model_type == 'snapshot' %}
+    LEFT JOIN net_iacv_to_net_arr_ratio
+      ON COALESCE(sfdc_opportunity.user_segment_stamped, sfdc_user.user_segment) = net_iacv_to_net_arr_ratio.user_segment_stamped
+      AND sfdc_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
     {%- endif %}
 
 )

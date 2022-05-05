@@ -5,92 +5,6 @@
     ('dim_date', 'dim_date')
 ]) }},
 
-net_iacv_to_net_arr_ratio AS (
-
-  SELECT
-    '2. New - Connected' AS order_type,
-    'Mid-Market' AS user_segment_stamped,
-    0.999691784 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '1. New - First Order' AS order_type,
-    'SMB' AS user_segment_stamped,
-    0.998590143 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '1. New - First Order' AS order_type,
-    'Large' AS user_segment_stamped,
-    0.992289340 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '3. Growth' AS order_type,
-    'SMB' AS user_segment_stamped,
-    0.927846192 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '3. Growth' AS order_type,
-    'Large' AS user_segment_stamped,
-    0.852915435 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '2. New - Connected' AS order_type,
-    'SMB' AS user_segment_stamped,
-    1.009262672 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '3. Growth' AS order_type,
-    'Mid-Market' AS user_segment_stamped,
-    0.793618079 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '1. New - First Order' AS order_type,
-    'Mid-Market' AS user_segment_stamped,
-    0.988527875 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '2. New - Connected' AS order_type,
-    'Large' AS user_segment_stamped,
-    1.010081083 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '1. New - First Order' AS order_type,
-    'PubSec' AS user_segment_stamped,
-    1.000000000 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '2. New - Connected' AS order_type,
-    'PubSec' AS user_segment_stamped,
-    1.002741689 AS ratio_net_iacv_to_net_arr
-
-  UNION
-
-  SELECT
-    '3. Growth' AS order_type,
-    'PubSec' AS user_segment_stamped,
-    0.965670500 AS ratio_net_iacv_to_net_arr
-
-),
-
 final AS (
 
 
@@ -104,46 +18,65 @@ final AS (
     dim_crm_account.crm_account_name,
     dim_crm_account.dim_crm_account_id,
     fct_crm_opportunity.dim_crm_user_id,
+    fct_crm_opportunity.duplicate_opportunity_id,
 
     -- dates
     fct_crm_opportunity.sales_accepted_date,
-    DATE_TRUNC(
-      'month', fct_crm_opportunity.sales_accepted_date
-    ) AS sales_accepted_month,
+    fct_crm_opportunity.sales_accepted_month,
     fct_crm_opportunity.close_date,
-    DATE_TRUNC(
-      'month', fct_crm_opportunity.close_date
-    ) AS close_month,
+    fct_crm_opportunity.close_month,
     fct_crm_opportunity.created_date,
-    DATE_TRUNC(
-      'month', fct_crm_opportunity.created_date
-    ) AS created_month,
-    fct_crm_opportunity.sales_qualified_date,
-    DATE_TRUNC(
-      'month', fct_crm_opportunity.sales_qualified_date
-    ) AS sales_qualified_month,
+    fct_crm_opportunity.snapshot_date,
+    fct_crm_opportunity.snapshot_month,
+    fct_crm_opportunity.snapshot_fiscal_year,
+    fct_crm_opportunity.snapshot_fiscal_quarter_name,
+    fct_crm_opportunity.snapshot_fiscal_quarter_date,
+    fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
+    fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
+    fct_crm_opportunity.close_month,
+    fct_crm_opportunity.close_fiscal_year,
+    fct_crm_opportunity.close_fiscal_quarter_name,
+    fct_crm_opportunity.close_fiscal_quarter_date,
+    fct_crm_opportunity.close_day_of_fiscal_quarter_normalised,
+    fct_crm_opportunity.create_month,
+    fct_crm_opportunity.created_fiscal_year,
+    fct_crm_opportunity.created_fiscal_quarter_name,
+    fct_crm_opportunity.created_fiscal_quarter_date,
+    fct_crm_opportunity.iacv_created_date,
+    fct_crm_opportunity.iacv_created_month,
+    fct_crm_opportunity.iacv_created_fiscal_year,
+    fct_crm_opportunity.iacv_created_fiscal_quarter_name,
+    fct_crm_opportunity.iacv_created_fiscal_quarter_date,
+    fct_crm_opportunity.net_arr_created_date,
+    fct_crm_opportunity.net_arr_created_month,
+    fct_crm_opportunity.net_arr_created_fiscal_year,
+    fct_crm_opportunity.net_arr_created_fiscal_quarter_name,
+    fct_crm_opportunity.net_arr_created_fiscal_quarter_date,
+    fct_crm_opportunity.pipeline_created_date,
+    fct_crm_opportunity.pipeline_created_month,
+    fct_crm_opportunity.pipeline_created_fiscal_year,
+    fct_crm_opportunity.pipeline_created_fiscal_quarter_name,
+    fct_crm_opportunity.pipeline_created_fiscal_quarter_date,
+    fct_crm_opportunity.sales_accepted_fiscal_year,
+    fct_crm_opportunity.sales_accepted_fiscal_quarter_name,
+    fct_crm_opportunity.sales_accepted_fiscal_quarter_date,
+    fct_crm_opportunity.stage_0_pending_acceptance_date,
+    fct_crm_opportunity.stage_1_discovery_date,
+    fct_crm_opportunity.stage_2_scoping_date,
+    fct_crm_opportunity.stage_3_technical_evaluation_date,
+    fct_crm_opportunity.stage_4_proposal_date,
+    fct_crm_opportunity.stage_5_negotiating_date,
+    fct_crm_opportunity.stage_6_awaiting_signature_date,
+    fct_crm_opportunity.stage_6_closed_won_date,
+    fct_crm_opportunity.stage_6_closed_lost_date,
+    fct_crm_opportunity.last_activity_date,
+    fct_crm_opportunity.subscription_start_date,
+    fct_crm_opportunity.subscription_end_date,
 
-    -- opportunity attributes & additive fields
-    fct_crm_opportunity.is_won,
-    fct_crm_opportunity.is_closed,
-    fct_crm_opportunity.days_in_sao,
-    fct_crm_opportunity.arr_basis,
-    fct_crm_opportunity.incremental_acv AS iacv,
-    fct_crm_opportunity.net_incremental_acv AS net_iacv,
-    fct_crm_opportunity.net_arr,
-    fct_crm_opportunity.new_logo_count,
-    fct_crm_opportunity.amount,
-    fct_crm_opportunity.is_edu_oss,
-    fct_crm_opportunity.is_ps_opp,
+    -- opportunity attributes
     fct_crm_opportunity.stage_name,
     fct_crm_opportunity.reason_for_loss,
     fct_crm_opportunity.sales_type,
-    fct_crm_opportunity.is_sao,
-    fct_crm_opportunity.is_net_arr_closed_deal,
-    fct_crm_opportunity.is_new_logo_first_order,
-    fct_crm_opportunity.is_net_arr_pipeline_created,
-    fct_crm_opportunity.is_win_rate_calc,
-    fct_crm_opportunity.is_closed_won,
     fct_crm_opportunity.deal_path AS deal_path_name,
     fct_crm_opportunity.order_type,
     fct_crm_opportunity.order_type_grouped,
@@ -155,7 +88,6 @@ final AS (
     fct_crm_opportunity.sales_qualified_source_grouped,
     fct_crm_opportunity.sqs_bucket_engagement,
     fct_crm_opportunity.closed_buckets,
-    fct_crm_opportunity.duplicate_opportunity_id,
     fct_crm_opportunity.opportunity_category,
     fct_crm_opportunity.source_buckets,
     fct_crm_opportunity.opportunity_sales_development_representative,
@@ -164,7 +96,6 @@ final AS (
     fct_crm_opportunity.sdr_or_bdr,
     fct_crm_opportunity.iqm_submitted_by_role,
     fct_crm_opportunity.sdr_pipeline_contribution,
-    fct_crm_opportunity.is_web_portal_purchase,
     fct_crm_opportunity.fpa_master_bookings_flag,
     fct_crm_opportunity.sales_path,
     fct_crm_opportunity.professional_services_value,
@@ -176,6 +107,46 @@ final AS (
     fct_crm_opportunity.opportunity_deal_size,
     fct_crm_opportunity.deployment_preference,
     fct_crm_opportunity.net_new_source_categories,
+    fct_crm_opportunity.invoice_number,
+    fct_crm_opportunity.primary_campaign_source_id,
+    fct_crm_opportunity.opportunity_term,
+    fct_crm_opportunity.cp_use_cases,
+    fct_crm_opportunity.record_type_id,
+    fct_crm_opportunity.opportunity_owner_manager,
+    fct_crm_opportunity.account_owner_team_stamped,
+    fct_crm_opportunity.stage_name_3plus,
+    fct_crm_opportunity.stage_name_4plus,
+    fct_crm_opportunity.stage_category,
+    fct_crm_opportunity.deal_category,
+    fct_crm_opportunity.deal_group,
+    fct_crm_opportunity.deal_size,
+    fct_crm_opportunity.calculated_deal_size,
+    fct_crm_opportunity.dr_partner_engagement,
+    fct_crm_opportunity.deal_path_engagement,
+    fct_crm_opportunity.forecast_category_name,
+
+    -- flags
+    fct_crm_opportunity.is_won,
+    fct_crm_opportunity.is_closed,
+    fct_crm_opportunity.is_edu_oss,
+    fct_crm_opportunity.is_ps_opp,
+    fct_crm_opportunity.is_sao,
+    fct_crm_opportunity.is_net_arr_closed_deal,
+    fct_crm_opportunity.is_new_logo_first_order,
+    fct_crm_opportunity.is_net_arr_pipeline_created,
+    fct_crm_opportunity.is_win_rate_calc,
+    fct_crm_opportunity.is_closed_won,
+    fct_crm_opportunity.is_web_portal_purchase,
+    fct_crm_opportunity.is_stage_1_plus,
+    fct_crm_opportunity.is_stage_3_plus,
+    fct_crm_opportunity.is_stage_4_plus,
+    fct_crm_opportunity.is_lost,
+    fct_crm_opportuntiy.is_open,
+    fct_crm_opportunity.is_renewal,
+    fct_crm_opportunity.is_refund,
+    fct_crm_opportunity.is_deleted,
+
+    -- account fields
     dim_crm_account.is_jihu_account,
     dim_crm_account.fy22_new_logo_target_list,
     dim_crm_account.crm_account_gtm_strategy,
@@ -243,41 +214,7 @@ final AS (
         'account_owner_live.crm_user_geo', 'account_owner_live.crm_user_region') }}
     AS crm_account_user_sales_segment_region_grouped,
 
-    -- channel fields
-    fct_crm_opportunity.lead_source,
-    fct_crm_opportunity.dr_partner_deal_type,
-    fct_crm_opportunity.partner_account,
-    fct_crm_opportunity.dr_status,
-    fct_crm_opportunity.distributor,
-    fct_crm_opportunity.dr_deal_id,
-    fct_crm_opportunity.dr_primary_registration,
-    fct_crm_opportunity.influence_partner,
-    fct_crm_opportunity.fulfillment_partner,
-    fct_crm_opportunity.platform_partner,
-    fct_crm_opportunity.partner_track,
-    fct_crm_opportunity.is_public_sector_opp,
-    fct_crm_opportunity.is_registration_from_portal,
-    fct_crm_opportunity.calculated_discount,
-    fct_crm_opportunity.partner_discount,
-    fct_crm_opportunity.partner_discount_calc,
-    fct_crm_opportunity.comp_channel_neutral,
-    fct_crm_opportunity.count_crm_attribution_touchpoints,
-    fct_crm_opportunity.weighted_linear_iacv,
-    fct_crm_opportunity.count_campaigns,
-
-    -- Solutions-Architech fields
-    fct_crm_opportunity.sa_tech_evaluation_close_status,
-    fct_crm_opportunity.sa_tech_evaluation_end_date,
-    fct_crm_opportunity.sa_tech_evaluation_start_date,
-
-    -- Command Plan fields
-    fct_crm_opportunity.cp_partner,
-    fct_crm_opportunity.cp_paper_process,
-    fct_crm_opportunity.cp_help,
-    fct_crm_opportunity.cp_review_notes,
-
-    -- Pipeline Velocity Fields
-    fct_crm_opportunity.dim_crm_account_id AS raw_account_id,
+    -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
     LOWER(
       fct_crm_opportunity.user_segment_stamped
     ) AS report_opportunity_user_segment,
@@ -317,8 +254,6 @@ final AS (
         fct_crm_opportunity.order_type
       )
     ) AS report_user_segment_geo_region_area_sqs_ot,
-    fct_crm_opportunity.deal_category,
-    fct_crm_opportunity.deal_group,
     report_opportunity_user_segment AS key_segment,
     fct_crm_opportunity.sales_qualified_source AS key_sqs,
     fct_crm_opportunity.deal_group AS key_ot,
@@ -349,7 +284,7 @@ final AS (
     COALESCE(
       report_opportunity_user_segment, 'other'
     ) AS sales_team_cro_level,
-    -- NF: This code replicates the reporting structured of FY22, to keep current tools working
+    -- This code replicates the reporting structured of FY22, to keep current tools working
     CASE
       WHEN report_opportunity_user_segment = 'large'
         AND report_opportunity_user_geo = 'emea'
@@ -406,95 +341,60 @@ final AS (
       ),
       'other'
     ) AS sales_team_asm_level,
-    fct_crm_opportunity.incremental_acv,
     CASE
       WHEN
-        fct_crm_opportunity.stage_name IN (
-          '00-Pre Opportunity',
-          '0-Pending Acceptance',
-          '0-Qualifying',
-          'Developing',
-          '1-Discovery',
-          '2-Developing',
-          '2-Scoping'
+        fct_crm_opportunity.account_owner_team_stamped IN (
+          'Commercial - SMB', 'SMB', 'SMB - US', 'SMB - International'
         )
-        THEN 'Pipeline'
+        THEN 'SMB'
       WHEN
-        fct_crm_opportunity.stage_name IN (
-          '3-Technical Evaluation',
-          '4-Proposal',
-          '5-Negotiating',
-          '6-Awaiting Signature',
-          '7-Closing'
+        fct_crm_opportunity.account_owner_team_stamped IN (
+          'APAC', 'EMEA', 'Channel', 'US West', 'US East', 'Public Sector'
         )
-        THEN '3+ Pipeline'
-      WHEN fct_crm_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')
-        THEN 'Lost'
-      WHEN fct_crm_opportunity.stage_name IN ('Closed Won')
-        THEN 'Closed Won'
-      ELSE 'Other'
-    END AS stage_name_3plus,
-    CASE
+        THEN 'Large'
       WHEN
-        fct_crm_opportunity.stage_name IN (
-          '00-Pre Opportunity',
-          '0-Pending Acceptance',
-          '0-Qualifying',
-          'Developing',
-          '1-Discovery',
-          '2-Developing',
-          '2-Scoping',
-          '3-Technical Evaluation'
+        fct_crm_opportunity.account_owner_team_stamped IN (
+          'MM - APAC', 'MM - East', 'MM - EMEA', 'Commercial - MM', 'MM - West', 'MM-EMEA'
         )
-        THEN 'Pipeline'
-      WHEN
-        fct_crm_opportunity.stage_name IN (
-          '4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing'
-        )
-        THEN '4+ Pipeline'
-      WHEN fct_crm_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost')
-        THEN 'Lost'
-      WHEN fct_crm_opportunity.stage_name IN ('Closed Won')
-        THEN 'Closed Won'
-      ELSE 'Other'
-    END AS stage_name_4plus,
-    CASE
-      WHEN fct_crm_opportunity.stage_name
-        IN (
-          '1-Discovery',
-          '2-Developing',
-          '2-Scoping',
-          '3-Technical Evaluation',
-          '4-Proposal',
-          'Closed Won',
-          '5-Negotiating',
-          '6-Awaiting Signature',
-          '7-Closing'
-        )
-        THEN 1
-      ELSE 0
-    END AS is_stage_1_plus,
-    CASE
-      WHEN fct_crm_opportunity.stage_name
-        IN (
-          '3-Technical Evaluation',
-          '4-Proposal',
-          'Closed Won',
-          '5-Negotiating',
-          '6-Awaiting Signature',
-          '7-Closing'
-        )
-        THEN 1
-      ELSE 0
-    END AS is_stage_3_plus,
+        THEN 'Mid-Market'
+      ELSE 'SMB'
+    END AS account_owner_team_stamped_cro_level,
 
-    CASE
-      WHEN fct_crm_opportunity.stage_name
-        IN ('4-Proposal', 'Closed Won', '5-Negotiating', '6-Awaiting Signature', '7-Closing')
-        THEN 1
-      ELSE 0
-    END AS is_stage_4_plus,
-    -- competitor flags
+    -- channel fields
+    fct_crm_opportunity.lead_source,
+    fct_crm_opportunity.dr_partner_deal_type,
+    fct_crm_opportunity.partner_account,
+    fct_crm_opportunity.dr_status,
+    fct_crm_opportunity.distributor,
+    fct_crm_opportunity.dr_deal_id,
+    fct_crm_opportunity.dr_primary_registration,
+    fct_crm_opportunity.influence_partner,
+    fct_crm_opportunity.fulfillment_partner,
+    fct_crm_opportunity.platform_partner,
+    fct_crm_opportunity.partner_track,
+    fct_crm_opportunity.is_public_sector_opp,
+    fct_crm_opportunity.is_registration_from_portal,
+    fct_crm_opportunity.calculated_discount,
+    fct_crm_opportunity.partner_discount,
+    fct_crm_opportunity.partner_discount_calc,
+    fct_crm_opportunity.comp_channel_neutral,
+    fct_crm_opportunity.count_crm_attribution_touchpoints,
+    fct_crm_opportunity.weighted_linear_iacv,
+    fct_crm_opportunity.count_campaigns,
+
+    -- Solutions-Architech fields
+    fct_crm_opportunity.sa_tech_evaluation_close_status,
+    fct_crm_opportunity.sa_tech_evaluation_end_date,
+    fct_crm_opportunity.sa_tech_evaluation_start_date,
+
+    -- Command Plan fields
+    fct_crm_opportunity.cp_partner,
+    fct_crm_opportunity.cp_paper_process,
+    fct_crm_opportunity.cp_help,
+    fct_crm_opportunity.cp_review_notes,
+
+    -- Competitor flags
+    fct_crm_opportunity.competitors,
     CASE
       WHEN CONTAINS(fct_crm_opportunity.competitors, 'Other')
         THEN 1
@@ -595,171 +495,84 @@ final AS (
         THEN 1
       ELSE 0
     END AS competitors_aws_flag,
+
+    -- additive fields
+    fct_crm_opportunity.days_in_sao,
+    fct_crm_opportunity.arr_basis,
+    fct_crm_opportunity.incremental_acv AS iacv,
+    fct_crm_opportunity.net_incremental_acv AS net_iacv,
+    fct_crm_opportunity.net_arr,
+    fct_crm_opportunity.new_logo_count,
+    fct_crm_opportunity.amount,
+    fct_crm_opportunity.open_1plus_deal_count,
+    fct_crm_opportunity.open_3plus_deal_count,
+    fct_crm_opportunity.open_4plus_deal_count,
+    fct_crm_opportunity.booked_deal_count,
+    fct_crm_opportunity.churned_contraction_deal_count,
+    fct_crm_opportunity.open_1plus_net_arr,
+    fct_crm_opportunity.open_3plus_net_arr,
+    fct_crm_opportunity.open_4plus_net_arr,
+    fct_crm_opportunity.booked_net_arr,
+    fct_crm_opportunity.churned_contraction_net_arr,
+    fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
+    fct_crm_opportunity.calculated_from_ratio_net_arr,
+    fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
+    fct_crm_opportunity.calculated_deal_count,
+    fct_crm_opportunity.acv,
+    fct_crm_opportunity.incremental_acv,
+    fct_crm_opportunity.net_incremental_acv,
+    fct_crm_opportunity.raw_net_arr,
+    fct_crm_opportunity.arr,
+    fct_crm_opportunity.recurring_amount,
+    fct_crm_opportunity.true_up_amount,
+    fct_crm_opportunity.proserv_amount,
+    fct_crm_opportunity.other_non_recurring_amount,
+    fct_crm_opportunity.refund_iacv,
+    fct_crm_opportunity.downgrade_iacv,
+    fct_crm_opportunity.renewal_acv,
+    fct_crm_opportunity.renewal_amount,
+    fct_crm_opportunity.total_contract_value,
+
+    -- calculated fields 
+    fct_crm_opportunity.calculated_age_in_days,
+    CASE
+      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.snapshot_fiscal_quarter_name
+        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+        THEN fct_crm_opportunity.net_arr
+      ELSE 0
+    END AS created_in_snapshot_quarter_net_arr,
+    CASE
+      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.close_fiscal_quarter_name
+        AND fct_crm_opportunity.is_won = 1
+        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+        THEN fct_crm_opportunity.net_arr
+      ELSE 0
+    END AS created_and_won_same_quarter_net_arr,
+    CASE
+      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.snapshot_fiscal_quarter_name
+        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+        THEN fct_crm_opportunity.calculated_deal_count
+      ELSE 0
+    END AS created_in_snapshot_quarter_deal_count,
+
+    -- renamed columns for pipeline & velocity reporting
+    fct_crm_opportunity.dim_crm_account_id AS raw_account_id,
     fct_crm_opportunity.crm_opportunity_snapshot_id AS opportunity_snapshot_id,
     fct_crm_opportunity.dim_crm_opportunity_id AS opportunity_id,
     fct_crm_opportunity.dim_crm_user_id AS owner_id,
     fct_crm_opportunity.merged_opportunity_id,
     fct_crm_opportunity.opportunity_owner_department,
     fct_crm_opportunity.order_type AS snapshot_order_type_stamped,
-    fct_crm_opportunity.acv,
-    fct_crm_opportunity.competitors,
-    fct_crm_opportunity.forecast_category_name,
-    fct_crm_opportunity.iacv_created_date,
-    fct_crm_opportunity.invoice_number,
-    fct_crm_opportunity.is_refund,
     fct_crm_opportunity.is_credit AS is_credit_flag,
     fct_crm_opportunity.is_contract_reset AS is_contract_reset_flag,
-    fct_crm_opportunity.net_incremental_acv,
-    fct_crm_opportunity.primary_campaign_source_id,
-    fct_crm_opportunity.refund_iacv,
-    fct_crm_opportunity.downgrade_iacv,
-    fct_crm_opportunity.renewal_acv,
-    fct_crm_opportunity.renewal_amount,
     fct_crm_opportunity.sales_qualified_source AS snapshot_sales_qualified_source,
     fct_crm_opportunity.is_edu_oss AS snapshot_is_edu_oss,
-    fct_crm_opportunity.total_contract_value,
-    fct_crm_opportunity.opportunity_term,
-    fct_crm_opportunity.net_arr AS raw_net_arr,
-    fct_crm_opportunity.arr,
-    fct_crm_opportunity.recurring_amount,
-    fct_crm_opportunity.true_up_amount,
-    fct_crm_opportunity.proserv_amount,
-    fct_crm_opportunity.other_non_recurring_amount,
-    fct_crm_opportunity.subscription_start_date,
-    fct_crm_opportunity.subscription_end_date,
-    fct_crm_opportunity.cp_use_cases,
-    fct_crm_opportunity.is_deleted,
-    fct_crm_opportunity.last_activity_date,
-    fct_crm_opportunity.record_type_id,
-    fct_crm_opportunity.dr_partner_engagement,
-    fct_crm_opportunity.deal_path_engagement,
-    fct_crm_opportunity.stage_0_pending_acceptance_date,
-    fct_crm_opportunity.stage_1_discovery_date,
-    fct_crm_opportunity.stage_2_scoping_date,
-    fct_crm_opportunity.stage_3_technical_evaluation_date,
-    fct_crm_opportunity.stage_4_proposal_date,
-    fct_crm_opportunity.stage_5_negotiating_date,
-    fct_crm_opportunity.stage_6_awaiting_signature_date,
-    fct_crm_opportunity.stage_6_closed_won_date,
-    fct_crm_opportunity.stage_6_closed_lost_date,
-    fct_crm_opportunity.is_lost,
-    CASE
-      WHEN fct_crm_opportunity.is_closed = FALSE
-        THEN 1
-      ELSE 0
-    END AS is_open,
-    fct_crm_opportunity.is_renewal,
-    fct_crm_opportunity.snapshot_date,
-    snapshot_date.first_day_of_month AS snapshot_date_month,
-    snapshot_date.fiscal_year AS snapshot_fiscal_year,
-    snapshot_date.fiscal_quarter_name_fy AS snapshot_fiscal_quarter_name,
-    snapshot_date.first_day_of_fiscal_quarter AS snapshot_fiscal_quarter_date,
-    snapshot_date.day_of_fiscal_quarter_normalised AS snapshot_day_of_fiscal_quarter_normalised,
-    snapshot_date.day_of_fiscal_year_normalised AS snapshot_day_of_fiscal_year_normalised,
-    close_date_detail.first_day_of_month AS close_date_month,
-    close_date_detail.fiscal_year AS close_fiscal_year,
-    close_date_detail.fiscal_quarter_name_fy AS close_fiscal_quarter_name,
-    close_date_detail.first_day_of_fiscal_quarter AS close_fiscal_quarter_date,
-    90 - DATEDIFF(
-      DAY, snapshot_date.date_actual, close_date_detail.last_day_of_fiscal_quarter
-    ) AS close_day_of_fiscal_quarter_normalised,
-    created_date_detail.first_day_of_month AS created_date_month,
-    created_date_detail.fiscal_year AS created_fiscal_year,
-    created_date_detail.fiscal_quarter_name_fy AS created_fiscal_quarter_name,
-    created_date_detail.first_day_of_fiscal_quarter AS created_fiscal_quarter_date,
-    net_arr_created_date.first_day_of_month AS iacv_created_date_month,
-    net_arr_created_date.fiscal_year AS iacv_created_fiscal_year,
-    net_arr_created_date.fiscal_quarter_name_fy AS iacv_created_fiscal_quarter_name,
-    net_arr_created_date.first_day_of_fiscal_quarter AS iacv_created_fiscal_quarter_date,
-    created_date_detail.date_actual AS net_arr_created_date,
-    created_date_detail.first_day_of_month AS net_arr_created_date_month,
-    created_date_detail.fiscal_year AS net_arr_created_fiscal_year,
-    created_date_detail.fiscal_quarter_name_fy AS net_arr_created_fiscal_quarter_name,
-    created_date_detail.first_day_of_fiscal_quarter AS net_arr_created_fiscal_quarter_date,
-    net_arr_created_date.date_actual AS pipeline_created_date,
-    net_arr_created_date.first_day_of_month AS pipeline_created_date_month,
-    net_arr_created_date.fiscal_year AS pipeline_created_fiscal_year,
-    net_arr_created_date.fiscal_quarter_name_fy AS pipeline_created_fiscal_quarter_name,
-    net_arr_created_date.first_day_of_fiscal_quarter AS pipeline_created_fiscal_quarter_date,
-    sales_accepted_date.fiscal_year AS sales_accepted_fiscal_year,
-    sales_accepted_date.fiscal_quarter_name_fy AS sales_accepted_fiscal_quarter_name,
-    sales_accepted_date.first_day_of_fiscal_quarter AS sales_accepted_fiscal_quarter_date,
-    CASE
-      WHEN is_open = 1
-        THEN DATEDIFF(DAYS, created_date_detail.date_actual, snapshot_date.date_actual)
-      WHEN is_open = 0 AND snapshot_date.date_actual < close_date_detail.date_actual
-        THEN DATEDIFF(DAYS, created_date_detail.date_actual, snapshot_date.date_actual)
-      ELSE DATEDIFF(DAYS, created_date_detail.date_actual, close_date_detail.date_actual)
-    END AS calculated_age_in_days,
-    fct_crm_opportunity.stage_category,
-    CASE
-      WHEN fct_crm_opportunity.is_won = 1
-        AND fct_crm_opportunity.opportunity_category != 'Contract Reset'
-        AND COALESCE(fct_crm_opportunity.net_arr, 0) != 0
-        AND COALESCE(fct_crm_opportunity.net_incremental_acv, 0) != 0
-        THEN COALESCE(fct_crm_opportunity.net_arr / fct_crm_opportunity.net_incremental_acv, 0)
-    END AS opportunity_based_iacv_to_net_arr_ratio,
-    COALESCE(
-      net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr, 0
-    ) AS segment_order_type_iacv_to_net_arr_ratio,
-    CASE
-      WHEN
-        fct_crm_opportunity.stage_name NOT IN (
-          '8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate'
-        )
-        THEN COALESCE(
-          fct_crm_opportunity.incremental_acv, 0
-        ) * COALESCE(segment_order_type_iacv_to_net_arr_ratio, 0)
-      WHEN fct_crm_opportunity.stage_name IN ('8-Closed Lost')
-        AND COALESCE(fct_crm_opportunity.net_incremental_acv, 0) = 0
-        THEN COALESCE(
-          fct_crm_opportunity.incremental_acv, 0
-        ) * COALESCE(segment_order_type_iacv_to_net_arr_ratio, 0)
-      WHEN fct_crm_opportunity.stage_name IN ('8-Closed Lost', 'Closed Won')
-        THEN COALESCE(
-          fct_crm_opportunity.net_incremental_acv, 0
-        ) * COALESCE(
-          opportunity_based_iacv_to_net_arr_ratio, segment_order_type_iacv_to_net_arr_ratio
-        )
-    END AS calculated_from_ratio_net_arr,
-    fct_crm_opportunity.calculated_deal_count,
-    fct_crm_opportunity.opportunity_owner_manager,
     fct_crm_opportunity.dim_crm_account_id AS account_id,
-    stage_1_date.date_actual AS stage_1_date,
-    stage_1_date.first_day_of_month AS stage_1_date_month,
-    stage_1_date.fiscal_year AS stage_1_fiscal_year,
-    stage_1_date.fiscal_quarter_name_fy AS stage_1_fiscal_quarter_name,
-    stage_1_date.first_day_of_fiscal_quarter AS stage_1_fiscal_quarter_date,
-    CASE
-      WHEN net_arr_created_date.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
-        AND fct_crm_opportunity.is_won = 1
-        THEN fct_crm_opportunity.incremental_acv
-      ELSE 0
-    END AS created_and_won_same_quarter_iacv,
-    CASE
-      WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
-        THEN fct_crm_opportunity.incremental_acv
-      ELSE 0
-    END AS created_in_snapshot_quarter_iacv,
-    fct_crm_opportunity.account_owner_team_stamped,
-    CASE
-      WHEN
-        fct_crm_opportunity.account_owner_team_stamped IN (
-          'Commercial - SMB', 'SMB', 'SMB - US', 'SMB - International'
-        )
-        THEN 'SMB'
-      WHEN
-        fct_crm_opportunity.account_owner_team_stamped IN (
-          'APAC', 'EMEA', 'Channel', 'US West', 'US East', 'Public Sector'
-        )
-        THEN 'Large'
-      WHEN
-        fct_crm_opportunity.account_owner_team_stamped IN (
-          'MM - APAC', 'MM - East', 'MM - EMEA', 'Commercial - MM', 'MM - West', 'MM-EMEA'
-        )
-        THEN 'Mid-Market'
-      ELSE 'SMB'
-    END AS account_owner_team_stamped_cro_level,
+    fct_crm_opportunity.stage_1_discovery_date AS stage_1_date,
+    fct_crm_opportunity.stage_1_discovery_month AS stage_1_date_month,
+    fct_crm_opportunity.stage_1_discovery_fiscal_year AS stage_1_fiscal_year,
+    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_name AS stage_1_fiscal_quarter_name,
+    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_date AS stage_1_fiscal_quarter_date,
     fct_crm_opportunity.is_duplicate AS current_is_duplicate_flag,
     fct_crm_opportunity.opportunity_owner,
     dim_crm_account.crm_account_name AS account_name,
@@ -780,8 +593,6 @@ final AS (
     dim_crm_account.parent_crm_account_demographics_region AS upa_demographics_region,
     dim_crm_account.parent_crm_account_demographics_area AS upa_demographics_area,
     dim_crm_account.parent_crm_account_demographics_territory AS upa_demographics_territory,
-    fct_crm_opportunity.deal_size,
-    fct_crm_opportunity.calculated_deal_size,
     fct_crm_opportunity.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
     fct_crm_opportunity.is_eligible_created_pipeline AS is_eligible_created_pipeline_flag,
     fct_crm_opportunity.is_eligible_sao AS is_eligible_sao_flag,
@@ -789,36 +600,12 @@ final AS (
     fct_crm_opportunity.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
     fct_crm_opportunity.fpa_master_bookings_flag AS is_booked_net_arr_flag,
     fct_crm_opportunity.is_eligible_churn_contraction AS is_eligible_churn_contraction_flag,
-    CASE
-      WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
-        THEN fct_crm_opportunity.net_arr
-      ELSE 0
-    END AS created_in_snapshot_quarter_net_arr,
-    CASE
-      WHEN net_arr_created_date.fiscal_quarter_name_fy = close_date_detail.fiscal_quarter_name_fy
-        AND fct_crm_opportunity.is_won = 1
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
-        THEN fct_crm_opportunity.net_arr
-      ELSE 0
-    END AS created_and_won_same_quarter_net_arr,
-    CASE
-      WHEN net_arr_created_date.fiscal_quarter_name_fy = snapshot_date.fiscal_quarter_name_fy
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
-        THEN fct_crm_opportunity.calculated_deal_count
-      ELSE 0
-    END AS created_in_snapshot_quarter_deal_count,
-
-    fct_crm_opportunity.open_1plus_deal_count,
-    fct_crm_opportunity.open_3plus_deal_count,
-    fct_crm_opportunity.open_4plus_deal_count,
-    fct_crm_opportunity.booked_deal_count,
-    fct_crm_opportunity.churned_contraction_deal_count,
-    fct_crm_opportunity.open_1plus_net_arr,
-    fct_crm_opportunity.open_3plus_net_arr,
-    fct_crm_opportunity.open_4plus_net_arr,
-    fct_crm_opportunity.booked_net_arr,
-    fct_crm_opportunity.churned_contraction_net_arr,
+    fct_crm_opportunity.snapshot_month AS snapshot_date_month,
+    fct_crm_opportunity.close_month AS close_date_month,
+    fct_crm_opportunity.create_month AS created_date_month,
+    fct_crm_opportunity.iacv_created_month AS iacv_created_date_month,
+    fct_crm_opportunity.net_arr_created_month AS net_arr_created_date_month,
+    fct_crm_opportunity.pipeline_created_month AS pipeline_created_date_month,
     CASE
       WHEN
         dim_crm_account.dim_parent_crm_account_id IN (
@@ -861,24 +648,6 @@ final AS (
   LEFT JOIN dim_crm_user AS account_owner_live
     ON dim_crm_account.dim_crm_user_id = account_owner_live.dim_crm_user_id
       AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
-  LEFT JOIN dim_date AS snapshot_date
-    ON fct_crm_opportunity.snapshot_date::DATE = snapshot_date.date_actual
-  LEFT JOIN dim_date AS close_date_detail
-    ON fct_crm_opportunity.close_date::DATE = close_date_detail.date_actual
-  LEFT JOIN dim_date AS created_date_detail
-    ON fct_crm_opportunity.created_date::DATE = created_date_detail.date_actual
-  LEFT JOIN dim_date AS net_arr_created_date
-    ON fct_crm_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual
-  LEFT JOIN dim_date AS sales_accepted_date
-    ON fct_crm_opportunity.sales_accepted_date::DATE = sales_accepted_date.date_actual
-  LEFT JOIN dim_date AS stage_1_date
-    ON fct_crm_opportunity.stage_1_discovery_date::DATE = stage_1_date.date_actual
-  LEFT JOIN net_iacv_to_net_arr_ratio
-    ON
-      COALESCE(
-        fct_crm_opportunity.user_segment_stamped, opp_owner_live.crm_user_sales_segment
-      ) = net_iacv_to_net_arr_ratio.user_segment_stamped
-      AND fct_crm_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
 
 
 )
@@ -887,6 +656,6 @@ final AS (
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2022-05-03",
-    updated_date="2022-05-03"
+    created_date="2022-05-05",
+    updated_date="2022-05-05"
   ) }}
