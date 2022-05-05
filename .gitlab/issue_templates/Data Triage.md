@@ -93,6 +93,9 @@ Completed with x errors and x warnings:
 
 </details>
 
+#### Trusted Data Health Status
+* [ ] Check [Trusted Data Health Dashboard](https://app.periscopedata.com/app/gitlab/891891/TD:-Trusted-Data-Health-Dashboard) to get high level overview of health status if the data in the Snowflake Data-warehouse could be trusted or not. Health Status in the dashboard is presented separately for Data extraction (RAW data layer) and Data transformation (Prod data layer) with a PASS, FAIL, WARNING status.
+
 ### Data Notification Templates
 
 Use these to notify stakeholders of Data Delays.
