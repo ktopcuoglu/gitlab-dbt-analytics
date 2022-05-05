@@ -9,7 +9,7 @@ Time Grain: None
 
 Use case: Everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges, exclude specific projects, etc
 
-Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+Note: This model includes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
 
 {% enddocs %}
 
@@ -24,7 +24,7 @@ Time Grain: None
 
 Use case: Everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges, exclude specific projects, etc
 
-Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event_with_valid_user for more details). Events not tied to a specific user are included.
 
 {% enddocs %}
 
