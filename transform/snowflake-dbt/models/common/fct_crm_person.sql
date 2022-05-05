@@ -109,7 +109,7 @@ WITH account_dims_mapping AS (
 
 mql_date::timestamp                                                                                            AS mql_event_timestamp,
 
-marketo_qualified_lead::timestamp
+marketo_qualified_lead_date::timestamp
                    AS legacy_mql_event_timestamp,
       lead_id                                                                                                             AS sfdc_record_id,
       'lead'                                                                                                              AS sfdc_record,
@@ -130,7 +130,7 @@ marketo_qualified_lead::timestamp
       
 mql_date                                                                                                       AS mql_event_timestamp,
 
-marketo_qualified_lead::timestamp
+marketo_qualified_lead_date::timestamp
                    AS legacy_mql_event_timestamp,
       contact_id                                                                                                          AS sfdc_record_id,
       'contact'                                                                                                           AS sfdc_record,
