@@ -63,8 +63,8 @@ models:
           - not_null
           - unique
 
-  - name: prep_ping_instance
-    description: ' {{ doc("prep_ping_instance") }} '
+  - name: prep_ping_instance_wk
+    description: ' {{ doc("prep_ping_instance_wk") }} '
     columns:
       - name: dim_ping_instance_id
         tests:
@@ -118,8 +118,8 @@ models:
       - name: git_version
         description: the version of gitlab the instance is running (i.e. 2.17.0, 2.33.1, 2.23.0)
 
-  - name: prep_ping_instance_flattened
-    description: ' {{ doc("prep_ping_instance_flattened") }} '
+  - name: prep_ping_instance_flattened_wk
+    description: ' {{ doc("prep_ping_instance_flattened_wk") }} '
     columns:
       - name: prep_ping_instance_flattened_id
         tests:

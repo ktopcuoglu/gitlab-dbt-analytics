@@ -121,7 +121,7 @@ Use case: Model used to estimate usage based upon reported and unreported seats/
 
 {% enddocs %}
 
-{% docs prep_ping_instance %}
+{% docs prep_ping_instance_wk %}
 
 Type of Data: Instance-level Service Ping from Versions app
 Aggregate Grain: One record per service ping (dim_ping_instance_id)
@@ -130,7 +130,7 @@ Use case: Service Ping prep table
 
 {% enddocs %}
 
-{% docs prep_ping_instance_flattened %}
+{% docs prep_ping_instance_flattened_wk %}
 
 Type of Data: Instance-level Service Ping from Versions app
 Aggregate Grain: One record per service ping (dim_ping_instance_id) per metric (metrics_path)
