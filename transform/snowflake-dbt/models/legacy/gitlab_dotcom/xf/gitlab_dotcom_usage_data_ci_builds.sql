@@ -123,7 +123,7 @@
       
     {% if is_incremental() %}
 
-      AND created_at >= (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
+      AND created_at > (SELECT MAX(event_created_at) FROM {{this}} WHERE event_name = '{{ event_cte.event_name }}')
 
     {% endif %}
 
@@ -143,11 +143,16 @@
       {{ event_cte.is_representative_of_stage }}::BOOLEAN AS is_representative_of_stage,
       '{{ event_cte.stage_name }}' AS stage_name,
       {% if event_cte.key_to_parent_project is defined -%}
+
       {{ event_cte.key_to_parent_project }} 
  
       {%- elif event_cte.key_to_parent_group is defined -%}
+
       {{ event_cte.key_to_parent_group }} 
-      {%- endif %} AS parent_id,
+      
+      {%- else -%}
+      NULL 
+      {%- endif %}::NUMBER AS parent_id,
       {% if event_cte.key_to_parent_project is defined -%}
         'project'
        
