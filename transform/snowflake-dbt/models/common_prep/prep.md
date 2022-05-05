@@ -795,3 +795,27 @@ The source data contains several versions of source data with different format. 
 ```
 
 {% enddocs %}
+
+{% docs prep_ping_instance %}
+
+Prep table to read Service ping data from Versions app and to build `dim_ping_instance` table.
+
+Below are some additional details about the table:
+* `Type of Data`: Instance-level Service Ping from Versions app
+* `Aggregate Grain`: One record per service ping (dim_ping_instance_id)
+* `Time Grain`: None
+* `Use case`: Service Ping prep table
+
+{% enddocs %}
+
+{% docs prep_ping_instance_flattened %}
+
+Prep table to flatten the Service ping JSON payload that is sourced from Versions app and to build `fct_ping_instance_metric` table.
+
+Below are some additional details about the table:
+`Type of Data`: Instance-level Service Ping from Versions app
+`Aggregate Grain`: One record per service ping (dim_ping_instance_id) per metric (metrics_path)
+`Time Grain`: None
+`Use case`: Service Ping metric-level prep table
+
+{% enddocs %}
