@@ -77,7 +77,7 @@ WITH account_dims_mapping AS (
       CASE 
         WHEN prep_mql_date != '9999-01-01'
         THEN prep_mql_date::timestamp
-      END                                                                                                                 AS mql_date,
+      END                                                                                                                 AS mql_date
     FROM {{ ref('sfdc_contact_source') }}
     WHERE is_deleted = 'FALSE'
 
