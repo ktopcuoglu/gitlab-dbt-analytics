@@ -138,7 +138,23 @@
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_instance_type_active']") }}                                                  AS active_instance_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_group_type_active']") }}                                                     AS active_group_runners_all_time_event,
     {{ null_negative_numbers("raw_usage_data_payload['counts']['ci_runners_project_type_active']") }}                                                   AS active_project_runners_all_time_event,
-    raw_usage_data_payload['gitaly']['version']::VARCHAR                                                                                              AS gitaly_version,
-    {{ null_negative_numbers("raw_usage_data_payload['gitaly']['servers']") }}                                                                          AS gitaly_servers_all_time_event
+    raw_usage_data_payload['gitaly']['version']::VARCHAR                                                                                                AS gitaly_version,
+    {{ null_negative_numbers("raw_usage_data_payload['gitaly']['servers']") }}                                                                          AS gitaly_servers_all_time_event,
+    
+    -- 6 metrics
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['api_fuzzing_scans']") }}                                     AS api_fuzzing_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['api_fuzzing_scans']") }}                             AS api_fuzzing_scans_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['coverage_fuzzing_scans']") }}                                AS coverage_fuzzing_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['coverage_fuzzing_scans']") }}                        AS coverage_fuzzing_scans_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['secret_detection_scans']") }}                                AS secret_detection_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['secret_detection_scans']") }}                        AS secret_detection_scans_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['dependency_scanning_scans']") }}                             AS dependency_scanning_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['dependency_scanning_scans']") }}                     AS dependency_scanning_scans_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['container_scanning_scans']") }}                              AS container_scanning_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['container_scanning_scans']") }}                      AS container_scanning_scans_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['dast_scans']") }}                                            AS dast_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['dast_scans']") }}                                    AS dast_scans_28_days_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage']['secure']['sast_scans']") }}                                            AS sast_scans_all_time_event,
+    {{ null_negative_numbers("raw_usage_data_payload['usage_activity_by_stage_monthly']['secure']['sast_scans']") }}                                    AS sast_scans_28_days_event
     
 {%- endmacro -%}
