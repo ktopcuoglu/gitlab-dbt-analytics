@@ -47,7 +47,7 @@ Grab just the metrics relevant to the subscription based upon version
   FROM subscriptions_w_versions
     INNER JOIN metric_opt_in
       ON subscriptions_w_versions.major_minor_version
-        BETWEEN metric_opt_in.first_version_with_counter AND metric_opt_in.last_version_with_counter
+        BETWEEN metric_opt_in.first_major_minor_version_with_counter AND metric_opt_in.last_major_minor_version_with_counter
         AND subscriptions_w_versions.ping_edition = metric_opt_in.ping_edition
 
 ), arr_counts_joined AS (
