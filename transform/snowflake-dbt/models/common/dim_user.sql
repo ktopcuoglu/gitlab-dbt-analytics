@@ -17,7 +17,8 @@ WITH prep_user AS (
       public_email_domain,
       public_email_domain_classification,
       commit_email_domain,
-      commit_email_domain_classification
+      commit_email_domain_classification,
+      identity_provider
     FROM {{ ref('prep_user') }}
 
 )
