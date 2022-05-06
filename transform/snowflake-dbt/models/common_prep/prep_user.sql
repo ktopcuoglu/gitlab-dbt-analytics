@@ -22,6 +22,20 @@
 
 )
 
+, min_provider AS (
+
+    SELECT
+        u.dim_user_id                                                 AS dim_user_id,
+        i.identity_provider                                           AS identity_provider
+    FROM 
+        prod.common.dim_user                                          u 
+        LEFT JOIN prod.legacy.gitlab_dotcom_identities                i
+        ON u.dim_user_id = i.user_id
+    WHERE i.user_id IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY u.dim_user_id 
+                              ORDER BY TIMEDIFF(MILLISECONDS,IFNULL(u.created_at,'2050-01-01'),IFNULL(i.created_at,'2050-01-01')) ASC) = 1
+)
+
 , renamed AS (
 
     SELECT
@@ -46,7 +60,8 @@
       source.public_email_domain                                       AS public_email_domain,
       public_email_domain.classification                               AS public_email_domain_classification,
       source.commit_email_domain                                       AS commit_email_domain,
-      commit_email_domain.classification                               AS commit_email_domain_classification
+      commit_email_domain.classification                               AS commit_email_domain_classification,
+      min_provider.identity_provider                                   AS identity_provider 
 
     FROM source
     LEFT JOIN dim_date
@@ -59,6 +74,8 @@
       ON public_email_domain.domain = source.public_email_domain
     LEFT JOIN email_classification_dedup AS commit_email_domain
       ON commit_email_domain.domain = source.commit_email_domain
+    LEFT JOIN min_provider AS min_provider
+      ON source.user_id = min_provider.dim_user_id  
     
 )
 
