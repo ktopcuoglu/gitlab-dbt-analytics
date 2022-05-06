@@ -94,14 +94,14 @@
 
 ), flattened_high_level as (
     SELECT
-      dim_ping_instance_id                                                    AS dim_ping_instance_id,
+      dim_ping_instance_id                                                            AS dim_ping_instance_id,
       metrics_path                                                                    AS metrics_path,
       metric_value                                                                    AS metric_value,
       has_timed_out                                                                   AS has_timed_out,
       dim_product_tier_id                                                             AS dim_product_tier_id,
       dim_subscription_id                                                             AS dim_subscription_id,
       dim_location_country_id                                                         AS dim_location_country_id,
-      dim_ping_date_id                                                        AS dim_ping_date_id,
+      dim_ping_date_id                                                                AS dim_ping_date_id,
       dim_instance_id                                                                 AS dim_instance_id,
       dim_host_id                                                                     AS dim_host_id,
       dim_installation_id                                                             AS dim_installation_id,
