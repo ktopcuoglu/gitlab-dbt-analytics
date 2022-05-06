@@ -247,7 +247,7 @@ WITH first_contact  AS (
            ON snapshot_dates.date_actual >= sfdc_user_snapshots_source.dbt_valid_from
            AND snapshot_dates.date_actual < COALESCE(sfdc_user_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
     {%- endif %}
-    WHERE account_id IS NOT NULL
+    WHERE user_id IS NOT NULL
 
 ), final AS (
 
