@@ -9,3 +9,6 @@ models:
 
   - name: gitlab_dotcom_approval_project_rules_users
     description: Workspace model of the source data (deduplicated).  
+
+  - name: version_usage_ping_errors
+    description: Workspace model of the source data. 
