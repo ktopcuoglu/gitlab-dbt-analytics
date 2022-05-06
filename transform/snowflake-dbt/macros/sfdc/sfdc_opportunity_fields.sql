@@ -166,7 +166,7 @@ WITH first_contact  AS (
         {{ dbt_utils.surrogate_key(['sfdc_opportunity_snapshots_source.opportunity_id','snapshot_dates.date_id'])}}   AS crm_opportunity_snapshot_id,
         snapshot_dates.date_id                                                                                        AS snapshot_id,
         snapshot_dates.date_actual                                                                                    AS snapshot_date,
-        snapshot_dates.first_day_of_month                                                                             AS snapshot_date_month,
+        snapshot_dates.first_day_of_month                                                                             AS snapshot_month,
         snapshot_dates.fiscal_year                                                                                    AS snapshot_fiscal_year,
         snapshot_dates.fiscal_quarter_name_fy                                                                         AS snapshot_fiscal_quarter_name,
         snapshot_dates.first_day_of_fiscal_quarter                                                                    AS snapshot_fiscal_quarter_date,
