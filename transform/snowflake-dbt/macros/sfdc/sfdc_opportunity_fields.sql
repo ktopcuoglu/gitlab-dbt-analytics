@@ -318,11 +318,11 @@ WITH first_contact  AS (
         raw_net_arr                                                                             AS net_arr,
       {%- elif model_type == 'snapshot' %}
       CASE 
-        WHEN sfdc_opportunity_stage.is_won = 1 -- only consider won deals
-          AND sfdc_opportunity.opportunity_category <> 'Contract Reset' -- contract resets have a special way of calculating net iacv
-          AND COALESCE(sfdc_opportunity.raw_net_arr,0) <> 0
-          AND COALESCE(sfdc_opportunity.net_incremental_acv,0) <> 0
-            THEN COALESCE(sfdc_opportunity.raw_net_arr / sfdc_opportunity.net_incremental_acv,0)
+        WHEN sfdc_opportunity_source_live.is_won = 1 -- only consider won deals
+          AND sfdc_opportunity_source_live.opportunity_category <> 'Contract Reset' -- contract resets have a special way of calculating net iacv
+          AND COALESCE(sfdc_opportunity_source_live.net_arr,0) <> 0
+          AND COALESCE(sfdc_opportunity_source_live.net_incremental_acv,0) <> 0
+            THEN COALESCE(sfdc_opportunity_source_live.net_arr / sfdc_opportunity_source_live.net_incremental_acv,0)
         ELSE NULL 
       END                                                                     AS opportunity_based_iacv_to_net_arr_ratio,
       -- If there is no opportunity, use a default table ratio
@@ -432,7 +432,7 @@ WITH first_contact  AS (
       END                                                                                         AS is_sdr_sao,
       CASE 
         WHEN (
-               (sfdc_opportunity.sales_type = 'Renewal' AND stage_name = '8-Closed Lost')
+               (sfdc_opportunity.sales_type = 'Renewal' AND sfdc_opportunity.stage_name = '8-Closed Lost')
                  OR sfdc_opportunity.stage_name = 'Closed Won'
               )
             AND sfdc_account.is_jihu_account = FALSE
@@ -527,7 +527,7 @@ WITH first_contact  AS (
       CASE
         WHEN sfdc_opportunity.is_edu_oss = 0
           AND sfdc_opportunity.is_deleted = 0
-          AND (is_won = 1 
+          AND (sfdc_opportunity_stage.is_won = 1 
               OR (is_renewal = 1 AND is_lost = 1))
           AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
             THEN 1
@@ -571,7 +571,7 @@ WITH first_contact  AS (
       -- attribution information
       linear_attribution_base.count_crm_attribution_touchpoints,
       campaigns_per_opp.count_campaigns,
-      incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints                   AS weighted_linear_iacv,
+      sfdc_opportunity.incremental_acv/linear_attribution_base.count_crm_attribution_touchpoints   AS weighted_linear_iacv,
 
      -- opportunity attributes
       CASE
@@ -597,7 +597,7 @@ WITH first_contact  AS (
           THEN 'No XDR Assigned'
       END                                               AS sdr_or_bdr,
       CASE 
-        WHEN is_won = 1  
+        WHEN sfdc_opportunity_stage.is_won = 1  
           THEN '1.Won'
         WHEN is_lost = 1 
           THEN '2.Lost'
@@ -758,7 +758,7 @@ WITH first_contact  AS (
         WHEN is_credit = 1
           THEN 0
         ELSE 1
-      END                                                                                       AS calculated_deal_count,
+      END                                               AS calculated_deal_count,
       CASE 
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_1_plus = 1
@@ -887,9 +887,11 @@ WITH first_contact  AS (
         AND sfdc_opportunity.snapshot_id = sfdc_user.snapshot_id
     {%- endif %}
     {%- if model_type == 'snapshot' %}
+    LEFT JOIN {{ ref('sfdc_opportunity_source') }} AS sfdc_opportunity_source_live
+      ON sfdc_opportunity.dim_crm_opportunity_id = sfdc_opportunity_source_live.opportunity_id
     LEFT JOIN net_iacv_to_net_arr_ratio
-      ON COALESCE(sfdc_opportunity.user_segment_stamped, sfdc_user.user_segment) = net_iacv_to_net_arr_ratio.user_segment_stamped
-      AND sfdc_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
+      ON COALESCE(sfdc_opportunity_source_live.user_segment_stamped, sfdc_user.user_segment) = net_iacv_to_net_arr_ratio.user_segment_stamped
+      AND sfdc_opportunity_source_live.order_type_stamped = net_iacv_to_net_arr_ratio.order_type
     {%- endif %}
 
 )
