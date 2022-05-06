@@ -84,14 +84,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_vulnerability_issue_links' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM vulnerability_issue_links
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_issues_prometheus_alert_events' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -354,14 +346,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_vulnerability_feedback' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM vulnerability_feedback
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_approver_groups' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -370,27 +354,11 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_vulnerability_scanners' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM vulnerability_scanners
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_ci_triggers' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM ci_triggers
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_packages_tags' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM packages_tags
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
@@ -566,14 +534,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_vulnerability_identifiers' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM vulnerability_identifiers
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL  
         SELECT 'gitlab_db_milestones' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -612,14 +572,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL       
-        SELECT 'gitlab_db_vulnerabilities' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM vulnerabilities
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_namespaces' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -679,14 +631,6 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM protected_branches
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_vulnerability_occurrence_identifiers' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM vulnerability_occurrence_identifiers
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
