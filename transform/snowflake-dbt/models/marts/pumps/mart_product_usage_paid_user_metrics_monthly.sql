@@ -1,6 +1,6 @@
 {{
   config(
-    tags=["mnpi_exception"],
+    tags=["product", "mnpi_exception"],
     schema="common_mart_product"
   )
 }}
@@ -201,6 +201,15 @@
       monthly_sm_metrics.author_issue_all_time_user,
       monthly_sm_metrics.failed_deployments_28_days_user,
       monthly_sm_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_sm_metrics.geo_enabled,
+      monthly_sm_metrics.geo_nodes_all_time_event,
+      monthly_sm_metrics.auto_devops_pipelines_28_days_user,
+      monthly_sm_metrics.active_instance_runners_all_time_event,
+      monthly_sm_metrics.active_group_runners_all_time_event,
+      monthly_sm_metrics.active_project_runners_all_time_event,
+      monthly_sm_metrics.gitaly_version,
+      monthly_sm_metrics.gitaly_servers_all_time_event,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -373,7 +382,16 @@
       monthly_saas_metrics.author_epic_all_time_user,
       monthly_saas_metrics.author_issue_all_time_user,
       monthly_saas_metrics.failed_deployments_28_days_user,
-      monthly_saas_metrics.successful_deployments_28_days_user,    
+      monthly_saas_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_saas_metrics.geo_enabled,
+      monthly_saas_metrics.geo_nodes_all_time_event,
+      monthly_saas_metrics.auto_devops_pipelines_28_days_user,
+      monthly_saas_metrics.active_instance_runners_all_time_event,
+      monthly_saas_metrics.active_group_runners_all_time_event,
+      monthly_saas_metrics.active_project_runners_all_time_event,
+      monthly_saas_metrics.gitaly_version,
+      monthly_saas_metrics.gitaly_servers_all_time_event,    
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -396,12 +414,28 @@
     SELECT *
     FROM saas_paid_user_metrics
 
+), final AS (
+  
+    SELECT
+      unioned.*,
+      {{ dbt_utils.surrogate_key(
+        [
+          'snapshot_month',
+          'dim_subscription_id',
+          'delivery_type',
+          'uuid',
+          'hostname',
+          'dim_namespace_id'
+        ]
+      ) }} AS primary_key
+    FROM unioned
+  
 )
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-03-28"
+    updated_date="2022-04-26"
 ) }}

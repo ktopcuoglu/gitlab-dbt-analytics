@@ -39,12 +39,16 @@ renamed AS (
     -- Coalesced to match application behavior
     -- https://gitlab.com/gitlab-data/analytics/-/issues/12046#note_863577705
     COALESCE(notification_email, email)::VARCHAR AS notification_email,
+    SPLIT_PART(COALESCE(notification_email, email), '@', 2) AS notification_email_domain,
     hide_no_password::BOOLEAN AS has_hide_no_password_enabled,
     password_automatically_set::BOOLEAN AS is_password_automatically_set,
     IFF(LOWER(location) = 'nan', NULL, location) AS location, -- noqa:L029
     email::VARCHAR AS email,
+    SPLIT_PART(email, '@', 2) AS email_domain,
     public_email::VARCHAR AS public_email,
+    SPLIT_PART(public_email, '@', 2) AS public_email_domain,
     commit_email::VARCHAR AS commit_email,
+    IFF(SPLIT_PART(commit_email, '@', 2) = '', NULL, SPLIT_PART(commit_email, '@', 2)) AS commit_email_domain,
     email_opted_in::BOOLEAN AS is_email_opted_in,
     email_opted_in_source_id::NUMBER AS email_opted_in_source_id,
     email_opted_in_at::TIMESTAMP AS email_opted_in_at,

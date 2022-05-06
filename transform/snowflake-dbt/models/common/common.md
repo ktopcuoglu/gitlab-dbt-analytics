@@ -519,6 +519,72 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_event_with_valid_user %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: None
+
+Time Grain: None
+
+Use case: fct_event_with_valid_user is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
+data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
+
+{% enddocs %}
+
+{% docs fct_event %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: None
+
+Time Grain: None
+
+Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
+
+{% enddocs %}
+
+{% docs fct_event_daily %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_name, dim_ultimate_parent_namespace_id, dim_user_id
+
+Time Grain: event_date
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are excluded.
+
+{% enddocs %}
+
+{% docs fct_event_instance_daily %}
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_name, dim_instance_id (all of gitlab.com/SaaS)
+
+Time Grain: event_date
+
+Use case: everyday analysis and dashboards; SaaS-wide analysis
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+
+{% enddocs %}
+
+{% docs fct_event_namespace_daily %}
+
+Type of Data: gitlab.com db usage events
+
+Aggregate Grain: event_name, dim_ultimate_parent_namespace_id
+
+Time Grain: event_date
+
+Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+
+Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 
@@ -842,38 +908,6 @@ The grain of the table is the `dim_note_id`. This table is easily joinable with:
 - `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 {% enddocs %}
 
-{% docs fct_event_400 %}
-
-Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
-
-This table allows us to answer for example some questions like:
-
-- basic: how many ultimate namespace open an issue every month ?
-- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
-- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
-
-The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
-
-Only events that happened the last 400 days are included in this table.
-
-{% enddocs %}
-
-{% docs fct_event_800 %}
-
-Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
-
-This table allows us to answer for example some questions like:
-
-- basic: how many ultimate namespace open an issue every month ?
-- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
-- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
-
-The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
-
-Only events that happened the last 800 days are included in this table.
-
-{% enddocs %}
-
 {% docs fct_monthly_subscription_service_ping_opt_in %}
 
 Factual model that allows to know if a specific active subscription sent us at least one payload on a given month M.
@@ -919,38 +953,6 @@ Union of models `prep_monthly_usage_data_28_days` and `prep_monthly_usage_data_a
 {% enddocs %}
 
 {% docs fct_daily_event_400 %}
-
-Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.
-
-The granularity is one event per day per user per ultimate parent namespace.
-
-That means if a user creates the same day an issue on the Gitlab Data Team project and 2 issues in the main gitlab-com project, 2 rows will be recorded in the table.
-
-If 2 users A and B create on the same day 1 merge request on the GitLab Data Team projectm 2 rows will be also recorded in the table.
-
-Some examples of analysis that were done with the legacy table `gitlab_dotcom_daily_usage_data_events`:
-
-1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
-1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
-1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
-
-{% enddocs %}
-
-{% docs fct_event_all %}
-
-Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
-
-This table allows us to answer for example some questions like:
-
-- basic: how many ultimate namespace open an issue every month ?
-- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
-- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
-
-The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
-
-{% enddocs %}
-
-{% docs fct_daily_event_all %}
 
 Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.
 

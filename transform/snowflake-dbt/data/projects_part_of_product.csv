@@ -279,3 +279,11 @@ gitlab-org/tanuki_emoji,27628435
 gitlab-org/growth/product-intelligence/snowplow-pseudonymization,28496898
 gitlab-org/opstrace/opstrace,32149347
 gitlab-org/opstrace/opstrace-ui,32189602
+gitlab-org/growth/product-intelligence/metric-dictionary,27919014
+gitlab-org/modelops/applied-ml/review-recommender/recommendation-engine,31203840
+gitlab-org/modelops/applied-ml/review-recommender/recommender-bot-service,32318686
+gitlab-org/modelops/applied-ml/review-recommender/gcp-postgres,32823351
+gitlab-org/modelops/applied-ml/review-recommender/extracteur,31202357
+gitlab-org/modelops/applied-ml/review-recommender/etl,31202862
+gitlab-org/modelops/applied-ml/review-recommender/recommender-ci,31203942
+gitlab-org/modelops/anti-abuse/pipeline-validation-service,24631368

@@ -30,6 +30,17 @@ HAVING_CLAUSE_PATTERN = re.compile(
     "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED", re.IGNORECASE
 )
 
+METRICS_EXCEPTION = (
+    "counts.clusters_platforms_eks",
+    "counts.clusters_platforms_gke",
+    "usage_activity_by_stage.configure.clusters_platforms_gke",
+    "usage_activity_by_stage.configure.clusters_platforms_eks",
+    "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
+    "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
+    "usage_activity_by_stage.release.users_creating_deployment_approvals",
+    "usage_activity_by_stage_monthly.release.users_creating_deployment_approvals",
+)
+
 
 def get_sql_query_map(private_token: str = None) -> Dict[Any, Any]:
     """
