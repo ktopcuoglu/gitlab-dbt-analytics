@@ -1,11 +1,5 @@
 {%- macro sfdc_account_fields(model_type) %}
 
-/*
-
-  ATTENTION: When a field is added to this live model, add it to the SFDC_ACCOUNT_SNAPSHOTS_SOURCE model to keep the live and snapshot models in alignment.
-
-*/
-
 WITH map_merged_crm_account AS (
 
     SELECT *
