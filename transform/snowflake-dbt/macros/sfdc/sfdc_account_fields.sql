@@ -1,5 +1,11 @@
 {%- macro sfdc_account_fields(model_type) %}
 
+/*
+
+  ATTENTION: When a field is added to this live model, add it to the SFDC_ACCOUNT_SNAPSHOTS_SOURCE model to keep the live and snapshot models in alignment.
+
+*/
+
 WITH map_merged_crm_account AS (
 
     SELECT *
@@ -199,6 +205,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.zoom_info_parent_company_name                          AS crm_account_zoom_info_parent_company_name,
       sfdc_account.zoom_info_ultimate_parent_company_zi_id                AS crm_account_zoom_info_ultimate_parent_company_zi_id,
       sfdc_account.zoom_info_ultimate_parent_company_name                 AS crm_account_zoom_info_ultimate_parent_company_name,
+      sfdc_account.is_key_account                                         AS is_key_account,
   
       ----ultimate parent crm account info
       ultimate_parent_account.account_id                                  AS dim_parent_crm_account_id,

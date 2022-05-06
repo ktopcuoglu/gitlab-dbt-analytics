@@ -194,9 +194,8 @@ renamed AS (
     zi_ultimate_parent_company_zoominfo_id__c AS zoom_info_ultimate_parent_company_zi_id,
     zi_ultimate_parent_company_name__c AS zoom_info_ultimate_parent_company_name,
 
-
     -- NF: Added on 20220427 to support EMEA reporting
-    key_account__c                     AS is_key_account_flag,
+    key_account__c                     AS is_key_account,
 
     -- metadata
     createdbyid AS created_by_id,
