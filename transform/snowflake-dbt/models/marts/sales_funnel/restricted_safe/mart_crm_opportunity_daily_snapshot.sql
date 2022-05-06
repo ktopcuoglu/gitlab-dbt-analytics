@@ -33,12 +33,11 @@ final AS (
     fct_crm_opportunity.snapshot_fiscal_quarter_date,
     fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
     fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
-    fct_crm_opportunity.close_month,
     fct_crm_opportunity.close_fiscal_year,
     fct_crm_opportunity.close_fiscal_quarter_name,
     fct_crm_opportunity.close_fiscal_quarter_date,
     fct_crm_opportunity.close_day_of_fiscal_quarter_normalised,
-    fct_crm_opportunity.create_month,
+    fct_crm_opportunity.created_month,
     fct_crm_opportunity.created_fiscal_year,
     fct_crm_opportunity.created_fiscal_quarter_name,
     fct_crm_opportunity.created_fiscal_quarter_date,
@@ -141,7 +140,7 @@ final AS (
     fct_crm_opportunity.is_stage_3_plus,
     fct_crm_opportunity.is_stage_4_plus,
     fct_crm_opportunity.is_lost,
-    fct_crm_opportuntiy.is_open,
+    fct_crm_opportunity.is_open,
     fct_crm_opportunity.is_renewal,
     fct_crm_opportunity.is_refund,
     fct_crm_opportunity.is_deleted,
@@ -602,7 +601,7 @@ final AS (
     fct_crm_opportunity.is_eligible_churn_contraction AS is_eligible_churn_contraction_flag,
     fct_crm_opportunity.snapshot_month AS snapshot_date_month,
     fct_crm_opportunity.close_month AS close_date_month,
-    fct_crm_opportunity.create_month AS created_date_month,
+    fct_crm_opportunity.created_month AS created_date_month,
     fct_crm_opportunity.iacv_created_month AS iacv_created_date_month,
     fct_crm_opportunity.net_arr_created_month AS net_arr_created_date_month,
     fct_crm_opportunity.pipeline_created_month AS pipeline_created_date_month,
@@ -623,8 +622,8 @@ final AS (
         AND fct_crm_opportunity.snapshot_date < '2021-05-01'
         THEN 1
       -- exclude vision opps from FY21-Q2
-      WHEN net_arr_created_date.fiscal_quarter_name_fy = 'FY21-Q2'
-        AND snapshot_date.day_of_fiscal_year_normalised = 90
+      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
+        AND fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised = 90
         AND fct_crm_opportunity.stage_name IN (
           '00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
         )
