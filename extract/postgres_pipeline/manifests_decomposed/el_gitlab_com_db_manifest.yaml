@@ -971,7 +971,6 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
         AND first_comment_at >= '2000-01-01 00:00:00.000'::timestamp
-        AND first_comment_at >= '2000-01-01 00:00:00.000'::timestamp
   merge_requests:
     dbt_source_model: true
     export_schema: 'gitlab_com'
