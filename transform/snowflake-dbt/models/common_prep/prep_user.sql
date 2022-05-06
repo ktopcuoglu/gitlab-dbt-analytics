@@ -3,7 +3,7 @@
 ) }}
 
 {{ config({
-    "materialized": "incremental",
+    "materialized": "table",
     "unique_key": "dim_user_id"
     })
 }}
