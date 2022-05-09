@@ -89,9 +89,8 @@ sources:
           - name: updated_at
             tests:
               - not_null        
-
       - name: usage_ping_errors
-        freshness: null
+        loaded_at_field: created_at::TIMESTAMP
         columns:
           - name: id
             tests:
