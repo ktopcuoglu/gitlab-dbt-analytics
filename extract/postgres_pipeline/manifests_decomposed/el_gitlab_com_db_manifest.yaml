@@ -1220,20 +1220,6 @@ tables:
       FROM packages_packages
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  packages_tags:
-    export_schema: 'gitlab_com'
-    export_table: 'packages_tags'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , package_id
-      , name
-      , created_at
-      , updated_at
-      FROM packages_tags
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   project_auto_devops:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1409,21 +1395,6 @@ tables:
       , updated_at
       , code_owner_approval_required
       FROM protected_branches
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  protected_environments:
-    advanced_metadata: true
-    export_schema: 'gitlab_com'
-    export_table: 'protected_environments'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , project_id
-      , created_at
-      , updated_at
-      , name
-      FROM protected_environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   push_rules:
@@ -1991,146 +1962,6 @@ tables:
       , user_id
       , project_id
       FROM users_ops_dashboard_projects
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerabilities:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerabilities'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , confidence
-      , confidence_overridden
-      , confirmed_at
-      , created_at
-      , dismissed_at
-      , resolved_at
-      , severity_overridden
-      , state
-      , updated_at
-      FROM vulnerabilities
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_feedback:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_feedback'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , feedback_type
-      , category
-      , project_id
-      , author_id
-      , pipeline_id
-      , issue_id
-      , project_fingerprint
-      , merge_request_id
-      , comment_author_id
-      , comment
-      , comment_timestamp
-      FROM vulnerability_feedback
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_identifiers:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_identifiers'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , external_type
-      , external_id
-      , name
-      , url
-      FROM vulnerability_identifiers
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_issue_links:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_issue_links'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , vulnerability_id
-      , issue_id
-      , link_type
-      , created_at
-      , updated_at
-      FROM vulnerability_issue_links
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_occurrences:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_occurrences'
-    export_table_primary_key: 'id'
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , severity
-      , confidence
-      , report_type
-      , project_id
-      , scanner_id
-      , primary_identifier_id
-      , uuid
-      , name
-      , metadata_version
-      , raw_metadata
-      , vulnerability_id
-      FROM vulnerability_occurrences
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_occurrence_identifiers:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_occurrence_identifiers'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , occurrence_id
-      , identifier_id
-      FROM vulnerability_occurrence_identifiers
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_occurrence_pipelines:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_occurrence_pipelines'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , occurrence_id
-      , pipeline_id
-      FROM vulnerability_occurrence_pipelines
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  vulnerability_scanners:
-    export_schema: 'gitlab_com'
-    export_table: 'vulnerability_scanners'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , external_id
-      , name
-      FROM vulnerability_scanners
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   web_hooks:
