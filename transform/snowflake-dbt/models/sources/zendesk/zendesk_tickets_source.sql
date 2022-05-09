@@ -24,6 +24,8 @@ renamed AS (
       md5(recipient)                          AS ticket_recipient,
       url                                     AS ticket_url,
       tags                                    AS ticket_tags,
+      description                             AS ticket_description,
+      type                                    AS ticket_type,
       -- added ':score'
       satisfaction_rating__id::VARCHAR        AS satisfaction_rating_id,
       satisfaction_rating__score::VARCHAR     AS satisfaction_rating_score,
