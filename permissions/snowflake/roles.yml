@@ -107,11 +107,6 @@ databases:
     - kmagda_prep:
         shared: no
 
-    - laddula_prod:
-        shared: no
-    - laddula_prep:
-        shared: no
-
     - lvinueza_prod:
         shared: no
     - lvinueza_prep:
@@ -1706,7 +1701,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_packages_dependency_links
                     - raw.tap_postgres.gitlab_db_packages_packages
                     - raw.tap_postgres.gitlab_db_packages_package_files
-                    - raw.tap_postgres.gitlab_db_packages_tags
                     - raw.tap_postgres.gitlab_db_pages_domains
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
@@ -1722,7 +1716,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_project_statistics
                     - raw.tap_postgres.gitlab_db_prometheus_alerts
                     - raw.tap_postgres.gitlab_db_protected_branches
-                    - raw.tap_postgres.gitlab_db_protected_environments
                     - raw.tap_postgres.gitlab_db_push_rules
                     - raw.tap_postgres.gitlab_db_releases
                     - raw.tap_postgres.gitlab_db_repository_languages
@@ -1748,28 +1741,7 @@ roles:
                     - raw.tap_postgres.gitlab_db_user_custom_attributes
                     - raw.tap_postgres.gitlab_db_user_preferences
                     - raw.tap_postgres.gitlab_db_user_preferences_validate
-                    - raw.tap_postgres.gitlab_db_vulnerabilities
-                    - raw.tap_postgres.gitlab_db_vulnerabilities_errors
-                    - raw.tap_postgres.gitlab_db_vulnerabilities_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_feedback
-                    - raw.tap_postgres.gitlab_db_vulnerability_feedback_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_feedback_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_identifiers
-                    - raw.tap_postgres.gitlab_db_vulnerability_identifiers_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_identifiers_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_issue_links
-                    - raw.tap_postgres.gitlab_db_vulnerability_issue_links_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_issue_links_validate
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrences
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_scanners
-                    - raw.tap_postgres.gitlab_db_vulnerability_scanners_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_scanners_validate
                     - raw.tap_postgres.gitlab_db_web_hooks
                     - raw.tap_postgres.gitlab_db_web_hooks_errors
                     - raw.tap_postgres.gitlab_db_web_hooks_validate
@@ -3359,47 +3331,8 @@ roles:
             - analyst_xs
 
     - laddula:
-        member_of:
-            - engineer
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - laddula_prep
-                - laddula_prod
-            schemas:
-                - laddula_prep.*
-                - laddula_prod.*
-            tables:
-                - laddula_prep.*.*
-                - laddula_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - laddula_prep
-                    - laddula_prod
-                write:
-                    - laddula_prep
-                    - laddula_prod
-            schemas:
-                read:
-                    - laddula_prep.*
-                    - laddula_prod.*
-                write:
-                    - laddula_prep.*
-                    - laddula_prod.*
-            tables:
-                read:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
-                write:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
+        member_of: []
+        warehouses: []
 
     - levans:
         member_of:
@@ -4623,10 +4556,8 @@ users:
             - kkarthikeyan
 
     - laddula:
-        can_login: yes
-        member_of:
-            - laddula
-            - accountadmin
+        can_login: no
+        member_of: []
 
     - levans:
         can_login: yes
