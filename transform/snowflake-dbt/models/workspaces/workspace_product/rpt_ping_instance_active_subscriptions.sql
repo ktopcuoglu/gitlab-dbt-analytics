@@ -6,7 +6,7 @@
 {{ simple_cte([
     ('metric_opt_in', 'rpt_ping_counter_statistics'),
     ('mart_arr', 'mart_arr'),
-    ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day')
+    ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly')
     ])
 
 }}
@@ -23,11 +23,9 @@ Determine latest version for each subscription to determine if the potential met
       ping_edition                      AS ping_edition,
       major_minor_version               AS major_minor_version,
       instance_user_count               AS instance_user_count
-  FROM mart_ping_instance_metric_28_day
-      WHERE is_last_ping_of_month = TRUE
+  FROM mart_ping_instance_metric_monthly
+      WHERE time_frame = '28d'
         AND ping_delivery_type = 'Self-Managed'
-        AND ping_product_tier != 'Storage'
-        AND latest_active_subscription_id IS NOT NULL
       QUALIFY ROW_NUMBER() OVER (
             PARTITION BY ping_created_at_month, latest_active_subscription_id
               ORDER BY major_minor_version_id DESC) = 1
@@ -38,11 +36,7 @@ Determine latest version for each subscription to determine if the potential met
     ping_created_at_month                       AS ping_created_at_month,
     latest_active_subscription_id               AS latest_active_subscription_id,
     COUNT(DISTINCT(ping_instance_metric_id))    AS count_of_pings
-  FROM mart_ping_instance_metric_28_day
-      WHERE is_last_ping_of_month = TRUE
-        AND ping_delivery_type = 'Self-Managed'
-        AND ping_product_tier != 'Storage'
-        AND latest_active_subscription_id IS NOT NULL
+  FROM mart_ping_instance_metric_monthly
       {{ dbt_utils.group_by(n=2)}}
 
 ), joined_subscriptions AS (
@@ -60,9 +54,9 @@ Determine latest version for each subscription to determine if the potential met
   SELECT
     arr_month             AS arr_month,
     dim_subscription_id   AS dim_subscription_id,
-    MAX(mrr)              AS mrr,
-    MAX(arr)              AS arr,
-    MAX(quantity)         AS licensed_users
+    SUM(mrr)              AS mrr,
+    SUM(arr)              AS arr,
+    SUM(quantity)         AS licensed_user_count
   FROM mart_arr
     {{ dbt_utils.group_by(n=2)}}
 
@@ -75,7 +69,7 @@ Determine latest version for each subscription to determine if the potential met
     joined_subscriptions.ping_edition                                                                   AS ping_edition,
     joined_subscriptions.major_minor_version                                                            AS major_minor_version,
     joined_subscriptions.instance_user_count                                                            AS instance_user_count,
-    mart_arr_cleaned.licensed_users                                                                     AS licensed_user_count,
+    mart_arr_cleaned.licensed_user_count                                                                AS licensed_user_count,
     mart_arr_cleaned.arr                                                                                AS arr,
     mart_arr_cleaned.mrr                                                                                AS mrr,
     IFF(ping_edition IS NULL, FALSE, TRUE)                                                              AS reported_flag

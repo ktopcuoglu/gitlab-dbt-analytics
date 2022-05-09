@@ -8,6 +8,16 @@ Notes: Includes non-numeric metric values (ex: instance settings). Metrics that 
 
 {% enddocs %}
 
+{% docs fct_ping_instance %}
+
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_ping_instance_id)
+Time Grain: None
+Use case: Service Ping metric-level analysis
+Notes: This is the unflattened fact table.
+
+{% enddocs %}
+
 {% docs fct_ping_instance_metric_28_day %}
 
 Type of Data: Instance-level Service Ping from Versions app
@@ -25,6 +35,16 @@ Aggregate Grain: One record per service ping (dim_ping_instance_id) per metric (
 Time Grain: None
 Use case: Service Ping metric-level analysis
 Notes: Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 7 day time_frame.
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_monthly %}
+
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_ping_instance_id) per metric (metrics_path)
+Time Grain: None
+Use case: Service Ping metric-level analysis
+Notes: Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day AND all time_frame. Only last ping of month shows as well.
 
 {% enddocs %}
 
@@ -57,6 +77,16 @@ Note: This model is filtered to metrics that return numeric values. Metrics that
 
 {% enddocs %}
 
+{% docs mart_ping_instance %}
+
+Type of Data: Instance-level Service Ping from Versions app
+Aggregate Grain: One record per service ping (dim_ping_instance_id)
+Time Grain: None
+Use case: Service Ping metric exploration and analysis
+Note: This model is unflattened service ping data.
+
+{% enddocs %}
+
 {% docs mart_ping_instance_metric_28_day %}
 
 Type of Data: Instance-level Service Ping from Versions app
@@ -67,13 +97,13 @@ Note: This model is filtered to metrics where time_frame = 28d (https://metrics.
 
 {% enddocs %}
 
-{% docs mart_ping_instance_metric_7_day %}
+{% docs mart_ping_instance_metric_monthly %}
 
 Type of Data: Instance-level Service Ping from Versions app
 Aggregate Grain: One record per service ping (dim_ping_instance_id) per 28-day metric (metrics_path)
 Time Grain: None
 Use case: Service Ping 7-day metric exploration and analysis
-Note: This model is filtered to metrics where time_frame = 7d (https://metrics.gitlab.com/?q=7d). Metrics that timed out are set to a value of 0.
+Note: This model is filtered to metrics where time_frame is equal to 28d or all. Only last ping of month shows as well. Metrics that timed out are set to a value of 0.
 
 {% enddocs %}
 

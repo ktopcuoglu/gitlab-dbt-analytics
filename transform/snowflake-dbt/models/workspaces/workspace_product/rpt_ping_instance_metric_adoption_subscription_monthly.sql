@@ -4,61 +4,34 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_ping_instance_metric_28_day', 'mart_ping_instance_metric_28_day'),
-    ('rpt_ping_instance_subcription_opt_in_monthly', 'rpt_ping_instance_subcription_opt_in_monthly'),
-    ('mart_arr', 'mart_arr'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
+    ('sub_combo', 'rpt_ping_instance_subcription_opt_in_monthly'),
+    ('active_subscriptions', 'rpt_ping_instance_active_subscriptions')
     ])
 
 }}
 
 -- Assign key to subscription info (possible subscriptions)
 
-, subscription_info AS (
-
-    SELECT
-    *,
-    1                                         AS key
-  FROM rpt_ping_instance_subcription_opt_in_monthly
-
--- Assign key to metric info (all metrics)
-
-), metrics AS (
-
-    SELECT
-        *,
-        1                                     AS key
-    FROM dim_ping_metric
-
--- Join to get combo of all possible subscriptions and the metrics
-
-), sub_combo AS (
-
-    SELECT subscription_info.*,
-            metrics_path                      AS metrics_path
-    FROM subscription_info
-        INNER JOIN metrics
-    ON subscription_info.key = metrics.key
-
--- Get value from mart_arr
-
-), arr_joined AS (
+, arr_joined AS (
 
   SELECT
-    mart_ping_instance_metric_28_day.*,
-    mart_arr.quantity
-  FROM mart_ping_instance_metric_28_day
-    INNER JOIN mart_arr
-  ON mart_ping_instance_metric_28_day.latest_active_subscription_id = mart_arr.dim_subscription_id
-      AND mart_ping_instance_metric_28_day.ping_created_at_month = mart_arr.arr_month
-
+    mart_ping_instance_metric_monthly.*,
+    active_subscriptions.licensed_user_count
+  FROM mart_ping_instance_metric_monthly
+    INNER JOIN active_subscriptions
+  ON mart_ping_instance_metric_monthly.latest_active_subscription_id = active_subscriptions.latest_active_subscription_id
+      AND mart_ping_instance_metric_monthly.ping_created_at_month = active_subscriptions.ping_created_at_month
+    WHERE time_frame = '28d'
+      AND ping_delivery_type = 'Self-Managed'
 -- Get actual count of subs/users for a given month/metric
 
 ), count_tbl AS (
 
     SELECT
-        ping_created_at_month                           AS arr_month,
+        ping_created_at_month                           AS ping_created_at_month,
         metrics_path                                    AS metrics_path,
+        ping_edition                                    AS ping_edition,
         stage_name                                      AS stage_name,
         section_name                                    AS section_name,
         group_name                                      AS group_name,
@@ -67,22 +40,18 @@
         is_paid_gmau                                    AS is_paid_gmau,
         is_umau                                         AS is_umau,
         COUNT(DISTINCT latest_active_subscription_id)   AS subscription_count,
-        SUM(quantity)                                   AS seat_count
+        SUM(licensed_user_count)                        AS seat_count
     FROM arr_joined
-            WHERE latest_active_subscription_id IS NOT NULL
-                AND is_last_ping_of_month = TRUE
-                AND ping_delivery_type = 'Self-Managed'
-                AND has_timed_out = FALSE
-                AND metric_value is not null
-    {{ dbt_utils.group_by(n=9)}}
+    {{ dbt_utils.group_by(n=10)}}
 
 -- Join actuals to number of possible subs/users
 
 ), joined_counts AS (
 
     SELECT
-        count_tbl.arr_month                                     AS reporting_month,
+        count_tbl.ping_created_at_month                         AS ping_created_at_month,
         count_tbl.metrics_path                                  AS metrics_path,
+        count_tbl.ping_edition                                  AS ping_edition,
         count_tbl.stage_name                                    AS stage_name,
         count_tbl.section_name                                  AS section_name,
         count_tbl.group_name                                    AS group_name,
@@ -98,16 +67,18 @@
         total_licensed_users - reported_seat_count              AS no_reporting_seat_count
     FROM count_tbl
         LEFT JOIN sub_combo
-    ON count_tbl.arr_month = sub_combo.arr_month
+    ON count_tbl.ping_created_at_month = sub_combo.ping_created_at_month
         AND count_tbl.metrics_path = sub_combo.metrics_path
+        AND count_tbl.ping_edition = sub_combo.ping_edition
 
 -- Split subs and seats then union
 
 ), unioned_counts AS (
 
   SELECT
-    reporting_month                                             AS reporting_month,
+    ping_created_at_month                                       AS ping_created_at_month,
     metrics_path                                                AS metrics_path,
+    ping_edition                                                AS ping_edition,
     stage_name                                                  AS stage_name,
     section_name                                                AS section_name,
     group_name                                                  AS group_name,
@@ -124,8 +95,9 @@
   UNION ALL
 
   SELECT
-    reporting_month                                             AS reporting_month,
+    ping_created_at_month                                       AS ping_created_at_month,
     metrics_path                                                AS metrics_path,
+    ping_edition                                                AS ping_edition,
     stage_name                                                  AS stage_name,
     section_name                                                AS section_name,
     group_name                                                  AS group_name,
@@ -144,9 +116,9 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_subscription_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_subscription_monthly_id,
     *,
-    {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                   AS percent_reporting
+    {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                                         AS percent_reporting
  FROM unioned_counts
 
 )
