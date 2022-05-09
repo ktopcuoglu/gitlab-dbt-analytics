@@ -33,4 +33,4 @@ This way the table will be excluded from extraction test that would fail the Dag
 Variable can be removed after initial successful run
 
 
-> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
+> **Note:** For more details on our Python coding standards, please refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
