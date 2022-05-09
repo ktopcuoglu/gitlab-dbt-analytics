@@ -9,4 +9,4 @@ Guideline on how to generate `Sisense` Embed links
 * The embed URL will be output in the `chart_links.csv` file.
 * **You should not commit changes to either of these two csv files.**
 
-> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
+> **Note:** For more details on our Python coding standards, please refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
