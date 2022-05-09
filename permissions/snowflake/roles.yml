@@ -107,11 +107,6 @@ databases:
     - kmagda_prep:
         shared: no
 
-    - laddula_prod:
-        shared: no
-    - laddula_prep:
-        shared: no
-
     - lvinueza_prod:
         shared: no
     - lvinueza_prep:
@@ -3360,47 +3355,8 @@ roles:
             - analyst_xs
 
     - laddula:
-        member_of:
-            - engineer
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - laddula_prep
-                - laddula_prod
-            schemas:
-                - laddula_prep.*
-                - laddula_prod.*
-            tables:
-                - laddula_prep.*.*
-                - laddula_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - laddula_prep
-                    - laddula_prod
-                write:
-                    - laddula_prep
-                    - laddula_prod
-            schemas:
-                read:
-                    - laddula_prep.*
-                    - laddula_prod.*
-                write:
-                    - laddula_prep.*
-                    - laddula_prod.*
-            tables:
-                read:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
-                write:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
+        member_of: []
+        warehouses: []
 
     - levans:
         member_of:
@@ -4624,10 +4580,8 @@ users:
             - kkarthikeyan
 
     - laddula:
-        can_login: yes
-        member_of:
-            - laddula
-            - accountadmin
+        can_login: no
+        member_of: []
 
     - levans:
         can_login: yes
