@@ -31,7 +31,7 @@ Describe the solution. Include links to any related MRs and/or issues.
     * Add the name of the newly created folder, folder names need to unique here so ensure you do not conflict with any existing folders. 
     * Add yourself as an owner
     * Decide on a loading strategy for table_replace_append. 
-      * If set to 1, all files which are uploaded to the folder will be **appended** to the table. 
+      * If set to 1, all files which are uploaded to the folder will be **appended** to the table. After the files are uploaded they will go into the `./Archive` directory inside the GDrive folder.
       * If set to 0, the files which are uploaded to the folder will **replace** the data in the table. 
 
 
