@@ -10,4 +10,4 @@ We welcome contributions and improvements, please see the [contribution guidelin
 
 This code is distributed under the MIT license, please see the [LICENSE](LICENSE) file.
 
-> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
+> **Note:** For more details on our Python coding standards, please refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
