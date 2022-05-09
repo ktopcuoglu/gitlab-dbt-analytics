@@ -163,13 +163,13 @@
       free_user_metrics.active_group_runners_all_time_event,
       free_user_metrics.active_project_runners_all_time_event,
       free_user_metrics.gitaly_version,
-      free_user_metrics.gitaly_servers_all_time_event, 
+      free_user_metrics.gitaly_servers_all_time_event,
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
-    LEFT JOIN namespaces 
+    LEFT JOIN namespaces
       ON namespaces.dim_namespace_id = free_user_metrics.dim_namespace_id
 
 )

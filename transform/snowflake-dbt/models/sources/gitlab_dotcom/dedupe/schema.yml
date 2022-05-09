@@ -27,8 +27,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approvals_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_approver_groups_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_audit_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_audit_events_external_audit_event_destinations_dedupe_source
@@ -139,8 +137,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_epic_issues_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_epic_metrics_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_epics_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_events_dedupe_source
@@ -169,10 +165,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_issues_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_issues_prometheus_alert_events_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_issues_self_managed_prometheus_alert_events_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_jira_imports_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_jira_tracker_data_dedupe_source
@@ -188,8 +180,6 @@ models:
   - name: gitlab_dotcom_lfs_objects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_lfs_objects_projects_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_licenses_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_lists_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

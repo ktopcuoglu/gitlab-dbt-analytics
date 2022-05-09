@@ -427,6 +427,12 @@ The grain of this table is one row per uuid-hostname combination per month.
 
 {% enddocs %}
 
+{% docs prep_event_all %}
+
+Prep table that unions together all of the monthly partitions created from the [prep_event model](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_event)
+
+{% enddocs %}
+
 {% docs prep_ci_pipeline %}
 
 Creates a base view of CI pipelines. More info about CI pipelines [is available here](https://docs.gitlab.com/ee/ci/pipelines/)
@@ -787,5 +793,29 @@ The source data contains several versions of source data with different format. 
     - name: Paris
       factor: 67.00
 ```
+
+{% enddocs %}
+
+{% docs prep_ping_instance %}
+
+Prep table to read Service ping data from Versions app and to build `dim_ping_instance` table.
+
+Below are some additional details about the table:
+* `Type of Data`: Instance-level Service Ping from Versions app
+* `Aggregate Grain`: One record per service ping (dim_ping_instance_id)
+* `Time Grain`: None
+* `Use case`: Service Ping prep table
+
+{% enddocs %}
+
+{% docs prep_ping_instance_flattened %}
+
+Prep table to flatten the Service ping JSON payload that is sourced from Versions app and to build `fct_ping_instance_metric` table.
+
+Below are some additional details about the table:
+`Type of Data`: Instance-level Service Ping from Versions app
+`Aggregate Grain`: One record per service ping (dim_ping_instance_id) per metric (metrics_path)
+`Time Grain`: None
+`Use case`: Service Ping metric-level prep table
 
 {% enddocs %}

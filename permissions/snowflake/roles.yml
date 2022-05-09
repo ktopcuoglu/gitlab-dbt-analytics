@@ -72,6 +72,11 @@ databases:
     - jcaine_prep:
         shared: no
 
+    - jkim_prod:
+        shared: no
+    - jkim_prep:
+        shared: no   
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
@@ -100,11 +105,6 @@ databases:
     - kmagda_prod:
         shared: no
     - kmagda_prep:
-        shared: no
-
-    - laddula_prod:
-        shared: no
-    - laddula_prep:
         shared: no
 
     - lvinueza_prod:
@@ -744,6 +744,7 @@ roles:
             schemas:
                 read:
                     - prep.gitlab_dotcom
+                    - prep.data_science
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
@@ -758,6 +759,7 @@ roles:
             tables:
                 read:
                     - prep.gitlab_dotcom.*
+                    - prep.data_science.*
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.workspace_data_science.*
@@ -925,6 +927,7 @@ roles:
             schemas:
                 - prod.common
                 - prod.common_mapping
+                - prod.common_mart
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
                 - prod.common_mart_product
@@ -933,6 +936,7 @@ roles:
             tables:
                 - prod.common.*
                 - prod.common_mapping.*
+                - prod.common_mart.*
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
                 - prod.common_mart_product.*
@@ -1281,14 +1285,20 @@ roles:
                 read:
                     - prod.common
                     - prod.common_mapping
+                    - prod.common_mart
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
+                    - prod.common_mart_product
+                    - prod.common_prep
             tables:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
+                    - prod.common_mart.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
+                    - prod.common_mart_product.*
+                    - prod.common_prep.*
 
     - date:
         privileges:
@@ -1318,6 +1328,7 @@ roles:
                 read:
                     - prod.common
                     - prod.common_mapping
+                    - prod.common_mart
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
@@ -1340,6 +1351,7 @@ roles:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
+                    - prod.common_mart.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
@@ -1403,6 +1415,7 @@ roles:
                       - prod.restricted_safe_workspace_sales
                       - prod.common_mart_product
                       - prod.common_mart_marketing
+                      - prep.data_science
               tables:
                   read:
                       - prod.workspace_data_science.*
@@ -1410,6 +1423,7 @@ roles:
                       - prod.restricted_safe_workspace_sales.*
                       - prod.common_mart_product.*
                       - prod.common_mart_marketing.*
+                      - prep.data_science.*
 
 
     - demandbase:
@@ -1590,7 +1604,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_approvals_errors
                     - raw.tap_postgres.gitlab_db_approvals_validate
                     - raw.tap_postgres.gitlab_db_approval_merge_request_rules
-                    - raw.tap_postgres.gitlab_db_approver_groups
                     - raw.tap_postgres.gitlab_db_audit_events
                     - raw.tap_postgres.gitlab_db_award_emoji
                     - raw.tap_postgres.gitlab_db_boards
@@ -1651,7 +1664,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epics_errors
                     - raw.tap_postgres.gitlab_db_epics_validate
                     - raw.tap_postgres.gitlab_db_epic_issues
-                    - raw.tap_postgres.gitlab_db_epic_metrics
                     - raw.tap_postgres.gitlab_db_epic_metrics_errors
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
@@ -1670,7 +1682,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_label_links
                     - raw.tap_postgres.gitlab_db_label_priorities
                     - raw.tap_postgres.gitlab_db_lfs_objects_projects
-                    - raw.tap_postgres.gitlab_db_licenses
                     - raw.tap_postgres.gitlab_db_lists
                     - raw.tap_postgres.gitlab_db_members
                     - raw.tap_postgres.gitlab_db_merge_requests
@@ -2972,6 +2983,48 @@ roles:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
 
+    - jkim:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - jkim_prep
+                - jkim_prod
+            schemas:
+                - jkim_prep.*
+                - jkim_prod.*
+            tables:
+                - jkim_prep.*.*
+                - jkim_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jkim_prep
+                    - jkim_prod
+                write:
+                    - jkim_prep
+                    - jkim_prod
+            schemas:
+                read:
+                    - jkim_prep.*
+                    - jkim_prod.*
+                write:
+                    - jkim_prep.*
+                    - jkim_prod.*
+            tables:
+                read:
+                    - jkim_prep.*.*
+                    - jkim_prod.*.*
+                write:
+                    - jkim_prep.*.*
+                    - jkim_prod.*.*
+
     - joshua:
         member_of: []
         warehouses: []
@@ -3302,47 +3355,8 @@ roles:
             - analyst_xs
 
     - laddula:
-        member_of:
-            - engineer
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - laddula_prep
-                - laddula_prod
-            schemas:
-                - laddula_prep.*
-                - laddula_prod.*
-            tables:
-                - laddula_prep.*.*
-                - laddula_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - laddula_prep
-                    - laddula_prod
-                write:
-                    - laddula_prep
-                    - laddula_prod
-            schemas:
-                read:
-                    - laddula_prep.*
-                    - laddula_prod.*
-                write:
-                    - laddula_prep.*
-                    - laddula_prod.*
-            tables:
-                read:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
-                write:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
+        member_of: []
+        warehouses: []
 
     - levans:
         member_of:
@@ -4492,6 +4506,11 @@ users:
         member_of:
             - jcaine
 
+    - jkim:
+        can_login: yes
+        member_of:
+            - jkim
+
     - joshua:
         can_login: no
         member_of: []
@@ -4561,10 +4580,8 @@ users:
             - kkarthikeyan
 
     - laddula:
-        can_login: yes
-        member_of:
-            - laddula
-            - accountadmin
+        can_login: no
+        member_of: []
 
     - levans:
         can_login: yes

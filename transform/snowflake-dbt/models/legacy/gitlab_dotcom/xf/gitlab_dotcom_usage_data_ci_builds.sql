@@ -31,7 +31,7 @@
     "stage_name": "verify",
     "is_representative_of_stage": "False"
   },
-    {
+  {
     "event_name": "ci_pipeline_schedules",
     "source_table_name": "gitlab_dotcom_ci_pipeline_schedules",
     "user_column_name": "owner_id",
@@ -39,15 +39,6 @@
     "primary_key": "ci_pipeline_schedule_id",
     "stage_name": "verify",
     "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "ci_pipelines",
-    "source_table_name": "gitlab_dotcom_ci_pipelines",
-    "user_column_name": "user_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "ci_pipeline_id",
-    "stage_name": "verify",
-    "is_representative_of_stage": "True"
   },
   {
     "event_name": "ci_stages",
@@ -67,24 +58,6 @@
     "stage_name": "verify",
     "is_representative_of_stage": "False"
   },
-  {
-    "event_name": "events",
-    "source_table_name": "gitlab_dotcom_events",
-    "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "event_id",
-    "stage_name": "manage",
-    "is_representative_of_stage": "False"
-  },
-  {
-    "event_name": "push_events",
-    "source_cte_name": "push_events_source",
-    "user_column_name": "author_id",
-    "key_to_parent_project": "project_id",
-    "primary_key": "event_id",
-    "stage_name": "create",
-    "is_representative_of_stage": "False"
-  },
 ]
 -%}
 
@@ -98,13 +71,6 @@
     ('users', 'gitlab_dotcom_users')
 ]) }}
 
-, push_events_source AS (
-
-    SELECT *
-    FROM {{ ref('temp_gitlab_dotcom_events_filtered') }}
-    WHERE event_action_type = 'pushed'
-
-)
 
 {% for event_cte in event_ctes %}
 

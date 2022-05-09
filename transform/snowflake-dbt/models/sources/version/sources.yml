@@ -88,4 +88,14 @@ sources:
               - not_null
           - name: updated_at
             tests:
-              - not_null            
+              - not_null        
+
+      - name: usage_ping_errors
+        freshness: null
+        columns:
+          - name: id
+            tests:
+              - not_null
+          - name: created_at
+            tests:
+              - not_null   
