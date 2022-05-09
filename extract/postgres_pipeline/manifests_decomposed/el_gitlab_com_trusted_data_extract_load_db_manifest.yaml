@@ -84,11 +84,11 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_issues_prometheus_alert_events' AS table_name
+        SELECT 'gitlab_db_vulnerability_issue_links' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
-        FROM issues_prometheus_alert_events
+        FROM vulnerability_issue_links
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
@@ -180,14 +180,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_epic_metrics' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM epic_metrics
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_project_tracing_settings' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -220,14 +212,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_issues_self_managed_prometheus_alert_events' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM issues_self_managed_prometheus_alert_events
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_ldap_group_links' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -257,14 +241,6 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM status_page_settings
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_licenses' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM licenses
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
   cluster_2:
@@ -346,11 +322,19 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_approver_groups' AS table_name
+        SELECT 'gitlab_db_vulnerability_feedback' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
-        FROM approver_groups
+        FROM vulnerability_feedback
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_vulnerability_scanners' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM vulnerability_scanners
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
@@ -359,6 +343,14 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM ci_triggers
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_packages_tags' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM packages_tags
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
@@ -399,7 +391,7 @@ tables:
         FROM ci_runner_projects
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL  
+        UNION ALL
         SELECT 'gitlab_db_project_auto_devops' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -424,6 +416,14 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
+        SELECT 'gitlab_db_protected_environments' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM protected_environments
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_subscriptions' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -431,7 +431,7 @@ tables:
         FROM subscriptions
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_user_custom_attributes' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -439,7 +439,7 @@ tables:
         FROM user_custom_attributes
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_services' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -477,7 +477,7 @@ tables:
         FROM security_scans
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL     
+        UNION ALL
         SELECT 'gitlab_db_project_custom_attributes' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -493,7 +493,7 @@ tables:
         FROM environments
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_push_rules' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -534,6 +534,14 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
+        SELECT 'gitlab_db_vulnerability_identifiers' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM vulnerability_identifiers
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_milestones' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -571,7 +579,15 @@ tables:
         FROM packages_package_files
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL       
+        UNION ALL
+        SELECT 'gitlab_db_vulnerabilities' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM vulnerabilities
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_namespaces' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -587,7 +603,7 @@ tables:
         FROM merge_requests_closing_issues
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_user_preferences' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -602,8 +618,8 @@ tables:
         , count(*) as number_of_records
         FROM lists
         WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3    
-        UNION ALL 
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_container_expiration_policies' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -634,6 +650,14 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
+        SELECT 'gitlab_db_vulnerability_occurrence_identifiers' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM vulnerability_occurrence_identifiers
+        WHERE DATE(updated_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_projects' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -641,7 +665,7 @@ tables:
         FROM projects
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_labels' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -671,7 +695,7 @@ tables:
         FROM lfs_objects
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_routes' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -679,7 +703,7 @@ tables:
         FROM routes
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-        UNION ALL    
+        UNION ALL
         SELECT 'gitlab_db_project_features' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -694,7 +718,7 @@ tables:
         , count(*) as number_of_records
         FROM approvals
         WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3               
+        GROUP BY 1,2,3
   cluster_8:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -745,7 +769,7 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-  
+    import_query: |-
         SELECT 'gitlab_db_notification_settings' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -767,7 +791,7 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |- 
+    import_query: |-
         SELECT 'gitlab_db_issue_metrics' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -781,7 +805,7 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |- 
+    import_query: |-
         SELECT 'gitlab_db_operations_feature_flags' AS table_name
         , DATE(created_at) as created_date
         , 'null' as updated_date
@@ -829,7 +853,7 @@ tables:
         FROM uploads
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2
-        UNION ALL 
+        UNION ALL
         SELECT 'gitlab_db_resource_label_events' AS table_name
         , DATE(created_at) as created_date
         , 'null' as updated_date
@@ -852,7 +876,7 @@ tables:
         , count(*) as number_of_records
         FROM project_daily_statistics
         WHERE DATE(date) > current_date - interval '8' day
-        GROUP BY 1,2 
+        GROUP BY 1,2
         UNION ALL
         SELECT 'gitlab_db_audit_events' AS table_name
         , DATE(created_at) as created_date
@@ -860,14 +884,14 @@ tables:
         , count(*) as number_of_records
         FROM audit_events
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2 
+        GROUP BY 1,2
   cluster_13:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_system_note_metadata' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -882,7 +906,7 @@ tables:
         , count(*) as number_of_records
         FROM merge_request_blocks
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3 
+        GROUP BY 1,2,3
         UNION ALL
         SELECT 'gitlab_db_dast_profiles' AS table_name
         , DATE(created_at) as created_date
@@ -897,7 +921,7 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_merge_request_diffs' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -919,7 +943,15 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
+        SELECT 'gitlab_db_vulnerability_occurrence_pipelines' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM vulnerability_occurrence_pipelines
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
         SELECT 'gitlab_db_namespace_settings' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -927,13 +959,13 @@ tables:
         FROM namespace_settings
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
-  cluster_16: 
+  cluster_16:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_deployments' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -947,7 +979,7 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_merge_requests' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -962,14 +994,14 @@ tables:
         , count(*) as number_of_records
         FROM remote_mirrors
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3 
+        GROUP BY 1,2,3
   cluster_18:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_issues' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -984,14 +1016,14 @@ tables:
         , count(*) as number_of_records
         FROM integrations
         WHERE DATE(created_at) > current_date - interval '8' day
-        GROUP BY 1,2,3 
+        GROUP BY 1,2,3
   cluster_19:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_events' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -1005,25 +1037,25 @@ tables:
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_namespace_root_storage_statistics' AS table_name
         , 'null' as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM namespace_root_storage_statistics
         WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,3  
+        GROUP BY 1,3
   cluster_21:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
     export_table: 'gitlab_pgp_export'
     export_table_primary_key: created_date
     import_db: GITLAB_DB
-    import_query: |-      
+    import_query: |-
         SELECT 'gitlab_db_notes' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM notes
         WHERE updated_at > current_timestamp - interval '8' day
-        GROUP BY 1,2,3  
+        GROUP BY 1,2,3

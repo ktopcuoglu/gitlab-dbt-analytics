@@ -1940,3 +1940,90 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: prep_ping_instance
+    description: ' {{ doc("prep_ping_instance") }} '
+    columns:
+      - name: dim_ping_instance_id
+        tests:
+          - not_null
+          - unique
+        description: The unique identifier of the ping
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description:  The uuid of an instance from the dim_instances model.
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ip_address_hash
+        description: The source_ip_hash associated with the instance
+      - name: version
+        description: The version associated with the instance (9., 10., 11., ... 14.)
+      - name: instance_user_count
+        description: The total count of users on the instance
+      - name: license_md5
+        description: The license_md5 associated with the instance
+      - name: historical_max_users
+        description: The max user number the instance has had
+      - name: license_user_count
+        description: The user count for the license
+      - name: license_starts_at
+        description: The date the license starts at
+      - name: license_expires_at
+        description:  The date the license ends on
+      - name: license_add_ons
+        description: The add ones associated with the license
+      - name: mattermost_enabled
+        description: Denotes whether mattermost is enabled
+      - name: uuid
+        description: The unique id of the instance from the dim_instances model
+      - name: hostname
+        description: The name (URL) of the host
+      - name: host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: license_trial
+        description: Denoted whether the license is a trial or not
+      - name: source_license_id
+        description: The unique id of a source license
+      - name: installation_type
+        description: The type of installation associated with the instance (i.e. gitlab-development-kit, gitlab-helm-chart, gitlab-omnibus-helm-chart)
+      - name: license_plan
+        description: The license plan associated with the instance (i.e. Ultimate, Premium)
+      - name: database_adapter
+        description: The type of database adapter being used (i.e. mysql2, postgresql)
+      - name: database_version
+        description: The database version associated with the instance (i.e. 9.5.3)
+      - name: git_version
+        description: The version of gitlab the instance is running (i.e. 2.17.0, 2.33.1, 2.23.0)
+
+  - name: prep_ping_instance_flattened
+    description: ' {{ doc("prep_ping_instance_flattened") }} '
+    columns:
+      - name: ping_instance_flattened_id
+        tests:
+          - not_null
+          #- unique --Commenting this as the model is erroring out due to a waarehouse timeout limit of 1800 seconds
+        description: The unique ID of the prep_ping_instance_flattenned model consisting of `dim_ping_instance_id` and path
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_ping_instance_id
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: main_edition
+        description: The edition of GitLab on the instance (EE, CE)
+      - name: product_tier
+        description: The product tier associated with the instance (Premium, Starter, Core, Ultimate)
+      - name: license_subscription_id
+        description: The unique id of a license subscription
+      - name: license_trial_ends_on
+        description: The date when the trial license ends
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: has_timed_out
+        description: A flag to denote that it has timed out

@@ -107,11 +107,6 @@ databases:
     - kmagda_prep:
         shared: no
 
-    - laddula_prod:
-        shared: no
-    - laddula_prep:
-        shared: no
-
     - lvinueza_prod:
         shared: no
     - lvinueza_prep:
@@ -1609,7 +1604,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_approvals_errors
                     - raw.tap_postgres.gitlab_db_approvals_validate
                     - raw.tap_postgres.gitlab_db_approval_merge_request_rules
-                    - raw.tap_postgres.gitlab_db_approver_groups
                     - raw.tap_postgres.gitlab_db_audit_events
                     - raw.tap_postgres.gitlab_db_award_emoji
                     - raw.tap_postgres.gitlab_db_boards
@@ -1670,7 +1664,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epics_errors
                     - raw.tap_postgres.gitlab_db_epics_validate
                     - raw.tap_postgres.gitlab_db_epic_issues
-                    - raw.tap_postgres.gitlab_db_epic_metrics
                     - raw.tap_postgres.gitlab_db_epic_metrics_errors
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
@@ -1689,7 +1682,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_label_links
                     - raw.tap_postgres.gitlab_db_label_priorities
                     - raw.tap_postgres.gitlab_db_lfs_objects_projects
-                    - raw.tap_postgres.gitlab_db_licenses
                     - raw.tap_postgres.gitlab_db_lists
                     - raw.tap_postgres.gitlab_db_members
                     - raw.tap_postgres.gitlab_db_merge_requests
@@ -3340,47 +3332,8 @@ roles:
             - analyst_xs
 
     - laddula:
-        member_of:
-            - engineer
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - laddula_prep
-                - laddula_prod
-            schemas:
-                - laddula_prep.*
-                - laddula_prod.*
-            tables:
-                - laddula_prep.*.*
-                - laddula_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - laddula_prep
-                    - laddula_prod
-                write:
-                    - laddula_prep
-                    - laddula_prod
-            schemas:
-                read:
-                    - laddula_prep.*
-                    - laddula_prod.*
-                write:
-                    - laddula_prep.*
-                    - laddula_prod.*
-            tables:
-                read:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
-                write:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
+        member_of: []
+        warehouses: []
 
     - levans:
         member_of:
@@ -4604,10 +4557,8 @@ users:
             - kkarthikeyan
 
     - laddula:
-        can_login: yes
-        member_of:
-            - laddula
-            - accountadmin
+        can_login: no
+        member_of: []
 
     - levans:
         can_login: yes

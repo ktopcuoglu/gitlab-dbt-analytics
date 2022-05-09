@@ -1,7 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "prep_ping_instance_flattened_id"
+    unique_key = "ping_instance_flattened_id"
 ) }}
 
 
@@ -16,7 +16,7 @@ WITH source AS (
 
 ) , flattened_high_level as (
       SELECT
-        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'path']) }}                         AS prep_ping_instance_flattened_id,
+        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'path']) }}                         AS ping_instance_flattened_id,
         dim_ping_instance_id                                                                    AS dim_ping_instance_id,
         dim_host_id                                                                             AS dim_host_id,
         dim_instance_id                                                                         AS dim_instance_id,
@@ -42,7 +42,7 @@ WITH source AS (
   {{ dbt_audit(
       cte_ref="flattened_high_level",
       created_by="@icooper-acp",
-      updated_by="@icooper-acp",
+      updated_by="@snalamaru",
       created_date="2022-03-17",
-      updated_date="2022-03-17"
+      updated_date="2022-05-05"
   ) }}

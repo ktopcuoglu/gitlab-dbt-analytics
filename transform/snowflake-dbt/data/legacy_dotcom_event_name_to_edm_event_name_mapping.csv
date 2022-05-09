@@ -9,7 +9,7 @@ ci_pipeline_schedules,ci_pipeline_schedules
 ci_pipelines,ci_pipeline_creation
 ci_stages,ci_stages
 ci_triggers,ci_triggers
-container_scanning,protect_ci_build_creation
+container_scanning,container_scanning_build_run
 dast,dast_build_run
 dependency_scanning,dependency_scanning_build_run
 deployments,deployment_creation

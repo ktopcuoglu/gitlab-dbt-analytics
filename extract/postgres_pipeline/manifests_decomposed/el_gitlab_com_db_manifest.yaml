@@ -468,20 +468,6 @@ tables:
       FROM environments
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  epic_metrics:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'epic_metrics'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , epic_id
-      , created_at
-      , updated_at
-      FROM epic_metrics
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   epics:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -712,32 +698,6 @@ tables:
       FROM issues
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  issues_prometheus_alert_events:
-    export_schema: "gitlab_com"
-    export_table: issues_prometheus_alert_events
-    export_table_primary_key: issue_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT issue_id
-      , prometheus_alert_event_id
-      , created_at
-      , updated_at
-      FROM issues_prometheus_alert_events
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  issues_self_managed_prometheus_alert_events:
-    export_schema: "gitlab_com"
-    export_table: issues_self_managed_prometheus_alert_events
-    export_table_primary_key: issue_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT issue_id
-      , self_managed_prometheus_alert_event_id
-      , created_at
-      , updated_at
-      FROM issues_self_managed_prometheus_alert_events
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   jira_imports:
     export_schema: "gitlab_com"
     export_table: jira_imports
@@ -866,19 +826,6 @@ tables:
       , updated_at
       , repository_type
       FROM lfs_objects_projects
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  licenses:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'licenses'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      FROM licenses
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   lists:

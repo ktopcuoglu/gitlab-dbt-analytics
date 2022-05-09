@@ -3213,3 +3213,131 @@ models:
         description: The date the location factor for a locality stops being applied
       - name: is_current
         description: A flag to indicate if the location factor for the locality is from the most recent source data.
+
+
+  - name: dim_ping_instance
+    description: ' {{ doc("dim_ping_instance") }} '
+    columns:
+      - name: dim_ping_instance_id
+        tests:
+          - not_null
+          - unique
+        description: The unique identifier of the ping
+      - name: dim_ping_date_id
+        description: The unique id associated with the dim_ping_instance
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique id of an instance (brought in from usage_data source data).
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_28_days_earlier
+        description: The date 28 days prior to when the ping was created
+      - name: ping_created_at_year
+        description: The year when the ping was created
+      - name: ping_created_at_month
+        description: The month when the ping was created
+      - name: ping_created_at_week
+        description: The week when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: ip_address_hash
+        description: The ip_address_has associated with the instance
+      - name: version
+        description: The version associated with the instance (9., 10., 11., ... 14.)
+      - name: instance_user_count
+        description: The total count of users on the instance
+      - name: license_md5
+        description: The license_md5 associated with teh instance
+      - name: historical_max_users
+        description: The max user number the instance has had
+      - name: license_user_count
+        description: The user count for the license
+      - name: license_starts_at
+        description: The date the license starts at
+      - name: license_expires_at
+        description:  The date the license ends on
+      - name: license_add_ons
+        description: The add ones associated with the license
+      - name: dim_instance_id
+        description: The unique identifier of the instance, easily joined to dim_installation. This id is store in the database of the instance and appears as uuid in the ping payload
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: host_name
+        description: The name (URL) of the host
+      - name: product_tier
+        description: The product tier associated with the instance (Premium, Starter, Core, Ultimate)
+      - name: is_staging
+        description: Boolean flag which is set to True if the instance has been identified as a staging instance
+      - name: is_trial
+        description: Boolean flag which is set to True if the instance has a valid trial license at service ping creation
+      - name: source_license_id
+        description: The unique id of a source license
+      - name: installation_type
+        description: The type of installation associated with the instance (i.e. gitlab-development-kit, gitlab-helm-chart, gitlab-omnibus-helm-chart)
+      - name: license_plan
+        description: The license plan associated with the instance (i.e. Ultimate, Premium)
+      - name: database_version
+        description: The database version associated with the instance (i.e. 9.5.3)
+      - name: git_version
+        description: The version of gitlab the instance is running (i.e. 2.17.0, 2.33.1, 2.23.0)
+      - name: major_version
+        description: The major version of GitLab on the instance. For example, for 13.6.2, major_version is 13. See details here (https://docs.gitlab.com/ee/policy/maintenance.html)
+      - name: minor_version
+        description: The major version of GitLab on the instance. For example, for 13.6.2, minor_version is 6. See details here (https://docs.gitlab.com/ee/policy/maintenance.html)
+      - name: major_minor_version
+        description: The concatenation of major and minor version. For example, for 13.6.2,
+      - name: version_is_prerelease
+        description: Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details here (https://docs.gitlab.com/ee/policy/maintenance.html)
+      - name: is_internal
+        description: Denotes whether the instance is internal
+
+
+  - name: dim_ping_metric
+    description: ' {{ doc("dim_ping_metric") }} '
+    columns:
+      - name: ping_metric_id
+        tests:
+          - not_null
+          - unique
+      - name: metrics_path
+        description: The path name of metric 
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: description
+      - name: product_category
+      - name: group_name
+        description: The name of the Product group
+      - name: section_name
+        description: The name of the product section
+      - name: stage_name
+        description: The name of the product stage
+      - name: milestone
+      - name: skip_validation
+      - name: metrics_status
+      - name: tier
+      - name: time_frame
+      - name: value_type
+      - name: is_gmau
+        description: Boolean field representing if the xmau metric represents a Group Monthly Active user (GMAU) metric
+      - name: is_paid_gmau
+        description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric
+      - name: is_smau
+        description: Boolean field representing if the xmau metric represents a Stage Monthly Active User (SMAU) metric
+      - name: is_umau
+        description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric
+      - name: snapshot_date
+      - name: uploaded_at
+      - name: created_byssss
+        description: Who created this model
+      - name: updated_by
+        description: Who updated this model last
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model code was last updatedss
+      - name: dbt_updated_at
+      - name: dbt_created_at
+

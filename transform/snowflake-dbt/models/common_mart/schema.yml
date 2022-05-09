@@ -60,6 +60,88 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
 
+- name: mart_event_with_valid_user
+  description: '{{ doc("mart_event_with_valid_user") }}'
+  columns:
+    - name: event_id
+      description: The unique identifier of an event. This is a generated primary key and will not join back to the source models
+      tests:
+        - not_null
+        - unique
+    - name: dim_active_product_tier_id
+      description: The unique identifier of the ultimate parent namespace's latest product tier, easily joined to dim_product_tier
+    - name: dim_active_subscription_id
+      description: The unique identifier of the ultimate parent namespace's latest subscription, easily joined to dim_subscription
+    - name: dim_event_date_id
+      description: The unique id of the event date, easily joined to dim_date
+    - name: dim_crm_account_id
+      description: The unique id of a crm account, easily joined to dim_crm_account
+    - name: dim_billing_account_id
+      description: The identifier of the Zuora account associated with the subscription, easily joined to dim_billing_account
+    - name: dim_ultimate_parent_namespace_id
+      description: The unique identifier of the ultimate parent namespace in which the event was generated, easily joined to dim_namespace
+    - name: dim_project_id
+      description: The unique identifier of the project in which the event was generated, easily joined to dim_project. This will be NULL if the event is not tied to a project (ex. epics)
+    - name: dim_user_id
+      description: The unique identifier of the user who generated the event, easily joined to dim_user. This will be NULL if the event is not tied to a specific user
+    - name: event_created_at
+      description: Timestamp of the event
+    - name: event_date
+      description: The date when the event was created
+    - name: parent_id
+      description: The unique identifier of the project (dim_project_id) associated with the event. If no project is associated, the ultimate parent namespace associated with the event. This will be NULL if neither a project or namespace is associated with the event
+    - name: parent_type
+      description: Denotes whether the event was associate with a project or namespace ('project' or 'group'). This will be NULL if neither a project or namespace is associated with the event
+    - name: is_smau
+      description: Boolean flag set to True if the event is chosen for the stage's SMAU calculation
+    - name: is_gmau
+      description: Boolean flag set to True if the event is chosen for the group's GMAU calculation
+    - name: is_umau
+      description: Boolean flag set to True if the event is chosen for the UMAU calculation
+    - name: event_name
+      description: The name tied to the event
+    - name: stage_name
+      description: The name of the product stage
+    - name: section_name
+      description: The name of the product section
+    - name: group_name
+      description: The name of the product group
+    - name: plan_id_at_event_date
+      description: The ID of the ultimate parent namespace's plan on the day the event was created. Defaults to '34' if a value is not available.
+    - name: plan_name_at_event_date
+      description: The name of the ultimate parent namespace's plan type on the day when the event was created. Defaults to 'free' if a value is not available.
+    - name: plan_was_paid_at_event_date
+      description: Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created
+    - name: days_since_user_creation_at_event_date
+      description: The count of days between user creation and the event. This will be NULL if a user is not associated with the event
+    - name: days_since_namespace_creation_at_event_date
+      description: The count of days between ultimate parent namespace creation and the event
+    - name: days_since_project_creation_at_event_date
+      description: The count of days between project creation and the event. This will be NULL if a project is not associated with the event
+    - name: data_source
+      description: The source application where the data was extracted from
+    - name: namespace_is_internal
+      description: Boolean flag set to True if the ultimate parent namespace in which the event was created is identified as an internal GitLab namespace
+    - name: namespace_creator_is_blocked
+      description: Boolean flag set to True if the ultimate parent namespace creator is in a 'blocked' or 'banned' state
+    - name: namespace_created_at
+      description: The timestamp of the ultimate parent namespace creation
+    - name: namespace_created_date
+      description: The date of the ultimate parent namespace creation
+    - name: user_created_at
+      description: The timestamp of the user creation
+    - name: project_is_learn_gitlab
+      description: Boolean flag set to True if the project in which the event was generated was a Learn GitLab project, one automatically created during user onboarding
+    - name: project_is_imported
+      description: Boolean flag set to True if the project in which the event was generated was imported
+    - name: created_by
+      description: Who created this model?
+    - name: update_by
+      description: Who updated this model last?
+    - name: model_created_date
+      description: The date at which the model was created
+    - name: model_updated_date
+      description: The date at which the model code was last updated
 
 - name: mart_event_namespace_daily
   description: '{{ doc("mart_event_namespace_daily") }}'
