@@ -11,7 +11,7 @@ WITH source AS (
       f.VALUE       AS ticket_tag
     FROM
       source,
-      table(FLATTEN(INPUT => STRTOK_TO_ARRAY(tags, '[], "'))) f;
+      table(FLATTEN(INPUT => STRTOK_TO_ARRAY(tags, '[], "'))) f
 
 )
 
