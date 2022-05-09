@@ -219,6 +219,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.cp_why_do_anything_at_all,
       sfdc_opportunity.cp_why_gitlab,
       sfdc_opportunity.cp_why_now,
+      sfdc_opportunity.cp_score,
 
       -- User Segment Hierarchy fields
       sfdc_opportunity.user_segment_stamped,

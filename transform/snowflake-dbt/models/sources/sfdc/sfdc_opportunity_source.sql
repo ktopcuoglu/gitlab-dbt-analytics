@@ -2,6 +2,12 @@
     tags=["mnpi"]
 ) }}
 
+/*
+
+  ATTENTION: When a field is added to this live model, add it to the SFDC_OPPORTUNITY_SNAPSHOTS_SOURCE model to keep the live and snapshot models in alignment.
+
+*/
+
 WITH source AS (
 
     SELECT
@@ -262,6 +268,7 @@ WITH source AS (
         fm_why_do_anything_at_all__c                    AS cp_why_do_anything_at_all,
         fm_why_gitlab__c                                AS cp_why_gitlab,
         fm_why_now__c                                   AS cp_why_now,
+        fm_score__c                                     AS cp_score,
 
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
         sa_validated_tech_evaluation_close_statu__c     AS sa_tech_evaluation_close_status,
