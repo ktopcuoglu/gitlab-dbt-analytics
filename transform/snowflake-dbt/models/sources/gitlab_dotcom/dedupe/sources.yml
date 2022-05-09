@@ -31,7 +31,7 @@ sources:
       - name: approval_merge_request_rules
         identifier: gitlab_db_approval_merge_request_rules
       - name: approvals
-        identifier: gitlab_db_approvals    
+        identifier: gitlab_db_approvals
       - name: audit_events
         identifier: gitlab_db_audit_events
         freshness:
@@ -173,7 +173,7 @@ sources:
         freshness: null #https://gitlab.com/gitlab-data/analytics/-/merge_requests/5998
       - name: experiments
         identifier: gitlab_db_experiments
-      - name: external_status_checks 
+      - name: external_status_checks
         identifier: gitlab_db_external_status_checks
         freshness:
           warn_after: {count: 7, period: day}
@@ -212,8 +212,8 @@ sources:
         identifier: gitlab_db_lists
       - name: members
         identifier: gitlab_db_members
-      - name: merge_request_blocks 
-        identifier: gitlab_db_merge_request_blocks  
+      - name: merge_request_blocks
+        identifier: gitlab_db_merge_request_blocks
       - name: merge_request_diffs
         identifier: gitlab_db_merge_request_diffs
       - name: merge_request_metrics
@@ -231,7 +231,7 @@ sources:
       - name: namespace_root_storage_statistics
         identifier: gitlab_db_namespace_root_storage_statistics
       - name: namespace_settings
-        identifier:  gitlab_db_namespace_settings     
+        identifier:  gitlab_db_namespace_settings
       - name: namespace_statistics
         identifier: gitlab_db_namespace_statistics
       - name: namespaces
@@ -290,7 +290,7 @@ sources:
       - name: requirements
         identifier: gitlab_db_requirements
       - name: resource_label_events
-        identifier: gitlab_db_resource_label_events        
+        identifier: gitlab_db_resource_label_events
       - name: resource_milestone_events
         identifier: gitlab_db_resource_milestone_events
       - name: resource_weight_events
@@ -347,11 +347,11 @@ sources:
       - name: approval_project_rules
         identifier: gitlab_db_approval_project_rules
       - name: approval_project_rules_groups
-        identifier: gitlab_db_approval_project_rules_groups             
+        identifier: gitlab_db_approval_project_rules_groups
       - name: approval_project_rules_protected_branches
         identifier: gitlab_db_approval_project_rules_protected_branches
       - name: approval_project_rules_users
-        identifier: gitlab_db_approval_project_rules_users     
+        identifier: gitlab_db_approval_project_rules_users
       - name: authentication_events
         identifier: gitlab_db_authentication_events
       - name: bulk_imports
@@ -425,11 +425,6 @@ sources:
         freshness: null
       - name: remote_mirrors
         identifier: gitlab_db_remote_mirrors
-      - name: requirements_management_test_reports
-        identifier: gitlab_db_requirements_management_test_reports
-        freshness:
-          warn_after: {count: 3, period: day}
-          error_after: {count: 7, period: day}
       - name: security_scans
         identifier: gitlab_db_security_scans
       - name: sentry_issues
