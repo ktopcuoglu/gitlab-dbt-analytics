@@ -5,18 +5,18 @@
 
 {{ simple_cte([
     ('dim_date','dim_date'),
-    ('mart_event', 'mart_event')
+    ('mart_event_with_valid_user', 'mart_event_with_valid_user')
     ])
 }},
 
 mart_raw AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('mart_event'), except=["STAGE_NAME"]) }},
+    {{ dbt_utils.star(from=ref('mart_event_with_valid_user'), except=["STAGE_NAME"]) }},
     CASE
       WHEN stage_name = 'manage' THEN NULL ELSE stage_name
     END AS stage_name
-  FROM mart_event
+  FROM mart_event_with_valid_user
   WHERE dim_user_id IS NOT NULL
     AND (is_umau = TRUE 
          OR is_gmau = TRUE 
@@ -176,5 +176,5 @@ results AS (
     created_by="@icooper_acp",
     updated_by="@iweeks",
     created_date="2022-02-23",
-    updated_date="2022-04-09"
+    updated_date="2022-05-05"
 ) }}

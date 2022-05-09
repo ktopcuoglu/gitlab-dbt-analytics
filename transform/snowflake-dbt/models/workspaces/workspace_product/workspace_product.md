@@ -38,15 +38,6 @@ Notes: Includes non-numeric metric values (ex: instance settings). Metrics that 
 
 {% enddocs %}
 
-{% docs dim_ping_instance %}
-
-Type of Data: Instance-level Service Ping from Versions app
-Aggregate Grain: One record per service ping (dim_ping_instance_id)
-Time Grain: None
-Use case: Service Ping dimension analysis (ex: edition, installation_type)
-
-{% enddocs %}
-
 {% docs mart_ping_instance_metric %}
 
 Type of Data: Instance-level Service Ping from Versions app
@@ -121,33 +112,9 @@ Use case: Model used to estimate usage based upon reported and unreported seats/
 
 {% enddocs %}
 
-{% docs prep_ping_instance %}
-
-Type of Data: Instance-level Service Ping from Versions app
-Aggregate Grain: One record per service ping (dim_ping_instance_id)
-Time Grain: None
-Use case: Service Ping prep table
-
-{% enddocs %}
-
-{% docs prep_ping_instance_flattened %}
-
-Type of Data: Instance-level Service Ping from Versions app
-Aggregate Grain: One record per service ping (dim_ping_instance_id) per metric (metrics_path)
-Time Grain: None
-Use case: Service Ping metric-level prep table
-
-{% enddocs %}
-
 {% docs mart_ping_estimations_monthly %}
 
 Estimation model to estimate the usage for unreported self-managed instances.
-
-{% enddocs %}
-
-{% docs dim_ping_metric %}
-
-New dimension table to replace dim_usage_ping_metric with some enhancements: surrogate key, cleaning of groups, and renamed.
 
 {% enddocs %}
 

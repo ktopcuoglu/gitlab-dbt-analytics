@@ -5,21 +5,21 @@
 
 {{ simple_cte([
     ('dim_date','dim_date'),
-    ('mart_event', 'mart_event')
+    ('mart_event_with_valid_user', 'mart_event_with_valid_user')
     ])
 }},
 
 mart_with_date_range AS (
 
   SELECT
-    mart_event.*,
+    mart_event_with_valid_user.*,
     dim_date.last_day_of_month AS last_day_of_month,
     dim_date.last_day_of_quarter AS last_day_of_quarter,
     dim_date.last_day_of_fiscal_year AS last_day_of_fiscal_year
-  FROM mart_event
+  FROM mart_event_with_valid_user
   LEFT JOIN dim_date
-    ON mart_event.event_date = dim_date.date_actual
-  WHERE mart_event.event_date BETWEEN DATEADD('day', -27, last_day_of_month) AND last_day_of_month
+    ON mart_event_with_valid_user.event_date = dim_date.date_actual
+  WHERE mart_event_with_valid_user.event_date BETWEEN DATEADD('day', -27, last_day_of_month) AND last_day_of_month
 
 ),
 
@@ -52,5 +52,5 @@ mart_usage_event_plan_monthly AS (
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-02-22",
-    updated_date="2022-04-09"
+    updated_date="2022-05-05"
 ) }}
