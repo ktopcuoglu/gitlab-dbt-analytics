@@ -110,6 +110,13 @@ models:
         tests:
             - unique
             - not_null
+    - name: zendesk_ticket_fields_source
+      description: This is the source model for Zendesk tickets fields.
+      columns:
+      - name: ticket_field_id
+        tests:
+            - unique
+            - not_null
     - name: zendesk_users_source
       description: This is the source model for Zendesk users.
       columns:
