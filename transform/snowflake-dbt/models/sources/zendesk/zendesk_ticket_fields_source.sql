@@ -1,21 +1,20 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('zendesk', 'ticket_audits') }}
+    FROM {{ source('zendesk', 'ticket_fields') }}
     
 ), flattened AS (
 
     SELECT
 
-      active                                AS active,
+      id                                    AS zendesk_ticket_field_id,
+      active                                AS is_active,
       agent_description                     AS agent_description,
       collapsed_for_agents                  AS collapsed_for_agents,
-      created_at                            AS created_at,
       custom_field_options                  AS custom_field_options,
       description                           AS description,
       editable_in_portal                    AS editable_in_portal,
-      id                                    AS id,
-      position                              AS position,
+      position                              AS field_position,
       raw_description                       AS raw_description,
       raw_title                             AS raw_title,
       raw_title_in_portal                   AS raw_title_in_portal,
@@ -29,9 +28,10 @@ WITH source AS (
       title                                 AS title,
       title_in_portal                       AS title_in_portal,
       type                                  AS type,
-      updated_at                            AS updated_at,
       url                                   AS url,
-      visible_in_portal                     AS visible_in_portal
+      visible_in_portal                     AS visible_in_portal,
+      updated_at                            AS updated_at,
+      created_at                            AS created_at
 
     FROM source
 
