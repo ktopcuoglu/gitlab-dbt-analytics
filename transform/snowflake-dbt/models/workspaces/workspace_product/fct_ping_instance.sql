@@ -1,7 +1,7 @@
 {{ config(
     tags=["product", "mnpi_exception"],
     materialized = "incremental",
-    unique_key = "ping_instance_metric_id"
+    unique_key = "ping_instance_id"
 ) }}
 
 {%- set settings_columns = dbt_utils.get_column_values(table=ref('prep_usage_ping_metrics_setting'), column='metrics_path', max_records=1000, default=['']) %}
@@ -13,8 +13,7 @@
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
-    ('prep_ping_instance', 'prep_ping_instance_flattened'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('prep_ping_instance', 'prep_ping_instance')
     ])
 
 }}
@@ -31,7 +30,11 @@
 ), source AS (
 
     SELECT
-      prep_ping_instance.*
+      prep_ping_instance.*,
+      --(prep_ping_instance.raw_usage_data_payload:license_md5::TEXT)                                       AS license_md5,
+      TO_DATE(prep_ping_instance.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
+      (prep_ping_instance.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
+      prep_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value
     FROM prep_ping_instance
       {% if is_incremental() %}
                   WHERE ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
@@ -66,10 +69,7 @@
       license_subscription_id                             AS license_subscription_id,
       umau_value                                          AS umau_value,
       product_tier                                        AS product_tier,
-      main_edition                                        AS main_edition,
-      metrics_path                                        AS metrics_path,
-      metric_value                                        AS metric_value,
-      has_timed_out                                       AS has_timed_out
+      main_edition                                        AS main_edition
     FROM add_country_info_to_usage_ping
     LEFT JOIN dim_product_tier
     ON TRIM(LOWER(add_country_info_to_usage_ping.product_tier)) = TRIM(LOWER(dim_product_tier.product_tier_historical_short))
@@ -92,12 +92,10 @@
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
-), flattened_high_level as (
+), final as (
     SELECT
+      {{ dbt_utils.surrogate_key(['dim_ping_instance_id']) }}                         AS ping_instance_id,
       dim_ping_instance_id                                                            AS dim_ping_instance_id,
-      metrics_path                                                                    AS metrics_path,
-      metric_value                                                                    AS metric_value,
-      has_timed_out                                                                   AS has_timed_out,
       dim_product_tier_id                                                             AS dim_product_tier_id,
       dim_subscription_id                                                             AS dim_subscription_id,
       dim_location_country_id                                                         AS dim_location_country_id,
@@ -111,21 +109,6 @@
       license_subscription_id                                                         AS dim_subscription_license_id,
       'VERSION_DB'                                                                    AS data_source
   FROM joined_payload
-
-), metric_attributes AS (
-
-    SELECT * FROM dim_ping_metric
-      -- WHERE time_frame != 'none'
-
-), final AS (
-
-    SELECT
-        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'flattened_high_level.metrics_path']) }}               AS ping_instance_metric_id,
-        flattened_high_level.*,
-        metric_attributes.time_frame                                                                               AS time_frame
-    FROM flattened_high_level
-        LEFT JOIN metric_attributes
-    ON flattened_high_level.metrics_path = metric_attributes.metrics_path
 
 )
 

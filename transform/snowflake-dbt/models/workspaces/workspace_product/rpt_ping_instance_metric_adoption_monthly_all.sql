@@ -15,15 +15,15 @@
 , final AS (
 
   SELECT
-      {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_monthly_all_id,
-      {{ dbt_utils.star(from=ref('rpt_ping_instance_metric_adoption_subscription_monthly'), except=['RPT_ping_INSTANCE_METRIC_ADOPTION_SUBSCRIPTION_MONTHLY_ID', 'CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
+      {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_monthly_all_id,
+      {{ dbt_utils.star(from=ref('rpt_ping_instance_metric_adoption_subscription_monthly'), except=['RPT_PING_INSTANCE_METRIC_ADOPTION_SUBSCRIPTION_MONTHLY_ID', 'CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
   FROM rpt_ping_instance_metric_adoption_subscription_monthly
 
   UNION ALL
 
   SELECT
-      {{ dbt_utils.surrogate_key(['reporting_month', 'metrics_path', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_monthly_all_id,
-      {{ dbt_utils.star(from=ref('rpt_ping_instance_metric_adoption_subscription_metric_monthly'), except=['RPT_ping_INSTANCE_METRIC_ADOPTION_SUBSCRIPTION_METRIC_MONTHLY_ID', 'CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
+      {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_monthly_all_id,
+      {{ dbt_utils.star(from=ref('rpt_ping_instance_metric_adoption_subscription_metric_monthly'), except=['RPT_PING_INSTANCE_METRIC_ADOPTION_SUBSCRIPTION_METRIC_MONTHLY_ID', 'CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
   FROM rpt_ping_instance_metric_adoption_subscription_metric_monthly
 
 )
