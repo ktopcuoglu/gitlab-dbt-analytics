@@ -9,4 +9,4 @@ create or replace table raw.engineering_extracts.red_master_stats (
   );
 ```
 
-> **Note:** For more details on how to make standardization in Python coding, refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
+> **Note:** For more details on our Python coding standards, please refer to [GitLab Python Guide](https://about.gitlab.com/handbook/business-technology/data-team/platform/python-guide/).
