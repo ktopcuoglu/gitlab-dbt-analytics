@@ -45,7 +45,7 @@ WITH source AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['metrics_path']) }}                                                                                         AS dim_ping_metric_id,
+      {{ dbt_utils.surrogate_key(['metrics_path']) }}                                                                                         AS ping_metric_id,
       metrics_path                                                                                                                            AS metrics_path,
       data_source                                                                                                                             AS data_source,
       description                                                                                                                             AS description,
@@ -73,7 +73,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@icooper-acp",
+    updated_by="@snalamaru",
     created_date="2022-04-14",
-    updated_date="2022-04-14"
+    updated_date="2022-05-05"
 ) }}

@@ -31,10 +31,7 @@ sources:
       - name: approval_merge_request_rules
         identifier: gitlab_db_approval_merge_request_rules
       - name: approvals
-        identifier: gitlab_db_approvals
-      - name: approver_groups
-        identifier: gitlab_db_approver_groups
-        freshness: null       
+        identifier: gitlab_db_approvals    
       - name: audit_events
         identifier: gitlab_db_audit_events
         freshness:
@@ -165,9 +162,6 @@ sources:
         identifier: gitlab_db_environments
       - name: epic_issues
         identifier: gitlab_db_epic_issues
-      - name: epic_metrics
-        identifier: gitlab_db_epic_metrics
-        freshness: null
       - name: epics
         identifier: gitlab_db_epics
       - name: events
@@ -214,9 +208,6 @@ sources:
         identifier: gitlab_db_labels
       - name: lfs_objects_projects
         identifier: gitlab_db_lfs_objects_projects
-      - name: licenses
-        identifier: gitlab_db_licenses
-        freshness: null
       - name: lists
         identifier: gitlab_db_lists
       - name: members
@@ -401,12 +392,6 @@ sources:
         identifier: gitlab_db_group_import_states
       - name: integrations
         identifier: gitlab_db_integrations
-      - name: issues_prometheus_alert_events
-        identifier: gitlab_db_issues_prometheus_alert_events
-        freshness: null
-      - name: issues_self_managed_prometheus_alert_events
-        identifier: gitlab_db_issues_self_managed_prometheus_alert_events
-        freshness: null
       - name: jira_imports
         identifier: gitlab_db_jira_imports
         freshness:

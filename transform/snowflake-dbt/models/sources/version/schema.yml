@@ -81,3 +81,14 @@ models:
           tests:
             - not_null
             - unique            
+
+    - name: version_usage_ping_errors_source
+      description: Error information upon generating a new service ping.
+      columns:
+        - name: id
+          tags:
+            - tdf
+            - version_db
+          tests:
+            - not_null
+            - unique    

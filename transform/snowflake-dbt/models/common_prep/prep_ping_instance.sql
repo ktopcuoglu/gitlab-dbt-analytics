@@ -69,7 +69,7 @@
 {{ dbt_audit(
     cte_ref="joined_ping",
     created_by="@icooper-acp",
-    updated_by="@icooper-acp",
+    updated_by="@snalamaru",
     created_date="2022-03-17",
-    updated_date="2022-03-17"
+    updated_date="2022-05-05"
 ) }}

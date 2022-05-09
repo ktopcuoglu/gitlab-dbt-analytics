@@ -996,3 +996,20 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
 This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
 
 {% enddocs %}
+
+{% docs dim_ping_instance %}
+
+* `Type of Data`: Instance-level Service Ping from Versions app
+* `Aggregate Grain`: One record per service ping (dim_ping_instance_id)
+* `Time Grain`: None
+* `Use case`: Service Ping dimension analysis (ex: edition, installation_type)
+
+{% enddocs %}
+
+{% docs dim_ping_metric %}
+
+This model replaces `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed. 
+
+Some other enhancements in this model include : addition of a surrogate key, exclusion and cleaning of some Product groups, and renaming Usage ping to Service Ping.
+
+{% enddocs %}

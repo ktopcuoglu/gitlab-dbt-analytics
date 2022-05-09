@@ -145,7 +145,7 @@ SELECT DISTINCT
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@icooper-acp",
+    updated_by="@snalamaru",
     created_date="2022-03-08",
-    updated_date="2022-03-11"
+    updated_date="2022-05-05"
 ) }}
