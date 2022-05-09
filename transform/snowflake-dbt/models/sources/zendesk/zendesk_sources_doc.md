@@ -61,6 +61,6 @@ The users table contains info about the users associated with your Zendesk Suppo
 
 {% docs zendesk_ticket_fields_desc %}
 
-The users table contains info about the users associated with your Zendesk Support account. This includes agents, admins, and end-users (customers). [Link to Documentation](https://www.stitchdata.com/docs/integrations/saas/zendesk#users)
+The ticket fields table contains info about the custom fields created for our Zendesk tickets. Fields are used for determining what type of issue has been created. 
 
 {% enddocs %}
