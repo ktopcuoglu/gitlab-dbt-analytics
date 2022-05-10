@@ -1964,6 +1964,25 @@ tables:
       FROM users_ops_dashboard_projects
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  vulnerabilities:
+    export_schema: 'gitlab_com'
+    export_table: 'vulnerabilities'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , confidence
+      , confidence_overridden
+      , confirmed_at
+      , created_at
+      , dismissed_at
+      , resolved_at
+      , severity_overridden
+      , state
+      , updated_at
+      FROM vulnerabilities
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   web_hooks:
     export_schema: 'gitlab_com'
     export_table: web_hooks
