@@ -12,6 +12,7 @@ crm_account,For CRM Accounts
 customers_db,Relates to Customers database
 daily,Used in Airflow runs
 data,dbt built-in
+data_science,Relates to data_science data processes.
 datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
 demandbase,Relates to demandbase data
@@ -59,3 +60,4 @@ zuora,Relates to Zuora data
 zuora_api_sandbox, Relates to Zuora API Sandbox data
 zuora_central_sandbox, Relates to Central Sandbox data
 zuora_revenue, Relates to Zuora Revenue data
+zuora_query_api, Relates to Zuora Query API data

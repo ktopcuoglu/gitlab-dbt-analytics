@@ -84,6 +84,7 @@ models:
     - name: qualtrics_post_purchase_survey_responses
       description: One record for each survey response.
       columns:
+        - name: account_id
         - name: is_finished
         - name: recorded_at
         - name: response_id

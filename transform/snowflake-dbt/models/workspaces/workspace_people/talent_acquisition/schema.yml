@@ -25,4 +25,17 @@ models:
               - job_id
               - job_opening_id
               - application_id
-              - stage_entered_date 
+              - stage_entered_date
+      columns:
+        - name: job_id
+          tests:
+            - not_null
+        - name: job_opening_id
+          tests:
+            - not_null
+        - name: application_id
+          tests:
+            - not_null
+        - name: stage_entered_date
+          tests:
+            - not_null 

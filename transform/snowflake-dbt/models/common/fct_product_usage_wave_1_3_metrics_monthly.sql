@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["product", "mnpi_exception"]
 ) }}
 
 {{ simple_cte([
@@ -192,6 +192,31 @@
       usage_ping.projects_compliance_framework_all_time_event,
       usage_ping.commit_ci_config_file_28_days_user,
       usage_ping.view_audit_all_time_user,
+      --Wave 5.2
+      usage_ping.dependency_scanning_jobs_all_time_user,
+      usage_ping.analytics_devops_adoption_all_time_user,
+      usage_ping.projects_imported_all_time_event,
+      usage_ping.preferences_security_dashboard_28_days_user,
+      usage_ping.web_ide_edit_28_days_user,
+      usage_ping.auto_devops_pipelines_all_time_event,
+      usage_ping.projects_prometheus_active_all_time_event,
+      usage_ping.prometheus_enabled,
+      usage_ping.prometheus_metrics_enabled,
+      usage_ping.group_saml_enabled,
+      usage_ping.jira_issue_imports_all_time_event,
+      usage_ping.author_epic_all_time_user,
+      usage_ping.author_issue_all_time_user,
+      usage_ping.failed_deployments_28_days_user,
+      usage_ping.successful_deployments_28_days_user,
+      -- Wave 5.3
+      usage_ping.geo_enabled,
+      usage_ping.geo_nodes_all_time_event,
+      usage_ping.auto_devops_pipelines_28_days_user,
+      usage_ping.active_instance_runners_all_time_event,
+      usage_ping.active_group_runners_all_time_event,
+      usage_ping.active_project_runners_all_time_event,
+      usage_ping.gitaly_version,
+      usage_ping.gitaly_servers_all_time_event,
       -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
           usage_ping.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -234,5 +259,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-02-08",
-    updated_date="2021-12-23"
+    updated_date="2021-04-12"
 ) }}

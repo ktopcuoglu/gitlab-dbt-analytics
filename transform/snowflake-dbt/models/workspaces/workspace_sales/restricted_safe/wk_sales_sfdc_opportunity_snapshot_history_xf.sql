@@ -71,6 +71,8 @@ WITH date_details AS (
       key_segment_geo_region_area_sqs,
       key_segment_geo_region_area_ot,
 
+      key_segment_geo_area,
+      
       -------------------------------------
       -- NF: These fields are not exposed yet in opty history, just for check
       -- I am adding this logic
@@ -149,7 +151,6 @@ WITH date_details AS (
 
       sfdc_opportunity_snapshot_history.order_type_stamped AS snapshot_order_type_stamped,
       --sfdc_opportunity_snapshot_history.order_type,
-      --sfdc_opportunity_snapshot_history.opportunity_owner_team,
       --sfdc_opportunity_snapshot_history.opportunity_owner_manager,
       --sfdc_opportunity_snapshot_history.account_owner_team_stamped,
       --sfdc_opportunity_snapshot_history.parent_segment,
@@ -235,7 +236,7 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.other_non_recurring_amount,
       sfdc_opportunity_snapshot_history.subscription_start_date,
       sfdc_opportunity_snapshot_history.subscription_end_date,
-      /*
+      
       sfdc_opportunity_snapshot_history.cp_champion,
       sfdc_opportunity_snapshot_history.cp_close_plan,
       sfdc_opportunity_snapshot_history.cp_competition,
@@ -245,13 +246,14 @@ WITH date_details AS (
       sfdc_opportunity_snapshot_history.cp_identify_pain,
       sfdc_opportunity_snapshot_history.cp_metrics,
       sfdc_opportunity_snapshot_history.cp_risks,
-      */
+      
       sfdc_opportunity_snapshot_history.cp_use_cases,
-      /*sfdc_opportunity_snapshot_history.cp_value_driver,
+      sfdc_opportunity_snapshot_history.cp_value_driver,
       sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
       sfdc_opportunity_snapshot_history.cp_why_gitlab,
       sfdc_opportunity_snapshot_history.cp_why_now,
-      */
+      sfdc_opportunity_snapshot_history.cp_score,
+      
       sfdc_opportunity_snapshot_history._last_dbt_run,
       sfdc_opportunity_snapshot_history.is_deleted,
       sfdc_opportunity_snapshot_history.last_activity_date,
@@ -824,6 +826,8 @@ WITH date_details AS (
       sfdc_opportunity_xf.key_segment_geo_region_area,
       sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
       sfdc_opportunity_xf.key_segment_geo_region_area_ot,
+
+      sfdc_opportunity_xf.key_segment_geo_area,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    
@@ -978,9 +982,7 @@ WITH date_details AS (
           AND opp_snapshot.is_edu_oss = 0
           AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
           AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-         AND (opp_snapshot.is_stage_1_plus = 1
-                OR opp_snapshot.is_lost = 1)
-          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified')
+          AND opp_snapshot.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
           AND (opp_snapshot.net_arr > 0 
             OR opp_snapshot.opportunity_category = 'Credit')
           -- exclude vision opps from FY21-Q2
@@ -1180,6 +1182,10 @@ WITH date_details AS (
         WHEN opp_snapshot.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
                 AND vision_opps.opportunity_id IS NOT NULL
           THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN opp_snapshot.opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+          THEN 1
+      
         ELSE 0
       END                                                         AS is_excluded_flag
 

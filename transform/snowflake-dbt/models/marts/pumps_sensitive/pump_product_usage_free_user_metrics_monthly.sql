@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception", "product"]
 ) }}
 
     SELECT
@@ -120,6 +120,29 @@
       projects_compliance_framework_all_time_event,
       commit_ci_config_file_28_days_user,
       view_audit_all_time_user,
+      dependency_scanning_jobs_all_time_user,
+      analytics_devops_adoption_all_time_user,
+      projects_imported_all_time_event,
+      preferences_security_dashboard_28_days_user,
+      web_ide_edit_28_days_user,
+      auto_devops_pipelines_all_time_event,
+      projects_prometheus_active_all_time_event,
+      prometheus_enabled,
+      prometheus_metrics_enabled,
+      group_saml_enabled,
+      jira_issue_imports_all_time_event,
+      author_epic_all_time_user,
+      author_issue_all_time_user,
+      failed_deployments_28_days_user,
+      successful_deployments_28_days_user,
+      geo_enabled,
+      geo_nodes_all_time_event,
+      auto_devops_pipelines_28_days_user,
+      active_instance_runners_all_time_event,
+      active_group_runners_all_time_event,
+      active_project_runners_all_time_event,
+      gitaly_version,
+      gitaly_servers_all_time_event,
       is_latest_data,
 
       -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)

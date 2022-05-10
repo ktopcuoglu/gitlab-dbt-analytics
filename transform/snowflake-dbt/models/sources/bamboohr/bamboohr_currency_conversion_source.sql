@@ -16,8 +16,7 @@ WITH source AS (
       data_by_row.value['customUSDAnnualSalary']::VARCHAR                  AS usd_annual_salary,
       uploaded_at
     FROM source,
-    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) initial_unnest,
-    LATERAL FLATTEN(INPUT => parse_json(initial_unnest.value), OUTER => true) data_by_row
+    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) data_by_row
 
 ), final AS (
 

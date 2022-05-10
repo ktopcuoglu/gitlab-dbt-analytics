@@ -113,7 +113,7 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "el_gitlab_com",
         "dbt_name": "gitlab_dotcom",
-        "env_vars": {"HOURS": "12"},
+        "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_DB_USER,
@@ -132,7 +132,7 @@ config_dict = {
         "cloudsql_instance_name": None,
         "dag_name": "el_gitlab_com_ci",
         "dbt_name": "none",
-        "env_vars": {"HOURS": "12"},
+        "env_vars": {"HOURS": "96"},
         "extract_schedule_interval": "0 */6 * * *",
         "secrets": [
             GITLAB_COM_CI_DB_NAME,
@@ -223,6 +223,13 @@ config_dict = {
         "description": "This DAG does Full extract & load of Operational database (Postgres) to snowflake",
     },
 }
+
+
+def get_task_pool(task_name) -> string:
+    if task_name == "gitlab-com":
+        return f"{config['task_name']}_scd_pool"
+    else:
+        return f"{config['task_name']}_pool"
 
 
 def is_incremental(raw_query):
@@ -556,7 +563,7 @@ for source_name, config in config_dict.items():
                         image=DATA_IMAGE,
                         task_id=task_identifier,
                         name=task_identifier,
-                        pool=f"{config['task_name']}_pool",
+                        pool=get_task_pool(config["task_name"]),
                         secrets=standard_secrets + config["secrets"],
                         env_vars={
                             **gitlab_pod_env_vars,

@@ -172,7 +172,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.federal_account                                        AS federal_account,
       sfdc_account.is_jihu_account                                        AS is_jihu_account,
       sfdc_account.carr_this_account,
-      -- sfdc_account.carr_account_family,
+      sfdc_account.carr_account_family,
       sfdc_account.potential_arr_lam,
       sfdc_account.lam                                                    AS parent_crm_account_lam,
       sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
@@ -199,6 +199,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.zoom_info_parent_company_name                          AS crm_account_zoom_info_parent_company_name,
       sfdc_account.zoom_info_ultimate_parent_company_zi_id                AS crm_account_zoom_info_ultimate_parent_company_zi_id,
       sfdc_account.zoom_info_ultimate_parent_company_name                 AS crm_account_zoom_info_ultimate_parent_company_name,
+      sfdc_account.is_key_account                                         AS is_key_account,
   
       ----ultimate parent crm account info
       ultimate_parent_account.account_id                                  AS dim_parent_crm_account_id,

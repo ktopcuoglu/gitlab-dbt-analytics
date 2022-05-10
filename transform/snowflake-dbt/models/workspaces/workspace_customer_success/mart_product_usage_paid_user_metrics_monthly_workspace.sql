@@ -11,7 +11,9 @@
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
     ('subscriptions', 'dim_subscription'),
-    ('namespaces', 'dim_namespace')
+    ('namespaces', 'dim_namespace'),
+    ('charges', 'mart_charge'),
+    ('dates', 'dim_date')
 ]) }}
 
 
@@ -38,9 +40,24 @@
       ORDER BY
         subscription_version DESC
     ) = 1
-)
-
-, sm_paid_user_metrics AS (
+    
+), zuora_licenses_per_subscription AS (
+  
+    SELECT
+      dates.first_day_of_month AS month,
+      subscriptions.dim_subscription_id_original,
+      SUM(charges.quantity) AS zuora_licenses
+    FROM charges
+    JOIN dates ON charges.effective_start_month <= dates.date_actual
+      AND (charges.effective_end_month > dates.date_actual
+       OR charges.effective_end_month IS NULL)
+      AND dates.day_of_month = 1
+    LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
+    WHERE charges.subscription_status IN ('Active','Cancelled')
+      AND charges.product_tier_name != 'Storage'
+    {{ dbt_utils.group_by(n = 2) }}
+  
+), sm_paid_user_metrics AS (
 
     SELECT
       monthly_sm_metrics.snapshot_month,
@@ -185,6 +202,31 @@
       monthly_sm_metrics.projects_compliance_framework_all_time_event,
       monthly_sm_metrics.commit_ci_config_file_28_days_user,
       monthly_sm_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      monthly_sm_metrics.dependency_scanning_jobs_all_time_user,
+      monthly_sm_metrics.analytics_devops_adoption_all_time_user,
+      monthly_sm_metrics.projects_imported_all_time_event,
+      monthly_sm_metrics.preferences_security_dashboard_28_days_user,
+      monthly_sm_metrics.web_ide_edit_28_days_user,
+      monthly_sm_metrics.auto_devops_pipelines_all_time_event,
+      monthly_sm_metrics.projects_prometheus_active_all_time_event,
+      monthly_sm_metrics.prometheus_enabled,
+      monthly_sm_metrics.prometheus_metrics_enabled,
+      monthly_sm_metrics.group_saml_enabled,
+      monthly_sm_metrics.jira_issue_imports_all_time_event,
+      monthly_sm_metrics.author_epic_all_time_user,
+      monthly_sm_metrics.author_issue_all_time_user,
+      monthly_sm_metrics.failed_deployments_28_days_user,
+      monthly_sm_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_sm_metrics.geo_enabled,
+      monthly_sm_metrics.geo_nodes_all_time_event,
+      monthly_sm_metrics.auto_devops_pipelines_28_days_user,
+      monthly_sm_metrics.active_instance_runners_all_time_event,
+      monthly_sm_metrics.active_group_runners_all_time_event,
+      monthly_sm_metrics.active_project_runners_all_time_event,
+      monthly_sm_metrics.gitaly_version,
+      monthly_sm_metrics.gitaly_servers_all_time_event,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -341,7 +383,32 @@
       monthly_saas_metrics.failed_deployments_28_days_event,
       monthly_saas_metrics.projects_compliance_framework_all_time_event,
       monthly_saas_metrics.commit_ci_config_file_28_days_user,
-      monthly_saas_metrics.view_audit_all_time_user,    
+      monthly_saas_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      monthly_saas_metrics.dependency_scanning_jobs_all_time_user,
+      monthly_saas_metrics.analytics_devops_adoption_all_time_user,
+      monthly_saas_metrics.projects_imported_all_time_event,
+      monthly_saas_metrics.preferences_security_dashboard_28_days_user,
+      monthly_saas_metrics.web_ide_edit_28_days_user,
+      monthly_saas_metrics.auto_devops_pipelines_all_time_event,
+      monthly_saas_metrics.projects_prometheus_active_all_time_event,
+      monthly_saas_metrics.prometheus_enabled,
+      monthly_saas_metrics.prometheus_metrics_enabled,
+      monthly_saas_metrics.group_saml_enabled,
+      monthly_saas_metrics.jira_issue_imports_all_time_event,
+      monthly_saas_metrics.author_epic_all_time_user,
+      monthly_saas_metrics.author_issue_all_time_user,
+      monthly_saas_metrics.failed_deployments_28_days_user,
+      monthly_saas_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_saas_metrics.geo_enabled,
+      monthly_saas_metrics.geo_nodes_all_time_event,
+      monthly_saas_metrics.auto_devops_pipelines_28_days_user,
+      monthly_saas_metrics.active_instance_runners_all_time_event,
+      monthly_saas_metrics.active_group_runners_all_time_event,
+      monthly_saas_metrics.active_project_runners_all_time_event,
+      monthly_saas_metrics.gitaly_version,
+      monthly_saas_metrics.gitaly_servers_all_time_event,    
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -364,12 +431,32 @@
     SELECT *
     FROM saas_paid_user_metrics
 
+), final AS (
+  
+    SELECT
+      unioned.*,
+      {{ dbt_utils.surrogate_key(
+        [
+          'snapshot_month',
+          'dim_subscription_id',
+          'delivery_type',
+          'uuid',
+          'hostname',
+          'dim_namespace_id'
+        ]
+      ) }} AS primary_key,
+      zuora_licenses_per_subscription.zuora_licenses
+    FROM unioned
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = unioned.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = unioned.snapshot_month
+  
 )
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="final",
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-02-09"
+    updated_date="2022-04-26"
 ) }}

@@ -93,6 +93,9 @@ Completed with x errors and x warnings:
 
 </details>
 
+#### Trusted Data Health Status
+* [ ] Check [Trusted Data Health Dashboard](https://app.periscopedata.com/app/gitlab/891891/TD:-Trusted-Data-Health-Dashboard) to get high level overview of health status if the data in the Snowflake Data-warehouse could be trusted or not. Health Status in the dashboard is presented separately for Data extraction (RAW data layer) and Data transformation (Prod data layer) with a PASS, FAIL, WARNING status.
+
 ### Data Notification Templates
 
 Use these to notify stakeholders of Data Delays.
@@ -112,9 +115,7 @@ The DRI for this incident is `@username`.
 
 The link to the Data Team Incident issue is <link>
 
-Replication lag to the database we extract from can be monitored by [checking Thanos](https://thanos-query.ops.gitlab.net/graph?g0.range_input=2w&g0.max_source_resolution=0s&g0.expr=pg_replication_lag%7Btype%3D%22postgres-archive%22%2Cenv%3D%22gprd%22%7D&g0.tab=0&g1.range_input=3d&g1.max_source_resolution=0s&g1.expr=rate(pg_xlog_position_bytes%7Benv%3D%22gprd%22%7D%5B1m%5D)%20and%20on%20(instance)%20(pg_replication_is_replica%20%3D%3D%200)&g1.tab=0)
-
-`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu, @WayneHaber,  @Steve Loyd, @lily, @kwiebers, @Davis Townsend, @s_awezec, @mkarampalas`
+`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu, @WayneHaber,  @Steve Loyd, @lily, @kwiebers, @Davis Townsend, @s_awezec, @mkarampalas, @product-analysts`
 
 
 #### Salesforce

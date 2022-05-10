@@ -120,6 +120,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_geo_id') }}                                                        AS dim_crm_account_user_geo_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                     AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
+      sfdc_opportunity.ssp_id,
 
             -- flags
       sfdc_opportunity.is_closed,
@@ -169,6 +170,7 @@
       sfdc_opportunity.incremental_acv                                                                                      AS iacv,
       sfdc_opportunity.net_incremental_acv                                                                                  AS net_iacv,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.new_logo_count,
       sfdc_opportunity.amount,
       sfdc_opportunity.recurring_amount,
       sfdc_opportunity.true_up_amount,
@@ -220,5 +222,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-02-28"
+    updated_date="2022-03-17"
 ) }}

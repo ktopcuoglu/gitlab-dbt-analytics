@@ -156,6 +156,10 @@ models:
           +schema: sensitive
           secure: true
 
+      data_science:
+        +schema: data_science
+        +tags: ["data_science"]
+
       datasiren:
         +full_refresh: false
         +materialized: incremental
@@ -310,6 +314,10 @@ models:
         +schema: zuora
         +tags: ["zuora"]
 
+      zuora_query_api:
+        +schema: zuora_query_api
+        +tags: ["zuora_query_api"]
+
       zuora_central_sandbox:
         +schema: zuora_central_sandbox
         +tags: [ "zuora_central_sandbox" ]
@@ -352,6 +360,15 @@ models:
         +tags: ["safe"]
         secure: true
 
+    common_mart:
+      +materialized: table    
+      +schema: common_mart
+      +tags: ["product"]
+      
+    common_mart_product:
+      +materialized: table
+      +schema: common_mart_product
+      +tags: ["product"]
 
     # ------------------
     # Legacy (formerly Staging)
@@ -535,7 +552,7 @@ models:
     # ------------------
     marts:
       +materialized: table
-
+          
       arr:
         +schema: restricted_safe_legacy
         +tags: ["safe"]
@@ -621,7 +638,7 @@ snapshots:
     transient: false
 
     common:
-      +tags: ["daily"]
+      +tags: ["edm_snapshot"]
 
     customers:
       +tags: ["daily", "customers_db"]
@@ -633,7 +650,7 @@ snapshots:
       +tags: ["daily", "license_db"]
 
     marts:
-      +tags: ["daily"]
+      +tags: ["edm_snapshot"]
 
     netsuite:
       +tags: ["daily"]

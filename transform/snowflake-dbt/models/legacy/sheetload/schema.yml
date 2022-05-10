@@ -62,6 +62,7 @@ models:
 - name: sheetload_headcount
 - name: sheetload_hire_plan
 - name: sheetload_hire_replan
+- name: sheetload_hp_dvr
 - name: sheetload_ic_dib_comptency
 - name: sheetload_ic_efficiency_competency
 - name: sheetload_ic_iteration_competency
