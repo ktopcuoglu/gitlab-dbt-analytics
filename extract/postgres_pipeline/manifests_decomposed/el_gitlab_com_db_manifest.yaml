@@ -1284,6 +1284,35 @@ tables:
       FROM project_features
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  project_settings:
+    export_schema: "gitlab_com"
+    export_table: project_settings
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , created_at
+      , updated_at
+      , push_rule_id
+      , show_default_award_emojis
+      , allow_merge_on_skipped_pipeline
+      , squash_option
+      , has_confluence
+      , has_vulnerabilities
+      , prevent_merge_without_jira_issue
+      , cve_id_request_enabled
+      , mr_default_target_self
+      , previous_default_branch
+      , warn_about_potentially_unwanted_characters
+      , merge_commit_template text
+      , has_shimo
+      , squash_commit_template
+      , legacy_open_source_license_available
+      , target_platforms
+      , enforce_auth_checks_on_uploads 
+      FROM project_settings
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   project_tracing_settings:
     export_schema: "gitlab_com"
     export_table: project_tracing_settings
