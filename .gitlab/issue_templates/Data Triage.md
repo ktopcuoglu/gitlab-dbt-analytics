@@ -37,12 +37,12 @@ All tasks below should be checked off at the end of Triage day.
 
 The focus area for the Analytics Engineer are the `DBT` models including the applied tests. The source for the tasks below are the Airflow logs posted in **#analytics-pipelines** and the Sisense Trusted Data Operations [Dashboard](https://app.periscopedata.com/app/gitlab/756199/TD:-Trusted-Data-Operations-Dashboard). 
 
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT model
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT model and apply the `Triage::Analytics` label.
+    * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**. 
+    * [ ] Use the AE issue template to resolve the dbt-run failure.
+* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT test and and apply the `Triage::Analytics` label.
     * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
-    * [ ] Work with the Data Fusion Team Manager to determine a DRI and SLO to resolve the dbt run failure. These run failures are more urgent to resolve because they result in stale data and we need to determine the path forward to have the model run again.
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) for each new failed DBT test
-    * [ ] Link to all resulting issues and MRs in slack in **#analytics-pipelines**
-    * [ ] Work with Data Fusion Team Manager to determine a DRI and SLO for test failure resolution. These test failures can be less urgent and usually relate to a DQ issue that needs to be investigated.
+    * [ ] Use the AE issue template to resolve the dbt-test failure.
 * [ ] Review all dbt-test warnings and [create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) if needed
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
