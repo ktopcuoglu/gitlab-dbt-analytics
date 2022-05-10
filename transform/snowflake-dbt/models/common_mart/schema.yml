@@ -207,7 +207,7 @@ models:
 - name: mart_event_daily
   description: '{{ doc("mart_event_daily") }}'
   columns:
-    - name: usage_event_daily_id
+    - name: event_daily_id
       description: the unique composite ID for the mart_usage_event_daily model consisting of event_date, dim_user_id, dim_ultimate_parent_namespace_id, and event_name.
       tests:
         - not_null
