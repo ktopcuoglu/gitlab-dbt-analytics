@@ -13,7 +13,6 @@ WITH postgres_counts AS (
     FROM {{source('gitlab_dotcom','gitlab_pgp_export')}}
     WHERE table_name NOT IN (
         'gitlab_db_operations_feature_flags',
-        'gitlab_db_requirements_management_test_reports',
         'gitlab_db_resource_milestone_events',
         'gitlab_db_resource_weight_events',
         'gitlab_db_authentication_events',

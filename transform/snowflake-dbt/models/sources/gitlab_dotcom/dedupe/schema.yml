@@ -20,7 +20,7 @@ models:
   - name: gitlab_dotcom_approval_project_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approval_project_rules_groups_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'    
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approval_project_rules_protected_branches_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_approval_project_rules_users_dedupe_source
@@ -263,8 +263,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_requirements_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_requirements_management_test_reports_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_resource_label_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_resource_milestone_events_dedupe_source
@@ -324,6 +322,6 @@ models:
   - name: gitlab_dotcom_zoom_meetings_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_user_credit_card_validations_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'  
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_boards_epic_boards_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'  
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

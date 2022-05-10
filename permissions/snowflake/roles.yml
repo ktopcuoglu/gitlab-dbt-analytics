@@ -75,7 +75,7 @@ databases:
     - jkim_prod:
         shared: no
     - jkim_prep:
-        shared: no   
+        shared: no
 
     - jpeguero_prod:
         shared: no
@@ -90,7 +90,7 @@ databases:
     - judume_prod:
         shared: no
     - judume_prep:
-        shared: no       
+        shared: no
 
     - kaguilar_prod:
         shared: no
@@ -170,7 +170,7 @@ databases:
     - rkohnke_prod:
         shared: no
     - rkohnke_prep:
-        shared: no  
+        shared: no
 
     - rparker_prod:
         shared: no
@@ -1720,7 +1720,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_releases
                     - raw.tap_postgres.gitlab_db_repository_languages
                     - raw.tap_postgres.gitlab_db_requirements
-                    - raw.tap_postgres.gitlab_db_requirements_management_test_reports
                     - raw.tap_postgres.gitlab_db_resource_label_events
                     - raw.tap_postgres.gitlab_db_resource_milestone_events
                     - raw.tap_postgres.gitlab_db_resource_weight_events
@@ -2421,13 +2420,13 @@ roles:
             - transforming_l
             - transforming_xl
 
-    - alpcohen: 
-        member_of: 
+    - alpcohen:
+        member_of:
             - reporter
             - restricted_safe
             - xactly
 
-        warehouses: 
+        warehouses:
             - analyst_xs
 
     - amartin:
@@ -2539,7 +2538,7 @@ roles:
             - reporter
             - restricted_safe
         warehouses:
-            - analyst_xs  
+            - analyst_xs
 
     - csharp:
         member_of:
@@ -2797,15 +2796,15 @@ roles:
             - transforming_xs
             - transforming_xl
 
-    - hselim: 
-        member_of: 
+    - hselim:
+        member_of:
             - adaptive
             - reporter
             - restricted_safe
             - salesforce
             - xactly
 
-        warehouses: 
+        warehouses:
             - analyst_xs
 
     - ian:
@@ -3976,7 +3975,7 @@ roles:
                     - rkohnke_prod.*.*
                 write:
                     - rkohnke_prep.*.*
-                    - rkohnke_prod.*.* 
+                    - rkohnke_prod.*.*
 
     - rparker:
         member_of:
@@ -4388,7 +4387,7 @@ users:
     - cmeddaugh:
         can_login: yes
         member_of:
-            - cmeddaugh     
+            - cmeddaugh
 
     - csharp:
         can_login: yes
@@ -4425,7 +4424,7 @@ users:
     - eneuberger:
         can_login: yes
         member_of:
-            - eneuberger       
+            - eneuberger
 
     - fivetran:
         can_login: yes
@@ -4448,10 +4447,10 @@ users:
         member_of:
             - grafana
 
-    - hselim: 
+    - hselim:
         can_login: yes
-        member_of: 
-            - hselim       
+        member_of:
+            - hselim
     - ian:
         can_login: yes
         member_of:
@@ -4788,12 +4787,12 @@ users:
         member_of:
             - zzhang
 
-    - data_obs_user_1: # External user - Data Observability Vendor 
+    - data_obs_user_1: # External user - Data Observability Vendor
         can_login: yes
         member_of:
             - data_observability
-  
-    - data_obs_user_2: # External user - Data Observability Vendor 
+
+    - data_obs_user_2: # External user - Data Observability Vendor
         can_login: yes
         member_of:
             - data_observability_2
