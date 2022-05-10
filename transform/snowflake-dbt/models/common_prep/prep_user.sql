@@ -11,7 +11,8 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('source', 'gitlab_dotcom_users_source'),
-    ('email_classification', 'driveload_email_domain_classification_source')
+    ('email_classification', 'driveload_email_domain_classification_source'),
+    ('dim_user', 'dim_user')
 ]) }}
 
 , email_classification_dedup AS (
@@ -22,18 +23,19 @@
 
 )
 
-, min_provider AS (
+, closest_provider AS (
 
     SELECT
-        u.dim_user_id                                                 AS dim_user_id,
-        i.identity_provider                                           AS identity_provider
+        user.dim_user_id                                              AS dim_user_id,
+        identity.identity_provider                                    AS identity_provider
     FROM 
-        prod.common.dim_user                                          u 
-        LEFT JOIN prod.legacy.gitlab_dotcom_identities                i
-        ON u.dim_user_id = i.user_id
-    WHERE i.user_id IS NOT NULL
-    QUALIFY ROW_NUMBER() OVER(PARTITION BY u.dim_user_id 
-                              ORDER BY TIMEDIFF(MILLISECONDS,IFNULL(u.created_at,'2050-01-01'),IFNULL(i.created_at,'2050-01-01')) ASC) = 1
+        dim_user                                                      user 
+        LEFT JOIN prod.legacy.gitlab_dotcom_identities                identity
+        ON user.dim_user_id = identity.user_id
+    WHERE 
+        identity.user_id IS NOT NULL
+    QUALIFY ROW_NUMBER() OVER(PARTITION BY user.dim_user_id 
+                              ORDER BY TIMEDIFF(MILLISECONDS,IFNULL(user.created_at,{{var('infinity_future')}}),IFNULL(identity.created_at,{{var('infinity_future')}})) ASC) = 1
 )
 
 , renamed AS (
