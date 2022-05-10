@@ -40,7 +40,7 @@
         is_paid_gmau                                    AS is_paid_gmau,
         is_umau                                         AS is_umau,
         COUNT(DISTINCT latest_active_subscription_id)   AS subscription_count,
-        SUM(licensed_user_count)                        AS seat_count
+        MAX(licensed_user_count)                        AS seat_count
     FROM arr_joined
     {{ dbt_utils.group_by(n=10)}}
 

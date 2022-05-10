@@ -33,7 +33,7 @@ SELECT
     metrics_path                                                                      AS metrics_path,
     ping_edition                                                                      AS ping_edition,
     SUM(arr)                                                                          AS total_arr,
-    COUNT(latest_active_subscription_id)                                              AS total_subscription_count,
+    COUNT(DISTINCT latest_active_subscription_id)                                     AS total_subscription_count,
     SUM(licensed_user_count)                                                          AS total_licensed_users
 FROM active_subscriptions_by_metric
     {{ dbt_utils.group_by(n=4)}}

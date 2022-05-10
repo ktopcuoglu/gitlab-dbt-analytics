@@ -42,7 +42,7 @@
         is_paid_gmau                                                  AS is_paid_gmau,
         is_umau                                                       AS is_umau,
         COUNT(DISTINCT latest_active_subscription_id)                 AS subscription_count,
-        SUM(licensed_user_count)                                      AS seat_count
+        MAX(licensed_user_count)                                      AS seat_count
     FROM arr_joined
     {{ dbt_utils.group_by(n=10)}}
 
@@ -68,7 +68,7 @@
         total_subscription_count - reported_subscription_count         AS no_reporting_subscription_count, -- could have reported, but didn't
         total_licensed_users - reported_seat_count                     AS no_reporting_seat_count -- could have reported, but didn't
     FROM reported_actuals
-        LEFT JOIN potential_report_counts
+        INNER JOIN potential_report_counts
     ON reported_actuals.ping_created_at_month = potential_report_counts.ping_created_at_month
         AND reported_actuals.metrics_path = potential_report_counts.metrics_path
         AND reported_actuals.ping_edition = potential_report_counts.ping_edition

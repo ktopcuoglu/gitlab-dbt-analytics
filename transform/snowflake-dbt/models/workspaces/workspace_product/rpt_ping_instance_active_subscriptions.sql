@@ -30,6 +30,20 @@ Determine latest version for each subscription to determine if the potential met
             PARTITION BY ping_created_at_month, latest_active_subscription_id
               ORDER BY major_minor_version_id DESC) = 1
 
+), deduped_subscriptions_w_versions AS (
+
+    SELECT
+        ping_created_at_month             AS ping_created_at_month,
+        latest_active_subscription_id     AS latest_active_subscription_id,
+        ping_edition                      AS ping_edition,
+        major_minor_version               AS major_minor_version,
+        MAX(instance_user_count)          AS instance_user_count
+    FROM mart_ping_instance_metric_monthly
+      {{ dbt_utils.group_by(n=4)}}
+/*
+Get the count of pings each month per subscription_name_slugify
+*/
+
 ), ping_counts AS (
 
   SELECT
@@ -39,15 +53,23 @@ Determine latest version for each subscription to determine if the potential met
   FROM mart_ping_instance_metric_monthly
       {{ dbt_utils.group_by(n=2)}}
 
+/*
+Join subscription information with count of pings
+*/
+
 ), joined_subscriptions AS (
 
   SELECT
-    subscriptions_w_versions.*,
+    deduped_subscriptions_w_versions.*,
     ping_counts.count_of_pings
-  FROM subscriptions_w_versions
+  FROM deduped_subscriptions_w_versions
     INNER JOIN ping_counts
-  ON subscriptions_w_versions.ping_created_at_month = ping_counts.ping_created_at_month
-    AND subscriptions_w_versions.latest_active_subscription_id = ping_counts.latest_active_subscription_id
+  ON deduped_subscriptions_w_versions.ping_created_at_month = ping_counts.ping_created_at_month
+    AND deduped_subscriptions_w_versions.latest_active_subscription_id = ping_counts.latest_active_subscription_id
+
+/*
+Aggregate mart_arr information (used as the basis of truth), this gets rid of host deviation
+*/
 
 ), mart_arr_cleaned AS (
 
@@ -59,6 +81,11 @@ Determine latest version for each subscription to determine if the potential met
     SUM(quantity)         AS licensed_user_count
   FROM mart_arr
     {{ dbt_utils.group_by(n=2)}}
+
+
+/*
+Join mart_arr information bringing in mart_arr subscriptions which DO NOT appear in ping fact data
+*/
 
 ), arr_counts_joined AS (
 
