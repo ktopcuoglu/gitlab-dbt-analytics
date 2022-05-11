@@ -18,7 +18,7 @@ WITH dates AS (
 			AND counter_value > 0 -- Filter out non-instances
 			AND ping_date <= CURRENT_DATE -- Return data for complete month and current month
 			{% if is_incremental() %}
-			AND DATE_TRUNC('month', ping_date) >= (SELECT MAX(snapshot_month) FROM {{ this }})
+			AND ping_date > (SELECT MAX(ping_date) FROM {{ this }})
 			{% endif %}
 
 ), saas_last_monthly_ping_per_account AS (
@@ -26,6 +26,7 @@ WITH dates AS (
 		SELECT
 			saas_usage_ping.dim_namespace_id,
 			dates.first_day_of_month 					AS snapshot_month,
+			saas_usage_ping.ping_date,
 			saas_usage_ping.ping_name 				AS metrics_path,
 			saas_usage_ping.counter_value     AS metrics_value
 		FROM saas_usage_ping
@@ -45,6 +46,7 @@ WITH dates AS (
 		SELECT
 			dim_namespace_id,
 			snapshot_month,
+			ping_date,
 			metrics_path,
 			metrics_value
 		FROM saas_last_monthly_ping_per_account
