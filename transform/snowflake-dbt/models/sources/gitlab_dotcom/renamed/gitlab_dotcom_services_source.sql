@@ -8,7 +8,6 @@ WITH source AS (
 
     SELECT
       id::NUMBER                             AS service_id,
-      type::VARCHAR                          AS service_type,
       project_id::NUMBER                     AS project_id,
       created_at::TIMESTAMP                  AS created_at,
       updated_at::TIMESTAMP                  AS updated_at,
