@@ -16,12 +16,9 @@ WITH dates AS (
 		WHERE ping_date >= '2021-03-01'::DATE
 			AND ping_name LIKE 'usage_activity_by_stage%'
 			AND counter_value > 0 -- Filter out non-instances
-			AND ping_date < DATE_TRUNC( -- Only return data for complete months
-				'month', CURRENT_DATE
-			)
-
+			AND ping_date <= CURRENT_DATE -- Return data for complete month and current month
 			{% if is_incremental() %}
-			AND DATE_TRUNC('month', ping_date) > (SELECT MAX(snapshot_month) FROM {{ this }})
+			AND DATE_TRUNC('month', ping_date) >= (SELECT MAX(snapshot_month) FROM {{ this }})
 			{% endif %}
 
 ), saas_last_monthly_ping_per_account AS (
