@@ -5,7 +5,13 @@
 
 {{ simple_cte([
     ('metric_opt_in', 'rpt_ping_counter_statistics'),
-    ('mart_arr', 'mart_arr'),
+    ('mart_charge', 'mart_charge'),
+    ('dim_charge', 'dim_charge'),
+    ('fct_charge', 'fct_charge'),
+    ('dim_subscription', 'dim_subscription'),
+    ('dim_billing_account', 'dim_billing_account'),
+    ('dim_crm_account', 'dim_crm_account'),
+    ('dim_date', 'dim_date'),
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly')
     ])
 
@@ -72,45 +78,58 @@ Join subscription information with count of pings
     AND deduped_subscriptions_w_versions.latest_active_subscription_id = ping_counts.latest_active_subscription_id
 
 /*
-Aggregate mart_arr information (used as the basis of truth), this gets rid of host deviation
+Aggregate mart_charge information (used as the basis of truth), this gets rid of host deviation
 */
 
-), mart_arr_cleaned AS (
+), mart_charge_cleaned AS (
 
   SELECT
-    arr_month             AS arr_month,
-    dim_subscription_id   AS dim_subscription_id,
-    SUM(mrr)              AS mrr,
-    SUM(arr)              AS arr,
-    SUM(quantity)         AS licensed_user_count
-  FROM mart_arr
-  WHERE product_tier_name != 'Storage'
-      AND product_delivery_type = 'Self-Managed'
-    {{ dbt_utils.group_by(n=2)}}
-
+       dim_date.date_actual               AS arr_month,
+       fct_charge.dim_subscription_id     AS dim_subscription_id,
+       SUM(mrr)                           AS mrr,
+       SUM(arr)                           AS arr,
+       SUM(quantity)                      AS licensed_user_count
+  FROM fct_charge
+  INNER JOIN dim_date
+    ON effective_start_month <= dim_date.date_actual
+    AND (effective_end_month > dim_date.date_actual OR effective_end_month IS NULL)
+    AND dim_date.day_of_month = 1
+  INNER JOIN dim_charge
+    ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
+  INNER JOIN dim_subscription
+    ON fct_charge.dim_subscription_id = dim_subscription.dim_subscription_id
+  INNER JOIN dim_billing_account
+    ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
+  LEFT JOIN dim_crm_account
+    ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
+  WHERE subscription_status IN ('Active','Cancelled')
+    ---AND --add exclude the storage
+    --AND --filter to only self-managed
+    --AND dim_crm_account.is_jihu_account != 'TRUE'
+      {{ dbt_utils.group_by(n=2)}}
 
 /*
-Join mart_arr information bringing in mart_arr subscriptions which DO NOT appear in ping fact data
+Join mart_charge information bringing in mart_charge subscriptions which DO NOT appear in ping fact data
 */
 
 ), arr_counts_joined AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_active_subscription_id']) }}           AS rpt_ping_instance_active_subscriptions_id,
-    mart_arr_cleaned.arr_month                                                                          AS ping_created_at_month,
-    mart_arr_cleaned.dim_subscription_id                                                                AS latest_active_subscription_id,
-    joined_subscriptions.ping_edition                                                                   AS ping_edition,
-    joined_subscriptions.major_minor_version                                                            AS major_minor_version,
-    joined_subscriptions.instance_user_count                                                            AS instance_user_count,
-    mart_arr_cleaned.licensed_user_count                                                                AS licensed_user_count,
-    mart_arr_cleaned.arr                                                                                AS arr,
-    mart_arr_cleaned.mrr                                                                                AS mrr,
-    joined_subscriptions.count_of_pings                                                                 AS has_sent_pings,
-    IFF(ping_edition IS NULL, FALSE, TRUE)                                                              AS reported_flag
-  FROM mart_arr_cleaned
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_active_subscription_id']) }}               AS rpt_ping_instance_active_subscriptions_id,
+    mart_charge_cleaned.arr_month                                                                           AS ping_created_at_month,
+    mart_charge_cleaned.dim_subscription_id                                                                 AS latest_active_subscription_id,
+    joined_subscriptions.ping_edition                                                                       AS ping_edition,
+    joined_subscriptions.major_minor_version                                                                AS major_minor_version,
+    joined_subscriptions.instance_user_count                                                                AS instance_user_count,
+    mart_charge_cleaned.licensed_user_count                                                                 AS licensed_user_count,
+    mart_charge_cleaned.arr                                                                                 AS arr,
+    mart_charge_cleaned.mrr                                                                                 AS mrr,
+    joined_subscriptions.count_of_pings                                                                     AS has_sent_pings,
+    IFF(ping_edition IS NULL, FALSE, TRUE)                                                                  AS reported_flag
+  FROM mart_charge_cleaned
     LEFT OUTER JOIN joined_subscriptions
-  ON joined_subscriptions.latest_active_subscription_id = mart_arr_cleaned.dim_subscription_id
-      AND joined_subscriptions.ping_created_at_month = mart_arr_cleaned.arr_month
+  ON joined_subscriptions.latest_active_subscription_id = mart_charge_cleaned.dim_subscription_id
+      AND joined_subscriptions.ping_created_at_month = mart_charge_cleaned.arr_month
 
 )
 

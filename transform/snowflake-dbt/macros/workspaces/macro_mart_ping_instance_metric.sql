@@ -9,6 +9,7 @@
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
+    ('dim_subscription', 'dim_subscription'),
     ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
     ('dim_ping_metric', 'dim_ping_metric')
@@ -19,7 +20,7 @@
 , dim_subscription AS (
 
     SELECT *
-    FROM {{ ref('dim_subscription') }}
+    FROM dim_subscription
     WHERE (subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
       OR zuora_renewal_subscription_name_slugify IS NULL)
       AND subscription_status NOT IN ('Draft', 'Expired')
@@ -40,6 +41,16 @@
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
+), latest_active_subscription AS (
+
+  SELECT
+      dim_subscription_id             AS latest_active_subscription_id,
+      dim_subscription_id_original    AS dim_subscription_id_original
+  FROM dim_subscription
+      QUALIFY ROW_NUMBER() OVER (
+              PARTITION BY dim_subscription_id_original
+                ORDER BY subscription_version DESC) = 1
+
 ), license_subscriptions AS (
 
     SELECT DISTINCT
@@ -48,7 +59,8 @@
       dim_license.license_md5                                                     AS license_md5,
       dim_license.company                                                         AS license_company_name,
       subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
-      dim_subscription.dim_subscription_id                                        AS latest_active_subscription_id,
+      dim_subscription.dim_subscription_id                                        AS dim_subscription_id,
+      latest_active_subscription.latest_active_subscription_id                    AS latest_active_subscription_id,
       dim_subscription.subscription_start_date                                    AS subscription_start_date,
       dim_subscription.subscription_end_date                                      AS subscription_end_date,
       dim_subscription.subscription_start_month                                   AS subscription_start_month,
@@ -75,9 +87,11 @@
     INNER JOIN subscription_source
       ON dim_license.dim_subscription_id = subscription_source.subscription_id
     LEFT JOIN dim_subscription
-      ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
+      ON subscription_source.subscription_name = dim_subscription.subscription_name
+    LEFT JOIN latest_active_subscription
+      ON dim_subscription.dim_subscription_id_original = latest_active_subscription.dim_subscription_id_original
     LEFT JOIN subscription_source AS all_subscriptions
-      ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
+      ON subscription_source.subscription_name = all_subscriptions.subscription_name
     INNER JOIN fct_charge
       ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
         AND charge_type = 'Recurring'
@@ -91,7 +105,7 @@
       ON dim_billing_account.dim_crm_account_id = dim_crm_accounts.dim_crm_account_id
     INNER JOIN dim_date
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
-    {{ dbt_utils.group_by(n=20)}}
+    {{ dbt_utils.group_by(n=21)}}
 
 
   ), joined AS (

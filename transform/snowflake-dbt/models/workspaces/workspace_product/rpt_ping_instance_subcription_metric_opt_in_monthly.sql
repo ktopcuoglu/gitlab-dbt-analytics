@@ -11,7 +11,7 @@
 }}
 
 /*
-Determine latest version for each subscription to determine if the potential metric is valid for a given month
+Attach metrics_path to subscription IF the subscription is on a version which it can report on
 */
 
 , active_subscriptions_by_metric AS (
@@ -24,6 +24,10 @@ Determine latest version for each subscription to determine if the potential met
       ON active_subscriptions.major_minor_version
         BETWEEN metric_opt_in.first_major_minor_version_with_counter AND metric_opt_in.last_major_minor_version_with_counter
         AND active_subscriptions.ping_edition = metric_opt_in.ping_edition
+
+/*
+Aggregate CTE to determine count of arr, subscriptions and licensed users for each month/metric.
+*/
 
 ), agg_subscriptions AS (
 

@@ -12,7 +12,7 @@
 
 }}
 
--- Get value from mart_arr
+-- Get value from active_susbcriptions
 
 , arr_joined AS (
 
@@ -25,6 +25,7 @@
       AND mart_ping_instance_metric_monthly.ping_created_at_month = active_subscriptions.ping_created_at_month
     WHERE time_frame = '28d'
       AND ping_delivery_type = 'Self-Managed'
+      --AND version_is_prerelease = FALSE
 
 -- Get actual count of subs/users for a given month/metric
 
