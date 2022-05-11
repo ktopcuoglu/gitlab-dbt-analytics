@@ -3686,6 +3686,18 @@ roles:
                     - mwawrzyniak_prep.*.*
                     - mwawrzyniak_prod.*.*
 
+    - mwielich:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
+    - nbelokolodov:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - nfiguera:
         member_of:
             - analyst_sales
@@ -3851,6 +3863,12 @@ roles:
     - permission_bot:
         warehouses:
             - admin
+
+    - pskorupa:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
 
     - rbacovic:
         member_of:
@@ -4219,6 +4237,12 @@ roles:
                 write:
                     - tnguyen_prep.*.*
                     - tnguyen_prod.*.*
+
+    - tvellishetty:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
 
     - vagrawal:
         member_of:
@@ -4635,6 +4659,16 @@ users:
         member_of:
             - mwawrzyniak
 
+    - mwielich:
+        can_login: yes
+        member_of:
+            - mwielich
+
+    - nbelokolodov:
+        can_login: yes
+        member_of:
+            - nbelokolodov
+
     - nfiguera:
         can_login: yes
         member_of:
@@ -4687,6 +4721,11 @@ users:
             - permission_bot
             - securityadmin
             - sysadmin
+
+    - pskorupa:
+        can_login: yes
+        member_of:
+            - pskorupa
 
     - rbacovic:
         can_login: yes
@@ -4755,6 +4794,11 @@ users:
         can_login: yes
         member_of:
             - tnguyen
+
+    - tvellishetty:
+        can_login: yes
+        member_of:
+            - tvellishetty
 
     - vagrawal:
         can_login: yes
