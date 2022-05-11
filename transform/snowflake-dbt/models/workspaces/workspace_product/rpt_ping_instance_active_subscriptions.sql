@@ -30,6 +30,10 @@ Determine latest version for each subscription to determine if the potential met
             PARTITION BY ping_created_at_month, latest_active_subscription_id
               ORDER BY major_minor_version_id DESC) = 1
 
+/*
+Deduping the mart to ensure instance_user_count isn't counted 2+ times
+*/
+
 ), deduped_subscriptions_w_versions AS (
 
     SELECT
@@ -49,7 +53,7 @@ Get the count of pings each month per subscription_name_slugify
   SELECT
     ping_created_at_month                       AS ping_created_at_month,
     latest_active_subscription_id               AS latest_active_subscription_id,
-    COUNT(DISTINCT(ping_instance_metric_id))    AS count_of_pings
+    COUNT(DISTINCT(dim_ping_instance_id))       AS count_of_pings
   FROM mart_ping_instance_metric_monthly
       {{ dbt_utils.group_by(n=2)}}
 
@@ -80,6 +84,8 @@ Aggregate mart_arr information (used as the basis of truth), this gets rid of ho
     SUM(arr)              AS arr,
     SUM(quantity)         AS licensed_user_count
   FROM mart_arr
+  WHERE product_tier_name != 'Storage'
+      AND product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=2)}}
 
 
@@ -99,6 +105,7 @@ Join mart_arr information bringing in mart_arr subscriptions which DO NOT appear
     mart_arr_cleaned.licensed_user_count                                                                AS licensed_user_count,
     mart_arr_cleaned.arr                                                                                AS arr,
     mart_arr_cleaned.mrr                                                                                AS mrr,
+    joined_subscriptions.count_of_pings                                                                 AS has_sent_pings,
     IFF(ping_edition IS NULL, FALSE, TRUE)                                                              AS reported_flag
   FROM mart_arr_cleaned
     LEFT OUTER JOIN joined_subscriptions
