@@ -37,7 +37,7 @@ sources:
         description: '{{ doc("zendesk_ticket_audits_desc") }}'
       - name: ticket_fields
         description: '{{ doc("zendesk_ticket_fields_desc") }}'
-      - name: ticket_fields
+      - name: ticket_forms
         description: '{{ doc("zendesk_ticket_forms_desc") }}'
       - name: ticket_comments
         description: '{{ doc("zendesk_ticket_comments_desc") }}'
