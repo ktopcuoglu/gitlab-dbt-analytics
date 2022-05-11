@@ -13,32 +13,32 @@
     ('source', 'gitlab_dotcom_users_source'),
     ('email_classification', 'driveload_email_domain_classification_source'),
     ('identity','gitlab_dotcom_identities_source')
-]) }}
+]) }}, 
 
-, email_classification_dedup AS (
+email_classification_dedup AS (
 
     SELECT *
     FROM email_classification
     QUALIFY ROW_NUMBER() OVER(PARTITION BY domain ORDER BY domain DESC) = 1
 
-)
+), 
 
-, closest_provider AS (
+closest_provider AS (
 
     SELECT
         source.user_id                                                AS user_id,
         identity.identity_provider                                    AS identity_provider
-    FROM 
-        source                                                       
-        LEFT JOIN identity 
-        ON source.user_id = identity.user_id
+    FROM source                                                       
+    LEFT JOIN identity 
+      ON source.user_id = identity.user_id
     WHERE 
-        identity.user_id IS NOT NULL
+      identity.user_id IS NOT NULL
     QUALIFY ROW_NUMBER() OVER(PARTITION BY source.user_id 
                               ORDER BY TIMEDIFF(MILLISECONDS,source.created_at,COALESCE(identity.created_at,{{var('infinity_future')}})) ASC) = 1
-)
 
-, renamed AS (
+), 
+
+renamed AS (
 
     SELECT
       source.user_id                                                   AS dim_user_id,
