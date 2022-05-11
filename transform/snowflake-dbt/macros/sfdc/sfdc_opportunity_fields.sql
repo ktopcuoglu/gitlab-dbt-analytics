@@ -41,20 +41,13 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ref('sfdc_opportunity_stage_source')}}
 
-{%- if model_type == 'live' %}
-
-{%- elif model_type == 'snapshot' %}
+{%- if model_type == 'snapshot' %}
 ), snapshot_dates AS (
 
     SELECT *
     FROM {{ ref('dim_date') }}
-    WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
-    {% if is_incremental() %}
-
-   -- this filter will only be applied on an incremental run
-   AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
-
-   {% endif %}
+    WHERE date_actual >= '2019-10-01'::DATE
+      AND date_actual <= CURRENT_DATE  
 
 ), net_iacv_to_net_arr_ratio AS (
 
@@ -142,6 +135,46 @@ WITH first_contact  AS (
 
 {%- endif %}
 
+), live_opportunity_owner_fields AS (
+
+  SELECT 
+    sfdc_opportunity_source.opportunity_id AS dim_crm_opportunity_id,
+    CASE 
+      WHEN sfdc_opportunity_source.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
+        THEN 0
+      ELSE 1  
+    END                                                                   AS is_open,
+    CASE 
+      WHEN sfdc_opportunity_source.user_segment_stamped IS NULL 
+        OR is_open = 1
+        THEN sfdc_users_source.user_segment 
+      ELSE sfdc_opportunity_source.user_segment_stamped
+    END                                                                   AS opportunity_owner_user_segment,
+
+    CASE 
+      WHEN sfdc_opportunity_source.user_geo_stamped IS NULL 
+          OR is_open = 1
+        THEN sfdc_users_source.user_geo
+      ELSE sfdc_opportunity_source.user_geo_stamped
+    END                                                                   AS opportunity_owner_user_geo,
+
+      CASE 
+        WHEN sfdc_opportunity_source.user_region_stamped IS NULL
+             OR is_open = 1
+          THEN sfdc_users_source.user_region
+          ELSE sfdc_opportunity_source.user_region_stamped
+      END                                                                   AS opportunity_owner_user_region,
+
+      CASE
+        WHEN sfdc_opportunity_source.user_area_stamped IS NULL
+             OR is_open = 1
+          THEN sfdc_users_source.user_area
+        ELSE sfdc_opportunity_source.user_area_stamped
+      END                                                                   AS opportunity_owner_user_area
+  FROM {{ ref('sfdc_opportunity_source') }}
+  INNER JOIN {{ ref('sfdc_users_source') }}
+    ON sfdc_opportunity_source.owner_id = sfdc_users_source.user_id
+
 ), sfdc_opportunity AS (
 
     SELECT 
@@ -180,8 +213,8 @@ WITH first_contact  AS (
     {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_opportunity_snapshots_source') }}
          INNER JOIN snapshot_dates
-           ON snapshot_dates.date_actual >= sfdc_opportunity_snapshots_source.dbt_valid_from
-           AND snapshot_dates.date_actual < COALESCE(sfdc_opportunity_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+           ON sfdc_opportunity_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
+           AND (sfdc_opportunity_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_opportunity_snapshots_source.dbt_valid_to IS NULL)
     {%- endif %}
     WHERE account_id IS NOT NULL
       AND is_deleted = FALSE
@@ -222,9 +255,9 @@ WITH first_contact  AS (
         {{ ref('sfdc_account_source') }}
     {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_account_snapshots_source') }}
-         INNER JOIN snapshot_dates
-           ON snapshot_dates.date_actual >= sfdc_account_snapshots_source.dbt_valid_from
-           AND snapshot_dates.date_actual < COALESCE(sfdc_account_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+          INNER JOIN snapshot_dates
+            ON sfdc_account_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
+            AND (sfdc_account_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_account_snapshots_source.dbt_valid_to IS NULL)
     {%- endif %}
     WHERE account_id IS NOT NULL
 
@@ -240,12 +273,12 @@ WITH first_contact  AS (
      {%- endif %}
     FROM 
     {%- if model_type == 'live' %}
-        {{ ref('sfdc_account_source') }}
+        {{ ref('sfdc_users_source') }}
     {%- elif model_type == 'snapshot' %}
         {{ ref('sfdc_user_snapshots_source') }}
          INNER JOIN snapshot_dates
-           ON snapshot_dates.date_actual >= sfdc_user_snapshots_source.dbt_valid_from
-           AND snapshot_dates.date_actual < COALESCE(sfdc_user_snapshots_source.dbt_valid_to, '9999-12-31'::TIMESTAMP)
+           ON sfdc_user_snapshots_source.dbt_valid_from::DATE <= snapshot_dates.date_actual
+           AND (sfdc_user_snapshots_source.dbt_valid_to::DATE > snapshot_dates.date_actual OR sfdc_user_snapshots_source.dbt_valid_to IS NULL)
     {%- endif %}
     WHERE user_id IS NOT NULL
 
@@ -845,8 +878,57 @@ WITH first_contact  AS (
         WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < close_date_detail.date_actual
           THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
         ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
-      END                                                       AS calculated_age_in_days
+      END                                                       AS calculated_age_in_days,
+      CASE
+        WHEN
+        sfdc_account.ultimate_parent_account_id IN (
+          '001610000111bA3',
+          '0016100001F4xla',
+          '0016100001CXGCs',
+          '00161000015O9Yn',
+          '0016100001b9Jsc'
+        )
+        AND sfdc_opportunity.close_date < '2020-08-01'
+        THEN 1
+      -- NF 2021 - Pubsec extreme deals
+      WHEN
+        sfdc_opportunity.dim_crm_opportunity_id IN ('0064M00000WtZKUQA3', '0064M00000Xb975QAB')
+        AND sfdc_opportunity.snapshot_date < '2021-05-01'
+        THEN 1
+      -- exclude vision opps from FY21-Q2
+      WHEN pipeline_created_fiscal_quarter_name = 'FY21-Q2'
+        AND sfdc_opportunity.snapshot_day_of_fiscal_quarter_normalised = 90
+        AND sfdc_opportunity.stage_name IN (
+          '00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+        )
+        THEN 1
+      -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+      WHEN
+        sfdc_opportunity.dim_crm_opportunity_id IN (
+          '0064M00000ZGpfQQAT', '0064M00000ZGpfVQAT', '0064M00000ZGpfGQAT'
+        )
+        THEN 1
+       -- remove test accounts
+       WHEN 
+         sfdc_opportunity.dim_crm_account_id = '0014M00001kGcORQA0'
+         THEN 1
+       --remove test accounts
+       WHEN (sfdc_account_source_live.ultimate_parent_account_id = ('0016100001YUkWVAA1')
+            OR sfdc_account_source_live.account_id IS NULL) 
+         THEN 1
+       -- remove jihu accounts
+       WHEN sfdc_account_source_live.is_jihu_account = 1 
+         THEN 1
+       -- remove deleted opps
+        WHEN sfdc_opportunity.is_deleted = 1
+          THEN 1
+        ELSE 0
+      END AS is_excluded,
       {%- endif %}
+      live_opportunity_owner_fields.opportunity_owner_user_segment,
+      live_opportunity_owner_fields.opportunity_owner_user_geo,
+      live_opportunity_owner_fields.opportunity_owner_user_region,
+      live_opportunity_owner_fields.opportunity_owner_user_area
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage
@@ -886,11 +968,15 @@ WITH first_contact  AS (
     {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = sfdc_user.snapshot_id
     {%- endif %}
+    LEFT JOIN live_opportunity_owner_fields
+      ON sfdc_opportunity.dim_crm_opportunity_id = live_opportunity_owner_fields.dim_crm_opportunity_id
     {%- if model_type == 'snapshot' %}
     LEFT JOIN {{ ref('sfdc_opportunity_source') }} AS sfdc_opportunity_source_live
       ON sfdc_opportunity.dim_crm_opportunity_id = sfdc_opportunity_source_live.opportunity_id
+    LEFT JOIN {{ ref('sfdc_account_source')}} AS sfdc_account_source_live
+      ON sfdc_opportunity_source_live.account_id = sfdc_account_source_live.account_id
     LEFT JOIN net_iacv_to_net_arr_ratio
-      ON COALESCE(sfdc_opportunity_source_live.user_segment_stamped, sfdc_user.user_segment) = net_iacv_to_net_arr_ratio.user_segment_stamped
+      ON live_opportunity_owner_fields.opportunity_owner_user_segment = net_iacv_to_net_arr_ratio.user_segment_stamped
       AND sfdc_opportunity_source_live.order_type_stamped = net_iacv_to_net_arr_ratio.order_type
     {%- endif %}
 

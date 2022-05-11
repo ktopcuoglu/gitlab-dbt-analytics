@@ -214,6 +214,10 @@ final AS (
     AS crm_account_user_sales_segment_region_grouped,
 
     -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
+    fct_crm_opportunity.opportunity_owner_user_segment,
+    fct_crm_opportunity.opportunity_owner_user_geo,
+    fct_crm_opportunity.opportunity_owner_user_region,
+    fct_crm_opportunity.opportunity_owner_user_area,
     LOWER(
       fct_crm_opportunity.user_segment_stamped
     ) AS report_opportunity_user_segment,
@@ -268,18 +272,6 @@ final AS (
     report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || fct_crm_opportunity.sales_qualified_source AS key_segment_geo_region_area_sqs,
     report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || fct_crm_opportunity.deal_group AS key_segment_geo_region_area_ot,
     report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area AS key_segment_geo_area,
-    COALESCE(
-      fct_crm_opportunity.user_segment_stamped, opp_owner_live.crm_user_sales_segment
-    ) AS opportunity_owner_user_segment,
-    COALESCE(
-      fct_crm_opportunity.user_geo_stamped, opp_owner_live.crm_user_geo
-    ) AS opportunity_owner_user_geo,
-    COALESCE(
-      fct_crm_opportunity.user_region_stamped, opp_owner_live.crm_user_region
-    ) AS opportunity_owner_user_region,
-    COALESCE(
-      fct_crm_opportunity.user_area_stamped, opp_owner_live.crm_user_area
-    ) AS opportunity_owner_user_area,
     COALESCE(
       report_opportunity_user_segment, 'other'
     ) AS sales_team_cro_level,
@@ -605,37 +597,7 @@ final AS (
     fct_crm_opportunity.iacv_created_month AS iacv_created_date_month,
     fct_crm_opportunity.net_arr_created_month AS net_arr_created_date_month,
     fct_crm_opportunity.pipeline_created_month AS pipeline_created_date_month,
-    CASE
-      WHEN
-        dim_crm_account.dim_parent_crm_account_id IN (
-          '001610000111bA3',
-          '0016100001F4xla',
-          '0016100001CXGCs',
-          '00161000015O9Yn',
-          '0016100001b9Jsc'
-        )
-        AND fct_crm_opportunity.close_date < '2020-08-01'
-        THEN 1
-      -- NF 2021 - Pubsec extreme deals
-      WHEN
-        fct_crm_opportunity.dim_crm_opportunity_id IN ('0064M00000WtZKUQA3', '0064M00000Xb975QAB')
-        AND fct_crm_opportunity.snapshot_date < '2021-05-01'
-        THEN 1
-      -- exclude vision opps from FY21-Q2
-      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = 'FY21-Q2'
-        AND fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised = 90
-        AND fct_crm_opportunity.stage_name IN (
-          '00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
-        )
-        THEN 1
-      -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
-      WHEN
-        fct_crm_opportunity.dim_crm_opportunity_id IN (
-          '0064M00000ZGpfQQAT', '0064M00000ZGpfVQAT', '0064M00000ZGpfGQAT'
-        )
-        THEN 1
-      ELSE 0
-    END AS is_excluded_flag
+    fct_crm_opportunity.is_excluded AS is_excluded_flag
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
