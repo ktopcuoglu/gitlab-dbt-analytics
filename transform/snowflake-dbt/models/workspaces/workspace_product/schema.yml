@@ -63,418 +63,19 @@ models:
           - not_null
           - unique
 
-
-  - name: fct_usage_event
-    description: '{{ doc("fct_usage_event") }}'
+  - name: fct_ping_instance_metric
+    description: ' {{ doc("fct_ping_instance_metric") }} '
     columns:
-      - name: event_id
-        description: The unique ID of an event.
+      - name: ping_instance_metric_id
         tests:
           - not_null
-          - unique
-      - name: event_name
-        description: The name tied to an event
-      - name: dim_instance_id
-        description: The unique uuid of an instance from the dim_instances model.
-      - name: dim_product_tier_id
-        description: The unique id of a Product Tier in the dim_product_tier model.
-      - name: dim_subscripton_id
-        description: The unique id of a subscription from the dim_subscription model
-      - name: dim_event_date_id
-        description: The unique date id of an event to join to dim_date.
-      - name: dim_crm_account_id
-        description: The unique id of a crm account in the dim_crm_account model.
-      - name: dim_billing_account_id
-        description: The identifier of the Zuora account associated with the subscription
-      - name: dim_namespace_id
-        description: The unique id of the ultimate parent namespace from the dim_namespace model.
-      - name: dim_project_id
-        description: The unique id of a project from the dim_project model.
-      - name: dim_user_id
-        description: The unique id of a user from the dim_user model.
-      - name: stage_name
-        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
-      - name: section_name
-        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-      - name: group_name
-        description: The name of the group (A stage has one or more groups.).
-      - name: event_created_at
-        description: The date at which the event was created
-      - name: plan_id_at_event_date
-        description: The id of the plan on the day the event was created.
-      - name: plan_name_at_event_date
-        description: The name of the plan type when the event was created
-      - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid or free when the event was created
-      - name: project_is_learn_gitlab
-        description: Denotes whether the event is related to a Learn GitLab project, one created for the user during new user onboarding.
-      - name: data_source
-        description: The source application where the data was extracted from.
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
-
-  - name: mart_usage_event
-    description: '{{ doc("mart_usage_event") }}'
-    columns:
-      - name: event_id
-        description: The unique ID of an event.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: The date when the event was created.
-      - name: dim_user_id
-        description: The unique id of a user in the dim_user model.
-      - name: event_name
-        description: The name tied to an event
-      - name: dim_product_tier_id
-        description: The unique id of a Product Tier in the dim_product_tier model.
-      - name: dim_subscripton_id
-        description: The unique id of a subscription from the dim_subscription model
-      - name: dim_crm_account_id
-        description: The unique id of a crm account in the dim_crm_account model.
-      - name: dim_billing_account_id
-        description: The identifier of the Zuora account associated with the subscription
-      - name: stage_name
-        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
-      - name: section_name
-        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-      - name: group_name
-        description: The name of the group (A stage has one or more groups.).
-      - name: data_source
-        description: The source application where the data was extracted from.
-      - name: plan_id_at_event_date
-        description: The id of the plan on the day the event was created.
-      - name: plan_name_at_event_date
-        description: The name of the plan type when the event was created
-      - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid or free when the event was created
-      - name: dim_namespace_id
-        description: The unique id of the ultimate parent namespace from the dim_namespace model.
-      - name: dim_instance_id
-        description: The unique uuid of an instance from the dim_instances model.
-      - name: namespace_created_at
-        description: The date when the namespace was created.
-      - name: days_since_namespace_created
-        description: The days since the namespace was created.
-      - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
-
-
-  - name: mart_usage_namespace_daily
-    description: '{{ doc("mart_usage_namespace_daily") }}'
-    columns:
-      - name: mart_usage_namespace_id
-        description: the unique ID combination of the event_date, event_name, na ddim_namespace_id in mart_usage_namespace.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: The date when the event was created.
-      - name: event_name
-        description: The name tied to an event
-      - name: dim_product_tier_id
-        description: The unique id of a Product Tier in the dim_product_tier model.
-      - name: dim_subscripton_id
-        description: The unique id of a subscription from the dim_subscription model
-      - name: dim_crm_account_id
-        description: The unique id of a crm account in the dim_crm_account model.
-      - name: dim_billing_account_id
-        description: The identifier of the Zuora account associated with the subscription
-      - name: stage_name
-        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
-      - name: section_name
-        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-      - name: group_name
-        description: The name of the group (A stage has one or more groups.).
-      - name: data_source
-        description: The source application where the data was extracted from.
-      - name: plan_id_at_event_date
-        description: The id of the plan on the day the event was created.
-      - name: plan_name_at_event_date
-        description: The name of the plan type when the event was created
-      - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid or free when the event was created
-      - name: dim_instance_id
-        description: The unique uuid of an instance from the dim_instances model.
-      - name: dim_namespace_id
-        description: The unique id of the ultimate parent namespace from the dim_namespace model.
-      - name: namespace_created_at
-        description: The date when the namespace was created.
-      - name: days_since_namespace_created
-        description: The days since the namespace was created.
-      - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: event_count
-        description: The count of events
-      - name: distinct_user_count
-        description: The count of distinct users
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
-
-  - name: mart_usage_instance_daily
-    description: '{{ doc("mart_usage_instance_daily") }}'
-    columns:
-      - name: mart_usage_instance_id
-        description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: The date when the event was created.
-      - name: event_name
-        description: The name tied to an event
-      - name: data_source
-        description: The source application where the data was extracted from.
-      - name: dim_instance_id
-        description: The unique uuid of an instance from the dim_instances model.
-      - name: event_count
-        description: The count of events
-      - name: distinct_user_count
-        description: The count of distinct users
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
-
-  - name: mart_usage_event_daily
-    description: '{{ doc("mart_usage_event_daily") }}'
-    columns:
-      - name: mart_usage_event_daily_id
-        description: the unique composite ID for the mart_usage_event_daily model consisting of event_date, dim_user_id, dim_namespace_id, and event_name.
-        tests:
-          - not_null
-          - unique
-      - name: event_date
-        description: The date when the event was created.
-      - name: dim_user_id
-        description: The unique id of a user in the dim_user model.
-      - name: dim_namespace_id
-        description: The unique id of the ultimate parent namespace from the dim_namespace model.
-      - name: dim_instance_id
-        description: The unique uuid of an instance from the dim_instances model.
-      - name: plan_id_at_event_date
-        description: The id of the plan on the day the event was created.
-      - name: event_name
-        description: The name tied to an event
-      - name: dim_product_tier_id
-        description: The unique id of a Product Tier in the dim_product_tier model.
-      - name: dim_subscripton_id
-        description: The unique id of a subscription from the dim_subscription model
-      - name: dim_crm_account_id
-        description: The unique id of a crm account in the dim_crm_account model.
-      - name: dim_billing_account_id
-        description: The identifier of the Zuora account associated with the subscription
-      - name: stage_name
-        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
-      - name: section_name
-        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-      - name: group_name
-        description: The name of the group (A stage has one or more groups.).
-      - name: data_source
-        description: The source application where the data was extracted from.
-      - name: plan_name_at_event_date
-        description: The name of the plan type when the event was created
-      - name: plan_was_paid_at_event_date
-        description: Defines whether the plan was paid or free when the event was created
-      - name: namespace_is_internal
-        description: Tells whether this namespace is internal or not
-      - name: namespace_created_at
-        description: The date when the nampespace was created.
-      - name: days_since_namespace_created
-        description: The days since the namespace was created.
-      - name: days_since_namespace_creation_at_event_date
-        description: The days since the namespace was created from the day the event was created.
-      - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: event_count
-        description: The count of events
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
-
-  - name: mart_usage_event_plan_monthly
-    description: '{{ doc("mart_usage_event_plan_monthly") }}'
-    columns:
-      - name: mart_usage_event_plan_monthly_id
-        description: the unique ID of a montthly usage event plan in mart_usage_event_plan_monthly
-        tests:
-          - not_null
-          - unique
-      - name: reporting_month
-        description: Month in which the product usage was reported. (this model only looks at the last 28 days of the month.)
-      - name: plan_id_at_event_date
-        description: The id of the plan on the day the event was created.
-      - name: event_name
-        description: The name tied to an event
-      - name: stage_name
-        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
-      - name: section_name
-        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-      - name: group_name
-        description: The name of the group (A stage has one or more groups.).
-      - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
-      - name: is_gmau
-        description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
-      - name: is_umau
-        description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
-      - name: event_count
-        description: The count of events
-      - name: namespace_count
-        description: The count of namespaces
-      - name: user_count
-        description: The count of users
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
-
-  - name: prep_service_ping_instance
-    description: ' {{ doc("prep_service_ping_instance") }} '
-    columns:
-      - name: dim_service_ping_instance_id
-        tests:
-          - not_null
-          - unique
-        description: The unique identifier of the ping
-      - name: dim_host_id
-        description: The unique id of a host from the dim_host model (brought in from source data).
-      - name: dim_instance_id
-        description:  The uuid of an instance from the dim_instances model.
-      - name: ping_created_at
-        description: The time when the ping was created
-      - name: ip_address_hash
-        description: The source_ip_hash associated with the instance
-      - name: version
-        description: the version associated with the instance (9., 10., 11., ... 14.)
-      - name: instance_user_count
-        description: The total count of users on the instance
-      - name: license_md5
-        description: the license_md5 associated with teh instance
-      - name: historical_max_users
-        description: the max user number the instance has had
-      - name: license_user_count
-        description: the user count for the license
-      - name: license_starts_at
-        description: the date the license starts at
-      - name: license_expires_at
-        description:  the date the license ends on
-      - name: license_add_ons
-        description: the add ones associated with the license
-      - name: mattermost_enabled
-        description: denotes whether mattermost is enabled
-      - name: uuid
-        description: the unique id of the instance from the dim_instances model
-      - name: hostname
-        description: The name (URL) of the host
-      - name: host_id
-        description: The unique id of a host from the dim_host model (brought in from source data).
-      - name: license_trial
-        description: denoted whether the license is a trial or not
-      - name: source_license_id
-        description: the unique id of a source license
-      - name: installation_type
-        description: the type of installation associated with the instance (i.e. gitlab-development-kit, gitlab-helm-chart, gitlab-omnibus-helm-chart)
-      - name: license_plan
-        description: the license plan associated with the instance (i.e. Ultimate, Premium)
-      - name: database_adapter
-        description: the type of database adapter being usedd (i.e. mysql2, postgresql)
-      - name: database_version
-        description: the database version associated with the instance (i.e. 9.5.3)
-      - name: git_version
-        description: the version of gitlab the instance is running (i.e. 2.17.0, 2.33.1, 2.23.0)
-
-  - name: prep_service_ping_instance_flattened
-    description: ' {{ doc("prep_service_ping_instance_flattened") }} '
-    columns:
-      - name: prep_service_ping_instance_flattened_id
-        tests:
-          - not_null
-          #- unique
-        description: The unique ID of the prep_service_ping_instance_flattenned model consisting of dim_service_ping_instance_id and path
-      - name: dim_host_id
-        description: The unique id of a host from the dim_host model (brought in from source data).
-      - name: dim_instance_id
-        description: The unique uuid of an instance from the dim_instances model.
-      - name: dim_service_ping_instance_id
-      - name: ping_created_at
-        description: The time when the ping was created
-      - name: main_edition
-        description: The edition of GitLab on the instance (EE, CE)
-      - name: product_tier
-        description: The product tier associated with the instance (Premium, Starter, Core, Ultimate)
-      - name: license_subscription_id
-        description: The unique id of a license subscription
-      - name: license_trial_ends_on
-        description: The date when the trial license ends
-      - name: umau_value
-        description: The unique monthly active user value for the instance
-      - name: metrics_path
-        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
-      - name: metric_value
-        description: The value associated with the metric path
-      - name: has_timed_out
-        description: A flag to denote that it has timed out
-
-  - name: fct_service_ping_instance_metric
-    description: ' {{ doc("fct_service_ping_instance_metric") }} '
-    columns:
-      - name: fct_service_ping_instance_metric_id
-        tests:
-          - not_null
-        description: the unique composite ID for the fct_service_ping_instance_metric model consisting of dim_service_ping_instance_id and flattened_high_level.metrics_path
-      - name: dim_service_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_service_ping_instance model.
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
-      - name: dim_service_ping_date_id
+      - name: dim_ping_date_id
         description: The unique id of a country from the dim_location_country model
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
@@ -507,100 +108,158 @@ models:
       - name: umau_value
         description: The unique monthly active user value for the instance
 
-  - name: dim_service_ping_instance
-    description: ' {{ doc("dim_service_ping_instance") }} '
+  - name: fct_ping_instance_metric_28_day
+    description: ' {{ doc("fct_ping_instance_metric_28_day") }} '
     columns:
-      - name: dim_service_ping_instance_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
-          - unique
-        description: The unique identifier of the ping
-      - name: dim_service_ping_date_id
-        description: the unique id associated with the dim_service_ping_instance
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
       - name: dim_host_id
         description: The unique id of a host from the dim_host model (brought in from source data).
       - name: dim_instance_id
-        description: The unique id of an instance (brought in from usage_data source data).
+        description: The unique uuid of an instance from the dim_instances model.
       - name: dim_date_id
         description: The unqiue id of a date in the dim_date model.
-      - name: ping_created_at
-        description: The time when the ping was created
-      - name: ping_created_at_28_days_earlier
-        description: The date 28 days prior to when the ping was created
-      - name: ping_created_at_year
-        description: The year when the ping was created
-      - name: ping_created_at_month
-        description: The month when the ping was created
-      - name: ping_created_at_week
-        description: The week when the ping was created
-      - name: ping_created_at_date
-        description: The date when the ping was created
-      - name: ip_address_hash
-        description: The ip_address_has associated with the instance
-      - name: version
-        description: the version associated with the instance (9., 10., 11., ... 14.)
-      - name: instance_user_count
-        description: The total count of users on the instance
-      - name: license_md5
-        description: the license_md5 associated with teh instance
-      - name: historical_max_users
-        description: the max user number the instance has had
-      - name: license_user_count
-        description: the user count for the license
-      - name: license_starts_at
-        description: the date the license starts at
-      - name: license_expires_at
-        description:  the date the license ends on
-      - name: license_add_ons
-        description: the add ones associated with the license
-      - name: dim_instance_id
-        description: The unique identifier of the instance, easily joined to dim_installation. This id is store in the database of the instance and appears as uuid in the ping payload
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
       - name: dim_installation_id
         description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
-      - name: host_name
-        description: The name (URL) of the host
-      - name: product_tier
-        description: The product tier associated with the instance (Premium, Starter, Core, Ultimate)
-      - name: is_staging
-        description: Boolean flag which is set to True if the instance has been identified as a staging instance
-      - name: is_trial
-        description: Boolean flag which is set to True if the instance has a valid trial license at service ping creation
-      - name: source_license_id
-        description: the unique id of a source license
-      - name: installation_type
-        description: the type of installation associated with the instance (i.e. gitlab-development-kit, gitlab-helm-chart, gitlab-omnibus-helm-chart)
-      - name: license_plan
-        description: the license plan associated with the instance (i.e. Ultimate, Premium)
-      - name: database_version
-        description: the database version associated with the instance (i.e. 9.5.3)
-      - name: git_version
-        description: the version of gitlab the instance is running (i.e. 2.17.0, 2.33.1, 2.23.0)
-      - name: major_version
-        description: The major version of GitLab on the instance. For example, for 13.6.2, major_version is 13. See details here (https://docs.gitlab.com/ee/policy/maintenance.html)
-      - name: minor_version
-        description: The major version of GitLab on the instance. For example, for 13.6.2, minor_version is 6. See details here (https://docs.gitlab.com/ee/policy/maintenance.html)
-      - name: major_minor_version
-        description: The concatenation of major and minor version. For example, for 13.6.2, 
-      - name: version_is_prerelease
-        description: Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details here (https://docs.gitlab.com/ee/policy/maintenance.html)
-      - name: is_internal
-        description: Denotes whether the instance is internal
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
 
-  - name: mart_service_ping_instance_metric
-    description: ' {{ doc("mart_service_ping_instance_metric") }} '
+  - name: fct_ping_instance_metric_7_day
+    description: ' {{ doc("fct_ping_instance_metric_7_day") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_all_time
+    description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+
+
+  - name: mart_ping_instance_metric
+    description: ' {{ doc("mart_ping_instance_metric") }} '
+    columns:
+      - name: ping_instance_metric_id
         tests:
           - not_null
           #- unique
-        description: the unique composite ID for the mart_service_ping_instance_metric model consisting of dim_service_ping_instance_id and metrics_path
+        description: the unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
       - name: dim_date_id
         description: The unqiue id of a date in the dim_date model.
       - name: metrics_path
         description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
       - name: metric_value
         description: The value associated with the metric path
-      - name: dim_service_ping_instance_id
+      - name: dim_ping_instance_id
         description: The unique identifier of the ping
       - name: dim_instance_id
         description: The unique identifier of the instance, easily joined to dim_installation. This id is store in the database of the instance and appears as uuid in the ping payload
@@ -699,21 +358,21 @@ models:
       - name: is_last_ping_of_month
         description: Boolean flag set to True if this is the instance's (defined by dim_installation_id) last ping of the calendar month (defined by ping_created_at)
 
-  - name: mart_service_ping_instance_metric_28_day
-    description: ' {{ doc("mart_service_ping_instance_metric_28_day") }} '
+  - name: mart_ping_instance_metric_28_day
+    description: ' {{ doc("mart_ping_instance_metric_28_day") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           - unique
-        description: the unique composite ID for the mart_service_ping_instance_metric model consisting of dim_service_ping_instance_id and metrics_path
+        description: the unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path
       - name: dim_date_id
         description: The unqiue id of a date in the dim_date model.
       - name: metrics_path
         description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
       - name: metric_value
         description: The value associated with the metric path
-      - name: dim_service_ping_instance_id
+      - name: dim_ping_instance_id
         description: The unique identifier of the ping
       - name: dim_instance_id
         description: The unique identifier of the instance, easily joined to dim_installation. This id is store in the database of the instance and appears as uuid in the ping payload
@@ -770,7 +429,7 @@ models:
       - name: is_paid_gmau
         description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
       - name: is_umau
-        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation 
+        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
       - name: time_frame
         description: The time frame associated with the metric, as defined in the metric definition YAML file
       - name: instance_user_count
@@ -812,46 +471,46 @@ models:
       - name: is_last_ping_of_month
         description: Boolean flag set to True if this is the instance's (defined by dim_installation_id) last ping of the calendar month (defined by ping_created_at)
 
-  - name: mart_service_ping_instance_metric_7_day
-    description: ' {{ doc("mart_service_ping_instance_metric_7_day") }} '
+  - name: mart_ping_instance_metric_7_day
+    description: ' {{ doc("mart_ping_instance_metric_7_day") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           - unique
 
-  - name: mart_service_ping_instance_metric_all_time
-    description: ' {{ doc("mart_service_ping_instance_metric_all_time") }} '
+  - name: mart_ping_instance_metric_all_time
+    description: ' {{ doc("mart_ping_instance_metric_all_time") }} '
     columns:
-      - name: mart_service_ping_instance_metric_id
+      - name: ping_instance_metric_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_monthly_all
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_monthly_all") }} '
+  - name: rpt_ping_instance_metric_adoption_monthly_all
+    description: ' {{ doc("rpt_ping_instance_metric_adoption_monthly_all") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_monthly_all_id
+      - name: rpt_ping_instance_metric_adoption_monthly_all_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_subscription_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_subscription_monthly") }} '
+  - name: rpt_ping_instance_metric_adoption_subscription_monthly
+    description: ' {{ doc("rpt_ping_instance_metric_adoption_subscription_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_subscription_monthly_id
+      - name: rpt_ping_instance_metric_adoption_subscription_monthly_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_metric_adoption_subscription_metric_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_adoption_subscription_metric_monthly") }} '
+  - name: rpt_ping_instance_metric_adoption_subscription_metric_monthly
+    description: ' {{ doc("rpt_ping_instance_metric_adoption_subscription_metric_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_adoption_subscription_metric_monthly_id
+      - name: rpt_ping_instance_metric_adoption_subscription_metric_monthly_id
         tests:
           - not_null
           - unique
-        description: the unique composite ID for the rpt_service_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
+        description: the unique composite ID for the rpt_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
       - name: reporting_month
         description: The month the dat was reported
       - name: reporting_count
@@ -861,7 +520,7 @@ models:
       - name: estimation_grain
         description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
       - name: percent_reporting
-        description: The percentage of events being reported      
+        description: The percentage of events being reported
       - name: stage_name
         description: The name of the product stage responsible for the metric
       - name: section_name
@@ -875,17 +534,17 @@ models:
       - name: is_paid_gmau
         description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
       - name: is_umau
-        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation 
+        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
 
 
-  - name: rpt_service_ping_instance_metric_estimated_monthly
-    description: ' {{ doc("rpt_service_ping_instance_metric_estimated_monthly") }} '
+  - name: rpt_ping_instance_metric_estimated_monthly
+    description: ' {{ doc("rpt_ping_instance_metric_estimated_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_metric_estimated_monthly_id
+      - name: rpt_ping_instance_metric_estimated_monthly_id
         tests:
           - not_null
           - unique
-        description: the unique composite ID for the rpt_service_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+        description: the unique composite ID for the rpt_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
       - name: metrics_path
         description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
       - name: reporting_month
@@ -923,79 +582,31 @@ models:
       - name: is_paid_gmau
         description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
       - name: is_umau
-        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation 
+        description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
 
-
-  - name: dim_service_ping_metric
-    description: ' {{ doc("dim_service_ping_metric") }} '
+  - name: rpt_ping_counter_statistics
+    description: ' {{ doc("rpt_ping_counter_statistics") }} '
     columns:
-      - name: dim_service_ping_metric_id
+      - name: rpt_ping_counter_statistics_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_counter_statistics
-    description: ' {{ doc("rpt_service_ping_counter_statistics") }} '
+  - name: rpt_ping_instance_subcription_opt_in_monthly
+    description: ' {{ doc("rpt_ping_instance_subcription_opt_in_monthly") }} '
     columns:
-      - name: rpt_service_ping_counter_statistics_id
+      - name: rpt_ping_instance_subcription_opt_in_monthly_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_service_ping_instance_subcription_opt_in_monthly
-    description: ' {{ doc("rpt_service_ping_instance_subcription_opt_in_monthly") }} '
+  - name: rpt_ping_instance_subcription_metric_opt_in_monthly
+    description: ' {{ doc("rpt_ping_instance_subcription_metric_opt_in_monthly") }} '
     columns:
-      - name: rpt_service_ping_instance_subcription_opt_in_monthly_id
+      - name: rpt_ping_instance_subcription_metric_opt_in_monthly_id
         tests:
           - not_null
           - unique
-
-  - name: rpt_service_ping_instance_subcription_metric_opt_in_monthly
-    description: ' {{ doc("rpt_service_ping_instance_subcription_metric_opt_in_monthly") }} '
-    columns:
-      - name: rpt_service_ping_instance_subcription_metric_opt_in_monthly_id
-        tests:
-          - not_null
-          - unique
-
-  - name: mart_xmau_metric_monthly
-    description: '{{ doc("mart_xmau_metric_monthly") }}'
-    columns:
-      - name: mart_xmau_metric_monthly_id
-        description: the unique ID of a monthly xMAU metric in mart_xmau_metric_monthly
-        tests:
-          - not_null
-          - unique
-      - name: reporting_month
-        description: Month in which the product usage was reported. (this model only looks at d      the last 28 days of the month.)
-      - name: is_smau
-        description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_gmau
-        description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: is_umau
-        description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-      - name: stage_name
-        description: The name of the product stage (Stages are aligned logically starting with the 7 loop stages of Plan, Create, Verify, Package, Release, Configure, and Monitor. We then add the value stages that we talk about in marketing, these include Manage, Secure, and Protect. Lastly, we add the team stages, Ecosystem, Growth, and Enablement. These stages have groups that rally around the same users, GitLab integrators, GitLab itself, and GitLab administrators respectively.).
-      - name: section_name
-        description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-      - name: group_name
-        description: The name of the group (A stage has one or more groups.).
-      - name: user_group
-      - name: event_name_array
-      - name: event_count
-        description: The count of events
-      - name: namespace_count
-        description: The count of namespaces
-      - name: user_count
-        description: The count of users
-      - name: created_by
-        description: Who created this model?
-      - name: update_by
-        description: Who updated this model last?
-      - name: model_created_date
-        description: The date at which the model was created
-      - name: model_updated_date
-        description: The date at which the model code was last updated
 
   - name: fct_performance_indicator_targets
     description: '{{ doc("fct_performance_indicator_targets") }}'

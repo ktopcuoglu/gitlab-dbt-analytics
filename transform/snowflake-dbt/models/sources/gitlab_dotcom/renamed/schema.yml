@@ -65,23 +65,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_approver_groups_source
-    description: Base model for Gitlab.com approver groups
-    columns:
-      - name: approver_group_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_audit_events_source
     description: Base model for Gitlab.com audit events
     columns:
@@ -699,23 +682,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_epic_metrics_source
-    description: Base model for Gitlab.com epic metrics
-    columns:
-      - name: epic_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_epics_source
     description: Base model for Gitlab.com epics
     columns:
@@ -1002,22 +968,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_licenses_source
-    description: Base model for Gitlab.com licenses
-    columns:
-      - name: license_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
 
   - name: gitlab_dotcom_lists_source
     description: Base model for Gitlab.com lists

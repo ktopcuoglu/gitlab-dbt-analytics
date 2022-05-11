@@ -153,7 +153,7 @@ WITH sfdc_opportunity_snapshots AS (
       fm_why_do_anything_at_all__c   AS cp_why_do_anything_at_all,
       fm_why_gitlab__c               AS cp_why_gitlab,
       fm_why_now__c                  AS cp_why_now,
-
+      fm_score__c                    AS cp_score,
 
       -- ************************************
 
