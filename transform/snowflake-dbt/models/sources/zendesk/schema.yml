@@ -117,6 +117,13 @@ models:
         tests:
             - unique
             - not_null
+    - name: zendesk_ticket_forms_source
+      description: This is the source model for Zendesk tickets forms.
+      columns:
+      - name: ticket_form_id
+        tests:
+            - unique
+            - not_null
     - name: zendesk_users_source
       description: This is the source model for Zendesk users.
       columns:

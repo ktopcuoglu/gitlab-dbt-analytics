@@ -64,3 +64,9 @@ The users table contains info about the users associated with your Zendesk Suppo
 The ticket fields table contains info about the custom fields created for our Zendesk tickets. Fields are used for determining what type of issue has been created. 
 
 {% enddocs %}
+
+{% docs zendesk_ticket_forms_desc %}
+
+The ticket forms table contains info about the custom forms created for our Zendesk tickets. Forms are used for determining what type of issue has been created. 
+
+{% enddocs %}

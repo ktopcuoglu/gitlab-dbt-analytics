@@ -7,7 +7,7 @@ WITH source AS (
 
     SELECT
 
-      id::NUMBER                                    AS zendesk_ticket_field_id,
+      id::NUMBER                                    AS ticket_field_id,
       active::BOOLEAN                               AS is_field_active,
       description::VARCHAR                          AS description,
       agent_description::VARCHAR                    AS agent_description,
