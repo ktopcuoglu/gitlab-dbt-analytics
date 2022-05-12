@@ -9,7 +9,6 @@
     ('dim_product_detail', 'dim_product_detail'),
     ('fct_charge', 'fct_charge'),
     ('dim_license', 'dim_license'),
-    ('dim_subscription', 'dim_subscription'),
     ('dim_hosts', 'dim_hosts'),
     ('dim_location', 'dim_location_country'),
     ('dim_ping_metric', 'dim_ping_metric')
@@ -20,7 +19,7 @@
 , dim_subscription AS (
 
     SELECT *
-    FROM dim_subscription
+    FROM {{ ref('dim_subscription') }}
     WHERE (subscription_name_slugify <> zuora_renewal_subscription_name_slugify[0]::TEXT
       OR zuora_renewal_subscription_name_slugify IS NULL)
       AND subscription_status NOT IN ('Draft', 'Expired')
@@ -41,16 +40,6 @@
     WHERE is_deleted = FALSE
       AND exclude_from_analysis IN ('False', '')
 
-), latest_active_subscription AS (
-
-  SELECT
-      dim_subscription_id             AS latest_active_subscription_id,
-      dim_subscription_id_original    AS dim_subscription_id_original
-  FROM dim_subscription
-      QUALIFY ROW_NUMBER() OVER (
-              PARTITION BY dim_subscription_id_original
-                ORDER BY subscription_version DESC) = 1
-
 ), license_subscriptions AS (
 
     SELECT DISTINCT
@@ -60,11 +49,11 @@
       dim_license.company                                                         AS license_company_name,
       subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
       dim_subscription.dim_subscription_id                                        AS dim_subscription_id,
-      latest_active_subscription.latest_active_subscription_id                    AS latest_active_subscription_id,
       dim_subscription.subscription_start_date                                    AS subscription_start_date,
       dim_subscription.subscription_end_date                                      AS subscription_end_date,
       dim_subscription.subscription_start_month                                   AS subscription_start_month,
       dim_subscription.subscription_end_month                                     AS subscription_end_month,
+      dim_subscription.dim_subscription_id_original                               AS dim_subscription_id_original,
       dim_billing_account.dim_billing_account_id                                  AS dim_billing_account_id,
       dim_crm_accounts.crm_account_name                                           AS crm_account_name,
       dim_crm_accounts.dim_parent_crm_account_id                                  AS dim_parent_crm_account_id,
@@ -87,11 +76,9 @@
     INNER JOIN subscription_source
       ON dim_license.dim_subscription_id = subscription_source.subscription_id
     LEFT JOIN dim_subscription
-      ON subscription_source.subscription_name = dim_subscription.subscription_name
-    LEFT JOIN latest_active_subscription
-      ON dim_subscription.dim_subscription_id_original = latest_active_subscription.dim_subscription_id_original
+      ON subscription_source.subscription_name_slugify = dim_subscription.subscription_name_slugify
     LEFT JOIN subscription_source AS all_subscriptions
-      ON subscription_source.subscription_name = all_subscriptions.subscription_name
+      ON subscription_source.subscription_name_slugify = all_subscriptions.subscription_name_slugify
     INNER JOIN fct_charge
       ON all_subscriptions.subscription_id = fct_charge.dim_subscription_id
         AND charge_type = 'Recurring'
@@ -107,6 +94,23 @@
       ON effective_start_month <= dim_date.date_day AND effective_end_month > dim_date.date_day
     {{ dbt_utils.group_by(n=21)}}
 
+
+  ), latest_active_subscription AS (
+
+    SELECT
+        dim_subscription_id             AS latest_active_subscription_id,
+        dim_subscription_id_original    AS dim_subscription_id_original
+    FROM dim_subscription
+        WHERE subscription_status IN ('Active', 'Cancelled')
+
+  ), license_subscriptions_w_latest_active_subscription AS (
+
+    SELECT
+      license_subscriptions.*,
+      latest_active_subscription.latest_active_subscription_id
+      FROM license_subscriptions
+        LEFT JOIN latest_active_subscription
+      ON license_subscriptions.dim_subscription_id_original = latest_active_subscription.dim_subscription_id_original
 
   ), joined AS (
 
@@ -128,24 +132,24 @@
         dim_ping_instance.license_md5                                                                                                   AS license_md5,
         dim_ping_instance.is_trial                                                                                                      AS is_trial,
         fct_ping_instance_metric.umau_value                                                                                             AS umau_value,
-        license_subscriptions.license_id                                                                                                AS license_id,
-        license_subscriptions.license_company_name                                                                                      AS license_company_name,
-        license_subscriptions.latest_active_subscription_id                                                                             AS latest_active_subscription_id,
-        license_subscriptions.original_subscription_name_slugify                                                                        AS original_subscription_name_slugify,
-        license_subscriptions.product_category_array                                                                                    AS product_category_array,
-        license_subscriptions.product_rate_plan_name_array                                                                              AS product_rate_plan_name_array,
-        license_subscriptions.subscription_start_month                                                                                  AS subscription_start_month,
-        license_subscriptions.subscription_end_month                                                                                    AS subscription_end_month,
-        license_subscriptions.dim_billing_account_id                                                                                    AS dim_billing_account_id,
-        license_subscriptions.crm_account_name                                                                                          AS crm_account_name,
-        license_subscriptions.dim_parent_crm_account_id                                                                                 AS dim_parent_crm_account_id,
-        license_subscriptions.parent_crm_account_name                                                                                   AS parent_crm_account_name,
-        license_subscriptions.parent_crm_account_billing_country                                                                        AS parent_crm_account_billing_country,
-        license_subscriptions.parent_crm_account_sales_segment                                                                          AS parent_crm_account_sales_segment,
-        license_subscriptions.parent_crm_account_industry                                                                               AS parent_crm_account_industry,
-        license_subscriptions.parent_crm_account_owner_team                                                                             AS parent_crm_account_owner_team,
-        license_subscriptions.parent_crm_account_sales_territory                                                                        AS parent_crm_account_sales_territory,
-        license_subscriptions.technical_account_manager                                                                                 AS technical_account_manager,
+        license_subscriptions_w_latest_active_subscription.license_id                                                                                                AS license_id,
+        license_subscriptions_w_latest_active_subscription.license_company_name                                                                                      AS license_company_name,
+        license_subscriptions_w_latest_active_subscription.latest_active_subscription_id                                                                             AS latest_active_subscription_id,
+        license_subscriptions_w_latest_active_subscription.original_subscription_name_slugify                                                                        AS original_subscription_name_slugify,
+        license_subscriptions_w_latest_active_subscription.product_category_array                                                                                    AS product_category_array,
+        license_subscriptions_w_latest_active_subscription.product_rate_plan_name_array                                                                              AS product_rate_plan_name_array,
+        license_subscriptions_w_latest_active_subscription.subscription_start_month                                                                                  AS subscription_start_month,
+        license_subscriptions_w_latest_active_subscription.subscription_end_month                                                                                    AS subscription_end_month,
+        license_subscriptions_w_latest_active_subscription.dim_billing_account_id                                                                                    AS dim_billing_account_id,
+        license_subscriptions_w_latest_active_subscription.crm_account_name                                                                                          AS crm_account_name,
+        license_subscriptions_w_latest_active_subscription.dim_parent_crm_account_id                                                                                 AS dim_parent_crm_account_id,
+        license_subscriptions_w_latest_active_subscription.parent_crm_account_name                                                                                   AS parent_crm_account_name,
+        license_subscriptions_w_latest_active_subscription.parent_crm_account_billing_country                                                                        AS parent_crm_account_billing_country,
+        license_subscriptions_w_latest_active_subscription.parent_crm_account_sales_segment                                                                          AS parent_crm_account_sales_segment,
+        license_subscriptions_w_latest_active_subscription.parent_crm_account_industry                                                                               AS parent_crm_account_industry,
+        license_subscriptions_w_latest_active_subscription.parent_crm_account_owner_team                                                                             AS parent_crm_account_owner_team,
+        license_subscriptions_w_latest_active_subscription.parent_crm_account_sales_territory                                                                        AS parent_crm_account_sales_territory,
+        license_subscriptions_w_latest_active_subscription.technical_account_manager                                                                                 AS technical_account_manager,
         COALESCE(is_paid_subscription, FALSE)                                                                                           AS is_paid_subscription,
         COALESCE(is_program_subscription, FALSE)                                                                                        AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
@@ -181,9 +185,9 @@
         ON dim_ping_instance.dim_host_id = dim_hosts.host_id
           AND dim_ping_instance.ip_address_hash = dim_hosts.source_ip_hash
           AND dim_ping_instance.dim_instance_id = dim_hosts.instance_id
-      LEFT JOIN license_subscriptions
-        ON dim_ping_instance.license_md5 = license_subscriptions.license_md5
-          AND dim_date.first_day_of_month = license_subscriptions.reporting_month
+      LEFT JOIN license_subscriptions_w_latest_active_subscription
+        ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_active_subscription.license_md5
+          AND dim_date.first_day_of_month = license_subscriptions_w_latest_active_subscription.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
 

@@ -14,6 +14,7 @@
 , final AS (
 
     SELECT
+        fct_ping_instance_metric.ping_instance_metric_id                                                         AS ping_instance_metric_id,
         fct_ping_instance_metric.dim_ping_instance_id                                                            AS dim_ping_instance_id,
         fct_ping_instance_metric.metrics_path                                                                    AS metrics_path,
         fct_ping_instance_metric.metric_value                                                                    AS metric_value,
