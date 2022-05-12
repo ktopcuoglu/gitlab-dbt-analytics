@@ -612,6 +612,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , NULL as type
       , project_id
       , created_at
       , updated_at
@@ -1611,6 +1612,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , NULL AS type
       , project_id
       , created_at
       , updated_at
