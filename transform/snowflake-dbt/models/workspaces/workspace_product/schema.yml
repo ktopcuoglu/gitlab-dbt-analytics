@@ -750,18 +750,18 @@ models:
           - not_null
           - unique
 
-  - name: rpt_ping_instance_subcription_opt_in_monthly
-    description: ' {{ doc("rpt_ping_instance_subcription_opt_in_monthly") }} '
+  - name: rpt_ping_instance_subscription_opt_in_monthly
+    description: ' {{ doc("rpt_ping_instance_subscription_opt_in_monthly") }} '
     columns:
-      - name: rpt_ping_instance_subcription_opt_in_monthly_id
+      - name: rpt_ping_instance_subscription_opt_in_monthly_id
         tests:
           - not_null
           - unique
 
-  - name: rpt_ping_instance_subcription_metric_opt_in_monthly
-    description: ' {{ doc("rpt_ping_instance_subcription_metric_opt_in_monthly") }} '
+  - name: rpt_ping_instance_subscription_metric_opt_in_monthly
+    description: ' {{ doc("rpt_ping_instance_subscription_metric_opt_in_monthly") }} '
     columns:
-      - name: rpt_ping_instance_subcription_metric_opt_in_monthly_id
+      - name: rpt_ping_instance_subscription_metric_opt_in_monthly_id
         tests:
           - not_null
           - unique

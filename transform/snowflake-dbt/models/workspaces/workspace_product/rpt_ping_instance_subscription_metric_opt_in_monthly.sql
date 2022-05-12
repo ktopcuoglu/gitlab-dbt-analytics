@@ -17,13 +17,17 @@ Attach metrics_path to subscription IF the subscription is on a version which it
 , active_subscriptions_by_metric AS (
 
   SELECT
-    active_subscriptions.*,
+    active_subscriptions.ping_created_at_month                          AS ping_created_at_month,
+    active_subscriptions.arr                                            AS arr,
+    active_subscriptions.latest_active_subscription_id                  AS latest_active_subscription_id,
+    active_subscriptions.licensed_user_count                            AS licensed_user_count,
+    metric_opt_in.ping_edition                                          AS ping_edition,
     metric_opt_in.metrics_path                                          AS metrics_path
   FROM active_subscriptions
     INNER JOIN metric_opt_in
-      ON active_subscriptions.major_minor_version
-        BETWEEN metric_opt_in.first_major_minor_version_with_counter AND metric_opt_in.last_major_minor_version_with_counter
-        AND active_subscriptions.ping_edition = metric_opt_in.ping_edition
+      ON active_subscriptions.major_minor_version_id
+        BETWEEN metric_opt_in.first_major_minor_version_id_with_counter AND metric_opt_in.last_major_minor_version_id_with_counter
+        --AND active_subscriptions.ping_edition = metric_opt_in.ping_edition
 
 /*
 Aggregate CTE to determine count of arr, subscriptions and licensed users for each month/metric.
@@ -32,7 +36,7 @@ Aggregate CTE to determine count of arr, subscriptions and licensed users for ea
 ), agg_subscriptions AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path']) }}          AS rpt_ping_instance_subcription_metric_opt_in_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path']) }}          AS rpt_ping_instance_subscription_metric_opt_in_monthly_id,
     ping_created_at_month                                                             AS ping_created_at_month,
     metrics_path                                                                      AS metrics_path,
     ping_edition                                                                      AS ping_edition,

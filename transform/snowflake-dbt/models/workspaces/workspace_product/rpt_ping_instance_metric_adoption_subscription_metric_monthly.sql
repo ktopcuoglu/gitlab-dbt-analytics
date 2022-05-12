@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('potential_report_counts', 'rpt_ping_instance_subcription_metric_opt_in_monthly'),
+    ('potential_report_counts', 'rpt_ping_instance_subscription_metric_opt_in_monthly'),
     ('active_subscriptions', 'rpt_ping_instance_active_subscriptions'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
@@ -66,8 +66,8 @@
         reported_actuals.seat_count                                    AS reported_seat_count, -- actually reported
         potential_report_counts.total_licensed_users                   AS total_licensed_users,  -- could have reported
         potential_report_counts.total_subscription_count               AS total_subscription_count, -- could have reported
-        total_subscription_count - reported_subscription_count         AS no_reporting_subscription_count, -- could have reported, but didn't
-        total_licensed_users - reported_seat_count                     AS no_reporting_seat_count -- could have reported, but didn't
+        total_subscription_count - reported_subscription_count         AS not_reporting_subscription_count, -- could have reported, but didn't
+        total_licensed_users - reported_seat_count                     AS not_reporting_seat_count -- could have reported, but didn't
     FROM reported_actuals
         INNER JOIN potential_report_counts
     ON reported_actuals.ping_created_at_month = potential_report_counts.ping_created_at_month
@@ -90,7 +90,7 @@
     is_paid_gmau                                                    AS is_paid_gmau,
     is_umau                                                         AS is_umau,
     reported_subscription_count                                     AS reporting_count,
-    no_reporting_subscription_count                                 AS no_reporting_count,
+    not_reporting_subscription_count                                 AS not_reporting_count,
     total_subscription_count                                        AS total_count,
     'metric/version check - subscription based estimation'          AS estimation_grain
   FROM joined_counts
@@ -109,7 +109,7 @@
     is_paid_gmau                                                    AS is_paid_gmau,
     is_umau                                                         AS is_umau,
     reported_seat_count                                             AS reporting_count,
-    no_reporting_seat_count                                         AS no_reporting_count,
+    not_reporting_seat_count                                         AS not_reporting_count,
     total_licensed_users                                            AS total_count,
     'metric/version check - seat based estimation'                  AS estimation_grain
   FROM joined_counts
@@ -121,7 +121,7 @@
 SELECT
     {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition','estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_subscription_metric_monthly_id,
     *,
-    {{ pct_w_counters('reporting_count', 'no_reporting_count') }}                                                        AS percent_reporting
+    {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                        AS percent_reporting
  FROM unioned_counts
 
 )

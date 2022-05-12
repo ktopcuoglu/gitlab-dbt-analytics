@@ -161,13 +161,13 @@ Data mart to explore statistics around usage ping counters. This includes the fo
 
 {% enddocs %}
 
-{% docs rpt_ping_instance_subcription_opt_in_monthly %}
+{% docs rpt_ping_instance_subscription_opt_in_monthly %}
 
 Monthly counts of active subscriptions.
 
 {% enddocs %}
 
-{% docs rpt_ping_instance_subcription_metric_opt_in_monthly %}
+{% docs rpt_ping_instance_subscription_metric_opt_in_monthly %}
 
 Monthly counts of active subscriptions.
 

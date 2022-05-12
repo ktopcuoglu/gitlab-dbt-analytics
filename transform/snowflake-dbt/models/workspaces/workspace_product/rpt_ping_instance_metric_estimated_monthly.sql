@@ -28,7 +28,7 @@
       is_gmau                           AS is_gmau,
       is_paid_gmau                      AS is_paid_gmau,
       is_umau                           AS is_umau,
-      SUM(metric_value)                 AS actual_usage
+      SUM(metric_value)                 AS recorded_usage
     FROM mart_ping_instance_metric_monthly
         WHERE time_frame = '28d'
     {{ dbt_utils.group_by(n=13)}}
@@ -40,7 +40,7 @@
   SELECT
       fact.*,
       mart_pct.reporting_count          AS reporting_count,
-      mart_pct.no_reporting_count       AS no_reporting_count,
+      mart_pct.not_reporting_count      AS not_reporting_count,
       mart_pct.percent_reporting        AS percent_reporting,
       mart_pct.estimation_grain         AS estimation_grain
     FROM fact
@@ -57,7 +57,7 @@
   SELECT
       fact.*,
       1                                         AS reporting_count,
-      0                                         AS no_reporting_count,
+      0                                         AS not_reporting_count,
       1                                         AS percent_reporting,
       'SaaS'    AS estimation_grain
     FROM fact
@@ -97,12 +97,12 @@ SELECT
     is_umau                                                                                                                                             AS is_umau,
     -- fct info
     reporting_count                                                                                                                                     AS reporting_count,
-    no_reporting_count                                                                                                                                  AS no_reporting_count,
+    not_reporting_count                                                                                                                                  AS not_reporting_count,
     percent_reporting                                                                                                                                   AS percent_reporting,
     estimation_grain                                                                                                                                    AS estimation_grain,
-    {{ usage_estimation('actual_usage', 'percent_reporting') }}                                                                                         AS total_usage_estimated,
-    total_usage_estimated - actual_usage                                                                                                                AS estimated_usage,
-    actual_usage                                                                                                                                        AS actual_usage
+    ROUND({{ usage_estimation('recorded_usage', 'percent_reporting') }})                                                                                  AS total_usage_with_estimate,
+    total_usage_with_estimate - recorded_usage                                                                                                                AS estimated_usage,
+    recorded_usage                                                                                                                                        AS recorded_usage
  FROM joined_counts_w_percentage
 
 )
