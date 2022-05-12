@@ -10,7 +10,7 @@ report AS (
   SELECT
     unique_id,
     gitlab_roulette_project,
-    gitlab_roulette_project,
+    gitlab_roulette_role,
     gitlab_roulette_history_at,
     total_team_members,
     available_team_members,

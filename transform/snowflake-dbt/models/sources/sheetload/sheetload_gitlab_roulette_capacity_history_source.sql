@@ -8,7 +8,7 @@ WITH source AS (
     SELECT
       unique_id::VARCHAR AS unique_id,
       project::VARCHAR AS gitlab_roulette_project,
-      role::VARCHAR AS gitlab_roulette_project,
+      role::VARCHAR AS gitlab_roulette_role,
       timestamp::TIMESTAMP AS gitlab_roulette_history_at,
       total_team_members::NUMBER AS total_team_members,
       available_team_members::NUMBER AS available_team_members,
