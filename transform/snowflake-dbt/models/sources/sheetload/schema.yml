@@ -533,3 +533,22 @@ models:
     - name: other
     - name: requestor_name
     - name: additional_gitlab_team_members
+- name: sheetload_gitlab_roulette_capacity_history_source
+  description: > 
+    History file from the GitLab Roulette application with the current capacity and availability for every project/role combination.   
+    For column descriptions see the application [documentation](https://gitlab.com/gitlab-org/gitlab-roulette/-/blob/a9ccc606396e48bc5e0e115eb6f21259e28e57c2/doc/capacity_history.md)
+  columns:
+    - name: unique_id
+    - name: gitlab_roulette_project
+    - name: gitlab_roulette_role
+    - name: gitlab_roulette_history_at
+    - name: total_team_members
+    - name: available_team_members
+    - name: hungry_team_members
+    - name: reduced_capacity_team_members
+    - name: ooo_team_members
+    - name: no_capacity_team_members
+    - name: updated_at
+    - name: valid_from
+    - name: valid_to
+    - name: is_current
