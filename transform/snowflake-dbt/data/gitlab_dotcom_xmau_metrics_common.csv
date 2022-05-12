@@ -3,7 +3,7 @@ action,manage,FALSE,manage,FALSE,dev,TRUE
 action_monthly_active_users_design_management,create,FALSE,product_planning,FALSE,dev,FALSE
 action_monthly_active_users_project_repo,create,TRUE,gitaly,TRUE,dev,FALSE
 action_monthly_active_users_wiki_repo,create,FALSE,editor,FALSE,dev,FALSE
-api_fuzzing_build_run,secure,TRUE,dynamic_analysis,FALSE,sec,FALSE
+api_fuzzing_build_run,secure,TRUE,dynamic_analysis,TRUE,sec,FALSE
 boards,plan,FALSE,project_management,FALSE,dev,FALSE
 ci_pipeline_creation,verify,TRUE,continuous_integration,TRUE,ops,FALSE
 ci_pipeline_schedules,verify,FALSE,pipeline_execution,FALSE,ops,FALSE

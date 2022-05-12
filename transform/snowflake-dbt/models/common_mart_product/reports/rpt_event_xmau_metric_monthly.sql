@@ -165,7 +165,7 @@ results_wo_pk AS (
 results AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name', 'event_name_array']) }} AS xmau_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS xmau_metric_monthly_id,
     results_wo_pk.*
   FROM results_wo_pk
 
