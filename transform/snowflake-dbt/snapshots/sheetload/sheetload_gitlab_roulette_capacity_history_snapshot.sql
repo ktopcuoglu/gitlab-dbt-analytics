@@ -8,10 +8,10 @@
     )
 }}
 
-SELECT
-  {{ dbt_utils.surrogate_key(['project','role','timestamp']) }} AS unique_id,
-  *,
-  _UPDATED_AT::NUMBER::TIMESTAMP as updated_at
-FROM {{ source('sheetload','gitlab_roulette_capacity_history') }}
+  SELECT
+    {{ dbt_utils.surrogate_key(['project','role','timestamp']) }} AS unique_id,
+    *,
+    _updated_at::NUMBER::TIMESTAMP AS updated_at
+  FROM {{ source('sheetload','gitlab_roulette_capacity_history') }}
 
 {% endsnapshot %}
