@@ -4,7 +4,8 @@
 ) }}
 
 {{ simple_cte([
-    ('mart_arr', 'mart_arr')
+  ('active_subscriptions', 'rpt_ping_instance_active_subscriptions'),
+  ('dim_ping_metric', 'dim_ping_metric')
     ])
 
 }}
@@ -14,20 +15,42 @@
 , subscription_info AS (
 
   SELECT
-    {{ dbt_utils.surrogate_key(['arr_month']) }}          AS rpt_ping_instance_subcription_opt_in_monthly_id,
-    arr_month                                             AS arr_month,
-    SUM(arr)                                              AS arr,
-    SUM(quantity)                                         AS total_licensed_users,
-    COUNT(DISTINCT dim_subscription_id)                   AS total_subscription_count
-  FROM mart_arr
-  WHERE product_tier_name != 'Storage'
-    AND product_delivery_type = 'Self-Managed'
-  GROUP BY 1,2
-    ORDER BY 2 DESC
+    ping_created_at_month                                             AS ping_created_at_month,
+    ping_edition                                                      AS ping_edition,
+    1                                                                 AS key,
+    SUM(arr)                                                          AS total_arr,
+    COUNT(DISTINCT latest_active_subscription_id)                     AS total_subscription_count,
+    SUM(licensed_user_count)                                          AS total_licensed_users
+  FROM active_subscriptions
+      {{ dbt_utils.group_by(n=3)}}
+
+), metrics AS (
+
+    SELECT
+        *,
+        1                                     AS key
+    FROM dim_ping_metric
+
+-- Join to get combo of all possible subscriptions and the metrics
+
+), sub_combo AS (
+
+    SELECT
+      {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS rpt_ping_instance_subcription_opt_in_monthly_id,
+      subscription_info.ping_created_at_month                                                           AS ping_created_at_month,
+      metrics.metrics_path                                                                              AS metrics_path,
+      subscription_info.ping_edition                                                                    AS ping_edition,
+      subscription_info.total_arr                                                                       AS total_arr,
+      subscription_info.total_subscription_count                                                        AS total_subscription_count,
+      subscription_info.total_licensed_users                                                            AS total_licensed_users
+    FROM subscription_info
+        INNER JOIN metrics
+    ON subscription_info.key = metrics.key
 
 )
+
  {{ dbt_audit(
-     cte_ref="subscription_info",
+     cte_ref="sub_combo",
      created_by="@icooper-acp",
      updated_by="@icooper-acp",
      created_date="2022-04-07",
