@@ -519,16 +519,16 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_event_with_valid_user %}
+{% docs fct_event_valid_events %}
 
-Type of Data: gitlab.com db usage events
+Description: Atomic level GitLab.com Usage Event Data with Events that have a Valid User -  by Event_Id, Created_at
+- User and Namespace activity with Targets and Actions from the GitLab.com application.  
 
-Aggregate Grain: None
-
-Time Grain: None
-
-Use case: fct_event_with_valid_user is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
-data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
+Special Business Logic in this Model: 
+- Use only Valid Events for standard analysis and reporting:
+  - Events where User Id = NULL are Valid Events that do not point to a particular User, ie. 'milestones'
+  - Events that are created after the User is created.  Events created before the User is created are from projects worked before the User, but imported after the user is created.  
+- Rolling 24 mos of data (for performance optimization)
 
 {% enddocs %}
 
