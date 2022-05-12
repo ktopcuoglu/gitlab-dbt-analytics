@@ -163,6 +163,7 @@
   script:
     - echo $DBT_MODELS
     - *set_snapshot
+    - *clone_raw # Reads from raw clone
     - *l_warehouse
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
