@@ -4609,6 +4609,18 @@ users:
         member_of:
             - marntz
 
+    - mconteanu:
+        member_of:
+            - reporter
+            - marketo
+        warehouses:
+            - analyst_xs
+
+    - mconteanu:
+        can_login: yes
+        member_of:
+            - mconteanu
+
     - mcooper:
         can_login: yes
         member_of:
