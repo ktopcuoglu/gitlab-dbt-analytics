@@ -3417,6 +3417,13 @@ roles:
             - analyst_l
             - analyst_xl
 
+    - mconteanu:
+        member_of:
+            - reporter
+            - marketo
+        warehouses:
+            - analyst_xs
+
     - mcooper:
         member_of:
             - analyst_finance
@@ -4612,6 +4619,11 @@ users:
         can_login: yes
         member_of:
             - marntz
+
+    - mconteanu:
+        can_login: yes
+        member_of:
+            - mconteanu
 
     - mcooper:
         can_login: yes
