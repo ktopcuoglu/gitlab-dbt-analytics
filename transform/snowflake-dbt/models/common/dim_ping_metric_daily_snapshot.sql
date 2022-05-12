@@ -23,7 +23,13 @@
          )
     }}
     
-    SELECT *
+    SELECT
+    {{
+          dbt_utils.star(
+            from=ref('dim_ping_metric'),
+            except=['DBT_UPDATED_AT']
+            )
+      }}
     FROM {{ ref('dim_ping_metric') }}
 
 {% endsnapshot %}
