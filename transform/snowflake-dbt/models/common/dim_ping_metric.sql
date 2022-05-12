@@ -47,6 +47,9 @@ WITH source AS (
     SELECT
       {{ dbt_utils.surrogate_key(['metrics_path']) }}                                                                                         AS ping_metric_id,
       metrics_path                                                                                                                            AS metrics_path,
+      'raw_usage_data_payload['''
+        || REPLACE(metrics_path, '.', '''][''')
+        || ''']'                                                                                                                                AS sql_friendly_path,
       data_source                                                                                                                             AS data_source,
       description                                                                                                                             AS description,
       product_category                                                                                                                        AS product_category,
