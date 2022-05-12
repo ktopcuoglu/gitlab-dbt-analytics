@@ -150,6 +150,7 @@
     - echo $DBT_MODELS
     - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
     - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - *clone_raw # Reads from raw clone
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
 
