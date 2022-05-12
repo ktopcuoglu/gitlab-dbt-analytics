@@ -539,9 +539,17 @@ models:
     For column descriptions see the application [documentation](https://gitlab.com/gitlab-org/gitlab-roulette/-/blob/a9ccc606396e48bc5e0e115eb6f21259e28e57c2/doc/capacity_history.md)
   columns:
     - name: unique_id
+      tests:
+        - not_null
     - name: gitlab_roulette_project
+      tests:
+        - not_null
     - name: gitlab_roulette_role
+      tests:
+        - not_null
     - name: gitlab_roulette_history_at
+      tests:
+        - not_null
     - name: total_team_members
     - name: available_team_members
     - name: hungry_team_members
