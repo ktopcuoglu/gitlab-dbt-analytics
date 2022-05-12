@@ -23,7 +23,6 @@ report AS (
     COALESCE(valid_to, {{ var('tomorrow') }}) AS valid_to
   FROM source
   WHERE is_current = TRUE
-  
 
 )
 
