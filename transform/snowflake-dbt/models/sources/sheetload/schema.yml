@@ -537,6 +537,11 @@ models:
   description: > 
     History file from the GitLab Roulette application with the current capacity and availability for every project/role combination.   
     For column descriptions see the application [documentation](https://gitlab.com/gitlab-org/gitlab-roulette/-/blob/a9ccc606396e48bc5e0e115eb6f21259e28e57c2/doc/capacity_history.md)
+  tests:
+    - dbt_utils.unique_combination_of_columns:
+        combination_of_columns:
+          - unique_id
+          - valid_from
   columns:
     - name: unique_id
       tests:
