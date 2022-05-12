@@ -3210,12 +3210,16 @@ roles:
     - kdietz:
         member_of:
             - analyst_core
+            - bi_tool_eval_read
             - data_team_analyst
+            - dbt_data_science
+            - google_analytics_360
+            - marketo
             - salesforce
             - restricted_safe
-            - dbt_data_science
-            - bi_tool_eval_read
             - snowplow
+            - zendesk
+            - zendesk_community_relations
         warehouses:
             - analyst_xs
         owns:
