@@ -534,13 +534,16 @@ data quality issues by filtering out negative days since user creation at event 
 
 {% docs fct_event %}
 
-Type of Data: gitlab.com db usage events
+Description: Source level GitLab.com Usage Event Data
+- User and Namespace activity with Targets and Actions in the GitLab.com application are captured and refreshed periodically throughout the day.  Changes to Targets or Actions be updated in the latest data pull. 
+- Dimension Id's commonly joined to Event data is added to this Atomic Level data. 
+- The [prep_event](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_event) table is used to prepare the data and build the fct_event data. 
+- A handbook page describing the Event data and Prep_Event table can be found [here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-product-events-data/) 
 
-Aggregate Grain: None
+Data Grain: Event_Id, Date_Id
 
-Time Grain: None
-
-Use case: Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
+Special Business Logic in this Model: 
+- Source of truth (atomic), contains foreign keys to easily join to DIM tables or other FCT/MART tables for additional detail and discovery
 
 {% enddocs %}
 
