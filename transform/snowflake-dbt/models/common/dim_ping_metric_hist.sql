@@ -44,7 +44,7 @@ WITH source AS (
 ), final AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['metrics_path']) }}                                   AS ping_metric_id,
+      {{ dbt_utils.surrogate_key(['metrics_path', valid_from]) }}                       AS ping_metric_hist_id,
       metrics_path                                                                      AS metrics_path,
       'raw_usage_data_payload['''
         || REPLACE(metrics_path, '.', '''][''')

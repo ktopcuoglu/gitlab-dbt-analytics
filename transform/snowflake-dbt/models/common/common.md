@@ -1013,3 +1013,11 @@ This model replaces `dim_usage_ping_metric` table that maps directly to the [Git
 Some other enhancements in this model include : addition of a surrogate key, exclusion and cleaning of some Product groups, and renaming Usage ping to Service Ping.
 
 {% enddocs %}
+
+{% docs dim_ping_metric_hist %}
+
+This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `valid_from` and `valid_to` timestamps have been included to be used in the join.
+
+For this reason `metrics_path` is not unique.
+
+{% enddocs %}
