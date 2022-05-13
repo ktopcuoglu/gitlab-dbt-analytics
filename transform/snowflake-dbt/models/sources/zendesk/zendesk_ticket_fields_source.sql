@@ -19,7 +19,7 @@ WITH source AS (
       sub_type_id::NUMBER                           AS sub_type_id,
       system_field_options::VARCHAR                 AS system_field_options,
       tag::VARCHAR                                  AS tag,
-      title::VARCHAR                                AS title,
+      ticket_form_title::VARCHAR                    AS title,
       title_in_portal::VARCHAR                      AS title_in_portal,
       type::VARCHAR                                 AS type,
       url::VARCHAR                                  AS url,
