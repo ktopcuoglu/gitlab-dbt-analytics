@@ -167,7 +167,7 @@
   <<: *snowflake_dbt_jobs
   script:
     - *deps_and_seed
-    - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/.sql/$DEPENDENT_TYPE/g" )
+    - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
     - echo $CHANGED_FILES
     - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $CHANGED_FILES || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
