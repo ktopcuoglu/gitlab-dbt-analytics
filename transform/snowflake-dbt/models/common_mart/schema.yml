@@ -147,7 +147,7 @@ models:
   description: '{{ doc("mart_event_namespace_daily") }}'
   columns:
     - name: event_namespace_daily_id
-      description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_usage_namespace_daily.
+      description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_event_namespace_daily.
       tests:
         - not_null
         - unique
