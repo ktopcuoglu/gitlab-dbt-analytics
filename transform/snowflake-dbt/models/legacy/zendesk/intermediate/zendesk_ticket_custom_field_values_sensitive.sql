@@ -12,12 +12,13 @@ WITH zendesk_tickets AS (
 ), custom_fields AS (
 
     SELECT 
-      d.value['id']     AS ticket_custom_field_id,
-      d.value['value']  AS ticket_custom_field_value,
-      ticket_id         AS ticket_id
+      d.value['id']                             AS ticket_custom_field_id,
+      NULLIF(d.value['value'], 'null')          AS ticket_custom_field_value,
+      ticket_id                                 AS ticket_id
     FROM zendesk_tickets,
     LATERAL FLATTEN(INPUT => PARSE_JSON(ticket_custom_field_values), outer => true) d
-    
+    WHERE ticket_custom_field_value IS NOT NULL
+
 )
 
 SELECT *
