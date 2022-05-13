@@ -534,21 +534,61 @@ Special Business Logic in this Model:
 
 {% docs fct_event %}
 
-Description: Atomic level GitLab.com Usage Event Data by Event_Id, Created_at
-- User and Namespace activity with Targets and Actions in the GitLab.com application are captured and refreshed periodically throughout the day.  Changes to Targets or Actions are captured in the latest data pull. 
-- Dimension Id's commonly joined to Event data is added to this Atomic Level data. 
-- The [prep_event](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_event) table is used to prepare the data and build the fct_event data. 
-- A handbook page describing the Event data and Prep_Event table can be found [here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-product-events-data/) 
+**Description:** Atomic level GitLab.com Usage Event Data
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie Issue, milestone, merge_request and Actions have effects on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
 
-Special Business Logic in this Model: 
-- Degenerate dimenisions added for Ease of Use
-  - event_name
-  - stage_name
-  - section_name
-  - group_name
+**Data Grain:**
+- event_id
+- event_create_at
+
+**Filters:**
+- None - `ALL Data` at the Atomic (`lowest level/grain`) is brought forward from the Source for comprehensive analysis.  
+  - Futher filters may be needed for Standard Analysis and Reporting, ie. Limiting to Events with Valid Users  
+
+**Table Attributes:**
+- This table is built from the Event Source data and Joined to data normally used when working with Events as an Enterprise Data Star solution and Ease Of Use.  Here are the Attributes brought in from the Event source and Attributes Derived from the Supporting Dimensions:
+
+Attributes from Source Event Data:
+- event_id
+- event_name (derived)
+- stage_name (derived)
+- parent_type (derived)
+- event_created_at
+- dim_project_id
+- parent_id (same as dim_project_id)
+- dim_user_id
+
+Attributes from Joined Data:
+- dim_event_date_id
+- created_date_id
+- dim_active_product_tier_id
+- dim_active_subscription_id 
+- dim_crm_account_id
+- dim_billing_account_id
+- dim_ultimate_parent_namespace_id
+- is_smau
+- is_gmau
+- is_umau
+- group_name
+- section_name
+- plan_id_at_event_date
+- plan_name_at_event_date
+- plan_was_paid_at_event_date
+- days_since_user_creation_at_event_date
+- days_since_namespace_creation_at_event_date
+- days_since_project_creation_at_event_date
+- data_source
+
+**Business Logic in this Model:** 
+- Atomic Level data
+- ALL Source Data starting 2017-01
+- Data_source is Identified in the Model as 'GITLAB_DOTCOM'
+- The Actual Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information is Derived by using the Event Date for each event.
 - The events are identified as being used for xMAU metrics
-- Latest Namespace Plan information is included
 - `data_source` = 'GITLAB_DOTCOM'
+
+**Other Comments:**
+- The `fct_event` table is built directly from the [Prep_Event table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_event) which brings all of the different types of events together.  A handbook page on this table can be found [here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-product-events-data/) .
 
 {% enddocs %}
 
