@@ -27,7 +27,7 @@ Determine latest version for each subscription to determine if the potential met
       ping_created_at_month             AS ping_created_at_month,
       latest_active_subscription_id     AS latest_active_subscription_id,
       ping_edition                      AS ping_edition,
-      major_minor_version               AS major_minor_version,
+      major_minor_version_id            AS major_minor_version_id,
       instance_user_count               AS instance_user_count
   FROM mart_ping_instance_metric_monthly
       WHERE time_frame = '28d'
@@ -46,9 +46,9 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
         ping_created_at_month             AS ping_created_at_month,
         latest_active_subscription_id     AS latest_active_subscription_id,
         ping_edition                      AS ping_edition,
-        major_minor_version               AS major_minor_version_id,
+        major_minor_version_id            AS major_minor_version_id,
         MAX(instance_user_count)          AS instance_user_count
-    FROM mart_ping_instance_metric_monthly
+    FROM subscriptions_w_versions
       {{ dbt_utils.group_by(n=4)}}
 /*
 Get the count of pings each month per subscription_name_slugify
