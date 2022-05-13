@@ -25,6 +25,7 @@ Determine latest version for each subscription to determine if the potential met
 
   SELECT
       ping_created_at_month             AS ping_created_at_month,
+      dim_installation_id               AS dim_installation_id,
       latest_active_subscription_id     AS latest_active_subscription_id,
       ping_edition                      AS ping_edition,
       major_minor_version_id            AS major_minor_version_id,
@@ -44,12 +45,13 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
 
     SELECT
         ping_created_at_month             AS ping_created_at_month,
+        dim_installation_id               AS dim_installation_id,
         latest_active_subscription_id     AS latest_active_subscription_id,
         ping_edition                      AS ping_edition,
         major_minor_version_id            AS major_minor_version_id,
         MAX(instance_user_count)          AS instance_user_count
     FROM subscriptions_w_versions
-      {{ dbt_utils.group_by(n=4)}}
+      {{ dbt_utils.group_by(n=5)}}
 /*
 Get the count of pings each month per subscription_name_slugify
 */
@@ -58,10 +60,11 @@ Get the count of pings each month per subscription_name_slugify
 
   SELECT
     ping_created_at_month                       AS ping_created_at_month,
+    dim_installation_id                         AS dim_installation_id,
     latest_active_subscription_id               AS latest_active_subscription_id,
     COUNT(DISTINCT(dim_ping_instance_id))       AS ping_count
   FROM mart_ping_instance_metric_monthly
-      {{ dbt_utils.group_by(n=2)}}
+      {{ dbt_utils.group_by(n=3)}}
 
 /*
 Join subscription information with count of pings
@@ -76,7 +79,7 @@ Join subscription information with count of pings
     INNER JOIN ping_counts
   ON deduped_subscriptions_w_versions.ping_created_at_month = ping_counts.ping_created_at_month
     AND deduped_subscriptions_w_versions.latest_active_subscription_id = ping_counts.latest_active_subscription_id
-
+    AND deduped_subscriptions_w_versions.dim_installation_id = ping_counts.dim_installation_id
 /*
 Aggregate mart_charge information (used as the basis of truth), this gets rid of host deviation
 */
@@ -92,7 +95,7 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
   FROM fct_charge
   INNER JOIN dim_date
     ON effective_start_month <= dim_date.date_actual
-    AND (effective_end_month > dim_date.date_actual OR effective_end_month IS NULL)
+    AND (effective_end_month >= dim_date.date_actual OR effective_end_month IS NULL)
     AND dim_date.day_of_month = 1
   INNER JOIN dim_charge
     ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
@@ -117,6 +120,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
   SELECT
     {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_active_subscription_id']) }}               AS rpt_ping_instance_active_subscriptions_id,
     mart_charge_cleaned.arr_month                                                                           AS ping_created_at_month,
+    joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_active_subscription_id,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
     joined_subscriptions.major_minor_version_id                                                             AS major_minor_version_id,
