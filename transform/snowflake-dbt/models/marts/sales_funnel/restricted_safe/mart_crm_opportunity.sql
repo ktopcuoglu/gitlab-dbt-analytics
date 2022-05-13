@@ -84,6 +84,7 @@
       dim_crm_account.crm_account_name,
       dim_crm_account.dim_crm_account_id,
       dim_crm_opportunity.dim_crm_user_id                                 AS dim_crm_sales_rep_id,
+      fct_crm_opportunity.ssp_id,
 
       -- opportunity attributes & additive fields
       fct_crm_opportunity.is_won,
@@ -93,6 +94,7 @@
       fct_crm_opportunity.iacv,
       fct_crm_opportunity.net_iacv,
       fct_crm_opportunity.net_arr,
+      fct_crm_opportunity.new_logo_count,
       fct_crm_opportunity.amount,
       dim_crm_opportunity.is_edu_oss,
       dim_crm_opportunity.is_ps_opp,
@@ -156,6 +158,7 @@
       fct_crm_opportunity.products_purchased,
       fct_crm_opportunity.growth_type,
       fct_crm_opportunity.opportunity_deal_size,
+      dim_crm_opportunity.primary_campaign_source_id,
 
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
@@ -177,9 +180,9 @@
       dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped,
       dim_crm_user_hierarchy_stamped_area.crm_opp_owner_area_stamped,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_stamped_sales_segment.crm_opp_owner_sales_segment_stamped',
-        'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
+        'dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }}
                                                                            AS crm_opp_owner_sales_segment_region_stamped_grouped,
-      --dim_crm_user_hierarchy_stamped.crm_opp_owner_sales_segment_geo_region_area_stamped,
+      dim_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped,
       dim_crm_opportunity.crm_opp_owner_user_role_type_stamped,
 
       -- crm owner/sales rep live fields
@@ -189,7 +192,7 @@
       dim_crm_user_hierarchy_live_region.crm_user_region,
       dim_crm_user_hierarchy_live_area.crm_user_area,
       {{ sales_segment_region_grouped('dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment',
-        'dim_crm_user_hierarchy_live_region.crm_user_region') }}
+        'dim_crm_user_hierarchy_live_geo.crm_user_geo', 'dim_crm_user_hierarchy_live_region.crm_user_region') }}
                                                                            AS crm_user_sales_segment_region_grouped,
 
       
@@ -200,7 +203,7 @@
       dim_crm_account_user_hierarchy_live_region.crm_user_region                         AS crm_account_user_region,
       dim_crm_account_user_hierarchy_live_area.crm_user_area                             AS crm_account_user_area,
       {{ sales_segment_region_grouped('dim_crm_account_user_hierarchy_live_sales_segment.crm_user_sales_segment',
-        'dim_crm_account_user_hierarchy_live_region.crm_user_region') }}
+        'dim_crm_account_user_hierarchy_live_geo.crm_user_geo', 'dim_crm_account_user_hierarchy_live_region.crm_user_region') }}
                                                                                          AS crm_account_user_sales_segment_region_grouped,
 
       -- channel fields
@@ -284,7 +287,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@rkohnke",
     created_date="2020-12-07",
-    updated_date="2022-02-24",
+    updated_date="2022-04-26",
   ) }}

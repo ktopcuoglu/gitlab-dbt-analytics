@@ -120,6 +120,10 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - infrastructure_missing_employees
+  - name: hp_dvr
+    owner: '@dvanrooijen2'
+    tabs:
+      - hp_dvr
   - name: job_roles_prior_to_2020_02
     owner: '@pluthra'
     tabs:
@@ -259,11 +263,11 @@ sheets:
     tabs:
       - sdr_count_snapshot
   - name: sisense_users
-    owner: '@laddula'
+    owner: '@dvanrooijen2'
     tabs:
       - sisense_users
   - name: sisense_user_roles
-    owner: '@laddula'
+    owner: '@dvanrooijen2'
     tabs:
       - sisense_user_roles
   - name: social_marketing_metrics

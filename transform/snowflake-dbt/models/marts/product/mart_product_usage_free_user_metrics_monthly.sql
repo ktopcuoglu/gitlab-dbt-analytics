@@ -139,12 +139,37 @@
       free_user_metrics.projects_compliance_framework_all_time_event,
       free_user_metrics.commit_ci_config_file_28_days_user,
       free_user_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      free_user_metrics.dependency_scanning_jobs_all_time_user,
+      free_user_metrics.analytics_devops_adoption_all_time_user,
+      free_user_metrics.projects_imported_all_time_event,
+      free_user_metrics.preferences_security_dashboard_28_days_user,
+      free_user_metrics.web_ide_edit_28_days_user,
+      free_user_metrics.auto_devops_pipelines_all_time_event,
+      free_user_metrics.projects_prometheus_active_all_time_event,
+      free_user_metrics.prometheus_enabled,
+      free_user_metrics.prometheus_metrics_enabled,
+      free_user_metrics.group_saml_enabled,
+      free_user_metrics.jira_issue_imports_all_time_event,
+      free_user_metrics.author_epic_all_time_user,
+      free_user_metrics.author_issue_all_time_user,
+      free_user_metrics.failed_deployments_28_days_user,
+      free_user_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      free_user_metrics.geo_enabled,
+      free_user_metrics.geo_nodes_all_time_event,
+      free_user_metrics.auto_devops_pipelines_28_days_user,
+      free_user_metrics.active_instance_runners_all_time_event,
+      free_user_metrics.active_group_runners_all_time_event,
+      free_user_metrics.active_project_runners_all_time_event,
+      free_user_metrics.gitaly_version,
+      free_user_metrics.gitaly_servers_all_time_event,
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
     LEFT JOIN crm_accounts
       ON free_user_metrics.dim_crm_account_id = crm_accounts.dim_crm_account_id
-    LEFT JOIN namespaces 
+    LEFT JOIN namespaces
       ON namespaces.dim_namespace_id = free_user_metrics.dim_namespace_id
 
 )
@@ -270,6 +295,29 @@
         'projects_compliance_framework_all_time_event',
         'commit_ci_config_file_28_days_user',
         'view_audit_all_time_user',
+        'dependency_scanning_jobs_all_time_user',
+        'analytics_devops_adoption_all_time_user',
+        'projects_imported_all_time_event',
+        'preferences_security_dashboard_28_days_user',
+        'web_ide_edit_28_days_user',
+        'auto_devops_pipelines_all_time_event',
+        'projects_prometheus_active_all_time_event',
+        'prometheus_enabled',
+        'prometheus_metrics_enabled',
+        'group_saml_enabled',
+        'jira_issue_imports_all_time_event',
+        'author_epic_all_time_user',
+        'author_issue_all_time_user',
+        'failed_deployments_28_days_user',
+        'successful_deployments_28_days_user',
+        'geo_enabled',
+        'geo_nodes_all_time_event',
+        'auto_devops_pipelines_28_days_user',
+        'active_instance_runners_all_time_event',
+        'active_group_runners_all_time_event',
+        'active_project_runners_all_time_event',
+        'gitaly_version',
+        'gitaly_servers_all_time_event',
         'is_latest_data'
     ]
 ) }}
@@ -279,5 +327,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2022-03-02"
+    updated_date="2022-04-21"
 ) }}

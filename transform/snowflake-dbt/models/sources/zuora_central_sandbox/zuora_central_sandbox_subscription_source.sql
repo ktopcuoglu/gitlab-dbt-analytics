@@ -36,7 +36,10 @@ WITH source AS (
       eoa_starter_bronze_offer_accepted_c           AS eoa_starter_bronze_offer_accepted,
       IFF(LENGTH(TRIM(turn_on_cloud_licensing_c)) > 0, turn_on_cloud_licensing_c, NULL)
                                                     AS turn_on_cloud_licensing,
-      -- turn_on_usage_ping_required_metrics_c         AS turn_on_usage_ping_required_metrics,
+      turn_on_seat_reconciliation_c                 AS turn_on_seat_reconciliation,
+      turn_on_auto_renew_c                          AS turn_on_auto_renewal,
+      turn_on_operational_metrics_c                 AS turn_on_operational_metrics,
+      contract_operational_metrics_c                AS contract_operational_metrics,
 
       --key_dates
       cancelled_date                                AS cancelled_date,
@@ -62,7 +65,12 @@ WITH source AS (
       --renewal info
       renewal_setting                               AS renewal_setting,
       renewal_subscription_c_c                      AS zuora_renewal_subscription_name,
-
+      split(nullif({{zuora_slugify("renewal_subscription_c_c")}}, ''), '|')
+                                                    AS zuora_renewal_subscription_name_slugify,
+      renewal_term                                  AS renewal_term,
+      renewal_term_period_type                      AS renewal_term_period_type,
+      contract_auto_renew_c                         AS contract_auto_renewal,
+      contract_seat_reconciliation_c                AS contract_seat_reconciliation,
 
 
       --metadata

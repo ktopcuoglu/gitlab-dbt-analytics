@@ -93,7 +93,7 @@ saas_last_monthly_ping_per_account AS (
         AND metrics_value > 0 -- Filter out non-instances
   QUALIFY ROW_NUMBER() OVER (
     PARTITION BY
-      namespace_subscription_bridge.dim_subscription_id,
+      namespace_subscription_bridge.dim_crm_account_id,
       namespace_subscription_bridge.dim_namespace_id,
       namespace_subscription_bridge.snapshot_month,
       saas_usage_ping.ping_name

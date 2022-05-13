@@ -89,7 +89,7 @@ WITH sfdc_lead AS (
       crm_account.parent_crm_account_sales_segment,
       crm_account.parent_crm_account_tsp_region,
       sfdc_account.tsp_region,
-      crm_person.region                                                                                                     AS crm_person_region,
+      crm_person.account_demographics_geo                                                                                                    AS crm_person_region,
       CASE
         WHEN sfdc_lead_contact = 'contact' THEN sfdc_contact.mailing_country
         ELSE sfdc_lead.country
@@ -253,9 +253,9 @@ WITH sfdc_lead AS (
       sfdc.parent_crm_account_sales_segment                                                                              AS sfdc_parent_sales_segment,
       COALESCE(sfdc.parent_crm_account_tsp_region, sfdc.tsp_region, sfdc.crm_person_region)                              AS sfdc_parent_crm_account_tsp_region,
       IFF(marketo_lead.email_address IS NOT NULL, TRUE, FALSE)                                                           AS is_marketo_lead,
-      marketo_lead.is_marketo_email_bounced                                                                              AS is_marketo_email_hard_bounced,
+      COALESCE(marketo_lead.is_marketo_email_bounced, FALSE)                                                             AS is_marketo_email_hard_bounced,
       marketo_lead.marketo_email_bounced_date                                                                            AS marketo_email_hard_bounced_date,
-      marketo_lead.is_marketo_unsubscribed                                                                               AS is_marketo_opted_out,
+      COALESCE(marketo_lead.is_marketo_unsubscribed, FALSE)                                                              AS is_marketo_opted_out,
       marketo_lead.marketo_compliance_segment_value                                                                      AS marketo_compliance_segment_value,
       CASE
         WHEN sfdc.email_address IS NOT NULL THEN TRUE
@@ -327,5 +327,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2021-11-07"
+    updated_date="2022-04-07"
 ) }}

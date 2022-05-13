@@ -1,4 +1,9 @@
+"""
+Test unit to ensure quality of transformation algorithm
+from Postgres to Snowflake
+"""
 from typing import Dict, List, Any
+import re
 import pytest
 import sqlparse.sql
 
@@ -12,12 +17,15 @@ from extract.saas_usage_ping.transform_instance_level_queries_to_snowsql import 
     META_API_COLUMNS,
     TRANSFORMED_INSTANCE_QUERIES_FILE,
     META_DATA_INSTANCE_QUERIES_FILE,
+    HAVING_CLAUSE_PATTERN,
+    METRICS_EXCEPTION,
 )
 
-##################################################################
-# Test case: for transforming queries from Postgres to Snowflake
-##################################################################
+
 def test_transforming_queries():
+    """
+    Test case: for transforming queries from Postgres to Snowflake
+    """
     test_cases_dict: Dict[Any, Any] = {
         "counts": {
             "boards": 'SELECT COUNT("boards"."id") FROM "boards"',
@@ -111,7 +119,7 @@ def test_transforming_queries():
     for sql_metric, sql_query in final_sql_query_dict.items():
         #  check did we fix the bug with "JOINprep", should be fixed to "JOIN prep."
         final_sql = sql_query.upper()
-        assert not "JOINPREP" in final_sql
+        assert "JOINPREP" not in final_sql
 
         if "JOIN" in final_sql:
             assert "JOIN PREP" in final_sql
@@ -120,10 +128,10 @@ def test_transforming_queries():
         assert sql_query == results_dict[sql_metric]
 
 
-##################################################################
-# Test case: Scalar subquery :: test SELECT (SELECT 1) -> SELECT (SELECT 1) as counter_value
-##################################################################
 def test_scalar_subquery():
+    """
+    Test case: Scalar subquery :: test SELECT (SELECT 1) -> SELECT (SELECT 1) as counter_value
+    """
     test_cases_dict = {
         "counts": {
             "snippets": 'SELECT (SELECT COUNT("snippets"."id") FROM "snippets" WHERE "snippets"."type" = \'PersonalSnippet\') + (SELECT COUNT("snippets"."id") FROM "snippets" WHERE "snippets"."type" = \'ProjectSnippet\')'
@@ -141,16 +149,16 @@ def test_scalar_subquery():
         assert sql_query == results_dict[sql_metric]
 
 
-##################################################################
-# Test case: regular subquery transform:
-# SELECT a
-#   FROM (SELECT 1 as a
-#           FROM b) ->
-# SELECT 'metric_name', a metric_value
-#   FROM (SELECT 1 AS a
-#           FROM b)
-##################################################################
 def test_regular_subquery_transform():
+    """
+    Test case: regular subquery transform:
+    SELECT a
+      FROM (SELECT 1 as a
+              FROM b) ->
+    SELECT 'metric_name', a metric_value
+      FROM (SELECT 1 AS a
+              FROM b)
+    """
     test_cases_dict_subquery: Dict[Any, Any] = {
         "usage_activity_by_stage_monthly": {
             "create": {
@@ -189,10 +197,10 @@ def test_regular_subquery_transform():
         assert sql_query == results_dict_subquery[sql_metric]
 
 
-##################################################################
-# Test case: optimize_token_size
-##################################################################
 def test_optimize_token_size():
+    """
+    Test case: optimize_token_size
+    """
     test_cases_list: List[Any] = [
         "  SELECT  aa.bb  FROM   (SELECT   1 as aa) FROM BB ",
         "   SELECT 1",
@@ -214,10 +222,13 @@ def test_optimize_token_size():
         assert optimize_token_size(test_case_list) == results_list[i]
 
 
-##################################################################
-# Test case: COUNT from PG to Snowflake: translate_postgres_snowflake_count
-##################################################################
 def test_count_pg_snowflake():
+    """
+    Test
+    case: COUNT
+    from Postgres to
+    Snowflake: translate_postgres_snowflake_count
+    """
     test_cases_list_count: List[Any] = [
         ["COUNT(DISTINCT aa.bb.cc)"],
         ["COUNT(xx.yy.zz)"],
@@ -245,10 +256,10 @@ def test_count_pg_snowflake():
         )
 
 
-##################################################################
-# Test case: find_keyword_index
-##################################################################
 def test_find_keyword_index():
+    """
+    Test case: find_keyword_index
+    """
     test_cases_parse: List[Any] = [
         sqlparse.parse("SELECT FROM")[0].tokens,
         sqlparse.parse("THERE IS NO MY WORD")[0].tokens,
@@ -268,10 +279,10 @@ def test_find_keyword_index():
         assert find_keyword_index(test_case_parse, "FROM") == results_parse[i]
 
 
-##################################################################
-# Test case: prepare_sql_statement
-##################################################################
 def test_prepare_sql_statement():
+    """
+    Test case: prepare_sql_statement
+    """
     test_cases_prepare = [
         sqlparse.parse("SELECT 1")[0].tokens,
         sqlparse.parse("SELECT abc from def")[0].tokens,
@@ -284,10 +295,10 @@ def test_prepare_sql_statement():
         assert prepare_sql_statement(test_case_prepare) == results_list_prepare[i]
 
 
-##################################################################
-# Test case: check static variables
-##################################################################
 def test_static_variables():
+    """
+    Test case: check static variables
+    """
     assert META_API_COLUMNS == [
         "recorded_at",
         "version",
@@ -300,10 +311,10 @@ def test_static_variables():
     assert META_DATA_INSTANCE_QUERIES_FILE == "meta_data_instance_queries.json"
 
 
-##################################################################
-# Test case: keep_meta_data
-##################################################################
 def test_keep_meta_data():
+    """
+    Test case: keep_meta_data
+    """
     meta_json_result = {
         "recorded_at": "2022-01-21 09:07:46 UTC",
         "uuid": "1234",
@@ -316,19 +327,111 @@ def test_keep_meta_data():
         "recording_ee_finished_at": "2022-01-21 09:07:53 UTC",
     }
 
-    meta_json_raw = {k: v for k, v in meta_json_result.items()}
+    meta_json_raw = meta_json_result.copy()
     meta_json_raw["fake1"] = "12"
     meta_json_raw["fake2"] = "13"
 
     result_json = keep_meta_data(meta_json_raw)
 
-    for k, v in result_json.items():
-        assert v == meta_json_raw.get(k)
+    for result_key, result_value in result_json.items():
+        assert result_value == meta_json_raw.get(result_key)
 
     assert isinstance(result_json, dict)
     assert len(result_json.keys()) == len(META_API_COLUMNS)
     assert result_json.get("fake1", None) is None
     assert result_json.get("fake2", None) is None
+
+
+@pytest.fixture
+def test_cases_dict_transformed() -> Dict[Any, Any]:
+    """
+    Prepare fixture data for testing
+    """
+    test_cases_dict_subquery: Dict[Any, Any] = {
+        "usage_activity_by_stage_monthly": {
+            "create": {
+                "approval_project_rules_with_more_approvers_than_required": 'SELECT COUNT(*) FROM (SELECT COUNT("approval_project_rules"."id") FROM "approval_project_rules" INNER JOIN approval_project_rules_users ON approval_project_rules_users.approval_project_rule_id = approval_project_rules.id WHERE "approval_project_rules"."rule_type" = 0 GROUP BY "approval_project_rules"."id" HAVING (COUNT(approval_project_rules_users) > approvals_required)) subquery',
+                "approval_project_rules_with_less_approvers_than_required": 'SELECT COUNT(*) FROM (SELECT COUNT("approval_project_rules"."id") FROM "approval_project_rules" INNER JOIN approval_project_rules_users ON approval_project_rules_users.approval_project_rule_id = approval_project_rules.id WHERE "approval_project_rules"."rule_type" = 0 GROUP BY "approval_project_rules"."id" HAVING (COUNT(approval_project_rules_users) < approvals_required)) subquery',
+                "approval_project_rules_with_exact_required_approvers": 'SELECT COUNT(*) FROM (SELECT COUNT("approval_project_rules"."id") FROM "approval_project_rules" INNER JOIN approval_project_rules_users ON approval_project_rules_users.approval_project_rule_id = approval_project_rules.id WHERE "approval_project_rules"."rule_type" = 0 GROUP BY "approval_project_rules"."id" HAVING (COUNT(approval_project_rules_users) = approvals_required)) subquery',
+            }
+        },
+        "usage_activity_by_stage": {
+            "create": {
+                "approval_project_rules_with_more_approvers_than_required": 'SELECT COUNT(*) FROM (SELECT COUNT("approval_project_rules"."id") FROM "approval_project_rules" INNER JOIN approval_project_rules_users ON approval_project_rules_users.approval_project_rule_id = approval_project_rules.id WHERE "approval_project_rules"."rule_type" = 0 GROUP BY "approval_project_rules"."id" HAVING (COUNT(approval_project_rules_users) > approvals_required)) subquery',
+                "approval_project_rules_with_less_approvers_than_required": 'SELECT COUNT(*) FROM (SELECT COUNT("approval_project_rules"."id") FROM "approval_project_rules" INNER JOIN approval_project_rules_users ON approval_project_rules_users.approval_project_rule_id = approval_project_rules.id WHERE "approval_project_rules"."rule_type" = 0 GROUP BY "approval_project_rules"."id" HAVING (COUNT(approval_project_rules_users) < approvals_required)) subquery',
+                "approval_project_rules_with_exact_required_approvers": 'SELECT COUNT(*) FROM (SELECT COUNT("approval_project_rules"."id") FROM "approval_project_rules" INNER JOIN approval_project_rules_users ON approval_project_rules_users.approval_project_rule_id = approval_project_rules.id WHERE "approval_project_rules"."rule_type" = 0 GROUP BY "approval_project_rules"."id" HAVING (COUNT(approval_project_rules_users) = approvals_required)) subquery',
+            }
+        },
+    }
+
+    return main(test_cases_dict_subquery)
+
+
+@pytest.fixture
+def metric_list() -> set:
+    """
+    static list of metrics for testing complex subqueries
+    """
+    return {
+        "usage_activity_by_stage_monthly.create.approval_project_rules_with_more_approvers_than_required",
+        "usage_activity_by_stage_monthly.create.approval_project_rules_with_less_approvers_than_required",
+        "usage_activity_by_stage_monthly.create.approval_project_rules_with_exact_required_approvers",
+        "usage_activity_by_stage.create.approval_project_rules_with_more_approvers_than_required",
+        "usage_activity_by_stage.create.approval_project_rules_with_less_approvers_than_required",
+        "usage_activity_by_stage.create.approval_project_rules_with_exact_required_approvers",
+    }
+
+
+def test_subquery_complex(test_cases_dict_transformed, metric_list):
+    """
+    Test bugs we found for complex subquery with FROM () clause
+    """
+    expect_value_select, expect_value_from = 2, 2
+
+    final_sql_query_dict = test_cases_dict_transformed
+
+    for metric_name, metric_sql in final_sql_query_dict.items():
+        assert "approval" in metric_name
+        assert metric_name in metric_list
+        assert metric_name in metric_sql
+
+        assert (
+            metric_sql.upper().count("SELECT") == expect_value_select
+        )  # expect 2 SELECT statement
+        assert (
+            metric_sql.upper().count("FROM") == expect_value_from
+        )  # expect 2 FROM statements
+        assert metric_sql.count("(") == metric_sql.count(")")  # query parsed properly
+
+
+def test_transform_having_clause(test_cases_dict_transformed, metric_list):
+    """
+    Test bugs we found for complex subquery - having clause
+
+    bug fixing, need to move from:
+    (COUNT(approval_project_rules_users) < approvals_required)
+    to
+    (COUNT(approval_project_rules_users.id) < MAX(approvals_required))
+    """
+
+    final_sql_query_dict = test_cases_dict_transformed
+
+    for metric_name, metric_sql in final_sql_query_dict.items():
+        assert ".id" in metric_sql
+        assert "MAX(" in metric_sql
+        assert "COUNT(approval_project_rules_users.id)" in metric_sql
+        assert "MAX(approvals_required)" in metric_sql
+        assert "subquery" in metric_sql
+        assert metric_sql.count("(") == metric_sql.count(")")
+        assert metric_name in metric_list
+        assert metric_name in metric_sql
+
+
+def test_constants():
+    assert TRANSFORMED_INSTANCE_QUERIES_FILE is not None
+    assert META_DATA_INSTANCE_QUERIES_FILE is not None
+    assert HAVING_CLAUSE_PATTERN is not None
+    assert METRICS_EXCEPTION is not None
 
 
 if __name__ == "__main__":
@@ -341,3 +444,6 @@ if __name__ == "__main__":
     test_prepare_sql_statement()
     test_static_variables()
     test_keep_meta_data()
+    test_subquery_complex(test_cases_dict_transformed, metric_list)
+    test_transform_having_clause(test_cases_dict_transformed, metric_list)
+    test_constants()

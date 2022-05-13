@@ -1,0 +1,74 @@
+connection_info:
+  account: BIZIBLE_SNOWFLAKE_ACCOUNT
+  database: BIZIBLE_SNOWFLAKE_DATABASE
+  pass: BIZIBLE_SNOWFLAKE_PASSWORD
+  user: BIZIBLE_SNOWFLAKE_USER
+  role: BIZIBLE_SNOWFLAKE_ROLE
+  warehouse: BIZIBLE_SNOWFLAKE_WAREHOUSE
+tables:
+  biz_accounts:
+    date_column: _modified_date
+  biz_account_to_emails:
+    date_column: _modified_date
+  biz_activities:
+    date_column: _modified_date
+  biz_ads:
+    date_column: _modified_date
+  biz_advertisers:
+  biz_ad_accounts:
+  biz_ad_campaigns:
+    date_column: _modified_date
+  biz_ad_groups:
+    date_column: modified_date
+  biz_ad_providers:
+  biz_campaign_members:
+    date_column: _modified_date
+  biz_channels:
+  biz_contacts:
+    date_column: _modified_date
+  biz_conversion_rates:
+  biz_costs:
+    date_column: _modified_date
+  biz_creatives:
+    date_column: _modified_date
+  biz_crm_tasks:
+    date_column: _modified_date
+  biz_currencies:
+  biz_email_to_visitor_ids:
+    date_column: _modified_date
+  biz_facts:
+    date_column: modified_date
+  biz_lead_stage_transitions:
+    date_column: _modified_date
+  biz_segments:
+  biz_sites:
+  biz_site_links:
+    date_column: _modified_date
+  biz_urls:
+  biz_customer_ab_tests:
+    date_column: _modified_date
+  biz_opportunities:
+    date_column: _modified_date
+  biz_sessions:
+    date_column: _modified_date
+  biz_user_touchpoints:
+    date_column: _modified_date
+  biz_attribution_touchpoints:
+    date_column: _modified_date
+  biz_form_submits:
+    date_column: _modified_date
+  biz_keywords:
+    date_column: _modified_date
+  biz_leads:
+    date_column: _modified_date
+  biz_opp_stage_transitions:
+    date_column: _modified_date
+  biz_touchpoints:
+    date_column: _modified_date
+  biz_crm_events:
+    date_column: _modified_date
+  biz_page_views:
+    date_column: _modified_date
+  biz_stage_definitions:
+  biz_placements:
+  biz_web_host_mappings:

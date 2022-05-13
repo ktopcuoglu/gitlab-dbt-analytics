@@ -5,6 +5,11 @@ WITH sfdc_account_xf AS (
     SELECT *
     FROM {{ref('sfdc_accounts_xf')}}
 
+), opportunity AS (
+
+  SELECT *
+  FROM {{ref('sfdc_opportunity')}}
+
 ), sfdc_opportunity_xf AS ( 
 
     SELECT 
@@ -18,7 +23,7 @@ WITH sfdc_account_xf AS (
         CASE
           WHEN opportunity.sales_qualified_source = 'BDR Generated'
               THEN 'SDR Generated'
-          ELSE COALESCE(opportunity.sales_qualified_source,'NA')
+          ELSE COALESCE(opportunity.sales_qualified_source,'other')
         END                                                           AS sales_qualified_source,
 
         -- medium level grouping of the order type field
@@ -47,8 +52,8 @@ WITH sfdc_account_xf AS (
         account.account_owner_user_region,
         account.account_owner_user_area
   
-    FROM {{ref('sfdc_opportunity_xf')}} opportunity
-    INNER JOIN sfdc_account_xf account
+    FROM opportunity
+    LEFT JOIN sfdc_account_xf account
         ON account.account_id = opportunity.account_id
 
 
@@ -70,7 +75,7 @@ WITH sfdc_account_xf AS (
         LOWER(CONCAT(report_opportunity_user_segment, '-',report_opportunity_user_geo, '-',report_opportunity_user_region, '-',report_opportunity_user_area, '-', sales_qualified_source, '-', order_type_stamped))    AS report_user_segment_geo_region_area_sqs_ot
   FROM sfdc_opportunity_xf
   
-  UNION 
+  UNION ALL
   
   SELECT         
         LOWER(account_owner_user_segment)       AS report_opportunity_user_segment,
@@ -116,19 +121,24 @@ WITH sfdc_account_xf AS (
         sales_qualified_source            AS key_sqs,
         deal_group                        AS key_ot,
 
+        report_opportunity_user_segment || '_' || sales_qualified_source             AS key_segment_sqs,
+        report_opportunity_user_segment || '_' || deal_group                         AS key_segment_ot,    
+
         report_opportunity_user_segment || '_' || report_opportunity_user_geo                                               AS key_segment_geo,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  sales_qualified_source             AS key_segment_geo_sqs,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' ||  deal_group                         AS key_segment_geo_ot,      
 
 
-        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region                                  AS key_segment_geo_region,
-        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_geo || '_' ||  sales_qualified_source   AS key_segment_geo_region_sqs,
-        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_geo || '_' ||  deal_group               AS key_segment_geo_region_ot,   
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region                                     AS key_segment_geo_region,
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  sales_qualified_source   AS key_segment_geo_region_sqs,
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' ||  deal_group               AS key_segment_geo_region_ot,   
 
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area                                       AS key_segment_geo_region_area,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  sales_qualified_source     AS key_segment_geo_region_area_sqs,
         report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' ||  deal_group                 AS key_segment_geo_region_area_ot,
 
+
+        report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area                                       AS key_segment_geo_area,
 
         COALESCE(report_opportunity_user_segment ,'other')                                    AS sales_team_cro_level,
      

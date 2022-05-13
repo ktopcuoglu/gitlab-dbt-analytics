@@ -1,6 +1,6 @@
 {{
   config(
-    tags=["mnpi_exception"],
+    tags=["product", "mnpi_exception"],
     schema="common_mart_product"
   )
 }}
@@ -10,7 +10,8 @@
     ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription')
+    ('subscriptions', 'dim_subscription'),
+    ('namespaces', 'dim_namespace')
 ]) }}
 
 
@@ -45,6 +46,7 @@
       monthly_sm_metrics.snapshot_month,
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
+      NULL                                                                         AS namespace_name,
       monthly_sm_metrics.uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -162,6 +164,53 @@
       monthly_sm_metrics.ci_templates_usage_28_days_event,
       monthly_sm_metrics.project_management_issue_milestone_changed_28_days_user,
       monthly_sm_metrics.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      monthly_sm_metrics.protected_branches_28_days_user,
+      monthly_sm_metrics.ci_cd_lead_time_usage_28_days_event,
+      monthly_sm_metrics.ci_cd_deployment_frequency_usage_28_days_event,
+      monthly_sm_metrics.projects_with_repositories_enabled_all_time_user,
+      monthly_sm_metrics.api_fuzzing_jobs_usage_28_days_user,
+      monthly_sm_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
+      monthly_sm_metrics.api_fuzzing_pipeline_usage_28_days_event,
+      monthly_sm_metrics.container_scanning_pipeline_usage_28_days_event,
+      monthly_sm_metrics.dependency_scanning_pipeline_usage_28_days_event,
+      monthly_sm_metrics.sast_pipeline_usage_28_days_event,
+      monthly_sm_metrics.secret_detection_pipeline_usage_28_days_event,
+      monthly_sm_metrics.dast_pipeline_usage_28_days_event,
+      monthly_sm_metrics.coverage_fuzzing_jobs_28_days_user,
+      monthly_sm_metrics.environments_all_time_event,
+      monthly_sm_metrics.feature_flags_all_time_event,
+      monthly_sm_metrics.successful_deployments_28_days_event,
+      monthly_sm_metrics.failed_deployments_28_days_event,
+      monthly_sm_metrics.projects_compliance_framework_all_time_event,
+      monthly_sm_metrics.commit_ci_config_file_28_days_user,
+      monthly_sm_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      monthly_sm_metrics.dependency_scanning_jobs_all_time_user,
+      monthly_sm_metrics.analytics_devops_adoption_all_time_user,
+      monthly_sm_metrics.projects_imported_all_time_event,
+      monthly_sm_metrics.preferences_security_dashboard_28_days_user,
+      monthly_sm_metrics.web_ide_edit_28_days_user,
+      monthly_sm_metrics.auto_devops_pipelines_all_time_event,
+      monthly_sm_metrics.projects_prometheus_active_all_time_event,
+      monthly_sm_metrics.prometheus_enabled,
+      monthly_sm_metrics.prometheus_metrics_enabled,
+      monthly_sm_metrics.group_saml_enabled,
+      monthly_sm_metrics.jira_issue_imports_all_time_event,
+      monthly_sm_metrics.author_epic_all_time_user,
+      monthly_sm_metrics.author_issue_all_time_user,
+      monthly_sm_metrics.failed_deployments_28_days_user,
+      monthly_sm_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_sm_metrics.geo_enabled,
+      monthly_sm_metrics.geo_nodes_all_time_event,
+      monthly_sm_metrics.auto_devops_pipelines_28_days_user,
+      monthly_sm_metrics.active_instance_runners_all_time_event,
+      monthly_sm_metrics.active_group_runners_all_time_event,
+      monthly_sm_metrics.active_project_runners_all_time_event,
+      monthly_sm_metrics.gitaly_version,
+      monthly_sm_metrics.gitaly_servers_all_time_event,
+      -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
     LEFT JOIN billing_accounts
@@ -179,6 +228,7 @@
       monthly_saas_metrics.snapshot_month,
       monthly_saas_metrics.dim_subscription_id,
       monthly_saas_metrics.dim_namespace_id::VARCHAR                                AS dim_namespace_id,
+      namespaces.namespace_name,
       NULL                                                                          AS uuid,
       NULL                                                                          AS hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
@@ -296,14 +346,63 @@
       monthly_saas_metrics.ci_templates_usage_28_days_event,
       monthly_saas_metrics.project_management_issue_milestone_changed_28_days_user,
       monthly_saas_metrics.project_management_issue_iteration_changed_28_days_user,
+      -- Wave 5.1
+      monthly_saas_metrics.protected_branches_28_days_user,
+      monthly_saas_metrics.ci_cd_lead_time_usage_28_days_event,
+      monthly_saas_metrics.ci_cd_deployment_frequency_usage_28_days_event,
+      monthly_saas_metrics.projects_with_repositories_enabled_all_time_user,
+      monthly_saas_metrics.api_fuzzing_jobs_usage_28_days_user,
+      monthly_saas_metrics.coverage_fuzzing_pipeline_usage_28_days_event,
+      monthly_saas_metrics.api_fuzzing_pipeline_usage_28_days_event,
+      monthly_saas_metrics.container_scanning_pipeline_usage_28_days_event,
+      monthly_saas_metrics.dependency_scanning_pipeline_usage_28_days_event,
+      monthly_saas_metrics.sast_pipeline_usage_28_days_event,
+      monthly_saas_metrics.secret_detection_pipeline_usage_28_days_event,
+      monthly_saas_metrics.dast_pipeline_usage_28_days_event,
+      monthly_saas_metrics.coverage_fuzzing_jobs_28_days_user,
+      monthly_saas_metrics.environments_all_time_event,
+      monthly_saas_metrics.feature_flags_all_time_event,
+      monthly_saas_metrics.successful_deployments_28_days_event,
+      monthly_saas_metrics.failed_deployments_28_days_event,
+      monthly_saas_metrics.projects_compliance_framework_all_time_event,
+      monthly_saas_metrics.commit_ci_config_file_28_days_user,
+      monthly_saas_metrics.view_audit_all_time_user,
+      -- Wave 5.2
+      monthly_saas_metrics.dependency_scanning_jobs_all_time_user,
+      monthly_saas_metrics.analytics_devops_adoption_all_time_user,
+      monthly_saas_metrics.projects_imported_all_time_event,
+      monthly_saas_metrics.preferences_security_dashboard_28_days_user,
+      monthly_saas_metrics.web_ide_edit_28_days_user,
+      monthly_saas_metrics.auto_devops_pipelines_all_time_event,
+      monthly_saas_metrics.projects_prometheus_active_all_time_event,
+      monthly_saas_metrics.prometheus_enabled,
+      monthly_saas_metrics.prometheus_metrics_enabled,
+      monthly_saas_metrics.group_saml_enabled,
+      monthly_saas_metrics.jira_issue_imports_all_time_event,
+      monthly_saas_metrics.author_epic_all_time_user,
+      monthly_saas_metrics.author_issue_all_time_user,
+      monthly_saas_metrics.failed_deployments_28_days_user,
+      monthly_saas_metrics.successful_deployments_28_days_user,
+      -- Wave 5.3
+      monthly_saas_metrics.geo_enabled,
+      monthly_saas_metrics.geo_nodes_all_time_event,
+      monthly_saas_metrics.auto_devops_pipelines_28_days_user,
+      monthly_saas_metrics.active_instance_runners_all_time_event,
+      monthly_saas_metrics.active_group_runners_all_time_event,
+      monthly_saas_metrics.active_project_runners_all_time_event,
+      monthly_saas_metrics.gitaly_version,
+      monthly_saas_metrics.gitaly_servers_all_time_event,    
+      -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
     LEFT JOIN billing_accounts
       ON monthly_saas_metrics.dim_billing_account_id = billing_accounts.dim_billing_account_id
     LEFT JOIN subscriptions
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
-      LEFT JOIN most_recent_subscription_version
-        ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN most_recent_subscription_version
+      ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN namespaces 
+      ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -315,12 +414,28 @@
     SELECT *
     FROM saas_paid_user_metrics
 
+), final AS (
+  
+    SELECT
+      unioned.*,
+      {{ dbt_utils.surrogate_key(
+        [
+          'snapshot_month',
+          'dim_subscription_id',
+          'delivery_type',
+          'uuid',
+          'hostname',
+          'dim_namespace_id'
+        ]
+      ) }} AS primary_key
+    FROM unioned
+  
 )
 
 {{ dbt_audit(
-    cte_ref="unioned",
+    cte_ref="final",
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-02-04"
+    updated_date="2022-04-26"
 ) }}

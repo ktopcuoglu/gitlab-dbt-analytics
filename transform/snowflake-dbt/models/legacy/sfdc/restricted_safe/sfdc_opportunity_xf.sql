@@ -99,7 +99,6 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.opportunity_owner_department                                               AS opportunity_owner_department,
       sfdc_opportunity.opportunity_owner_manager                                                  AS opportunity_owner_manager,
       opportunity_owner.role_name                                                                 AS opportunity_owner_role,
-      sfdc_opportunity.opportunity_owner_team                                                     AS opportunity_owner_team,
       opportunity_owner.title                                                                     AS opportunity_owner_title,
       sfdc_opportunity.opportunity_sales_development_representative,
       sfdc_opportunity.opportunity_development_representative,
@@ -220,6 +219,7 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity.cp_why_do_anything_at_all,
       sfdc_opportunity.cp_why_gitlab,
       sfdc_opportunity.cp_why_now,
+      sfdc_opportunity.cp_score,
 
       -- User Segment Hierarchy fields
       sfdc_opportunity.user_segment_stamped,
@@ -239,7 +239,6 @@ WITH sfdc_opportunity AS (
       -- sales segmentation deprecated fields - 2020-09-03
       -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
       -- issue: https://gitlab.com/gitlab-data/analytics/-/issues/5709
-      sfdc_opportunity.segment                                                                          AS segment,
       sfdc_opportunity.sales_segment                                                                    AS sales_segment,
       sfdc_opportunity.parent_segment                                                                   AS parent_segment,
 

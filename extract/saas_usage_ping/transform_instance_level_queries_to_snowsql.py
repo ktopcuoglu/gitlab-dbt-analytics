@@ -6,6 +6,7 @@ from typing import Any, Dict, List
 from logging import info
 
 from os import environ as env
+import re
 from flatten_dict import flatten
 from flatten_dict.reducer import make_reducer
 import sqlparse
@@ -25,6 +26,20 @@ META_API_COLUMNS = [
 
 TRANSFORMED_INSTANCE_QUERIES_FILE = "transformed_instance_queries.json"
 META_DATA_INSTANCE_QUERIES_FILE = "meta_data_instance_queries.json"
+HAVING_CLAUSE_PATTERN = re.compile(
+    "HAVING.*COUNT.*APPROVAL_PROJECT_RULES_USERS.*APPROVALS_REQUIRED", re.IGNORECASE
+)
+
+METRICS_EXCEPTION = (
+    "counts.clusters_platforms_eks",
+    "counts.clusters_platforms_gke",
+    "usage_activity_by_stage.configure.clusters_platforms_gke",
+    "usage_activity_by_stage.configure.clusters_platforms_eks",
+    "usage_activity_by_stage_monthly.configure.clusters_platforms_gke",
+    "usage_activity_by_stage_monthly.configure.clusters_platforms_eks",
+    "usage_activity_by_stage.release.users_creating_deployment_approvals",
+    "usage_activity_by_stage_monthly.release.users_creating_deployment_approvals",
+)
 
 
 def get_sql_query_map(private_token: str = None) -> Dict[Any, Any]:
@@ -75,6 +90,29 @@ def optimize_token_size(input_token: str) -> str:
         else:
             break
     return "".join(optimized_token)
+
+
+def transform_having_clause(postgres_sql: str) -> str:
+    """
+    Algorithm enhancement , need to allow following transformation from:
+    (COUNT(approval_project_rules_users) < approvals_required)
+    to
+    (COUNT(approval_project_rules_users.id) < MAX(approvals_required))
+    """
+
+    snowflake_having_clause = postgres_sql
+
+    if HAVING_CLAUSE_PATTERN.findall(snowflake_having_clause):
+
+        snowflake_having_clause = postgres_sql.replace(
+            "(approval_project_rules_users)", "(approval_project_rules_users.id)"
+        )
+
+        snowflake_having_clause = snowflake_having_clause.replace(
+            "approvals_required)", "MAX(approvals_required))"
+        )
+
+    return snowflake_having_clause
 
 
 def translate_postgres_snowflake_count(input_token_list: list) -> List[str]:
@@ -246,9 +284,12 @@ def rename_table_name(
             i += 1
 
         next_token = tokens[index + i]
-        if not str(next_token).startswith("prep") and not str(next_token).startswith(
-            "prod"
+        if (
+            not str(next_token).startswith("prep")
+            and not str(next_token).startswith("prod")
+            and not (str(token) == "FROM" and str(next_token).startswith("("))
         ):
+
             # insert, token list to string list, create the SQL query, reparse it
             # there is FOR sure a better way to do that
             token_string_list[index + i] = (
@@ -285,7 +326,12 @@ def rename_query_tables(sql_query: str) -> str:
             index=index,
             token_string_list=token_string_list,
         )
-    return "".join(token_string_list)
+
+    raw_string_list = "".join(token_string_list)
+
+    prepared_string_list = transform_having_clause(raw_string_list)
+
+    return prepared_string_list
 
 
 def keep_meta_data(json_file: dict) -> dict:

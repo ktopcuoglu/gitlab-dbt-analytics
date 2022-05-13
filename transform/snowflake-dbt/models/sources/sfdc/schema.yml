@@ -22,6 +22,23 @@ models:
         description: Sales segment of the specific account.
       - name: ultimate_parent_sales_segment
         description: Sales segment of the parent of the account hierarchy.
+      - name: zoom_info_company_name
+        description: The name of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_revenue
+        description: The estimated revenue of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_employee_count
+        description: The number of employees of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_industry
+        description: The the primary industry of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_city
+        description: The city of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_state_province
+        description: The state or province of the company matched by the Zoom Info enrichment process.
+      - name: zoom_info_company_country
+        description: The country of the company matched by the Zoom Info enrichment process.
+      - name: is_excluded_from_zoom_info_enrich
+        description: A flag to indicate if the account should be included in the Zoom Info enrichment process.
+
   - name: sfdc_account_history_source
     description: Source model for SFDC Account History
     columns:
@@ -92,6 +109,20 @@ models:
           sensitive: true
         tests:
           - not_null
+      - name: zoominfo_company_id
+        description: The zoom info id of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_revenue
+        description: The estimated revenue of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_employee_count
+        description: The number of employees of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_city
+        description: The city of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_industry
+        description: The industry of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_state_province
+        description: The state or province of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_country
+        description: The country of the company matched by the Zoom Info enrichment process.
   - name: sfdc_contact_history_source
     description: Source model for SFDC Contacts History
     columns:
@@ -167,6 +198,16 @@ models:
           sensitive: true
         tests:
           - not_null
+      - name: zoominfo_company_id
+        description: The zoom info id of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_revenue
+        description: The estimated revenue of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_employee_count
+        description: The number of employees of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_city
+        description: The city of the company matched by the Zoom Info enrichment process.
+      - name: zoominfo_company_industry
+        description: The industry of the company matched by the Zoom Info enrichment process.
   - name: sfdc_lead_history_source
     description: Source model for SFDC Leads History
     columns:

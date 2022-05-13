@@ -2,6 +2,12 @@
     tags=["mnpi"]
 ) }}
 
+/*
+
+  ATTENTION: When a field is added to this live model, add it to the SFDC_OPPORTUNITY_SNAPSHOTS_SOURCE model to keep the live and snapshot models in alignment.
+
+*/
+
 WITH source AS (
 
     SELECT
@@ -40,7 +46,6 @@ WITH source AS (
         duplicate_opportunity__c                        AS duplicate_opportunity_id,
         account_owner__c                                AS account_owner,
         opportunity_owner__c                            AS opportunity_owner,
-        owner_team_o__c                                 AS opportunity_owner_team,
         manager_current__c                              AS opportunity_owner_manager,
         sales_market__c                                 AS opportunity_owner_department,
         SDR_LU__c                                       AS opportunity_sales_development_representative,
@@ -135,6 +140,7 @@ WITH source AS (
         arr_basis__c                                    AS arr_basis,
         arr__c                                          AS arr,
         days_in_sao__c                                  AS days_in_sao,
+        new_logo_count__c                               AS new_logo_count,
         {{ sales_hierarchy_sales_segment_cleaning('user_segment_o__c') }}
                                                         AS user_segment_stamped,
         CASE
@@ -144,9 +150,16 @@ WITH source AS (
         stamped_user_geo__c                             AS user_geo_stamped,
         stamped_user_region__c                          AS user_region_stamped,
         stamped_user_area__c                            AS user_area_stamped,
-        {{ sales_segment_region_grouped('user_segment_stamped', 'user_region_stamped') }}
+        {{ sales_segment_region_grouped('user_segment_stamped', 'user_geo_stamped', 'user_region_stamped') }}
                                                         AS user_segment_region_stamped_grouped,
-        --stamped_opp_owner_segment_geo_region_area__c    AS user_segment_go_region_area_stamped,
+        CONCAT(user_segment_stamped,
+               '-', 
+               user_geo_stamped,
+               '-',
+               user_region_stamped,
+               '-',
+               user_area_stamped
+              )                                         AS user_segment_geo_region_area_stamped,
         stamped_opp_owner_user_role_type__c             AS crm_opp_owner_user_role_type_stamped,
         stamped_opportunity_owner__c                    AS crm_opp_owner_stamped_name,
         stamped_account_owner__c                        AS crm_account_owner_stamped_name,
@@ -161,7 +174,7 @@ WITH source AS (
         sao_user_geo__c                                 AS sao_crm_opp_owner_geo_stamped,
         sao_user_region__c                              AS sao_crm_opp_owner_region_stamped,
         sao_user_area__c                                AS sao_crm_opp_owner_area_stamped,
-        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_region_stamped') }}
+        {{ sales_segment_region_grouped('sao_crm_opp_owner_sales_segment_stamped', 'sao_crm_opp_owner_geo_stamped', 'sao_crm_opp_owner_region_stamped') }}
                                                         AS sao_crm_opp_owner_segment_region_stamped_grouped,
         opportunity_category__c                         AS opportunity_category,
         opportunity_health__c                           AS opportunity_health,
@@ -187,8 +200,7 @@ WITH source AS (
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
       -- left temporary for the sake of MVC and avoid breaking SiSense existing charts
-        sales_segmentation_o__c                         AS segment,
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                                         AS sales_segment,
         {{ sales_segment_cleaning('ultimate_parent_sales_segment_emp_o__c') }}
                                                         AS parent_segment,
@@ -213,7 +225,7 @@ WITH source AS (
         x7_closed_lost_date__c                          AS stage_6_closed_lost_date,
 
         -- sales segment fields
-        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, {{ sales_segment_cleaning('sales_segmentation_o__c') }}, 'Unknown' )
+        COALESCE({{ sales_segment_cleaning('sales_segmentation_employees_o__c') }}, 'Unknown' )
                                                         AS division_sales_segment_stamped,
         -- channel reporting
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6072
@@ -256,6 +268,7 @@ WITH source AS (
         fm_why_do_anything_at_all__c                    AS cp_why_do_anything_at_all,
         fm_why_gitlab__c                                AS cp_why_gitlab,
         fm_why_now__c                                   AS cp_why_now,
+        fm_score__c                                     AS cp_score,
 
         -- original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
         sa_validated_tech_evaluation_close_statu__c     AS sa_tech_evaluation_close_status,
@@ -266,6 +279,7 @@ WITH source AS (
         fp_a_master_bookings_flag__c::BOOLEAN           AS fpa_master_bookings_flag,
 
         downgrade_reason__c                             AS downgrade_reason,
+        ssp_id__c                                       AS ssp_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

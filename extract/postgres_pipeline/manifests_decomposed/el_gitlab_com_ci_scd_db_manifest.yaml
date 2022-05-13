@@ -28,6 +28,21 @@ tables:
       , certificate
       , "authorization"
       FROM ci_builds_runner_session
+  ci_namespace_monthly_usages:
+    export_schema: 'gitlab_com'
+    export_table: ci_namespace_monthly_usages
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , namespace_id
+      , date
+      , additional_amount_available
+      , amount_used
+      , notification_level
+      , shared_runners_duration
+      , created_at
+      FROM ci_namespace_monthly_usages
   ci_pipeline_chat_data:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -39,18 +54,6 @@ tables:
       , chat_name_id
       , response_url
       FROM ci_pipeline_chat_data
-  ci_pipeline_variables:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: ci_pipeline_variables
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , key
-      , pipeline_id
-      , variable_type
-      FROM ci_pipeline_variables
   ci_project_monthly_usages:
     dbt_source_model: true
     export_schema: 'gitlab_com'
