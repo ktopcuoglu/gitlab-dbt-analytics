@@ -88,7 +88,7 @@ Completed with x errors and x warnings:
 ## Data Engineer tasks
 
 The focus area for the Data Engineer are the Data Pipelines and Data Infrastructure. 
-
+* [ ] Check [Trusted Data Health Dashboard](https://app.periscopedata.com/app/gitlab/891891/TD:-Trusted-Data-Health-Dashboard) to get high level overview of health status if the data in the Snowflake Data-warehouse could be trusted or not. Health Status in the dashboard is presented separately for Data extraction (RAW data layer) and Data transformation (Prod data layer) with a PASS, FAIL, WARNING status.
 * [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) for each new failure in **#data-pipelines** and **#data-prom-alerts**
     * [ ] Link to all resulting issues and MRs in slack 
     * [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
