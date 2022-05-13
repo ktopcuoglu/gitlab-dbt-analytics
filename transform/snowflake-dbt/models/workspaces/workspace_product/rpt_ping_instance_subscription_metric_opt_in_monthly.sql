@@ -36,13 +36,13 @@ Aggregate CTE to determine count of arr, subscriptions and licensed users for ea
 ), agg_subscriptions AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path']) }}          AS rpt_ping_instance_subscription_metric_opt_in_monthly_id,
-    ping_created_at_month                                                             AS ping_created_at_month,
-    metrics_path                                                                      AS metrics_path,
-    ping_edition                                                                      AS ping_edition,
-    SUM(arr)                                                                          AS total_arr,
-    COUNT(DISTINCT latest_active_subscription_id)                                     AS total_subscription_count,
-    SUM(licensed_user_count)                                                          AS total_licensed_users
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS rpt_ping_instance_subscription_metric_opt_in_monthly_id,
+    ping_created_at_month                                                                             AS ping_created_at_month,
+    metrics_path                                                                                      AS metrics_path,
+    ping_edition                                                                                      AS ping_edition,
+    SUM(arr)                                                                                          AS total_arr,
+    COUNT(DISTINCT latest_active_subscription_id)                                                     AS total_subscription_count,
+    SUM(licensed_user_count)                                                                          AS total_licensed_users
 FROM active_subscriptions_by_metric
     {{ dbt_utils.group_by(n=4)}}
 
