@@ -9,6 +9,12 @@ WITH source AS (
     SELECT *
     FROM {{ source('gitlab_data_yaml', 'usage_ping_metrics') }}
 
+), snapshot_dates AS (
+
+   SELECT *
+   FROM {{ ref('dim_date') }}
+   WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
+
 ), intermediate AS (
 
     SELECT
@@ -41,10 +47,9 @@ WITH source AS (
       valid_from
     FROM intermediate
 
-), final AS (
+), ping_metric_hist AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['metrics_path', 'valid_from']) }}                     AS ping_metric_hist_id,
       metrics_path                                                                      AS metrics_path,
       'raw_usage_data_payload['''
         || REPLACE(metrics_path, '.', '''][''')
@@ -72,10 +77,21 @@ WITH source AS (
         OVER (PARTITION BY metrics_path ORDER BY valid_from DESC))                      AS valid_to 
     FROM renamed
 
+), ping_metric_spined AS (
+
+    SELECT
+      {{ dbt_utils.surrogate_key(['metrics_path', 'snapshot_dates.date_id']) }}         AS ping_metric_hist_id,
+      snapshot_dates.date_id AS snapshot_id,
+      ping_metric_hist.*
+    FROM ping_metric_hist
+    INNER JOIN snapshot_dates
+      ON snapshot_dates.date_actual >= ping_metric_hist.valid_from
+      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('ping_metric_hist.valid_to') }}
+
 )
 
 {{ dbt_audit(
-    cte_ref="final",
+    cte_ref="ping_metric_spined",
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-05-13",

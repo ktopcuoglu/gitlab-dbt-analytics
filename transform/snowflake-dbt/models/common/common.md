@@ -1014,9 +1014,9 @@ Some other enhancements in this model include : addition of a surrogate key, exc
 
 {% enddocs %}
 
-{% docs dim_ping_metric_hist %}
+{% docs dim_ping_metric_daily_snapshot %}
 
-This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `valid_from` and `valid_to` timestamps have been included to be used in the join.
+This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
 
 For this reason `metrics_path` is not unique.
 
