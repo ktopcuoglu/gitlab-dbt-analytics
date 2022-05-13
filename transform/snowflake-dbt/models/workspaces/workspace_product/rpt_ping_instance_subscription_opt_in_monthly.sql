@@ -36,7 +36,7 @@
 ), sub_combo AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS rpt_ping_instance_subcription_opt_in_monthly_id,
+      {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS rpt_ping_instance_subscription_opt_in_monthly_id,
       subscription_info.ping_created_at_month                                                           AS ping_created_at_month,
       metrics.metrics_path                                                                              AS metrics_path,
       subscription_info.ping_edition                                                                    AS ping_edition,

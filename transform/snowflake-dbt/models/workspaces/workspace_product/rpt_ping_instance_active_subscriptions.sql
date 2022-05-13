@@ -27,7 +27,7 @@ Determine latest version for each subscription to determine if the potential met
       ping_created_at_month             AS ping_created_at_month,
       latest_active_subscription_id     AS latest_active_subscription_id,
       ping_edition                      AS ping_edition,
-      major_minor_version               AS major_minor_version,
+      major_minor_version_id            AS major_minor_version_id,
       instance_user_count               AS instance_user_count
   FROM mart_ping_instance_metric_monthly
       WHERE time_frame = '28d'
@@ -46,9 +46,9 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
         ping_created_at_month             AS ping_created_at_month,
         latest_active_subscription_id     AS latest_active_subscription_id,
         ping_edition                      AS ping_edition,
-        major_minor_version               AS major_minor_version,
+        major_minor_version_id            AS major_minor_version_id,
         MAX(instance_user_count)          AS instance_user_count
-    FROM mart_ping_instance_metric_monthly
+    FROM subscriptions_w_versions
       {{ dbt_utils.group_by(n=4)}}
 /*
 Get the count of pings each month per subscription_name_slugify
@@ -59,7 +59,7 @@ Get the count of pings each month per subscription_name_slugify
   SELECT
     ping_created_at_month                       AS ping_created_at_month,
     latest_active_subscription_id               AS latest_active_subscription_id,
-    COUNT(DISTINCT(dim_ping_instance_id))       AS count_of_pings
+    COUNT(DISTINCT(dim_ping_instance_id))       AS ping_count
   FROM mart_ping_instance_metric_monthly
       {{ dbt_utils.group_by(n=2)}}
 
@@ -71,7 +71,7 @@ Join subscription information with count of pings
 
   SELECT
     deduped_subscriptions_w_versions.*,
-    ping_counts.count_of_pings
+    ping_counts.ping_count
   FROM deduped_subscriptions_w_versions
     INNER JOIN ping_counts
   ON deduped_subscriptions_w_versions.ping_created_at_month = ping_counts.ping_created_at_month
@@ -119,13 +119,13 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     mart_charge_cleaned.arr_month                                                                           AS ping_created_at_month,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_active_subscription_id,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
-    joined_subscriptions.major_minor_version                                                                AS major_minor_version,
+    joined_subscriptions.major_minor_version_id                                                             AS major_minor_version_id,
     joined_subscriptions.instance_user_count                                                                AS instance_user_count,
     mart_charge_cleaned.licensed_user_count                                                                 AS licensed_user_count,
     mart_charge_cleaned.arr                                                                                 AS arr,
     mart_charge_cleaned.mrr                                                                                 AS mrr,
-    joined_subscriptions.count_of_pings                                                                     AS has_sent_pings,
-    IFF(ping_edition IS NULL, FALSE, TRUE)                                                                  AS reported_flag
+    joined_subscriptions.ping_count                                                                         AS ping_count,
+    IFF(ping_edition IS NULL, FALSE, TRUE)                                                                  AS has_sent_pings
   FROM mart_charge_cleaned
     LEFT OUTER JOIN joined_subscriptions
   ON joined_subscriptions.latest_active_subscription_id = mart_charge_cleaned.dim_subscription_id

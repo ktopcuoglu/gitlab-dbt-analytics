@@ -14,6 +14,7 @@
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
     ('prep_ping_instance', 'prep_ping_instance_flattened'),
+    ('dim_product_tier', 'dim_product_tier'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
 
@@ -45,11 +46,6 @@
     FROM source
     LEFT JOIN map_ip_location
       ON source.ip_address_hash = map_ip_location.ip_address_hash
-
-), dim_product_tier AS (
-
-  SELECT *
-  FROM {{ ref('dim_product_tier') }}
 
 ), prep_usage_ping_cte AS (
 
@@ -92,45 +88,38 @@
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
-), flattened_high_level as (
-    SELECT
-      dim_ping_instance_id                                                            AS dim_ping_instance_id,
-      metrics_path                                                                    AS metrics_path,
-      metric_value                                                                    AS metric_value,
-      has_timed_out                                                                   AS has_timed_out,
-      dim_product_tier_id                                                             AS dim_product_tier_id,
-      dim_subscription_id                                                             AS dim_subscription_id,
-      dim_location_country_id                                                         AS dim_location_country_id,
-      dim_ping_date_id                                                                AS dim_ping_date_id,
-      dim_instance_id                                                                 AS dim_instance_id,
-      dim_host_id                                                                     AS dim_host_id,
-      dim_installation_id                                                             AS dim_installation_id,
-      dim_license_id                                                                  AS dim_license_id,
-      ping_created_at                                                                 AS ping_created_at,
-      umau_value                                                                      AS umau_value,
-      license_subscription_id                                                         AS dim_subscription_license_id,
-      'VERSION_DB'                                                                    AS data_source
-  FROM joined_payload
-
 ), metric_attributes AS (
 
     SELECT * FROM dim_ping_metric
-      -- WHERE time_frame != 'none'
 
-), final AS (
-
+), flattened_high_level as (
     SELECT
-        {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'flattened_high_level.metrics_path']) }}               AS ping_instance_metric_id,
-        flattened_high_level.*,
-        metric_attributes.time_frame                                                                               AS time_frame
-    FROM flattened_high_level
-        LEFT JOIN metric_attributes
-    ON flattened_high_level.metrics_path = metric_attributes.metrics_path
+      {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'joined_payload.metrics_path']) }}                      AS ping_instance_metric_id,
+      dim_ping_instance_id                                                                                        AS dim_ping_instance_id,
+      joined_payload.metrics_path                                                                                 AS metrics_path,
+      metric_value                                                                                                AS metric_value,
+      has_timed_out                                                                                               AS has_timed_out,
+      dim_product_tier_id                                                                                         AS dim_product_tier_id,
+      dim_subscription_id                                                                                         AS dim_subscription_id,
+      dim_location_country_id                                                                                     AS dim_location_country_id,
+      dim_ping_date_id                                                                                            AS dim_ping_date_id,
+      dim_instance_id                                                                                             AS dim_instance_id,
+      dim_host_id                                                                                                 AS dim_host_id,
+      dim_installation_id                                                                                         AS dim_installation_id,
+      dim_license_id                                                                                              AS dim_license_id,
+      ping_created_at                                                                                             AS ping_created_at,
+      umau_value                                                                                                  AS umau_value,
+      license_subscription_id                                                                                     AS dim_subscription_license_id,
+      'VERSION_DB'                                                                                                AS data_source,
+      metric_attributes.time_frame                                                                                AS time_frame
+  FROM joined_payload
+      LEFT JOIN metric_attributes
+  ON joined_payload.metrics_path = metric_attributes.metrics_path
 
 )
 
 {{ dbt_audit(
-    cte_ref="final",
+    cte_ref="flattened_high_level",
     created_by="@icooper-acp",
     updated_by="@icooper-acp",
     created_date="2022-03-08",

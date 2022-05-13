@@ -13,6 +13,7 @@
     ('dim_date', 'dim_date'),
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
+    ('dim_product_tier', 'dim_product_tier'),
     ('prep_ping_instance', 'prep_ping_instance')
     ])
 
@@ -49,11 +50,6 @@
     LEFT JOIN map_ip_location
       ON source.ip_address_hash = map_ip_location.ip_address_hash
 
-), dim_product_tier AS (
-
-  SELECT *
-  FROM {{ ref('dim_product_tier') }}
-
 ), prep_usage_ping_cte AS (
 
     SELECT
@@ -79,11 +75,21 @@
 ), joined_payload AS (
 
     SELECT
-      prep_usage_ping_cte.*,
-      prep_license.dim_license_id                                                                          AS dim_license_id,
-      dim_date.date_id                                                                                     AS dim_ping_date_id,
-      COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                             AS dim_subscription_id,
-      IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial
+      {{ dbt_utils.surrogate_key(['dim_ping_instance_id']) }}                         AS ping_instance_id,
+      dim_ping_instance_id                                                            AS dim_ping_instance_id,
+      dim_product_tier_id                                                             AS dim_product_tier_id,
+      COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)        AS dim_subscription_id,
+      dim_location_country_id                                                         AS dim_location_country_id,
+      dim_date.date_id                                                                AS dim_ping_date_id,
+      dim_instance_id                                                                 AS dim_instance_id,
+      dim_host_id                                                                     AS dim_host_id,
+      dim_installation_id                                                             AS dim_installation_id,
+      prep_license.dim_license_id                                                     AS dim_license_id,
+      ping_created_at                                                                 AS ping_created_at,
+      umau_value                                                                      AS umau_value,
+      license_subscription_id                                                         AS dim_subscription_license_id,
+      IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)   AS is_trial,
+      'VERSION_DB'                                                                    AS data_source
     FROM prep_usage_ping_cte
     LEFT JOIN prep_license
       ON prep_usage_ping_cte.license_md5 = prep_license.license_md5
@@ -92,28 +98,10 @@
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
-), final as (
-    SELECT
-      {{ dbt_utils.surrogate_key(['dim_ping_instance_id']) }}                         AS ping_instance_id,
-      dim_ping_instance_id                                                            AS dim_ping_instance_id,
-      dim_product_tier_id                                                             AS dim_product_tier_id,
-      dim_subscription_id                                                             AS dim_subscription_id,
-      dim_location_country_id                                                         AS dim_location_country_id,
-      dim_ping_date_id                                                                AS dim_ping_date_id,
-      dim_instance_id                                                                 AS dim_instance_id,
-      dim_host_id                                                                     AS dim_host_id,
-      dim_installation_id                                                             AS dim_installation_id,
-      dim_license_id                                                                  AS dim_license_id,
-      ping_created_at                                                                 AS ping_created_at,
-      umau_value                                                                      AS umau_value,
-      license_subscription_id                                                         AS dim_subscription_license_id,
-      'VERSION_DB'                                                                    AS data_source
-  FROM joined_payload
-
 )
 
 {{ dbt_audit(
-    cte_ref="final",
+    cte_ref="joined_payload",
     created_by="@icooper-acp",
     updated_by="@icooper-acp",
     created_date="2022-03-08",
