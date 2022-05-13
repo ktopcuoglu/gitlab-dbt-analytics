@@ -26,4 +26,4 @@ Should any model/test fail, ensure all of the errors are being addressed ensure 
 </details>
 
 
-/label ~Triage ~Break-Fix ~"Priority::1-Ops" ~"workflow::1 - triage"
+/label ~Triage ~Break-Fix ~"Priority::1-Ops" ~"workflow::1 - triage" ~"Triage::Analytics" 
