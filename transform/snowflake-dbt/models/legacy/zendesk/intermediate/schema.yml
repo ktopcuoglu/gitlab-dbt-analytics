@@ -30,3 +30,8 @@ models:
         tests:
             - unique
             - not_null                  
+    - name: zendesk_ticket_tags
+      columns:
+        - name: ticket_id
+          tests:
+            - not_null

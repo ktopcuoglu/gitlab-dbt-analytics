@@ -11,11 +11,11 @@ WITH source AS (
 
     -- Parse lists to values
     SELECT
-      ID            AS ticket_id,
+      ticket_id     AS ticket_id,
       f.VALUE       AS ticket_tag
     FROM
       source,
-      table(FLATTEN(INPUT => STRTOK_TO_ARRAY(ticket_tags, '[], "'))) f
+    TABLE(FLATTEN(INPUT => STRTOK_TO_ARRAY(ticket_tags, '[], "'))) f
 
 )
 

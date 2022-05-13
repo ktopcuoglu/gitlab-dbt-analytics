@@ -72,11 +72,6 @@ models:
           tests:
             - not_null
             - unique
-    - name: zendesk_ticket_tags_source
-      columns:
-        - name: ticket_id
-          tests:
-            - not_null
     - name: zendesk_ticket_audits_source
       description: This is the source model for Zendesk ticket audit events.
       columns:
