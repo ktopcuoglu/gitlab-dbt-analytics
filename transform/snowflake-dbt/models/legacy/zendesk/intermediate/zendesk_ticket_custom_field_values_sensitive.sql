@@ -16,7 +16,7 @@ WITH zendesk_tickets AS (
       d.value['value']  AS ticket_custom_field_value,
       ticket_id         AS ticket_id
     FROM zendesk_tickets,
-    LATERAL FLATTEN(INPUT => ticket_custom_field_values, outer => true) d
+    LATERAL FLATTEN(INPUT => PARSE_JSON(ticket_custom_field_values), outer => true) d
     
 )
 
