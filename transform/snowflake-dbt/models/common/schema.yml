@@ -3341,8 +3341,8 @@ models:
       - name: dbt_updated_at
       - name: dbt_created_at
 
-  - name: dim_ping_metric_hist
-    description: ' {{ doc("dim_ping_metric_hist") }} '
+  - name: dim_ping_metric_daily_snapshot
+    description: ' {{ doc("dim_ping_metric_daily_snapshot") }} '
     columns:
       - name: ping_metric_hist_id
         tests:
