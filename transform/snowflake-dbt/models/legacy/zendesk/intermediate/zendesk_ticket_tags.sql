@@ -1,7 +1,11 @@
+{{config({
+    "schema": "legacy"
+  })
+}}
 WITH source AS (
 
     SELECT *
-    FROM {{ source('zendesk', 'tickets') }}
+    FROM {{ ref('zendesk_tickets_source') }}
 
 ), renamed AS (
 
@@ -11,7 +15,7 @@ WITH source AS (
       f.VALUE       AS ticket_tag
     FROM
       source,
-      table(FLATTEN(INPUT => STRTOK_TO_ARRAY(tags, '[], "'))) f
+      table(FLATTEN(INPUT => STRTOK_TO_ARRAY(ticket_tags, '[], "'))) f
 
 )
 
