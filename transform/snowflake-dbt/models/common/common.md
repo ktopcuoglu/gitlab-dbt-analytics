@@ -521,22 +521,32 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs fct_event_valid_events %}
 
-Description: Atomic level GitLab.com Usage Event Data with Events that have a Valid User -  by Event_Id, Created_at
-- User and Namespace activity with Targets and Actions from the GitLab.com application.  
+**Description:** Atomic level GitLab.com Usage Event Data with Only Valid Events
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
+- Limited to Valid Events which is used for most Standard Analysis and Reporting
 
-Special Business Logic in this Model: 
+**Data Grain:**
+- event_id
+- event_created_at
+
+**Filters:**
 - Use ONLY Valid Events for standard analysis and reporting:
-  - Events where User Id = NULL are Valid Events that do not point to a particular User, ie. 'milestones'
-  - Events that are created after the User is created.  
-    - Events created before the User is created Not Valid.  These are usually from projects that were created before the User was created and then imported in by this User after the User is created.   
-- Rolling 24 mos of data (for performance optimization)
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
+
+**Business Logic in this Model:** 
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
 
 {% docs fct_event %}
 
 **Description:** Atomic level GitLab.com Usage Event Data
-- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effects on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
 
 **Data Grain:**
 - event_id
@@ -546,33 +556,9 @@ Special Business Logic in this Model:
 - None - `ALL Data` at the Atomic (`lowest level/grain`) is brought through from the Source for comprehensive analysis.  
   - Futher filters may be needed for Standard Analysis and Reporting, ie. Limiting to Events with Valid Users  
 
-**Table Attributes:**
-This table is built from the Event Source data and Joined to data normally used when working with Events as an Enterprise Data Star solution for Ease Of Use.  
-- Local Type Attributes come directly from the Event Source, ie.
-  - event_id
-  - event_created_at
-  - dim_project_id
-  - dim_user_id
-
-- Conformed Dimensions are brought in from Joins for common supporting tables, ie.
-  - dim_event_date_id
-  - dim_active_product_tier_id
-  - dim_active_subscription_id 
-  - dim_crm_account_id
-
-- Degenerate Dimensions are brought in as calculated values or derived values, ie.  
-  - is_smau
-  - is_gmau
-  - is_umau
-  - plan_id_at_event_date
-  - data_source
-
 **Business Logic in this Model:** 
-- Atomic Level data
-- ALL Source Data starting 2017-01
-- Data_source is Identified in the Model as 'GITLAB_DOTCOM'
-- The Actual Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information is Derived by using the Event Date for each event.
-- The events are identified as being used for xMAU metrics
+- The Actual Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information for the Event is determined by the Event Date.
+- Each Event is identified as being used for different xMAU metrics (is_smau, is_gmau, is_umau)
 - `data_source` = 'GITLAB_DOTCOM'
 
 **Other Comments:**
