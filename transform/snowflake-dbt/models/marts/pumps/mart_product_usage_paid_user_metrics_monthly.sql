@@ -1,6 +1,6 @@
 {{
   config(
-    tags=["mnpi_exception"],
+    tags=["product", "mnpi_exception"],
     schema="common_mart_product"
   )
 }}

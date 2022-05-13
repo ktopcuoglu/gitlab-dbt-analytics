@@ -137,6 +137,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.tsp_region                                             AS crm_account_tsp_region,
       sfdc_account.tsp_sub_region                                         AS crm_account_tsp_sub_region,
       sfdc_account.tsp_area                                               AS crm_account_tsp_area,
+      sfdc_account.tsp_max_hierarchy_sales_segment                        AS tsp_max_hierarchy_sales_segment,
       sfdc_account.account_demographics_sales_segment                     AS parent_crm_account_demographics_sales_segment,
       sfdc_account.account_demographics_geo                               AS parent_crm_account_demographics_geo,
       sfdc_account.account_demographics_region                            AS parent_crm_account_demographics_region,
@@ -199,6 +200,7 @@ WITH map_merged_crm_account AS (
       sfdc_account.zoom_info_parent_company_name                          AS crm_account_zoom_info_parent_company_name,
       sfdc_account.zoom_info_ultimate_parent_company_zi_id                AS crm_account_zoom_info_ultimate_parent_company_zi_id,
       sfdc_account.zoom_info_ultimate_parent_company_name                 AS crm_account_zoom_info_ultimate_parent_company_name,
+      sfdc_account.is_key_account                                         AS is_key_account,
   
       ----ultimate parent crm account info
       ultimate_parent_account.account_id                                  AS dim_parent_crm_account_id,

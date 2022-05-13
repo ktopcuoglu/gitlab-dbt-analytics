@@ -5,6 +5,12 @@ WITH source AS (
 
 ),
 
+/*
+
+  ATTENTION: When a field is added to this snapshot model, add it to the SFDC_ACCOUNT_SOURCE model to keep the live and snapshot models in alignment.
+
+*/
+
 renamed AS (
 
   SELECT
@@ -190,6 +196,9 @@ renamed AS (
     zi_parent_company_name__c AS zoom_info_parent_company_name,
     zi_ultimate_parent_company_zoominfo_id__c AS zoom_info_ultimate_parent_company_zi_id,
     zi_ultimate_parent_company_name__c AS zoom_info_ultimate_parent_company_name,
+
+    -- NF: Added on 20220427 to support EMEA reporting
+    key_account__c                     AS is_key_account,
 
     -- metadata
     createdbyid AS created_by_id,
