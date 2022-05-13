@@ -3,7 +3,7 @@
   })
 }}
 
-WITH zendesk_custom_fields AS (
+WITH zendesk_ticket_fields AS (
 
     SELECT *
     FROM {{ref('zendesk_ticket_fields_source')}}
