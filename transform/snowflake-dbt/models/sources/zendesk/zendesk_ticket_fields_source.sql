@@ -23,7 +23,7 @@ WITH source AS (
       title_in_portal::VARCHAR                      AS title_in_portal,
       type::VARCHAR                                 AS type,
       url::VARCHAR                                  AS url,
-      custom_field_options::VARCHAR                 AS custom_field_options,
+      custom_field_options::VARIANT                 AS custom_field_options,
       removable::BOOLEAN                            AS is_removable,
       required::BOOLEAN                             AS is_required,
       required_in_portal::BOOLEAN                   AS is_required_in_portal,
