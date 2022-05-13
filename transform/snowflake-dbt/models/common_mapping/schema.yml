@@ -17,6 +17,14 @@ models:
       - name: bizible_campaign_grouping_id
         tests:
           - not_null
+          
+  - name: map_gitlab_dotcom_xmau_metrics
+    description: '{{ doc("map_gitlab_dotcom_xmau_metrics") }}'
+    columns:
+      - name: common_events_to_include
+        tests:
+          - unique
+          - not_null
 
   - name: map_ip_to_country
     description: '{{ doc("map_ip_to_country") }}'
