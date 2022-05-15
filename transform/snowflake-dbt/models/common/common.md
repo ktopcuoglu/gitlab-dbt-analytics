@@ -519,7 +519,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_event_with_valid_user %}
+{% docs fct_event_valid %}
 
 Type of Data: gitlab.com db usage events
 
@@ -527,7 +527,7 @@ Aggregate Grain: None
 
 Time Grain: None
 
-Use case: fct_event_with_valid_user is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
+Use case: fct_event_valid is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
 data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
 
 {% enddocs %}
@@ -544,7 +544,7 @@ Use case: Source of truth (atomic), contains foreign keys to easily join to DIM 
 
 {% enddocs %}
 
-{% docs fct_event_daily %}
+{% docs fct_event_user_daily %}
 
 Type of Data: gitlab.com db usage events
 

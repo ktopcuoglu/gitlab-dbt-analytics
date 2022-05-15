@@ -2292,8 +2292,8 @@ models:
       - name: status_purchased
         description: Status of CI Minutes usage against the extra CI Minutes purchased limit by namespaces.
 
-  - name: fct_event_with_valid_user
-    description: '{{ doc("fct_event_with_valid_user") }}'
+  - name: fct_event_valid
+    description: '{{ doc("fct_event_valid") }}'
     columns:
       - name: event_id
         description: The unique ID of an event.
@@ -2352,10 +2352,10 @@ models:
       - name: model_updated_date
         description: The date at which the model code was last updated
   
-  - name: fct_event_daily
-    description: '{{ doc("fct_event_daily") }}'
+  - name: fct_event_user_daily
+    description: '{{ doc("fct_event_user_daily") }}'
     columns:
-      - name: event_daily_id
+      - name: event_user_daily_id
         description: The unique ID of a daily event.
         tests:
           - not_null
