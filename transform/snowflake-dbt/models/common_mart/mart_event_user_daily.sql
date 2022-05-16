@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('dim_namespace', 'dim_namespace'),
-    ('fct_event_daily', 'fct_event_daily'),
+    ('fct_event_user_daily', 'fct_event_user_daily'),
     ('dim_user', 'dim_user'),
     ('dim_date', 'dim_date')
     ])
@@ -14,9 +14,9 @@
 fact AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('fct_event_daily'), except=["CREATED_BY",
+    {{ dbt_utils.star(from=ref('fct_event_user_daily'), except=["CREATED_BY",
         "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
-  FROM fct_event_daily
+  FROM fct_event_user_daily
   
 ),
 
@@ -47,5 +47,5 @@ fact_with_dims AS (
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-01-28",
-    updated_date="2022-04-09"
+    updated_date="2022-05-16"
 ) }}
