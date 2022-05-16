@@ -8,18 +8,16 @@
     ('fct_ping_instance_metric', 'fct_ping_instance_metric')
     ])
 
-}},
+}}
 
-final AS (
+, final AS (
 
     SELECT
         {{ dbt_utils.star(from=ref('fct_ping_instance_metric'), except=['CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
     FROM fct_ping_instance_metric
-    WHERE time_frame = '28d'
+      WHERE time_frame = '28d'
     {% if is_incremental() %}
-                
-      AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
-    
+                AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
     {% endif %}
 
 )
@@ -27,7 +25,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@iweeks",
+    updated_by="@snalamaru",
     created_date="2022-05-03",
-    updated_date="2022-05-12"
+    updated_date="2022-05-16"
 ) }}
