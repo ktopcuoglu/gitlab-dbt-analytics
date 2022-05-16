@@ -124,10 +124,6 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - infrastructure_missing_employees
-  - name: hp_dvr
-    owner: '@dvanrooijen2'
-    tabs:
-      - hp_dvr
   - name: job_roles_prior_to_2020_02
     owner: '@pluthra'
     tabs:
