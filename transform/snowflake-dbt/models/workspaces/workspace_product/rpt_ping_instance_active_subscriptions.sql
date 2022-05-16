@@ -28,13 +28,14 @@ Determine latest version for each subscription to determine if the potential met
       dim_installation_id               AS dim_installation_id,
       latest_active_subscription_id     AS latest_active_subscription_id,
       ping_edition                      AS ping_edition,
+      version_is_prerelease             AS version_is_prerelease,
       major_minor_version_id            AS major_minor_version_id,
       instance_user_count               AS instance_user_count
   FROM mart_ping_instance_metric_monthly
       WHERE time_frame = '28d'
         AND ping_delivery_type = 'Self-Managed'
       QUALIFY ROW_NUMBER() OVER (
-            PARTITION BY ping_created_at_month, latest_active_subscription_id
+            PARTITION BY ping_created_at_month, latest_active_subscription_id, dim_installation_id
               ORDER BY major_minor_version_id DESC) = 1
 
 /*
@@ -48,10 +49,11 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
         dim_installation_id               AS dim_installation_id,
         latest_active_subscription_id     AS latest_active_subscription_id,
         ping_edition                      AS ping_edition,
+        version_is_prerelease             AS version_is_prerelease,
         major_minor_version_id            AS major_minor_version_id,
         MAX(instance_user_count)          AS instance_user_count
     FROM subscriptions_w_versions
-      {{ dbt_utils.group_by(n=5)}}
+      {{ dbt_utils.group_by(n=6)}}
 /*
 Get the count of pings each month per subscription_name_slugify
 */
@@ -123,6 +125,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_active_subscription_id,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
+    joined_subscriptions.version_is_prerelease                                                              AS version_is_prerelease,
     joined_subscriptions.major_minor_version_id                                                             AS major_minor_version_id,
     joined_subscriptions.instance_user_count                                                                AS instance_user_count,
     mart_charge_cleaned.licensed_user_count                                                                 AS licensed_user_count,
