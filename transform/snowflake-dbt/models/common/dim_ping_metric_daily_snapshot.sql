@@ -75,8 +75,7 @@ WITH source AS (
       is_paid_gmau                                                                      AS is_paid_gmau,
       is_umau                                                                           AS is_umau,
       valid_from                                                                        AS valid_from,
-      DATEADD(millisecond, -1, LAG(valid_from) ignore nulls 
-        OVER (PARTITION BY metrics_path ORDER BY valid_from DESC))                      AS valid_to 
+      valid_to                                                                          AS valid_to 
     FROM renamed
 
 ), ping_metric_spined AS (
