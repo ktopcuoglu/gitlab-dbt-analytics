@@ -19,7 +19,8 @@ WITH source AS (
 
     SELECT
       d.value                                 AS data_by_row,
-      min(uploaded_at)                        AS valid_from
+      min(uploaded_at)                        AS valid_from,
+      max(uploaded_at)                        AS valid_to
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
     GROUP BY 1
@@ -44,7 +45,8 @@ WITH source AS (
       ARRAY_CONTAINS( 'smau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_smau,
       ARRAY_CONTAINS( 'paid_gmau'::VARIANT , data_by_row['performance_indicator_type']) AS is_paid_gmau,
       ARRAY_CONTAINS( 'umau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_umau,
-      valid_from
+      valid_from,
+      valid_to
     FROM intermediate
 
 ), ping_metric_hist AS (
@@ -103,7 +105,7 @@ WITH source AS (
     FROM ping_metric_hist
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= ping_metric_hist.valid_from
-      AND snapshot_dates.date_actual < {{ coalesce_to_infinity('ping_metric_hist.valid_to') }}
+      AND snapshot_dates.date_actual < ping_metric_hist.valid_to
 
 )
 
