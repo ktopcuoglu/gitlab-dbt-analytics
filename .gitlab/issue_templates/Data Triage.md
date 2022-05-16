@@ -95,7 +95,7 @@ The focus area for the Data Engineer are the Data Pipelines and Data Infrastruct
 * [ ] [Investigate](https://gitlab.com/gitlab-org/gitlab/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) all relevant merge requests to the gitlab.com database schema, create an issue for each MR in the analytics project that impacts the GitLab.com extraction. Link each issue created to this issue. A detailed explanation of how to act if there is some impact is described on the page [#gitlabcom-db-structure-changes](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-db-structure-changes)
 
 
-In addition to these tasks, the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859) as well as updating the [rubbooks](https://gitlab.com/gitlab-data/runbooks) project where relevant.
+In addition to these tasks, the Data Engineer on triage should be focused on resolving these issues, including the backlog found on the [DE - Triage Errors board](https://gitlab.com/groups/gitlab-data/-/boards/1917859) as well as updating the [runbooks](https://gitlab.com/gitlab-data/runbooks) project where relevant.
 
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#data-pipelines** and **#data-prom-alerts** so that it is clear for the next triager what time to check for issues from.
 
