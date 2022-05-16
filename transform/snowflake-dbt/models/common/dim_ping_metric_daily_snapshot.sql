@@ -82,7 +82,24 @@ WITH source AS (
     SELECT
       {{ dbt_utils.surrogate_key(['metrics_path', 'snapshot_dates.date_id']) }}         AS ping_metric_hist_id,
       snapshot_dates.date_id                                                            AS snapshot_id,
-      ping_metric_hist.*
+      ping_metric_hist.metrics_path,
+      ping_metric_hist.sql_friendly_path,
+      ping_metric_hist.data_source,
+      ping_metric_hist.description,
+      ping_metric_hist.product_category,
+      ping_metric_hist.group_name,
+      ping_metric_hist.section_name,
+      ping_metric_hist.stage_name,
+      ping_metric_hist.milestone,
+      ping_metric_hist.skip_validation,
+      ping_metric_hist.metrics_status,
+      ping_metric_hist.tier,
+      ping_metric_hist.time_frame,
+      ping_metric_hist.value_type,
+      ping_metric_hist.is_gmau,
+      ping_metric_hist.is_smau,
+      ping_metric_hist.is_paid_gmau,
+      ping_metric_hist.is_umau    
     FROM ping_metric_hist
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= ping_metric_hist.valid_from
