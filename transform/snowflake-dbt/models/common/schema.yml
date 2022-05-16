@@ -3341,3 +3341,270 @@ models:
       - name: dbt_updated_at
       - name: dbt_created_at
 
+  - name: fct_ping_instance_metric
+    description: ' {{ doc("fct_ping_instance_metric") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+
+  - name: fct_ping_instance
+    description: ' {{ doc("fct_ping_instance") }} '
+    columns:
+      - name: ping_instance_id
+        tests:
+          - not_null
+        description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_28_day
+    description: ' {{ doc("fct_ping_instance_metric_28_day") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_7_day
+    description: ' {{ doc("fct_ping_instance_metric_7_day") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_monthly
+    description: ' {{ doc("fct_ping_instance_metric_monthly") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+  - name: fct_ping_instance_metric_all_time
+    description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
+    columns:
+      - name: ping_instance_metric_id
+        tests:
+          - not_null
+        description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
+      - name: dim_ping_instance_id
+        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+      - name: dim_product_tier_id
+        description: The unique id of a Product Tier in the dim_product_tier model.
+      - name: dim_location_country_id
+      - name: dim_ping_date_id
+        description: The unique id of a country from the dim_location_country model
+      - name: dim_host_id
+        description: The unique id of a host from the dim_host model (brought in from source data).
+      - name: dim_instance_id
+        description: The unique uuid of an instance from the dim_instances model.
+      - name: dim_date_id
+        description: The unqiue id of a date in the dim_date model.
+      - name: dim_license_id
+        description:  The unique id of a license from the dim_license model.
+      - name: metrics_path
+        description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+      - name: metric_value
+        description: The value associated with the metric path
+      - name: dim_installation_id
+        description: The unique identifier of the installation, easily joined to dim_installation. This id is the combination of dim_host_id and dim_instance_id and is considered the unique identifier of the instance for reporting and analysis
+      - name: ping_created_at
+        description: The time when the ping was created
+      - name: ping_created_at_date
+        description: The date when the ping was created
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: has_timed_out
+        description: A flag to denote that it has timed out
+      - name: dim_subscripton_id
+        description: The unique id of a subscription from the dim_subscription model
+      - name: dim_subscripton_license_id
+        description: The unique id of a license subscription
+      - name: time_frame
+        description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: umau_value
+        description: The unique monthly active user value for the instance
+
+
+  - name: fct_performance_indicator_targets
+    description: '{{ doc("fct_performance_indicator_targets") }}'
+    columns:
+      - name: fct_performance_indicator_targets_id
+        description: The unique ID of a month/metric record in fct_performance_indicator_targets
+
