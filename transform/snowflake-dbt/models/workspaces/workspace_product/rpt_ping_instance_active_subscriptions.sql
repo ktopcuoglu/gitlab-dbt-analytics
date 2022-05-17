@@ -130,7 +130,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     mart_charge_cleaned.licensed_user_count                                                                 AS licensed_user_count,
     mart_charge_cleaned.arr                                                                                 AS arr,
     mart_charge_cleaned.mrr                                                                                 AS mrr,
-    joined_subscriptions.ping_count                                                                         AS ping_count,
+    IFNULL(joined_subscriptions.ping_count, 0)                                                              AS ping_count,
     IFF(ping_edition IS NULL, FALSE, TRUE)                                                                  AS has_sent_pings
   FROM mart_charge_cleaned
     LEFT OUTER JOIN joined_subscriptions
