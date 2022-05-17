@@ -83,6 +83,7 @@ WITH source AS (
     SELECT
       {{ dbt_utils.surrogate_key(['metrics_path', 'snapshot_dates.date_id']) }}         AS ping_metric_hist_id,
       snapshot_dates.date_id                                                            AS snapshot_id,
+      ping_metric_hist.snapshot_date,
       ping_metric_hist.metrics_path,
       ping_metric_hist.sql_friendly_path,
       ping_metric_hist.data_source,
