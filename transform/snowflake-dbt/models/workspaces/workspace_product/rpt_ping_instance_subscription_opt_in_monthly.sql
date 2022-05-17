@@ -12,7 +12,18 @@
 
 -- Determine monthly sub and user count
 
-, subscription_info AS (
+, dedupe_active_subscriptions AS (
+
+  SELECT
+    ping_created_at_month                                             AS ping_created_at_month,
+    ping_edition                                                      AS ping_edition,
+    latest_active_subscription_id                                     AS latest_active_subscription_id,
+    licensed_user_count                                               AS licensed_user_count,
+    arr                                                               AS arr
+  FROM active_subscriptions
+    {{ dbt_utils.group_by(n=5)}}
+
+), subscription_info AS (
 
   SELECT
     ping_created_at_month                                             AS ping_created_at_month,
@@ -21,7 +32,7 @@
     SUM(arr)                                                          AS total_arr,
     COUNT(DISTINCT latest_active_subscription_id)                     AS total_subscription_count,
     SUM(licensed_user_count)                                          AS total_licensed_users
-  FROM active_subscriptions
+  FROM dedupe_active_subscriptions
       {{ dbt_utils.group_by(n=3)}}
 
 ), metrics AS (
