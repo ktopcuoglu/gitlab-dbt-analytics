@@ -159,7 +159,8 @@ WITH RECURSIVE employee_directory AS (
       IFF(employee_directory.hire_date< employment_status_first_value,
             'Active', employment_status)                                    AS employment_status,
       job_role.gitlab_username,
-      sales_geo_differential,
+      job_role.region,
+      job_role.sales_geo_differential,
       direct_reports.total_direct_reports,
      --for the diversity KPIs we are looking to understand senior leadership representation and do so by job grade instead of role        
       CASE 
