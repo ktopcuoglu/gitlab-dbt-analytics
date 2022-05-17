@@ -23,7 +23,7 @@ WITH source AS (
       date_trunc('day', uploaded_at)::DATE    AS snapshot_date
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
-    QUALIFY row_number() OVER (PARTITION BY data_by_row['key_path'], uploaded_at::DATE ORDER BY uploaded_at DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY data_by_row['key_path'], uploaded_at::DATE ORDER BY uploaded_at DESC) = 1
 
 ), renamed AS (
 
@@ -113,5 +113,5 @@ WITH source AS (
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-05-13",
-    updated_date="2022-05-13"
+    updated_date="2022-05-17"
 ) }}

@@ -49,7 +49,7 @@ WITH source AS (
       metrics_path                                                                                                                            AS metrics_path,
       'raw_usage_data_payload['''
         || REPLACE(metrics_path, '.', '''][''')
-        || ''']'                                                                                                                                AS sql_friendly_path,
+        || ''']'                                                                                                                              AS sql_friendly_path,
       data_source                                                                                                                             AS data_source,
       description                                                                                                                             AS description,
       product_category                                                                                                                        AS product_category,
@@ -76,7 +76,7 @@ WITH source AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@snalamaru",
+    updated_by="@chrissharp",
     created_date="2022-04-14",
-    updated_date="2022-05-05"
+    updated_date="2022-05-17"
 ) }}
