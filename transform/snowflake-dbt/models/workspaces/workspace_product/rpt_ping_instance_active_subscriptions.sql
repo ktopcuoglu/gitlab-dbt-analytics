@@ -107,7 +107,7 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
      INNER JOIN dim_product_detail
        ON fct_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
       WHERE dim_product_detail.product_delivery_type = 'Self-Managed'
-        AND mrr > 0
+        -- AND mrr > 0
         AND subscription_status IN ('Active','Cancelled')
         AND dim_product_detail.product_tier_name != 'Storage'
       {{ dbt_utils.group_by(n=2)}}
