@@ -1098,7 +1098,6 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
-                    - raw.sheetload.hp_dvr
                     - raw.snapshots.fct_mrr_snapshot
                     - raw.snapshots.mart_arr_snapshot
                     - raw.snapshots.dim_subscription_snapshot
