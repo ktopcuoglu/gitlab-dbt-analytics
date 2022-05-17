@@ -1007,7 +1007,6 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
-                    - prod.legacy.sheetload_hp_dvr
                     - prod.workspace_data.airflow_dag
                     - prod.workspace_data.airflow_dag_run
                     - prod.workspace_data.dbt_test_results
@@ -1033,7 +1032,6 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
-                    - raw.sheetload.hp_dvr
 
     - data_observability_2:
         warehouses:
@@ -1075,7 +1073,6 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
-                    - prod.legacy.sheetload_hp_dvr
                     - prod.workspace_data.airflow_dag
                     - prod.workspace_data.airflow_dag_run
                     - prod.workspace_data.dbt_test_results
