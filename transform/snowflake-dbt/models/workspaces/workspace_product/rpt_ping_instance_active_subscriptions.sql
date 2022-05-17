@@ -11,6 +11,7 @@
     ('dim_subscription', 'dim_subscription'),
     ('dim_billing_account', 'dim_billing_account'),
     ('dim_crm_account', 'dim_crm_account'),
+    ('dim_product_detail', 'dim_product_detail'),
     ('dim_date', 'dim_date'),
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly')
     ])
@@ -94,23 +95,21 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
        SUM(mrr)                           AS mrr,
        SUM(arr)                           AS arr,
        SUM(quantity)                      AS licensed_user_count
-  FROM fct_charge
-  INNER JOIN dim_date
-    ON effective_start_month <= dim_date.date_actual
-    AND (effective_end_month >= dim_date.date_actual OR effective_end_month IS NULL)
-    AND dim_date.day_of_month = 1
-  INNER JOIN dim_charge
-    ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
-  INNER JOIN dim_subscription
-    ON fct_charge.dim_subscription_id = dim_subscription.dim_subscription_id
-  INNER JOIN dim_billing_account
-    ON fct_charge.dim_billing_account_id = dim_billing_account.dim_billing_account_id
-  LEFT JOIN dim_crm_account
-    ON dim_crm_account.dim_crm_account_id = dim_billing_account.dim_crm_account_id
-  WHERE subscription_status IN ('Active','Cancelled')
-    ---AND --add exclude the storage
-    --AND --filter to only self-managed
-    --AND dim_crm_account.is_jihu_account != 'TRUE'
+     FROM fct_charge
+     INNER JOIN dim_date
+        ON effective_start_month <= dim_date.date_actual
+        AND (effective_end_month > dim_date.date_actual OR effective_end_month IS NULL)
+        AND dim_date.day_of_month = 1
+     INNER JOIN dim_charge
+       ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
+     INNER JOIN dim_subscription
+       ON fct_charge.dim_subscription_id = dim_subscription.dim_subscription_id
+     INNER JOIN dim_product_detail
+       ON fct_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id
+      WHERE dim_product_detail.product_delivery_type = 'Self-Managed'
+        AND mrr > 0
+        AND subscription_status IN ('Active','Cancelled')
+        AND dim_product_detail.product_tier_name != 'Storage'
       {{ dbt_utils.group_by(n=2)}}
 
 /*
