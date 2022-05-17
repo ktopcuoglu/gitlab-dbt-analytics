@@ -90,7 +90,7 @@ WITH dim_date AS (
       MIN(revenue_start_date)               AS revenue_start_date,
       MAX(revenue_end_date)                 AS revenue_end_date
     FROM revenue_contract_line
-    GROUP BY 1,2,3
+    {{ dbt_utils.group_by(n=3) }}
 
 ), true_up_lines AS (
 
@@ -133,7 +133,7 @@ WITH dim_date AS (
       ON mje.revenue_contract_line_id = true_up_lines.revenue_contract_line_id
         AND mje.revenue_contract_id = true_up_lines.revenue_contract_id
           AND mje.snapshot_date = true_up_lines.snapshot_date
-    group by 1,2
+    {{ dbt_utils.group_by(n=2) }}
 
 ), true_up_lines_subcription_grain AS (
   
@@ -156,7 +156,7 @@ WITH dim_date AS (
       ON lns.revenue_contract_line_id = mje.revenue_contract_line_id
     WHERE adjustment IS NOT NULL
       AND ABS(ROUND(adjustment,5)) > 0
-    group by 1,2,3,4,5,6,7,8
+    {{ dbt_utils.group_by(n=8) }}
 
  ), manual_charges_prep AS (
   
