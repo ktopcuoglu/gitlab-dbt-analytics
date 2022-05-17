@@ -81,6 +81,8 @@
       fct_crm_person.inquiry_date,
       fct_crm_person.mql_date_first,
       fct_crm_person.mql_date_latest,
+      fct_crm_person.legacy_mql_date_first,
+      fct_crm_person.legacy_mql_date_latest,
       fct_crm_person.accepted_date,
       fct_crm_person.qualifying_date,
       fct_crm_person.qualified_date,
@@ -272,5 +274,5 @@
     created_by="@mcooperDD",
     updated_by="@rkohnke",
     created_date="2020-02-18",
-    updated_date="2022-03-01"
+    updated_date="2022-05-06"
 ) }}
