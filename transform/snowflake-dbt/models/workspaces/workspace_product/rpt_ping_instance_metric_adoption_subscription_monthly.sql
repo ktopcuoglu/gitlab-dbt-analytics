@@ -34,7 +34,7 @@
       AND mart_ping_instance_metric_monthly.ping_created_at_month = active_subscriptions.ping_created_at_month
     WHERE time_frame = '28d'
       AND ping_delivery_type = 'Self-Managed'
-    {{ dbt_utils.group_by(n=12)}}
+    {{ dbt_utils.group_by(n=12)}} 
 -- Get actual count of subs/users for a given month/metric
 
 ), count_tbl AS (
