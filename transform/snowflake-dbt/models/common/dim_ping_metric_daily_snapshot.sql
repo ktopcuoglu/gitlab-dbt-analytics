@@ -19,11 +19,11 @@ WITH source AS (
 
     SELECT
       d.value                                 AS data_by_row,
-      min(uploaded_at)                        AS valid_from,
-      max(uploaded_at)                        AS valid_to
+      uploaded_at                             AS uploaded_at,
+      date_trunc('day', uploaded_at)::DATE    AS snapshot_date
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
-    GROUP BY 1
+    QUALIFY row_number() OVER (PARTITION BY data_by_row['key_path'], uploaded_at::DATE ORDER BY uploaded_at DESC) = 1
 
 ), renamed AS (
 
@@ -45,8 +45,8 @@ WITH source AS (
       ARRAY_CONTAINS( 'smau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_smau,
       ARRAY_CONTAINS( 'paid_gmau'::VARIANT , data_by_row['performance_indicator_type']) AS is_paid_gmau,
       ARRAY_CONTAINS( 'umau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_umau,
-      valid_from,
-      valid_to
+      uploaded_at,
+      snapshot_date
     FROM intermediate
 
 ), ping_metric_hist AS (
@@ -74,8 +74,8 @@ WITH source AS (
       is_smau                                                                           AS is_smau,
       is_paid_gmau                                                                      AS is_paid_gmau,
       is_umau                                                                           AS is_umau,
-      valid_from                                                                        AS valid_from,
-      valid_to                                                                          AS valid_to 
+      uploaded_at                                                                       AS uploaded_at,
+      snapshot_date                                                                     AS snapshot_date
     FROM renamed
 
 ), ping_metric_spined AS (
@@ -100,11 +100,11 @@ WITH source AS (
       ping_metric_hist.is_gmau,
       ping_metric_hist.is_smau,
       ping_metric_hist.is_paid_gmau,
-      ping_metric_hist.is_umau    
+      ping_metric_hist.is_umau,
+      uploaded_at
     FROM ping_metric_hist
     INNER JOIN snapshot_dates
-      ON snapshot_dates.date_actual >= ping_metric_hist.valid_from
-      AND snapshot_dates.date_actual < ping_metric_hist.valid_to
+      ON snapshot_dates.date_actual = ping_metric_hist.snapshot_date
 
 )
 
