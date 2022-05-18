@@ -1,15 +1,4 @@
 {% docs mart_event %}
-Enriched version of the atomic (event-level) GitLab.com usage events table, `common.fct_event`
-
-Type of Data: gitlab.com db usage events
-
-Aggregate Grain: None
-
-Time Grain: None
-
-Use case: Everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges, exclude specific projects, etc
-
-Note: This model includes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
 
 **Description:** Enriched Atomic level GitLab.com Usage Event Data 
 - [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
