@@ -1033,79 +1033,6 @@ roles:
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
 
-    - data_observability_2:
-        warehouses:
-            - data_obs_wh_2
-        privileges:
-            databases:
-                read:
-                    - prod
-                    - raw
-                    - prep
-                    - snowflake
-            schemas:
-                read:
-                    - prod.restricted_safe_common_mart_sales
-                    - prod.restricted_safe_common
-                    - prod.common
-                    - prod.legacy
-                    - prod.workspace_data
-                    - raw.airflow_stitch
-                    - raw.dbt
-                    - prep.zuora
-                    - prep.gitlab_dotcom
-                    - prep.snowplow
-                    - prep.dbt
-                    - prep.airflow
-                    - snowflake.account_usage
-                    - raw.sheetload
-                    - raw.snapshots
-            tables:
-                read:
-                    - prod.restricted_safe_common_mart_sales.mart_arr
-                    - prod.restricted_safe_common.fct_mrr
-                    - prod.restricted_safe_common.dim_crm_account
-                    - prod.common.dim_product_detail
-                    - prod.common.dim_billing_account
-                    - prod.common.fct_usage_ping_payload
-                    - prod.common.dim_date
-                    - prod.common.dim_subscription
-                    - prod.legacy.gitlab_dotcom_ci_job_artifacts
-                    - prod.legacy.gitlab_dotcom_namespaces_xf
-                    - prod.legacy.gitlab_dotcom_usage_data_events
-                    - prod.workspace_data.airflow_dag
-                    - prod.workspace_data.airflow_dag_run
-                    - prod.workspace_data.dbt_test_results
-                    - prod.workspace_data.dbt_run_results
-                    - prod.workspace_data.dbt_failing_tests
-                    - prod.workspace_data.dbt_compilation_runtime
-                    - prod.workspace_data.dbt_last_successful_test_runs
-                    - raw.airflow_stitch.dag_run
-                    - raw.airflow_stitch.dag
-                    - raw.dbt.test_run_results
-                    - raw.dbt.run_results
-                    - raw.dbt.manifest
-                    - raw.dbt.snapshots_run_results
-                    - prep.airflow.airflow_dag_run_source
-                    - prep.airflow.airflow_dag_source
-                    - prep.dbt.dbt_test_results_source
-                    - prep.dbt.dbt_run_results_source
-                    - prep.dbt.dbt_model_source
-                    - prep.dbt.dbt_snapshots_results_source
-                    - prep.zuora.zuora_account_source
-                    - prep.zuora.zuora_subscription_source
-                    - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
-                    - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
-                    - prep.snowplow.snowplow_gitlab_good_events_source
-                    - snowflake.account_usage.query_history
-                    - raw.snapshots.fct_mrr_snapshot
-                    - raw.snapshots.mart_arr_snapshot
-                    - raw.snapshots.dim_subscription_snapshot
-                    - raw.snapshots.gitlab_dotcom_namespaces_snapshots
-                    - raw.snapshots.zuora_subscription_snapshots
-                    - raw.snapshots.zuora_account_snapshots
-
-
 # ==========================================
 # Object Roles
 # ==========================================
@@ -4847,11 +4774,6 @@ users:
         can_login: yes
         member_of:
             - data_observability
-
-    - data_obs_user_2: # External user - Data Observability Vendor
-        can_login: yes
-        member_of:
-            - data_observability_2
 
 # ==========================================
 # Warehouses
