@@ -452,12 +452,15 @@ roles:
             databases:
                 read:
                     - prep
+                    - prod
             schemas:
                 read:
                     - prep.sensitive
+                    - prod.pumps_sensitive
             tables:
                 read:
                     - prep.sensitive.mart_marketing_contact
+                    - prod.pumps_sensitive.pump_marketing_contact
 
     - analyst_people:
         warehouses:
@@ -1936,7 +1939,20 @@ roles:
             tables:
                 read:
                     - raw.prometheus.*
-
+    
+    - pumps_sensitive:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.pumps_sensitive
+            tables:
+                read:
+                    - prod.pumps_sensitive.*
 
     - restricted_safe:
         warehouses:
