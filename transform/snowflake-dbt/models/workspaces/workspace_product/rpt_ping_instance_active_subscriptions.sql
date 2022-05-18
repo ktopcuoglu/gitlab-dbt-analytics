@@ -98,7 +98,7 @@ Aggregate mart_charge information (used as the basis of truth), this gets rid of
      FROM fct_charge
      INNER JOIN dim_date
         ON effective_start_month <= dim_date.date_actual
-        AND (effective_end_month > dim_date.date_actual OR effective_end_month IS NULL)
+        AND (effective_end_month >= dim_date.date_actual OR effective_end_month IS NULL)
         AND dim_date.day_of_month = 1
      INNER JOIN dim_charge
        ON fct_charge.dim_charge_id = dim_charge.dim_charge_id
