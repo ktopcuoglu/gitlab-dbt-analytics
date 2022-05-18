@@ -2300,6 +2300,24 @@ models:
         tests:
           - not_null
           - unique
+      # - name: group_name
+        # tests:
+          # - not_null
+      - name: section_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_smau
+        tests:
+          - not_null
+      - name: is_gmau
+        tests:
+          - not_null
+      - name: is_umau
+        tests:
+          - not_null
   
   - name: fct_event
     description: '{{ doc("fct_event") }}'
