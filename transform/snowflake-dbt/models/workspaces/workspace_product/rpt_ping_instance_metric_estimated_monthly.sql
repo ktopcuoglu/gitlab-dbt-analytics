@@ -97,12 +97,12 @@ SELECT
     is_umau                                                                                                                                             AS is_umau,
     -- fct info
     reporting_count                                                                                                                                     AS reporting_count,
-    not_reporting_count                                                                                                                                  AS not_reporting_count,
+    not_reporting_count                                                                                                                                 AS not_reporting_count,
     percent_reporting                                                                                                                                   AS percent_reporting,
     estimation_grain                                                                                                                                    AS estimation_grain,
-    ROUND({{ usage_estimation('recorded_usage', 'percent_reporting') }})                                                                                  AS total_usage_with_estimate,
-    total_usage_with_estimate - recorded_usage                                                                                                                AS estimated_usage,
-    recorded_usage                                                                                                                                        AS recorded_usage
+    ROUND({{ usage_estimation('recorded_usage', 'percent_reporting') }})                                                                                AS total_usage_with_estimate,
+    ROUND(total_usage_with_estimate - recorded_usage)                                                                                                   AS estimated_usage,
+    recorded_usage                                                                                                                                      AS recorded_usage
  FROM joined_counts_w_percentage
 
 )
