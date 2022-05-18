@@ -114,11 +114,11 @@ echo "dbt completion script successfully installed"
 ## Add refresh command
 echo "alias dbt_refresh='dbt clean ; dbt deps ; dbt seed'" >> ~/.bash_profile
 
-## install anaconda
-echo "Installing anaconda.."
-brew cask install anaconda
-echo "export PATH=/usr/local/anaconda3/bin:"$PATH"" >> ~/.bash_profile
-echo "anaconda installed succesfully"
+## install miniforge
+echo "Installing miniforge.."
+brew install miniforge
+echo "export PATH=/usr/local/mambaforge/bin:"$PATH"" >> ~/.bash_profile
+echo "miniforge installed succesfully"
 
 ## Set up the computer to contribute to the handbook
 echo "Setting up your computer to contribute to the handbook..."
