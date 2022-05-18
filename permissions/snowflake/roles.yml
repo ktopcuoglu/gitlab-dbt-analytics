@@ -4859,6 +4859,3 @@ warehouses:
 
     - data_obs_wh_1:
         size: x-small
-
-    - data_obs_wh_2:
-        size: x-small
