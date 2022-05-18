@@ -225,5 +225,5 @@ Join to capture missing metrics, uses the last value found for these in fct_char
      created_by="@icooper-acp",
      updated_by="@icooper-acp",
      created_date="2022-05-05",
-     updated_date="2022-05-05"
+     updated_date="2022-05-06"
  ) }}
