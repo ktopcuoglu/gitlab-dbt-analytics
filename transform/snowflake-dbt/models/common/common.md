@@ -596,15 +596,30 @@ Note: This model excludes events occurring before a gitlab.com user was created 
 
 {% docs fct_event_namespace_daily %}
 
-Type of Data: gitlab.com db usage events
+**Description:** GitLab.com Usage Event Data Grouped by Date, Event, Namespace and Billing
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
+- The data is aggregated by Date, Event and Namespace and includes supporting Attributes. 
 
-Aggregate Grain: event_name, dim_ultimate_parent_namespace_id
+**Data Grain:**
+- event_date
+- event_name
+- dim_ultimate_parent_namespace_id
 
-Time Grain: event_date
+**Filters:**
+- Use Valid Events Only for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
 
-Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+**Business Logic in this Model:** 
+- The Actual Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information for the Event is determined by the Event Date.
+- Each Event is identified as being used for different xMAU metrics (is_smau, is_gmau, is_umau)
+- `data_source` = 'GITLAB_DOTCOM'
 
-Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+**Other Comments:**
+- The `fct_event_namespace_daily` table is built directly from the [fct_event_with_valid_user](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.fct_event_with_valid_user) which brings all of the different types of events together.  
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
 
