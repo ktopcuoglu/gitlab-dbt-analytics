@@ -569,15 +569,29 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% docs fct_event_daily %}
 
-Type of Data: gitlab.com db usage events
-
-Aggregate Grain: event_name, dim_ultimate_parent_namespace_id, dim_user_id
-
-Time Grain: event_date
-
-Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
-
 Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are excluded.
+
+**Description:**GitLab.com Usage Event Data with Only Valid Events by Event_Date, User, Ultimate_Parent_Namespace and Event_Name
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
+- Limited to Valid Events which is used for most Standard Analysis and Reporting
+
+**Data Grain:**
+- event_date
+- dim_user_id
+- dim_ultimate_parent_namespace_id
+- event_name
+
+**Filters:**
+- Use ONLY Valid Events for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
+
+**Business Logic in this Model:** 
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
 
