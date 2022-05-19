@@ -21,6 +21,7 @@
 - Include Events used in Metrics (umau, gmau, smau)  
 
 **Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the instance-level service ping metrics by getting a 28-day count
@@ -34,7 +35,7 @@
 {% docs rpt_event_plan_monthly %}
 
 **Description:** GitLab.com Usage Event Report Data with Monthly Totals for Valid Events
-- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
 
 **Data Grain:**
 - event_calendar_month
@@ -50,6 +51,7 @@
 - Include rows where the Event_Date is within 28 days of the Last Day of the Month  
 
 **Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the instance-level service ping metrics by getting a 28-day count
