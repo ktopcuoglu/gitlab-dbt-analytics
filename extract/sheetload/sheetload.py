@@ -24,6 +24,7 @@ from qualtrics_sheetload import qualtrics_loader
 
 from pandas.errors import ParserError
 
+
 def sheet_loader(
     sheet_file: str,
     table_name: str = None,
@@ -268,7 +269,9 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
             body = csv_obj["Body"]
             csv_string = body.read().decode("utf-8")
             try:
-                sheet_df = pd.read_csv(StringIO(csv_string), engine="c", low_memory=False)
+                sheet_df = pd.read_csv(
+                    StringIO(csv_string), engine="c", low_memory=False
+                )
 
                 table_name, extension = file.split(".")[0:2]
                 # To pick up the file name alone  not the whole path to the file for as table name
@@ -280,6 +283,7 @@ def s3_loader(bucket: str, schema: str, conn_dict: Dict[str, str] = None) -> Non
 
             except ParserError:
                 error(f"Problem processing {file}")
+
 
 def csv_loader(
     filename: str,
@@ -370,7 +374,9 @@ def drive_loader(
 
         info(f"Processing folder {folder_name}")
 
-        folder_id = google_drive_client.get_item_id(item_name=folder_name, is_folder=True)
+        folder_id = google_drive_client.get_item_id(
+            item_name=folder_name, is_folder=True
+        )
         archive_folder_id = google_drive_client.get_archive_folder_id(
             in_folder_id=folder_id
         )
