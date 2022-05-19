@@ -3348,17 +3348,65 @@ models:
         description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric
       - name: snapshot_date
       - name: uploaded_at
-      - name: created_byssss
+      - name: created_by
         description: Who created this model
       - name: updated_by
         description: Who updated this model last
       - name: model_created_date
         description: The date at which the model was created
       - name: model_updated_date
-        description: The date at which the model code was last updatedss
+        description: The date at which the model code was last updateded
       - name: dbt_updated_at
       - name: dbt_created_at
 
+  - name: dim_ping_metric_daily_snapshot
+    description: ' {{ doc("dim_ping_metric_daily_snapshot") }} '
+    columns:
+      - name: ping_metric_hist_id
+        tests:
+          - not_null
+          - unique
+      - name: metrics_path
+        description: The path name of metric 
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: description
+      - name: product_category
+      - name: group_name
+        description: The name of the Product group
+      - name: section_name
+        description: The name of the product section
+      - name: stage_name
+        description: The name of the product stage
+      - name: milestone
+      - name: skip_validation
+      - name: metrics_status
+      - name: tier
+      - name: time_frame
+      - name: value_type
+      - name: is_gmau
+        description: Boolean field representing if the xmau metric represents a Group Monthly Active user (GMAU) metric
+      - name: is_paid_gmau
+        description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric
+      - name: is_smau
+        description: Boolean field representing if the xmau metric represents a Stage Monthly Active User (SMAU) metric
+      - name: is_umau
+        description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric
+      - name: valid_from
+        description: Timestamp of when this metric path mapping is valid from
+      - name: valid_to
+        description: Timestamp of when this metric path mapping is valid until
+      - name: created_by
+        description: Who created this model
+      - name: updated_by
+        description: Who updated this model last
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model code was last updateded
+      - name: dbt_updated_at
+      - name: dbt_created_at
+      
   - name: fct_ping_instance_metric
     description: ' {{ doc("fct_ping_instance_metric") }} '
     columns:
