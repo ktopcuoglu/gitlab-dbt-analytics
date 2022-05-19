@@ -5,7 +5,8 @@
 ) }}
 
 {{ simple_cte([
-    ('dim_date', 'dim_date')
+    ('dim_date', 'dim_date'),
+    ('prep_event_all', 'prep_event_all')
     ])
 }},
 
@@ -24,7 +25,14 @@ fct_events AS (
     prep_event_all.days_since_namespace_creation_at_event_date,
     prep_event_all.days_since_project_creation_at_event_date,
     CAST(prep_event_all.event_created_at AS DATE) AS event_date
-  FROM {{ ref('prep_event_all') }}
+  FROM prep_event_all
+  
+  {% if is_incremental() %}
+
+   WHERE event_created_at > (SELECT max(event_created_at) FROM {{ this }})
+
+  {% endif %}
+
 
 ),
 
@@ -43,7 +51,7 @@ paid_flag_by_day AS (
 
 ),
 
-final AS (
+fct_event_w_flags AS (
 
   SELECT
     fct_events.*,
@@ -61,30 +69,30 @@ gitlab_dotcom_fact AS (
 
   SELECT
     --Primary Key
-    final.event_id,
+    fct_event_w_flags.event_id,
     
     --Foreign Keys
     dim_date.date_id AS dim_event_date_id,
-    final.ultimate_parent_namespace_id AS dim_ultimate_parent_namespace_id,
-    final.dim_project_id,
-    final.dim_user_id,
+    fct_event_w_flags.ultimate_parent_namespace_id AS dim_ultimate_parent_namespace_id,
+    fct_event_w_flags.dim_project_id,
+    fct_event_w_flags.dim_user_id,
     
     --Time attributes
-    final.event_created_at,
-    final.event_date,
+    fct_event_w_flags.event_created_at,
+    fct_event_w_flags.event_date,
     
     --Degenerate Dimensions (No stand-alone, promoted dimension table)
-    final.parent_id,
-    final.parent_type,
-    final.event_name,
-    final.plan_id_at_event_date,
-    final.plan_name_at_event_date,
-    final.plan_was_paid_at_event_date,
-    final.days_since_user_creation_at_event_date,
-    final.days_since_namespace_creation_at_event_date,
-    final.days_since_project_creation_at_event_date,
+    fct_event_w_flags.parent_id,
+    fct_event_w_flags.parent_type,
+    fct_event_w_flags.event_name,
+    fct_event_w_flags.plan_id_at_event_date,
+    fct_event_w_flags.plan_name_at_event_date,
+    fct_event_w_flags.plan_was_paid_at_event_date,
+    fct_event_w_flags.days_since_user_creation_at_event_date,
+    fct_event_w_flags.days_since_namespace_creation_at_event_date,
+    fct_event_w_flags.days_since_project_creation_at_event_date,
     'GITLAB_DOTCOM' AS data_source
-  FROM final
+  FROM fct_event_w_flags
   LEFT JOIN dim_date
     ON TO_DATE(event_created_at) = dim_date.date_day
 
