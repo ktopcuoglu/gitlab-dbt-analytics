@@ -99,6 +99,10 @@ sheets:
     owner: '@rbacovic'
     tabs:
       - gitlab_certification_tracking_dashboard
+  - name: gitlab_roulette
+    owner: '@leipert'
+    tabs:
+      - gitlab_roulette_capacity_history
   - name: gitlab_slack_stats
     owner: '@ken_aguilar'
     tabs:
@@ -120,10 +124,6 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - infrastructure_missing_employees
-  - name: hp_dvr
-    owner: '@dvanrooijen2'
-    tabs:
-      - hp_dvr
   - name: job_roles_prior_to_2020_02
     owner: '@pluthra'
     tabs:

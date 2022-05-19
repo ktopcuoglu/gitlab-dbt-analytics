@@ -52,7 +52,6 @@ class SnowflakeManager:
             "MELTANO",
             "GRAFANA",
             "DATA_OBS_USER_1",
-            "DATA_OBS_USER_2",
         ]
         connection = self.engine.connect()
         for index, row in user_list.iterrows():

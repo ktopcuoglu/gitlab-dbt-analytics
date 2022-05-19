@@ -23,7 +23,8 @@
 
 {% enddocs %}
 
-{% docs mart_event_with_valid_user %}
+{% docs mart_event_valid %}
+Enriched version of the derived (event-level) `common.fct_event_valid` GitLab.com usage events table which filters out invalid users and provides a rolling 2 years of data. 
 
 **Description:** Enriched GitLab.com Usage Event Data for Valid Events
 - [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.
@@ -77,7 +78,8 @@
 
 {% enddocs %}
 
-{% docs mart_event_daily %}
+{% docs mart_event_user_daily %}
+Enhanced version of `common.fct_event_user_daily`
 
 **Description:** Enriched GitLab.com Usage Event Data with Only Valid Events by Event_Date, User, Ultimate_Parent_Namespace and Event_Name with extra Namespace Attributes
 - [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  These events are captured from the GitLab application.

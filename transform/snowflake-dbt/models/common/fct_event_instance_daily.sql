@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('fct_event_with_valid_user', 'fct_event_with_valid_user')
+    ('fct_event_valid', 'fct_event_valid')
     ])
 }},
 
@@ -18,7 +18,7 @@ fct_event_instance_daily AS (
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_user_id)) AS user_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count
-  FROM fct_event_with_valid_user
+  FROM fct_event_valid
   {{ dbt_utils.group_by(n=4) }}
   
 )
@@ -28,5 +28,5 @@ fct_event_instance_daily AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-04-09"
+    updated_date="2022-05-16"
 ) }}
