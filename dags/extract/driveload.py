@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-from yaml import load, safe_load, YAMLError
+from yaml import safe_load, YAMLError
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
