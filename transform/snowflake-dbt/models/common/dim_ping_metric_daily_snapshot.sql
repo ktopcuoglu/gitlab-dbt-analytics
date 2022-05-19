@@ -7,47 +7,14 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('gitlab_data_yaml', 'usage_ping_metrics') }}
+    FROM {{ref('usage_ping_metrics_source')}}
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY metrics_path, uploaded_at::DATE ORDER BY uploaded_at DESC) = 1
 
 ), snapshot_dates AS (
 
    SELECT *
    FROM {{ ref('dim_date') }}
-   WHERE date_actual >= '2020-03-01' and date_actual <= CURRENT_DATE
-
-), intermediate AS (
-
-    SELECT
-      d.value                                 AS data_by_row,
-      uploaded_at                             AS uploaded_at,
-      date_trunc('day', uploaded_at)::DATE    AS snapshot_date
-    FROM source,
-    LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => TRUE) d
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY data_by_row['key_path'], uploaded_at::DATE ORDER BY uploaded_at DESC) = 1
-
-), renamed AS (
-
-     SELECT
-      data_by_row['key_path']::TEXT                                                     AS metrics_path,
-      data_by_row['data_source']::TEXT                                                  AS data_source,
-      data_by_row['description']::TEXT                                                  AS description,
-      data_by_row['product_category']::TEXT                                             AS product_category,
-      data_by_row['product_group']::TEXT                                                AS product_group,
-      data_by_row['product_section']::TEXT                                              AS product_section,
-      data_by_row['product_stage']::TEXT                                                AS product_stage,
-      data_by_row['milestone']::TEXT                                                    AS milestone,
-      data_by_row['skip_validation']::TEXT                                              AS skip_validation,
-      data_by_row['status']::TEXT                                                       AS metrics_status,
-      data_by_row['tier']                                                               AS tier,
-      data_by_row['time_frame']::TEXT                                                   AS time_frame,
-      data_by_row['value_type']::TEXT                                                   AS value_type,
-      ARRAY_CONTAINS( 'gmau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_gmau,
-      ARRAY_CONTAINS( 'smau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_smau,
-      ARRAY_CONTAINS( 'paid_gmau'::VARIANT , data_by_row['performance_indicator_type']) AS is_paid_gmau,
-      ARRAY_CONTAINS( 'umau'::VARIANT , data_by_row['performance_indicator_type'])      AS is_umau,
-      uploaded_at,
-      snapshot_date
-    FROM intermediate
+   WHERE date_actual >= '2021-04-13' and date_actual <= CURRENT_DATE
 
 ), ping_metric_hist AS (
 
@@ -76,7 +43,7 @@ WITH source AS (
       is_umau                                                                           AS is_umau,
       uploaded_at                                                                       AS uploaded_at,
       snapshot_date                                                                     AS snapshot_date
-    FROM renamed
+    FROM source
 
 ), ping_metric_spined AS (
 
