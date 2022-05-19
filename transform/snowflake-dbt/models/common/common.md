@@ -519,7 +519,7 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs fct_event_with_valid_user %}
+{% docs fct_event_valid %}
 
 Type of Data: gitlab.com db usage events
 
@@ -527,7 +527,7 @@ Aggregate Grain: None
 
 Time Grain: None
 
-Use case: fct_event_with_valid_user is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
+Use case: fct_event_valid is at the atomic grain of event_id and event_created_at timestamp. All other derived facts in the GitLab.com usage events lineage are built from this derived fact. The model filters out imported projects and events with 
 data quality issues by filtering out negative days since user creation at event date. It keeps events with a NULL days since user creation to capture valid events that do not have a user.
 
 {% enddocs %}
@@ -544,7 +544,7 @@ Use case: Source of truth (atomic), contains foreign keys to easily join to DIM 
 
 {% enddocs %}
 
-{% docs fct_event_daily %}
+{% docs fct_event_user_daily %}
 
 Type of Data: gitlab.com db usage events
 
@@ -999,10 +999,12 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
 
 {% docs dim_ping_instance %}
 
-* `Type of Data`: Instance-level Service Ping from Versions app
-* `Aggregate Grain`: One record per service ping (dim_ping_instance_id)
-* `Time Grain`: None
-* `Use case`: Service Ping dimension analysis (ex: edition, installation_type)
+Below are some details about the dimension table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id)`
+* Time Grain: `None`
+* Use case: `Service Ping dimension analysis (ex: edition, installation_type)`
 
 {% enddocs %}
 
@@ -1019,5 +1021,113 @@ Some other enhancements in this model include : addition of a surrogate key, exc
 This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
 
 For this reason `metrics_path` is not unique.
+
+{% enddocs %}
+
+{% docs fct_performance_indicator_targets %}
+
+New fact table to replace `performance_indicators_yaml_historical`. 
+
+This new table will include all flattened target values for each metric for each month. Can just filter this fact table down in `td_xmau 2.0` snippet.
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric %}
+
+The granularity of this model is one row per tuple (metric_name, instance_id).
+
+The Service Ping metrics sent via a JSON Payload could be of various types:
+
+* all_time counters (for example how many issues a specific instance has created since its inception)
+* 28_days counters (how many users have created at least one issue over the last 4 weeks)
+* 7_days counters (how many users have created at least one issue over the last 7 days)
+* an instance configuration parameter (has this instance enabled saml/sso)
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance %}
+
+Unflattened Factual table with metadata on Service ping payloads received.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Main foreign keys that can help to build easily joins:
+
+* dim_license_id
+* dim_subscription_id
+* dim_date_id
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_7_day %}
+
+
+This table filters data for the `7-days` Service ping metric counters from `fct_ping_instance_metric` model.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 7 day time_frame.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_28_day %}
+
+This table filters data for the `28-days` Service ping metric counters from `fct_ping_instance_metric` model.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day time_frame.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_monthly %}
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day AND all time_frame. Only last ping of month shows as well.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_all_time %}
+
+This table filters data for the `all-time` Service ping metric counters from `fct_ping_instance_metric` model.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: None
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to all time time_frame.`
 
 {% enddocs %}

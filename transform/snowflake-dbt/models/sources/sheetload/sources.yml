@@ -57,13 +57,13 @@ sources:
       - name: gcp_active_cud
       - name: gitlab_contributing_organizations
       - name: gitlab_certification_tracking_dashboard
+      - name: gitlab_roulette_capacity_history
       - name: gitlab_slack_stats
       - name: google_referrals
       - name: headcount
       - name: hire_forecast
       - name: hire_plan
       - name: hire_replan
-      - name: hp_dvr
       - name: ic_collaboration_competency
       - name: ic_dib_comptency
       - name: ic_efficiency_competency

@@ -10,3 +10,4 @@ Reports to be extracted are defined in [reports.yml](reports.yml) file.
  
 
 [Link to issue](https://gitlab.com/gitlab-data/analytics/-/issues/6007)
+

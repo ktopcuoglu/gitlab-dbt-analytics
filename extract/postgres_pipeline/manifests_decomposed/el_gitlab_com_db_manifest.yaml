@@ -612,7 +612,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , type
+      , NULL as type
       , project_id
       , created_at
       , updated_at
@@ -1625,7 +1625,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , type
+      , NULL AS type
       , project_id
       , created_at
       , updated_at
@@ -1994,6 +1994,29 @@ tables:
       , state
       , updated_at
       FROM vulnerabilities
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  vulnerability_occurrences:
+    export_schema: 'gitlab_com'
+    export_table: 'vulnerability_occurrences'
+    export_table_primary_key: 'id'
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , severity
+      , confidence
+      , report_type
+      , project_id
+      , scanner_id
+      , primary_identifier_id
+      , uuid
+      , name
+      , metadata_version
+      , raw_metadata
+      , vulnerability_id
+      FROM vulnerability_occurrences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   web_hooks:

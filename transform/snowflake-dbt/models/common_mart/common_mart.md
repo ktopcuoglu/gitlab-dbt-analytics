@@ -13,8 +13,8 @@ Note: This model includes events occurring before a gitlab.com user was created 
 
 {% enddocs %}
 
-{% docs mart_event_with_valid_user %}
-Enriched version of the derived (event-level) `common.fct_event_with_valid_user` GitLab.com usage events table which filters out invalid users and provides a rolling 2 years of data. 
+{% docs mart_event_valid %}
+Enriched version of the derived (event-level) `common.fct_event_valid` GitLab.com usage events table which filters out invalid users and provides a rolling 2 years of data. 
 
 Type of Data: gitlab.com db usage events
 
@@ -43,8 +43,8 @@ Note: This model excludes events occurring before a gitlab.com user was created 
 
 {% enddocs %}
 
-{% docs mart_event_daily %}
-Enhanced version of `common.fct_event_daily`
+{% docs mart_event_user_daily %}
+Enhanced version of `common.fct_event_user_daily`
 
 Type of Data: gitlab.com db usage events
 
