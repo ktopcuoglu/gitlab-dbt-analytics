@@ -26,6 +26,8 @@
                 {% for table in tables %}
                     {% if loop.last %}
                         {{ log('THIS IS LAST ONE') }}
+                    {% else %}
+                        {{ log('THIS IS NOT THE LAST ONE') }}
                     {% endif %}
 
                     {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
