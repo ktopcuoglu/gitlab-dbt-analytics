@@ -30,11 +30,8 @@
 
                 {% endfor %}
 
-                {{ log('TEST END FOR1') }}
 
             {% endfor %}
-
-            {{ log('TEST END FOR2') }}
 
         {% endfor %}
 
