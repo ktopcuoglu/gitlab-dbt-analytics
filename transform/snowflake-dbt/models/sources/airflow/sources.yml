@@ -12,7 +12,9 @@ sources:
       schema: false
       identifier: false
 
-    freshness: null
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
 
     tables:
       - name: dag
