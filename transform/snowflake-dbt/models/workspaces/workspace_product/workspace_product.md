@@ -62,3 +62,8 @@ Monthly counts of active subscriptions.
 Monthly counts of active subscriptions.
 
 {% enddocs %}
+
+{% docs rpt_ping_instance_active_subscriptions %}
+
+List of active subscription and installations by month.
+{% enddocs %}

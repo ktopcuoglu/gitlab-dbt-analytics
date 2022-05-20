@@ -163,13 +163,13 @@ This CTE below grabs the missing installation/subs for each month missing from a
         latest_active_subscription_id           AS latest_active_subscription_id,
         ping_edition                            AS ping_edition,
         version_is_prerelease                   AS version_is_prerelease,
-        major_minor_version_id                  AS major_minor_version_id,
-        instance_user_count                     AS instance_user_count,
+        MAX(major_minor_version_id)             AS major_minor_version_id,
+        MAX(instance_user_count)                AS instance_user_count,
         COUNT(DISTINCT(dim_ping_instance_id))   AS ping_count
     FROM mart_ping_instance_metric
         WHERE CONCAT(latest_active_subscription_id, to_varchar(ping_created_at_month)) NOT IN
     (SELECT DISTINCT(CONCAT(latest_active_subscription_id, to_varchar(ping_created_at_month))) FROM arr_counts_joined)
-            {{ dbt_utils.group_by(n=7)}}
+            {{ dbt_utils.group_by(n=5)}}
 
 /*
 Join to capture missing metrics, uses the last value found for these in fct_charge
@@ -232,7 +232,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         active_subs_unioned.version_is_prerelease                                                                                       AS version_is_prerelease,
         active_subs_unioned.major_minor_version_id                                                                                      AS major_minor_version_id,
         active_subs_unioned.instance_user_count                                                                                         AS instance_user_count,
-        active_subs_unioned.licensed_user_count                                                                                         AS licensed_user_count,
+        FLOOR(active_subs_unioned.licensed_user_count)                                                                                  AS licensed_user_count,
         active_subs_unioned.arr                                                                                                         AS arr,
         active_subs_unioned.mrr                                                                                                         As mrr,
         IFNULL(active_subs_unioned.ping_count, 0)                                                                                       AS ping_count,
