@@ -25,9 +25,9 @@
 
                 {% for table in tables %}
                     {% if loop.last %}
-                        {{ log('THIS IS LAST ONE') }}
+                        {{ log('THIS IS LAST ONE', info = true) }}
                     {% else %}
-                        {{ log('THIS IS NOT THE LAST ONE') }}
+                        {{ log('THIS IS NOT THE LAST ONE', info = true) }}
                     {% endif %}
 
                     {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
