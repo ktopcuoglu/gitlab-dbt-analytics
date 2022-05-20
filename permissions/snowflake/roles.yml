@@ -518,6 +518,7 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
+            - general_data_masking
 
     - analytics_engineer_ga:
         member_of:
@@ -628,6 +629,7 @@ roles:
             - snowflake_db
             - static_admin
             - zoominfo
+            - general_data_masking
         warehouses:
             - airflow_testing_l
             - engineer_xs
@@ -1032,6 +1034,14 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
+
+# ==========================================
+# Data Masking Roles
+# ==========================================
+    - general_data_masking:
+        warehouses:
+            - reporting
+
 
 # ==========================================
 # Object Roles

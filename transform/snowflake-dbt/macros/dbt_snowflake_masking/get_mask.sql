@@ -1,4 +1,4 @@
-{%- macro create_masking_policy(data_type, policy=none) -%}
+{%- macro get_mask(data_type, policy=none) -%}
 
   {# Default maksing for each data type #}
   {% if data_type == 'TEXT' %}
@@ -22,7 +22,7 @@
   {% endif %}
 
   {% if policy %}
-    {# Override making on a policy specific basis #}
+    {# Override default masking on a policy specific basis #}
   {% endif %}
 
 
