@@ -141,4 +141,7 @@ models:
     - name: location
     - name: location_factor
     - name: candidate_id
+
+  - name: workday_rpt_greenhouse_hired_employees_opening_ids
+    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
     
