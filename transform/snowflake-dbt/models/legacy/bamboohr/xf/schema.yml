@@ -211,7 +211,7 @@ models:
     description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
 
   - name: workday_bamboohr_job_info_current_division_base
-  description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
+    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
 
   - name: workday_bamboohr_work_email
     description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
