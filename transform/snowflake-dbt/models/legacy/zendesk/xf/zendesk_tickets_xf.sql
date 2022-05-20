@@ -46,6 +46,21 @@ WITH zendesk_tickets AS (
     SELECT *
     FROM {{ref('zendesk_satisfaction_ratings_source')}}
 
+), zendesk_ticket_custom_field_values_sensitive AS (
+  
+    SELECT *
+    FROM {{ref('zendesk_ticket_custom_field_values_sensitive')}}
+  
+), zendesk_ticket_custom_fields AS (
+  
+    SELECT *
+    FROM {{ref('zendesk_ticket_custom_fields')}}
+  
+), zendesk_ticket_forms AS (
+  
+    SELECT *
+    FROM {{ref('zendesk_ticket_forms_source')}}
+    
 ), zendesk_ticket_audit_first_comment AS (
 
     SELECT
@@ -57,34 +72,52 @@ WITH zendesk_tickets AS (
     WHERE audit_field = 'is_public'
     QUALIFY ROW_NUMBER() OVER(PARTITION BY ticket_id ORDER BY sla_audit_created_at) = 1
 
+), zendesk_ticket_lr_transaction_issue_type AS (
+
+    SELECT
+      zendesk_ticket_custom_field_values_sensitive.ticket_id,
+      zendesk_ticket_custom_fields.ticket_field_name
+    FROM zendesk_ticket_custom_field_values_sensitive
+    INNER JOIN zendesk_ticket_custom_fields
+      ON zendesk_ticket_custom_fields.ticket_field_value = zendesk_ticket_custom_field_values_sensitive.ticket_custom_field_value
+    INNER JOIN zendesk_tickets
+      ON zendesk_ticket_custom_field_values_sensitive.ticket_id = zendesk_tickets.ticket_id
+    WHERE zendesk_ticket_custom_fields.ticket_field_id = '360020421853'  -- Transaction issue type custom field id
+      AND zendesk_tickets.ticket_form_id IN (
+        SELECT DISTINCT ticket_form_id 
+        FROM zendesk_ticket_forms
+        WHERE display_name = 'Licensing and renewals problems' -- Licensing and Renewal Form
+    ) 
+
 )
 
 SELECT DISTINCT 
   zendesk_tickets.*,
-  zendesk_satisfaction_ratings.created_at                   AS satisfaction_rating_created_at,
+  zendesk_ticket_lr_transaction_issue_type.ticket_field_name  AS ticket_lr_transaction_issue_type,
+  zendesk_satisfaction_ratings.created_at                     AS satisfaction_rating_created_at,
   zendesk_ticket_metrics.first_reply_time,
   zendesk_organizations.sfdc_account_id,
   zendesk_organizations.organization_market_segment,
   zendesk_organizations.organization_tags,
-  zendesk_tickets_sla.priority                              AS ticket_priority_at_first_reply,
-  zendesk_tickets_sla.sla_policy                            AS ticket_sla_policy_at_first_reply,
+  zendesk_tickets_sla.priority                                AS ticket_priority_at_first_reply,
+  zendesk_tickets_sla.sla_policy                              AS ticket_sla_policy_at_first_reply,
   zendesk_tickets_sla.first_reply_time_sla,
   zendesk_tickets_sla.first_reply_at,
   zendesk_ticket_metrics.solved_at,
   zendesk_sla_policies.policy_metrics_target,
   IFF(zendesk_tickets_sla.first_reply_time_sla <= zendesk_sla_policies.policy_metrics_target, 
-      True, False)                                          AS was_support_sla_met,
+      True, False)                                            AS was_support_sla_met,
   IFF(zendesk_users_submitter.role = 'end-user'
     OR (
         zendesk_users_submitter.role IN ('agent', 'admin')
         AND zendesk_ticket_audit_first_comment.is_first_comment_public = FALSE
         ),
       TRUE, FALSE
-    )                                                       AS is_part_of_sla,
+    )                                                         AS is_part_of_sla,
   IFF(zendesk_tickets_sla.first_reply_time_sla <= zendesk_sla_policies.policy_metrics_target, 
-      True, False)                                          AS was_sla_achieved,
+      True, False)                                            AS was_sla_achieved,
   IFF(zendesk_tickets_sla.first_reply_time_sla > zendesk_sla_policies.policy_metrics_target,
-      True, False)                                          AS was_sla_breached
+      True, False)                                            AS was_sla_breached
 
 FROM zendesk_tickets
 LEFT JOIN zendesk_ticket_metrics
@@ -102,3 +135,5 @@ LEFT JOIN zendesk_satisfaction_ratings
   ON zendesk_satisfaction_ratings.satisfaction_rating_id = zendesk_tickets.satisfaction_rating_id
 LEFT JOIN zendesk_ticket_audit_first_comment
   ON zendesk_ticket_audit_first_comment.ticket_id = zendesk_tickets.ticket_id
+LEFT JOIN zendesk_ticket_lr_transaction_issue_type
+  ON zendesk_ticket_lr_transaction_issue_type.ticket_id = zendesk_tickets.ticket_id

@@ -16,14 +16,25 @@
 , arr_joined AS (
 
   SELECT
-    mart_ping_instance_metric_monthly.*,
-    active_subscriptions.licensed_user_count
+    mart_ping_instance_metric_monthly.ping_created_at_month                           AS ping_created_at_month,
+    mart_ping_instance_metric_monthly.metrics_path                                    AS metrics_path,
+    mart_ping_instance_metric_monthly.ping_edition                                    AS ping_edition,
+    mart_ping_instance_metric_monthly.stage_name                                      AS stage_name,
+    mart_ping_instance_metric_monthly.section_name                                    AS section_name,
+    mart_ping_instance_metric_monthly.group_name                                      AS group_name,
+    mart_ping_instance_metric_monthly.is_smau                                         AS is_smau,
+    mart_ping_instance_metric_monthly.is_gmau                                         AS is_gmau,
+    mart_ping_instance_metric_monthly.is_paid_gmau                                    AS is_paid_gmau,
+    mart_ping_instance_metric_monthly.is_umau                                         AS is_umau,
+    mart_ping_instance_metric_monthly.latest_active_subscription_id                   AS latest_active_subscription_id,
+    active_subscriptions.licensed_user_count                                          AS licensed_user_count
   FROM mart_ping_instance_metric_monthly
     INNER JOIN active_subscriptions
   ON mart_ping_instance_metric_monthly.latest_active_subscription_id = active_subscriptions.latest_active_subscription_id
       AND mart_ping_instance_metric_monthly.ping_created_at_month = active_subscriptions.ping_created_at_month
     WHERE time_frame = '28d'
       AND ping_delivery_type = 'Self-Managed'
+    {{ dbt_utils.group_by(n=12)}} 
 -- Get actual count of subs/users for a given month/metric
 
 ), count_tbl AS (
@@ -40,7 +51,7 @@
         is_paid_gmau                                    AS is_paid_gmau,
         is_umau                                         AS is_umau,
         COUNT(DISTINCT latest_active_subscription_id)   AS subscription_count,
-        MAX(licensed_user_count)                        AS seat_count
+        SUM(licensed_user_count)                        AS seat_count
     FROM arr_joined
     {{ dbt_utils.group_by(n=10)}}
 

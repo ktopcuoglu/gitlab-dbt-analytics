@@ -1,59 +1,88 @@
-{% docs mart_event %}
-Enriched version of the atomic (event-level) GitLab.com usage events table, `common.fct_event`
+{% docs mart_event_valid %}
 
-Type of Data: gitlab.com db usage events
+**Description:** Enriched GitLab.com Usage Event Data for Valid Events
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc. 
+- The data is Enriched with Extra business related attributes for Namespace, User and Project to allow single table queries that satisfy a Larger Generalized set of Use Cases. 
 
-Aggregate Grain: None
+**Data Grain:**
+- event_id
+- event_created_at
 
-Time Grain: None
+**Filters:**
+- Use Valid Events Only for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
+- Rolling 24mos of Data  
 
-Use case: Everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges, exclude specific projects, etc
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
+- Event, User and Ultimate_Namespace counts are included for the Aggregation Level
 
-Note: This model includes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
-
-{% enddocs %}
-
-{% docs mart_event_with_valid_user %}
-Enriched version of the derived (event-level) `common.fct_event_with_valid_user` GitLab.com usage events table which filters out invalid users and provides a rolling 2 years of data. 
-
-Type of Data: gitlab.com db usage events
-
-Aggregate Grain: None
-
-Time Grain: None
-
-Use case: Everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges, exclude specific projects, etc
-
-Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event_with_valid_user for more details). Events not tied to a specific user are included.
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
 
 {% docs mart_event_namespace_daily %}
-Enhanced version of `common.fct_event_namespace_daily`
 
-Type of Data: gitlab.com db usage events
+**Description:** Enriched GitLab.com Usage Event Data Grouped by Date, Event, Namespace and Billing for Valid Events with extra Namespace Attributes
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
+- The data is aggregated by Date, Event and Namespace and includes supporting Attributes with Enhanced Namespace Attributes. 
 
-Aggregate Grain: event_name, dim_ultimate_parent_namespace_id
+**Data Grain:**
+- event_date
+- event_name
+- dim_ultimate_parent_namespace_id
 
-Time Grain: event_date
+**Filters:**
+- Use Valid Events Only for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
+- Rolling 24mos of Data  
 
-Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
+- The Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information for the Event is determined by the Event Date.
+- Each Event is identified as being used for different xMAU metrics (is_smau, is_gmau, is_umau)
+- `data_source` = 'GITLAB_DOTCOM'
 
-Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are included.
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
 
-{% docs mart_event_daily %}
-Enhanced version of `common.fct_event_daily`
+{% docs mart_event_user_daily %}
+Enhanced version of `common.fct_event_user_daily`
 
-Type of Data: gitlab.com db usage events
+**Description:** Enriched GitLab.com Usage Event Data with Only Valid Events by Event_Date, User, Ultimate_Parent_Namespace and Event_Name with extra Namespace Attributes
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc. 
+- The data is aggregated by Event_Date, User, Ultimate_Parent_Namespace and Event_Name and includes supporting Attributes with Enhanced Namespace Attributes.
 
-Aggregate Grain: event_name, dim_ultimate_parent_namespace_id, dim_user_id
+**Data Grain:**
+- event_date
+- dim_user_id
+- dim_ultimate_parent_namespace_id
+- event_name
 
-Time Grain: event_date
+**Filters:**
+- Use ONLY Valid Events for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
+- Rolling 24mos of Data  
 
-Use case: everyday analysis and dashboards; flexibility in aggregating by sets of events, different time ranges
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 
-Note: This model excludes events occurring before a gitlab.com user was created (ex: imported projects; see fct_event for more details). Events not tied to a specific user are excluded.
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
