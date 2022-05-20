@@ -22,18 +22,24 @@
                 {{ log('Getting tables in schema ' ~ schema ~ '...', info = true) }}
 
                 {% set tables = dbt_utils.get_relations_by_prefix(schema.upper(), '', exclude='FIVETRAN_%', database=database) %}
-                {{ log('TABLES: ' ~ tables ~ '...', info = true) }}
+
                 {% for table in tables %}
                     {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
-                    {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
-                    {{ backup_table_command }}
+
                     {{ log('TEST END: Backing up ' ~ table.name ~ '...', info = true) }}
+
                 {% endfor %}
+
                 {{ log('TEST END FOR1') }}
+
             {% endfor %}
+
             {{ log('TEST END FOR2') }}
+
         {% endfor %}
+
         {{ log('TEST END FOR3') }}
+
     {%- endcall -%}
 
 {%- endmacro -%}
