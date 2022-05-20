@@ -24,9 +24,14 @@
                 {% set tables = dbt_utils.get_relations_by_prefix(schema.upper(), '', exclude='FIVETRAN_%', database=database) %}
 
                 {% for table in tables %}
+                    {% if loop.last %}
+                        {{ log('THIS IS LAST ONE') }}
+                    {% endif %}
+
                     {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
                     {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
                     {{ backup_table_command }}
+
                     {{ log('TEST END: Backing up ' ~ table.name ~ '...', info = true) }}
 
                 {% endfor %}
@@ -34,8 +39,6 @@
             {% endfor %}
 
         {% endfor %}
-
-        {{ log('TEST END FOR3') }}
 
     {%- endcall -%}
 
