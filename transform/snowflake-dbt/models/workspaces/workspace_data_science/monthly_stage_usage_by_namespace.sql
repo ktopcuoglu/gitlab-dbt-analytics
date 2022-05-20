@@ -10,7 +10,7 @@ WITH flattened_metrics AS (
 	SELECT *
 	FROM {{ ref('prep_saas_flattened_metrics') }}
 	{% if is_incremental() %}
-	WHERE snapshot_month > (SELECT MAX(snapshot_month) FROM {{ this }})
+	WHERE snapshot_month >= (SELECT MAX(snapshot_month) FROM {{ this }})
 	{% endif %}
 
 ), usage_ping_metrics AS (

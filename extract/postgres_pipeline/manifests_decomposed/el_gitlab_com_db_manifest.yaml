@@ -612,7 +612,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , type
+      , NULL as type
       , project_id
       , created_at
       , updated_at
@@ -1284,6 +1284,35 @@ tables:
       FROM project_features
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  project_settings:
+    export_schema: "gitlab_com"
+    export_table: project_settings
+    export_table_primary_key: project_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT project_id
+      , created_at
+      , updated_at
+      , push_rule_id
+      , show_default_award_emojis
+      , allow_merge_on_skipped_pipeline
+      , squash_option
+      , has_confluence
+      , has_vulnerabilities
+      , prevent_merge_without_jira_issue
+      , cve_id_request_enabled
+      , mr_default_target_self
+      , previous_default_branch
+      , warn_about_potentially_unwanted_characters
+      , merge_commit_template 
+      , has_shimo
+      , squash_commit_template
+      , legacy_open_source_license_available
+      , target_platforms
+      , enforce_auth_checks_on_uploads 
+      FROM project_settings
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   project_tracing_settings:
     export_schema: "gitlab_com"
     export_table: project_tracing_settings
@@ -1485,22 +1514,6 @@ tables:
       FROM requirements
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  requirements_management_test_reports:
-    export_schema: "gitlab_com"
-    export_table: requirements_management_test_reports
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , requirement_id
-      , author_id
-      , state
-      , build_id
-      , issue_id
-      FROM requirements_management_test_reports
-      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   resource_label_events:
     advanced_metadata: true
     dbt_source_model: true
@@ -1612,7 +1625,7 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , type
+      , NULL AS type
       , project_id
       , created_at
       , updated_at
@@ -1962,6 +1975,48 @@ tables:
       , user_id
       , project_id
       FROM users_ops_dashboard_projects
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  vulnerabilities:
+    export_schema: 'gitlab_com'
+    export_table: 'vulnerabilities'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , confidence
+      , confidence_overridden
+      , confirmed_at
+      , created_at
+      , dismissed_at
+      , resolved_at
+      , severity_overridden
+      , state
+      , updated_at
+      FROM vulnerabilities
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  vulnerability_occurrences:
+    export_schema: 'gitlab_com'
+    export_table: 'vulnerability_occurrences'
+    export_table_primary_key: 'id'
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , severity
+      , confidence
+      , report_type
+      , project_id
+      , scanner_id
+      , primary_identifier_id
+      , uuid
+      , name
+      , metadata_version
+      , raw_metadata
+      , vulnerability_id
+      FROM vulnerability_occurrences
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   web_hooks:

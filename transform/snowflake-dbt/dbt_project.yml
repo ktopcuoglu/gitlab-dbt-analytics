@@ -293,6 +293,9 @@ models:
         +materialized: table
         +schema: version_db
 
+      workday:
+        +schema: workday
+
       zendesk:
         +schema: zendesk
 

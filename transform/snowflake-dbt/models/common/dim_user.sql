@@ -17,7 +17,8 @@ WITH prep_user AS (
       public_email_domain,
       public_email_domain_classification,
       commit_email_domain,
-      commit_email_domain_classification
+      commit_email_domain_classification,
+      identity_provider
     FROM {{ ref('prep_user') }}
 
 )
@@ -25,7 +26,7 @@ WITH prep_user AS (
 {{ dbt_audit(
     cte_ref="prep_user",
     created_by="@mpeychet_",
-    updated_by="@jpeguero",
+    updated_by="@tpoole",
     created_date="2021-06-28",
-    updated_date="2022-04-26"
+    updated_date="2022-05-05"
 ) }}

@@ -1,67 +1,8 @@
 version: 2
 
 models:
-- name: mart_event
-  description: '{{ doc("mart_event") }}'
-  columns:
-    - name: event_id
-      description: The unique ID of an event.
-      tests:
-        - not_null
-        - unique
-    - name: event_date
-      description: The date when the event was created.
-    - name: dim_user_id
-      description: The unique id of a user in the dim_user model.
-    - name: event_name
-      description: The name tied to an event
-    - name: dim_product_tier_id
-      description: The unique id of a Product Tier in the dim_product_tier model.
-    - name: dim_subscripton_id
-      description: The unique id of a subscription from the dim_subscription model
-    - name: dim_crm_account_id
-      description: The unique id of a crm account in the dim_crm_account model.
-    - name: dim_billing_account_id
-      description: The unqiue id of a billing account in the dim_billing_account model.
-    - name: stage_name
-      description: The name of the product stage
-    - name: section_name
-      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-    - name: group_name
-      description: The name of the group (A stage has one or more groups.).
-    - name: data_source
-      description: The source application where the data was extracted from.
-    - name: plan_id_at_event_date
-      description: The id of the plan on the day the event was created.
-    - name: plan_name_at_event_date
-      description: The name of the plan type when the event was created
-    - name: plan_was_paid_at_event_date
-      description: Defines whether the plan was paid or free when the event was created
-    - name: dim_namespace_id
-      description: The unique id of the ultimate parent namespace from the dim_namespace model.
-    - name: dim_instance_id
-      description: The unique id of an instance from the dim_instance model.
-    - name: namespace_created_at
-      description: The date when the namespace was created.
-    - name: days_since_namespace_created
-      description: The days since the namespace was created.
-    - name: is_smau
-      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-    - name: is_gmau
-      description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-    - name: is_umau
-      description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
-    - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
-    - name: model_created_date
-      description: The date at which the model was created
-    - name: model_updated_date
-      description: The date at which the model code was last updated
-
-- name: mart_event_with_valid_user
-  description: '{{ doc("mart_event_with_valid_user") }}'
+- name: mart_event_valid
+  description: '{{ doc("mart_event_valid") }}'
   columns:
     - name: event_id
       description: The unique identifier of an event. This is a generated primary key and will not join back to the source models
@@ -146,8 +87,8 @@ models:
 - name: mart_event_namespace_daily
   description: '{{ doc("mart_event_namespace_daily") }}'
   columns:
-    - name: usage_namespace_daily_id
-      description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_usage_namespace_daily.
+    - name: event_namespace_daily_id
+      description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_event_namespace_daily.
       tests:
         - not_null
         - unique
@@ -204,11 +145,11 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
 
-- name: mart_event_daily
-  description: '{{ doc("mart_event_daily") }}'
+- name: mart_event_user_daily
+  description: '{{ doc("mart_event_user_daily") }}'
   columns:
-    - name: usage_event_daily_id
-      description: the unique composite ID for the mart_usage_event_daily model consisting of event_date, dim_user_id, dim_ultimate_parent_namespace_id, and event_name.
+    - name: event_user_daily_id
+      description: the unique composite ID for the mart_event_user_daily model consisting of event_date, dim_user_id, dim_ultimate_parent_namespace_id, and event_name.
       tests:
         - not_null
         - unique

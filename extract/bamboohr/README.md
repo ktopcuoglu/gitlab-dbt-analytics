@@ -31,3 +31,5 @@ CREATE OR REPLACE TABLE raw.bamboohr.<table_name> (
 For the initial DAG run set Airflow Variable `BAMBOOHR_SKIP_TEST` with name of the new table. 
 This way the table will be excluded from extraction test that would fail the Dag Run and prevent new data from loading.
 Variable can be removed after initial successful run
+
+

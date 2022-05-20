@@ -167,7 +167,7 @@ _**THE SCRIPT SHOULD ONLY BE RUN ON YOUR GITLAB-ISSUED LAPTOP.** If you run this
         - Installs oh-my-zsh for easy terminal theming, git autocomplete, and a few other plugins. 
             - If you are curious or would like to change the look and feel of your shell please [go here](https://github.com/ohmyzsh/ohmyzsh).
         - Installs jump, an easy way to move through the file system. [Please find here more details on how to use jump](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/jump)
-        - Installs anaconda, how we recommend folks get their python distribution. 
+        - Installs miniforge, how we recommend folks get their python distribution. 
         - Adds alias and environment variables needed for running dbt and other helper commands
 - [ ] Open a new terminal and test the following commands
     - [ ] `jump analytics` this should change the directory to `~/repos/analytics`

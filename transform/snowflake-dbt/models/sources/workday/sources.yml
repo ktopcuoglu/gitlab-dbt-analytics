@@ -1,0 +1,48 @@
+version: 2
+
+sources:
+  - name: workday
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: workday
+    loader: Airflow
+    loaded_at_field: _fivetran_synced
+    
+    quoting:
+      database: true
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 8, period: hour}
+      error_after: {count: 24, period: hour}
+
+    tables:
+      - name: compensation
+        description: '{{ doc("workday_compensation") }}'
+
+      - name: custom_bonus
+        description: '{{ doc("workday_custom_bonus") }}'
+        identifier: custombonus
+
+      - name: on_target_earnings
+        description: '{{ doc("workday_on_target_earnings") }}'
+        identifier: ontargetearnings
+
+      - name: directory
+        description: '{{ doc("workday_directory") }}'
+
+      - name: emergency_contacts
+        description: '{{ doc("workday_emergency_contacts") }}'
+        identifier: emergencycontacts
+
+      - name: employee_mapping
+        description: '{{ doc("workday_employee_mapping") }}'
+        identifier: employeemapping
+
+      - name: employment_status
+        description: '{{ doc("workday_employment_status") }}'
+        identifier: employmentstatus
+
+      - name: job_info
+        description: '{{ doc("workday_job_info") }}'
+        identifier: jobinfo
