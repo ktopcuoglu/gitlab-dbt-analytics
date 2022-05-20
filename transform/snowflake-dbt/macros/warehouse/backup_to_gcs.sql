@@ -25,8 +25,7 @@
 
                 {% for table in tables %}
                     {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
-                    {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
-                    {{ backup_table_command }}
+
                     {{ log('TEST END: Backing up ' ~ table.name ~ '...', info = true) }}
                 {% endfor %}
                 {{ log('TEST END FOR1') }}
