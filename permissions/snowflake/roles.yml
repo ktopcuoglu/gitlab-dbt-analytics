@@ -3360,6 +3360,7 @@ roles:
         member_of:
             - reporter
             - marketo
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
