@@ -29,11 +29,11 @@
                     {{ backup_table_command }}
                     {{ log('TEST END: Backing up ' ~ table.name ~ '...', info = true) }}
                 {% endfor %}
-                {{ log('TEST END FOR1' }}
+                {{ log('TEST END FOR1') }}
             {% endfor %}
-            {{ log('TEST END FOR2'}}
+            {{ log('TEST END FOR2') }}
         {% endfor %}
-        {{ log('TEST END FOR3'}}
+        {{ log('TEST END FOR3') }}
     {%- endcall -%}
 
 {%- endmacro -%}
