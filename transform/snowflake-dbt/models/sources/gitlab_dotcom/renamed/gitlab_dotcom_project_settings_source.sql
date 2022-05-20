@@ -18,7 +18,7 @@ WITH source AS (
     prevent_merge_without_jira_issue::BOOLEAN             AS prevent_merge_without_jira_issue,
     cve_id_request_enabled::BOOLEAN                       AS cve_id_request_enabled,
     mr_default_target_self::BOOLEAN                       AS mr_default_target_self,
-    previous_default_branch::VARCHAR                      AS previous_default_branch
+    previous_default_branch::VARCHAR                      AS previous_default_branch,
     warn_about_potentially_unwanted_characters::BOOLEAN   AS warn_about_potentially_unwanted_characters,
     merge_commit_template::VARCHAR                        AS merge_commit_template,
     has_shimo::BOOLEAN                                    AS has_shimo,
