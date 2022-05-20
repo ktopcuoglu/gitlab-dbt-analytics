@@ -2,7 +2,7 @@ WITH base_all_time AS (
   
   SELECT DISTINCT 
     subscription_name
-  FROM {{ ('mart_charge_snapshot') }}
+  FROM {{ source('snapshots', 'mart_charge_snapshot') }}
   WHERE rate_plan_charge_name = 'manual true up allocation'
 
 ), base_live AS (
