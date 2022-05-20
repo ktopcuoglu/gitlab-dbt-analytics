@@ -54,6 +54,26 @@ tables:
       FROM ci_builds
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  ci_secure_files:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: ci_secure_files
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , created_at
+      , updated_at
+      , file_store
+      , permissions
+      , name text
+      , file text
+      , checksum
+      , key_data
+      FROM ci_secure_files
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   ci_group_variables:
     dbt_source_model: true
     export_schema: 'gitlab_com'
