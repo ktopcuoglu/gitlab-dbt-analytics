@@ -14,6 +14,10 @@
  Mapping table for dimension keys related to opportunities so they can be reused in fact tables containing quotes.
 {% enddocs %}
 
+{% docs map_gitlab_dotcom_xmau_metrics %}
+ Mapping table that maps events from the Legacy Usage Data Model to the Common Data model. It also maps events to stages, groups, sections, and xMAU designations. 
+{% enddocs %}
+
 {% docs map_ip_to_country %}
 Table for mapping ip address ranges to location ids.
 {% enddocs %}

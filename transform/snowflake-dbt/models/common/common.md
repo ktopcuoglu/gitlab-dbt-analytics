@@ -519,6 +519,137 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
+{% docs fct_event_valid %}
+
+**Description:** Atomic level GitLab.com Usage Event Data with Only Valid Events
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.
+- Atomic (lowest grain) data  
+
+**Data Grain:**
+- event_id
+- event_created_at
+
+**Filters:**
+- Use ONLY Valid Events for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
+
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
+{% docs fct_event %}
+
+**Description:** Atomic level GitLab.com Usage Event Data
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.
+- Atomic (lowest grain) data   
+
+**Data Grain:**
+- event_id
+- event_created_at
+
+**Filters:**
+- None - `ALL Data` at the Atomic (`lowest level/grain`) is brought through from the Source for comprehensive analysis.  
+  - Futher filters may be needed for Standard Analysis and Reporting, ie. Limiting to Valid Events  
+
+**Business Logic in this Model:** 
+- The Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information for the Event is determined by the Event Date.
+- Each Event is identified as being used for different xMAU metrics (is_smau, is_gmau, is_umau)
+- `data_source` = 'GITLAB_DOTCOM'
+
+**Other Comments:**
+- The `fct_event` table is built directly from the [Prep_Event table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_event) which brings all of the different types of events together.  A handbook page on this table can be found [here](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-product-events-data/) .
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
+{% docs fct_event_user_daily %}
+
+**Description:** GitLab.com Usage Event Data with Only Valid Events by Event_Date, User, Ultimate_Parent_Namespace and Event_Name
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
+
+**Data Grain:**
+- event_date
+- dim_user_id
+- dim_ultimate_parent_namespace_id
+- event_name
+
+**Filters:**
+- Use ONLY Valid Events for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
+
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
+{% docs fct_event_instance_daily %}
+
+**Description:** GitLab.com Usage Event Data Grouped by Date and Event for Valid Events
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
+- The data is aggregated by Date and Event and Namespace and includes supporting Attributes. 
+
+**Data Grain:**
+- event_date
+- event_name
+
+**Filters:**
+- Use Valid Events Only for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
+
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+- Event, User and Ultimate_Namespace counts are included for the Aggregation Level
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
+{% docs fct_event_namespace_daily %}
+
+**Description:** GitLab.com Usage Event Data Grouped by Date, Event, Namespace and Billing for Valid Events
+- [Targets and Actions](https://docs.gitlab.com/ee/api/events.html) activity by Users and [Namespaces](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/namespace/) within the GitLab.com application are captured and refreshed periodically throughout the day.  Targets are objects ie. issue, milestone, merge_request and Actions have effect on Targets, ie. approved, closed, commented, created, etc.  
+- The data is aggregated by Date, Event and Namespace and includes supporting Attributes. 
+
+**Data Grain:**
+- event_date
+- event_name
+- dim_ultimate_parent_namespace_id
+
+**Filters:**
+- Use Valid Events Only for standard analysis and reporting:
+  - Remove Events where the Event Created Datetime < the User Created Datetime.
+    - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
+  - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+- Rolling 24mos of Data  
+
+**Business Logic in this Model:** 
+- Valid events where the Event Create DateTime is >= User Create DateTime
+- The Actual Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information for the Event is determined by the Event Date.
+- Each Event is identified as being used for different xMAU metrics (is_smau, is_gmau, is_umau)
+- `data_source` = 'GITLAB_DOTCOM'
+
+**Other Comments:**
+- Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
+
+{% enddocs %}
+
 {% docs fct_usage_ping_payload %}
 Factual table with metadata on usage ping payloads received.
 
@@ -842,38 +973,6 @@ The grain of the table is the `dim_note_id`. This table is easily joinable with:
 - `dim_namespace` through `dim_namespace_id` and `ultimate_namespace_id`
 {% enddocs %}
 
-{% docs fct_event_400 %}
-
-Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
-
-This table allows us to answer for example some questions like:
-
-- basic: how many ultimate namespace open an issue every month ?
-- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
-- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
-
-The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
-
-Only events that happened the last 400 days are included in this table.
-
-{% enddocs %}
-
-{% docs fct_event_800 %}
-
-Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
-
-This table allows us to answer for example some questions like:
-
-- basic: how many ultimate namespace open an issue every month ?
-- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
-- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
-
-The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
-
-Only events that happened the last 800 days are included in this table.
-
-{% enddocs %}
-
 {% docs fct_monthly_subscription_service_ping_opt_in %}
 
 Factual model that allows to know if a specific active subscription sent us at least one payload on a given month M.
@@ -936,38 +1035,6 @@ Some examples of analysis that were done with the legacy table `gitlab_dotcom_da
 
 {% enddocs %}
 
-{% docs fct_event_all %}
-
-Factual table allowing us to explore all events happening on our SaaS Instance www.gitlab.com.
-
-This table allows us to answer for example some questions like:
-
-- basic: how many ultimate namespace open an issue every month ?
-- intermediate: split by plan_id, how many users that have used both merge requests and issues on a given month ?
-- advanced: in the first 30 days after the creation of the namespace, which stage/feature our users tend to adopt more ?
-
-The list of available events [is currently available here](https://app.periscopedata.com/app/gitlab/897425/fct_event-workflow?widget=12279318&udv=0)
-
-{% enddocs %}
-
-{% docs fct_daily_event_all %}
-
-Factual table built on top of prep_events tables that allows to explore usage data of free and paid users and namespaces from our SaaS instance gitlab.com.
-
-The granularity is one event per day per user per ultimate parent namespace.
-
-That means if a user creates the same day an issue on the Gitlab Data Team project and 2 issues in the main gitlab-com project, 2 rows will be recorded in the table.
-
-If 2 users A and B create on the same day 1 merge request on the GitLab Data Team projectm 2 rows will be also recorded in the table.
-
-Some examples of analysis that were done with the legacy table `gitlab_dotcom_daily_usage_data_events`:
-
-1. [User Journey Analysis](https://app.periscopedata.com/app/gitlab/869174/WIP-Cross-Stage-Adoption-Dashboard): See how often different product stages are used by the same namespaces. See what stages are used in combination.
-1. [New Namespace Stage Adoption](https://app.periscopedata.com/app/gitlab/761347/Group-Namespace-Conversion-Metrics): Evaluate how often new namespaces are adopting stages such as 'Create' and 'Verify' within their first days of use.
-1. [Stages per Organization](https://app.periscopedata.com/app/gitlab/824044/Stages-per-Organization-Deep-Dive---SpO): Identify how namespaces adopt stages within their first days and how this correlates with paid conversion and long-term engagement.
-
-{% enddocs %}
-
 {% docs dim_issue_links %}
 
 Dimensional table representing links between GitLab Issues recorded by the Events API. [More info about issue links can be found here](https://docs.gitlab.com/ee/user/project/issues/related_issues.html)
@@ -992,5 +1059,140 @@ The grain of the table is the `dim_locality_id` and the `valid_from` date filed.
 {% docs dim_usage_ping_metric %}
 
 This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed.
+
+{% enddocs %}
+
+{% docs dim_ping_instance %}
+
+Below are some details about the dimension table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id)`
+* Time Grain: `None`
+* Use case: `Service Ping dimension analysis (ex: edition, installation_type)`
+
+{% enddocs %}
+
+{% docs dim_ping_metric %}
+
+This model replaces `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). In addition to all metrics currently in the Service Ping, it also contains metrics that have been removed. 
+
+Some other enhancements in this model include : addition of a surrogate key, exclusion and cleaning of some Product groups, and renaming Usage ping to Service Ping.
+
+{% enddocs %}
+
+{% docs dim_ping_metric_daily_snapshot %}
+
+This slowly changing dimension type 2 model allows for historic reporting of the  `dim_usage_ping_metric` table that maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitlab.com/). `snapshot_id` has been included to be used in the join.
+
+For this reason `metrics_path` is not unique.
+
+{% enddocs %}
+
+{% docs fct_performance_indicator_targets %}
+
+New fact table to replace `performance_indicators_yaml_historical`. 
+
+This new table will include all flattened target values for each metric for each month. Can just filter this fact table down in `td_xmau 2.0` snippet.
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric %}
+
+The granularity of this model is one row per tuple (metric_name, instance_id).
+
+The Service Ping metrics sent via a JSON Payload could be of various types:
+
+* all_time counters (for example how many issues a specific instance has created since its inception)
+* 28_days counters (how many users have created at least one issue over the last 4 weeks)
+* 7_days counters (how many users have created at least one issue over the last 7 days)
+* an instance configuration parameter (has this instance enabled saml/sso)
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance %}
+
+Unflattened Factual table with metadata on Service ping payloads received.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Main foreign keys that can help to build easily joins:
+
+* dim_license_id
+* dim_subscription_id
+* dim_date_id
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_7_day %}
+
+
+This table filters data for the `7-days` Service ping metric counters from `fct_ping_instance_metric` model.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 7 day time_frame.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_28_day %}
+
+This table filters data for the `28-days` Service ping metric counters from `fct_ping_instance_metric` model.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day time_frame.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_monthly %}
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: `None`
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day AND all time_frame. Only last ping of month shows as well.`
+
+{% enddocs %}
+
+{% docs fct_ping_instance_metric_all_time %}
+
+This table filters data for the `all-time` Service ping metric counters from `fct_ping_instance_metric` model.
+
+Below are some details about the fact table:
+
+* Type of Data: `Instance-level Service Ping from Versions app`
+* Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
+* Time Grain: None
+* Use case: `Service Ping metric-level analysis`
+
+Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to all time time_frame.`
 
 {% enddocs %}

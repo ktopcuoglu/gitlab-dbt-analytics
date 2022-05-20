@@ -43,6 +43,10 @@
   - export SNOWFLAKE_LOAD_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW"
   - echo $SNOWFLAKE_LOAD_DATABASE
 
+.set_snapshot: &set_snapshot
+  - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
+  - echo $SNOWFLAKE_SNAPSHOT_DATABASE 
+
 .deps_and_seed: &deps_and_seed
   - python3 macro_name_check.py
   - dbt deps $CI_PROFILE_TARGET
@@ -131,6 +135,7 @@
   script:
     - *deps_and_seed
     - *clone_raw # Reads from raw clone 
+    - *set_snapshot
     - echo $DBT_MODELS
     - dbt run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $DBT_MODELS || FAILED=true
     - dbt --partial-parse test $CI_PROFILE_TARGET --models $DBT_MODELS || FAILED=true
@@ -148,8 +153,8 @@
   <<: *snowflake_dbt_jobs
   script:
     - echo $DBT_MODELS
-    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
-    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - *set_snapshot
+    - *clone_raw # Reads from raw clone
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
 
@@ -157,12 +162,43 @@
   <<: *snowflake_dbt_jobs
   script:
     - echo $DBT_MODELS
-    - export SNOWFLAKE_SNAPSHOT_DATABASE="${CI_COMMIT_REF_NAME^^}_RAW" # Must write to clone of RAW since this does real work
-    - echo $SNOWFLAKE_SNAPSHOT_DATABASE
+    - *set_snapshot
+    - *clone_raw # Reads from raw clone
     - *l_warehouse
     - *deps_and_seed
     - dbt snapshot $CI_PROFILE_TARGET --select $DBT_MODELS
 
+➕🏗️🛺run_changed_models_sql:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *deps_and_seed
+    - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
+    - echo $CHANGED_FILES
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $CHANGED_FILES || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
+
+➕🏗️🛺🦖run_changed_models_sql_l:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *l_warehouse
+    - *deps_and_seed
+    - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
+    - echo $CHANGED_FILES
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $CHANGED_FILES || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
+
+➕🏗️🛺🐘run_changed_models_sql_xl:
+  <<: *snowflake_dbt_jobs
+  script:
+    - *xl_warehouse
+    - *deps_and_seed
+    - CHANGED_FILES=$(git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -n1 basename | grep '\.sql'  | sed "s/^/$ANCESTOR_TYPE/g" | sed "s/.sql/$DEPENDENT_TYPE/g" )
+    - echo $CHANGED_FILES
+    - dbt --partial-parse run $CI_PROFILE_TARGET ${REFRESH:-"--full-refresh"} --models $CHANGED_FILES || FAILED=true
+    - dbt --partial-parse test $CI_PROFILE_TARGET --models $CHANGED_FILES || FAILED=true
+    - if [ $FAILED ]; then exit 1; fi
 
 # dbt tests
 .dbt_misc_jobs: &dbt_misc_jobs

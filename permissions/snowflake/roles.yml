@@ -72,6 +72,11 @@ databases:
     - jcaine_prep:
         shared: no
 
+    - jkim_prod:
+        shared: no
+    - jkim_prep:
+        shared: no
+
     - jpeguero_prod:
         shared: no
     - jpeguero_prep:
@@ -85,7 +90,7 @@ databases:
     - judume_prod:
         shared: no
     - judume_prep:
-        shared: no       
+        shared: no
 
     - kaguilar_prod:
         shared: no
@@ -100,11 +105,6 @@ databases:
     - kmagda_prod:
         shared: no
     - kmagda_prep:
-        shared: no
-
-    - laddula_prod:
-        shared: no
-    - laddula_prep:
         shared: no
 
     - lvinueza_prod:
@@ -170,7 +170,7 @@ databases:
     - rkohnke_prod:
         shared: no
     - rkohnke_prep:
-        shared: no  
+        shared: no
 
     - rparker_prod:
         shared: no
@@ -452,12 +452,15 @@ roles:
             databases:
                 read:
                     - prep
+                    - prod
             schemas:
                 read:
                     - prep.sensitive
+                    - prod.pumps_sensitive
             tables:
                 read:
                     - prep.sensitive.mart_marketing_contact
+                    - prod.pumps_sensitive.pump_marketing_contact
 
     - analyst_people:
         warehouses:
@@ -927,6 +930,7 @@ roles:
             schemas:
                 - prod.common
                 - prod.common_mapping
+                - prod.common_mart
                 - prod.common_mart_marketing
                 - prod.common_mart_sales
                 - prod.common_mart_product
@@ -935,6 +939,7 @@ roles:
             tables:
                 - prod.common.*
                 - prod.common_mapping.*
+                - prod.common_mart.*
                 - prod.common_mart_marketing.*
                 - prod.common_mart_sales.*
                 - prod.common_mart_product.*
@@ -1005,7 +1010,6 @@ roles:
                     - prod.legacy.gitlab_dotcom_ci_job_artifacts
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.gitlab_dotcom_usage_data_events
-                    - prod.legacy.sheetload_hp_dvr
                     - prod.workspace_data.airflow_dag
                     - prod.workspace_data.airflow_dag_run
                     - prod.workspace_data.dbt_test_results
@@ -1031,82 +1035,6 @@ roles:
                     - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
                     - prep.snowplow.snowplow_gitlab_good_events_source
                     - snowflake.account_usage.query_history
-                    - raw.sheetload.hp_dvr
-
-    - data_observability_2:
-        warehouses:
-            - data_obs_wh_2
-        privileges:
-            databases:
-                read:
-                    - prod
-                    - raw
-                    - prep
-                    - snowflake
-            schemas:
-                read:
-                    - prod.restricted_safe_common_mart_sales
-                    - prod.restricted_safe_common
-                    - prod.common
-                    - prod.legacy
-                    - prod.workspace_data
-                    - raw.airflow_stitch
-                    - raw.dbt
-                    - prep.zuora
-                    - prep.gitlab_dotcom
-                    - prep.snowplow
-                    - prep.dbt
-                    - prep.airflow
-                    - snowflake.account_usage
-                    - raw.sheetload
-                    - raw.snapshots
-            tables:
-                read:
-                    - prod.restricted_safe_common_mart_sales.mart_arr
-                    - prod.restricted_safe_common.fct_mrr
-                    - prod.restricted_safe_common.dim_crm_account
-                    - prod.common.dim_product_detail
-                    - prod.common.dim_billing_account
-                    - prod.common.fct_usage_ping_payload
-                    - prod.common.dim_date
-                    - prod.common.dim_subscription
-                    - prod.legacy.gitlab_dotcom_ci_job_artifacts
-                    - prod.legacy.gitlab_dotcom_namespaces_xf
-                    - prod.legacy.gitlab_dotcom_usage_data_events
-                    - prod.legacy.sheetload_hp_dvr
-                    - prod.workspace_data.airflow_dag
-                    - prod.workspace_data.airflow_dag_run
-                    - prod.workspace_data.dbt_test_results
-                    - prod.workspace_data.dbt_run_results
-                    - prod.workspace_data.dbt_failing_tests
-                    - prod.workspace_data.dbt_compilation_runtime
-                    - prod.workspace_data.dbt_last_successful_test_runs
-                    - raw.airflow_stitch.dag_run
-                    - raw.airflow_stitch.dag
-                    - raw.dbt.test_run_results
-                    - raw.dbt.run_results
-                    - raw.dbt.manifest
-                    - raw.dbt.snapshots_run_results
-                    - prep.airflow.airflow_dag_run_source
-                    - prep.airflow.airflow_dag_source
-                    - prep.dbt.dbt_test_results_source
-                    - prep.dbt.dbt_run_results_source
-                    - prep.dbt.dbt_model_source
-                    - prep.dbt.dbt_snapshots_results_source
-                    - prep.zuora.zuora_account_source
-                    - prep.zuora.zuora_subscription_source
-                    - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
-                    - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
-                    - prep.snowplow.snowplow_gitlab_good_events_source
-                    - snowflake.account_usage.query_history
-                    - raw.sheetload.hp_dvr
-                    - raw.snapshots.fct_mrr_snapshot
-                    - raw.snapshots.mart_arr_snapshot
-                    - raw.snapshots.dim_subscription_snapshot
-                    - raw.snapshots.gitlab_dotcom_namespaces_snapshots
-                    - raw.snapshots.zuora_subscription_snapshots
-                    - raw.snapshots.zuora_account_snapshots
-
 
 # ==========================================
 # Object Roles
@@ -1283,14 +1211,20 @@ roles:
                 read:
                     - prod.common
                     - prod.common_mapping
+                    - prod.common_mart
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
+                    - prod.common_mart_product
+                    - prod.common_prep
             tables:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
+                    - prod.common_mart.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
+                    - prod.common_mart_product.*
+                    - prod.common_prep.*
 
     - date:
         privileges:
@@ -1320,6 +1254,7 @@ roles:
                 read:
                     - prod.common
                     - prod.common_mapping
+                    - prod.common_mart
                     - prod.common_mart_marketing
                     - prod.common_mart_sales
                     - prod.common_mart_product
@@ -1342,6 +1277,7 @@ roles:
                 read:
                     - prod.common.*
                     - prod.common_mapping.*
+                    - prod.common_mart.*
                     - prod.common_mart_marketing.*
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
@@ -1594,7 +1530,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_approvals_errors
                     - raw.tap_postgres.gitlab_db_approvals_validate
                     - raw.tap_postgres.gitlab_db_approval_merge_request_rules
-                    - raw.tap_postgres.gitlab_db_approver_groups
                     - raw.tap_postgres.gitlab_db_audit_events
                     - raw.tap_postgres.gitlab_db_award_emoji
                     - raw.tap_postgres.gitlab_db_boards
@@ -1655,7 +1590,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epics_errors
                     - raw.tap_postgres.gitlab_db_epics_validate
                     - raw.tap_postgres.gitlab_db_epic_issues
-                    - raw.tap_postgres.gitlab_db_epic_metrics
                     - raw.tap_postgres.gitlab_db_epic_metrics_errors
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
@@ -1674,7 +1608,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_label_links
                     - raw.tap_postgres.gitlab_db_label_priorities
                     - raw.tap_postgres.gitlab_db_lfs_objects_projects
-                    - raw.tap_postgres.gitlab_db_licenses
                     - raw.tap_postgres.gitlab_db_lists
                     - raw.tap_postgres.gitlab_db_members
                     - raw.tap_postgres.gitlab_db_merge_requests
@@ -1694,7 +1627,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_packages_dependency_links
                     - raw.tap_postgres.gitlab_db_packages_packages
                     - raw.tap_postgres.gitlab_db_packages_package_files
-                    - raw.tap_postgres.gitlab_db_packages_tags
                     - raw.tap_postgres.gitlab_db_pages_domains
                     - raw.tap_postgres.gitlab_db_plans
                     - raw.tap_postgres.gitlab_db_programming_languages
@@ -1710,12 +1642,10 @@ roles:
                     - raw.tap_postgres.gitlab_db_project_statistics
                     - raw.tap_postgres.gitlab_db_prometheus_alerts
                     - raw.tap_postgres.gitlab_db_protected_branches
-                    - raw.tap_postgres.gitlab_db_protected_environments
                     - raw.tap_postgres.gitlab_db_push_rules
                     - raw.tap_postgres.gitlab_db_releases
                     - raw.tap_postgres.gitlab_db_repository_languages
                     - raw.tap_postgres.gitlab_db_requirements
-                    - raw.tap_postgres.gitlab_db_requirements_management_test_reports
                     - raw.tap_postgres.gitlab_db_resource_label_events
                     - raw.tap_postgres.gitlab_db_resource_milestone_events
                     - raw.tap_postgres.gitlab_db_resource_weight_events
@@ -1737,28 +1667,7 @@ roles:
                     - raw.tap_postgres.gitlab_db_user_custom_attributes
                     - raw.tap_postgres.gitlab_db_user_preferences
                     - raw.tap_postgres.gitlab_db_user_preferences_validate
-                    - raw.tap_postgres.gitlab_db_vulnerabilities
-                    - raw.tap_postgres.gitlab_db_vulnerabilities_errors
-                    - raw.tap_postgres.gitlab_db_vulnerabilities_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_feedback
-                    - raw.tap_postgres.gitlab_db_vulnerability_feedback_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_feedback_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_identifiers
-                    - raw.tap_postgres.gitlab_db_vulnerability_identifiers_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_identifiers_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_issue_links
-                    - raw.tap_postgres.gitlab_db_vulnerability_issue_links_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_issue_links_validate
                     - raw.tap_postgres.gitlab_db_vulnerability_occurrences
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_identifiers_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_occurrence_pipelines_validate
-                    - raw.tap_postgres.gitlab_db_vulnerability_scanners
-                    - raw.tap_postgres.gitlab_db_vulnerability_scanners_errors
-                    - raw.tap_postgres.gitlab_db_vulnerability_scanners_validate
                     - raw.tap_postgres.gitlab_db_web_hooks
                     - raw.tap_postgres.gitlab_db_web_hooks_errors
                     - raw.tap_postgres.gitlab_db_web_hooks_validate
@@ -2030,7 +1939,20 @@ roles:
             tables:
                 read:
                     - raw.prometheus.*
-
+    
+    - pumps_sensitive:
+        warehouses:
+            - analyst_xs
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.pumps_sensitive
+            tables:
+                read:
+                    - prod.pumps_sensitive.*
 
     - restricted_safe:
         warehouses:
@@ -2437,13 +2359,13 @@ roles:
             - transforming_l
             - transforming_xl
 
-    - alpcohen: 
-        member_of: 
+    - alpcohen:
+        member_of:
             - reporter
             - restricted_safe
             - xactly
 
-        warehouses: 
+        warehouses:
             - analyst_xs
 
     - amartin:
@@ -2555,7 +2477,7 @@ roles:
             - reporter
             - restricted_safe
         warehouses:
-            - analyst_xs  
+            - analyst_xs
 
     - csharp:
         member_of:
@@ -2813,15 +2735,15 @@ roles:
             - transforming_xs
             - transforming_xl
 
-    - hselim: 
-        member_of: 
+    - hselim:
+        member_of:
             - adaptive
             - reporter
             - restricted_safe
             - salesforce
             - xactly
 
-        warehouses: 
+        warehouses:
             - analyst_xs
 
     - ian:
@@ -2975,6 +2897,48 @@ roles:
                 write:
                     - jcaine_prep.*.*
                     - jcaine_prod.*.*
+
+    - jkim:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+            - bi_tool_eval_read
+            - xactly
+        warehouses:
+            - analyst_xs
+        owns:
+            databases:
+                - jkim_prep
+                - jkim_prod
+            schemas:
+                - jkim_prep.*
+                - jkim_prod.*
+            tables:
+                - jkim_prep.*.*
+                - jkim_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - jkim_prep
+                    - jkim_prod
+                write:
+                    - jkim_prep
+                    - jkim_prod
+            schemas:
+                read:
+                    - jkim_prep.*
+                    - jkim_prod.*
+                write:
+                    - jkim_prep.*
+                    - jkim_prod.*
+            tables:
+                read:
+                    - jkim_prep.*.*
+                    - jkim_prod.*.*
+                write:
+                    - jkim_prep.*.*
+                    - jkim_prod.*.*
 
     - joshua:
         member_of: []
@@ -3185,12 +3149,16 @@ roles:
     - kdietz:
         member_of:
             - analyst_core
+            - bi_tool_eval_read
             - data_team_analyst
+            - dbt_data_science
+            - google_analytics_360
+            - marketo
             - salesforce
             - restricted_safe
-            - dbt_data_science
-            - bi_tool_eval_read
             - snowplow
+            - zendesk
+            - zendesk_community_relations
         warehouses:
             - analyst_xs
         owns:
@@ -3306,47 +3274,8 @@ roles:
             - analyst_xs
 
     - laddula:
-        member_of:
-            - engineer
-            - restricted_safe
-            - bi_tool_eval_db
-        warehouses:
-            - engineer_xs
-            - engineer_xl
-            - loading
-            - reporting
-        owns:
-            databases:
-                - laddula_prep
-                - laddula_prod
-            schemas:
-                - laddula_prep.*
-                - laddula_prod.*
-            tables:
-                - laddula_prep.*.*
-                - laddula_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - laddula_prep
-                    - laddula_prod
-                write:
-                    - laddula_prep
-                    - laddula_prod
-            schemas:
-                read:
-                    - laddula_prep.*
-                    - laddula_prod.*
-                write:
-                    - laddula_prep.*
-                    - laddula_prod.*
-            tables:
-                read:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
-                write:
-                    - laddula_prep.*.*
-                    - laddula_prod.*.*
+        member_of: []
+        warehouses: []
 
     - levans:
         member_of:
@@ -3426,6 +3355,14 @@ roles:
             - analyst_xs
             - analyst_l
             - analyst_xl
+
+    - mconteanu:
+        member_of:
+            - reporter
+            - marketo
+            - analyst_marketing
+        warehouses:
+            - analyst_xs
 
     - mcooper:
         member_of:
@@ -3700,6 +3637,18 @@ roles:
                     - mwawrzyniak_prep.*.*
                     - mwawrzyniak_prod.*.*
 
+    - mwielich:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
+    - nbelokolodov:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - nfiguera:
         member_of:
             - analyst_sales
@@ -3866,6 +3815,12 @@ roles:
         warehouses:
             - admin
 
+    - pskorupa:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - rbacovic:
         member_of:
             - engineer
@@ -3989,7 +3944,7 @@ roles:
                     - rkohnke_prod.*.*
                 write:
                     - rkohnke_prep.*.*
-                    - rkohnke_prod.*.* 
+                    - rkohnke_prod.*.*
 
     - rparker:
         member_of:
@@ -4234,6 +4189,12 @@ roles:
                     - tnguyen_prep.*.*
                     - tnguyen_prod.*.*
 
+    - tvellishetty:
+        member_of:
+            - analyst_growth
+        warehouses:
+            - analyst_xs
+
     - vagrawal:
         member_of:
             - adaptive
@@ -4401,7 +4362,7 @@ users:
     - cmeddaugh:
         can_login: yes
         member_of:
-            - cmeddaugh     
+            - cmeddaugh
 
     - csharp:
         can_login: yes
@@ -4438,7 +4399,7 @@ users:
     - eneuberger:
         can_login: yes
         member_of:
-            - eneuberger       
+            - eneuberger
 
     - fivetran:
         can_login: yes
@@ -4461,10 +4422,10 @@ users:
         member_of:
             - grafana
 
-    - hselim: 
+    - hselim:
         can_login: yes
-        member_of: 
-            - hselim       
+        member_of:
+            - hselim
     - ian:
         can_login: yes
         member_of:
@@ -4495,6 +4456,11 @@ users:
         can_login: yes
         member_of:
             - jcaine
+
+    - jkim:
+        can_login: yes
+        member_of:
+            - jkim
 
     - joshua:
         can_login: no
@@ -4565,10 +4531,8 @@ users:
             - kkarthikeyan
 
     - laddula:
-        can_login: yes
-        member_of:
-            - laddula
-            - accountadmin
+        can_login: no
+        member_of: []
 
     - levans:
         can_login: yes
@@ -4595,6 +4559,11 @@ users:
         can_login: yes
         member_of:
             - marntz
+
+    - mconteanu:
+        can_login: yes
+        member_of:
+            - mconteanu
 
     - mcooper:
         can_login: yes
@@ -4645,6 +4614,16 @@ users:
         can_login: yes
         member_of:
             - mwawrzyniak
+
+    - mwielich:
+        can_login: yes
+        member_of:
+            - mwielich
+
+    - nbelokolodov:
+        can_login: yes
+        member_of:
+            - nbelokolodov
 
     - nfiguera:
         can_login: yes
@@ -4698,6 +4677,11 @@ users:
             - permission_bot
             - securityadmin
             - sysadmin
+
+    - pskorupa:
+        can_login: yes
+        member_of:
+            - pskorupa
 
     - rbacovic:
         can_login: yes
@@ -4767,6 +4751,11 @@ users:
         member_of:
             - tnguyen
 
+    - tvellishetty:
+        can_login: yes
+        member_of:
+            - tvellishetty
+
     - vagrawal:
         can_login: yes
         member_of:
@@ -4798,15 +4787,10 @@ users:
         member_of:
             - zzhang
 
-    - data_obs_user_1: # External user - Data Observability Vendor 
+    - data_obs_user_1: # External user - Data Observability Vendor
         can_login: yes
         member_of:
             - data_observability
-  
-    - data_obs_user_2: # External user - Data Observability Vendor 
-        can_login: yes
-        member_of:
-            - data_observability_2
 
 # ==========================================
 # Warehouses
@@ -4891,7 +4875,4 @@ warehouses:
         size: small
 
     - data_obs_wh_1:
-        size: x-small
-
-    - data_obs_wh_2:
         size: x-small

@@ -116,7 +116,7 @@
     "stage_name": "package"
   },
   {
-    "event_name": "protect_ci_build_creation",
+    "event_name": "container_scanning_build_run",
     "source_cte_name": "protect_ci_build",
     "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",

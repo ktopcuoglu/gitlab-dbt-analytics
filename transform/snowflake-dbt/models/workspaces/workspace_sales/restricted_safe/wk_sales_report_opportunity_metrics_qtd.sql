@@ -32,7 +32,8 @@ WITH sfdc_opportunity_xf AS (
         date_actual                             AS current_date_actual,
         fiscal_quarter_name_fy                  AS current_fiscal_quarter_name,
         first_day_of_fiscal_quarter             AS current_fiscal_quarter_date,
-        day_of_fiscal_quarter_normalised        AS current_fiscal_quarter_day_normalised
+        day_of_fiscal_quarter_normalised        AS current_fiscal_quarter_day_normalised,
+        fiscal_year                             AS current_fiscal_year
     FROM date_details
     WHERE date_actual = CURRENT_DATE
    
@@ -245,10 +246,106 @@ WITH sfdc_opportunity_xf AS (
             AND oppty.is_stage_4_plus = 1
               THEN oppty.net_arr 
             ELSE 0 
-          END)                                                                  AS rq_plus_2_open_4plus_net_arr
+          END)                                                                  AS rq_plus_2_open_4plus_net_arr,
+
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+    -- Fiscal year metrics
   
+        SUM(CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+                  AND oppty.is_stage_1_plus = 1 
+                  AND oppty.is_eligible_open_pipeline_flag = 1 
+              THEN oppty.calculated_deal_count 
+                ELSE 0 
+            END)                                                                  AS cfy_open_1plus_deal_count,
+
+      SUM(CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+                  AND oppty.is_stage_3_plus = 1 
+                  AND oppty.is_eligible_open_pipeline_flag = 1 
+              THEN oppty.calculated_deal_count 
+                ELSE 0 
+            END)                                                                  AS cfy_open_3plus_deal_count,
+
+      SUM(CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+                  AND oppty.is_stage_4_plus = 1 
+                  AND oppty.is_eligible_open_pipeline_flag = 1 
+              THEN oppty.calculated_deal_count  
+                ELSE 0 
+            END)                                                                  AS cfy_open_4plus_deal_count,
+
+      SUM(CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.is_won = 1
+                THEN oppty.calculated_deal_count  
+              ELSE 0
+          END)                                                                    AS cfy_closed_deal_count,
+
+      -- CREATED in quarter
+      -- NF: 2020-02-18 Need to validate how do I consider lost deals, a lost deal that is coming from a non- 1+stage should not oppty. included here
+      SUM(CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.is_eligible_created_pipeline_flag = 1
+                THEN oppty.calculated_deal_count 
+              ELSE 0 
+          END)                                                                    AS cfy_created_deal_count,
+
+      -- NEXT Q Deal count
+        -- Net ARR
+
+      SUM(CASE
+        WHEN oppty.close_fiscal_year = today.current_fiscal_year
+            THEN oppty.booked_net_arr
+          ELSE 0 
+      END)                                                                   AS cfy_booked_net_arr,
+      
+      SUM(CASE
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_1_plus = 1
+                THEN oppty.net_arr 
+              ELSE 0 
+           END)                                                                   AS cfy_open_1plus_net_arr,
+
+      SUM (CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_3_plus = 1
+                THEN  oppty.net_arr
+              ELSE 0 
+            END)                                                                  AS cfy_open_3plus_net_arr,
+
+      SUM (CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_4_plus = 1
+                THEN  oppty.net_arr 
+            ELSE 0 
+           END)                                                                  AS cfy_open_4plus_net_arr,
+
+      -- created pipeline in year
+      SUM(CASE
+            WHEN oppty.pipeline_created_fiscal_year = today.current_fiscal_year
+            AND oppty.is_eligible_created_pipeline_flag = 1
+                THEN oppty.net_arr 
+              ELSE 0 
+          END)                                                                    AS cfy_created_net_arr,
+
+      -- created and closed in the same year
+      SUM(CASE 
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.pipeline_created_fiscal_year = today.current_fiscal_year
+              AND oppty.is_eligible_created_pipeline_flag = 1
+              AND  (oppty.is_won = 1 OR (oppty.is_lost = 1 AND oppty.is_renewal = 1))
+                THEN oppty.net_arr
+              ELSE 0 
+          END)                                                                   AS cfy_created_and_closed_net_arr
   
-  
+
+
     FROM sfdc_opportunity_xf oppty
     -- identify todays quarter and fiscal quarter
         CROSS JOIN today
