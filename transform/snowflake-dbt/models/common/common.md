@@ -534,10 +534,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Remove Events where the Event Created Datetime < the User Created Datetime.
     - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
   - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
 - Rolling 24mos of Data  
 
 **Business Logic in this Model:** 
 - Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
@@ -585,10 +587,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Remove Events where the Event Created Datetime < the User Created Datetime.
     - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
   - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
 - Rolling 24mos of Data  
 
 **Business Logic in this Model:** 
 - Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 
 **Other Comments:**
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
@@ -610,10 +614,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Remove Events where the Event Created Datetime < the User Created Datetime.
     - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
   - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
 - Rolling 24mos of Data  
 
 **Business Logic in this Model:** 
 - Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 - Event, User and Ultimate_Namespace counts are included for the Aggregation Level
 
 **Other Comments:**
@@ -637,10 +643,12 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
   - Remove Events where the Event Created Datetime < the User Created Datetime.
     - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
   - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
 - Rolling 24mos of Data  
 
 **Business Logic in this Model:** 
 - Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 - The Actual Ultimate Parent Namespace, Plan, Subscription, Billing and Product Information for the Event is determined by the Event Date.
 - Each Event is identified as being used for different xMAU metrics (is_smau, is_gmau, is_umau)
 - `data_source` = 'GITLAB_DOTCOM'
