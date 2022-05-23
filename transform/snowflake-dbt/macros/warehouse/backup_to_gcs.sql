@@ -12,7 +12,4 @@
             {{ backup_table_command }}
         {% endfor %}
 
-
-
-
 {%- endmacro -%}
