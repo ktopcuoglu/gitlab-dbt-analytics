@@ -329,6 +329,17 @@ tables:
       , last_error
       , user_id
       FROM group_import_states
+  ip_restrictions:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'ip_restrictions'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , group_id
+      , range
+      FROM ip_restrictions
   issuable_severities:
     dbt_source_model: true
     export_schema: 'gitlab_com'
