@@ -100,7 +100,7 @@
     is_paid_gmau                                                AS is_paid_gmau,
     is_umau                                                     AS is_umau,
     reported_subscription_count                                 AS reporting_count,
-    not_reporting_subscription_count                             AS not_reporting_count,
+    not_reporting_subscription_count                            AS not_reporting_count,
     total_subscription_count                                    AS total_count,
     'reported metric - subscription based estimation'           AS estimation_grain
   FROM joined_counts
