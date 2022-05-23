@@ -1,7 +1,7 @@
 {% macro get_backup_table_command(table, day_of_month) %}
 
     {% set backup_key -%}
-        day_{{ day_of_month }}/{{ table.database.lower() }}/{{ table.schema.lower() }}/{{ table.name.lower() }}/data_
+        day_{{ day_of_month }}/{{ table.database.lower() }}/{{ table.schema.lower() }}/{{ table.name.lower() }}/test_data_
     {%- endset %}
 
     copy into @raw.public.backup_stage/{{ backup_key }}
