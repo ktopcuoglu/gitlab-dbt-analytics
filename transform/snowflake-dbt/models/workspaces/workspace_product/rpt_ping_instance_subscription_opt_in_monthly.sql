@@ -61,6 +61,7 @@
     FROM subscription_info
         INNER JOIN metrics
     ON subscription_info.key = metrics.key
+      AND subscription_info.ping_created_at_month = metrics.ping_created_at_month
 
 )
 
