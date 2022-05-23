@@ -7,17 +7,17 @@
 WITH job_info AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_job_info_source') }}
+    FROM {{ ref ('workday_bamboohr_job_info') }}
 
 ), bamboo_mapping AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping') }}
+    FROM {{ ref ('blended_employee_mapping_source') }}
 
 ), job_role AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_job_role') }}
+    FROM {{ ref ('workday_bamboohr_job_role') }}
 
 ), department_name_changes AS (
 

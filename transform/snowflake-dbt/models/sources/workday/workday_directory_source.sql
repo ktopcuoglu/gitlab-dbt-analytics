@@ -1,6 +1,7 @@
 WITH source AS (
   SELECT *
   FROM {{ source('workday','directory') }}
+  WHERE employee_id != 'C-100003' -- a contractor that will be removed when switched to live data
 ),
 
 renamed AS (

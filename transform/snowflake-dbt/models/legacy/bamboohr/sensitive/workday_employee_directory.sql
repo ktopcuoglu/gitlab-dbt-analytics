@@ -1,12 +1,12 @@
 WITH mapping as (
 
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('blended_employee_mapping_source')}}
 
 ), bamboohr_directory AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_directory_source') }}
+    FROM {{ ref ('blended_directory_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) =1 
 
 ), department_info as (
@@ -14,14 +14,14 @@ WITH mapping as (
     SELECT 
       employee_id,
       LAST_VALUE(job_title) RESPECT NULLS 
-          OVER (PARTITION BY employee_id ORDER BY job_id) AS last_job_title,
+          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_job_title,
       LAST_VALUE(reports_to) RESPECT NULLS
-          OVER (PARTITION BY employee_id ORDER BY job_id) AS last_supervisor,
+          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_supervisor,
       LAST_VALUE(department) RESPECT NULLS
-          OVER (PARTITION BY employee_id ORDER BY job_id) AS last_department,
+          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_department,
       LAST_VALUE(division) RESPECT NULLS
-          OVER  (PARTITION BY employee_id ORDER BY job_id) AS last_division       
-    FROM {{ ref ('bamboohr_job_info_source') }}
+          OVER  (PARTITION BY employee_id ORDER BY job_sequence) AS last_division       
+    FROM {{ ref ('blended_job_info_source') }}
 
 ), cost_center AS (
 
@@ -29,21 +29,21 @@ WITH mapping as (
       employee_id,
       LAST_VALUE(cost_center) RESPECT NULLS
           OVER ( PARTITION BY employee_id ORDER BY effective_date) AS last_cost_center  
-    FROM {{ ref ('bamboohr_job_role') }}
+    FROM {{ ref ('workday_bamboohr_job_role') }}
 
 ), location_factor as (
 
     SELECT 
       DISTINCT bamboo_employee_number,
       FIRST_VALUE(location_factor) OVER ( PARTITION BY bamboo_employee_number ORDER BY valid_from) AS hire_location_factor
-    FROM {{ ref('employee_location_factor_snapshots') }}
+    FROM {{ ref('blended_employee_location_factor_snapshots') }}
 
 ), initial_hire AS (
     
     SELECT 
       employee_id,
       effective_date as hire_date
-    FROM {{ref('bamboohr_employment_status_source')}}
+    FROM {{ref('blended_employment_status_source')}}
     WHERE employment_status != 'Terminated'
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) = 1
 
@@ -53,7 +53,7 @@ WITH mapping as (
       employee_id,
       is_rehire,
       valid_from_date as rehire_date
-    FROM {{ref('bamboohr_employment_status_xf')}}
+    FROM {{ref('workday_bamboohr_employment_status_xf')}}
     WHERE is_rehire='True'
 
 ), final AS (

@@ -61,7 +61,7 @@ promotion AS (
     employee_id,
     effective_date,
     compensation_change_reason
-  FROM {{ ref('bamboohr_compensation_source') }}
+  FROM {{ ref('blended_compensation_source') }}
   WHERE compensation_change_reason = 'Promotion'
   GROUP BY 1, 2, 3
 
@@ -134,7 +134,7 @@ employment_status_records_check AS (
   SELECT
     employee_id,
     MIN(valid_from_date) AS employment_status_first_value
-  FROM {{ ref('bamboohr_employment_status_xf') }}
+  FROM {{ ref('workday_bamboohr_employment_status_xf') }}
   GROUP BY 1
 
 ),
@@ -156,14 +156,14 @@ sheetload_engineering_speciality AS (
 bamboohr_discretionary_bonuses_xf AS (
 
   SELECT *
-  FROM {{ ref('bamboohr_directionary_bonuses_xf') }}
+  FROM {{ ref('workday_bamboohr_directionary_bonuses_xf') }}
 
 ),
 
 fct_work_email AS (
 
   SELECT *
-  FROM {{ ref('bamboohr_work_email') }}
+  FROM {{ ref('workday_bamboohr_work_email') }}
 
 ),
 
