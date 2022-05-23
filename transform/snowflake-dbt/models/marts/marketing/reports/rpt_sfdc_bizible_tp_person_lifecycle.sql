@@ -12,7 +12,64 @@
     ('rpt_crm_person_with_opp','rpt_crm_person_with_opp')
 ]) }}
 
-, final AS (
+, base AS (
+
+  SELECT DISTINCT
+    mart_crm_touchpoint.dim_crm_person_id,
+    mart_crm_touchpoint.email_hash,
+    mart_crm_touchpoint.dim_crm_touchpoint_id,
+    mart_crm_touchpoint.mql_date_first,
+    mart_crm_touchpoint.bizible_touchpoint_date
+    FROM mart_crm_touchpoint
+    WHERE mql_date_first IS NOT null
+
+), count_of_pre_mql_touchpoints AS (
+
+  SELECT DISTINCT
+    SELECT
+    email_hash,
+    COUNT(DISTINCT dim_crm_touchpoint_id) AS pre_mql_touches
+  FROM base
+  WHERE bizible_touchpoint_date <= mql_date_first
+  GROUP BY 1
+
+), pre_mql_tps_by_person AS (
+    
+    SELECT
+      email_hash,
+      pre_mql_touches,
+      1/pre_mql_touches AS pre_mql_weight
+    FROM count_of_pre_mql_tps
+    GROUP BY 1,2
+    
+), pre_mql_tps AS (
+      
+    SELECT
+      base.dim_crm_touchpoint_id,
+      pre_mql_tps_by_person.pre_mql_weight
+    FROM pre_mql_tps_by_person
+    LEFT JOIN base ON
+    pre_mql_tps_by_person.email_hash=base.email_hash
+    WHERE bizible_touchpoint_date <= mql_date_first
+      
+), post_mql_tps AS (
+    
+    SELECT
+      base.dim_crm_touchpoint_id,
+      0 AS pre_mql_weight
+    FROM base
+    WHERE bizible_touchpoint_date > mql_date_first
+      OR mql_date_first IS null
+
+), mql_weighted_tps AS (
+
+    SELECT *
+    FROM pre_mql_tps
+    UNION ALL
+    SELECT *
+    FROM post_mql_tps
+
+), final AS (
 
     SELECT DISTINCT
       DATE_TRUNC('month',mart_crm_touchpoint.bizible_touchpoint_date)::date AS bizible_touchpoint_date_month_yr,
@@ -23,6 +80,7 @@
       mart_crm_touchpoint.bizible_touchpoint_source,
       mart_crm_touchpoint.bizible_medium,
       mart_crm_touchpoint.dim_crm_person_id,
+      mart_crm_touchpoint.email_hash,
       mart_crm_touchpoint.sfdc_record_id,
       mart_crm_touchpoint.lead_source,
       mart_crm_touchpoint.bizible_count_lead_creation_touch,
@@ -56,17 +114,7 @@
       rpt_crm_person_with_opp.sales_segment_name,
       rpt_crm_person_with_opp.is_inquiry,
       rpt_crm_person_with_opp.is_mql,
-      rpt_crm_person_with_opp.dim_crm_opportunity_id,
-      rpt_crm_person_with_opp.opportunity_created_date,
-      rpt_crm_person_with_opp.sales_accepted_date,
-      rpt_crm_person_with_opp.close_date,
-      rpt_crm_person_with_opp.sales_qualified_source_name, 
-      rpt_crm_person_with_opp.is_won,
-      rpt_crm_person_with_opp.net_arr,
-      rpt_crm_person_with_opp.is_edu_oss,
-      rpt_crm_person_with_opp.stage_name,
-      rpt_crm_person_with_opp.is_sao,
-      rpt_crm_person_with_opp.user_sales_segment, 
+      mql_weighted_tps.pre_mql_weight,
       mart_crm_touchpoint.crm_account_name,
       mart_crm_touchpoint.dim_crm_account_id,
       mart_crm_touchpoint.crm_account_gtm_strategy,
@@ -80,7 +128,7 @@
       mart_crm_touchpoint.last_utm_content,
       1 AS touchpoint_count,
       CASE
-        WHEN mart_crm_touchpoint.inquiry_date >= bizible_touchpoint_date_normalized THEN '1'
+        WHEN bizible_touchpoint_position LIKE '%LC%' AND bizible_touchpoint_position NOT LIKE '%PostLC%' THEN '1'
         ELSE '0'
       END AS count_inquiry,
       CASE
@@ -133,6 +181,8 @@
       END AS count_net_new_accepted
       FROM
       mart_crm_touchpoint
+      LEFT JOIN mql_weighted_tps ON
+      mart_crm_touchpoint.dim_crm_touchpoint_id=mql_weighted_tps.dim_crm_touchpoint_id
       LEFT JOIN rpt_crm_person_with_opp ON
       mart_crm_touchpoint.dim_crm_person_id=rpt_crm_person_with_opp.dim_crm_person_id
       WHERE bizible_touchpoint_date_normalized >= '09/01/2019'
@@ -142,7 +192,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@rkohnke",
-    updated_by="@michellecooper",
+    updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-03-24"
+    updated_date="2022-05-23"
 ) }}

@@ -31,33 +31,35 @@
       rpt_pmg_data.reporting_date_normalized AS close_date,          
       null AS stage_name, 
       null AS is_won,
-      null AS is_sao,
-      null AS deal_path_name, -- 15
+      null AS is_sao, -- 15
+      null AS deal_path_name, 
       null AS order_type, 
       null AS bizible_landing_page,
       null AS bizible_form_url,
-      null AS dim_crm_account_id, 
-      null AS dim_crm_opportunity_id, -- 20
+      null AS dim_crm_account_id, --20 
+      null AS dim_crm_opportunity_id,
       null AS crm_account_name,
       null AS crm_account_gtm_strategy,
       null AS country,
-      rpt_pmg_data.mapped_channel AS bizible_medium, 
-      rpt_pmg_data.touchpoint_segment, -- 25
+      rpt_pmg_data.mapped_channel AS bizible_medium, --25
+      rpt_pmg_data.touchpoint_segment,
       rpt_pmg_data.gtm_motion,
       null AS last_utm_campaign,
       null AS last_utm_content,
-      null AS bizible_ad_campaign_name,
-      null AS lead_source, --30
+      null AS bizible_ad_campaign_name, --30
+      null AS lead_source,
       null AS campaign_type,
       rpt_pmg_data.reporting_date_normalized AS mql_datetime_least,
       null AS true_inquiry_date,
       null AS dim_crm_person_id,
+      null AS email_hash,
       null AS is_inquiry, 
       null AS is_mql,
       SUM(rpt_pmg_data.cost) AS total_cost,
       0 AS touchpoint_sum,
       0 AS new_lead_created_sum,
-      0 AS count_true_inquiry,   
+      0 AS count_true_inquiry, 
+      0 AS AS inquiry_sum,  
       0 AS mql_sum,
       0 AS accepted_sum,
       0 AS new_mql_sum,
@@ -99,7 +101,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_pmg_data 
-    {{ dbt_utils.group_by(n=37) }}
+    {{ dbt_utils.group_by(n=38) }}
     UNION ALL
     SELECT 
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_month_yr,
@@ -140,13 +142,15 @@
       rpt_sfdc_bizible_tp_person_lifecycle.mql_datetime_least::date AS mql_datetime_least, --30
       rpt_sfdc_bizible_tp_person_lifecycle.true_inquiry_date,
       rpt_sfdc_bizible_tp_person_lifecycle.dim_crm_person_id AS dim_crm_person_id,
+      rpt_sfdc_bizible_tp_person_lifecycle.email_hash AS email_hash,
       is_inquiry,
       is_mql,
       0 AS Total_cost,
-      SUM(rpt_sfdc_bizible_tp_person_lifecycle.touchpoint_count) AS touchpoint_sum,
+      1 AS touchpoint_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.bizible_count_lead_creation_touch) AS new_lead_created_sum,
-      SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_true_inquiry) AS count_true_inquiry, 
-      SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_mql) AS mql_sum,
+      SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_true_inquiry) AS count_true_inquiry,
+      SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_inquiry AS inquiry_sum, 
+      SUM(rpt_sfdc_bizible_tp_person_lifecycle.pre_mql_weight) AS mql_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_accepted) AS accepted_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_net_new_mql) AS new_mql_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_net_new_accepted) AS new_accepted_sum,
@@ -187,7 +191,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_sfdc_bizible_tp_person_lifecycle
-    {{ dbt_utils.group_by(n=37) }}
+    {{ dbt_utils.group_by(n=38) }}
     UNION ALL
     SELECT
       rpt_sfdc_bizible_linear.bizible_touchpoint_date_month_yr AS opp_touchpoint_mo_yr, 
@@ -228,12 +232,14 @@
       null AS mql_datetime_least,
       null AS true_inquiry_date,
       null AS dim_crm_person_id,
+      email_hash AS email_hash,
       null AS is_inquiry,
       null AS is_mql,
       0 AS total_cost,
       0 AS touchpoint_sum,
       0 AS new_lead_created_sum,
       0 AS count_true_inquiry, 
+      0 AS inquiry_sum,
       0 AS mql_sum,
       0 AS accepted_sum,
       0 AS new_mql_sum,
@@ -299,55 +305,55 @@
         ELSE 0 
       END AS pipeline_linear_net_arr,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.first_weight) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.first_weight) 
         ELSE 0 
       END AS won_first,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.u_weight) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.u_weight) 
         ELSE 0 
       END AS won_u,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.w_weight) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.w_weight) 
         ELSE 0 
       END AS won_w,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.full_weight) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.full_weight) 
         ELSE 0 
       END AS won_full,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.custom_weight) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.custom_weight) 
         ELSE 0 
       END AS won_custom,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.l_weight) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.l_weight) 
         ELSE 0 
       END AS won_linear,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.first_net_arr) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.first_net_arr) 
         ELSE 0 
       END AS won_first_net_arr,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.u_net_arr) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.u_net_arr) 
         ELSE 0 
       END AS won_u_net_arr,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.w_net_arr) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.w_net_arr) 
         ELSE 0 
       END AS won_w_net_arr,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.full_net_arr) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.full_net_arr) 
         ELSE 0 
       END AS won_full_net_arr,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.custom_net_arr) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.custom_net_arr) 
         ELSE 0 
       END AS won_custom_net_arr,
       CASE 
-        WHEN rpt_sfdc_bizible_linear.is_won = 'True' THEN SUM(rpt_sfdc_bizible_linear.linear_net_arr) 
+        WHEN rpt_sfdc_bizible_linear.is_won = true THEN SUM(rpt_sfdc_bizible_linear.linear_net_arr) 
         ELSE 0 
       END AS won_linear_net_arr
     FROM rpt_sfdc_bizible_linear
-    {{ dbt_utils.group_by(n=37) }}
+    {{ dbt_utils.group_by(n=38) }}
 
 ), final AS (
 
@@ -368,5 +374,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-02-02"
+    updated_date="2022-05-23"
 ) }}
