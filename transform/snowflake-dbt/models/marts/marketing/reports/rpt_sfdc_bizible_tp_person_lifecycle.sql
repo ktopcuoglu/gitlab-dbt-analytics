@@ -26,7 +26,6 @@
 ), count_of_pre_mql_touchpoints AS (
 
   SELECT DISTINCT
-    SELECT
     email_hash,
     COUNT(DISTINCT dim_crm_touchpoint_id) AS pre_mql_touches
   FROM base
