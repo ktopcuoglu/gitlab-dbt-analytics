@@ -227,6 +227,21 @@
       monthly_sm_metrics.active_project_runners_all_time_event,
       monthly_sm_metrics.gitaly_version,
       monthly_sm_metrics.gitaly_servers_all_time_event,
+      -- Wave 6
+      monthly_sm_metrics.api_fuzzing_scans_all_time_event,
+      monthly_sm_metrics.api_fuzzing_scans_28_days_event,
+      monthly_sm_metrics.coverage_fuzzing_scans_all_time_event,
+      monthly_sm_metrics.coverage_fuzzing_scans_28_days_event,
+      monthly_sm_metrics.secret_detection_scans_all_time_event,
+      monthly_sm_metrics.secret_detection_scans_28_days_event,
+      monthly_sm_metrics.dependency_scanning_scans_all_time_event,
+      monthly_sm_metrics.dependency_scanning_scans_28_days_event,
+      monthly_sm_metrics.container_scanning_scans_all_time_event,
+      monthly_sm_metrics.container_scanning_scans_28_days_event,
+      monthly_sm_metrics.dast_scans_all_time_event,
+      monthly_sm_metrics.dast_scans_28_days_event,
+      monthly_sm_metrics.sast_scans_all_time_event,
+      monthly_sm_metrics.sast_scans_28_days_event,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -408,7 +423,22 @@
       monthly_saas_metrics.active_group_runners_all_time_event,
       monthly_saas_metrics.active_project_runners_all_time_event,
       monthly_saas_metrics.gitaly_version,
-      monthly_saas_metrics.gitaly_servers_all_time_event,    
+      monthly_saas_metrics.gitaly_servers_all_time_event,
+      -- Wave 6
+      monthly_saas_metrics.api_fuzzing_scans_all_time_event,
+      monthly_saas_metrics.api_fuzzing_scans_28_days_event,
+      monthly_saas_metrics.coverage_fuzzing_scans_all_time_event,
+      monthly_saas_metrics.coverage_fuzzing_scans_28_days_event,
+      monthly_saas_metrics.secret_detection_scans_all_time_event,
+      monthly_saas_metrics.secret_detection_scans_28_days_event,
+      monthly_saas_metrics.dependency_scanning_scans_all_time_event,
+      monthly_saas_metrics.dependency_scanning_scans_28_days_event,
+      monthly_saas_metrics.container_scanning_scans_all_time_event,
+      monthly_saas_metrics.container_scanning_scans_28_days_event,
+      monthly_saas_metrics.dast_scans_all_time_event,
+      monthly_saas_metrics.dast_scans_28_days_event,
+      monthly_saas_metrics.sast_scans_all_time_event,
+      monthly_saas_metrics.sast_scans_28_days_event,   
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -458,5 +488,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-04-26"
+    updated_date="2022-05-06"
 ) }}
