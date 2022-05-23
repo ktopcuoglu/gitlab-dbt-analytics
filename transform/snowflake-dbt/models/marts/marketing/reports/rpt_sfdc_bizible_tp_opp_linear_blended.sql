@@ -55,6 +55,8 @@
       null AS email_hash,
       null AS is_inquiry, 
       null AS is_mql,
+      null AS is_fmm_influenced,
+      null AS is_dg_influenced,
       SUM(rpt_pmg_data.cost) AS total_cost,
       0 AS touchpoint_sum,
       0 AS new_lead_created_sum,
@@ -101,7 +103,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_pmg_data 
-    {{ dbt_utils.group_by(n=38) }}
+    {{ dbt_utils.group_by(n=40) }}
     UNION ALL
     SELECT 
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_month_yr,
@@ -145,6 +147,11 @@
       rpt_sfdc_bizible_tp_person_lifecycle.email_hash AS email_hash,
       is_inquiry,
       is_mql,
+      is_fmm_influenced,
+      CASE 
+        WHEN touchpoint_segment = 'Demand Gen' THEN 1
+        ELSE 0
+      END AS is_dg_influenced,
       0 AS Total_cost,
       1 AS touchpoint_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.bizible_count_lead_creation_touch) AS new_lead_created_sum,
@@ -191,7 +198,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_sfdc_bizible_tp_person_lifecycle
-    {{ dbt_utils.group_by(n=38) }}
+    {{ dbt_utils.group_by(n=40) }}
     UNION ALL
     SELECT
       rpt_sfdc_bizible_linear.bizible_touchpoint_date_month_yr AS opp_touchpoint_mo_yr, 
@@ -235,6 +242,11 @@
       email_hash AS email_hash,
       null AS is_inquiry,
       null AS is_mql,
+      is_fmm_influenced,
+      CASE 
+        WHEN touchpoint_segment = 'Demand Gen' THEN 1
+        ELSE 0
+      END AS is_dg_influenced,
       0 AS total_cost,
       0 AS touchpoint_sum,
       0 AS new_lead_created_sum,
@@ -353,12 +365,20 @@
         ELSE 0 
       END AS won_linear_net_arr
     FROM rpt_sfdc_bizible_linear
-    {{ dbt_utils.group_by(n=38) }}
+    {{ dbt_utils.group_by(n=40) }}
 
 ), final AS (
 
     SELECT
       unioned.*,
+      CASE
+        WHEN bizible_touchpoint_position LIKE '%FT%' AND is_fmm_influenced = 1 THEN 1
+        ELSE 0
+      END AS is_fmm_sourced,
+      CASE
+        WHEN bizible_touchpoint_position LIKE '%FT%' AND is_dg_influenced = 1 THEN 1
+        ELSE 0
+      END AS is_dg_sourced,
       dim_date.fiscal_year                     AS date_range_year,
       dim_date.fiscal_quarter_name_fy          AS date_range_quarter,
       DATE_TRUNC(month, dim_date.date_actual)  AS date_range_month
