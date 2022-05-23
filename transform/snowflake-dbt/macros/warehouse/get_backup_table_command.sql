@@ -4,8 +4,6 @@
         day_{{ day_of_month }}/{{ table.database.lower() }}/{{ table.schema.lower() }}/{{ table.name.lower() }}/data_
     {%- endset %}
 
-    {{ log('..... WORK on backup to STAGE ' ~ day_of_month ~ '...' ~ table, info = true) }}
-    
     copy into @raw.public.backup_stage/{{ backup_key }}
     from {{ table.database }}.{{ table.schema }}."{{ table.name.upper() }}"
     header = true
