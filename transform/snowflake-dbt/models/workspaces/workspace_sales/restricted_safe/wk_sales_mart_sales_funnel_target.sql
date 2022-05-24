@@ -38,6 +38,7 @@
           funnel_target.*,
           target_month.fiscal_quarter_name_fy           AS target_fiscal_quarter_name,
           target_month.first_day_of_fiscal_quarter      AS target_fiscal_quarter_date,   
+          target_month.fiscal_year                      AS target_fiscal_year,
 
           agg_demo_keys.sales_team_cro_level,
           agg_demo_keys.sales_team_vp_level,
@@ -116,8 +117,9 @@
       final.deal_group,
       final.sales_qualified_source,
       report_user_segment_geo_region_area_sqs_ot,
-      next_fy_date.fiscal_quarter_name_fy AS target_fiscal_quarter_name,
-      next_fy_date.date_actual            AS target_fiscal_quarter_date,
+      next_fy_date.fiscal_quarter_name_fy         AS target_fiscal_quarter_name,
+      next_fy_date.first_day_of_fiscal_quarter    AS target_fiscal_quarter_date,
+      next_fy_date.fiscal_year                    AS target_fiscal_year,
       final.sales_team_cro_level,
       final.sales_team_vp_level,
       final.sales_team_avp_rd_level,
@@ -138,9 +140,9 @@
       final.report_user_segment_geo_region_area
   FROM  final 
     INNER JOIN date_details target_date
-      ON target_date.date_actual = final.target_fiscal_quarter_date
+      ON target_date.date_actual = final.target_month
     INNER JOIN date_details next_fy_date
-      ON next_fy_date.date_actual = Dateadd(month, 3, target_date.date_actual)
+      ON next_fy_date.date_actual = DATEADD(MONTH, 12, target_date.date_actual)
   WHERE  target_date.fiscal_year = 2023 -- Only relevant for FY24, Net ARR Targets * growth ratio
     AND final.kpi_name = 'Net ARR'
 
