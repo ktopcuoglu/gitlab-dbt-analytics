@@ -185,7 +185,11 @@ def generate_task(task_name: str, table_list: list, included: bool = False) -> N
 with open('analytics/dags/general/backup_manifest.yaml', 'r') as yaml_file:
     config_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
-# config_dict["OTHER_TABLES"] = {"TABLE_LIST_BACKUP": TABLE_LIST, "INCLUDED": False}
+# Safe mode in case we miss any table from the list or new one is introduced, will be picked up automatically
+
+table_list = [table.get('TABLE_LIST_BACKUP')[0] for table in config_dict.values()]
+
+config_dict["OTHER_TABLES"] = {"TABLE_LIST_BACKUP": table_list, "INCLUDED": False}
 
 for task_name, task_details in config_dict.items():
 
