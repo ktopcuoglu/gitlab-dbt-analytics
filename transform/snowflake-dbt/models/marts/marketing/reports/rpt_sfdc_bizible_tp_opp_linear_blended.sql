@@ -156,7 +156,7 @@
       1 AS touchpoint_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.bizible_count_lead_creation_touch) AS new_lead_created_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_true_inquiry) AS count_true_inquiry,
-      SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_inquiry AS inquiry_sum, 
+      SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_inquiry) AS inquiry_sum, 
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.pre_mql_weight) AS mql_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_accepted) AS accepted_sum,
       SUM(rpt_sfdc_bizible_tp_person_lifecycle.count_net_new_mql) AS new_mql_sum,
