@@ -1,4 +1,4 @@
-{% macro model_new_rows_per_day(model_name, created_column, min_value, lag_days=None, max_value=None, where_clause=None) %}
+{% macro model_new_rows_per_day(model_name, created_column, min_value, max_value=None, where_clause=None, lag_days=None) %}
 
 WITH dates AS (
 
