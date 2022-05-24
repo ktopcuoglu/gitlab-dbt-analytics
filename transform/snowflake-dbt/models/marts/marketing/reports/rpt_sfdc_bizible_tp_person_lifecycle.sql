@@ -119,6 +119,7 @@
       mart_crm_touchpoint.crm_account_gtm_strategy,
       mart_crm_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_touchpoint.touchpoint_segment,
+      mart_crm_touchpoint.is_fmm_influenced,
       mart_crm_touchpoint.gtm_motion,
       mart_crm_touchpoint.crm_person_title,
       mart_crm_touchpoint.bizible_touchpoint_position,
