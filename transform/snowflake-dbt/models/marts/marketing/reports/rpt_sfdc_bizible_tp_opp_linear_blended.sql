@@ -25,6 +25,7 @@
       IFF(rpt_pmg_data.utm_segment IS null,'Unknown',rpt_pmg_data.utm_segment) AS sales_segment_name,
       null AS crm_person_status,
       null AS bizible_touchpoint_type,
+      null AS bizible_touchpoint_position,
       null AS sales_type, 
       rpt_pmg_data.reporting_date_normalized AS opp_created_date, --10    
       rpt_pmg_data.reporting_date_normalized AS sales_accepted_date,
@@ -103,7 +104,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_pmg_data 
-    {{ dbt_utils.group_by(n=40) }}
+    {{ dbt_utils.group_by(n=41) }}
     UNION ALL
     SELECT 
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_month_yr,
@@ -117,6 +118,7 @@
       IFF(rpt_sfdc_bizible_tp_person_lifecycle.sales_segment_name IS null,'Unknown',rpt_sfdc_bizible_tp_person_lifecycle.sales_segment_name) AS sales_segment_name,
       rpt_sfdc_bizible_tp_person_lifecycle.crm_person_status,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_type, 
+      rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_position,
       null AS sales_type,
       null AS opp_created_date,
       null AS sales_accepted_date,
@@ -198,7 +200,7 @@
       0 AS won_custom_net_arr,
       0 AS won_linear_net_arr
     FROM rpt_sfdc_bizible_tp_person_lifecycle
-    {{ dbt_utils.group_by(n=40) }}
+    {{ dbt_utils.group_by(n=41) }}
     UNION ALL
     SELECT
       rpt_sfdc_bizible_linear.bizible_touchpoint_date_month_yr AS opp_touchpoint_mo_yr, 
@@ -211,7 +213,8 @@
     END AS region_normalized, --5
       IFF(rpt_sfdc_bizible_linear.crm_user_sales_segment IS null,'Unknown',rpt_sfdc_bizible_linear.crm_user_sales_segment) AS sales_segment_name,
       null AS crm_person_status,
-      rpt_sfdc_bizible_linear.bizible_touchpoint_type, 
+      rpt_sfdc_bizible_linear.bizible_touchpoint_type,
+      rpt_sfdc_bizible_linear.bizible_touchpoint_position, 
       rpt_sfdc_bizible_linear.sales_type,
       rpt_sfdc_bizible_linear.opp_created_date, --10
       rpt_sfdc_bizible_linear.sales_accepted_date,
@@ -365,7 +368,7 @@
         ELSE 0 
       END AS won_linear_net_arr
     FROM rpt_sfdc_bizible_linear
-    {{ dbt_utils.group_by(n=40) }}
+    {{ dbt_utils.group_by(n=41) }}
 
 ), final AS (
 
