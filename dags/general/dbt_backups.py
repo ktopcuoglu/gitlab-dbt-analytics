@@ -177,7 +177,7 @@ config_dict = {
     for table in TABLE_LIST
 }
 
-for task_name, task_details in config_dict.items():
+for task_name, task_details in config_dict:
 
     generate_task(
         task_name=task_name,
