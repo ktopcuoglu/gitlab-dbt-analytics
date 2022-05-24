@@ -56,6 +56,8 @@ def generate_task(task_name: str, table_list: list, included: bool = False) -> N
     @return:
     """
 
+    task_prefix = "dbt_backups"
+
     # dbt run-operation for backups
     args = f"""'{{TABLE_LIST_BACKUP: {table_list}, INCLUDED: {included}}}'"""
 
@@ -67,8 +69,8 @@ def generate_task(task_name: str, table_list: list, included: bool = False) -> N
     dbt_backups = KubernetesPodOperator(
         **gitlab_defaults,
         image=DBT_IMAGE,
-        task_id=f"dbt-backups-{task_name}",
-        name=f"dbt-backups-{task_name}",
+        task_id=f"{task_prefix}-{task_name}",
+        name=f"{task_prefix}-{task_name}",
         secrets=[
             GIT_DATA_TESTS_PRIVATE_KEY,
             GIT_DATA_TESTS_CONFIG,
@@ -87,6 +89,7 @@ def generate_task(task_name: str, table_list: list, included: bool = False) -> N
         env_vars=pod_env_vars,
         arguments=[dbt_backups_cmd],
         dag=dag,
+        pool="{task_prefix}_pool",
     )
 
 
@@ -178,6 +181,8 @@ config_dict = {
     table.lower(): {"TABLE_LIST_BACKUP": [table], "INCLUDED": True}
     for table in TABLE_LIST
 }
+
+config_dict["OTHER_TABLES"] = {"TABLE_LIST_BACKUP": TABLE_LIST, "INCLUDED": False}
 
 for task_name, task_details in config_dict.items():
 
