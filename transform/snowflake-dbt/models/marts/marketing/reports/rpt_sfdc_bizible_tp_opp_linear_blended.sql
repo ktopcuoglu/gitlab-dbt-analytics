@@ -61,7 +61,7 @@
       0 AS touchpoint_sum,
       0 AS new_lead_created_sum,
       0 AS count_true_inquiry, 
-      0 AS AS inquiry_sum,  
+      0 AS inquiry_sum,  
       0 AS mql_sum,
       0 AS accepted_sum,
       0 AS new_mql_sum,
