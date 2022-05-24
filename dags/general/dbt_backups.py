@@ -172,12 +172,14 @@ TABLE_LIST = [
     "GITLAB_DOTCOM_APPLICATION_SETTINGS_SNAPSHOTS",
 ]
 
+config_dict = dict
+
 config_dict = {
     table.lower(): {"TABLE_LIST_BACKUP": [table], "INCLUDED": True}
     for table in TABLE_LIST
 }
 
-for task_name, task_details in config_dict:
+for task_name, task_details in config_dict.items():
 
     generate_task(
         task_name=task_name,
