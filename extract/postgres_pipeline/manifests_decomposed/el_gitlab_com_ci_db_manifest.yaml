@@ -67,8 +67,8 @@ tables:
       , updated_at
       , file_store
       , permissions
-      , name text
-      , file text
+      , name
+      , file
       , checksum
       , key_data
       FROM ci_secure_files
