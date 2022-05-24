@@ -101,7 +101,7 @@
       monthly_sm_metrics.license_user_count,
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
-      action_active_users_project_repo_users.distinct_users AS action_monthly_active_users_project_repo_28_days_user,
+      monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
       monthly_sm_metrics.merge_requests_28_days_user,
       monthly_sm_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_sm_metrics.commit_comment_all_time_event,
@@ -298,7 +298,7 @@
       monthly_saas_metrics.subscription_seats,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
-      monthly_saas_metrics.action_monthly_active_users_project_repo_28_days_user,
+      action_active_users_project_repo_users.distinct_users AS action_monthly_active_users_project_repo_28_days_user,
       monthly_saas_metrics.merge_requests_28_days_user,
       monthly_saas_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_saas_metrics.commit_comment_all_time_event,
