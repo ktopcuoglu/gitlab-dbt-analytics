@@ -1,0 +1,304 @@
+customers_db_customers_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - CUSTOMERS_DB_CUSTOMERS_SNAPSHOTS
+customers_db_licenses_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - CUSTOMERS_DB_LICENSES_SNAPSHOTS
+customers_db_orders_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - CUSTOMERS_DB_ORDERS_SNAPSHOTS
+dim_subscription_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - DIM_SUBSCRIPTION_SNAPSHOT
+dim_subscription_snapshot_20210531:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - DIM_SUBSCRIPTION_SNAPSHOT_20210531
+fct_mrr_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - FCT_MRR_SNAPSHOT
+fct_mrr_snapshot_20210531:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - FCT_MRR_SNAPSHOT_20210531
+gitlab_dotcom_application_settings_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_APPLICATION_SETTINGS_SNAPSHOTS
+gitlab_dotcom_gitlab_subscriptions_namespace_id_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_GITLAB_SUBSCRIPTIONS_NAMESPACE_ID_SNAPSHOTS
+gitlab_dotcom_gitlab_subscriptions_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_GITLAB_SUBSCRIPTIONS_SNAPSHOTS
+gitlab_dotcom_issues_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_ISSUES_SNAPSHOTS
+gitlab_dotcom_members_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_MEMBERS_SNAPSHOTS
+gitlab_dotcom_namespace_root_storage_statistics_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_NAMESPACE_ROOT_STORAGE_STATISTICS_SNAPSHOTS
+gitlab_dotcom_namespace_statistics_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_NAMESPACE_STATISTICS_SNAPSHOTS
+gitlab_dotcom_namespaces_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_NAMESPACES_SNAPSHOTS
+gitlab_dotcom_project_statistics_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_PROJECT_STATISTICS_SNAPSHOTS
+gitlab_dotcom_projects_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - GITLAB_DOTCOM_PROJECTS_SNAPSHOTS
+license_db_licenses_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - LICENSE_DB_LICENSES_SNAPSHOTS
+mart_arr_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_ARR_SNAPSHOT
+mart_arr_snapshot_20210531:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_ARR_SNAPSHOT_20210531
+mart_arr_snapshot_20210609:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_ARR_SNAPSHOT_20210609
+mart_available_to_renew_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_AVAILABLE_TO_RENEW_SNAPSHOT
+mart_charge_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_CHARGE_SNAPSHOT
+mart_retention_parent_account_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_RETENTION_PARENT_ACCOUNT_SNAPSHOT
+mart_waterfall_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - MART_WATERFALL_SNAPSHOT
+netsuite_accounting_periods_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_ACCOUNTING_PERIODS_SNAPSHOTS
+netsuite_accounts_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_ACCOUNTS_SNAPSHOTS
+netsuite_budget_category_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_BUDGET_CATEGORY_SNAPSHOTS
+netsuite_budget_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_BUDGET_SNAPSHOTS
+netsuite_classes_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_CLASSES_SNAPSHOTS
+netsuite_consolidated_exchange_rates_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_CONSOLIDATED_EXCHANGE_RATES_SNAPSHOTS
+netsuite_departments_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_DEPARTMENTS_SNAPSHOTS
+netsuite_entity_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_ENTITY_SNAPSHOTS
+netsuite_subsidiaries_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_SUBSIDIARIES_SNAPSHOTS
+netsuite_transaction_lines_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_TRANSACTION_LINES_SNAPSHOTS
+netsuite_transactions_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - NETSUITE_TRANSACTIONS_SNAPSHOTS
+sfdc_account_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SFDC_ACCOUNT_SNAPSHOTS
+sfdc_opportunity_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SFDC_OPPORTUNITY_SNAPSHOTS
+sfdc_opportunity_snapshots_20220520:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SFDC_OPPORTUNITY_SNAPSHOTS_20220520
+sfdc_user_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SFDC_USER_SNAPSHOTS
+sfdc_zqu_quote_amendment_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SFDC_ZQU_QUOTE_AMENDMENT_SNAPSHOTS
+sfdc_zqu_quote_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SFDC_ZQU_QUOTE_SNAPSHOTS
+sheetload_comp_band_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SHEETLOAD_COMP_BAND_SNAPSHOTS
+sheetload_employee_location_factor_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SHEETLOAD_EMPLOYEE_LOCATION_FACTOR_SNAPSHOTS
+sheetload_gitlab_roulette_capacity_history_snapshot:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SHEETLOAD_GITLAB_ROULETTE_CAPACITY_HISTORY_SNAPSHOT
+sheetload_kpi_status_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SHEETLOAD_KPI_STATUS_SNAPSHOTS
+sheetload_kpi_status_snapshots_old:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - SHEETLOAD_KPI_STATUS_SNAPSHOTS_OLD
+zuora_account_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_ACCOUNT_SNAPSHOTS
+zuora_amendment_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_AMENDMENT_SNAPSHOTS
+zuora_contact_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_CONTACT_SNAPSHOTS
+zuora_discountappliedmetrics_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_DISCOUNTAPPLIEDMETRICS_SNAPSHOTS
+zuora_invoice_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_INVOICE_SNAPSHOTS
+zuora_invoiceitem_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_INVOICEITEM_SNAPSHOTS
+zuora_product_rate_plan_charge_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_PRODUCT_RATE_PLAN_CHARGE_SNAPSHOTS
+zuora_product_rate_plan_charge_tier_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_PRODUCT_RATE_PLAN_CHARGE_TIER_SNAPSHOTS
+zuora_product_rate_plan_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_PRODUCT_RATE_PLAN_SNAPSHOTS
+zuora_product_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_PRODUCT_SNAPSHOTS
+zuora_rateplan_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_RATEPLAN_SNAPSHOTS
+zuora_rateplancharge_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_RATEPLANCHARGE_SNAPSHOTS
+zuora_refund_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REFUND_SNAPSHOTS
+zuora_revenue_accounting_type_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_ACCOUNTING_TYPE_SNAPSHOTS
+zuora_revenue_approval_detail_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_APPROVAL_DETAIL_SNAPSHOTS
+zuora_revenue_book_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_BOOK_SNAPSHOTS
+zuora_revenue_calendar_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_CALENDAR_SNAPSHOTS
+zuora_revenue_invoice_accounting_summary_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_INVOICE_ACCOUNTING_SUMMARY_SNAPSHOTS
+zuora_revenue_manual_journal_entry_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_MANUAL_JOURNAL_ENTRY_SNAPSHOTS
+zuora_revenue_organization_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_ORGANIZATION_SNAPSHOTS
+zuora_revenue_revenue_contract_bill_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_BILL_SNAPSHOTS
+zuora_revenue_revenue_contract_header_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_HEADER_SNAPSHOTS
+zuora_revenue_revenue_contract_hold_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_HOLD_SNAPSHOTS
+zuora_revenue_revenue_contract_line_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_LINE_SNAPSHOTS
+zuora_revenue_revenue_contract_performance_obligation_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_PERFORMANCE_OBLIGATION_SNAPSHOTS
+zuora_revenue_revenue_contract_schedule_deleted_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_SCHEDULE_DELETED_SNAPSHOTS
+zuora_revenue_revenue_contract_schedule_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_REVENUE_CONTRACT_SCHEDULE_SNAPSHOTS
+zuora_revenue_schedule_item_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_REVENUE_SCHEDULE_ITEM_SNAPSHOTS
+zuora_subscription_snapshots:
+  INCLUDED: true
+  TABLE_LIST_BACKUP:
+  - ZUORA_SUBSCRIPTION_SNAPSHOTS
