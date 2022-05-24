@@ -48,7 +48,7 @@ default_args = {
 dag = DAG("dbt_backups", default_args=default_args, schedule_interval="5 4 * * *")
 
 
-def generate_task(task_name, table_list, included: bool = False) -> None:
+def generate_task(task_name: str, table_list: list, included: bool = False) -> None:
     """
     @param task_name:
     @param table_list:
