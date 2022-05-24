@@ -1,7 +1,7 @@
 WITH mapping as (
 
     SELECT *
-    FROM {{ref('bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('workday_bamboohr_id_employee_number_mapping')}}
     --mapping on bamboohr_id_employee_number_mapping as this has accounted for all hired employees whereas bamboohr_directory_source has not
 
 ), bamboohr_directory AS (

@@ -8,7 +8,7 @@ WITH bamboohr AS (
 workday AS (
 
   SELECT *
-  FROM {{ ref('workday_directory_source') }}
+  FROM {{ ref('workday_directory_source') }} -- need a daily snapshot
 ),
 
 map AS (

@@ -16,7 +16,7 @@ WITH RECURSIVE employee_directory AS (
     hire_location_factor,
     last_work_email,
     (first_name || ' ' || last_name) AS full_name
-  FROM {{ ref('employee_directory') }}
+  FROM {{ ref('workday_employee_directory') }}
 
 ),
 
@@ -30,28 +30,28 @@ date_details AS (
 department_info AS (
 
   SELECT *
-  FROM {{ ref('bamboohr_job_info_current_division_base') }}
+  FROM {{ ref('workday_bamboohr_job_info_current_division_base') }}
 
 ),
 
 job_role AS (
 
   SELECT *
-  FROM {{ ref('bamboohr_job_role') }}
+  FROM {{ ref('workday_bamboohr_job_role') }}
 
 ),
 
 location_factor AS (
 
   SELECT *
-  FROM {{ ref('employee_location_factor_snapshots') }}
+  FROM {{ ref('workday_employee_location_factor_snapshots') }}
 
 ),
 
 employment_status AS (
 
   SELECT *
-  FROM {{ ref('bamboohr_employment_status_xf') }}
+  FROM {{ ref('workday_bamboohr_employment_status_xf') }}
 
 ),
 

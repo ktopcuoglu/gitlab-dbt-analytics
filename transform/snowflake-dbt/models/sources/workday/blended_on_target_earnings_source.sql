@@ -29,6 +29,7 @@ SELECT
   bamboohr.annual_amount_local_currency_code,
   bamboohr.ote_local_currency_code,
   uploaded_at,
+  ROW_NUMBER() OVER (PARTITION BY map.wk_employee_id, bamboohr.effective_date ORDER BY bamboohr.target_earnings_update_id ASC) AS target_earnings_sequence,
   'bamboohr' AS source_system
 FROM bamboohr
 INNER JOIN map
@@ -48,5 +49,6 @@ SELECT
   annual_amount_local_currency_code,
   ote_local_currency_code,
   uploaded_at,
+  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date ASC) AS target_earnings_sequence, -- need initiated datetime
   'workday' AS source_system
 FROM workday

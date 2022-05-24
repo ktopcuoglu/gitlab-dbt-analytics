@@ -36,7 +36,7 @@ SELECT
   gender,
   country,
   age,
-  TRY_TO_NUMBER(job_grade) AS job_grade,
+  job_grade,
   pay_frequency,
   uploaded_at,
   uploaded_row_number_desc,
@@ -70,7 +70,7 @@ SELECT
   gender,
   country,
   age,
-  job_grade,
+  job_grade::VARCHAR AS job_grade, -- BambooHR data is a text filed.
   pay_frequency,
   uploaded_at,
   DENSE_RANK() OVER (ORDER BY uploaded_at DESC) AS uploaded_row_number_desc,

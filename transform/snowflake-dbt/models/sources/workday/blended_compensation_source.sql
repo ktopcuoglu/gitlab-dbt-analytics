@@ -46,3 +46,9 @@ SELECT
   ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY initiated_at ASC) AS compensation_sequence,
   'workday' AS source_system
 FROM workday
+
+/*
+LEFT JOIN pay_frequency
+      ON bamboohr_compensation_changes.employee_id = pay_frequency.employee_id
+      AND bamboohr_compensation_changes.effective_date BETWEEN pay_frequency.effective_date AND pay_frequency.next_effective_date
+*/

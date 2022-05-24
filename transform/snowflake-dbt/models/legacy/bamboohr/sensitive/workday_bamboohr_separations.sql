@@ -14,7 +14,7 @@ WITH dim_date AS (
       division_mapped_current           AS division, 
       department_modified               AS department,
       job_title                         AS job_title
-    FROM {{ ref('employee_directory_intermediate') }}
+    FROM {{ ref('workday_employee_directory_intermediate') }}
     WHERE is_termination_date = TRUE
       AND date_actual>='2020-02-01'
 
