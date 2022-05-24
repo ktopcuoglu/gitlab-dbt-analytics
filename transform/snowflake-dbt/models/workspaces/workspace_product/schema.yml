@@ -183,3 +183,11 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: rpt_ping_instance_active_subscriptions
+    description: ' {{ doc("rpt_ping_instance_active_subscriptions") }} '
+    columns:
+      - name: rpt_ping_instance_active_subscriptions_id
+        tests:
+          - not_null
+          - unique

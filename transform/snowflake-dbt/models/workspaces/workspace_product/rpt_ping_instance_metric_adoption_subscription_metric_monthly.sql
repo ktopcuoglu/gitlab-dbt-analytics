@@ -5,7 +5,8 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('potential_report_counts', 'rpt_ping_instance_subscription_metric_opt_in_monthly'),
+    ('rpt_ping_instance_subscription_opt_in_monthly', 'rpt_ping_instance_subscription_opt_in_monthly'),
+    ('rpt_ping_instance_subscription_metric_opt_in_monthly', 'rpt_ping_instance_subscription_metric_opt_in_monthly'),
     ('active_subscriptions', 'rpt_ping_instance_active_subscriptions'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
@@ -62,27 +63,31 @@
 ), joined_counts AS (
 
     SELECT
-        reported_actuals.ping_created_at_month                         AS ping_created_at_month,
-        reported_actuals.metrics_path                                  AS metrics_path,
-        reported_actuals.ping_edition                                  AS ping_edition,
-        reported_actuals.stage_name                                    AS stage_name,
-        reported_actuals.section_name                                  AS section_name,
-        reported_actuals.group_name                                    AS group_name,
-        reported_actuals.is_smau                                       AS is_smau,
-        reported_actuals.is_gmau                                       AS is_gmau,
-        reported_actuals.is_paid_gmau                                  AS is_paid_gmau,
-        reported_actuals.is_umau                                       AS is_umau,
-        reported_actuals.subscription_count                            AS reported_subscription_count, -- actually reported
-        reported_actuals.seat_count                                    AS reported_seat_count, -- actually reported
-        potential_report_counts.total_licensed_users                   AS total_licensed_users,  -- could have reported
-        potential_report_counts.total_subscription_count               AS total_subscription_count, -- could have reported
-        total_subscription_count - reported_subscription_count         AS not_reporting_subscription_count, -- could have reported, but didn't
-        total_licensed_users - reported_seat_count                     AS not_reporting_seat_count -- could have reported, but didn't
+        reported_actuals.ping_created_at_month                                                                                                                                      AS ping_created_at_month,
+        reported_actuals.metrics_path                                                                                                                                               AS metrics_path,
+        reported_actuals.ping_edition                                                                                                                                               AS ping_edition,
+        reported_actuals.stage_name                                                                                                                                                 AS stage_name,
+        reported_actuals.section_name                                                                                                                                               AS section_name,
+        reported_actuals.group_name                                                                                                                                                 AS group_name,
+        reported_actuals.is_smau                                                                                                                                                    AS is_smau,
+        reported_actuals.is_gmau                                                                                                                                                    AS is_gmau,
+        reported_actuals.is_paid_gmau                                                                                                                                               AS is_paid_gmau,
+        reported_actuals.is_umau                                                                                                                                                    AS is_umau,
+        rpt_ping_instance_subscription_metric_opt_in_monthly.total_subscription_count                                                                                               AS reported_subscription_count, -- on version with metric
+        rpt_ping_instance_subscription_metric_opt_in_monthly.total_licensed_users                                                                                                   AS reported_seat_count, -- on version with metric
+        rpt_ping_instance_subscription_opt_in_monthly.total_licensed_users                                                                                                          AS total_licensed_users,  -- could have reported (total seats on active subs)
+        rpt_ping_instance_subscription_opt_in_monthly.total_subscription_count                                                                                                      AS total_subscription_count, -- could have reported (total active subs)
+        rpt_ping_instance_subscription_opt_in_monthly.total_subscription_count - reported_subscription_count                                                                        AS not_reporting_subscription_count, -- not on version with metric
+        rpt_ping_instance_subscription_opt_in_monthly.total_licensed_users - reported_seat_count                                                                                    AS not_reporting_seat_count -- not on version with metric
     FROM reported_actuals
-        INNER JOIN potential_report_counts
-    ON reported_actuals.ping_created_at_month = potential_report_counts.ping_created_at_month
-        AND reported_actuals.metrics_path = potential_report_counts.metrics_path
-        AND reported_actuals.ping_edition = potential_report_counts.ping_edition
+    INNER JOIN rpt_ping_instance_subscription_metric_opt_in_monthly --model with subscriptions and seats on version
+      ON reported_actuals.ping_created_at_month = rpt_ping_instance_subscription_metric_opt_in_monthly.ping_created_at_month
+      AND reported_actuals.metrics_path = rpt_ping_instance_subscription_metric_opt_in_monthly.metrics_path
+      AND reported_actuals.ping_edition = rpt_ping_instance_subscription_metric_opt_in_monthly.ping_edition
+    INNER JOIN rpt_ping_instance_subscription_opt_in_monthly --model with overall total subscriptions and seats
+      ON reported_actuals.ping_created_at_month = rpt_ping_instance_subscription_opt_in_monthly.ping_created_at_month
+      AND reported_actuals.metrics_path = rpt_ping_instance_subscription_opt_in_monthly.metrics_path
+      AND reported_actuals.ping_edition = rpt_ping_instance_subscription_opt_in_monthly.ping_edition
 
 -- Split subs and seats then union
 
@@ -100,7 +105,7 @@
     is_paid_gmau                                                    AS is_paid_gmau,
     is_umau                                                         AS is_umau,
     reported_subscription_count                                     AS reporting_count,
-    not_reporting_subscription_count                                 AS not_reporting_count,
+    not_reporting_subscription_count                                AS not_reporting_count,
     total_subscription_count                                        AS total_count,
     'metric/version check - subscription based estimation'          AS estimation_grain
   FROM joined_counts
@@ -119,7 +124,7 @@
     is_paid_gmau                                                    AS is_paid_gmau,
     is_umau                                                         AS is_umau,
     reported_seat_count                                             AS reporting_count,
-    not_reporting_seat_count                                         AS not_reporting_count,
+    not_reporting_seat_count                                        AS not_reporting_count,
     total_licensed_users                                            AS total_count,
     'metric/version check - seat based estimation'                  AS estimation_grain
   FROM joined_counts
