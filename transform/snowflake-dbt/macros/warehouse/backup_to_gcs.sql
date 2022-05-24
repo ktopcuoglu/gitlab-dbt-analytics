@@ -1,4 +1,4 @@
-{% macro backup_to_gcs() %}
+{% macro backup_to_gcs(TABLE_LIST_BACKUP, INCLUDED = True) %}
 
         {% set backups =
             {
@@ -22,10 +22,8 @@
                 {% set tables = dbt_utils.get_relations_by_prefix(schema.upper(), '', exclude='FIVETRAN_%', database=database) %}
 
                 {% for table in tables %}
-                    {% if table.name not in ['FCT_MRR_SNAPSHOT', 'MART_ARR_SNAPSHOT', 'GITLAB_DOTCOM_PROJECT_STATISTICS_SNAPSHOTS', 'MART_WATERFALL_SNAPSHOT', 'MART_ARR_SNAPSHOT_20210609', 'GITLAB_DOTCOM_ISSUES_SNAPSHOTS', 'SFDC_ACCOUNT_SNAPSHOTS', 'DIM_SUBSCRIPTION_SNAPSHOT', 'MART_RETENTION_PARENT_ACCOUNT_SNAPSHOT', 'MART_CHARGE_SNAPSHOT', 'FCT_MRR_SNAPSHOT_20210531', 'GITLAB_DOTCOM_NAMESPACE_ROOT_STORAGE_STATISTICS_SNAPSHOTS', 'GITLAB_DOTCOM_PROJECTS_SNAPSHOTS', 'GITLAB_DOTCOM_NAMESPACES_SNAPSHOTS', 'GITLAB_DOTCOM_MEMBERS_SNAPSHOTS', 'MART_ARR_SNAPSHOT_20210531', 'GITLAB_DOTCOM_NAMESPACE_STATISTICS_SNAPSHOTS', 'SFDC_OPPORTUNITY_SNAPSHOTS','GITLAB_DOTCOM_GITLAB_SUBSCRIPTIONS_NAMESPACE_ID_SNAPSHOTS','MART_AVAILABLE_TO_RENEW_SNAPSHOT','GITLAB_DOTCOM_GITLAB_SUBSCRIPTIONS_SNAPSHOTS','ZUORA_REVENUE_REVENUE_CONTRACT_SCHEDULE_SNAPSHOTS','DIM_SUBSCRIPTION_SNAPSHOT_20210531','ZUORA_REVENUE_INVOICE_ACCOUNTING_SUMMARY_SNAPSHOTS', 'NETSUITE_TRANSACTION_LINES_SNAPSHOTS','ZUORA_RATEPLANCHARGE_SNAPSHOTS', 'ZUORA_REVENUE_SCHEDULE_ITEM_SNAPSHOTS'] %}
+                    {% if ((table.name in TABLE_LIST_BACKUP and INCLUDED == True) or (table.name not in TABLE_LIST_BACKUP and INCLUDED == False)) %}
                         {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
-                        {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
-                        {{ backup_table_command }}
                     {% endif %}
                 {% endfor %}
 
