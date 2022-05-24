@@ -23,7 +23,7 @@
     FROM mart_crm_touchpoint
     WHERE mql_date_first IS NOT null
 
-), count_of_pre_mql_touchpoints AS (
+), count_of_pre_mql_tps AS (
 
   SELECT DISTINCT
     email_hash,
