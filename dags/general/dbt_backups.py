@@ -89,7 +89,6 @@ def generate_task(task_name: str, table_list: list, included: bool = False) -> N
         env_vars=pod_env_vars,
         arguments=[dbt_backups_cmd],
         dag=dag,
-        pool="{task_prefix}_pool",
     )
 
 

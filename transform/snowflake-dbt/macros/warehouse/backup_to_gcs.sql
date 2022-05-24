@@ -23,7 +23,11 @@
 
                 {% for table in tables %}
                     {% if ((table.name in TABLE_LIST_BACKUP and INCLUDED == True) or (table.name not in TABLE_LIST_BACKUP and INCLUDED == False)) %}
+
                         {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
+                        {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
+                        {{ backup_table_command }}
+
                     {% endif %}
                 {% endfor %}
 
