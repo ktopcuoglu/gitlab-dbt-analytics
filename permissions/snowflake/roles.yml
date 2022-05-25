@@ -4812,6 +4812,9 @@ warehouses:
     - analyst_xs:
         size: x-small
 
+    - backups_m:
+        size: medium
+
     - datasiren:
         size: "4-x-large"
 
