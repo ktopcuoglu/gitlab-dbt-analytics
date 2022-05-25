@@ -1,0 +1,5 @@
+date_name,date_effective,date_description
+make_up_transaction_min,2022-04-04,The farthest historical date where the bamboohr transactions will be copied into workday
+historical_data_max,2022-01-01,
+report_cutover,2022-05-01,The date the reports will switch to useing Workday data
+system_go_live,2022-06-15,The date the Workday system goes live
