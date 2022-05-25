@@ -105,8 +105,6 @@
       rpt_crm_person_with_opp.true_inquiry_date,
       mart_crm_touchpoint.mql_date_first,
       mart_crm_touchpoint.mql_date_latest,
-      rpt_crm_person_with_opp.mql_inferred_date,
-      LEAST(IFNULL(mart_crm_touchpoint.mql_date_first:: date,'9999-01-01'),IFNULL(rpt_crm_person_with_opp.mql_inferred_date:: date,'9999-01-01')) AS mql_datetime_least,
       mart_crm_touchpoint.accepted_date,
       mart_crm_touchpoint.crm_person_status,
       rpt_crm_person_with_opp.account_demographics_geo AS region,
@@ -139,38 +137,14 @@
         WHEN mart_crm_touchpoint.mql_date_first >= bizible_touchpoint_date_normalized THEN '1'
         ELSE '0'
       END AS count_mql,
-      CASE
-        WHEN rpt_crm_person_with_opp.mql_inferred_date >= bizible_touchpoint_date_normalized THEN '1'
-        ELSE '0'
-      END AS count_mql_inferred,
-      CASE
-        WHEN mql_datetime_least >= bizible_touchpoint_date_normalized THEN '1'
-        ELSE '0'
-      END AS count_mql_least,
       CASE 
         WHEN count_mql=1 THEN mart_crm_touchpoint.sfdc_record_id
         ELSE NULL
       END AS mql_person,
-      CASE 
-        WHEN count_mql_inferred=1 THEN mart_crm_touchpoint.sfdc_record_id
-        ELSE NULL
-      END AS mql_person_inferred,
-      CASE 
-        WHEN count_mql_least=1 THEN mart_crm_touchpoint.sfdc_record_id
-      ELSE NULL
-      END AS mql_person_least,
       CASE
         WHEN mart_crm_touchpoint.mql_date_first >= bizible_touchpoint_date_normalized THEN mart_crm_touchpoint.bizible_count_lead_creation_touch
         ELSE '0'
       END AS count_net_new_mql,
-      CASE
-        WHEN rpt_crm_person_with_opp.mql_inferred_date >= bizible_touchpoint_date_normalized THEN mart_crm_touchpoint.bizible_count_lead_creation_touch
-        ELSE '0'
-      END AS count_net_new_mql_inferred,
-      CASE
-        WHEN mql_datetime_least >= bizible_touchpoint_date_normalized THEN mart_crm_touchpoint.bizible_count_lead_creation_touch
-        ELSE '0'
-      END AS count_net_new_mql_least,
       CASE
         WHEN mart_crm_touchpoint.accepted_date >= bizible_touchpoint_date_normalized THEN '1'
         ELSE '0'
@@ -194,5 +168,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-05-23"
+    updated_date="2022-05-25"
 ) }}

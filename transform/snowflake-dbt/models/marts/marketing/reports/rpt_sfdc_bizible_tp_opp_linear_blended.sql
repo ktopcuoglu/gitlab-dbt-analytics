@@ -50,7 +50,7 @@
       null AS bizible_ad_campaign_name, --30
       null AS lead_source,
       null AS campaign_type,
-      rpt_pmg_data.reporting_date_normalized AS mql_datetime_least,
+      rpt_pmg_data.reporting_date_normalized AS mql_date_first,
       null AS true_inquiry_date,
       null AS dim_crm_person_id,
       null AS email_hash,
@@ -143,7 +143,7 @@
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_ad_campaign_name,
       rpt_sfdc_bizible_tp_person_lifecycle.lead_source,
       rpt_sfdc_bizible_tp_person_lifecycle.campaign_type,
-      rpt_sfdc_bizible_tp_person_lifecycle.mql_datetime_least::date AS mql_datetime_least, --30
+      rpt_sfdc_bizible_tp_person_lifecycle.mql_date_first::date AS mql_date_first, --30
       rpt_sfdc_bizible_tp_person_lifecycle.true_inquiry_date,
       rpt_sfdc_bizible_tp_person_lifecycle.dim_crm_person_id AS dim_crm_person_id,
       rpt_sfdc_bizible_tp_person_lifecycle.email_hash AS email_hash,
@@ -239,7 +239,7 @@
       rpt_sfdc_bizible_linear.bizible_ad_campaign_name, --30
       rpt_sfdc_bizible_linear.lead_source,
       rpt_sfdc_bizible_linear.campaign_type,
-      null AS mql_datetime_least,
+      null AS mql_date_first,
       null AS true_inquiry_date,
       null AS dim_crm_person_id,
       email_hash AS email_hash,
@@ -397,5 +397,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-05-23"
+    updated_date="2022-05-25"
 ) }}
