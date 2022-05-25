@@ -921,6 +921,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - backups_m
             - datasiren
         member_of:
             - covid19
