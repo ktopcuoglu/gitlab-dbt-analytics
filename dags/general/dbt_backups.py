@@ -102,15 +102,7 @@ def load_manifest_file(file_name: str) -> dict:
         return yaml.load(yaml_file, Loader=yaml.FullLoader)
 
 
-# Safe mode, in case we miss any table from the list
-# or new one is introduced.
-# Will be picked up automatically
-
 config_dict = load_manifest_file("analytics/dags/general/backup_manifest.yaml")
-
-table_list = [table.get("TABLE_LIST_BACKUP")[0] for table in config_dict.values()]
-
-config_dict["OTHER_TABLES"] = {"TABLE_LIST_BACKUP": table_list, "INCLUDED": False}
 
 for task_name, task_details in config_dict.items():
 

@@ -14,18 +14,18 @@ dim_subscription_snapshot:
   INCLUDED: true
   TABLE_LIST_BACKUP:
   - DIM_SUBSCRIPTION_SNAPSHOT
-dim_subscription_snapshot_20210531:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - DIM_SUBSCRIPTION_SNAPSHOT_20210531
+#dim_subscription_snapshot_20210531:
+#  INCLUDED: true
+#  TABLE_LIST_BACKUP:
+#  - DIM_SUBSCRIPTION_SNAPSHOT_20210531
 fct_mrr_snapshot:
   INCLUDED: true
   TABLE_LIST_BACKUP:
   - FCT_MRR_SNAPSHOT
-fct_mrr_snapshot_20210531:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - FCT_MRR_SNAPSHOT_20210531
+#fct_mrr_snapshot_20210531:
+#  INCLUDED: true
+#  TABLE_LIST_BACKUP:
+#  - FCT_MRR_SNAPSHOT_20210531
 gitlab_dotcom_application_settings_snapshots:
   INCLUDED: true
   TABLE_LIST_BACKUP:
@@ -74,14 +74,14 @@ mart_arr_snapshot:
   INCLUDED: true
   TABLE_LIST_BACKUP:
   - MART_ARR_SNAPSHOT
-mart_arr_snapshot_20210531:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - MART_ARR_SNAPSHOT_20210531
-mart_arr_snapshot_20210609:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - MART_ARR_SNAPSHOT_20210609
+#mart_arr_snapshot_20210531:
+#  INCLUDED: true
+#  TABLE_LIST_BACKUP:
+#  - MART_ARR_SNAPSHOT_20210531
+#mart_arr_snapshot_20210609:
+#  INCLUDED: true
+#  TABLE_LIST_BACKUP:
+#  - MART_ARR_SNAPSHOT_20210609
 mart_available_to_renew_snapshot:
   INCLUDED: true
   TABLE_LIST_BACKUP:
@@ -150,10 +150,10 @@ sfdc_opportunity_snapshots:
   INCLUDED: true
   TABLE_LIST_BACKUP:
   - SFDC_OPPORTUNITY_SNAPSHOTS
-sfdc_opportunity_snapshots_20220520:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - SFDC_OPPORTUNITY_SNAPSHOTS_20220520
+#sfdc_opportunity_snapshots_20220520:
+#  INCLUDED: true
+#  TABLE_LIST_BACKUP:
+#  - SFDC_OPPORTUNITY_SNAPSHOTS_20220520
 sfdc_user_snapshots:
   INCLUDED: true
   TABLE_LIST_BACKUP:
@@ -182,10 +182,10 @@ sheetload_kpi_status_snapshots:
   INCLUDED: true
   TABLE_LIST_BACKUP:
   - SHEETLOAD_KPI_STATUS_SNAPSHOTS
-sheetload_kpi_status_snapshots_old:
-  INCLUDED: true
-  TABLE_LIST_BACKUP:
-  - SHEETLOAD_KPI_STATUS_SNAPSHOTS_OLD
+#sheetload_kpi_status_snapshots_old:
+#  INCLUDED: true
+#  TABLE_LIST_BACKUP:
+#  - SHEETLOAD_KPI_STATUS_SNAPSHOTS_OLD
 zuora_account_snapshots:
   INCLUDED: true
   TABLE_LIST_BACKUP:
