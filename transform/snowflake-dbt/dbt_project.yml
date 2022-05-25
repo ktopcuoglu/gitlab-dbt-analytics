@@ -664,6 +664,9 @@ snapshots:
     sheetload:
       +tags: ["daily"]
 
+    workday:
+      +tags: ["daily"]
+
     zuora:
       +tags: ["daily", "zuora"]
 
