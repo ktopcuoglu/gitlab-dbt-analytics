@@ -15,8 +15,9 @@ map AS (
 
   SELECT *
   FROM {{ ref('map_employee_id') }}
-)
+),
 
+unioned AS (
 SELECT
   map.wk_employee_id AS employee_id,
   bamboohr.bonus_date,
@@ -36,3 +37,13 @@ SELECT
   uploaded_at,
   'workday' AS source_system
 FROM workday
+),
+
+filtered AS (
+
+  {{ gitlab_snowflake.workday_bamboohr_blending_filter('unioned', ['employee_id','bonus_date','bonus_type']) }}
+  
+)
+
+SELECT *
+FROM filtered

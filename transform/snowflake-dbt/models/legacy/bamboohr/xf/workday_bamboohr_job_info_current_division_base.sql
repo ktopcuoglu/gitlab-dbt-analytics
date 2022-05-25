@@ -12,7 +12,7 @@ WITH job_info AS (
 ), bamboo_mapping AS (
 
     SELECT *
-    FROM {{ ref ('blended_employee_mapping_source') }}
+    FROM {{ ref ('workday_bamboohr_id_employee_number_mapping') }}
 
 ), job_role AS (
 

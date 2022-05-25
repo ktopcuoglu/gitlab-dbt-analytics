@@ -15,8 +15,9 @@ map AS (
 
   SELECT *
   FROM {{ ref('map_employee_id') }}
-)
+),
 
+unioned AS (
 SELECT
   map.wk_employee_id AS employee_id,
   bamboohr.work_email,
@@ -40,3 +41,9 @@ SELECT
   uploaded_at,
   'workday' AS source_system
 FROM workday
+)
+
+SELECT 
+  *
+FROM unioned
+--WHERE NOT source_system = 'workday'

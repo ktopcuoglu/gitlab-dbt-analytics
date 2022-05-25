@@ -9,8 +9,9 @@ workday AS (
 
   SELECT *
   FROM {{ ref('workday_employee_mapping_source') }} -- need a daily snapshot
-)
+),
 
+unioned AS (
 SELECT
   employee_number,
   employee_number AS employee_id,
@@ -76,3 +77,13 @@ SELECT
   DENSE_RANK() OVER (ORDER BY uploaded_at DESC) AS uploaded_row_number_desc,
   'workday' AS source_system
 FROM workday
+),
+
+filtered AS (
+
+  {{ gitlab_snowflake.workday_bamboohr_blending_filter('unioned', ['employee_id','DATE_TRUNC(\'day\',uploaded_at)']) }}
+  
+)
+
+SELECT *
+FROM filtered

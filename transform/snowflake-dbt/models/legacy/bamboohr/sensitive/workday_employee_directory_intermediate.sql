@@ -44,7 +44,7 @@ job_role AS (
 location_factor AS (
 
   SELECT *
-  FROM {{ ref('workday_employee_location_factor_snapshots') }}
+  FROM {{ ref('blended_employee_location_factor_snapshots') }}
 
 ),
 

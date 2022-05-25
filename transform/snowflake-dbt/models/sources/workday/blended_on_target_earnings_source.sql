@@ -15,8 +15,9 @@ map AS (
 
   SELECT *
   FROM {{ ref('map_employee_id') }}
-)
+),
 
+unioned AS (
 SELECT
   map.wk_employee_id AS employee_id,
   bamboohr.effective_date,
@@ -52,3 +53,13 @@ SELECT
   ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date ASC) AS target_earnings_sequence, -- need initiated datetime
   'workday' AS source_system
 FROM workday
+),
+
+filtered AS (
+
+  {{ gitlab_snowflake.workday_bamboohr_blending_filter('unioned', ['employee_id', 'effective_date']) }}
+  
+)
+
+SELECT *
+FROM filtered
