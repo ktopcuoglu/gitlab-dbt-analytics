@@ -1,7 +1,6 @@
 WITH source AS (
   SELECT *
-  FROM {{ source('workday','directory') }}
-  WHERE employee_id != 'C-100003' -- a contractor that will be removed when switched to live data
+  FROM {{ source('snapshots','workday_employee_directory_snapshots') }}
 ),
 
 renamed AS (
@@ -12,7 +11,10 @@ renamed AS (
     full_name::VARCHAR AS full_name,
     job_title::VARCHAR AS job_title,
     supervisor::VARCHAR AS supervisor,
-    _fivetran_synced::TIMESTAMP AS uploaded_at
+    _fivetran_synced::TIMESTAMP AS uploaded_at,
+    dbt_valid_from::TIMESTAMP AS valid_from,
+    dbt_valid_to::TIMESTAMP AS valid_to,
+    IFF(dbt_valid_to IS NULL,TRUE,FALSE) AS is_current
   FROM source
 
 )

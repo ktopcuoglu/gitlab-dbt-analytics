@@ -8,7 +8,7 @@ WITH bamboohr AS (
 workday AS (
 
   SELECT *
-  FROM {{ ref('workday_directory_source') }} -- need a daily snapshot
+  FROM {{ ref('workday_directory_source') }} 
 ),
 
 map AS (
@@ -41,9 +41,13 @@ SELECT
   uploaded_at,
   'workday' AS source_system
 FROM workday
+),
+
+filtered AS (
+
+  {{ gitlab_snowflake.workday_bamboohr_blending_filter('unioned', ['employee_id', 'DATE_TRUNC(\'day\',uploaded_at)']) }}
+  
 )
 
-SELECT 
-  *
-FROM unioned
---WHERE NOT source_system = 'workday'
+SELECT *
+FROM filtered

@@ -8,7 +8,7 @@ WITH bamboohr AS (
 workday AS (
 
   SELECT *
-  FROM {{ ref('workday_employee_mapping_source') }} -- need a daily snapshot
+  FROM {{ ref('workday_employee_mapping_source') }} 
 ),
 
 unioned AS (
@@ -53,7 +53,7 @@ SELECT
   last_name,
   hire_date,
   termination_date,
-  TRY_TO_NUMBER(greenhouse_candidate_id) AS greenhouse_candidate_id, -- may only need the conversion for testing
+  greenhouse_candidate_id,
   cost_center,
   gitlab_username,
   jobtitle_speciality_single_select,
