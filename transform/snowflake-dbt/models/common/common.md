@@ -1012,6 +1012,7 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
 - version NOT LIKE '%VERSION%'  - removes header type records (Valid Data)
 
 **Business Logic in this Model:** 
+- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
 - `ping_delivery_type` = 'SaaS' WHERE UUID/Instance_id = ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f ELSE 'Self-Managed'
 - `is_internal` = TRUE WHERE:
   - UUID/Instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' 

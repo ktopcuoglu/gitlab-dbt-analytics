@@ -23,26 +23,39 @@ Note: `This model is filtered to metrics that return numeric values. Metrics tha
                 Note: This model is unflattened service ping data.
 
 
-**Description:** Atomic Level Service Ping by Instance, Host, Date
-- Sums, Counts and Percents of Usage (called metrics) along wth the Implementation Information at the Instance Level is collected and sent to GitLab. 
-- Atomic (lowest grain) data with a Single Record per Instance, Host_id and Date 
+
+**Description:** Atomic Level Instance Service Ping Implementation information with Subscription, Account and Product Information by  Instance, Host and Date 
 
 **Data Grain:**
 - dim_instance_id
 - dim_host_id
-- ping_created_at
+- dim_ping_date_id
 
 **Filters:**
 - UUID is NOT NULL  -  Only bring through data that has an Instance_id.  (Valid Data)
 - version NOT LIKE '%VERSION%'  - removes header type records (Valid Data)
 
 **Business Logic in this Model:** 
-- `data_source` = 'VERSION_DB'
-  - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.   
+- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
+- `ping_delivery_type` = 'SaaS' WHERE UUID/Instance_id = ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f ELSE 'Self-Managed'
+- `is_internal` = TRUE WHERE:
+  - UUID/Instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' 
+  - (OR) installation_type = 'gitlab-development-kit'
+  - (OR) hostname = 'gitlab.com' 
+  - (OR) hostname LIKE '%.gitlab.com'
+- `is_staging` = TRUE WHERE:
+  - hostname LIKE 'staging.%'
+  - (OR) hostname IN ('staging.gitlab.com','dr.gitlab.com')
+- `major_minor_version` = major_version || '.' || minor_version 
+- `major_minor_version_id` = major_version * 100 + minor_version
+- `version_is_prerelease` = version LIKE '%-pre'
+- `cleaned_edition` = 'EE Free' WHERE license_expires_at < ping_created_at ELSE ping_edition 
+- `is_program_subscription` = TRUE WHERE product_rate_plan_name LIKE ('%edu%' or '%oss%')
+- `arr` = mrr * 12
 
 **Other Comments:**
 - The `fct_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
-- The Instance Owner determines whether Service Ping data will be sent or not. 
+- Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
 - GitLab implementations can be Customer Hosted (Self-Managed), GitLab Hosted (referred to as SaaS or Dotcom data) or GitLab Dedicated Hosted (where each Installation is Hosted by GitLab but on Separate Servers).  
 - Multiple Instances can be hosted on each Implementation. Multiple Installations can be included within each Instance which is determined by Host_id.   (Instance_id || Host_id = Installation_id)  
 - Service Ping data is captured at a particular point in time with `all-time, 7_day and 28_day` metrics.  The metrics are only pertinant to the Ping Date and Time and can not be aggregated across Ping Dates. Service Pings are normally compared WoW, MoM, YoY,  etc.  
