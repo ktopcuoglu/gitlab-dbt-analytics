@@ -132,7 +132,6 @@ tables:
       , description
       , color
       , namespace_id
-      , regulated
       , pipeline_configuration_full_path
       FROM compliance_management_frameworks
   columns:
