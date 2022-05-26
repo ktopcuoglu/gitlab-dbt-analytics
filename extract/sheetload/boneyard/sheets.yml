@@ -1,8 +1,4 @@
 sheets:
-  - name: books_tracer_bullet
-    owner: '@lisvinueza'
-    tabs:
-      - books
   - name: bronze_sus_responders_fy22q1
     owner: '@jeanpeguero'
     tabs:
