@@ -272,6 +272,8 @@ sources:
         identifier: gitlab_db_project_repositories
       - name: project_repository_storage_moves
         identifier: gitlab_db_project_repository_storage_moves
+      - name: project_settings
+        identifier: gitlab_db_project_settings
       - name: project_statistics
         identifier: gitlab_db_project_statistics
       - name: projects

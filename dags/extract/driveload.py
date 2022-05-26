@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta
-from yaml import load, safe_load, YAMLError
+from yaml import safe_load, YAMLError
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -25,12 +25,7 @@ from kubernetes_helpers import get_affinity, get_toleration
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
 # Change the DATABASE If the branch if not MASTER
-pod_env_vars = {
-    "SNOWFLAKE_LOAD_DATABASE": "RAW"
-    if GIT_BRANCH == "master"
-    else f"{GIT_BRANCH.upper()}_RAW",
-    "CI_PROJECT_DIR": "/analytics",
-}
+pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # Default arguments for the DAG
 default_args = {
@@ -58,7 +53,7 @@ with open(f"{airflow_home}/analytics/extract/sheetload/drives.yml", "r") as file
 dag = DAG(
     "driveload",
     default_args=default_args,
-    schedule_interval="0 2 * * 1",
+    schedule_interval="0 2 * * *",
     concurrency=1,
 )
 

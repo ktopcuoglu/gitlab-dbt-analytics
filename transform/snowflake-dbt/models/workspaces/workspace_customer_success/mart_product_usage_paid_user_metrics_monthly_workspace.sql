@@ -13,7 +13,8 @@
     ('subscriptions', 'dim_subscription'),
     ('namespaces', 'dim_namespace'),
     ('charges', 'mart_charge'),
-    ('dates', 'dim_date')
+    ('dates', 'dim_date'),
+    ('snowplow_metrics', 'snowplow_based_redis_counters_workspace')
 ]) }}
 
 
@@ -56,6 +57,13 @@
     WHERE charges.subscription_status IN ('Active','Cancelled')
       AND charges.product_tier_name != 'Storage'
     {{ dbt_utils.group_by(n = 2) }}
+    
+), action_active_users_project_repo_users AS (
+  
+    SELECT
+      *
+    FROM snowplow_metrics 
+    WHERE event_action = 'action_active_users_project_repo'
   
 ), sm_paid_user_metrics AS (
 
@@ -227,6 +235,21 @@
       monthly_sm_metrics.active_project_runners_all_time_event,
       monthly_sm_metrics.gitaly_version,
       monthly_sm_metrics.gitaly_servers_all_time_event,
+      -- Wave 6
+      monthly_sm_metrics.api_fuzzing_scans_all_time_event,
+      monthly_sm_metrics.api_fuzzing_scans_28_days_event,
+      monthly_sm_metrics.coverage_fuzzing_scans_all_time_event,
+      monthly_sm_metrics.coverage_fuzzing_scans_28_days_event,
+      monthly_sm_metrics.secret_detection_scans_all_time_event,
+      monthly_sm_metrics.secret_detection_scans_28_days_event,
+      monthly_sm_metrics.dependency_scanning_scans_all_time_event,
+      monthly_sm_metrics.dependency_scanning_scans_28_days_event,
+      monthly_sm_metrics.container_scanning_scans_all_time_event,
+      monthly_sm_metrics.container_scanning_scans_28_days_event,
+      monthly_sm_metrics.dast_scans_all_time_event,
+      monthly_sm_metrics.dast_scans_28_days_event,
+      monthly_sm_metrics.sast_scans_all_time_event,
+      monthly_sm_metrics.sast_scans_28_days_event,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -275,7 +298,7 @@
       monthly_saas_metrics.subscription_seats,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
-      monthly_saas_metrics.action_monthly_active_users_project_repo_28_days_user,
+      action_active_users_project_repo_users.distinct_users AS action_monthly_active_users_project_repo_28_days_user,
       monthly_saas_metrics.merge_requests_28_days_user,
       monthly_saas_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_saas_metrics.commit_comment_all_time_event,
@@ -408,7 +431,22 @@
       monthly_saas_metrics.active_group_runners_all_time_event,
       monthly_saas_metrics.active_project_runners_all_time_event,
       monthly_saas_metrics.gitaly_version,
-      monthly_saas_metrics.gitaly_servers_all_time_event,    
+      monthly_saas_metrics.gitaly_servers_all_time_event,
+      -- Wave 6
+      monthly_saas_metrics.api_fuzzing_scans_all_time_event,
+      monthly_saas_metrics.api_fuzzing_scans_28_days_event,
+      monthly_saas_metrics.coverage_fuzzing_scans_all_time_event,
+      monthly_saas_metrics.coverage_fuzzing_scans_28_days_event,
+      monthly_saas_metrics.secret_detection_scans_all_time_event,
+      monthly_saas_metrics.secret_detection_scans_28_days_event,
+      monthly_saas_metrics.dependency_scanning_scans_all_time_event,
+      monthly_saas_metrics.dependency_scanning_scans_28_days_event,
+      monthly_saas_metrics.container_scanning_scans_all_time_event,
+      monthly_saas_metrics.container_scanning_scans_28_days_event,
+      monthly_saas_metrics.dast_scans_all_time_event,
+      monthly_saas_metrics.dast_scans_28_days_event,
+      monthly_saas_metrics.sast_scans_all_time_event,
+      monthly_saas_metrics.sast_scans_28_days_event,   
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -420,6 +458,9 @@
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
     LEFT JOIN namespaces 
       ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN action_active_users_project_repo_users
+      ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
+      AND action_active_users_project_repo_users.gsc_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -458,5 +499,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-04-26"
+    updated_date="2022-05-24"
 ) }}

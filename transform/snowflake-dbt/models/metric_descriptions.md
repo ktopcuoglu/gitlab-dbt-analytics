@@ -215,3 +215,59 @@ Users who set personal preference to see Security Dashboard on Group
 {% docs gitaly_servers_all_time_event_desc %}
  Total Gitalty Servers. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210204124930_servers.yml)
 {% enddocs %}
+
+{% docs api_fuzzing_scans_all_time_event_desc %}
+ Number of DAST API Fuzzing security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216180353_api_fuzzing_scans.yml)
+{% enddocs %}
+
+{% docs api_fuzzing_scans_28_days_event_desc %}
+ Count of API fuzz test scans. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183838_api_fuzzing_scans.yml)
+{% enddocs %}
+
+{% docs coverage_fuzzing_scans_all_time_event_desc %}
+ Number of Coverage Fuzzing security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216180352_coverage_fuzzing_scans.yml)
+{% enddocs %}
+
+{% docs coverage_fuzzing_scans_28_days_event_desc %}
+Number of Coverage Guided Fuzz Test security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183836_coverage_fuzzing_scans.yml)
+{% enddocs %}
+
+{% docs secret_detection_scans_all_time_event_desc %}
+ Counts secret detection jobs. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216182123_secret_detection_scans.yml)
+{% enddocs %}
+
+{% docs secret_detection_scans_28_days_event_desc %}
+ Number of Secret Detection security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231956_secret_detection_scans.yml)
+{% enddocs %}
+
+{% docs dependency_scanning_scans_all_time_event_desc %}
+ Total count of Dependency Scanning security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216175220_dependency_scanning_scans.yml)
+{% enddocs %}
+
+{% docs dependency_scanning_scans_28_days_event_desc %}
+ Monthly count of Dependency Scanning security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183828_dependency_scanning_scans.yml)
+{% enddocs %}
+
+{% docs container_scanning_scans_all_time_event_desc %}
+ Counts container scanning jobs. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216175503_container_scanning_scans.yml)
+{% enddocs %}
+
+{% docs container_scanning_scans_28_days_event_desc %}
+ Number of Container Scanning security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231849_container_scanning_scans.yml)
+{% enddocs %}
+
+{% docs dast_scans_all_time_event_desc %}
+ Counts dast jobs. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216182122_dast_scans.yml)
+{% enddocs %}
+
+{% docs dast_scans_28_days_event_desc %}
+ Number of DAST security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183832_dast_scans.yml)
+{% enddocs %}
+
+{% docs sast_scans_all_time_event_desc %}
+ Counts sast jobs. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216182120_sast_scans.yml)
+{% enddocs %}
+
+{% docs sast_scans_28_days_event_desc %}
+ Number of SAST security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231329_sast_scans.yml)
+{% enddocs %}

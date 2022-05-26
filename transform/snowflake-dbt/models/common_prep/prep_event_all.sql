@@ -1,7 +1,7 @@
-{{config({
-    "materialized":"view"
-  })
-}}
+{{ config(
+    tags=["product"],
+    materialized = "view"
+) }}
 
 -- depends on: {{ ref('prep_event') }}
 WITH unioned_table AS (

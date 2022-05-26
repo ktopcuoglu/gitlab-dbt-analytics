@@ -15,6 +15,7 @@
   - Remove Events where the Event Created Datetime < the User Created Datetime.
     - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
   - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
 - Rolling 24mos of Data
 - Include rows where the Event_Date is within 28 days of the Last Day of the Month
 - Include User Type Events 
@@ -22,6 +23,7 @@
 
 **Business Logic in this Model:** 
 - Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the instance-level service ping metrics by getting a 28-day count
@@ -47,11 +49,13 @@
   - Remove Events where the Event Created Datetime < the User Created Datetime.
     - These are usually events from projects that were created before the User and then imported in by the User after the User is created.  
   - Keep Events where User Id = NULL.  These do not point to a particular User, ie. 'milestones' 
+  - Remove Events from blocked users
 - Rolling 24mos of Data
 - Include rows where the Event_Date is within 28 days of the Last Day of the Month  
 
 **Business Logic in this Model:** 
 - Valid events where the Event Create DateTime is >= User Create DateTime
+- Events from blocked users are excluded
 - Aggregated Counts are based on the Event Date being within the Last Day of the Month and 27 days prior to the Last Day of the Month (total 28 days)
   - Events that are 29,30 or 31 days prior to the Last Day of the Month will Not be included in these totals
   - This is intended to match the instance-level service ping metrics by getting a 28-day count
