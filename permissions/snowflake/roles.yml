@@ -3911,6 +3911,7 @@ roles:
             - analyst_marketing
             - restricted_safe
             - bi_tool_eval_read
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
