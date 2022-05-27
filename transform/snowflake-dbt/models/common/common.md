@@ -1008,8 +1008,8 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
 - dim_ping_date_id
 
 **Filters:**
-- UUID is NOT NULL  -  Only bring through data that has an Instance_id.  (Valid Data)
-- version NOT LIKE '%VERSION%'  - removes header type records (Valid Data)
+- UUID is NOT NULL  -  Filter In-Valid Data from Source
+- version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
 
 **Business Logic in this Model:** 
 - `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
@@ -1028,7 +1028,7 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
 - `cleaned_edition` = 'EE Free' WHERE license_expires_at < ping_created_at ELSE ping_edition 
 
 **Other Comments:**
-- The `fct_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
+- The `dim_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
 - Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
 - GitLab implementations can be Customer Hosted (Self-Managed), GitLab Hosted (referred to as SaaS or Dotcom data) or GitLab Dedicated Hosted (where each Installation is Hosted by GitLab but on Separate Servers).  
 - Multiple Instances can be hosted on each Implementation. Multiple Installations can be included within each Instance which is determined by Host_id.   (Instance_id || Host_id = Installation_id)  
@@ -1058,53 +1058,44 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance_metric %}
 
-        The granularity of this model is one row per tuple (metric_name, instance_id).
-
-        The Service Ping metrics sent via a JSON Payload could be of various types:
-
-        * all_time counters (for example how many issues a specific instance has created since its inception)
-        * 28_days counters (how many users have created at least one issue over the last 4 weeks)
-        * 7_days counters (how many users have created at least one issue over the last 7 days)
-        * an instance configuration parameter (has this instance enabled saml/sso)
-
-        Below are some details about the fact table:
-
-        * Type of Data: `Instance-level Service Ping from Versions app`
-        * Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
-        * Time Grain: `None`
-        * Use case: `Service Ping metric-level analysis`
-
-        Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0.`
-
-**Description:** Atomic Level Service Ping Instance Level Data by Instance, Metric, Date
-- Sums, Counts and Percents of Usage (called metrics) along wth the Server Instance Configuration information is collected at a point in time for each Instance and sent to GitLab Corporate.  This is normally done on a weekly basis.  The Instance Owner determines whether this data will be sent or not and how will be sent if so.   Implementations can be Customer Hosted (Self-Managed) or GitLab Hosted (referred to as SaaS or Dotcom data).  Multiple Instances can be hosted on Self-Managed Implementations. 
-- Atomic (lowest grain) with a Single Record per Service Ping Instance, Metric
-- The data is Enriched with Extra business related attributes for License, Subscription and Location to allow single table queries that satisfy a Larger Generalized set of Use Cases.
+**Description:** Atomic Level Instance Service Ping data by Instance, Host, Metric, DateTime
+- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included. 
 
 **Data Grain:**
-- dim_ping_instance_id
+- dim_instance_id
+- dim_host_id
 - metrics_path
+- ping_created_at
 
 **Filters:**
-
+- UUID is NOT NULL  -  Filter In-Valid Data from Source
+- version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
-  - Currently this model only brings in data from Self-Managed Implementations which goes through the Versions Application and Database  
+  - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
+- `dim_ping_instance_id` = 'source ping id' with the following grain:     
+  - dim_instance_id
+  - dim_host_id
+  - ping_created_at
 
 **Other Comments:**
-- The `fct_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in All Service Ping data one record per Service Ping to include a 'Payload' column with all Metrics currently captured in the Service Ping.  There are 2000+ metricsin number. 
-- Service Ping data (configuration and metrics) is captured at a particular point in time for a specific grain, ie. Instance.  The metrics within the Service Ping are for different time-frames (ALL, 7 Day and 28 Day).  For this reason Metrics between pings can not be aggregated.  Service Pings are normally compared WoW, MoM, etc.  
-- The different types of Service Pings are show here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping) and the [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping)
+- The `fct_ping_instance_metric` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
+- Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
+- GitLab implementations can be Customer Hosted (Self-Managed), GitLab Hosted (referred to as SaaS or Dotcom data) or GitLab Dedicated Hosted (where each Installation is Hosted by GitLab but on Separate Servers).  
+- Multiple Instances can be hosted on each Implementation. Multiple Installations can be included within each Instance which is determined by Host_id.   (Instance_id || Host_id = Installation_id)  
+- Service Ping data is captured at a particular point in time with `all-time, 7_day and 28_day` metrics.  The metrics are only pertinant to the Ping Date and Time and can not be aggregated across Ping Dates. Service Pings are normally compared WoW, MoM, YoY,  etc.  
+- The different types of Service Pings are shown here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping), [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
+- [GitLab Dedicated Implementation](https://docs.gitlab.com/ee/subscriptions/gitlab_dedicated/#gitlab-dedicated) service pings will function similar to Self-Managed Implementations.
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
-
 
 {% enddocs %}
 
 {% docs fct_ping_instance %}
 
-**Description:** Atomic Level Service Ping Instance Identifiers by Instance, Host, Date
-- Atomic (lowest grain) information with basic Identifiers for each Instance Ping.  Includes Instance, Date, Product and Subscriptions id's. 
+**Description:** Atomic Level Instance Service Ping Identifiers by Instance, Host, Time
+- Atomic (lowest grain) information with basic Identifiers for each Instance Ping.  Includes Instance, Date, Product and Subscriptions id's. Event detail is not included in the table.
+- The data includes a single row per Instance, Host, and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included.
 
 **Data Grain:**
 - dim_instance_id
@@ -1112,12 +1103,16 @@ This new table will include all flattened target values for each metric for each
 - ping_created_at
 
 **Filters:**
-- UUID is NOT NULL  -  Only bring through data that has an Instance_id.  (Valid Data)
-- version NOT LIKE '%VERSION%'  - removes header type records (Valid Data)
+- UUID is NOT NULL  -  Filter In-Valid Data from Source
+- version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
-  - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.   
+  - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
+- `dim_ping_instance_id` = 'source ping id' with the following grain:     
+  - dim_instance_id
+  - dim_host_id
+  - ping_created_at    
 
 **Other Comments:**
 - The `fct_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
@@ -1164,40 +1159,40 @@ Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that
 
 {% docs fct_ping_instance_metric_monthly %}
 
-                Below are some details about the fact table:
-
-                * Type of Data: `Instance-level Service Ping from Versions app`
-                * Aggregate Grain: `One record per service ping (dim_ping_instance_id) per metric (metrics_path)`
-                * Time Grain: `None`
-                * Use case: `Service Ping metric-level analysis`
-
-                Notes: `Includes non-numeric metric values (ex: instance settings). Metrics that timed out (return -1) are set to a value of 0. Filtered down to 28 day AND all time_frame. Only last ping of month shows as well.`
-
-**Description:** Atomic Level Service Ping Instance Level Data by Instance, Metric, Date
-- Sums, Counts and Percents of Usage (called metrics) along wth the Server Instance Configuration information is collected at a point in time for each Instance and sent to GitLab Corporate.  This is normally done on a weekly basis.  The Instance Owner determines whether this data will be sent or not and how will be sent if so.   Implementations can be Customer Hosted (Self-Managed) or GitLab Hosted (referred to as SaaS or Dotcom data).  Multiple Instances can be hosted on Self-Managed Implementations. 
-- Atomic (lowest grain) with a Single Record per Service Ping Instance, Metric
-- The data is Enriched with Extra business related attributes for License, Subscription and Location to allow single table queries that satisfy a Larger Generalized set of Use Cases.
+**Description:** Atomic Level Instance Service Ping data with Last Pings of the Month by Instance, Host, Metric, Month for 28_Day and All_Time metrics  
+- The basic Id's from the source for Subscription, Product and Location are included.
 
 **Data Grain:**
-
+- dim_instance_id
+- dim_host_id
+- metrics_path
+- ping_created_at
 
 **Filters:**
-- Includes metrics for 28 Day and ALL timeframes
+- UUID is NOT NULL  -  Filter In-Valid Data from Source
+- version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
+- Includes metrics for 28 Day and All-Time timeframes
 - Include only the `Last Pings of the Month`
 - Include `has_timed_out' = FALSE (to remove Pings that have timed out during processing and may have imcomplete data)
-- Include `metric_value' IS NOT NULL - ???
+- Include `metric_value' IS NOT NULL - Only include Metrics with valid Values
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
-  - Currently this model only brings in data from Self-Managed Implementations which goes through the Versions Application and Database
-- The Ping of the Month - ???     
+  - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
+- `dim_ping_instance_id` = 'source ping id' with the following grain:     
+  - dim_instance_id
+  - dim_host_id
+  - ping_created_at
+- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month  
 
 **Other Comments:**
-- The `fct_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in All Service Ping data one record per Service Ping to include a 'Payload' column with all Metrics currently captured in the Service Ping.  There are 2000+ metricsin number. 
-- Service Ping data (configuration and metrics) is captured at a particular point in time for a specific grain, ie. Instance.  The metrics within the Service Ping are for different time-frames (ALL, 7 Day and 28 Day).  For this reason Metrics between pings can not be aggregated.  Service Pings are normally compared WoW, MoM, etc.  
-- The different types of Service Pings are show here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping) and the [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping)
+- Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
+- GitLab implementations can be Customer Hosted (Self-Managed), GitLab Hosted (referred to as SaaS or Dotcom data) or GitLab Dedicated Hosted (where each Installation is Hosted by GitLab but on Separate Servers).  
+- Multiple Instances can be hosted on each Implementation. Multiple Installations can be included within each Instance which is determined by Host_id.   (Instance_id || Host_id = Installation_id)  
+- Service Ping data is captured at a particular point in time with `all-time, 7_day and 28_day` metrics.  The metrics are only pertinant to the Ping Date and Time and can not be aggregated across Ping Dates. Service Pings are normally compared WoW, MoM, YoY,  etc.  
+- The different types of Service Pings are shown here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping), [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
+- [GitLab Dedicated Implementation](https://docs.gitlab.com/ee/subscriptions/gitlab_dedicated/#gitlab-dedicated) service pings will function similar to Self-Managed Implementations.
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
-
 
 {% enddocs %}
 
