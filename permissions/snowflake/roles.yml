@@ -2368,6 +2368,14 @@ roles:
         warehouses:
             - analyst_xs
 
+    - alu:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - amartin:
         member_of:
             - analyst_finance
@@ -4308,6 +4316,11 @@ users:
         can_login: yes
         member_of:
             - alpcohen
+
+    - alu:
+        can_login: yes
+        member_of:
+            - alu
 
     - amartin:
         can_login: yes
