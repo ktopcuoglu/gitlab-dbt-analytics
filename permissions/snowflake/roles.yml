@@ -2735,7 +2735,7 @@ roles:
             - transformer
         warehouses:
             - loading
-            - merge_request_l
+            - dev_l
             - dev_xs
             - dev_xl
             - reporting
