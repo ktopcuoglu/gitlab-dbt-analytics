@@ -48,7 +48,7 @@ help:
     - run-dbt: attaches a shell to the dbt virtual environment and changes to the dbt directory. \n \
     - run-dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
     - clean-dbt: deletes all virtual environment artifacts \n \
-    - pip-dbt-shell: opens the pipenv environment in the dbt folder. Primarily for use with sql fluff. \n \
+    - pip-dbt-shell: opens the poetry environment in the dbt folder. Primarily for use with sql fluff. \n \
 	\n \
 	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ \n \
 	++ Python Related ++ \n \
@@ -107,17 +107,17 @@ update-containers:
 # DBT
 ########################################################################################################################
 prepare-dbt:
-	which pipenv || python3 -m pip install pipenv
-	pipenv install
+	which poetry || python3 -m pip install poetry
+	poetry install
 
 pip-dbt-shell:
-	pipenv shell "cd transform/snowflake-dbt/;"
+	poetry shell && "cd transform/snowflake-dbt/;"
 
 run-dbt:
-	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps;"
+	poetry shell && "cd transform/snowflake-dbt/;" && dbt clean && dbt deps
 
 run-dbt-docs:
-	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
+	poetry shell "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
 
 clean-dbt:
 	find . -name '*.pyc' -delete

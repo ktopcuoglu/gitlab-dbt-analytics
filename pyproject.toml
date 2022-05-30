@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "analytics"
+version = "1.0.0"
+description = ""
+authors = ["Sébastien Eustace <sebastien@eustace.io>"]
+
+[tool.poetry.dependencies]
+python = "^3.8.0"
+dbt-snowflake="1.1.0"
+gitlabdata="0.3.13"
+pandas = "*"
+requests = "*"
+sqlfluff = "*"
+sqlfluff-templater-dbt = "*"
+urllib3 = "*"
