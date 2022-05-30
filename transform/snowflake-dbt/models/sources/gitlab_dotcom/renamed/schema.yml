@@ -1095,7 +1095,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-      - name: created_at
+      - name: updated_at
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
