@@ -9,8 +9,8 @@ packages:
     revision: "{{env_var('DATA_SIREN_BRANCH')}}"
     warn-unpinned: false
   - package: dbt-labs/audit_helper
-    version: 0.3.0
+    version: 0.5.0
   - package: dbt-labs/dbt_utils
-    version: 0.6.4
+    version: 0.8.5
   - package: dbt-labs/snowplow
-    version: 0.12.0
+    version: 0.14.0
