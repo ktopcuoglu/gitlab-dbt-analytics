@@ -49,6 +49,7 @@ WITH prep_amendment AS (
     subscription.dim_crm_account_id,
     subscription.dim_billing_account_id,
     subscription.dim_billing_account_id_invoice_owner,
+    subscription.dim_billing_account_id_creator_account,
     CASE
        WHEN subscription.subscription_created_date < '2019-02-01'
          THEN NULL
@@ -82,6 +83,9 @@ WITH prep_amendment AS (
     subscription.contract_seat_reconciliation,
     subscription.turn_on_seat_reconciliation,
     subscription_opportunity_mapping.is_questionable_opportunity_mapping,
+    subscription.invoice_owner,
+    subscription.creator_account,
+    subscription.is_reseller_deal,
 
     --Date Information
     subscription.subscription_start_date,
@@ -117,7 +121,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2020-12-16",
-    updated_date="2021-11-11"
+    updated_date="2022-05-30"
 ) }}
