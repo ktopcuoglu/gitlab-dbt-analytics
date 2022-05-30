@@ -515,7 +515,7 @@ roles:
     - analytics_engineer_core:
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         member_of:
             - transformer # until issue#11249
             - analyst_core
@@ -634,7 +634,7 @@ roles:
         warehouses:
             - airflow_testing_l
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
         privileges:
             databases:
@@ -912,7 +912,7 @@ roles:
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
-            - engineer_xl
+            - dev_m
             - merge_request_l
             - merge_request_xs
             - merge_request_xl
@@ -2494,7 +2494,7 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -2537,7 +2537,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         owns:
             databases:
                 - david_prep
@@ -2761,7 +2761,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         owns:
             databases:
                 - ian_prep
@@ -3020,7 +3020,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3076,7 +3076,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         owns:
             databases:
                 - judume_prep
@@ -3734,7 +3734,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3776,7 +3776,7 @@ roles:
             - bi_tool_eval_db
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3835,7 +3835,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3877,7 +3877,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -4007,7 +4007,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -4239,7 +4239,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -4828,8 +4828,8 @@ warehouses:
     - datasiren:
         size: "4-x-large"
 
-    - engineer_xl:
-        size: x-large
+    - dev_m:
+        size: "medium"
 
     - engineer_xs:
         size: x-small
