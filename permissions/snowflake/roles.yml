@@ -344,7 +344,7 @@ roles:
         warehouses:
             - analyst_xs
             - analyst_l
-            - analyst_xl
+            - dev_xl
         member_of:
             - analyst_core
             - boneyard
@@ -820,7 +820,7 @@ roles:
         warehouses:
             - analyst_xs
             - analyst_l
-            - analyst_xl
+            - dev_xl
         member_of:
             - boneyard
             - dbt_analytics
@@ -915,7 +915,7 @@ roles:
             - dev_m
             - merge_request_l
             - merge_request_xs
-            - merge_request_xl
+            - dev_xl
             - transforming_s
             - transforming_l
             - transforming_xl
@@ -2738,7 +2738,7 @@ roles:
             - loading
             - merge_request_l
             - merge_request_xs
-            - merge_request_xl
+            - dev_xl
             - reporting
             - transforming_xs
             - transforming_xl
@@ -2968,7 +2968,7 @@ roles:
         warehouses:
             - analyst_xs
             - analyst_l
-            - analyst_xl
+            - dev_xl
         owns:
             databases:
                 - jpeguero_prep
@@ -3067,7 +3067,7 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - analyst_xs
-            - jstemmer_xl
+            - dev_xl
 
     - judume:
         member_of:
@@ -3362,7 +3362,7 @@ roles:
         warehouses:
             - analyst_xs
             - analyst_l
-            - analyst_xl
+            - dev_xl
 
     - mconteanu:
         member_of:
@@ -4819,9 +4819,6 @@ warehouses:
     - analyst_l:
         size: large
 
-    - analyst_xl:
-        size: x-large
-
     - analyst_xs:
         size: x-small
 
@@ -4855,17 +4852,11 @@ warehouses:
     - grafana:
         size: x-small
 
-    - jstemmer_xl:
-        size: x-large
-
     - loading:
         size: x-small
 
     - merge_request_l:
         size: large
-
-    - merge_request_xl:
-        size: x-large
 
     - merge_request_xs:
         size: x-small
