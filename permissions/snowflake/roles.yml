@@ -297,7 +297,7 @@ roles:
     - analyst_core:
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
         member_of:
             - boneyard
             - covid19
@@ -315,7 +315,7 @@ roles:
     - analyst_engineering:
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
         member_of:
             - analyst_core
             - boneyard
@@ -343,7 +343,7 @@ roles:
     - analyst_growth:
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
             - dev_xl
         member_of:
             - analyst_core
@@ -390,7 +390,7 @@ roles:
     - analyst_finance:
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
         member_of:
             - analyst_core
             - boneyard
@@ -545,7 +545,7 @@ roles:
     - data_manager:
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
         member_of:
             - analyst_core
             - analyst_engineering
@@ -632,7 +632,7 @@ roles:
             - static_admin
             - zoominfo
         warehouses:
-            - airflow_testing_l
+            - dev_l
             - engineer_xs
             - dev_m
             - loading
@@ -819,7 +819,7 @@ roles:
     - product_manager:
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
             - dev_xl
         member_of:
             - boneyard
@@ -911,9 +911,8 @@ roles:
 
     - transformer: # For automated jobs
         warehouses:
-            - airflow_testing_l
+            - dev_l
             - dev_m
-            - merge_request_l
             - merge_request_xs
             - dev_xl
             - transforming_s
@@ -2351,7 +2350,7 @@ roles:
 
     - airflow:
         warehouses:
-            - airflow_testing_l
+            - dev_l
             - gitlab_postgres
             - loading
             - transforming_xs
@@ -2967,7 +2966,7 @@ roles:
             - snowplow
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
             - dev_xl
         owns:
             databases:
@@ -3361,7 +3360,7 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - analyst_xs
-            - analyst_l
+            - dev_l
             - dev_xl
 
     - mconteanu:
@@ -4813,12 +4812,6 @@ warehouses:
     - admin:
         size: x-small
 
-    - airflow_testing_l:
-        size: large
-
-    - analyst_l:
-        size: large
-
     - analyst_xs:
         size: x-small
 
@@ -4854,9 +4847,6 @@ warehouses:
 
     - loading:
         size: x-small
-
-    - merge_request_l:
-        size: large
 
     - merge_request_xs:
         size: x-small
