@@ -27,12 +27,6 @@
 
     {% endif %}
 
-), prep_user AS (
-    
-    SELECT *
-    FROM {{ ref('prep_user') }} users
-    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
-
 ), joined AS (
 
     SELECT 
@@ -68,7 +62,6 @@
     LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_notes_dedupe_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_notes_dedupe_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN prep_user ON gitlab_dotcom_notes_dedupe_source.author_id = prep_user.dim_user_id
     LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_notes_dedupe_source.created_at) = dim_date.date_day
 
 )
@@ -78,5 +71,5 @@
     created_by="@mpeychet_",
     updated_by="@chrissharp",
     created_date="2021-06-22",
-    updated_date="2022-03-29"
+    updated_date="2022-05-30"
 ) }}
