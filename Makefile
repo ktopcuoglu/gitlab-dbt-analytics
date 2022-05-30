@@ -114,7 +114,8 @@ pip-dbt-shell:
 	poetry shell && "cd transform/snowflake-dbt/;"
 
 run-dbt:
-	poetry shell && "cd transform/snowflake-dbt/;" && dbt clean && dbt deps
+	cd transform/snowflake-dbt/ && pwd;
+	poetry shell
 
 run-dbt-docs:
 	poetry shell "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
