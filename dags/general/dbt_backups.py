@@ -27,7 +27,7 @@ from kube_secrets import (
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_TRANSFORM_WAREHOUSE,
+    SNOWFLAKE_BACKUP_WAREHOUSE,
     SNOWFLAKE_USER,
 )
 
@@ -85,7 +85,7 @@ def generate_task(task: str, backup_list: list, is_included: bool = False) -> No
             SNOWFLAKE_USER,
             SNOWFLAKE_PASSWORD,
             SNOWFLAKE_TRANSFORM_ROLE,
-            SNOWFLAKE_TRANSFORM_WAREHOUSE,
+            SNOWFLAKE_BACKUP_WAREHOUSE,
             SNOWFLAKE_TRANSFORM_SCHEMA,
         ],
         env_vars=pod_env_vars,
