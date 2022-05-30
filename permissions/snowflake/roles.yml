@@ -4828,8 +4828,17 @@ warehouses:
     - datasiren:
         size: "4-x-large"
 
+    - dev_xs:
+        size: "x-small"
+
     - dev_m:
         size: "medium"
+
+    - dev_l:
+        size: "large"
+
+    - dev_xl:
+        size: "x-large"
 
     - engineer_xs:
         size: x-small
