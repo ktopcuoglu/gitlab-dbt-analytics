@@ -21,6 +21,7 @@ sources:
       - name: abuse_top_storage_data
       - name: ally_certificate
       - name: ar_aging_details
+      - name: books
       - name: calendar
       - name: cert_customer_segmentation_dashboard
       - name: cert_customer_segmentation_sql
