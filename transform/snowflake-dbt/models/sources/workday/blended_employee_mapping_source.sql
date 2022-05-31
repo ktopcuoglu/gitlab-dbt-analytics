@@ -9,6 +9,7 @@ workday AS (
 
   SELECT *
   FROM {{ ref('workday_employee_mapping_source') }} 
+  
 ),
 
 unioned AS (
@@ -74,7 +75,7 @@ SELECT
   job_grade::VARCHAR AS job_grade, -- BambooHR data is a text filed.
   pay_frequency,
   uploaded_at,
-  DENSE_RANK() OVER (ORDER BY uploaded_at DESC) AS uploaded_row_number_desc,
+  DENSE_RANK() OVER (ORDER BY DATE_TRUNC('day',uploaded_at) DESC) AS uploaded_row_number_desc,
   'workday' AS source_system
 FROM workday
 ),

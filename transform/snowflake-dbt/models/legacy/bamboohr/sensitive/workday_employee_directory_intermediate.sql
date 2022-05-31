@@ -323,6 +323,7 @@ base_layers AS (
     ARRAY_CONSTRUCT(reports_to, full_name) AS lineage
   FROM enriched
   WHERE NULLIF(reports_to, '') IS NOT NULL
+  AND full_name != reports_to -- Sid is reported as reporting to himself
 
 ),
 

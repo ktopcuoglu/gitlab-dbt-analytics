@@ -19,6 +19,7 @@ sources:
     tables:
       - name: compensation
         description: '{{ doc("workday_compensation") }}'
+        identifier: employee_compensation
 
       - name: custom_bonus
         description: '{{ doc("workday_custom_bonus") }}'
@@ -26,7 +27,6 @@ sources:
 
       - name: on_target_earnings
         description: '{{ doc("workday_on_target_earnings") }}'
-        identifier: ontargetearnings
 
       - name: directory
         description: '{{ doc("workday_directory") }}'
@@ -34,15 +34,13 @@ sources:
 
       - name: emergency_contacts
         description: '{{ doc("workday_emergency_contacts") }}'
-        identifier: emergencycontacts
+        identifier: employee_emergency_contacts
 
       - name: employee_mapping
         description: '{{ doc("workday_employee_mapping") }}'
 
       - name: employment_status
         description: '{{ doc("workday_employment_status") }}'
-        identifier: employmentstatus
 
       - name: job_info
         description: '{{ doc("workday_job_info") }}'
-        identifier: jobinfo

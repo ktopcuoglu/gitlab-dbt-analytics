@@ -1,7 +1,7 @@
 WITH mapping as (
 
     SELECT *
-    FROM {{ref('blended_employee_mapping_source')}}
+    FROM {{ref('workday_bamboohr_id_employee_number_mapping')}}
 
 ), bamboohr_directory AS (
 
