@@ -30,6 +30,7 @@ sources:
 
       - name: directory
         description: '{{ doc("workday_directory") }}'
+        identifier: employee_directory
 
       - name: emergency_contacts
         description: '{{ doc("workday_emergency_contacts") }}'
@@ -37,7 +38,6 @@ sources:
 
       - name: employee_mapping
         description: '{{ doc("workday_employee_mapping") }}'
-        identifier: employeemapping
 
       - name: employment_status
         description: '{{ doc("workday_employment_status") }}'

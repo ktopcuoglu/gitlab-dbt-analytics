@@ -5,9 +5,6 @@ packages:
   - git: git@gitlab.com:gitlab-data/data-tests.git
     revision: "{{env_var('DATA_TEST_BRANCH')}}"
     warn-unpinned: false
-  - git: git@gitlab.com:gitlab-data/datasiren.git
-    revision: "{{env_var('DATA_SIREN_BRANCH')}}"
-    warn-unpinned: false
   - package: dbt-labs/audit_helper
     version: 0.5.0
   - package: dbt-labs/dbt_utils
