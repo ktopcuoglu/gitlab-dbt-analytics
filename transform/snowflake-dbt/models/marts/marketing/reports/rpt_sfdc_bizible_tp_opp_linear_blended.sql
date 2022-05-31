@@ -107,7 +107,7 @@
     -- {{ dbt_utils.group_by(n=41) }}
     -- UNION ALL
     SELECT 
-      rpt_sfdc_bizible_tp_person_lifecycle.dim_crm_touchpopint_id,
+      rpt_sfdc_bizible_tp_person_lifecycle.dim_crm_touchpoint_id,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_month_yr,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_normalized,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_integrated_campaign_grouping,
