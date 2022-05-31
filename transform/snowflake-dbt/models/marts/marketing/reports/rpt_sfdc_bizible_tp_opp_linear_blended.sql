@@ -107,6 +107,7 @@
     -- {{ dbt_utils.group_by(n=41) }}
     -- UNION ALL
     SELECT 
+      rpt_sfdc_bizible_tp_person_lifecycle.dim_crm_touchpopint_id,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_month_yr,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_touchpoint_date_normalized,
       rpt_sfdc_bizible_tp_person_lifecycle.bizible_integrated_campaign_grouping,
@@ -203,6 +204,7 @@
     {{ dbt_utils.group_by(n=41) }}
     UNION ALL
     SELECT
+      rpt_sfdc_bizible_linear.dim_crm_touchpoint_id,
       rpt_sfdc_bizible_linear.bizible_touchpoint_date_month_yr AS opp_touchpoint_mo_yr, 
       rpt_sfdc_bizible_linear.bizible_touchpoint_date_normalized AS opp_touchpoint_date_normalized,
       rpt_sfdc_bizible_linear.bizible_integrated_campaign_grouping AS opp_integrated_campaign_grouping,
@@ -397,5 +399,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-05-25"
+    updated_date="2022-05-31"
 ) }}
