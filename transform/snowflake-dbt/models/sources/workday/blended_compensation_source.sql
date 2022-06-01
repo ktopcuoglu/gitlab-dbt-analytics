@@ -42,7 +42,7 @@ SELECT
   compensation_type,
   compensation_change_reason,
   pay_rate,
-  compensation_value, -- Add pay_frequency?
+  per_pay_period_amount,
   compensation_currency,
   uploaded_at,
   ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY initiated_at ASC) AS compensation_sequence,
@@ -58,9 +58,3 @@ filtered AS (
 
 SELECT *
 FROM filtered
-
-/*
-LEFT JOIN pay_frequency
-      ON bamboohr_compensation_changes.employee_id = pay_frequency.employee_id
-      AND bamboohr_compensation_changes.effective_date BETWEEN pay_frequency.effective_date AND pay_frequency.next_effective_date
-*/
