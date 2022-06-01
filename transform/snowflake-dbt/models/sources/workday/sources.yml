@@ -23,7 +23,7 @@ sources:
 
       - name: custom_bonus
         description: '{{ doc("workday_custom_bonus") }}'
-        identifier: custombonus
+        identifier: employee_bonus
 
       - name: on_target_earnings
         description: '{{ doc("workday_on_target_earnings") }}'

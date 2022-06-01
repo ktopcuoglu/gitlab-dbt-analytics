@@ -38,7 +38,7 @@ SELECT
   employment_status,
   termination_type,
   uploaded_at,
-  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date ASC) AS employment_status_sequence, -- need the initiated datetime
+  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY initiated_at ASC) AS employment_status_sequence,
   'workday' AS source_system
 FROM workday
 ),

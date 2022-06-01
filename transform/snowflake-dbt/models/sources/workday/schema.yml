@@ -295,48 +295,48 @@ models:
 
   - name: blended_bonus_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_emergency_contacts_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_employee_mapping_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_employment_status_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_job_info_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_on_target_earnings_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_compensation_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique
 
   - name: blended_currency_conversion_source
     columns:
-      - name: unique_key
+      - name: unique_filter_key
         tests:
           - unique

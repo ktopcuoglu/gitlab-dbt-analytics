@@ -50,7 +50,7 @@ SELECT
   annual_amount_local_currency_code,
   ote_local_currency_code,
   uploaded_at,
-  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date ASC) AS target_earnings_sequence, -- need initiated datetime
+  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY initiated_at ASC) AS target_earnings_sequence,
   'workday' AS source_system
 FROM workday
 ),

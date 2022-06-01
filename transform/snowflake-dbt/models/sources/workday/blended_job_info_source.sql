@@ -44,7 +44,7 @@ SELECT
   entity,
   reports_to,
   uploaded_at,
-  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date ASC) AS job_sequence, -- need initiated datetime
+  ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY initiated_at ASC) AS job_sequence,
   'workday' AS source_system
 FROM workday
 ),
