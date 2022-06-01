@@ -1,7 +1,7 @@
 WITH employees AS (
 
     SELECT * 
-    FROM {{ref('employee_directory')}}
+    FROM {{ref('workday_employee_directory')}}
 
 ), greenhouse_applications AS (
 

@@ -7,14 +7,14 @@ WITH bamboohr_compensation AS (
 
     SELECT *,
       ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) AS rank_by_effective_date,
-      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY compensation_sequence)                             AS rank_by_id,
+      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date, compensation_sequence)                             AS rank_by_id,
       CASE WHEN rank_by_effective_date != rank_by_id
            THEN LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY effective_date)
-           ELSE LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY compensation_sequence) END    AS prior_compensation_value,
+           ELSE LAG(compensation_value) OVER (PARTITION BY employee_id ORDER BY effective_date, compensation_sequence) END    AS prior_compensation_value,
       CASE WHEN rank_by_effective_date != rank_by_id
            THEN LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY effective_date)
-           ELSE LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY compensation_sequence) END AS prior_compensation_currency,
-      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY compensation_sequence)             AS rank_compensation_change_effective_date    
+           ELSE LAG(compensation_currency) OVER (PARTITION BY employee_id ORDER BY effective_date, compensation_sequence) END AS prior_compensation_currency,
+      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date, compensation_sequence)             AS rank_compensation_change_effective_date    
     FROM bamboohr_compensation
 
 ), pay_frequency AS (
@@ -28,9 +28,9 @@ WITH bamboohr_compensation AS (
 
     SELECT 
       *,
-      LAG(COALESCE(annual_amount_usd_value,0)) OVER (PARTITION BY employee_id ORDER BY target_earnings_sequence) AS prior_annual_amount_usd,
+      LAG(COALESCE(annual_amount_usd_value,0),1,0) OVER (PARTITION BY employee_id ORDER BY effective_date, target_earnings_sequence) AS prior_annual_amount_usd,
       annual_amount_usd_value - prior_annual_amount_usd AS change_in_annual_amount_usd,
-      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY target_earnings_sequence)   AS rank_ote_effective_date
+      ROW_NUMBER() OVER (PARTITION BY employee_id, effective_date ORDER BY effective_date, target_earnings_sequence)   AS rank_ote_effective_date
     FROM {{ ref('blended_on_target_earnings_source') }}
 
 ), employee_directory AS (
@@ -41,15 +41,15 @@ WITH bamboohr_compensation AS (
 ), currency_conversion AS (
 
     SELECT *,
-      LAG(currency_conversion_factor) OVER (PARTITION BY employee_id ORDER BY currency_conversion_sequence)        AS prior_conversion_factor,
-      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY currency_conversion_sequence)                           AS rank_conversion_id
+      LAG(currency_conversion_factor) OVER (PARTITION BY employee_id ORDER BY effective_date, currency_conversion_sequence)        AS prior_conversion_factor,
+      ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date, currency_conversion_sequence)                           AS rank_conversion_id
     FROM {{ ref('blended_currency_conversion_source') }}
   
 ), currency_conversion_factor_periods AS (
 
     SELECT *,
-      LEAD(annual_amount_usd_value) OVER (PARTITION BY employee_id ORDER BY currency_conversion_sequence)          AS next_usd_value,
-      LEAD(DATEADD(day,-1,effective_date)) OVER (PARTITION BY employee_id ORDER BY currency_conversion_sequence)   AS next_effective_date
+      LEAD(annual_amount_usd_value) OVER (PARTITION BY employee_id ORDER BY effective_date, currency_conversion_sequence)          AS next_usd_value,
+      LEAD(DATEADD(day,-1,effective_date)) OVER (PARTITION BY employee_id ORDER BY effective_date, currency_conversion_sequence)   AS next_effective_date
     FROM currency_conversion
     WHERE currency_conversion_factor <> prior_conversion_factor
       OR rank_conversion_id = 1
@@ -66,12 +66,12 @@ WITH bamboohr_compensation AS (
       employee_directory.department_grouping,
       employee_directory.job_title,
       CASE 
-        WHEN bamboohr_compensation_changes.employee_id IN (40955, 40647, 41234, 40985, 
-                                                   41027, 40782, 40540) 
+        WHEN bamboohr_compensation_changes.employee_id IN (10483, 10175, 10760, 10513,
+                                                   10554, 10310, 10041) 
             AND bamboohr_compensation_changes.effective_date <='2020-06-01' 
           THEN 12
         --we didn't capture pay frequency prior to 2020.07 and in 2020.07 the pay frequency had changed for these individuals  
-        WHEN bamboohr_compensation_changes.employee_id ='40874' AND bamboohr_compensation_changes.effective_date < '2019-12-31' 
+        WHEN bamboohr_compensation_changes.employee_id = 10402 AND bamboohr_compensation_changes.effective_date < '2019-12-31' 
           THEN 12
         --This team member has a pay frequency of 12 prior to the 2019.12.31 and the current pay frequency for 2020
         ELSE COALESCE(pay_frequency.pay_frequency, pay_frequency_initial.pay_frequency) END AS pay_frequency,    
@@ -117,9 +117,9 @@ WITH bamboohr_compensation AS (
       effective_date,
       currency_conversion_factor,
       LAG(currency_conversion_factor) 
-        OVER (PARTITION BY employee_id ORDER BY compensation_sequence)                  AS prior_currency_conversion_factor,
+        OVER (PARTITION BY employee_id ORDER BY effective_date, compensation_sequence)                  AS prior_currency_conversion_factor,
       pay_frequency,
-      LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY compensation_sequence) AS prior_pay_frequency,
+      LAG(pay_frequency) OVER (PARTITION BY employee_id ORDER BY effective_date, compensation_sequence) AS prior_pay_frequency,
       compensation_value                                                                 AS new_compensation_value,
       prior_compensation_value                                                           AS prior_compensation_value,
       compensation_currency                                                              AS new_compensation_currency,

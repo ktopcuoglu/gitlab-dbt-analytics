@@ -27,7 +27,7 @@ WITH dim_date AS (
 ), eeoc AS (
 
     SELECT *
-    FROM {{ ref('blended_employee_mapping_source') }}
+    FROM {{ ref('workday_bamboohr_id_employee_number_mapping') }}
 
 ), final AS (
 
