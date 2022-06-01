@@ -921,6 +921,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - backups_xs
             - datasiren
         member_of:
             - covid19
@@ -4823,6 +4824,9 @@ warehouses:
         size: x-large
 
     - analyst_xs:
+        size: x-small
+
+    - backups_xs:
         size: x-small
 
     - datasiren:
