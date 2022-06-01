@@ -113,7 +113,21 @@
       {{ usage_ping_month_range('active_instance_runners_all_time_event') }},
       {{ usage_ping_month_range('active_group_runners_all_time_event') }},
       {{ usage_ping_month_range('active_project_runners_all_time_event') }},
-      {{ usage_ping_month_range('gitaly_servers_all_time_event') }}
+      {{ usage_ping_month_range('gitaly_servers_all_time_event') }},
+      {{ usage_ping_month_range('api_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_month_range('api_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_month_range('coverage_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_month_range('coverage_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_month_range('secret_detection_scans_all_time_event') }},
+      {{ usage_ping_month_range('secret_detection_scans_28_days_event') }},
+      {{ usage_ping_month_range('dependency_scanning_scans_all_time_event') }},
+      {{ usage_ping_month_range('dependency_scanning_scans_28_days_event') }},
+      {{ usage_ping_month_range('container_scanning_scans_all_time_event') }},
+      {{ usage_ping_month_range('container_scanning_scans_28_days_event') }},
+      {{ usage_ping_month_range('dast_scans_all_time_event') }},
+      {{ usage_ping_month_range('dast_scans_28_days_event') }},
+      {{ usage_ping_month_range('sast_scans_all_time_event') }},
+      {{ usage_ping_month_range('sast_scans_28_days_event') }}
     FROM monthly_metrics
 
 ), diffs AS (
@@ -210,7 +224,21 @@
       {{ usage_ping_over_ping_difference('active_instance_runners_all_time_event') }},
       {{ usage_ping_over_ping_difference('active_group_runners_all_time_event') }},
       {{ usage_ping_over_ping_difference('active_project_runners_all_time_event') }},
-      {{ usage_ping_over_ping_difference('gitaly_servers_all_time_event') }}
+      {{ usage_ping_over_ping_difference('gitaly_servers_all_time_event') }},
+      {{ usage_ping_over_ping_difference('api_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('api_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_over_ping_difference('coverage_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('coverage_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_over_ping_difference('secret_detection_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('secret_detection_scans_28_days_event') }},
+      {{ usage_ping_over_ping_difference('dependency_scanning_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('dependency_scanning_scans_28_days_event') }},
+      {{ usage_ping_over_ping_difference('container_scanning_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('container_scanning_scans_28_days_event') }},
+      {{ usage_ping_over_ping_difference('dast_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('dast_scans_28_days_event') }},
+      {{ usage_ping_over_ping_difference('sast_scans_all_time_event') }},
+      {{ usage_ping_over_ping_difference('sast_scans_28_days_event') }}
     FROM monthly_metrics
 
 ), smoothed_diffs AS (
@@ -301,7 +329,21 @@
       {{ usage_ping_over_ping_smoothed('active_instance_runners_all_time_event') }},
       {{ usage_ping_over_ping_smoothed('active_group_runners_all_time_event') }},
       {{ usage_ping_over_ping_smoothed('active_project_runners_all_time_event') }},
-      {{ usage_ping_over_ping_smoothed('gitaly_servers_all_time_event') }}
+      {{ usage_ping_over_ping_smoothed('gitaly_servers_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('api_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('api_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('coverage_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('coverage_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('secret_detection_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('secret_detection_scans_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('dependency_scanning_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('dependency_scanning_scans_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('container_scanning_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('container_scanning_scans_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('dast_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('dast_scans_28_days_event') }},
+      {{ usage_ping_over_ping_smoothed('sast_scans_all_time_event') }},
+      {{ usage_ping_over_ping_smoothed('sast_scans_28_days_event') }}
     FROM diffs
     INNER JOIN months
       ON diffs.snapshot_month = months.first_day_of_month
@@ -397,7 +439,21 @@
       {{ usage_ping_over_ping_estimated('active_instance_runners_all_time_event') }},
       {{ usage_ping_over_ping_estimated('active_group_runners_all_time_event') }},
       {{ usage_ping_over_ping_estimated('active_project_runners_all_time_event') }},
-      {{ usage_ping_over_ping_estimated('gitaly_servers_all_time_event') }}
+      {{ usage_ping_over_ping_estimated('gitaly_servers_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('api_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('api_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('coverage_fuzzing_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('coverage_fuzzing_scans_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('secret_detection_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('secret_detection_scans_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('dependency_scanning_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('dependency_scanning_scans_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('container_scanning_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('container_scanning_scans_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('dast_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('dast_scans_28_days_event') }},
+      {{ usage_ping_over_ping_estimated('sast_scans_all_time_event') }},
+      {{ usage_ping_over_ping_estimated('sast_scans_28_days_event') }}
     FROM smoothed_diffs
     LEFT JOIN ping_ranges
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
@@ -421,5 +477,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-03-04",
-    updated_date="2022-04-21"
+    updated_date="2022-06-01"
 ) }}
