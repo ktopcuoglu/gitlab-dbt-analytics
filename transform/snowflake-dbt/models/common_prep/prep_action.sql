@@ -10,12 +10,6 @@
     ('dim_date', 'dim_date'),
 ]) }}
 
-, prep_user AS (
-    
-    SELECT *
-    FROM {{ ref('prep_user') }} users
-    WHERE user_state <> 'blocked'
-  
 ), joined AS (
 
     SELECT 
@@ -25,7 +19,7 @@
       gitlab_dotcom_events_source.project_id::NUMBER                                              AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
-      prep_user.dim_user_id,
+      gitlab_dotcom_events_source.author_id                                                       AS author_id,
       dim_date.date_id                                                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                             AS dim_plan_id,
 
@@ -39,8 +33,7 @@
     LEFT JOIN dim_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_events_source.created_at >= dim_namespace_plan_hist.valid_from
         AND gitlab_dotcom_events_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN prep_user ON gitlab_dotcom_events_source.author_id = prep_user.dim_user_id
-    LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_events_source.created_at) = dim_date.date_day
+    INNER JOIN dim_date ON TO_DATE(gitlab_dotcom_events_source.created_at) = dim_date.date_day
 
 )
 

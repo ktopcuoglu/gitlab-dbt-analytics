@@ -10,7 +10,7 @@
   {
     "event_name": "action",
     "source_cte_name": "prep_action",
-    "user_column_name": "dim_user_id",
+    "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",
@@ -425,7 +425,6 @@
     ('prep_plan', 'prep_gitlab_dotcom_plan'),
     ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('prep_ci_stage', 'prep_ci_stage'),
-    ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
     ('prep_resource_label', 'prep_resource_label'),
     ('prep_environment_event', 'prep_environment_event'),
