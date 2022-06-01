@@ -250,7 +250,7 @@
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:test_dbt_change
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -332,7 +332,7 @@
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.24
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:test_dbt_change
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
