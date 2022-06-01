@@ -25,5 +25,15 @@ Should any model/test fail, ensure all of the errors are being addressed ensure 
 
 </details>
 
+<details>
+<summary><b>Resolving Chronic dbt model/test failures</b></summary>
+Should any model/test fail, ensure all of the errors are being addressed ensure the below is completed: 
+
+1. [ ] Has the root cause of the failure been determined? If not, the triager should determine the root cause.
+1. [ ] Is the test failure related to a row count failure AND there is no concerning problem with the table? If yes, consider using the LAG parameter in the row count test macro or use the row count test macro that leverages averages and standard deviations. If neither one of these options works, then move the test to blocked status and consider this for the new Data Observability tool.  
+1. [ ] Is the dbt model/test failure related to a timeout issue? If yes, confirm that the model can build and test can run on its own by full refreshing the model in Airflow. Review the model to confirm it truly needs to have a full refresh. Note the run time in Airflow for the model to build. If the model needs to be refreshed, then move the issue to blocked status and consider this model as a candidate for DAG Flowsharding.   
+
+</details>
+
 
 /label ~Triage ~Break-Fix ~"Priority::1-Ops" ~"workflow::1 - triage" ~"Triage::Analytics" 
