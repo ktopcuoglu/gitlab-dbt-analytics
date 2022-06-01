@@ -51,8 +51,8 @@ Paste the results of dbt test here, including the command.
 
 #### Pipelines
 
-* [ ] Run the dbt_models pipeline with the full model selection syntax for all models which have changed
-* [ ] Re-run the dbt_models pipeline (you may need to create a new pipeline with the "Run Pipeline" button), running only the models which have changed; e.g: dim_subscription. To remove any un-related pipeline failures.  
+* [ ] Run the [run_changed_models_sql](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8Frun_changed_models_sql) with the variable `ANCESTOR_TYPE` set to `+` for all the upstream models to be updated (ex. +dim_subscription)
+* [ ] Re-run the [run_changed_models_sql](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8Frun_changed_models_sql) pipeline (you may need to create a new pipeline with the "Run Pipeline" button), which will run only the models that have changed (ex. dim_subscription), to remove any un-related pipeline failures.  
 
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 
