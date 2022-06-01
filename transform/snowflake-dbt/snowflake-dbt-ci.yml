@@ -285,7 +285,7 @@
   <<: *safe_models_check
   script:
     - dbt deps $CI_PROFILE_TARGET
-    - dbt --partial-parse ls $CI_PROFILE_TARGET --models tag:mnpi+
+    - dbt --partial-parse --quiet ls $CI_PROFILE_TARGET --models tag:mnpi+
       --exclude
         tag:mnpi_exception
         config.database:$SNOWFLAKE_PREP_DATABASE
