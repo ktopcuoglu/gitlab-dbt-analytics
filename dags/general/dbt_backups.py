@@ -27,7 +27,7 @@ from kube_secrets import (
     SNOWFLAKE_PASSWORD,
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_BACKUP_WAREHOUSE,
+    SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
 )
 
@@ -64,8 +64,8 @@ def generate_task(task: str, backup_list: list, is_included: bool = False) -> No
     args = f"""'{{TABLE_LIST_BACKUP: {backup_list}, INCLUDED: {is_included}}}'"""
 
     dbt_backups_cmd = f"""
-        {dbt_install_deps_nosha_cmd} && export SNOWFLAKE_TRANSFORM_WAREHOUSE={SNOWFLAKE_BACKUP_WAREHOUSE} &&
-        dbt run-operation backup_to_gcs --args {args} --profiles-dir profile --target backup
+        {dbt_install_deps_nosha_cmd} && export SNOWFLAKE_TRANSFORM_WAREHOUSE="BACKUPS_XS" &&
+        dbt run-operation backup_to_gcs --args {args} --profiles-dir profile
     """
 
     dbt_backups = KubernetesPodOperator(
@@ -85,7 +85,7 @@ def generate_task(task: str, backup_list: list, is_included: bool = False) -> No
             SNOWFLAKE_USER,
             SNOWFLAKE_PASSWORD,
             SNOWFLAKE_TRANSFORM_ROLE,
-            SNOWFLAKE_BACKUP_WAREHOUSE,
+            SNOWFLAKE_TRANSFORM_WAREHOUSE,
             SNOWFLAKE_TRANSFORM_SCHEMA,
         ],
         env_vars=pod_env_vars,
