@@ -113,12 +113,15 @@ prepare-dbt:
 pip-dbt-shell:
 	poetry shell && "cd transform/snowflake-dbt/;"
 
-run-dbt:
-	cd transform/snowflake-dbt/ && pwd;
-	poetry shell
+dbt-deps:
+	cd transform/snowflake-dbt/;
+	poetry run bash -c "cd transform/snowflake-dbt/ dbt clean && dbt deps && poetry shell $*";
+
+run-dbt: dbt-deps
+	poetry shell;
 
 run-dbt-docs:
-	poetry shell "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
+	poetry run bash -c "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
 
 clean-dbt:
 	find . -name '*.pyc' -delete
