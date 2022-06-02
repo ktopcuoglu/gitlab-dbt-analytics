@@ -80,29 +80,29 @@
 SELECT
     {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type']) }}     AS rpt_ping_instance_metric_estimated_monthly_id,
     -- identifiers
-    metrics_path                                                                                                                                        AS metrics_path,
-    ping_created_at_month                                                                                                                               AS ping_created_at_month,
-    ping_delivery_type                                                                                                                                  AS ping_delivery_type,
+    metrics_path                                                                                                                                                        AS metrics_path,
+    ping_created_at_month                                                                                                                                               AS ping_created_at_month,
+    ping_delivery_type                                                                                                                                                  AS ping_delivery_type,
     -- ping attributes
-    ping_edition                                                                                                                                        AS ping_edition,
-    ping_product_tier                                                                                                                                   AS ping_product_tier,
-    ping_edition_product_tier                                                                                                                           AS ping_edition_product_tier,
+    ping_edition                                                                                                                                                        AS ping_edition,
+    ping_product_tier                                                                                                                                                   AS ping_product_tier,
+    ping_edition_product_tier                                                                                                                                           AS ping_edition_product_tier,
     -- metric attributes
-    stage_name                                                                                                                                          AS stage_name,
-    section_name                                                                                                                                        AS section_name,
-    group_name                                                                                                                                          AS group_name,
-    is_smau                                                                                                                                             AS is_smau,
-    is_gmau                                                                                                                                             AS is_gmau,
-    is_paid_gmau                                                                                                                                        AS is_paid_gmau,
-    is_umau                                                                                                                                             AS is_umau,
+    stage_name                                                                                                                                                          AS stage_name,
+    section_name                                                                                                                                                        AS section_name,
+    group_name                                                                                                                                                          AS group_name,
+    is_smau                                                                                                                                                             AS is_smau,
+    is_gmau                                                                                                                                                             AS is_gmau,
+    is_paid_gmau                                                                                                                                                        AS is_paid_gmau,
+    is_umau                                                                                                                                                             AS is_umau,
     -- fct info
-    reporting_count                                                                                                                                     AS reporting_count,
-    not_reporting_count                                                                                                                                 AS not_reporting_count,
-    percent_reporting                                                                                                                                   AS percent_reporting,
-    estimation_grain                                                                                                                                    AS estimation_grain,
-    ROUND({{ usage_estimation('recorded_usage', 'percent_reporting') }})                                                                                AS total_usage_with_estimate,
-    ROUND(total_usage_with_estimate - recorded_usage)                                                                                                   AS estimated_usage,
-    recorded_usage                                                                                                                                      AS recorded_usage
+    reporting_count                                                                                                                                                     AS reporting_count,
+    not_reporting_count                                                                                                                                                 AS not_reporting_count,
+    percent_reporting                                                                                                                                                   AS percent_reporting,
+    estimation_grain                                                                                                                                                    AS estimation_grain,
+    ROUND({{ usage_estimation('recorded_usage', 'percent_reporting') }})                                                                                                AS total_usage_with_estimate,
+    ROUND(total_usage_with_estimate - recorded_usage)                                                                                                                   AS estimated_usage,
+    recorded_usage                                                                                                                                                      AS recorded_usage
  FROM joined_counts_w_percentage
 
 )
