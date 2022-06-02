@@ -29,7 +29,7 @@ fct_events AS (
   
   {% if is_incremental() %}
 
-   WHERE event_created_at > (SELECT max(event_created_at) FROM {{ this }})
+   WHERE event_created_at > (SELECT DATEADD(DAY, -30 , max(event_created_at)) FROM {{ this }})
 
   {% endif %}
 
@@ -103,5 +103,5 @@ gitlab_dotcom_fact AS (
     created_by="@icooper-acp",
     updated_by="@iweeks",
     created_date="2022-01-20",
-    updated_date="2022-05-18"
+    updated_date="2022-06-02"
 ) }}
