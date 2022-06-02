@@ -1,7 +1,5 @@
 # Update docs-packages.yml as well to have the docs site be accurate.
 packages:
-  #- package: gitlabhq/snowflake_spend
-  #  version: 1.2.0
   - git: git@gitlab.com:gitlab-data/snowflake_spend.git
     revision: "master"
     warn-unpinned: false
