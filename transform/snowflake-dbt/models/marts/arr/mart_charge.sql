@@ -75,7 +75,7 @@
       dim_subscription.turn_on_seat_reconciliation,
       dim_subscription.invoice_owner,
       dim_subscription.creator_account,
-      dim_subscription.is_reseller_deal,
+      dim_subscription.was_purchased_through_reseller,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,

@@ -131,7 +131,7 @@ WITH dim_billing_account AS (
       dim_subscription.turn_on_seat_reconciliation,
       dim_subscription.invoice_owner,
       dim_subscription.creator_account,
-      dim_subscription.is_reseller_deal,
+      dim_subscription.was_purchased_through_reseller,
 
       --product info
       dim_product_detail.product_tier_name                                            AS product_tier_name,

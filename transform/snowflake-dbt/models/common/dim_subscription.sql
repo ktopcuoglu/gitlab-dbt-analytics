@@ -85,7 +85,7 @@ WITH prep_amendment AS (
     subscription_opportunity_mapping.is_questionable_opportunity_mapping,
     subscription.invoice_owner,
     subscription.creator_account,
-    subscription.is_reseller_deal,
+    subscription.was_purchased_through_reseller,
 
     --Date Information
     subscription.subscription_start_date,

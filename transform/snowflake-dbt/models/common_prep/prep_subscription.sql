@@ -58,7 +58,7 @@ WITH date_details AS (
       invoice_owner.account_name                                                AS invoice_owner,
       creator_account.account_name                                              AS creator_account,
       IFF(dim_billing_account_id_invoice_owner != dim_billing_account_id_creator_account, TRUE, FALSE)
-                                                                                AS is_reseller_deal,
+                                                                                AS was_purchased_through_reseller,
 
       --Date Information
       zuora_subscription.subscription_start_date                                AS subscription_start_date,
