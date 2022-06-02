@@ -71,7 +71,7 @@ WITH date_details AS (
         WHEN term_start_dates.fiscal_year = term_end_dates.fiscal_year
           THEN TRUE
         ELSE FALSE
-      END AS is_less_than_12_month_term_subscription,
+      END AS is_single_fiscal_year_term_subscription,
       CASE
         WHEN LOWER(zuora_subscription.subscription_status) = 'active' AND subscription_end_date > CURRENT_DATE
           THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE))
