@@ -1841,6 +1841,62 @@ models:
       - name: gitaly_servers_all_time_event  
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
         tests:
+          - dbt_utils.at_least_one  
+      - name: api_fuzzing_scans_all_time_event
+        description: '{{ doc("api_fuzzing_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_scans_28_days_event
+        description: '{{ doc("api_fuzzing_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_scans_all_time_event
+        description: '{{ doc("coverage_fuzzing_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_scans_28_days_event
+        description: '{{ doc("coverage_fuzzing_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_scans_all_time_event
+        description: '{{ doc("secret_detection_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_scans_28_days_event
+        description: '{{ doc("secret_detection_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_scans_all_time_event
+        description: '{{ doc("dependency_scanning_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_scans_28_days_event
+        description: '{{ doc("dependency_scanning_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_scans_all_time_event
+        description: '{{ doc("container_scanning_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_scans_28_days_event
+        description: '{{ doc("container_scanning_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_scans_all_time_event
+        description: '{{ doc("dast_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_scans_28_days_event
+        description: '{{ doc("dast_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_scans_all_time_event
+        description: '{{ doc("sast_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_scans_28_days_event
+        description: '{{ doc("sast_scans_28_days_event_desc") }}'
+        tests:
           - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
@@ -2300,6 +2356,24 @@ models:
         tests:
           - not_null
           - unique
+      # - name: group_name
+        # tests:
+          # - not_null
+      - name: section_name
+        tests:
+          - not_null
+      - name: stage_name
+        tests:
+          - not_null
+      - name: is_smau
+        tests:
+          - not_null
+      - name: is_gmau
+        tests:
+          - not_null
+      - name: is_umau
+        tests:
+          - not_null
   
   - name: fct_event
     description: '{{ doc("fct_event") }}'
@@ -3330,17 +3404,65 @@ models:
         description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric
       - name: snapshot_date
       - name: uploaded_at
-      - name: created_byssss
+      - name: created_by
         description: Who created this model
       - name: updated_by
         description: Who updated this model last
       - name: model_created_date
         description: The date at which the model was created
       - name: model_updated_date
-        description: The date at which the model code was last updatedss
+        description: The date at which the model code was last updateded
       - name: dbt_updated_at
       - name: dbt_created_at
 
+  - name: dim_ping_metric_daily_snapshot
+    description: ' {{ doc("dim_ping_metric_daily_snapshot") }} '
+    columns:
+      - name: ping_metric_hist_id
+        tests:
+          - not_null
+          - unique
+      - name: metrics_path
+        description: The path name of metric 
+      - name: data_source
+        description: The source application where the data was extracted from.
+      - name: description
+      - name: product_category
+      - name: group_name
+        description: The name of the Product group
+      - name: section_name
+        description: The name of the product section
+      - name: stage_name
+        description: The name of the product stage
+      - name: milestone
+      - name: skip_validation
+      - name: metrics_status
+      - name: tier
+      - name: time_frame
+      - name: value_type
+      - name: is_gmau
+        description: Boolean field representing if the xmau metric represents a Group Monthly Active user (GMAU) metric
+      - name: is_paid_gmau
+        description: Boolean field representing if the xmau metric represents a Paid Group Monthly Active user (GMAU) metric
+      - name: is_smau
+        description: Boolean field representing if the xmau metric represents a Stage Monthly Active User (SMAU) metric
+      - name: is_umau
+        description: Boolean field representing if the xmau metric represents Unique Monthly Active User (UMAU) metric
+      - name: valid_from
+        description: Timestamp of when this metric path mapping is valid from
+      - name: valid_to
+        description: Timestamp of when this metric path mapping is valid until
+      - name: created_by
+        description: Who created this model
+      - name: updated_by
+        description: Who updated this model last
+      - name: model_created_date
+        description: The date at which the model was created
+      - name: model_updated_date
+        description: The date at which the model code was last updateded
+      - name: dbt_updated_at
+      - name: dbt_created_at
+      
   - name: fct_ping_instance_metric
     description: ' {{ doc("fct_ping_instance_metric") }} '
     columns:

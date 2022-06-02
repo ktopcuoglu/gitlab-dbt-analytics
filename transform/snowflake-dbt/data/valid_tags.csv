@@ -13,7 +13,6 @@ customers_db,Relates to Customers database
 daily,Used in Airflow runs
 data,dbt built-in
 data_science,Relates to data_science data processes.
-datasiren,Relates to datasiren models
 dbt,Relates to dbt-generated data-sets
 demandbase,Relates to demandbase data
 discourse,Relates to Discourse data

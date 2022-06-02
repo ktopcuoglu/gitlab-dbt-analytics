@@ -29,6 +29,8 @@ models:
     - name: invoice_period
       tests:
         - not_null
+- name: sheetload_books_source
+  description: Book rating data used in @lisvinueza's data internship program.
 - name: sheetload_cert_product_geo_dashboard_source
   description: All team members that passed the product geolocation dashboard certification.
 - name: sheetload_cert_product_geo_sql_source
