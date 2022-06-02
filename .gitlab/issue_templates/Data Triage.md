@@ -45,6 +45,8 @@ The focus area for the Analytics Engineer are the `DBT` models including the app
     * [ ] Use the AE issue template to resolve the dbt-test failure.
 * [ ] Review all dbt-test warnings and [create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20AE) if needed
 
+*Occaisionally you we encounter connection errors, in which case [re-running the Airflow task](https://airflow.apache.org/docs/apache-airflow/1.10.15/dag-run.html#re-run-tasks) may be more appropriate than creating an issue. If the connection error persists then create an issue and escalate to the triage Data Engineer.*
+
 * [ ] At the end of your working day post EOD message to slack along with a link to this issue in **#analytics-pipelines** so that it is clear for the next triager what time to check for issues from.
 
 ### Prepare for Next Milestone 

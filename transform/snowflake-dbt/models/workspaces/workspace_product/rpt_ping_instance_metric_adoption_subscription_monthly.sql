@@ -34,7 +34,7 @@
       AND mart_ping_instance_metric_monthly.ping_created_at_month = active_subscriptions.ping_created_at_month
     WHERE time_frame = '28d'
       AND ping_delivery_type = 'Self-Managed'
-    {{ dbt_utils.group_by(n=12)}} 
+    {{ dbt_utils.group_by(n=12)}}
 -- Get actual count of subs/users for a given month/metric
 
 ), count_tbl AS (
@@ -62,7 +62,8 @@
     SELECT
         count_tbl.ping_created_at_month                         AS ping_created_at_month,
         count_tbl.metrics_path                                  AS metrics_path,
-        count_tbl.ping_edition                                  AS ping_edition,
+        -- count_tbl.ping_edition                                  AS ping_edition,
+        sub_combo.ping_edition                                  AS ping_edition, --change to pull from sub_combo, which has both CE and EE records
         count_tbl.stage_name                                    AS stage_name,
         count_tbl.section_name                                  AS section_name,
         count_tbl.group_name                                    AS group_name,
@@ -77,10 +78,11 @@
         total_subscription_count - reported_subscription_count  AS not_reporting_subscription_count,
         total_licensed_users - reported_seat_count              AS not_reporting_seat_count
     FROM count_tbl
-        LEFT JOIN sub_combo
-    ON count_tbl.ping_created_at_month = sub_combo.ping_created_at_month
-        AND count_tbl.metrics_path = sub_combo.metrics_path
-        AND count_tbl.ping_edition = sub_combo.ping_edition
+    LEFT JOIN sub_combo
+      ON count_tbl.ping_created_at_month = sub_combo.ping_created_at_month
+      AND count_tbl.metrics_path = sub_combo.metrics_path
+      -- AND count_tbl.ping_edition = sub_combo.ping_edition --don't join on ping_edition because subscriptions will all report on EE
+
 
 -- Split subs and seats then union
 
@@ -98,7 +100,7 @@
     is_paid_gmau                                                AS is_paid_gmau,
     is_umau                                                     AS is_umau,
     reported_subscription_count                                 AS reporting_count,
-    not_reporting_subscription_count                             AS not_reporting_count,
+    not_reporting_subscription_count                            AS not_reporting_count,
     total_subscription_count                                    AS total_count,
     'reported metric - subscription based estimation'           AS estimation_grain
   FROM joined_counts

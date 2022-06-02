@@ -548,9 +548,6 @@ models:
               severity: warn
       - name: dim_product_tier_id
         description: The unique ID of a product tier determined in dim_product_tier.
-        tests:
-          - not_null:
-              severity: warn
       - name: product_id
         description: The ID of the product that contains the product rate plan.
         tests:

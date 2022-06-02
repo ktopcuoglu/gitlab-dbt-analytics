@@ -1078,6 +1078,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   notes:
+    additional_filtering: AND created_at NOT IN ( '2746-07-23 18:16:42.925+00 BC')
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'notes'
