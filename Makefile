@@ -108,20 +108,16 @@ update-containers:
 ########################################################################################################################
 prepare-dbt:
 	which poetry || python3 -m pip install poetry
-	poetry install
+	cd transform/snowflake-dbt/ && poetry install
 
 pip-dbt-shell:
-	poetry shell && "cd transform/snowflake-dbt/;"
+	cd transform/snowflake-dbt/ && poetry shell;
 
-dbt-deps:
-	cd transform/snowflake-dbt/;
-	poetry run bash -c "cd transform/snowflake-dbt/ dbt clean && dbt deps && poetry shell $*";
-
-run-dbt: dbt-deps
-	poetry shell;
+run-dbt:
+	cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run dbt deps && poetry shell;
 
 run-dbt-docs:
-	poetry run bash -c "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
+	cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run dbt deps && poetry run dbt docs generate --target docs && poetry run dbt docs serve --port 8081;
 
 clean-dbt:
 	find . -name '*.pyc' -delete
