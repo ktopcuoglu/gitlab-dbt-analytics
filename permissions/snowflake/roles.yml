@@ -1227,6 +1227,18 @@ roles:
                     - prod.common_mart_product.*
                     - prod.common_prep.*
 
+    - container_registry:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.container_registry
+            tables:
+                read:
+                    - raw.container_registry.*
+
     - date:
         privileges:
             databases:
