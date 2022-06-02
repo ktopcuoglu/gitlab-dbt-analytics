@@ -45,7 +45,7 @@ FROM workday
 
 filtered AS (
 
-  {{ gitlab_snowflake.workday_bamboohr_blending_filter('unioned', ['employee_id', 'effective_date', 'employment_status']) }}
+  {{ gitlab_snowflake.workday_bamboohr_blending_filter('unioned', ['employee_id', 'effective_date', 'employment_status'], filter_date='effective_date') }}
   
 )
 

@@ -90,3 +90,4 @@ SELECT
 FROM minused
 LEFT JOIN new_prep
   ON minused.wk_employee_id = new_prep.wk_employee_id
+  AND minused.valid_from_date = new_prep.valid_from_date
