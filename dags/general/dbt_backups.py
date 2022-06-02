@@ -65,7 +65,7 @@ def generate_task(task: str, backup_list: list, is_included: bool = False) -> No
 
     dbt_backups_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
-        dbt run-operation backup_to_gcs --args {args} --profiles-dir profile
+        dbt run-operation backup_to_gcs --args {args} --profiles-dir profile --target backup
     """
 
     dbt_backups = KubernetesPodOperator(
