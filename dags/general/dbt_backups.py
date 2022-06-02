@@ -64,7 +64,7 @@ def generate_task(task: str, backup_list: list, is_included: bool = False) -> No
     args = f"""'{{TABLE_LIST_BACKUP: {backup_list}, INCLUDED: {is_included}}}'"""
 
     dbt_backups_cmd = f"""
-        {dbt_install_deps_nosha_cmd} &&
+        {dbt_install_deps_nosha_cmd} && export SNOWFLAKE_TRANSFORM_WAREHOUSE={SNOWFLAKE_BACKUP_WAREHOUSE} &&
         dbt run-operation backup_to_gcs --args {args} --profiles-dir profile --target backup
     """
 
