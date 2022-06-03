@@ -4,7 +4,6 @@ import urllib.parse
 from datetime import date, timedelta
 from typing import List, Dict
 
-from airflow.contrib.kubernetes.pod import Resources
 from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
@@ -187,7 +186,8 @@ def slack_failed_task(context):
     Send a Slack alert.
     """
 
-    attachment, slack_channel, task_id, task_text = slack_defaults(context, "failure")
+    attachment, slack_channel, task_id, task_text = slack_defaults(
+        context, "failure")
     airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
     slack_alert = SlackWebhookOperator(
@@ -208,7 +208,8 @@ def slack_succeeded_task(context):
     Send a Slack alert.
     """
 
-    attachment, slack_channel, task_id, task_text = slack_defaults(context, "success")
+    attachment, slack_channel, task_id, task_text = slack_defaults(
+        context, "success")
     airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
     slack_alert = SlackWebhookOperator(
