@@ -73,7 +73,7 @@
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
-      dim_subscription.invoice_owner,
+      dim_subscription.invoice_owner_account,
       dim_subscription.creator_account,
       dim_subscription.was_purchased_through_reseller,
 

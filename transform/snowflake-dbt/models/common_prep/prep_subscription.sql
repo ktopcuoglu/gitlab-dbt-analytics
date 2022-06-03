@@ -33,7 +33,7 @@ WITH date_details AS (
       zuora_subscription.subscription_id                                        AS dim_subscription_id,
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
       zuora_account.account_id                                                  AS dim_billing_account_id,
-      zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner,
+      zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner_account,
       zuora_subscription.creator_account_id                                     AS dim_billing_account_id_creator_account,
       zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
       zuora_subscription.original_id                                            AS dim_subscription_id_original,
@@ -55,9 +55,9 @@ WITH date_details AS (
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
       zuora_subscription.namespace_name,
       zuora_subscription.namespace_id,
-      invoice_owner.account_name                                                AS invoice_owner,
+      invoice_owner.account_name                                                AS invoice_owner_account,
       creator_account.account_name                                              AS creator_account,
-      IFF(dim_billing_account_id_invoice_owner != dim_billing_account_id_creator_account, TRUE, FALSE)
+      IFF(dim_billing_account_id_invoice_owner_account != dim_billing_account_id_creator_account, TRUE, FALSE)
                                                                                 AS was_purchased_through_reseller,
 
       --Date Information

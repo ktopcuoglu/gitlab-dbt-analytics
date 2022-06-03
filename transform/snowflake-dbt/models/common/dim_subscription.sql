@@ -1,7 +1,7 @@
 {{ config({
     "tags": ["mnpi_exception"],
     "alias": "dim_subscription",
-    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"dim_subscription_id":"string"},{"subscription_name":"string"},{"subscription_version":"number"},{"dim_crm_account_id":"string"},{"dim_billing_account_id":"string"},{"dim_billing_account_id_invoice_owner":"string"},{"created_by_id":"string"},{"updated_by_id":"string"},{"dim_subscription_id_original":"string"},{"dim_subscription_id_previous":"string"},{"subscription_name_slugify":"string"},{"subscription_status":"string"},{"namespace_id":"string"},{"namespace_name":"string"},{"zuora_renewal_subscription_name":"string"},{"zuora_renewal_subscription_name_slugify":"array"},{"eoa_starter_bronze_offer_accepted":"string"},
+    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"dim_subscription_id":"string"},{"subscription_name":"string"},{"subscription_version":"number"},{"dim_crm_account_id":"string"},{"dim_billing_account_id":"string"},{"dim_billing_account_id_invoice_owner_account":"string"},{"created_by_id":"string"},{"updated_by_id":"string"},{"dim_subscription_id_original":"string"},{"dim_subscription_id_previous":"string"},{"subscription_name_slugify":"string"},{"subscription_status":"string"},{"namespace_id":"string"},{"namespace_name":"string"},{"zuora_renewal_subscription_name":"string"},{"zuora_renewal_subscription_name_slugify":"array"},{"eoa_starter_bronze_offer_accepted":"string"},
     {"subscription_sales_type":"string"},{"auto_renew_customerdot_hist":"string"},{"turn_on_operational_metrics":"string"},{"contract_operational_metrics":"string"},{"contract_auto_renewal":"string"},{"is_questionable_opportunity_mapping":"number"},
     {"turn_on_auto_renewal":"string"},{"subscription_start_date":"date"},{"subscription_end_date":"date"},{"subscription_lineage":"string"},{"oldest_subscription_in_cohort":"string"},
     {"created_by":"string"},{"updated_by":"string"}
@@ -48,7 +48,7 @@ WITH prep_amendment AS (
     --Common Dimension Keys
     subscription.dim_crm_account_id,
     subscription.dim_billing_account_id,
-    subscription.dim_billing_account_id_invoice_owner,
+    subscription.dim_billing_account_id_invoice_owner_account,
     subscription.dim_billing_account_id_creator_account,
     CASE
        WHEN subscription.subscription_created_date < '2019-02-01'
@@ -83,7 +83,7 @@ WITH prep_amendment AS (
     subscription.contract_seat_reconciliation,
     subscription.turn_on_seat_reconciliation,
     subscription_opportunity_mapping.is_questionable_opportunity_mapping,
-    subscription.invoice_owner,
+    subscription.invoice_owner_account,
     subscription.creator_account,
     subscription.was_purchased_through_reseller,
 
