@@ -194,8 +194,8 @@ Estimation model to estimate the usage for unreported self-managed instances.
 
 {% docs rpt_ping_counter_statistics %}
 
-**Description:**  First and Last Versions for Ping Metrics with Active Subscriptions by Edition and Prerelease
-- This table provides First and Last Application Versions along with Installation Counts for Active Subscriptions by Metric, Ping Edition and Prerelease.    
+**Description:**  First and Last Versions for Ping Metrics by Edition and Prerelease
+- This table provides First and Last Application Versions along with Installation Counts by Metric, Ping Edition and Prerelease.    
 
 **Data Grain:**
 - metrics_path
