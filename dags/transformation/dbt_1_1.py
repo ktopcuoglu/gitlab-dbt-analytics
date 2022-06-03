@@ -90,6 +90,7 @@ dag = DAG(
 )
 dag.doc_md = __doc__
 
+
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime) -> str:
     """
@@ -111,18 +112,12 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
         return "dbt-non-product-models-run"
 
 
-# branching_dbt_run = BranchPythonOperator(
-#    task_id="branching-dbt-run",
-#    python_callable=lambda: dbt_run_or_refresh(datetime.now()),
-#    dag=dag,
-# )
-
 # run non-product models on small warehouse
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -138,33 +133,13 @@ dbt_non_product_models_task = KubernetesPodOperator(
 )
 
 
-# run product models on large warehouse
-dbt_product_models_command = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models tag:product --exclude workspaces.* ; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-
-dbt_product_models_task = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
-    task_id="dbt-product-models-run",
-    name="dbt-product-models-run",
-    secrets=secrets_list,
-    env_vars=pod_env_vars,
-    arguments=[dbt_product_models_command],
-    dag=dag,
-)
-
 
 # dbt-test
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt --no-use-colors test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    dbt --no-use-colors test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
@@ -180,89 +155,6 @@ dbt_test = KubernetesPodOperator(
     dag=dag,
 )
 
-# dbt-results
-dbt_results_cmd = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-dbt_results = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
-    task_id="dbt-results",
-    name="dbt-results",
-    trigger_rule="all_done",
-    secrets=secrets_list,
-    env_vars=pod_env_vars,
-    arguments=[dbt_results_cmd],
-    dag=dag,
-)
 
-# dbt-workspaces
-dbt_workspaces_command = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_data_science.* workspaces.workspace_data.tdf.*; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-dbt_workspaces = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
-    task_id="dbt-workspaces",
-    name="dbt-workspaces",
-    trigger_rule="all_done",
-    secrets=secrets_list,
-    env_vars=pod_env_vars,
-    arguments=[dbt_workspaces_command],
-    dag=dag,
-)
+dbt_non_product_models_task >> dbt_test
 
-# dbt-workspaces-xl
-dbt_workspaces_xl_command = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.workspace_data_science.* ; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-dbt_workspaces_xl = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
-    task_id="dbt-workspaces-xl",
-    name="dbt-workspaces-xl",
-    trigger_rule="all_done",
-    secrets=secrets_list,
-    env_vars=pod_env_vars,
-    arguments=[dbt_workspaces_xl_command],
-    dag=dag,
-)
-
-# dbt-workspaces
-dbt_workspaces_test_command = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    dbt --no-use-colors test --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
-"""
-dbt_workspaces_test = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
-    task_id="dbt-workspaces-test",
-    name="dbt-workspaces-test",
-    trigger_rule="all_done",
-    secrets=secrets_list,
-    env_vars=pod_env_vars,
-    arguments=[dbt_workspaces_test_command],
-    dag=dag,
-)
-
-(
-    dbt_non_product_models_task
-    >> dbt_product_models_task
-    >> dbt_test
-    >> dbt_workspaces
-    >> dbt_workspaces_xl
-    >> dbt_workspaces_test
-    >> dbt_results
-)
