@@ -1,10 +1,10 @@
 # Update docs-packages.yml as well to have the docs site be accurate.
 packages:
   - git: git@gitlab.com:gitlab-data/snowflake_spend.git
-    revision: "master"
+    revision: "updates_for_dbt_1_1"
     warn-unpinned: false
   - git: git@gitlab.com:gitlab-data/data-tests.git
-    revision: "{{env_var('DATA_TEST_BRANCH')}}"
+    revision: "dbt_1_0_1_changes"
     warn-unpinned: false
   - package: dbt-labs/audit_helper
     version: 0.5.0
