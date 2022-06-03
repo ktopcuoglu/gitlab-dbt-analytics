@@ -12,14 +12,14 @@
 
 **Filters for Subscriptions on a Version:**
 - Includes metrics for 28 Day timeframe
-- Include metrics from pings with ping_delivery_type = 'self_managed'
+- Include metrics from pings with `ping_delivery_type = 'Self-Managed'`
 - `Forwarded` - Include Metrics on Valid versions
 - `Forwarded` - Metrics from GitLab Service Pings will not be considered
 - `Forwarded` - Include Metrics from the 'Last Ping of the Month' pings
 
 **Filters for All Reported Subscriptions:**
-- `Forwarded` - Include ping_delivery_type = 'self_managed'
-- `Forwarded` - Include metrics from pings with ping_delivery_type = 'self_managed'
+- `Forwarded` - Include `ping_delivery_type = 'Self-Managed'`
+- `Forwarded` - Include metrics from pings with `ping_delivery_type = 'Self-Managed'`
 - `Forwarded` - Includes metrics for 28 Day and All-Time timeframes
 - `Forwarded` - Include only the `Last Pings of the Month`
 
@@ -63,8 +63,8 @@
 - estimation_grain
 
 **Filters:**
-- `Forwarded` - Include ping_delivery_type = 'self_managed'
-- `Forwarded` - Include metrics from pings with ping_delivery_type = 'self_managed'
+- `Forwarded` - Include `ping_delivery_type = 'Self-Managed'`
+- `Forwarded` - Include metrics from pings with `ping_delivery_type = 'Self-Managed'`
 - `Forwarded` - Includes metrics for 28 Day and All-Time timeframes
 - `Forwarded` - Include only the `Last Pings of the Month`
 
@@ -107,7 +107,7 @@
 
 **Filters:**
 - Includes metrics for 28 Day timeframe
-- Include metrics from pings with ping_delivery_type = 'self_managed'
+- Include metrics from pings with `ping_delivery_type = 'Self-Managed'`
 - `Forwarded` - Include Metrics on Valid versions
 - `Forwarded` - Metrics from GitLab Service Pings will not be considered
 - `Forwarded` - Include Metrics from the 'Last Ping of the Month' pings
@@ -233,7 +233,7 @@ Estimation model to estimate the usage for unreported self-managed instances.
 - ping_edition
 
 **Filters:**
-- `Forwarded` - Include metrics from pings with ping_delivery_type = 'self_managed'
+- `Forwarded` - Include metrics from pings with `ping_delivery_type = 'Self-Managed'`
 
 **Business Logic in this Model:**
 - `Forwarded` - ARR and Licensed_User_Count is limited to:
@@ -288,7 +288,7 @@ Estimation model to estimate the usage for unreported self-managed instances.
 - dim_installation_id
 
 **Filters:**
-- Include ping_delivery_type = 'self_managed'
+- Include `ping_delivery_type = 'Self-Managed'`
 
 **Business Logic in this Model:**
 - MRR, ARR and Licensed_User_Count is limited to:
