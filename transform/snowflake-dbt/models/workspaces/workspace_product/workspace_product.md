@@ -302,8 +302,3 @@ Estimation model to estimate the usage for unreported self-managed instances.
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
 
 {% enddocs %}
-
-{% docs rpt_ping_instance_active_subscriptions %}
-
-List of active subscription and installations by month.
-{% enddocs %}
