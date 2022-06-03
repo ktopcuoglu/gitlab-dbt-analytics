@@ -515,7 +515,7 @@ roles:
     - analytics_engineer_core:
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         member_of:
             - transformer # until issue#11249
             - analyst_core
@@ -634,7 +634,7 @@ roles:
         warehouses:
             - airflow_testing_l
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
         privileges:
             databases:
@@ -912,7 +912,7 @@ roles:
     - transformer: # For automated jobs
         warehouses:
             - airflow_testing_l
-            - engineer_xl
+            - dev_m
             - merge_request_l
             - merge_request_xs
             - merge_request_xl
@@ -921,6 +921,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - backups_xs
             - datasiren
         member_of:
             - covid19
@@ -1225,6 +1226,18 @@ roles:
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
                     - prod.common_prep.*
+
+    - container_registry:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.container_registry
+            tables:
+                read:
+                    - raw.container_registry.*
 
     - date:
         privileges:
@@ -2368,6 +2381,14 @@ roles:
         warehouses:
             - analyst_xs
 
+    - alu:
+        member_of:
+            - analyst_sales
+            - restricted_safe
+            - data_team_analyst
+        warehouses:
+            - analyst_xs
+
     - amartin:
         member_of:
             - analyst_finance
@@ -2486,7 +2507,7 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -2529,7 +2550,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         owns:
             databases:
                 - david_prep
@@ -2753,7 +2774,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         owns:
             databases:
                 - ian_prep
@@ -3012,7 +3033,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3068,7 +3089,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
         owns:
             databases:
                 - judume_prep
@@ -3360,6 +3381,7 @@ roles:
         member_of:
             - reporter
             - marketo
+            - analyst_marketing
         warehouses:
             - analyst_xs
 
@@ -3725,7 +3747,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3767,7 +3789,7 @@ roles:
             - bi_tool_eval_db
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3826,7 +3848,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3868,7 +3890,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -3910,6 +3932,7 @@ roles:
             - analyst_marketing
             - restricted_safe
             - bi_tool_eval_read
+            - data_team_analyst
         warehouses:
             - analyst_xs
         owns:
@@ -3997,7 +4020,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -4229,7 +4252,7 @@ roles:
             - restricted_safe
         warehouses:
             - engineer_xs
-            - engineer_xl
+            - dev_m
             - loading
             - reporting
         owns:
@@ -4306,6 +4329,11 @@ users:
         can_login: yes
         member_of:
             - alpcohen
+
+    - alu:
+        can_login: yes
+        member_of:
+            - alu
 
     - amartin:
         can_login: yes
@@ -4810,11 +4838,14 @@ warehouses:
     - analyst_xs:
         size: x-small
 
+    - backups_xs:
+        size: x-small
+
     - datasiren:
         size: "4-x-large"
 
-    - engineer_xl:
-        size: x-large
+    - dev_m:
+        size: "medium"
 
     - engineer_xs:
         size: x-small

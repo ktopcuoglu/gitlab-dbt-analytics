@@ -1385,7 +1385,14 @@ models:
         tests:
           - not_null
           - unique
-
+  - name: gitlab_dotcom_project_settings_source
+    description: Base model for Gitlab.com project settings
+    columns:
+      - name: project_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
   - name: gitlab_dotcom_project_statistics_source
     description: Base model for Gitlab.com project statistics
     columns:

@@ -17,4 +17,5 @@ sources:
 
     tables:
     - name: pte_scores
+    - name: ptc_scores
 
