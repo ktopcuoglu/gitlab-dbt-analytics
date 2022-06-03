@@ -1072,20 +1072,18 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
 
 {% docs dim_ping_instance %}
 
-**Description:** Atomic Level Instance Service Ping data including Implementation Info along with Usage Metrics by Instance, Host and Date 
-- Atomic (lowest grain) data with a Single Record per Instance, Host_id and Date. 
+**Description:** Atomic Level Instance Service Ping data including Implementation Info along with Usage Metrics
+- Atomic (lowest grain) data with a Single Record per Ping.
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
-- dim_ping_date_id
+- dim_ping_instance_id
 
 **Filters:**
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
 
 **Business Logic in this Model:** 
-- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
+- `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)
 - `ping_delivery_type` = 'SaaS' WHERE UUID/Instance_id = ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f ELSE 'Self-Managed'
 - `is_internal` = TRUE WHERE:
   - UUID/Instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' 
@@ -1141,14 +1139,12 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance_metric %}
 
-**Description:** Atomic Level Instance Service Ping Metric data For All Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
+**Description:** Atomic Level Instance Service Ping Metric data For All Metrics by Ping
+- The data includes a single row per Ping and Metric.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
@@ -1157,10 +1153,7 @@ This new table will include all flattened target values for each metric for each
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
   - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
-- `dim_ping_instance_id` = 'source ping id' with the following grain:     
-  - dim_instance_id
-  - dim_host_id
-  - ping_created_at
+- Metrics that timed out (return -1) are set to a value of 0
 
 **Other Comments:**
 - The `fct_ping_instance_metric` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
@@ -1179,14 +1172,12 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance %}
 
-**Description:** Atomic Level Instance Service Ping with Identifiers by Instance, Host, Time
-- Atomic (lowest grain) information with basic Identifiers for easy joins out to Dimension Tables.  Includes Instance, Date, Product and Subscriptions id's. Event detail is not included in the table.
-- The data includes a single row per Instance, Host, and Ping Created Time.  The basic Id's for Subscription, Product and Location are included.
+**Description:** Atomic Level Instance Service Ping with Identifiers by Ping
+- Atomic (lowest grain) information with basic Identifiers for easy joins out to Dimension Tables.  Includes Instance, Date, Product and Subscriptions id's. Metric detail is not included in the table.
+- The data includes a single row per Ping.  The basic Id's for Subscription, Product and Location are included.
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
-- ping_created_at
+- dim_ping_instance_id
 
 **Filters:**
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
@@ -1195,10 +1186,6 @@ This new table will include all flattened target values for each metric for each
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
   - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
-- `dim_ping_instance_id` = 'source ping id' with the following grain:     
-  - dim_instance_id
-  - dim_host_id
-  - ping_created_at    
 
 **Other Comments:**
 - The `fct_ping_instance` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
@@ -1217,14 +1204,12 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance_metric_7_day %}
 
-**Description:** Atomic Level Instance Service Ping Metric data For 7 Day Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
+**Description:** Atomic Level Instance Service Ping Metric data For 7 Day Metrics by Ping and Metric
+- The data includes a single row per Ping and Metric.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - time_frame = '7d'
@@ -1234,10 +1219,7 @@ This new table will include all flattened target values for each metric for each
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
   - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
-- `dim_ping_instance_id` = 'source ping id' with the following grain:     
-  - dim_instance_id
-  - dim_host_id
-  - ping_created_at
+- Metrics that timed out (return -1) are set to a value of 0
 
 **Other Comments:**
 - Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
@@ -1255,14 +1237,12 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance_metric_28_day %}
 
-**Description:** Atomic Level Instance Service Ping Metric data For 28 Day Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
+**Description:** Atomic Level Instance Service Ping Metric data For 28 Day Metrics by Ping and Metric
+- The data includes a single row per Ping and Metric.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - time_frame = '28d'
@@ -1272,10 +1252,7 @@ This new table will include all flattened target values for each metric for each
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
   - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
-- `dim_ping_instance_id` = 'source ping id' with the following grain:     
-  - dim_instance_id
-  - dim_host_id
-  - ping_created_at
+- Metrics that timed out (return -1) are set to a value of 0
 
 **Other Comments:**
 - Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
@@ -1293,14 +1270,12 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance_metric_monthly %}
 
-**Description:** Atomic Level Instance Service Ping data with Last Pings of the Month by Instance, Host, Metric, Month for 28_Day and All_Time metrics  
+**Description:** Atomic Level Instance Service Ping data with Last Pings of the Month per Installation by Ping and Metric for 28_Day and All_Time metrics  
 - The basic Id's from the source for Subscription, Product and Location are included.
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
@@ -1313,11 +1288,8 @@ This new table will include all flattened target values for each metric for each
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
   - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
-- `dim_ping_instance_id` = 'source ping id' with the following grain:     
-  - dim_instance_id
-  - dim_host_id
-  - ping_created_at
-- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month  
+- `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)
+- Metrics that timed out (return -1) are set to a value of 0
 
 **Other Comments:**
 - Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
@@ -1335,14 +1307,12 @@ This new table will include all flattened target values for each metric for each
 
 {% docs fct_ping_instance_metric_all_time %}
 
-**Description:** Atomic Level Instance Service Ping Metric data For All-Time Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
+**Description:** Atomic Level Instance Service Ping Metric data For All-Time Metrics by Ping and Metric
+- The data includes a single row per Ping and Metric.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - time_frame = 'all'
@@ -1352,10 +1322,7 @@ This new table will include all flattened target values for each metric for each
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
   - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
-- `dim_ping_instance_id` = 'source ping id' with the following grain:     
-  - dim_instance_id
-  - dim_host_id
-  - ping_created_at
+- Metrics that timed out (return -1) are set to a value of 0
 
 **Other Comments:**
 - Sums, Counts and Percents of Usage (called metrics) is captured along wth the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 

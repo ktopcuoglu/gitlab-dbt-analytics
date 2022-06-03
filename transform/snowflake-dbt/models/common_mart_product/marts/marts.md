@@ -1,19 +1,18 @@
 {% docs mart_ping_instance_metric %}
 
-**Description:** Atomic Level Instance Service Ping data by Instance, Host, Metric, DateTime
+**Description:** Atomic Level Instance Service Ping data by Ping and Metric
 - Extra attributes for License, Subscription and Billing are included to allow single table queries more easily.
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - For SaaS, include only production gitlab.com installation
 
 **Business Logic in this Model:** 
-- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
+- `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)
+- Metrics that timed out (return -1) are set to a value of 0
 - `ping_delivery_type` = 'SaaS' WHERE UUID/Instance_id = ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f ELSE 'Self-Managed'
 - `is_internal` = TRUE WHERE:
   - UUID/Instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' 
@@ -51,18 +50,17 @@
 
 {% docs mart_ping_instance %}
 
-**Description:** Atomic Level Service Ping information with Subscription, Account and Product information by  Instance, Host and Date.  Metrics are not included in this data. 
+**Description:** Atomic Level Service Ping information with Subscription, Account and Product information by  Ping.  Metrics are not included in this data. 
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
-- dim_ping_date_id
+- dim_ping_instance_id
 
 **Filters:**
 - For SaaS, include only production gitlab.com installation
 
 **Business Logic in this Model:** 
-- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
+- `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)
+- Metrics that timed out (return -1) are set to a value of 0
 - `ping_delivery_type` = 'SaaS' WHERE UUID/Instance_id = ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f ELSE 'Self-Managed'
 - `is_internal` = TRUE WHERE:
   - UUID/Instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' 
@@ -96,14 +94,12 @@
 
 {% docs mart_ping_instance_metric_monthly %}
 
-**Description:** Atomic Level and Enriched Service Ping Metric information by Instance, Host, Metric, Month  
+**Description:** Atomic Level and Enriched Service Ping Metric information by Ping and Metric
 - Extra business related attributes for License, Subscription and Billing are included to allow single table queries more easily.
 
 **Data Grain:**
-- dim_instance_id
-- dim_host_id
+- dim_ping_instance_id
 - metrics_path
-- ping_created_at
 
 **Filters:**
 - Includes metrics for 28 Day and All-Time timeframes
@@ -111,7 +107,8 @@
 - For SaaS, include only production gitlab.com installation
 
 **Business Logic in this Model:** 
-- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
+- `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)
+- Metrics that timed out (return -1) are set to a value of 0
 - `ping_delivery_type` = 'SaaS' WHERE UUID/Instance_id = ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f ELSE 'Self-Managed'
 - `is_internal` = TRUE WHERE:
   - UUID/Instance_id = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f' 
