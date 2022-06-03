@@ -1,6 +1,7 @@
 WITH source AS (
   SELECT *
   FROM {{ source('workday','job_info') }}
+  WHERE _fivetran_deleted = FALSE
 ),
 
 renamed AS (

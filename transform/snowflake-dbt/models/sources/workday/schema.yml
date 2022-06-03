@@ -6,60 +6,63 @@ version: 2
 models:
   - name: workday_bonus_source
     description: '{{ doc("workday_custom_bonus") }}'
-    #tests:
-      #- dbt_utils.unique_combination_of_columns:
-          #combination_of_columns:
-            #- employee_id
-            #- bonus_date
-            #- bonus_type
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - bonus_date
+            - bonus_type
+            - initiated_at
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: bonus_date
         description: '{{ doc("workday_bonus_date") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: bonus_type
         description: '{{ doc("workday_bonus_type") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
+      - name: initiated_at
+        description: '{{ doc("workday_initiated_at") }}'
 
   - name: workday_compensation_source
     description: '{{ doc("workday_compensation") }}'
-    #tests:
-      #- dbt_utils.unique_combination_of_columns:
-          #combination_of_columns:
-            #- employee_id
-            #- effective_date
-            #- compensation_type
-            #- initiated_at
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - effective_date
+            - compensation_type
+            - initiated_at
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: effective_date
         description: '{{ doc("workday_effective_date") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: compensation_type
         description: '{{ doc("workday_compensation_type") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: compensation_change_reason
         description: '{{ doc("workday_compensation_change_reason") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: pay_rate
         description: '{{ doc("workday_pay_rate") }}'
@@ -83,8 +86,12 @@ models:
 
       - name: compensation_value_usd
         description: '{{ doc("workday_compensation_value_usd") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
+      - name: pay_frequency
+        description: '{{ doc("workday_pay_frequency") }}'
+      - name: per_pay_period_amount
+        description: '{{ doc("workday_per_pay_period_amount") }}'
 
       - name: initiated_at
         description: '{{ doc("workday_initiated_at") }}'
@@ -94,13 +101,17 @@ models:
 
   - name: workday_directory_source
     description: '{{ doc("workday_directory") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - valid_from
 
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
-          #- unique
+        tests:
+          - not_null
 
       - name: work_email
         description: '{{ doc("workday_work_email") }}'
@@ -117,15 +128,19 @@ models:
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
 
+      - name: valid_from
+      - name: valid_to
+      - name: is_current
+
   - name: workday_emergency_contacts_source
     description: '{{ doc("workday_employment_status") }}'
 
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
-          #- unique
+        tests:
+          - not_null
+          - unique
   
       - name: full_name
         description: '{{ doc("workday_full_name") }}'
@@ -142,15 +157,22 @@ models:
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
 
+      - name: initiated_at
+        description: '{{ doc("workday_initiated_at") }}'
+
   - name: workday_employee_mapping_source
     description: '{{ doc("workday_employee_mapping") }}'
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - uploaded_at
 
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
-          #- unique
+        tests:
+          - not_null
 
       - name: employment_history_status
         description: '{{ doc("workday_employment_history_status") }}'
@@ -202,21 +224,24 @@ models:
         description: '{{ doc("workday_nationality") }}'
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
+      - name: valid_from
+      - name: valid_to
+      - name: is_current
 
 
   - name: workday_employment_status_source
     description: '{{ doc("workday_employment_status") }}'
-    #tests:
-      #- dbt_utils.unique_combination_of_columns:
-          #combination_of_columns:
-            #- employee_id
-            #- effective_date
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - effective_date
 
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: effective_date
         description: '{{ doc("workday_effective_date") }}'
@@ -226,20 +251,23 @@ models:
         description: '{{ doc("workday_termination_type") }}'
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
+      - name: initiated_at
+        description: '{{ doc("workday_initiated_at") }}'
 
   - name: workday_job_info_source
     description: '{{ doc("workday_job_info") }}'
-    #tests:
-      #- dbt_utils.unique_combination_of_columns:
-          #combination_of_columns:
-            #- employee_id
-            #- effective_date
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - effective_date
+            - initiated_at
 
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: business_process_event
         description: '{{ doc("workday_business_process_event") }}'
@@ -249,8 +277,8 @@ models:
         description: '{{ doc("workday_division") }}'
       - name: effective_date
         description: '{{ doc("workday_effective_date") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
       - name: entity
         description: '{{ doc("workday_entity") }}'
       - name: job_title
@@ -259,20 +287,24 @@ models:
         description: '{{ doc("workday_reports_to") }}'
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
+      - name: initiated_at
+        description: '{{ doc("workday_initiated_at") }}'
+        tests:
+          - not_null
 
   - name: workday_on_target_earnings_source
     description: '{{ doc("workday_on_target_earnings") }}'
-    #tests:
-      #- dbt_utils.unique_combination_of_columns:
-          #combination_of_columns:
-            #- employee_id
-            #- effective_date
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - employee_id
+            - effective_date
 
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
-        #tests:
-          #- not_null
+        tests:
+          - not_null
 
       - name: annual_amount_local
         description: '{{ doc("workday_annual_amount_local") }}'
@@ -292,6 +324,8 @@ models:
         description: '{{ doc("workday_ote_usd") }}'
       - name: uploaded_at
         description: '{{ doc("workday_uploaded_at") }}'
+      - name: initiated_at
+        description: '{{ doc("workday_initiated_at") }}'
 
   - name: blended_bonus_source
     columns:
