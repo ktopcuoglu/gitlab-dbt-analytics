@@ -617,7 +617,6 @@ tables:
       , created_at
       , updated_at
       , active
-      , properties
       , NULL AS template
       , push_events
       , issues_events
