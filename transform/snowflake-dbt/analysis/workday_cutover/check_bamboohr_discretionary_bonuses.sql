@@ -21,7 +21,7 @@ old_prep AS (
     map.wk_employee_id,
     old.bonus_type,
     old.bonus_date,
-    DATE_TRUNC('day',old.uploaded_at) AS uploaded_at,
+    --DATE_TRUNC('day',old.uploaded_at) AS uploaded_at,
     old.department,
     old.division
   FROM old
@@ -35,7 +35,7 @@ new_prep AS (
     map.wk_employee_id,
     new.bonus_type,
     new.bonus_date,
-   DATE_TRUNC('day',new.uploaded_at) AS uploaded_at,
+   --DATE_TRUNC('day',new.uploaded_at) AS uploaded_at,
     new.department,
     new.division
   FROM new
@@ -67,9 +67,9 @@ SELECT
   minused.bonus_date,
   new_prep.bonus_date,
   minused.bonus_date = new_prep.bonus_date AS matched_bonus_date,
-  minused.uploaded_at,
-  new_prep.uploaded_at,
-  minused.uploaded_at = new_prep.uploaded_at AS matched_uploaded_at,
+  --minused.uploaded_at,
+  --new_prep.uploaded_at,
+  --minused.uploaded_at = new_prep.uploaded_at AS matched_uploaded_at,
   minused.department,
   new_prep.department,
   minused.department = new_prep.department AS matched_department,

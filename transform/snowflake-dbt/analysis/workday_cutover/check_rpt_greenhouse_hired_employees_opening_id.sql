@@ -85,3 +85,4 @@ SELECT
 FROM minused
 LEFT JOIN new_prep
   ON minused.opening_id = new_prep.opening_id
+  AND minused.job_opening_name = new_prep.job_opening_name

@@ -13,7 +13,7 @@ old AS (
 
 new AS (
   SELECT *
-  FROM {{ ref('map_emploworkday_bamboohr_promotions_xfyee_id') }} -- pempey_prep.sensitive.workday_bamboohr_promotions_xf
+  FROM {{ ref('workday_bamboohr_promotions_xf') }} -- pempey_prep.sensitive.workday_bamboohr_promotions_xf
 
 
 ),

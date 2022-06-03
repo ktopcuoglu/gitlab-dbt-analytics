@@ -27,7 +27,7 @@ select
   'bamboohr_id_employee_number_mapping' AS report_table,
   count(*) AS old_row_count,
   min(new.row_count) AS new_row_count
-from {{ ref('map_emplobamboohr_id_employee_number_mappingyee_id') }} --pempey_prep.sensitive.bamboohr_id_employee_number_mapping
+from {{ ref('bamboohr_id_employee_number_mapping') }} --pempey_prep.sensitive.bamboohr_id_employee_number_mapping
 LEFT JOIN (select count(*) AS row_count from {{ ref('workday_bamboohr_id_employee_number_mapping') }} ) AS new
 
 UNION
