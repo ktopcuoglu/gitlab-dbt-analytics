@@ -116,6 +116,9 @@ pip-dbt-shell:
 dbt-deps:
 	cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run dbt deps
 
+run-dbt-no-deps:
+	cd transform/snowflake-dbt/ && poetry shell;
+
 run-dbt: dbt-deps
 	cd transform/snowflake-dbt/ && poetry shell;
 
