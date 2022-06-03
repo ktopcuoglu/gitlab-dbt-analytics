@@ -186,8 +186,7 @@ def slack_failed_task(context):
     Send a Slack alert.
     """
 
-    attachment, slack_channel, task_id, task_text = slack_defaults(
-        context, "failure")
+    attachment, slack_channel, task_id, task_text = slack_defaults(context, "failure")
     airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
     slack_alert = SlackWebhookOperator(
@@ -208,8 +207,7 @@ def slack_succeeded_task(context):
     Send a Slack alert.
     """
 
-    attachment, slack_channel, task_id, task_text = slack_defaults(
-        context, "success")
+    attachment, slack_channel, task_id, task_text = slack_defaults(context, "success")
     airflow_http_con_id, slack_webhook = slack_webhook_conn(slack_channel)
 
     slack_alert = SlackWebhookOperator(

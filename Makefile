@@ -131,25 +131,29 @@ clean-dbt:
 ########################################################################################################################
 # Python
 ########################################################################################################################
+prepare-python:
+	which poetry || python3 -m pip install poetry
+	poetry install
+
 black:
 	@echo "Running lint (black)..."
-	@black --check .
+	@poetry run black --check .
 
 flake8:
 	@echo "Running flake8..."
-	@flake8 . --ignore=E203,E501,W503,W605
+	@poetry run flake8 . --ignore=E203,E501,W503,W605
 
 mypy:
 	@echo "Running mypy..."
-	@mypy extract/ --ignore-missing-imports
+	@poetry run mypy extract/ --ignore-missing-imports
 
 pylint:
 	@echo "Running pylint..."
-	@pylint . --disable=line-too-long,E0401,E0611,W1203,W1202
+	@poetry run pylint . --disable=line-too-long,E0401,E0611,W1203,W1202
 
 complexity:
 	@echo "Running complexity (Xenon)..."
-	@xenon --max-absolute B --max-modules B --max-average A . -i transform,shared_modules
+	@poetry run xenon --max-absolute B --max-modules B --max-average A . -i transform,shared_modules
 
 yq-lint:
 ifdef YAML
@@ -162,15 +166,15 @@ endif
 
 vulture:
 	@echo "Running vulture..."
-	@vulture . --min-confidence 100
+	@poetry run vulture . --min-confidence 100
 
 pytest:
 	@echo "Running pytest..."
-	@python3 -m pytest -vv -x
+	@poetry run python3 -m pytest -vv -x
 
 python_code_quality: black mypy pylint complexity flake8 vulture pytest
 	@echo "Running python_code_quality..."
 
 clean-python:
 	@echo "Running clean-python..."
-	@find . -name "*_cache*" -type d -exec rm -rf "{}" +
+	@poetry env remove python
