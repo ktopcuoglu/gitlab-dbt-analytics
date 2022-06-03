@@ -10,7 +10,7 @@ from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
-    DBT_IMAGE,
+    DBT_IMAGE_1_1,
     clone_repo_cmd,
     dbt_install_deps_cmd,
     gitlab_defaults,
@@ -83,7 +83,7 @@ secrets_list = [
 
 # Create the DAG
 dag = DAG(
-    "dbt",
+    "dbt_1_1",
     description="This DAG is responsible for doing incremental model refresh",
     default_args=default_args,
     schedule_interval="45 8 * * MON-SAT",
@@ -128,7 +128,7 @@ dbt_non_product_models_command = f"""
 
 dbt_non_product_models_task = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-non-product-models-run",
     name="dbt-non-product-models-run",
     secrets=secrets_list,
@@ -149,7 +149,7 @@ dbt_product_models_command = f"""
 
 dbt_product_models_task = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-product-models-run",
     name="dbt-product-models-run",
     secrets=secrets_list,
@@ -170,7 +170,7 @@ dbt_test_cmd = f"""
 """
 dbt_test = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-test",
     name="dbt-test",
     trigger_rule="all_done",
@@ -189,7 +189,7 @@ dbt_results_cmd = f"""
 """
 dbt_results = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-results",
     name="dbt-results",
     trigger_rule="all_done",
@@ -208,7 +208,7 @@ dbt_workspaces_command = f"""
 """
 dbt_workspaces = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-workspaces",
     name="dbt-workspaces",
     trigger_rule="all_done",
@@ -228,7 +228,7 @@ dbt_workspaces_xl_command = f"""
 """
 dbt_workspaces_xl = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-workspaces-xl",
     name="dbt-workspaces-xl",
     trigger_rule="all_done",
@@ -247,7 +247,7 @@ dbt_workspaces_test_command = f"""
 """
 dbt_workspaces_test = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-workspaces-test",
     name="dbt-workspaces-test",
     trigger_rule="all_done",
