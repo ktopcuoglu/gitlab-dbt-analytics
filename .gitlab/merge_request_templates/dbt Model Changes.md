@@ -53,7 +53,7 @@ Paste the results of dbt test here, including the command.
 
 * [ ] Run the [run_changed_models_sql](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8Frun_changed_models_sql) with the variable `ANCESTOR_TYPE` set to either `+` to build changed models and all upstream models or `@` to test downstream models and pull in all dependencies. 
 * [ ] Re-run the [run_changed_models_sql](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8Frun_changed_models_sql) pipeline (you may need to create a new pipeline with the "Run Pipeline" button), which will run only the models that have changed (ex. dim_subscription), to remove any un-related pipeline failures.  You do not need to provide any variable values in this case.
-
+* Note, if your changes are only to the `schema.yml` or `source.yml` files you will need to run the [dbt-run](https://about.gitlab.com/handbook/business-technology/data-team/platform/ci-jobs/#%EF%B8%8F-dbt-run) CI jobs while inputting the model names manually as those changes are not picked up by the `run_changed_*` jobs
 **Which pipeline job do I run?** See our [handbook page](https://about.gitlab.com/handbook/business-ops/data-team/platform/ci-jobs/) on our CI jobs to better understand which job to run.
 
 **Provide an explanation here in case of any pipeline failures:**
