@@ -1139,7 +1139,7 @@ This new table will include all flattened target values for each metric for each
 {% docs fct_ping_instance_metric %}
 
 **Description:** Atomic Level Instance Service Ping Metric data For All Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included. 
+- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
 - dim_instance_id
@@ -1175,7 +1175,7 @@ This new table will include all flattened target values for each metric for each
 
 **Description:** Atomic Level Instance Service Ping with Identifiers by Instance, Host, Time
 - Atomic (lowest grain) information with basic Identifiers for easy joins out to Dimension Tables.  Includes Instance, Date, Product and Subscriptions id's. Event detail is not included in the table.
-- The data includes a single row per Instance, Host, and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included.
+- The data includes a single row per Instance, Host, and Ping Created Time.  The basic Id's for Subscription, Product and Location are included.
 
 **Data Grain:**
 - dim_instance_id
@@ -1209,7 +1209,7 @@ This new table will include all flattened target values for each metric for each
 {% docs fct_ping_instance_metric_7_day %}
 
 **Description:** Atomic Level Instance Service Ping Metric data For 7 Day Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included. 
+- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
 - dim_instance_id
@@ -1244,7 +1244,7 @@ This new table will include all flattened target values for each metric for each
 {% docs fct_ping_instance_metric_28_day %}
 
 **Description:** Atomic Level Instance Service Ping Metric data For 28 Day Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included. 
+- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
 - dim_instance_id
@@ -1318,7 +1318,7 @@ This new table will include all flattened target values for each metric for each
 {% docs fct_ping_instance_metric_all_time %}
 
 **Description:** Atomic Level Instance Service Ping Metric data For All-Time Metrics by Instance, Host, Metric, DateTime
-- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Locaiton are included. 
+- The data includes a single row per Instance, Host, Metric and Ping Created Time.  The basic Id's for Subscription, Product and Location are included. 
 
 **Data Grain:**
 - dim_instance_id
