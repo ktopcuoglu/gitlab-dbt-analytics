@@ -1,5 +1,3 @@
-{% macro gtm_motion() %}
-
 CASE
     WHEN camp.campaign_parent_id = '7014M000001dowZQAQ'
     OR (bizible_medium = 'sponsorship'
@@ -271,4 +269,3 @@ WHEN (bizible_touchpoint_type = 'Web Form'
   WHEN bizible_integrated_campaign_grouping IN ('GitOps Use Case','GitOps GTM webcast')  THEN 'GitOps'
   ELSE NULL END
 
-{% endmacro %}

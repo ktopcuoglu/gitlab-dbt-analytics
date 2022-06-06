@@ -26,8 +26,8 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
                     last_utm_campaign                     AS last_utm_campaign,
                     last_utm_content                      AS last_utm_content,
                     lead_source                           AS lead_source
-            FROM {{ ref('sfdc_contact_xf') }} C
-            LEFT JOIN {{ ref('sfdc_accounts_xf') }}  a ON C.account_id = a.account_id
+            FROM {{ REF('sfdc_contact_xf') }} C
+            LEFT JOIN {{ REF('sfdc_accounts_xf') }}  a ON C.account_id = a.account_id
 )
 
     SELECT
@@ -199,14 +199,13 @@ CASE
  WHEN bplc.person_accepted_datetime >= bizible_touchpoint_date_normalized THEN tp.bizible_count_lead_creation_touch
  ELSE '0'
  END AS count_net_new_accepted,
-{{ gtm_motion() }} as gtm_motion
+{{ ref('gtm_motion') }} as gtm_motion
 FROM {{ ref('sfdc_bizible_touchpoint') }} tp
 LEFT JOIN bplc ON bplc.person_id = tp.bizible_person_id
 LEFT JOIN campaign camp ON tp.campaign_id=camp.campaign_id
 WHERE tp.is_deleted = FALSE
 
 ), ol AS (
-
     WITH biz_base AS (
         WITH oa AS(
             SELECT
@@ -224,9 +223,9 @@ WHERE tp.is_deleted = FALSE
               a.account_id                    AS account_id,
               a.account_name                  AS account_name,
               a.gtm_strategy                  AS gtm_strategy
-    FROM {{ ref('sfdc_opportunity_xf') }}  o
-    LEFT JOIN {{ ref('sfdc_accounts_xf') }} a ON o.account_id = a.account_id
-)
+FROM {{ ref('sfdc_opportunity_xf') }}  o
+LEFT JOIN {{ ref('sfdc_accounts_xf') }} a
+ON o.account_id = a.account_id)
 
 SELECT
   bat.*,
@@ -244,7 +243,8 @@ SELECT
   gtm_strategy                                            AS gtm_strategy,
   order_type_stamped                                      AS order_type_stamped
 FROM  {{ ref('sfdc_bizible_attribution_touchpoint_xf') }}  bat
-LEFT JOIN oa opp ON bat.opportunity_id = opp.opportunity_id
+LEFT JOIN oa opp
+ON bat.opportunity_id = opp.opportunity_id
 WHERE stage_name NOT LIKE '%Duplicate%'
 AND LOWER(is_deleted) LIKE 'false'
 
@@ -332,23 +332,24 @@ SELECT
     camp.type AS campaign_type,
     contacts.person_last_utm_campaign,
     contacts.person_last_utm_content,
-    {{ gtm_motion() }} as gtm_motion,
-    SUM(bizible_count_first_touch)                  AS first_weight,
-    SUM(bizible_count_w_shaped)                     AS w_weight,
-    SUM(bizible_count_u_shaped)                     AS u_weight,
-    SUM(bizible_attribution_percent_full_path)      AS full_weight,
-    COUNT(DISTINCT biz_base.opportunity_id)         AS l_touches,
-    (l_touches / count_touches)                     AS l_weight,
-    (biz_base.iacv * first_weight)                  AS first_iacv,
-    (biz_base.iacv * w_weight)                      AS w_iacv,
-    (biz_base.iacv * u_weight)                      AS u_iacv,
-    (biz_base.iacv * full_weight)                   AS full_iacv,
+    {{ ref('gtm_motion') }} as gtm_motion,
+    SUM(bizible_count_first_touch)                  AS first_weigh,
+    SUM(bizible_count_w_shaped)                     AS w_weigh,
+    SUM(bizible_count_u_shaped)                     AS u_weigh,
+    SUM(bizible_attribution_percent_full_path)      AS full_weigh,
+    COUNT(DISTINCT biz_base.opportunity_id)         AS l_touche,
+    (l_touches / count_touches)                     AS l_weigh,
+    (biz_base.iacv * first_weight)                  AS first_iac,
+    (biz_base.iacv * w_weight)                      AS w_iac,
+    (biz_base.iacv * u_weight)                      AS u_iac,
+    (biz_base.iacv * full_weight)                   AS full_iac,
     (biz_base.iacv* l_weight)                       AS linear_iacv
-FROM biz_base
-LEFT JOIN linear_base ON biz_base.opportunity_id = linear_base.opportunity_id
-LEFT JOIN campaigns_per_opp ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
-LEFT JOIN campaign camp ON biz_base.campaign_id=camp.campaign_id
-LEFT JOIN contacts ON biz_base.bizible_contact=contacts.contact_id
+FROM
+  biz_base
+  LEFT JOIN linear_base ON biz_base.opportunity_id = linear_base.opportunity_id
+  LEFT JOIN campaigns_per_opp ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
+  LEFT JOIN campaign camp ON biz_base.campaign_id=camp.campaign_id
+  LEFT JOIN contacts ON biz_base.bizible_contact=contacts.contact_id
 GROUP BY
      1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47
 
@@ -459,5 +460,5 @@ ORDER BY 1 DESC
 
 SELECT *
 FROM base
-ORDER BY sao_date DESC
+ORDER BY DATE DESC
 
