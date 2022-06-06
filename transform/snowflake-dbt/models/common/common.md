@@ -1072,7 +1072,7 @@ This model maps directly to the [Gitlab Metrics Dictionary](https://metrics.gitl
 
 {% docs dim_ping_instance %}
 
-**Description:** Atomic Level Instance Service Ping data including Implementation Info along with Usage Metrics
+**Description:** Atomic Level Instance Service Ping data including Implementation Info along with JSON payloads with Usage Metrics
 - Atomic (lowest grain) data with a Single Record per Ping.
 
 **Data Grain:**
