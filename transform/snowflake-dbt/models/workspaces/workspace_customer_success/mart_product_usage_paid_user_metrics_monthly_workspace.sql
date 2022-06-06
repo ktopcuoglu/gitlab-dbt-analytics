@@ -62,7 +62,7 @@
   
     SELECT
       *
-    FROM snowplow_metrics 
+    FROM redis_namespace_snowplow_clicks_aggregated_workspace 
     WHERE event_action = 'action_active_users_project_repo'
   
 ), sm_paid_user_metrics AS (
@@ -499,5 +499,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-05-26"
+    updated_date="2022-06-06"
 ) }}
