@@ -31,93 +31,53 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
 )
 
     SELECT
-      bp.person_id                                                AS person_id,
-      bp.bizible_lead_id                                          AS bizible_lead_id,
-      bp.bizible_contact_id                                       AS bizible_contact_id,
-      l.inquiry_datetime                                          AS lead_inquiry_datetime,
-      ca.inquiry_datetime                                         AS contact_inquiry_datetime,
-      l.marketo_qualified_lead_date                               AS lead_mql_datetime,
-      l.mql_datetime_inferred                                     AS lead_mql_datetime_inferred,
-      ca.marketo_qualified_lead_date                              AS contact_mql_datetime,
-      ca.mql_datetime_inferred                                    AS contact_mql_datetime_inferred,
-      l.accepted_datetime                                         AS lead_accepted_datetime,
-      ca.accepted_datetime                                        AS contact_accepted_datetime,
-      l.lead_status                                               AS lead_status,
-      ca.contact_status                                           AS contact_status,
-      l.title                                                     AS lead_title,
-      ca.contact_title                                            AS contact_title,
-      l.account_demographics_region                               AS region,
-      ca.region                                                   AS account_region,
-      l.sales_segmentation                                        AS sales_segmentation,
-      ca.sales_segmentation                                       AS account_sales_segmentation,
-      l.country                                                   AS country,
-      ca.mailing_country                                          AS mailing_country,
-      l.company                                                   AS company,
-      ca.account_name                                             AS account_name,
-      ca.gtm_strategy                                             AS gtm_strategy,
-      ca.account_id                                               AS account_id,
-      ca.ultimate_parent_account_id                               AS ultimate_parent_account_id,
-      ca.ultimate_parent_account_name                             AS ultimate_parent_account_name,
-      l.last_utm_campaign                                         AS last_utm_campaign,
-      l.last_utm_content                                          AS last_utm_content,
-      ca.last_utm_campaign                                        AS last_utm_campaign,
-      ca.last_utm_content                                         AS last_utm_content,
-      l.lead_source                                               AS lead_source,
-      ca.lead_source                                              AS lead_source,
-      CASE
-      WHEN l.lead_source IS NOT NULL THEN l.lead_source
-      ELSE ca.lead_source END AS person_lead_source,
-      CASE
-      WHEN bp.bizible_contact_id  IS NOT NULL THEN bp.bizible_contact_id
-      ELSE bp.bizible_lead_id END AS sfdc_person_id,
-      CASE
-      WHEN ca.region IS NOT NULL THEN ca.region
-      ELSE l.account_demographics_region
-      END AS person_region,
-      CASE
-      WHEN ca.sales_segmentation IS NOT NULL THEN ca.sales_segmentation
-      ELSE l.sales_segmentation
-      END AS person_sales_segmentation,
-      CASE
-      WHEN ca.mailing_country IS NOT NULL THEN ca.mailing_country
-      ELSE l.country
-      END AS person_country,
-      CASE
-      WHEN ca.contact_status IS NOT NULL THEN ca.contact_status
-      ELSE l.lead_status
-      END AS person_status,
-      CASE
-      WHEN ca.contact_title IS NOT NULL THEN ca.contact_title
-      ELSE l.title
-      END AS person_title,
-      CASE
-      WHEN ca.account_name IS NOT NULL THEN ca.account_name
-      ELSE l.company
-      END AS person_company,
-      CASE
-      WHEN ca.last_utm_campaign IS NOT NULL THEN ca.last_utm_campaign
-      ELSE l.last_utm_campaign
-      END AS person_last_utm_campaign,
-      CASE
-      WHEN ca.last_utm_content IS NOT NULL THEN ca.last_utm_content
-      ELSE l.last_utm_content
-      END AS person_last_utm_content,
-      CASE
-      WHEN ca.inquiry_datetime IS NOT NULL THEN ca.inquiry_datetime::DATE
-      ELSE l.inquiry_datetime::DATE
-      END AS person_inquiry_datetime,
-      CASE
-      WHEN ca.marketo_qualified_lead_date IS NOT NULL THEN ca.marketo_qualified_lead_date::DATE
-      ELSE l.marketo_qualified_lead_date::DATE
-      END AS person_mql_datetime,
-      CASE
-      WHEN ca.mql_datetime_inferred IS NOT NULL THEN ca.mql_datetime_inferred::DATE
-      ELSE l.mql_datetime_inferred::DATE
-      END AS person_mql_datetime_inferred,
-      CASE
-      WHEN ca.accepted_datetime IS NOT NULL THEN ca.accepted_datetime::DATE
-      ELSE l.accepted_datetime::DATE
-      END AS person_accepted_datetime
+      bp.person_id                                                                      AS person_id,
+      bp.bizible_lead_id                                                                AS bizible_lead_id,
+      bp.bizible_contact_id                                                             AS bizible_contact_id,
+      l.inquiry_datetime                                                                AS lead_inquiry_datetime,
+      ca.inquiry_datetime                                                               AS contact_inquiry_datetime,
+      l.marketo_qualified_lead_date                                                     AS lead_mql_datetime,
+      l.mql_datetime_inferred                                                           AS lead_mql_datetime_inferred,
+      ca.marketo_qualified_lead_date                                                    AS contact_mql_datetime,
+      ca.mql_datetime_inferred                                                          AS contact_mql_datetime_inferred,
+      l.accepted_datetime                                                               AS lead_accepted_datetime,
+      ca.accepted_datetime                                                              AS contact_accepted_datetime,
+      l.lead_status                                                                     AS lead_status,
+      ca.contact_status                                                                 AS contact_status,
+      l.title                                                                           AS lead_title,
+      ca.contact_title                                                                  AS contact_title,
+      l.account_demographics_region                                                     AS region,
+      ca.region                                                                         AS account_region,
+      l.sales_segmentation                                                              AS sales_segmentation,
+      ca.sales_segmentation                                                             AS account_sales_segmentation,
+      l.country                                                                         AS country,
+      ca.mailing_country                                                                AS mailing_country,
+      l.company                                                                         AS company,
+      ca.account_name                                                                   AS account_name,
+      ca.gtm_strategy                                                                   AS gtm_strategy,
+      ca.account_id                                                                     AS account_id,
+      ca.ultimate_parent_account_id                                                     AS ultimate_parent_account_id,
+      ca.ultimate_parent_account_name                                                   AS ultimate_parent_account_name,
+      l.last_utm_campaign                                                               AS last_utm_campaign,
+      l.last_utm_content                                                                AS last_utm_content,
+      ca.last_utm_campaign                                                              AS last_utm_campaign,
+      ca.last_utm_content                                                               AS last_utm_content,
+      l.lead_source                                                                     AS lead_source,
+      ca.lead_source                                                                    AS lead_source,
+      IFNULL(l.lead_source,  ca.lead_source)                                            AS person_lead_source,
+      IFNULL(bp.bizible_contact_id, bp.bizible_lead_id)                                 AS sfdc_person_id,
+      IFNULL(ca.region, l.account_demographics_region)                                  AS person_region,
+      IFNULL(ca.sales_segmentation, l.sales_segmentation)                               AS person_sales_segmentation,
+      IFNULL(ca.mailing_country, l.country)                                             AS person_country,
+      IFNULL(ca.contact_status, l.lead_status)                                          AS person_status,
+      IFNULL(ca.contact_title, l.title)                                                 AS person_title,
+      IFNULL(ca.account_name, l.company)                                                AS person_company,
+      IFNULL(ca.last_utm_campaign, l.last_utm_campaign)                                 AS person_last_utm_campaign,
+      IFNULL(ca.last_utm_content, l.last_utm_content)                                   AS person_last_utm_content,
+      IFNULL(ca.inquiry_datetime, l.inquiry_datetime)::DATE                             AS person_inquiry_datetime,
+      IFNULL(ca.marketo_qualified_lead_date, ca.marketo_qualified_lead_date)::DATE      AS person_mql_datetime,
+      IFNULL(ca.mql_datetime_inferred, l.mql_datetime_inferred)::DATE                   AS person_mql_datetime_inferred,
+      IFNULL(ca.accepted_datetime, l.accepted_datetime:)::DATE                          AS person_accepted_datetime
 
     FROM {{ ref('sfdc_bizible_person') }} bp
     LEFT JOIN {{ ref('sfdc_lead_xf') }} l ON bp.bizible_lead_id = l.lead_id
@@ -140,17 +100,13 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     camp.type AS campaign_type,
     tp.bizible_touchpoint_source,
     tp.bizible_medium,
-    1 AS Touchpoint_count,
+    1 AS touchpoint_count,
     tp.bizible_person_id,
     bplc.sfdc_person_id,
     tp.bizible_count_lead_creation_touch,
-    CASE
-    WHEN camp.campaign_parent_id = '7014M000001dn8MQAQ'
-       THEN 'Paid Social.LinkedIn Lead Gen'
-    WHEN bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI'
-       THEN 'Sponsorship'
-    ELSE tp.bizible_marketing_channel_path
-    END AS bizible_marketing_channel_path,
+      CASE WHEN camp.campaign_parent_id = '7014M000001dn8MQAQ' THEN 'Paid Social.LinkedIn Lead Gen'
+         WHEN bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI' THEN 'Sponsorship'
+      ELSE tp.bizible_marketing_channel_path END                AS bizible_marketing_channel_path,
     tp.bizible_landing_page,
     tp.bizible_form_url,
     tp.bizible_referrer_page,
@@ -166,11 +122,8 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     bplc.person_lead_source ,
     bplc.person_last_utm_campaign,
     bplc.person_last_utm_content,
-    CASE
-      WHEN bplc.person_region = 'NORAM' THEN 'AMER'
-      ELSE bplc.person_region
-      END AS person_region,
-    IFF(bplc.person_sales_segmentation IS NULL,'Unknown',bplc.person_sales_segmentation) AS sfdc_sales_segmentation,
+    IFF(bplc.person_region = 'NORAM', 'AMER', bplc.person_region)                    AS person_region
+    IFFNULL(bplc.person_sales_segmentation,'Unknown',bplc.person_sales_segmentation) AS sfdc_sales_segmentation,
     bplc.person_company,
     bplc.account_id,
     bplc.account_name,
@@ -314,10 +267,10 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     pipe_name,
     bizible_medium,
     bizible_referrer_page,
-    biz_base.lead_source AS lead_source,
-    opp_created_date::DATE AS opp_created_date,
-    sales_accepted_date::DATE AS sales_accepted_date,
-    close_date::DATE AS close_date,
+    biz_base.lead_source                    AS lead_source,
+    opp_created_date::DATE                  AS opp_created_date,
+    sales_accepted_date::DATE               AS sales_accepted_date,
+    close_date::DATE                        AS close_date,
     sales_qualified_month,
     biz_base.sales_type,
     biz_base.stage_name,
