@@ -206,8 +206,8 @@
     "stage_name": "configure"
   },
   {
-    "event_name": "notes",
-    "source_cte_name": "prep_note",
+    "event_name": "notes_other",
+    "source_cte_name": "other_notes_source",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -549,6 +549,12 @@
     FROM  prep_action
     WHERE target_type = 'WikiPage::Meta'
       AND event_action_type IN ('created', 'updated')
+
+), other_notes_source AS (
+
+    SELECT *
+    FROM prep_note
+    WHERE noteable_type NOT IN ('Epic', 'MergeRequest')
 
 ), epic_notes_source AS (
 
