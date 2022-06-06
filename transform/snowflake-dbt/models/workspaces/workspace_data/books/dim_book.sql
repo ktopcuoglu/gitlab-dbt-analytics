@@ -6,7 +6,7 @@ WITH source AS (
       title AS book_title, 
       language,
       isbn, 
-      num_pages
+      num_pages AS pages_count
   FROM {{ ref('sheetload_books') }}
 
 )
@@ -16,5 +16,5 @@ WITH source AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2022-06-02",
-    updated_date="2022-06-02"
+    updated_date="2022-06-06"
 ) }}

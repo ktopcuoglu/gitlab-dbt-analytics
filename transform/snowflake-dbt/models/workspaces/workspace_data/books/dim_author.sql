@@ -13,5 +13,5 @@ WITH source AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2022-06-02",
-    updated_date="2022-06-02"
+    updated_date="2022-06-06"
 ) }}

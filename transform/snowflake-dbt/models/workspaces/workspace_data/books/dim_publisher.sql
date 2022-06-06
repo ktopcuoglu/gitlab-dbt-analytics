@@ -1,8 +1,8 @@
 WITH source AS (
 
-  SELECT 
+  SELECT DISTINCT
     --Primary Key
-      {{ dbt_utils.surrogate_key([publisher]) }} AS dim_publisher_key, 
+      {{ dbt_utils.surrogate_key([publisher]) }} AS dim_publisher_id, 
       publisher
   FROM {{ ref('sheetload_books') }}
 
@@ -13,5 +13,5 @@ WITH source AS (
     created_by="@lisvinueza",
     updated_by="@lisvinueza",
     created_date="2022-06-02",
-    updated_date="2022-06-02"
+    updated_date="2022-06-06"
 ) }}
