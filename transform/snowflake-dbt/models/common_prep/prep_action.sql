@@ -10,7 +10,7 @@
     ('dim_date', 'dim_date'),
 ]) }}
 
-), joined AS (
+, joined AS (
 
     SELECT 
       gitlab_dotcom_events_source.id                                                              AS dim_action_id,
