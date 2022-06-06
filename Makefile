@@ -110,7 +110,7 @@ update-containers:
 prepare-dbt:
 	which poetry || python3 -m pip install poetry
 	cd transform/snowflake-dbt/ && poetry install
-	$(DBT_DEPS)
+	"$(DBT_DEPS)"
 
 pip-dbt-shell:
 	cd transform/snowflake-dbt/ && poetry shell;
@@ -118,12 +118,15 @@ pip-dbt-shell:
 run-dbt-no-deps:
 	cd transform/snowflake-dbt/ && poetry shell;
 
+dbt-deps:
+	cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run dbt deps
+
 run-dbt:
-	$(DBT_DEPS)
+	"$(DBT_DEPS)"
 	cd transform/snowflake-dbt/ && poetry shell;
 
 run-dbt-docs:
-	$(DBT_DEPS)
+	"$(DBT_DEPS)"
 	cd transform/snowflake-dbt/ && poetry run dbt docs generate --target docs && poetry run dbt docs serve --port 8081;
 
 clean-dbt:
