@@ -2409,11 +2409,11 @@ models:
         description: The name of the product group
       - name: event_created_at
         description: Timestamp of the event
-      - name: plan_id_at_event_date
+      - name: plan_id_at_event_timestamp
         description: The ID of the ultimate parent namespace's plan on the day the event was created. Defaults to '34' if a value is not available.
-      - name: plan_name_at_event_date
+      - name: plan_name_at_event_timestamp
         description: The name of the ultimate parent namespace's plan type on the day when the event was created. Defaults to 'free' if a value is not available.
-      - name: plan_was_paid_at_event_date
+      - name: plan_was_paid_at_event_timestamp
         description: Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created
       - name: data_source
         description: The source application where the data was extracted from.
