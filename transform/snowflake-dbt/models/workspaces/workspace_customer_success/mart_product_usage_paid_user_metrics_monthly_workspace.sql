@@ -460,7 +460,7 @@
       ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN action_active_users_project_repo_users
       ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
-      AND action_active_users_project_repo_users.gsc_namespace_id = monthly_saas_metrics.dim_namespace_id
+      AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -499,5 +499,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-05-24"
+    updated_date="2022-05-26"
 ) }}

@@ -921,6 +921,7 @@ roles:
             - transforming_xl
             - transforming_xs
             - transforming_4xl
+            - backups_xs
             - datasiren
         member_of:
             - covid19
@@ -1225,6 +1226,18 @@ roles:
                     - prod.common_mart_sales.*
                     - prod.common_mart_product.*
                     - prod.common_prep.*
+
+    - container_registry:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.container_registry
+            tables:
+                read:
+                    - raw.container_registry.*
 
     - date:
         privileges:
@@ -4823,6 +4836,9 @@ warehouses:
         size: x-large
 
     - analyst_xs:
+        size: x-small
+
+    - backups_xs:
         size: x-small
 
     - datasiren:
