@@ -349,8 +349,8 @@ LEFT JOIN linear_base ON biz_base.opportunity_id = linear_base.opportunity_id
 LEFT JOIN campaigns_per_opp ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
 LEFT JOIN campaign camp ON biz_base.campaign_id=camp.campaign_id
 LEFT JOIN contacts ON biz_base.bizible_contact=contacts.contact_id
-{{ dbt_utils.group_by(n=47) }}
-
+GROUP BY
+     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47
 
 ), unioned AS (
 
@@ -378,7 +378,7 @@ SELECT
   0                                             AS linear_sao
 FROM tp
 WHERE tp.bizible_integrated_campaign_grouping <> 'None'
-{{ dbt_utils.group_by(n=16) }}
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 UNION ALL
 SELECT
   ol.bizible_touchpoint_date_normalized         AS opp_touchpoint_date_normalized,
@@ -406,7 +406,7 @@ SELECT
   ELSE 0 END AS linear_sao
 FROM ol
 WHERE ol.bizible_integrated_campaign_grouping <> 'None'
-{{ dbt_utils.group_by(n=16) }}
+GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
 
 ), final AS (
 
@@ -447,7 +447,7 @@ WHERE ol.bizible_integrated_campaign_grouping <> 'None'
   FROM unioned
   WHERE sao_date >= '2020-02-01'::DATE
   AND bizible_integrated_campaign_grouping <>'None'
-  {{ dbt_utils.group_by(n=23) }}
+  GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
 
 )
 
