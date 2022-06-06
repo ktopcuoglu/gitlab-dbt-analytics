@@ -77,7 +77,7 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
       IFNULL(ca.inquiry_datetime, l.inquiry_datetime)::DATE                             AS person_inquiry_datetime,
       IFNULL(ca.marketo_qualified_lead_date, ca.marketo_qualified_lead_date)::DATE      AS person_mql_datetime,
       IFNULL(ca.mql_datetime_inferred, l.mql_datetime_inferred)::DATE                   AS person_mql_datetime_inferred,
-      IFNULL(ca.accepted_datetime, l.accepted_datetime:)::DATE                          AS person_accepted_datetime
+      IFNULL(ca.accepted_datetime, l.accepted_datetime)::DATE                           AS person_accepted_datetime
 
     FROM {{ ref('sfdc_bizible_person') }} bp
     LEFT JOIN {{ ref('sfdc_lead_xf') }} l ON bp.bizible_lead_id = l.lead_id
@@ -119,11 +119,11 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     bplc.person_mql_datetime:: DATE                         AS person_mql_datetime,
     bplc.person_accepted_datetime:: DATE                    AS person_accepted_datetime,
     bplc.person_status,
-    bplc.person_lead_source ,
+    bplc.person_lead_source,
     bplc.person_last_utm_campaign,
     bplc.person_last_utm_content,
-    IFF(bplc.person_region = 'NORAM', 'AMER', bplc.person_region)                    AS person_region,
-    IFFNULL(bplc.person_sales_segmentation,'Unknown',bplc.person_sales_segmentation) AS sfdc_sales_segmentation,
+    IFF(bplc.person_region = 'NORAM', 'AMER', bplc.person_region)           AS person_region,
+    IFNULL(bplc.person_sales_segmentation,'Unknown')                        AS sfdc_sales_segmentation,
     bplc.person_company,
     bplc.account_id,
     bplc.account_name,
