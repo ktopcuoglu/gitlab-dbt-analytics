@@ -14,7 +14,7 @@
     ('namespaces', 'dim_namespace'),
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
-    ('snowplow_metrics', 'snowplow_based_redis_counters_workspace')
+    ('snowplow_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace')
 ]) }}
 
 
