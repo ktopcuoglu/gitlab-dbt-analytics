@@ -122,7 +122,7 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     bplc.person_lead_source ,
     bplc.person_last_utm_campaign,
     bplc.person_last_utm_content,
-    IFF(bplc.person_region = 'NORAM', 'AMER', bplc.person_region)                    AS person_region
+    IFF(bplc.person_region = 'NORAM', 'AMER', bplc.person_region)                    AS person_region,
     IFFNULL(bplc.person_sales_segmentation,'Unknown',bplc.person_sales_segmentation) AS sfdc_sales_segmentation,
     bplc.person_company,
     bplc.account_id,
