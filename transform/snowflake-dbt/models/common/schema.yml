@@ -573,6 +573,24 @@ models:
           - unique
         tags: [ "tdf", "purchase_channel", "common", "sales_funnel" ]
 
+  - name: dim_order
+    description: '{{ doc("dim_order") }}'
+    columns:
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_order_action
+    description: '{{ doc("dim_order_action") }}'
+    columns:
+      - name: dim_order_action_id
+        description: Unique identifier for each order action. These represent any action taken grouped under a single order.
+        tests:
+          - not_null
+          - unique
+
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
     columns:
