@@ -14,7 +14,7 @@
     ('namespaces', 'dim_namespace'),
     ('charges', 'mart_charge'),
     ('dates', 'dim_date'),
-    ('snowplow_metrics', 'snowplow_based_redis_counters_workspace')
+    ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace')
 ]) }}
 
 
@@ -62,7 +62,7 @@
   
     SELECT
       *
-    FROM redis_namespace_snowplow_clicks_aggregated_workspace 
+    FROM aggregated_metrics 
     WHERE event_action = 'action_active_users_project_repo'
   
 ), sm_paid_user_metrics AS (
