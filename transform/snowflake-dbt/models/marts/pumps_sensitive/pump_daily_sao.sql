@@ -131,158 +131,158 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
 
 )
 
-SELECT
-date_trunc('month',tp.bizible_touchpoint_date)::DATE::DATE  AS bizible_touchpoint_date_month_yr,
-tp.bizible_touchpoint_date::DATE                            AS bizible_touchpoint_date_normalized,
-tp.bizible_touchpoint_date,
-tp.touchpoint_id,
-tp.bizible_touchpoint_type,
-camp.type AS campaign_type,
-tp.bizible_touchpoint_source,
-tp.bizible_medium,
-1 AS Touchpoint_count,
-tp.bizible_person_id,
-bplc.sfdc_person_id,
-tp.bizible_count_lead_creation_touch,
-CASE
-WHEN camp.campaign_parent_id = '7014M000001dn8MQAQ'
-   THEN 'Paid Social.LinkedIn Lead Gen'
-WHEN bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI'
-   THEN 'Sponsorship'
-ELSE tp.bizible_marketing_channel_path
-END AS bizible_marketing_channel_path,
-tp.bizible_landing_page,
-tp.bizible_form_url,
-tp.bizible_referrer_page,
-tp.bizible_ad_campaign_name,
-tp.bizible_ad_content,
-tp.bizible_form_url_raw,
-tp.bizible_landing_page_raw,
-tp.bizible_referrer_page_raw,
-bplc.person_inquiry_datetime:: DATE                     AS person_inquiry_datetime,
-bplc.person_mql_datetime:: DATE                         AS person_mql_datetime,
-bplc.person_accepted_datetime:: DATE                    AS person_accepted_datetime,
-bplc.person_status,
-bplc.person_lead_source ,
-bplc.person_last_utm_campaign,
-bplc.person_last_utm_content,
-CASE
-  WHEN bplc.person_region = 'NORAM' THEN 'AMER'
-  ELSE bplc.person_region
-  END AS person_region,
-IFF(bplc.person_sales_segmentation IS NULL,'Unknown',bplc.person_sales_segmentation) AS sfdc_sales_segmentation,
-bplc.person_company,
-bplc.account_id,
-bplc.account_name,
-bplc.ultimate_parent_account_id,
-bplc.ultimate_parent_account_name,
-bplc.gtm_strategy,
-UPPER(bplc.person_title)        AS person_title,
-UPPER(bplc.country)             AS person_country,
-CASE
- WHEN bplc.person_mql_datetime >= bizible_touchpoint_date_normalized THEN '1'
- ELSE '0'
- END AS count_mql,
-CASE
- WHEN count_mql=1 THEN bplc.sfdc_person_id
- ELSE NULL
- END AS mql_person,
-CASE
- WHEN bplc.person_mql_datetime >= bizible_touchpoint_date_normalized THEN tp.bizible_count_lead_creation_touch
- ELSE '0'
- END AS count_net_new_mql,
-CASE
- WHEN bplc.person_accepted_datetime >= bizible_touchpoint_date_normalized THEN '1'
- ELSE '0'
- END AS count_accepted,
-CASE
- WHEN bplc.person_accepted_datetime >= bizible_touchpoint_date_normalized THEN tp.bizible_count_lead_creation_touch
- ELSE '0'
- END AS count_net_new_accepted,
-{{ gtm_motion() }} as gtm_motion
-FROM {{ ref('sfdc_bizible_touchpoint') }} tp
-LEFT JOIN bplc ON bplc.person_id = tp.bizible_person_id
-LEFT JOIN campaign camp ON tp.campaign_id=camp.campaign_id
-WHERE tp.is_deleted = FALSE
+  SELECT
+    date_trunc('month',tp.bizible_touchpoint_date)::DATE::DATE  AS bizible_touchpoint_date_month_yr,
+    tp.bizible_touchpoint_date::DATE                            AS bizible_touchpoint_date_normalized,
+    tp.bizible_touchpoint_date,
+    tp.touchpoint_id,
+    tp.bizible_touchpoint_type,
+    camp.type AS campaign_type,
+    tp.bizible_touchpoint_source,
+    tp.bizible_medium,
+    1 AS Touchpoint_count,
+    tp.bizible_person_id,
+    bplc.sfdc_person_id,
+    tp.bizible_count_lead_creation_touch,
+    CASE
+    WHEN camp.campaign_parent_id = '7014M000001dn8MQAQ'
+       THEN 'Paid Social.LinkedIn Lead Gen'
+    WHEN bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI'
+       THEN 'Sponsorship'
+    ELSE tp.bizible_marketing_channel_path
+    END AS bizible_marketing_channel_path,
+    tp.bizible_landing_page,
+    tp.bizible_form_url,
+    tp.bizible_referrer_page,
+    tp.bizible_ad_campaign_name,
+    tp.bizible_ad_content,
+    tp.bizible_form_url_raw,
+    tp.bizible_landing_page_raw,
+    tp.bizible_referrer_page_raw,
+    bplc.person_inquiry_datetime:: DATE                     AS person_inquiry_datetime,
+    bplc.person_mql_datetime:: DATE                         AS person_mql_datetime,
+    bplc.person_accepted_datetime:: DATE                    AS person_accepted_datetime,
+    bplc.person_status,
+    bplc.person_lead_source ,
+    bplc.person_last_utm_campaign,
+    bplc.person_last_utm_content,
+    CASE
+      WHEN bplc.person_region = 'NORAM' THEN 'AMER'
+      ELSE bplc.person_region
+      END AS person_region,
+    IFF(bplc.person_sales_segmentation IS NULL,'Unknown',bplc.person_sales_segmentation) AS sfdc_sales_segmentation,
+    bplc.person_company,
+    bplc.account_id,
+    bplc.account_name,
+    bplc.ultimate_parent_account_id,
+    bplc.ultimate_parent_account_name,
+    bplc.gtm_strategy,
+    UPPER(bplc.person_title)        AS person_title,
+    UPPER(bplc.country)             AS person_country,
+    CASE
+     WHEN bplc.person_mql_datetime >= bizible_touchpoint_date_normalized THEN '1'
+     ELSE '0'
+     END AS count_mql,
+    CASE
+     WHEN count_mql=1 THEN bplc.sfdc_person_id
+     ELSE NULL
+     END AS mql_person,
+    CASE
+     WHEN bplc.person_mql_datetime >= bizible_touchpoint_date_normalized THEN tp.bizible_count_lead_creation_touch
+     ELSE '0'
+     END AS count_net_new_mql,
+    CASE
+     WHEN bplc.person_accepted_datetime >= bizible_touchpoint_date_normalized THEN '1'
+     ELSE '0'
+     END AS count_accepted,
+    CASE
+     WHEN bplc.person_accepted_datetime >= bizible_touchpoint_date_normalized THEN tp.bizible_count_lead_creation_touch
+     ELSE '0'
+     END AS count_net_new_accepted,
+    {{ gtm_motion() }} as gtm_motion
+  FROM {{ ref('sfdc_bizible_touchpoint') }} tp
+  LEFT JOIN bplc ON bplc.person_id = tp.bizible_person_id
+  LEFT JOIN campaign camp ON tp.campaign_id=camp.campaign_id
+  WHERE tp.is_deleted = FALSE
 
 ), ol AS (
 
-    WITH biz_base AS (
-        WITH oa AS(
-            SELECT
-              o.opportunity_id                AS opportunity_id,
-              o.created_date                  AS opp_created_date,
-              o.sales_accepted_date           AS sales_accepted_date,
-              o.close_date                    AS close_date,
-              o.deal_path                     AS deal_path,
-              o.stage_name                    AS stage_name,
-              o.order_type_stamped            AS order_type_stamped,
-              o.is_won                        AS is_won,
-              o.incremental_acv               AS iacv,
-              a.sales_segment                 AS sales_segment,
-              a.account_demographics_region   AS account_region,
-              a.account_id                    AS account_id,
-              a.account_name                  AS account_name,
-              a.gtm_strategy                  AS gtm_strategy
-    FROM {{ ref('sfdc_opportunity_xf') }}  o
-    LEFT JOIN {{ ref('sfdc_accounts_xf') }} a ON o.account_id = a.account_id
+  WITH biz_base AS (
+    WITH oa AS(
+      SELECT
+        o.opportunity_id                AS opportunity_id,
+        o.created_date                  AS opp_created_date,
+        o.sales_accepted_date           AS sales_accepted_date,
+        o.close_date                    AS close_date,
+        o.deal_path                     AS deal_path,
+        o.stage_name                    AS stage_name,
+        o.order_type_stamped            AS order_type_stamped,
+        o.is_won                        AS is_won,
+        o.incremental_acv               AS iacv,
+        a.sales_segment                 AS sales_segment,
+        a.account_demographics_region   AS account_region,
+        a.account_id                    AS account_id,
+        a.account_name                  AS account_name,
+        a.gtm_strategy                  AS gtm_strategy
+  FROM {{ ref('sfdc_opportunity_xf') }}  o
+  LEFT JOIN {{ ref('sfdc_accounts_xf') }} a ON o.account_id = a.account_id
 )
 
-SELECT
-  bat.*,
-  opp_created_date                                        AS opp_created_date,
-  sales_accepted_date                                     AS sales_accepted_date,
-  close_date                                              AS close_date,
-  deal_path                                               AS deal_path,
-  stage_name                                              AS stage_name,
-  is_won                                                  AS is_won,
-  iacv                                                    AS iacv,
-  IFF(sales_segment IS NULL,'Unknown',sales_segment)      AS sales_segment,
-  account_region                                          AS account_region,
-  account_id                                              AS account_id,
-  account_name                                            AS account_name,
-  gtm_strategy                                            AS gtm_strategy,
-  order_type_stamped                                      AS order_type_stamped
-FROM  {{ ref('sfdc_bizible_attribution_touchpoint_xf') }}  bat
-LEFT JOIN oa opp ON bat.opportunity_id = opp.opportunity_id
-WHERE stage_name NOT LIKE '%Duplicate%'
-AND LOWER(is_deleted) LIKE 'false'
+  SELECT
+    bat.*,
+    opp_created_date                                        AS opp_created_date,
+    sales_accepted_date                                     AS sales_accepted_date,
+    close_date                                              AS close_date,
+    deal_path                                               AS deal_path,
+    stage_name                                              AS stage_name,
+    is_won                                                  AS is_won,
+    iacv                                                    AS iacv,
+    IFF(sales_segment IS NULL,'Unknown',sales_segment)      AS sales_segment,
+    account_region                                          AS account_region,
+    account_id                                              AS account_id,
+    account_name                                            AS account_name,
+    gtm_strategy                                            AS gtm_strategy,
+    order_type_stamped                                      AS order_type_stamped
+  FROM  {{ ref('sfdc_bizible_attribution_touchpoint_xf') }}  bat
+  LEFT JOIN oa opp ON bat.opportunity_id = opp.opportunity_id
+  WHERE stage_name NOT LIKE '%Duplicate%'
+  AND LOWER(is_deleted) LIKE 'false'
 
 ), contacts AS (
 
-SELECT
+  SELECT
     contact_id          AS contact_id,
     mailing_country     AS mailing_country,
     last_utm_campaign   AS person_last_utm_campaign,
     last_utm_content    AS person_last_utm_content
-FROM {{ ref('sfdc_contact_xf') }}
+  FROM {{ ref('sfdc_contact_xf') }}
 
 ), campaign AS (
 
-SELECT *
-FROM {{ ref('sfdc_campaign') }}
+  SELECT *
+  FROM {{ ref('sfdc_campaign') }}
 
 ), linear_base AS (
 
-SELECT
+  SELECT
     opportunity_id,
     iacv,
     COUNT(DISTINCT biz_base.touchpoint_id)  AS count_touches,
     iacv/count_touches                      AS weighted_linear_iacv
-FROM biz_base
-GROUP BY 1,2
+  FROM biz_base
+  GROUP BY 1,2
 
 ), campaigns_per_opp AS (
 
-SELECT
+  SELECT
     opportunity_id,
     COUNT(DISTINCT biz_base.campaign_id) AS campaigns_per_opp
-FROM biz_base
-GROUP BY 1
+  FROM biz_base
+  GROUP BY 1
 
 )
 
-SELECT
+  SELECT
     biz_base.opportunity_id AS opportunity_id,
     touchpoint_id,
     biz_base.campaign_id,
@@ -344,106 +344,105 @@ SELECT
     (biz_base.iacv * u_weight)                      AS u_iacv,
     (biz_base.iacv * full_weight)                   AS full_iacv,
     (biz_base.iacv* l_weight)                       AS linear_iacv
-FROM biz_base
-LEFT JOIN linear_base ON biz_base.opportunity_id = linear_base.opportunity_id
-LEFT JOIN campaigns_per_opp ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
-LEFT JOIN campaign camp ON biz_base.campaign_id=camp.campaign_id
-LEFT JOIN contacts ON biz_base.bizible_contact=contacts.contact_id
-{{ dbt_utils.group_by(n=47) }}
-
+  FROM biz_base
+  LEFT JOIN linear_base ON biz_base.opportunity_id = linear_base.opportunity_id
+  LEFT JOIN campaigns_per_opp ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
+  LEFT JOIN campaign camp ON biz_base.campaign_id=camp.campaign_id
+  LEFT JOIN contacts ON biz_base.bizible_contact=contacts.contact_id
+  {{ dbt_utils.group_by(n=47) }}
 
 ), unioned AS (
 
-SELECT
-  tp.bizible_touchpoint_date_normalized         AS bizible_touchpoint_date_normalized,
-  tp.bizible_integrated_campaign_grouping       AS bizible_integrated_campaign_grouping,
-  tp.bizible_marketing_channel_path             AS bizible_marketing_channel_path,
-  tp.bizible_form_url_raw                       AS bizible_form_url_raw,
-  tp.bizible_landing_page_raw                   AS bizible_landing_page_raw,
-  tp.sfdc_sales_segmentation                    AS sales_segment,
-  NULL                                          AS sales_type,
-  NULL                                          AS sales_qualified_month,
-  NULL                                          AS sales_accepted_date,
-  NULL                                          AS stage_name,
-  tp.bizible_medium                             AS bizible_medium,
-  tp.bizible_touchpoint_source                  AS bizible_touchpoint_source,
-  tp.bizible_ad_campaign_name                   AS bizible_ad_campaign_name,
-  tp.bizible_ad_content                         AS bizible_ad_content,
-  tp.person_last_utm_campaign                   AS person_last_utm_campaign,
-  tp.person_last_utm_content                    AS person_last_utm_content,
-  0                                             AS total_cost,
-  SUM (tp.touchpoint_count)                     AS touchpoint_sum,
-  SUM (tp.count_mql)                            AS mql_sum,
-  SUM (tp.count_accepted)                       AS accepted_sum,
-  0                                             AS linear_sao
-FROM tp
-WHERE tp.bizible_integrated_campaign_grouping <> 'None'
-{{ dbt_utils.group_by(n=16) }}
-UNION ALL
-SELECT
-  ol.bizible_touchpoint_date_normalized         AS opp_touchpoint_date_normalized,
-  ol.bizible_integrated_campaign_grouping       AS opp_integrated_campaign_grouping,
-  ol.marketing_channel_path                     AS marketing_channel_path,
-  ol.bizible_form_url_raw                       AS bizible_form_url_raw,
-  ol.bizible_landing_page_raw                   AS bizible_landing_page_raw,
-  ol.sales_segment                              AS sales_segment,
-  ol.sales_type                                 AS sales_type,
-  ol.sales_qualified_month                      AS sales_qualified_month,
-  ol.sales_accepted_date                        AS sales_accepted_date,
-  ol.stage_name                                 AS stage_name,
-  ol.bizible_medium                             AS bizible_medium,
-  ol.bizible_touchpoint_source                  AS bizible_touchpoint_source,
-  ol.bizible_ad_campaign_name                   AS bizible_ad_campaign_name,
-  ol.bizible_ad_content                         AS bizible_ad_content,
-  ol.person_last_utm_campaign                   AS person_last_utm_campaign,
-  ol.person_last_utm_content                    AS person_last_utm_content,
-  0                                             AS total_cost,
-  0                                             AS touchpoint_sum,
-  0                                             AS mql_sum,
-  0                                             AS accepted_sum,
-  CASE
-  WHEN ol.sales_accepted_date IS NOT NULL THEN SUM(ol.L_WEIGHT)
-  ELSE 0 END AS linear_sao
-FROM ol
-WHERE ol.bizible_integrated_campaign_grouping <> 'None'
-{{ dbt_utils.group_by(n=16) }}
+  SELECT
+    tp.bizible_touchpoint_date_normalized         AS bizible_touchpoint_date_normalized,
+    tp.bizible_integrated_campaign_grouping       AS bizible_integrated_campaign_grouping,
+    tp.bizible_marketing_channel_path             AS bizible_marketing_channel_path,
+    tp.bizible_form_url_raw                       AS bizible_form_url_raw,
+    tp.bizible_landing_page_raw                   AS bizible_landing_page_raw,
+    tp.sfdc_sales_segmentation                    AS sales_segment,
+    NULL                                          AS sales_type,
+    NULL                                          AS sales_qualified_month,
+    NULL                                          AS sales_accepted_date,
+    NULL                                          AS stage_name,
+    tp.bizible_medium                             AS bizible_medium,
+    tp.bizible_touchpoint_source                  AS bizible_touchpoint_source,
+    tp.bizible_ad_campaign_name                   AS bizible_ad_campaign_name,
+    tp.bizible_ad_content                         AS bizible_ad_content,
+    tp.person_last_utm_campaign                   AS person_last_utm_campaign,
+    tp.person_last_utm_content                    AS person_last_utm_content,
+    0                                             AS total_cost,
+    SUM (tp.touchpoint_count)                     AS touchpoint_sum,
+    SUM (tp.count_mql)                            AS mql_sum,
+    SUM (tp.count_accepted)                       AS accepted_sum,
+    0                                             AS linear_sao
+  FROM tp
+  WHERE tp.bizible_integrated_campaign_grouping <> 'None'
+  {{ dbt_utils.group_by(n=16) }}
+  UNION ALL
+  SELECT
+    ol.bizible_touchpoint_date_normalized         AS opp_touchpoint_date_normalized,
+    ol.bizible_integrated_campaign_grouping       AS opp_integrated_campaign_grouping,
+    ol.marketing_channel_path                     AS marketing_channel_path,
+    ol.bizible_form_url_raw                       AS bizible_form_url_raw,
+    ol.bizible_landing_page_raw                   AS bizible_landing_page_raw,
+    ol.sales_segment                              AS sales_segment,
+    ol.sales_type                                 AS sales_type,
+    ol.sales_qualified_month                      AS sales_qualified_month,
+    ol.sales_accepted_date                        AS sales_accepted_date,
+    ol.stage_name                                 AS stage_name,
+    ol.bizible_medium                             AS bizible_medium,
+    ol.bizible_touchpoint_source                  AS bizible_touchpoint_source,
+    ol.bizible_ad_campaign_name                   AS bizible_ad_campaign_name,
+    ol.bizible_ad_content                         AS bizible_ad_content,
+    ol.person_last_utm_campaign                   AS person_last_utm_campaign,
+    ol.person_last_utm_content                    AS person_last_utm_content,
+    0                                             AS total_cost,
+    0                                             AS touchpoint_sum,
+    0                                             AS mql_sum,
+    0                                             AS accepted_sum,
+    CASE
+    WHEN ol.sales_accepted_date IS NOT NULL THEN SUM(ol.L_WEIGHT)
+    ELSE 0 END AS linear_sao
+  FROM ol
+  WHERE ol.bizible_integrated_campaign_grouping <> 'None'
+  {{ dbt_utils.group_by(n=16) }}
 
 ), final AS (
 
-    SELECT
-      bizible_touchpoint_date_normalized                   AS sao_date,
-      bizible_integrated_campaign_grouping                 AS bizible_integrated_campaign_grouping,
-      sales_segment                                        AS sdfc_sales_segment,
-      bizible_ad_campaign_name                             AS bizible_ad_campaign_name,
-      bizible_marketing_channel_path                       AS bizible_marketing_channel_path,
-      bizible_medium                                       AS bizible_medium,
-      bizible_touchpoint_source                            AS bizible_source,
-      CASE
-        WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_campaign=',2),'&',1)= ''
-        THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_campaign=',2),'&',1)
-      ELSE SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_campaign=',2),'&',1) END AS utm_campaign,
-      SPLIT_PART(utm_campaign,'_',1)                        AS utm_campaigncode,
-      SPLIT_PART(utm_campaign,'_',2)                        AS utm_geo,
-      SPLIT_PART(utm_campaign,'_',3)                        AS utm_targeting,
-      SPLIT_PART(utm_campaign,'_',4)                        AS utm_ad_unit,
-      SPLIT_PART(utm_campaign,'_',5)                        AS "utm_br/bn",
-      SPLIT_PART(utm_campaign,'_',6)                        AS utm_matchtype,
-      CASE
-        WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1)= ''
-        THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_content=',2),'&',1)
-      ELSE SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1) END AS utm_content,
-      SPLIT_PART(utm_content,'_',1)                         AS utm_contentcode,
-      SPLIT_PART(utm_content,'_',2)                         AS utm_team,
-      SPLIT_PART(utm_content,'_',3)                         AS utm_segment,
-      SPLIT_PART(utm_content,'_',4)                         AS utm_language,
-      person_last_utm_campaign                              AS person_last_utm_campaign,
-      person_last_utm_content                               AS person_last_utm_content,
-      bizible_form_url_raw                                  AS bizible_form_url_raw,
-      bizible_landing_page_raw                              AS bizible_landing_page_raw,
-      SUM(touchpoint_sum)                                   AS inquiries,
-      SUM(mql_sum)                                          AS mqls,
-      SUM(accepted_sum)                                     AS sdr_accepted,
-      SUM(linear_sao)                                       AS linear_sao
+  SELECT
+    bizible_touchpoint_date_normalized                   AS sao_date,
+    bizible_integrated_campaign_grouping                 AS bizible_integrated_campaign_grouping,
+    sales_segment                                        AS sdfc_sales_segment,
+    bizible_ad_campaign_name                             AS bizible_ad_campaign_name,
+    bizible_marketing_channel_path                       AS bizible_marketing_channel_path,
+    bizible_medium                                       AS bizible_medium,
+    bizible_touchpoint_source                            AS bizible_source,
+    CASE
+      WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_campaign=',2),'&',1)= ''
+      THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_campaign=',2),'&',1)
+    ELSE SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_campaign=',2),'&',1) END AS utm_campaign,
+    SPLIT_PART(utm_campaign,'_',1)                        AS utm_campaigncode,
+    SPLIT_PART(utm_campaign,'_',2)                        AS utm_geo,
+    SPLIT_PART(utm_campaign,'_',3)                        AS utm_targeting,
+    SPLIT_PART(utm_campaign,'_',4)                        AS utm_ad_unit,
+    SPLIT_PART(utm_campaign,'_',5)                        AS "utm_br/bn",
+    SPLIT_PART(utm_campaign,'_',6)                        AS utm_matchtype,
+    CASE
+      WHEN SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1)= ''
+      THEN SPLIT_PART(SPLIT_PART(bizible_landing_page_raw,'utm_content=',2),'&',1)
+    ELSE SPLIT_PART(SPLIT_PART(bizible_form_url_raw,'utm_content=',2),'&',1) END AS utm_content,
+    SPLIT_PART(utm_content,'_',1)                         AS utm_contentcode,
+    SPLIT_PART(utm_content,'_',2)                         AS utm_team,
+    SPLIT_PART(utm_content,'_',3)                         AS utm_segment,
+    SPLIT_PART(utm_content,'_',4)                         AS utm_language,
+    person_last_utm_campaign                              AS person_last_utm_campaign,
+    person_last_utm_content                               AS person_last_utm_content,
+    bizible_form_url_raw                                  AS bizible_form_url_raw,
+    bizible_landing_page_raw                              AS bizible_landing_page_raw,
+    SUM(touchpoint_sum)                                   AS inquiries,
+    SUM(mql_sum)                                          AS mqls,
+    SUM(accepted_sum)                                     AS sdr_accepted,
+    SUM(linear_sao)                                       AS linear_sao
   FROM unioned
   WHERE sao_date >= '2020-02-01'::DATE
   AND bizible_integrated_campaign_grouping <>'None'
@@ -451,9 +450,9 @@ WHERE ol.bizible_integrated_campaign_grouping <> 'None'
 
 )
 
-SELECT *
-FROM final
-ORDER BY 1 DESC
+  SELECT *
+  FROM final
+  ORDER BY 1 DESC
 
 )
 
