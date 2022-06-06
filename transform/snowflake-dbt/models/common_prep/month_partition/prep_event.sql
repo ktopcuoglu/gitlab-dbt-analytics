@@ -10,7 +10,7 @@
   {
     "event_name": "action",
     "source_cte_name": "prep_action",
-    "user_column_name": "author_id",
+    "user_column_name": "dim_user_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
     "primary_key": "dim_action_id",

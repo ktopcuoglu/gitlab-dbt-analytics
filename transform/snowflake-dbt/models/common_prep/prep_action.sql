@@ -19,7 +19,7 @@
       gitlab_dotcom_events_source.project_id::NUMBER                                              AS dim_project_id,
       prep_project.dim_namespace_id,
       prep_project.ultimate_parent_namespace_id,
-      gitlab_dotcom_events_source.author_id                                                       AS author_id,
+      gitlab_dotcom_events_source.author_id                                                       AS dim_user_id,
       dim_date.date_id                                                                            AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                                             AS dim_plan_id,
 
