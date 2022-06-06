@@ -518,6 +518,6 @@ models:
 
   - name: pump_daily_sao
     columns:
-      name: sao_date
+    - name: sao_date
       tests:
         - not_null
