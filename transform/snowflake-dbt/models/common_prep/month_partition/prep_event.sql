@@ -53,8 +53,8 @@
     "stage_name": "plan"
   },
   {
-    "event_name": "issue_creation",
-    "source_cte_name": "prep_issue",
+    "event_name": "issue_creation_other",
+    "source_cte_name": "issue_creation_other_source",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -582,6 +582,13 @@
       *
     FROM prep_issue
     WHERE ARRAY_CONTAINS('incident'::variant, labels)
+
+), issue_creation_other_source AS (
+    
+    SELECT
+      *
+    FROM prep_issue
+    WHERE NOT ARRAY_CONTAINS('incident'::variant, labels)
 
 ), data AS (
 
