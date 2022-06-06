@@ -179,6 +179,14 @@ CASE
     OR (camp.campaign_parent_id = '7014M000001dn8MQAQ'
     AND bizible_ad_campaign_name ILIKE '%_Brand%')
    THEN 'Brand'
+ WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-04-27 MSandP: 316
+    AND (bizible_ad_campaign_name LIKE 'simplifydevops%'
+   OR bizible_ad_campaign_name LIKE 'Simplifydevops%'
+    OR bizible_form_url_raw LIKE '%utm_campaign=simplifydevops%'
+    OR bizible_landing_page_raw LIKE '%utm_campaign=simplifydevops%'
+    OR bizible_referrer_page_RAW LIKE '%utm_campaign=simplifydevops%'))
+    OR (camp.campaign_parent_id = '7014M000001dn6zQAA')
+   THEN 'Simplify DevOps'
 WHEN (bizible_touchpoint_type = 'Web Form' --added 2021-06-04 MSandP: 332
     AND (bizible_landing_page LIKE '%contact-us-ultimate%'
     OR bizible_form_url LIKE '%contact-us-ultimate%'
