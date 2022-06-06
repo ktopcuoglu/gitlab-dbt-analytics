@@ -241,7 +241,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         IFF(active_subs_unioned.ping_edition IS NULL, FALSE, TRUE)                                                                                                                AS has_sent_pings,
         active_subs_unioned.is_missing_charge_subscription                                                                                                                        AS is_missing_charge_subscription
     FROM active_subs_unioned
-      WHERE ping_created_at_month <= DATE_TRUNC('month', CURRENT_DATE)
+      WHERE ping_created_at_month < DATE_TRUNC('month', CURRENT_DATE)
 
 )
 
