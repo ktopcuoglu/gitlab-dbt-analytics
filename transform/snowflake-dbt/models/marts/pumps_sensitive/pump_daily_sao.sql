@@ -1,5 +1,5 @@
 {{ config(
-    tags=["mnpi_exception", "pmg"]
+    tags=["mnpi_exception"]
 ) }}
 
 WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
@@ -306,12 +306,11 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     bizible_form_url,
     bizible_landing_page,
     bizible_marketing_channel,
-    CASE WHEN camp.campaign_parent_id = '7014M000001dn8MQAQ'
-      THEN 'Paid Social.LinkedIn Lead Gen'
-    WHEN bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI'
-      THEN 'Sponsorship'
-    ELSE bizible_marketing_channel_path
-    END AS marketing_channel_path,
+      CASE
+        WHEN camp.campaign_parent_id = '7014M000001dn8MQAQ' THEN 'Paid Social.LinkedIn Lead Gen'
+        WHEN bizible_ad_campaign_name = '20201013_ActualTechMedia_DeepMonitoringCI' THEN 'Sponsorship'
+        ELSE bizible_marketing_channel_path
+      END AS marketing_channel_path,
     pipe_name,
     bizible_medium,
     bizible_referrer_page,
@@ -325,30 +324,34 @@ WITH base AS (--NOTE: ONLY add columns to the END of the final query per PMG
     biz_base.is_won,
     biz_base.deal_path,
     biz_base.order_type_stamped,
-    IFF(biz_base.sales_segment IS NULL,'Unknown',biz_base.sales_segment) AS sales_segment,
+    IFF(biz_base.sales_segment IS NULL,'Unknown',biz_base.sales_segment)    AS sales_segment,
     biz_base.account_region,
-    date_trunc('month',bizible_touchpoint_date)::DATE::DATE AS bizible_touchpoint_date_month_yr  ,
-    bizible_touchpoint_date::DATE AS bizible_touchpoint_date_normalized,
-    camp.type AS campaign_type,
+    date_trunc('month',bizible_touchpoint_date)::DATE::DATE                 AS bizible_touchpoint_date_month_yr,
+    bizible_touchpoint_date::DATE                                           AS bizible_touchpoint_date_normalized,
+    camp.type                                                               AS campaign_type,
     contacts.person_last_utm_campaign,
     contacts.person_last_utm_content,
-    {{ gtm_motion() }} as gtm_motion,
-    SUM(bizible_count_first_touch)                  AS first_weight,
-    SUM(bizible_count_w_shaped)                     AS w_weight,
-    SUM(bizible_count_u_shaped)                     AS u_weight,
-    SUM(bizible_attribution_percent_full_path)      AS full_weight,
-    COUNT(DISTINCT biz_base.opportunity_id)         AS l_touches,
-    (l_touches / count_touches)                     AS l_weight,
-    (biz_base.iacv * first_weight)                  AS first_iacv,
-    (biz_base.iacv * w_weight)                      AS w_iacv,
-    (biz_base.iacv * u_weight)                      AS u_iacv,
-    (biz_base.iacv * full_weight)                   AS full_iacv,
-    (biz_base.iacv* l_weight)                       AS linear_iacv
+    {{ gtm_motion() }}                                                      AS gtm_motion,
+    SUM(bizible_count_first_touch)                                          AS first_weight,
+    SUM(bizible_count_w_shaped)                                             AS w_weight,
+    SUM(bizible_count_u_shaped)                                             AS u_weight,
+    SUM(bizible_attribution_percent_full_path)                              AS full_weight,
+    COUNT(DISTINCT biz_base.opportunity_id)                                 AS l_touches,
+    (l_touches / count_touches)                                             AS l_weight,
+    (biz_base.iacv * first_weight)                                          AS first_iacv,
+    (biz_base.iacv * w_weight)                                              AS w_iacv,
+    (biz_base.iacv * u_weight)                                              AS u_iacv,
+    (biz_base.iacv * full_weight)                                           AS full_iacv,
+    (biz_base.iacv* l_weight)                                               AS linear_iacv
   FROM biz_base
-  LEFT JOIN linear_base ON biz_base.opportunity_id = linear_base.opportunity_id
-  LEFT JOIN campaigns_per_opp ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
-  LEFT JOIN campaign camp ON biz_base.campaign_id=camp.campaign_id
-  LEFT JOIN contacts ON biz_base.bizible_contact=contacts.contact_id
+  LEFT JOIN linear_base
+    ON biz_base.opportunity_id = linear_base.opportunity_id
+  LEFT JOIN campaigns_per_opp
+    ON biz_base.opportunity_id = campaigns_per_opp.opportunity_id
+  LEFT JOIN campaign camp
+    ON biz_base.campaign_id=camp.campaign_id
+  LEFT JOIN contacts
+    ON biz_base.bizible_contact=contacts.contact_id
   {{ dbt_utils.group_by(n=47) }}
 
 ), unioned AS (
