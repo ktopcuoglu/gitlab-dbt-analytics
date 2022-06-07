@@ -96,3 +96,44 @@ models:
       tests:
         - not_null
         - unique
+
+- name: rpt_ping_subscriptions_on_versions_estimate_factors_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_on_versions_estimate_factors_monthly") }} '
+  columns:
+    - name: ping_subscriptions_on_versions_estimate_factors_monthly_id
+      tests:
+        - not_null
+        - unique
+      description: the unique composite ID for the rpt_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
+    - name: reporting_month
+      description: The month the dat was reported
+    - name: reporting_count
+      description: The number of seats/subscriptions that reported the metric
+    - name: no_reporting_count
+      description: The number of seats/subscriptions that didn't report the metric, but should have
+    - name: estimation_grain
+      description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+    - name: percent_reporting
+      description: The percentage of events being reported
+    - name: stage_name
+      description: The name of the product stage responsible for the metric
+    - name: section_name
+      description: The name of the product section responsible for the metric
+    - name: group_name
+      description: The name of the product group responsible for the metric
+    - name: is_smau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the stage's SMAU calculation
+    - name: is_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's GMAU calculation
+    - name: is_paid_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
+    - name: is_umau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
+
+- name: rpt_ping_metric_estimate_factors_monthly
+  description: ' {{ doc("rpt_ping_metric_estimate_factors_monthly") }} '
+  columns:
+    - name: ping_metric_estimate_factors_monthly_id
+      tests:
+        - not_null
+        - unique
