@@ -14,6 +14,12 @@ WITH filtered_events AS (
   )
 ),
 
+namespaces AS (
+  SELECT
+    *
+  FROM {{ ref('dim_namespace') }}
+),
+
 months AS (
   {{ dbt_utils.date_spine(
        datepart = "month",
@@ -45,10 +51,12 @@ event_namespaces_action_months AS (
 event_namespaces_action_months__events__joined AS (
   SELECT
     event_namespaces_action_months.date_month,
-    event_namespaces_action_months.gsc_namespace_id,
+    namespaces.ultimate_parent_namespace_id,
     event_namespaces_action_months.event_action,
     COUNT(DISTINCT filtered_events.gsc_pseudonymized_user_id) AS distinct_users
   FROM event_namespaces_action_months
+  LEFT JOIN namespaces
+    ON event_namespaces_action_months.gsc_namespace_id = namespaces.dim_namespace_id
   LEFT JOIN filtered_events 
     ON event_namespaces_action_months.gsc_namespace_id = filtered_events.gsc_namespace_id
     AND event_namespaces_action_months.date_month = DATE_TRUNC('month', filtered_events.derived_tstamp)
@@ -61,5 +69,5 @@ event_namespaces_action_months__events__joined AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-05-24",
-    updated_date="2022-05-24"
+    updated_date="2022-05-26"
 ) }}
