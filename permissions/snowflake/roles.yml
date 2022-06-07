@@ -296,8 +296,8 @@ roles:
     ## For all analyst Roles
     - analyst_core:
         warehouses:
-            - analyst_xs
-            - analyst_l
+            - dev_xs
+            - dev_l
         member_of:
             - boneyard
             - covid19
@@ -314,8 +314,8 @@ roles:
 
     - analyst_engineering:
         warehouses:
-            - analyst_xs
-            - analyst_l
+            - dev_xs
+            - dev_l
         member_of:
             - analyst_core
             - boneyard
@@ -342,9 +342,9 @@ roles:
 
     - analyst_growth:
         warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
+            - dev_xs
+            - dev_l
+            - dev_xl
         member_of:
             - analyst_core
             - boneyard
@@ -389,8 +389,8 @@ roles:
 
     - analyst_finance:
         warehouses:
-            - analyst_xs
-            - analyst_l
+            - dev_xs
+            - dev_l
         member_of:
             - analyst_core
             - boneyard
@@ -430,7 +430,7 @@ roles:
 
     - analyst_marketing:
         warehouses:
-            - analyst_xs
+            - dev_xs
         member_of:
             - analyst_core
             - analyst_sales
@@ -464,7 +464,7 @@ roles:
 
     - analyst_people:
         warehouses:
-            - analyst_xs
+            - dev_xs
         member_of:
             - analyst_core
             - bamboohr_analytics
@@ -493,7 +493,7 @@ roles:
 
     - analyst_sales:
         warehouses:
-            - analyst_xs
+            - dev_xs
         member_of:
             - analyst_core
             - boneyard
@@ -514,7 +514,7 @@ roles:
 
     - analytics_engineer_core:
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
         member_of:
             - transformer # until issue#11249
@@ -544,8 +544,8 @@ roles:
 
     - data_manager:
         warehouses:
-            - analyst_xs
-            - analyst_l
+            - dev_xs
+            - dev_l
         member_of:
             - analyst_core
             - analyst_engineering
@@ -578,7 +578,7 @@ roles:
 
     - decisive_data:
         warehouses:
-            - analyst_xs
+            - dev_xs
         member_of:
             - analyst_core
             - bamboohr_analytics
@@ -632,8 +632,8 @@ roles:
             - static_admin
             - zoominfo
         warehouses:
-            - airflow_testing_l
-            - engineer_xs
+            - dev_l
+            - dev_xs
             - dev_m
             - loading
         privileges:
@@ -667,7 +667,7 @@ roles:
 
     - intern:
         warehouses:
-            - analyst_xs
+            - dev_xs
         member_of:
             - boneyard
             - dbt_analytics
@@ -675,7 +675,7 @@ roles:
 
     - integration_engineer:
         warehouses:
-            - engineer_xs
+            - dev_xs
         member_of:
             - boneyard
             - dbt_analytics
@@ -804,7 +804,7 @@ roles:
 
     - people_operations:
         warehouses:
-            - analyst_xs
+            - dev_xs
         member_of:
             - analyst_core
             - driveload
@@ -818,9 +818,9 @@ roles:
 
     - product_manager:
         warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
+            - dev_xs
+            - dev_l
+            - dev_xl
         member_of:
             - boneyard
             - dbt_analytics
@@ -854,7 +854,7 @@ roles:
 
     - read_all:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -911,11 +911,10 @@ roles:
 
     - transformer: # For automated jobs
         warehouses:
-            - airflow_testing_l
+            - dev_l
             - dev_m
-            - merge_request_l
-            - merge_request_xs
-            - merge_request_xl
+            - dev_xs
+            - dev_xl
             - transforming_s
             - transforming_l
             - transforming_xl
@@ -1042,7 +1041,7 @@ roles:
 # ==========================================
     - adaptive:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1056,7 +1055,7 @@ roles:
 
     - bamboohr_analytics:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1079,7 +1078,7 @@ roles:
 
     - bamboohr_sensitive_separations:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1093,7 +1092,7 @@ roles:
 
     - bamboohr:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1128,7 +1127,7 @@ roles:
 
     - boneyard:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1227,6 +1226,18 @@ roles:
                     - prod.common_mart_product.*
                     - prod.common_prep.*
 
+    - container_registry:
+        privileges:
+            databases:
+                read:
+                    - raw
+            schemas:
+                read:
+                    - raw.container_registry
+            tables:
+                read:
+                    - raw.container_registry.*
+
     - date:
         privileges:
             databases:
@@ -1244,7 +1255,7 @@ roles:
 
     - dbt_analytics:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1300,7 +1311,7 @@ roles:
 
     - dbt_analytics_clones:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1314,7 +1325,7 @@ roles:
 
     - dbt_analytics_sensitive:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1328,7 +1339,7 @@ roles:
 
     - dbt_data_science:
           warehouses:
-              - analyst_xs
+              - dev_xs
           privileges:
               databases:
                   read:
@@ -1355,7 +1366,7 @@ roles:
 
     - demandbase:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1396,7 +1407,7 @@ roles:
 
     - driveload:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1449,7 +1460,7 @@ roles:
 
     - gainsight:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1463,7 +1474,7 @@ roles:
 
     - gcp_billing:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1480,7 +1491,7 @@ roles:
 
     - gitlab_data_yaml:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1497,7 +1508,7 @@ roles:
 
     - gitlab_dotcom:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1676,7 +1687,7 @@ roles:
 
     - gitlab_dotcom_prep:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1690,7 +1701,7 @@ roles:
 
     - google_analytics_360:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1721,7 +1732,7 @@ roles:
 
     - greenhouse:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1746,7 +1757,7 @@ roles:
 
     - handbook:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1839,7 +1850,7 @@ roles:
 
     - netsuite:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1861,7 +1872,7 @@ roles:
 
     - postgres_pipeline:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1879,7 +1890,7 @@ roles:
 
     - qualtrics:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1893,7 +1904,7 @@ roles:
 
     - qualtrics_sensitive:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1915,7 +1926,7 @@ roles:
 
     - pmg:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1929,7 +1940,7 @@ roles:
 
     - prometheus:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1943,7 +1954,7 @@ roles:
     
     - pumps_sensitive:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -1990,7 +2001,7 @@ roles:
 
     - salesforce:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2019,7 +2030,7 @@ roles:
 
     - sheetload:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2049,7 +2060,7 @@ roles:
 
     - snapshots:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2173,7 +2184,7 @@ roles:
 
     - xactly:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2187,7 +2198,7 @@ roles:
 
     - zendesk:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2204,7 +2215,7 @@ roles:
 
     - zendesk_community_relations:
           warehouses:
-              - analyst_xs
+              - dev_xs
           privileges:
               databases:
                   read:
@@ -2221,7 +2232,7 @@ roles:
 
     - zoom:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2265,7 +2276,7 @@ roles:
 
     - zuora:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2282,7 +2293,7 @@ roles:
 
     - zuora_central_sandbox:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2300,7 +2311,7 @@ roles:
 
     - zuora_api_sandbox_stitch:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2314,7 +2325,7 @@ roles:
 
     - zuora_query_api:
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2331,7 +2342,7 @@ roles:
 
     - zuora_revenue: # This is done to provide access to Data team analyst as 3530
         warehouses:
-            - analyst_xs
+            - dev_xs
         privileges:
             databases:
                 read:
@@ -2352,7 +2363,7 @@ roles:
 
     - airflow:
         warehouses:
-            - airflow_testing_l
+            - dev_l
             - gitlab_postgres
             - loading
             - transforming_xs
@@ -2367,7 +2378,7 @@ roles:
             - xactly
 
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - alu:
         member_of:
@@ -2375,7 +2386,7 @@ roles:
             - restricted_safe
             - data_team_analyst
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - amartin:
         member_of:
@@ -2386,13 +2397,13 @@ roles:
             - data_team_analyst
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - amihaila:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - aperez:
         member_of:
@@ -2400,14 +2411,14 @@ roles:
             - bamboohr
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - bleducmills:
         member_of:
             - reporter
             - snowplow
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - bbutterfield:
         member_of:
@@ -2423,7 +2434,7 @@ roles:
             - qualtrics
             - qualtrics_sensitive
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - brhea_prep
@@ -2462,7 +2473,7 @@ roles:
             - reporter
             - gitlab_dotcom_prep
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - cbraza:
         member_of:
@@ -2471,7 +2482,7 @@ roles:
             - data_team_analyst
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - chauenstein:
         member_of:
@@ -2479,14 +2490,14 @@ roles:
             - bamboohr_analytics
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - cmeddaugh:
         member_of:
             - reporter
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - csharp:
         member_of:
@@ -2494,7 +2505,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -2537,7 +2548,7 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
         owns:
             databases:
@@ -2577,7 +2588,7 @@ roles:
             - reporter
             - analyst_marketing
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - degan:
         member_of:
@@ -2586,7 +2597,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - degan_prep
@@ -2626,7 +2637,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - dpeterson_prep
@@ -2666,7 +2677,7 @@ roles:
             - data_manager
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - dvanrooijen_prep
@@ -2704,7 +2715,7 @@ roles:
             - analyst_growth
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - fivetran_role:
         warehouses:
@@ -2737,9 +2748,9 @@ roles:
             - transformer
         warehouses:
             - loading
-            - merge_request_l
-            - merge_request_xs
-            - merge_request_xl
+            - dev_l
+            - dev_xs
+            - dev_xl
             - reporting
             - transforming_xs
             - transforming_xl
@@ -2753,7 +2764,7 @@ roles:
             - xactly
 
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - ian:
         member_of:
@@ -2761,7 +2772,7 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
         owns:
             databases:
@@ -2807,7 +2818,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_db
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - iweeks:
         member_of:
@@ -2821,7 +2832,7 @@ roles:
             - xactly
             - bi_tool_eval_db
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - iweeks_prep
@@ -2862,7 +2873,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - jameson: # De provisioned as part of Quarterly audit and security check.
         member_of: []
@@ -2873,7 +2884,7 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - jcaine_prep
@@ -2915,7 +2926,7 @@ roles:
             - bi_tool_eval_read
             - xactly
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - jkim_prep
@@ -2967,9 +2978,9 @@ roles:
             - dbt_data_science
             - snowplow
         warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
+            - dev_xs
+            - dev_l
+            - dev_xl
         owns:
             databases:
                 - jpeguero_prep
@@ -3007,7 +3018,7 @@ roles:
         member_of:
             - analyst_sales
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - jrubi:
         warehouses:
@@ -3020,7 +3031,7 @@ roles:
             - engineer
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -3067,8 +3078,8 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
-            - jstemmer_xl
+            - dev_xs
+            - dev_xl
 
     - judume:
         member_of:
@@ -3076,7 +3087,7 @@ roles:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
         owns:
             databases:
@@ -3121,7 +3132,7 @@ roles:
             - xactly
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - kaguilar_prep
@@ -3169,7 +3180,7 @@ roles:
             - zendesk
             - zendesk_community_relations
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - kdietz_prep
@@ -3215,7 +3226,7 @@ roles:
             - dbt_data_science
             - snowplow
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - kmagda_prep
@@ -3255,7 +3266,7 @@ roles:
             - bamboohr_analytics
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - kchen:
         member_of:
@@ -3268,7 +3279,7 @@ roles:
             - restricted_safe
             - xactly
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - kkarthikeyan:
         member_of:
@@ -3280,7 +3291,7 @@ roles:
             - restricted_safe
             - zoominfo_inbound
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - laddula:
         member_of: []
@@ -3308,7 +3319,7 @@ roles:
                 read:
                     - prep.sensitive.bamboohr_id_employee_number_mapping
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - lvandijk:
         warehouses:
@@ -3321,7 +3332,7 @@ roles:
             - data_team_analyst
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - lvinueza_prep
@@ -3361,9 +3372,9 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
-            - analyst_l
-            - analyst_xl
+            - dev_xs
+            - dev_l
+            - dev_xl
 
     - mconteanu:
         member_of:
@@ -3371,7 +3382,7 @@ roles:
             - marketo
             - analyst_marketing
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - mcooper:
         member_of:
@@ -3380,7 +3391,7 @@ roles:
             - data_team_analyst
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - mcooper_prep
@@ -3421,7 +3432,7 @@ roles:
          - restricted_safe
          - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - mdrussell_prep
@@ -3463,7 +3474,7 @@ roles:
             - data_team_analyst
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - mhanks:
         member_of:
@@ -3474,7 +3485,7 @@ roles:
             - data_team_analyst
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - mlaanen:
         member_of:
@@ -3483,7 +3494,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_db
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - mlaanen_prep
@@ -3522,14 +3533,14 @@ roles:
             - analyst_growth
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - mramirez:
         member_of:
             - analyst_sales
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - mramirez_prep
@@ -3570,7 +3581,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - mvilain_prep
@@ -3612,7 +3623,7 @@ roles:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - mwawrzyniak_prep
@@ -3650,13 +3661,13 @@ roles:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - nbelokolodov:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - nfiguera:
         member_of:
@@ -3666,7 +3677,7 @@ roles:
             - bi_tool_eval_read
             - xactly
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - nfiguera_prep
@@ -3706,13 +3717,13 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - nkhanna:
         member_of:
             - reporter
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - nraisinghani:
         member_of:
@@ -3720,21 +3731,21 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - ofalkenhof:
         member_of:
             - analyst_finance
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - parmstrong:
         member_of:
             - engineer
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -3776,7 +3787,7 @@ roles:
             - engineer
             - bi_tool_eval_db
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -3828,14 +3839,14 @@ roles:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - rbacovic:
         member_of:
             - engineer
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -3877,7 +3888,7 @@ roles:
             - engineer
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -3922,7 +3933,7 @@ roles:
             - bi_tool_eval_read
             - data_team_analyst
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - rkohnke_prep
@@ -3961,7 +3972,7 @@ roles:
             - analyst_core
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - rparker_prep
@@ -4007,7 +4018,7 @@ roles:
             - engineer
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -4050,7 +4061,7 @@ roles:
             - data_team_analyst
             - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - statimatla:
         member_of:
@@ -4063,7 +4074,7 @@ roles:
             - restricted_safe
             - xactly
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - stitch:
         warehouses:
@@ -4123,7 +4134,7 @@ roles:
          - gainsight
          - restricted_safe
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - tpoole_prep
@@ -4165,7 +4176,7 @@ roles:
          - bi_tool_eval_db
          - version_db
         warehouses:
-            - analyst_xs
+            - dev_xs
         owns:
             databases:
                 - tnguyen_prep
@@ -4203,7 +4214,7 @@ roles:
         member_of:
             - analyst_growth
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - vagrawal:
         member_of:
@@ -4216,7 +4227,7 @@ roles:
             - restricted_safe
             - xactly
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - vbrew:
         member_of:
@@ -4226,20 +4237,20 @@ roles:
             - analyst_marketing
             - data_team_analyst
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - vnagy:
         member_of:
             - gitlab_dotcom_prep
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - vprakash:
         member_of:
             - engineer
             - restricted_safe
         warehouses:
-            - engineer_xs
+            - dev_xs
             - dev_m
             - loading
             - reporting
@@ -4284,7 +4295,7 @@ roles:
             - dbt_data_science
             - snowplow
         warehouses:
-            - analyst_xs
+            - dev_xs
 
     - zzhang:
         member_of:
@@ -4297,7 +4308,7 @@ roles:
             - restricted_safe
             - xactly
         warehouses:
-            - analyst_xs
+            - dev_xs
 
 # ==========================================
 # Users
@@ -4814,29 +4825,23 @@ warehouses:
     - admin:
         size: x-small
 
-    - airflow_testing_l:
-        size: large
-
-    - analyst_l:
-        size: large
-
-    - analyst_xl:
-        size: x-large
-
-    - analyst_xs:
-        size: x-small
-
     - backups_xs:
         size: x-small
 
     - datasiren:
         size: "4-x-large"
 
+    - dev_xs:
+        size: "x-small"
+
     - dev_m:
         size: "medium"
 
-    - engineer_xs:
-        size: x-small
+    - dev_l:
+        size: "large"
+
+    - dev_xl:
+        size: "x-large"
 
     - fivetran_warehouse:
         size: x-small
@@ -4850,19 +4855,7 @@ warehouses:
     - grafana:
         size: x-small
 
-    - jstemmer_xl:
-        size: x-large
-
     - loading:
-        size: x-small
-
-    - merge_request_l:
-        size: large
-
-    - merge_request_xl:
-        size: x-large
-
-    - merge_request_xs:
         size: x-small
 
     - reporting:

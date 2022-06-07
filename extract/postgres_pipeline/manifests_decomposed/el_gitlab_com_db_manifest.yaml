@@ -405,6 +405,24 @@ tables:
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  deployment_approvals:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'deployment_approvals'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , deployment_id
+      , user_id
+      , created_at
+      , updated_at
+      , status
+      , comment
+      , approval_rule_id
+      FROM deployment_approvals
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   deployments:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -617,7 +635,6 @@ tables:
       , created_at
       , updated_at
       , active
-      , properties
       , NULL AS template
       , push_events
       , issues_events
@@ -1631,7 +1648,7 @@ tables:
       , created_at
       , updated_at
       , active
-      , properties
+      , NULL AS properties
       , NULL AS template
       , push_events
       , issues_events

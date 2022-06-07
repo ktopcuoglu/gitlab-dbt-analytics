@@ -163,6 +163,8 @@
           AND dim_date.first_day_of_month = license_subscriptions.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
+      WHERE ping_delivery_type = 'Self-Managed'
+        OR (ping_delivery_type = 'SaaS' AND fct_ping_instance_metric.dim_installation_id = '8b52effca410f0a380b0fcffaa1260e7')
 
 ), sorted AS (
 
