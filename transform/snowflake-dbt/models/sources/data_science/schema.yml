@@ -7,10 +7,4 @@ models:
       description: '{{ doc("ptc_scores_source") }}'
     - name: ptpt_scores_source
       description: '{{ doc("ptpt_scores_source") }}'
-    - name: pte_scores
-      description: '{{ doc("pte_scores") }}'
-    - name: ptc_scores
-      description: '{{ doc("ptc_scores") }}'
-    - name: ptpt_scores
-      description: '{{ doc("ptpt_scores") }}'
 

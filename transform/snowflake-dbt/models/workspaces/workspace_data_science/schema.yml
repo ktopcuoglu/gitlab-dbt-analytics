@@ -20,3 +20,8 @@ models:
       It flattens the SaaS metrics from `prep_saas_usage_ping_namespace`.
       By doing this step in a separate model from `prep_saas_usage_ping_namespace` we get performance gains.
   - name: pte_scores
+    description: Propensity to expand by at least 10% in the next 3 months. All Salesforce accounts are scored and updated monthly (excludes Russian and Belarusian accounts). 
+  - name: ptc_scores
+    description: Propensity to churn or contract by at least 10% in the next 6 months. All Salesforce accounts > 100 USD ARR are scored and updated monthly (excludes Russian and Belarusian accounts).  
+  - name: ptpt_scores
+    description: Propensity to purchase within 40 days after trial expiration. All trial namespaces with an active trial in the last 40 days are scored. 
