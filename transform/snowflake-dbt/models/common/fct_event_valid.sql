@@ -78,18 +78,58 @@ dim_namespace_w_bdg AS (
 
 ),
 
+paid_flag_by_day AS (
+
+  SELECT
+    dim_ultimate_parent_namespace_id,
+    plan_was_paid_at_event_date,
+    plan_id_at_event_date,
+    plan_name_at_event_date,
+    event_created_at,
+    event_date
+  FROM fct_event_valid
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY dim_ultimate_parent_namespace_id, event_date
+      ORDER BY event_created_at DESC) = 1
+
+),
+
 fct_event_w_flags AS (
 
   SELECT 
-    fct_event_valid.*,
+    fct_event_valid.event_id,
+    fct_event_valid.dim_event_date_id,
+    fct_event_valid.dim_ultimate_parent_namespace_id,
+    fct_event_valid.dim_project_id,
+    fct_event_valid.dim_user_id,
+    fct_event_valid.event_created_at,
+    fct_event_valid.event_date,
+    fct_event_valid.group_name,
+    fct_event_valid.section_name,
+    fct_event_valid.stage_name,
+    fct_event_valid.is_smau,
+    fct_event_valid.is_gmau,
+    fct_event_valid.is_umau,
+    fct_event_valid.parent_id,
+    fct_event_valid.parent_type,
+    fct_event_valid.event_name,
+    fct_event_valid.days_since_user_creation_at_event_date,
+    fct_event_valid.days_since_namespace_creation_at_event_date,
+    fct_event_valid.days_since_project_creation_at_event_date,
+    fct_event_valid.data_source,
     dim_namespace_w_bdg.dim_active_product_tier_id,
     dim_namespace_w_bdg.dim_active_subscription_id,
     dim_namespace_w_bdg.order_id,
     dim_namespace_w_bdg.dim_crm_account_id,
-    dim_namespace_w_bdg.dim_billing_account_id
+    dim_namespace_w_bdg.dim_billing_account_id,
+    paid_flag_by_day.plan_was_paid_at_event_date,
+    paid_flag_by_day.plan_id_at_event_date,
+    paid_flag_by_day.plan_name_at_event_date
   FROM fct_event_valid
   LEFT JOIN dim_namespace_w_bdg
     ON fct_event_valid.dim_ultimate_parent_namespace_id = dim_namespace_w_bdg.dim_namespace_id
+  LEFT JOIN paid_flag_by_day
+    ON fct_event_valid.dim_ultimate_parent_namespace_id = paid_flag_by_day.dim_ultimate_parent_namespace_id
+      AND fct_event_valid.event_date = paid_flag_by_day.event_date
 
 ),
 
@@ -140,5 +180,5 @@ gitlab_dotcom_fact AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-05-18"
+    updated_date="2022-06-02"
 ) }}

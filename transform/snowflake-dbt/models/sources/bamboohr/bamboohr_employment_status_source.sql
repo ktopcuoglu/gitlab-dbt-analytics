@@ -7,7 +7,9 @@ WITH source AS (
 
 ), intermediate as (
 
-      SELECT d.value AS data_by_row
+      SELECT 
+        d.value AS data_by_row,
+        uploaded_at
       FROM source,
       LATERAL FLATTEN(INPUT => parse_json(jsontext), outer => true) d
 
@@ -18,7 +20,8 @@ WITH source AS (
             data_by_row['employeeId']::NUMBER                     AS employee_id,
             data_by_row['date']::DATE                             AS effective_date,
             data_by_row['employmentStatus']::VARCHAR              AS employment_status, 
-            nullif(data_by_row['terminationTypeId']::VARCHAR, '') AS termination_type
+            nullif(data_by_row['terminationTypeId']::VARCHAR, '') AS termination_type,
+            uploaded_at
       FROM intermediate
 
 ), final AS (
