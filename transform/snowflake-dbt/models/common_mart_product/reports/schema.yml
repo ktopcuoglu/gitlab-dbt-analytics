@@ -137,3 +137,11 @@ models:
       tests:
         - not_null
         - unique
+
+- name: rpt_ping_subscriptions_reported_estimate_factors_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_reported_estimate_factors_monthly") }} '
+  columns:
+    - name: ping_subscriptions_reported_estimate_factors_monthly_id
+      tests:
+        - not_null
+        - unique

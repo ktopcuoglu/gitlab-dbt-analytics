@@ -215,3 +215,45 @@
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
 
 {% enddocs %}
+
+{% docs rpt_ping_subscriptions_reported_estimate_factors_monthly %}
+
+**Description:**  Estimated Usage Percents for All Subscriptions by Metric and Month  
+- These estimations are used for determining usage for Implementations that do not sent Service Pings. 
+- Multiple Estimation methods are in this data and utilized by a Macro.   
+
+**Data Grain:**
+- ping_created_at_month
+- metrics_path
+- ping_edition
+- estimation_grain
+
+**Filters:**
+- `Forwarded` - Include `ping_delivery_type = 'Self-Managed'`
+- `Forwarded` - Include metrics from pings with `ping_delivery_type = 'Self-Managed'`
+- `Forwarded` - Includes metrics for 28 Day and All-Time timeframes
+- `Forwarded` - Include only the `Last Pings of the Month`
+
+**Business Logic in this Model:**
+- There are multiple estimation Grains in this model
+  - A macro is used to determine which `estimation_grain` to use for this data.  
+- `estimation_grain` - tells which method is used to measure the `percent_reporting` %:
+  - 'reported metric - seat based estimation' is from licensed_users seat counts
+  - 'reported metric - subscription based estimation' is derived from subscription counts
+- `percent_reporting` - reporting_count / (reporting_count + not_reporting_count) 
+  - 'reporting_count' of Service Ping History (active Users or active Subscriptions)
+  - 'not_reporting_count' not reporting for the Month (active Users or active Subscriptions)
+- `Subscriptions (All) Estimate Percent Calculation`:
+  - (All Subscriptions) / (All Subscriptions Reporting + All Subscriptions Not Reporting) 
+  - (All Users) / (All Users Reporting + All Users Not Reporting) 
+- MRR, ARR and Licensed_User_Count is limited to:
+  - product_delivery_type = `Self-Managed` 
+  - subscription_status IN (`Active`,`Cancelled`)
+  - product_tier_name <> `Storage`
+
+**Other Comments:**
+- Service Ping data is Sums, Counts and Percents of Usage (called metrics) along with the Server Instance Configuration information is collected at a point in time for each Instance and sent to GitLab Corporate.  This is normally done on a weekly basis.  The Instance Owner determines whether this data will be sent or not and how much will be sent.  Implementations can be Customer Hosted (Self-Managed) or GitLab Hosted (referred to as SaaS or Dotcom data).  Multiple Instances can be hosted on Self-Managed Implementations like GitLab Implementations. 
+- The different types of Service Pings are shown here for the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping) and the [GitLab Hosted Implementation Service Pings](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
+- [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
+
+{% enddocs %}
