@@ -64,3 +64,34 @@
 - Note about the `action` event: This "event" captures everything from the [Events API](https://docs.gitlab.com/ee/api/events.html) - issue comments, MRs created, etc. While the `action` event is mapped to the Manage stage, the events included actually span multiple stages (plan, create, etc), which is why this is used for UMAU. Be mindful of the impact of including `action` during stage adoption analysis.
 
 {% enddocs %}
+
+
+{% docs rpt_ping_metric_first_last_versions %}
+
+**Description:**  First and Last Versions for Ping Metrics by Edition and Prerelease
+- This table provides First and Last Application Versions along with Installation Counts by Metric, Ping Edition and Prerelease.    
+
+**Data Grain:**
+- metrics_path
+- ping_edition
+- version_is_prerelease
+
+**Filters:**
+- Metrics from GitLab Service Pings will not be considered
+- `Forwarded` - Only 28 Day and All-Time metrics  
+- `Forwarded` - Only Metrics from the 'Last Ping of the Month' pings 
+
+**Business Logic in this Model:** 
+- `First Versions` - The earliest version found for each Metrics_Path, Ping_Edition and Version_Is_Prerelease 
+- `Last Versions` - The latest version found for each Metrics_Path, Ping_Edition and Version_Is_Prerelease 
+- `is_last_ping_of_month` = last ping (Instance_id and Host_id) sent for the Month
+- `major_minor_version` = major_version || '.' || minor_version 
+- `major_minor_version_id` = major_version * 100 + minor_version
+- `version_is_prerelease` = version LIKE '%-pre'
+
+**Other Comments:**
+- Service Ping data is Sums, Counts and Percents of Usage (called metrics) along with the Server Instance Configuration information is collected at a point in time for each Instance and sent to GitLab Corporate.  This is normally done on a weekly basis.  The Instance Owner determines whether this data will be sent or not and how much will be sent.  Implementations can be Customer Hosted (Self-Managed) or GitLab Hosted (referred to as SaaS or Dotcom data).  Multiple Instances can be hosted on Self-Managed Implementations like GitLab Implementations. 
+- The different types of Service Pings are shown here for the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping) and the [GitLab Hosted Implementation Service Pings](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
+- [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
+
+{% enddocs %}

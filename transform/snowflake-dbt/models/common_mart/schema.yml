@@ -422,7 +422,7 @@ models:
   description: ' {{ doc("mart_ping_instance_metric_monthly") }} '
   columns:
      - name: ping_instance_metric_id
-      tests:
+       tests:
         - not_null
         - unique
       description: The unique composite ID for the mart_ping_instance_metric model consisting of dim_ping_instance_id and metrics_path

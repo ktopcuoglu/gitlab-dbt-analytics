@@ -80,3 +80,11 @@ models:
       description: The date at which the model was created
     - name: model_updated_date
       description: The date at which the model code was last updated
+
+- name: rpt_ping_metric_first_last_versions
+  description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
+  columns:
+    - name: ping_metric_first_last_versions_id
+      tests:
+        - not_null
+        - unique
