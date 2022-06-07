@@ -39,22 +39,22 @@ default_args = {
 }
 
 # Create the DAG
-#Run on the 9th of every month
+#Run Every Monday
 dag = DAG(
-    "propensity_to_contract", default_args=default_args, schedule_interval="0 12 9 * *"
+    "propensity_to_purchase_trial", default_args=default_args, schedule_interval="0 12 * * 1"
 )
 
 # Task 1
-ptc_scoring_command = f"""
+ptpt_scoring_command = f"""
     {clone_data_science_repo_cmd} &&
-    cd data-science/deployments/ptc && 
+    cd data-science/deployments/ptpt && 
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(
     **gitlab_defaults,
     image=ANALYST_IMAGE,
-    task_id="propensity-to-contract,
-    name="propensity-to-contract",
+    task_id="propensity-to-purchase-trial",
+    name="propensity-to-purchase-trial",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -63,6 +63,6 @@ KubernetesPodOperator(
         SNOWFLAKE_LOAD_PASSWORD,
     ],
     env_vars=pod_env_vars,
-    arguments=[ptc_scoring_command],
+    arguments=[ptpt_scoring_command],
     dag=dag,
 )
