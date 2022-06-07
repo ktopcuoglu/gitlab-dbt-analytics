@@ -11,7 +11,6 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
-    clone_repo_cmd,
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -90,6 +89,7 @@ dag = DAG(
 )
 dag.doc_md = __doc__
 
+
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime) -> str:
     """
@@ -110,12 +110,6 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
     else:
         return "dbt-non-product-models-run"
 
-
-# branching_dbt_run = BranchPythonOperator(
-#    task_id="branching-dbt-run",
-#    python_callable=lambda: dbt_run_or_refresh(datetime.now()),
-#    dag=dag,
-# )
 
 # run non-product models on small warehouse
 dbt_non_product_models_command = f"""
