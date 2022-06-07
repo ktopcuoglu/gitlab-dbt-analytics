@@ -909,6 +909,19 @@ tables:
         FROM deployments
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+    dbt_source_model: true
+    export_schema: 'gitlab_dotcom'
+    export_table: 'gitlab_pgp_export'
+    export_table_primary_key: created_date
+    import_db: GITLAB_DB
+    import_query: |-
+        SELECT 'deployment_approvals' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM deployment_approvals
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
   cluster_17:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
