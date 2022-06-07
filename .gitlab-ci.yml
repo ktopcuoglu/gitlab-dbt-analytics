@@ -136,7 +136,7 @@ clone_stop:
   stage: 🐍 Python
   image: registry.gitlab.com/gitlab-data/data-image/ci-python-image:v1.0.0
   before_script:
-    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} | grep '\.py'$)
+    - CHANGED_FILES=$(git diff --name-only ${CI_COMMIT_SHA} origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME} --diff-filter=d | grep '\.py'$)
   tags:
     - analytics
   only:

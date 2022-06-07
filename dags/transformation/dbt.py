@@ -101,7 +101,7 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
     run every week.
     """
 
-    ## TODO: make this not hardcoded
+    # TODO: make this not hardcoded
     current_weekday = timestamp.isoweekday()
 
     # run a full-refresh once per week (on sunday early AM)
@@ -159,7 +159,7 @@ dbt_test_cmd = f"""
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
     dbt --no-use-colors test --profiles-dir profile --target prod --exclude snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
