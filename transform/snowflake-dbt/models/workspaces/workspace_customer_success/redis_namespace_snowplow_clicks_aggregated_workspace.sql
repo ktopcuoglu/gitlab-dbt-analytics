@@ -50,9 +50,9 @@ clicks_namespaces_action_months__events__joined AS (
     COUNT(DISTINCT filtered_events.gsc_pseudonymized_user_id) AS distinct_users
   FROM clicks_namespaces_action_months
   LEFT JOIN clicks_filtered 
-    ON event_namespaces_action_months.ultimate_parent_namespace_id = clicks_filtered.ultimate_parent_namespace_id
-    AND event_namespaces_action_months.date_month = DATE_TRUNC('month', clicks_filtered.derived_tstamp)
-    AND event_namespaces_action_months.event_action = clicks_filtered.event_action
+    ON clicks_namespaces_action_months.ultimate_parent_namespace_id = clicks_filtered.ultimate_parent_namespace_id
+    AND clicks_namespaces_action_months.date_month = DATE_TRUNC('month', clicks_filtered.derived_tstamp)
+    AND clicks_namespaces_action_months.event_action = clicks_filtered.event_action
   {{ dbt_utils.group_by(n = 3) }}
 )
 
@@ -61,5 +61,5 @@ clicks_namespaces_action_months__events__joined AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-05-24",
-    updated_date="2022-06-06"
+    updated_date="2022-06-07"
 ) }}
