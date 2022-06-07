@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('metric_opt_in', 'rpt_ping_counter_statistics'),
+    ('metric_opt_in', 'rpt_ping_metric_first_last_versions'),
     ('mart_charge', 'mart_charge'),
     ('dim_charge', 'dim_charge'),
     ('fct_charge', 'fct_charge'),
