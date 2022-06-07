@@ -9,7 +9,7 @@ macros:
         description: placeholder
       - name: no_reporting_count
         type: string
-        description: placeholder
+        description: tbd
 
   - name: usage_estimation
     description: '{{ doc("usage_estimation") }}'
@@ -19,4 +19,4 @@ macros:
         description: placeholder
       - name: percent_reporting
         type: string
-        description: placeholder
+        description: tbd
