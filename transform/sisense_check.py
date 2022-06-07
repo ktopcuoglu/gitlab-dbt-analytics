@@ -63,7 +63,7 @@ def get_chart_name(sql_path: str) -> str:
 # Get the file path for all files with a line that matches a table, view, or snippet call.
 paths_to_check = ["snippets", "views", "dashboards"]
 
-repos_to_check = ["periscope", "sisense-safe"]
+repos_to_check = ["periscope", "sisense-safe", "sisense-safe-intermediate"]
 
 periscope_table_dict = dict()
 for repo in repos_to_check:
@@ -148,7 +148,7 @@ while len(to_add) > 0 and i < 7:  # A catch for run away loops
                 *[
                     value
                     for key, value in match.items()
-                    if key not in {"sisense-safe-dashboards", "periscope-dashboards"}
+                    if key not in repos_to_check
                 ]
             )
         )
@@ -168,7 +168,7 @@ for line in models_to_match:
     if len(match) > 0:
 
         for key, value in match.items():
-            if key in {"sisense-safe-dashboards", "periscope-dashboards"}:
+            if key in repos_to_check:
                 charts = match[key]
                 for keys, values in charts.items():
                     charts[keys] = list(values)
