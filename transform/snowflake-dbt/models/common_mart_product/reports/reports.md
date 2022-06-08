@@ -307,8 +307,7 @@
 
 {% enddocs %}
 
-
-{% docs rpt_ping_subscriptions_on_versions_counts_monthly %}
+{% docs rpt_ping_subscriptions_reported_counts_monthly %}
 
 **Description:**  Ping Metrics by Edition and Month with Subscription, ARR and User Totals by Installation and Month  
 - Latest Subscription, Version, ARR, MRR and Ping Count information in included. 
