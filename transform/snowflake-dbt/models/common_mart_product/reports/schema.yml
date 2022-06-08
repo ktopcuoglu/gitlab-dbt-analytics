@@ -153,7 +153,7 @@ models:
       tests:
         - not_null
         - unique
-      description: the unique composite ID for the rpt_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+      description: the unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
     - name: metrics_path
       description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
     - name: reporting_month
