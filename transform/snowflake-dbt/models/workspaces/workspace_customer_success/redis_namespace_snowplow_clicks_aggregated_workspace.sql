@@ -47,7 +47,7 @@ clicks_namespaces_action_months__events__joined AS (
     clicks_namespaces_action_months.date_month,
     clicks_namespaces_action_months.ultimate_parent_namespace_id,
     clicks_namespaces_action_months.event_action,
-    COUNT(DISTINCT filtered_events.gsc_pseudonymized_user_id) AS distinct_users
+    COUNT(DISTINCT clicks_filtered.gsc_pseudonymized_user_id) AS distinct_users
   FROM clicks_namespaces_action_months
   LEFT JOIN clicks_filtered 
     ON clicks_namespaces_action_months.ultimate_parent_namespace_id = clicks_filtered.ultimate_parent_namespace_id
