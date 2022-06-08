@@ -43,7 +43,7 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # This value is set based on the commit hash setter task in dbt_snapshot
-pull_commit_hash = """export GIT_COMMIT="fc7161faa1ce93c23cc0bf51a68f4772fc9adced" """
+pull_commit_hash = """export GIT_COMMIT="f3e093953c3457c60f978b3b741850a8a165b124" """
 
 
 # Default arguments for the DAG
