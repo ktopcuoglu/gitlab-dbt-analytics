@@ -88,7 +88,6 @@ WITH mapping as (
       ON rehire.employee_id = mapping.employee_id
     LEFT JOIN cost_center
       ON cost_center.employee_id = mapping.employee_id  
-    WHERE mapping.hire_date < date_trunc('week', dateadd(week, 3, CURRENT_DATE))
 
 )
 
