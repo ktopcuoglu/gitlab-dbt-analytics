@@ -40,7 +40,6 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
 
-
 - name: rpt_event_plan_monthly
   description: '{{ doc("rpt_event_plan_monthly") }}'
   columns:
@@ -82,7 +81,6 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
 
-
 - name: rpt_ping_metric_first_last_versions
   description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
   columns:
@@ -91,7 +89,6 @@ models:
         - not_null
         - unique
 
-
 - name: rpt_ping_active_subscriptions_monthly
   description: ' {{ doc("rpt_ping_active_subscriptions_monthly") }} '
   columns:
@@ -99,7 +96,6 @@ models:
       tests:
         - not_null
         - unique
-
 
 - name: rpt_ping_subscriptions_on_versions_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_subscriptions_on_versions_estimate_factors_monthly") }} '
@@ -134,7 +130,6 @@ models:
     - name: is_umau
       description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
 
-
 - name: rpt_ping_metric_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_metric_estimate_factors_monthly") }} '
   columns:
@@ -143,7 +138,6 @@ models:
         - not_null
         - unique
 
-
 - name: rpt_ping_subscriptions_reported_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_subscriptions_reported_estimate_factors_monthly") }} '
   columns:
@@ -151,7 +145,6 @@ models:
       tests:
         - not_null
         - unique
-
 
 - name: rpt_ping_metric_totals_w_estimates_monthly
   description: ' {{ doc("rpt_ping_metric_totals_w_estimates_monthly") }} '
@@ -199,3 +192,20 @@ models:
       description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
     - name: is_umau
       description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
+
+
+- name: rpt_ping_subscriptions_reported_counts_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_reported_counts_monthly") }} '
+  columns:
+    - name: ping_subscriptions_reported_counts_monthly_id
+      tests:
+        - not_null
+        - unique
+
+- name: rpt_ping_subscriptions_on_versions_counts_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_on_versions_counts_monthly") }} '
+  columns:
+    - name: ping_subscriptions_on_versions_counts_monthly_id
+      tests:
+        - not_null
+        - unique

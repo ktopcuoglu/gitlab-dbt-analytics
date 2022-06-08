@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('mart_pct', 'rpt_ping_instance_metric_adoption_monthly_all')
+    ('mart_pct', 'rpt_ping_metric_estimate_factors_monthly')
     ])
 
 }}
