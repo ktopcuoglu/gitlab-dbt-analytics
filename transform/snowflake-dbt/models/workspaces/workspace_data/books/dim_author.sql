@@ -2,7 +2,7 @@ WITH source AS (
 
   SELECT DISTINCT
     --Primary Key
-      {{ dbt_utils.surrogate_key([authors]) }} AS dim_author_id,    
+      {{ dbt_utils.surrogate_key(['authors']) }} AS dim_author_id,    
       authors AS author_name
   FROM {{ ref('sheetload_books') }}
 
