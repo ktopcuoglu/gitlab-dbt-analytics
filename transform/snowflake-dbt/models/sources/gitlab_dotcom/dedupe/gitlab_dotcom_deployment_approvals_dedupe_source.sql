@@ -2,7 +2,7 @@
     "materialized": "incremental",
     "unique_key": "id"
     })
-}}
+}} 
 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'deployment_approvals') }}
