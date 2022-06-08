@@ -21,7 +21,7 @@
     FROM {{ ref('gitlab_dotcom_resource_label_events_source') }} 
     {% if is_incremental() %}
 
-    WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+    WHERE created_at > (SELECT MAX(created_at) FROM {{this}})
 
     {% endif %}
 
@@ -50,7 +50,7 @@
       ON resource_label_events.issue_id = dim_issue.dim_issue_id
     LEFT JOIN dim_merge_request
       ON resource_label_events.merge_request_id = dim_merge_request.dim_merge_request_id
-    LEFT JOIN dim_date 
+    INNER JOIN dim_date 
       ON TO_DATE(resource_label_events.created_at) = dim_date.date_day
 
 )
@@ -60,5 +60,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-03-14",
-    updated_date="2022-03-14"
+    updated_date="2022-06-01"
 ) }}
