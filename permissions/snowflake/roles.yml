@@ -411,6 +411,7 @@ roles:
             - zuora
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
+            - zuora_stitch_rest_api
         privileges:
             databases:
                 read:
@@ -2325,6 +2326,23 @@ roles:
             tables:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
+
+    - zuora_stitch_rest_api:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.zuora_stitch_rest_api
+                    - prep.zuora_stitch_rest_api
+            tables:
+                read:
+                    - raw.zuora_stitch_rest_api.*
+                    - prep.zuora_stitch_rest_api.*
 
     - zuora_query_api:
         warehouses:
