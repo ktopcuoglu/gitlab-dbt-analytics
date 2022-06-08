@@ -2,7 +2,6 @@ WITH base AS (
 
     SELECT *
     FROM {{ref('zuora_order_action_source')}}
-    WHERE is_deleted = FALSE
 
 ), final AS (
 

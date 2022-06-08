@@ -19,6 +19,9 @@ sources:
 
     tables:
       - name: order
+        identifier: ORDER
+        quoting:
+          identifier: true
         description: '{{ doc("zuora_order_source") }}'
         columns:
           - name: id

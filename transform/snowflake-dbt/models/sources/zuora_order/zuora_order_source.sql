@@ -16,13 +16,13 @@ WITH source AS (
       createdbymigration::VARCHAR AS created_by_migration,
       createddate::VARCHAR AS created_date,
       defaultpaymentmethodid::VARCHAR AS default_payment_method_id,
-      description::VARCHAR,
+      description::VARCHAR AS description,
       orderdate::VARCHAR AS order_date,
       ordernumber::VARCHAR AS order_number,
       parentaccountid::VARCHAR AS parent_account_id,
       soldtocontactid::VARCHAR AS sold_to_contact_id,
-      state::VARCHAR,
-      status::VARCHAR,
+      state::VARCHAR AS state,
+      status::VARCHAR AS status,
       updatedbyid::VARCHAR AS updated_by_id,
       updateddate::VARCHAR AS updated_date
 
