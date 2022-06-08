@@ -43,7 +43,7 @@ GIT_BRANCH = env["GIT_BRANCH"]
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # This value is set based on the commit hash setter task in dbt_snapshot
-pull_commit_hash = """export GIT_COMMIT="f3e093953c3457c60f978b3b741850a8a165b124" """
+pull_commit_hash = """export GIT_COMMIT="fc7161faa1ce93c23cc0bf51a68f4772fc9adced" """
 
 
 # Default arguments for the DAG
@@ -117,7 +117,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt run --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -139,7 +139,7 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
+    dbt --no-use-colors test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
