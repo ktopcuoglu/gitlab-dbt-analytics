@@ -16,6 +16,12 @@ models:
     - name: classification
       tests:
       - not_null
+- name: driveload_marketing_dnc_list_source
+  description: List for unmarketable contacts in the email marketing db.
+  columns:
+    - name: address
+      tests:
+      - not_null
 - name: driveload_ssa_coverage_fitted_curves_source
   description: Stores the result of fitting a curve to multiple metrics using the last 4 quarters as data points. These curves are leverage in the X-Ray dashboard and Quarterly Coverage metric reports.
   columns:
