@@ -748,6 +748,7 @@ roles:
                 read:
                     - prep.gitlab_dotcom
                     - prep.data_science
+                    - prep.zendesk
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
@@ -763,8 +764,10 @@ roles:
                 read:
                     - prep.gitlab_dotcom.*
                     - prep.data_science.*
+                    - prep.zendesk.*
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
+                    - prod.legacy.zendesk_tickets_xf
                     - prod.workspace_data_science.*
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
