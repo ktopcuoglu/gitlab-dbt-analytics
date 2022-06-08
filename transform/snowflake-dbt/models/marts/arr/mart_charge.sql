@@ -73,6 +73,9 @@
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
+      dim_subscription.invoice_owner_account,
+      dim_subscription.creator_account,
+      dim_subscription.was_purchased_through_reseller,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -187,7 +190,7 @@
 {{ dbt_audit(
     cte_ref="mart_charge",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2021-10-25"
+    updated_date="2022-05-30"
 ) }}

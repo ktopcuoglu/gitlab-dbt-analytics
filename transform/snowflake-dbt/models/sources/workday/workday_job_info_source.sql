@@ -1,6 +1,7 @@
 WITH source AS (
   SELECT *
   FROM {{ source('workday','job_info') }}
+  WHERE _fivetran_deleted = FALSE
 ),
 
 renamed AS (
@@ -14,7 +15,8 @@ renamed AS (
     events.value['EFFECTIVE_DATE']::DATE AS effective_date,
     events.value['ENTITY']::VARCHAR AS entity,
     events.value['JOB_TITLE']::VARCHAR AS job_title,
-    events.value['REPORTS_TO']::VARCHAR AS reports_to
+    events.value['REPORTS_TO']::VARCHAR AS reports_to,
+    events.value['DATE_TIME_INITIATED']::TIMESTAMP AS initiated_at
   FROM source
   INNER JOIN LATERAL FLATTEN(INPUT => source.job_info_group) AS events
 )

@@ -15,6 +15,7 @@ source-paths: ["models"]
 test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
+analysis-paths: ["analysis"]
 target-path: "target"
 clean-targets:
     - "target"
