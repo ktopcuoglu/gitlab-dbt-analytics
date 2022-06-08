@@ -116,8 +116,8 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
+    dbt run --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -139,7 +139,7 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt --no-use-colors test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
