@@ -498,5 +498,5 @@ sm_paid_user_metrics AS (
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-05-25"
+    updated_date="2022-06-08"
 ) }}
