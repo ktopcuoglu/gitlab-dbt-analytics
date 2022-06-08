@@ -47,7 +47,7 @@
     SELECT
       dates.first_day_of_month AS month,
       subscriptions.dim_subscription_id_original,
-      SUM(charges.quantity) AS zuora_licenses
+      SUM(charges.quantity) AS license_user_count
     FROM charges
     JOIN dates ON charges.effective_start_month <= dates.date_actual
       AND (charges.effective_end_month > dates.date_actual
@@ -94,11 +94,14 @@
       location_country.iso_3_country_code,
       'Self-Managed'                                                                AS delivery_type,
       -- Wave 1
-      monthly_sm_metrics.license_utilization,
+      DIV0(
+        monthly_sm_metrics.billable_user_count, 
+        zuora_licenses_per_subscription.license_user_count
+      )                                                                             AS license_utilization,
       monthly_sm_metrics.billable_user_count,
       monthly_sm_metrics.active_user_count,
       monthly_sm_metrics.max_historical_user_count,
-      monthly_sm_metrics.license_user_count,
+      zuora_licenses_per_subscription.license_user_count,
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -261,6 +264,9 @@
       ON subscriptions.dim_subscription_id = monthly_sm_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = monthly_sm_metrics.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = monthly_sm_metrics.snapshot_month
 
 ), saas_paid_user_metrics AS (
 
@@ -291,11 +297,14 @@
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
       -- Wave 1
-      monthly_saas_metrics.license_utilization,
+      DIV0(
+        monthly_saas_metrics.billable_user_count, 
+        zuora_licenses_per_subscription.license_user_count
+      )                                                                             AS license_utilization,
       monthly_saas_metrics.billable_user_count,
       NULL                                                                          AS active_user_count,
       monthly_saas_metrics.max_historical_user_count,
-      monthly_saas_metrics.subscription_seats,
+      zuora_licenses_per_subscription.license_user_count,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       action_active_users_project_repo_users.distinct_users AS action_monthly_active_users_project_repo_28_days_user,
@@ -446,7 +455,7 @@
       monthly_saas_metrics.dast_scans_all_time_event,
       monthly_saas_metrics.dast_scans_28_days_event,
       monthly_saas_metrics.sast_scans_all_time_event,
-      monthly_saas_metrics.sast_scans_28_days_event,   
+      monthly_saas_metrics.sast_scans_28_days_event,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -456,6 +465,9 @@
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = monthly_saas_metrics.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = monthly_saas_metrics.snapshot_month
     LEFT JOIN namespaces 
       ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
     LEFT JOIN action_active_users_project_repo_users
@@ -485,12 +497,8 @@
           'hostname',
           'dim_namespace_id'
         ]
-      ) }} AS primary_key,
-      zuora_licenses_per_subscription.zuora_licenses
+      ) }} AS primary_key
     FROM unioned
-    LEFT JOIN zuora_licenses_per_subscription 
-      ON zuora_licenses_per_subscription.dim_subscription_id_original = unioned.dim_subscription_id_original
-      AND zuora_licenses_per_subscription.month = unioned.snapshot_month
   
 )
 
@@ -499,5 +507,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-05-26"
+    updated_date="2022-06-08"
 ) }}
