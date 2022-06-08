@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('sub_combo', 'rpt_ping_instance_subscription_opt_in_monthly'),
+    ('sub_combo', 'rpt_ping_subscriptions_reported_counts_monthly'),
     ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly')
     ])
 

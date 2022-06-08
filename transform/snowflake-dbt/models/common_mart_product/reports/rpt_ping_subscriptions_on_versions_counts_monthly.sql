@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('metric_opt_in', 'rpt_ping_counter_statistics'),
+    ('metric_opt_in', 'rpt_ping_metric_first_last_versions'),
     ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly')
     ])
 

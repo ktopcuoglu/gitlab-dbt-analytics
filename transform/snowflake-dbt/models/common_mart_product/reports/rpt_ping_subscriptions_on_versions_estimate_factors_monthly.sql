@@ -5,9 +5,9 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('rpt_ping_instance_subscription_opt_in_monthly', 'rpt_ping_instance_subscription_opt_in_monthly'),
-    ('rpt_ping_instance_subscription_metric_opt_in_monthly', 'rpt_ping_instance_subscription_metric_opt_in_monthly'),
-    ('active_subscriptions', 'rpt_ping_instance_active_subscriptions'),
+    ('rpt_ping_subscriptions_reported_counts_monthly', 'rpt_ping_subscriptions_reported_counts_monthly'),
+    ('rpt_ping_subscriptions_on_versions_counts_monthly', 'rpt_ping_subscriptions_on_versions_counts_monthly'),
+    ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly'),
     ('dim_ping_metric', 'dim_ping_metric')
     ])
 
@@ -80,14 +80,14 @@
         rpt_ping_instance_subscription_opt_in_monthly.total_subscription_count - reported_subscription_count                                                                        AS not_reporting_subscription_count, -- not on version with metric
         rpt_ping_instance_subscription_opt_in_monthly.total_licensed_users - reported_seat_count                                                                                    AS not_reporting_seat_count -- not on version with metric
     FROM reported_actuals
-    INNER JOIN rpt_ping_instance_subscription_metric_opt_in_monthly --model with subscriptions and seats on version
-      ON reported_actuals.ping_created_at_month = rpt_ping_instance_subscription_metric_opt_in_monthly.ping_created_at_month
-      AND reported_actuals.metrics_path = rpt_ping_instance_subscription_metric_opt_in_monthly.metrics_path
-      AND reported_actuals.ping_edition = rpt_ping_instance_subscription_metric_opt_in_monthly.ping_edition
-    INNER JOIN rpt_ping_instance_subscription_opt_in_monthly --model with overall total subscriptions and seats
-      ON reported_actuals.ping_created_at_month = rpt_ping_instance_subscription_opt_in_monthly.ping_created_at_month
-      AND reported_actuals.metrics_path = rpt_ping_instance_subscription_opt_in_monthly.metrics_path
-      AND reported_actuals.ping_edition = rpt_ping_instance_subscription_opt_in_monthly.ping_edition
+    INNER JOIN rpt_ping_subscriptions_on_versions_counts_monthly --model with subscriptions and seats on version
+      ON reported_actuals.ping_created_at_month = rpt_ping_subscriptions_on_versions_counts_monthly.ping_created_at_month
+      AND reported_actuals.metrics_path = rpt_ping_subscriptions_on_versions_counts_monthly.metrics_path
+      AND reported_actuals.ping_edition = rpt_ping_subscriptions_on_versions_counts_monthly.ping_edition
+    INNER JOIN rpt_ping_subscriptions_reported_counts_monthly --model with overall total subscriptions and seats
+      ON reported_actuals.ping_created_at_month = rpt_ping_subscriptions_reported_counts_monthly.ping_created_at_month
+      AND reported_actuals.metrics_path = rpt_ping_subscriptions_reported_counts_monthly.metrics_path
+      AND reported_actuals.ping_edition = rpt_ping_subscriptions_reported_counts_monthly.ping_edition
 
 -- Split subs and seats then union
 
@@ -134,7 +134,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition','estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_subscription_metric_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition','estimation_grain']) }}          AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                        AS percent_reporting
  FROM unioned_counts
