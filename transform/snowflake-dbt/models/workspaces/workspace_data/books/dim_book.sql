@@ -2,7 +2,7 @@ WITH source AS (
 
   SELECT 
     --Primary Key
-      {{ dbt_utils.surrogate_key(['bookID', 'isbn13']) }} AS dim_book_id,    
+      {{ dbt_utils.surrogate_key(['bookid', 'isbn13']) }} AS dim_book_id,    
       title AS book_title, 
       language,
       isbn, 
