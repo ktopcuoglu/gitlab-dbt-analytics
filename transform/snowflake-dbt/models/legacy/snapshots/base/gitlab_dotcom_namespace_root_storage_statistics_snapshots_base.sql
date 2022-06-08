@@ -19,6 +19,7 @@ WITH source AS (
         build_artifacts_size::NUMBER                                 AS build_artifacts_size,
         storage_size::NUMBER                                         AS storage_size,
         packages_size::NUMBER                                        AS packages_size,
+        container_registry_size::NUMBER                              AS container_registry_size,
         dbt_valid_from::TIMESTAMP                                     AS valid_from,
         dbt_valid_to::TIMESTAMP                                       AS valid_to
 
