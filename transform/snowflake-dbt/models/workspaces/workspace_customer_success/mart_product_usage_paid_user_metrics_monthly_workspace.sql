@@ -298,7 +298,7 @@
       monthly_saas_metrics.subscription_seats,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
-      action_active_users_project_repo_users.distinct_users AS action_monthly_active_users_project_repo_28_days_user,
+      COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
       monthly_saas_metrics.merge_requests_28_days_user,
       monthly_saas_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_saas_metrics.commit_comment_all_time_event,
