@@ -39,7 +39,8 @@ models:
       description: The date at which the model was created
     - name: model_updated_date
       description: The date at which the model code was last updated
-      
+
+
 - name: rpt_event_plan_monthly
   description: '{{ doc("rpt_event_plan_monthly") }}'
   columns:
@@ -81,6 +82,7 @@ models:
     - name: model_updated_date
       description: The date at which the model code was last updated
 
+
 - name: rpt_ping_metric_first_last_versions
   description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
   columns:
@@ -89,6 +91,7 @@ models:
         - not_null
         - unique
 
+
 - name: rpt_ping_active_subscriptions_monthly
   description: ' {{ doc("rpt_ping_active_subscriptions_monthly") }} '
   columns:
@@ -96,6 +99,7 @@ models:
       tests:
         - not_null
         - unique
+
 
 - name: rpt_ping_subscriptions_on_versions_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_subscriptions_on_versions_estimate_factors_monthly") }} '
@@ -130,6 +134,7 @@ models:
     - name: is_umau
       description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
 
+
 - name: rpt_ping_metric_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_metric_estimate_factors_monthly") }} '
   columns:
@@ -138,6 +143,7 @@ models:
         - not_null
         - unique
 
+
 - name: rpt_ping_subscriptions_reported_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_subscriptions_reported_estimate_factors_monthly") }} '
   columns:
@@ -145,3 +151,51 @@ models:
       tests:
         - not_null
         - unique
+
+
+- name: rpt_ping_metric_totals_w_estimates_monthly
+  description: ' {{ doc("rpt_ping_metric_totals_w_estimates_monthly") }} '
+  columns:
+    - name: ping_metric_totals_w_estimates_monthly_id
+      tests:
+        - not_null
+        - unique
+      description: the unique composite ID for the rpt_ping_instance_metric_estimated_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+    - name: metrics_path
+      description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+    - name: reporting_month
+      description: The month the data was reported
+    - name: ping_edition
+      description: The edition of GitLab on the instance (EE, CE)
+    - name: actual_usage
+      description: The number of events that were reported
+    - name: estimated_usage
+      description: The estimated number of events that happened. but were not actually reported
+    - name: reporting_count
+      description: The number of seats/subscriptions that reported the metric
+    - name: no_reporting_count
+      description: The number of seats/subscriptions that didn't report the metric, but should have
+    - name: estimation_grain
+      description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+    - name: percent_reporting
+      description: The percentage of events being reported
+    - name: total_estimated_usage
+      description: The total estimated number of events that happened. but were not actually reported
+    - name: ping_product_tier
+      description: The product tier of the ping, inferred from the edition and the plan saved in the license (Core, Starter Premium, Ultimate)
+    - name: ping_main_edition_product_tier
+      description: A combination of the main_edition and the ping_product_tier (EE - Self-Managed - Free, EE - Self-Managed - Premium, EE - Self-Managed - Ultimate)
+    - name: stage_name
+      description: The name of the product stage responsible for the metric
+    - name: section_name
+      description: The name of the product section responsible for the metric
+    - name: group_name
+      description: The name of the product group responsible for the metric
+    - name: is_smau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the stage's SMAU calculation
+    - name: is_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's GMAU calculation
+    - name: is_paid_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
+    - name: is_umau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
