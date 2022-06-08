@@ -16,7 +16,8 @@ renamed AS (
     events.value['OTE_LOCAL']::FLOAT AS ote_local,
     events.value['OTE_LOCAL_-_Currency_Code']::VARCHAR AS ote_local_currency_code,
     events.value['OTE_TYPE']::VARCHAR AS ote_type,
-    events.value['OTE_USD']::FLOAT AS ote_usd
+    events.value['OTE_USD']::FLOAT AS ote_usd,
+    events.value['DATE_TIME_INITIATED']::TIMESTAMP AS initiated_at
   FROM source
   INNER JOIN LATERAL FLATTEN(INPUT => source.compensation_history) AS events
 

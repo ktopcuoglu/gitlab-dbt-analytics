@@ -129,6 +129,9 @@ WITH dim_billing_account AS (
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
+      dim_subscription.invoice_owner_account,
+      dim_subscription.creator_account,
+      dim_subscription.was_purchased_through_reseller,
 
       --product info
       dim_product_detail.product_tier_name                                            AS product_tier_name,
@@ -207,5 +210,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@jpeguero",
     created_date="2020-09-04",
-    updated_date="2022-02-01"
+    updated_date="2022-05-30"
 ) }}

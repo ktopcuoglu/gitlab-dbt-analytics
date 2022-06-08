@@ -17,7 +17,7 @@ environments,release,FALSE,release,FALSE,ops,FALSE
 epic_creation,plan,FALSE,portfolio_management,TRUE,dev,FALSE
 epic_notes,plan,FALSE,portfolio_management,TRUE,dev,FALSE
 incident_labeled_issues,monitor,FALSE,monitor,FALSE,ops,FALSE
-issue_creation,plan,TRUE,project_management,TRUE,dev,FALSE
+issue_creation_other,plan,TRUE,project_management,TRUE,dev,FALSE
 issue_note_creation,plan,TRUE,project_management,TRUE,dev,FALSE
 issue_resource_label_events,plan,FALSE,project_management,FALSE,dev,FALSE
 issue_resource_milestone_events,plan,FALSE,project_management,FALSE,dev,FALSE
@@ -27,7 +27,7 @@ license_scanning_build_run,secure,TRUE,composition_analysis,TRUE,sec,FALSE
 merge_request_creation,create,FALSE,code_review,TRUE,dev,FALSE
 merge_request_note_creation,create,FALSE,code_review,TRUE,dev,FALSE
 milestones,plan,FALSE,project_management,FALSE,dev,FALSE
-notes,plan,FALSE,project_management,FALSE,dev,FALSE
+notes_other,plan,FALSE,project_management,FALSE,dev,FALSE
 other_ci_build_creation,verify,FALSE,pipeline_execution,FALSE,ops,FALSE
 package_creation,package,TRUE,package,TRUE,ops,FALSE
 project_auto_devops,configure,FALSE,configure,FALSE,ops,FALSE
