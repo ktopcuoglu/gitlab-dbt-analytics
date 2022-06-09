@@ -96,7 +96,9 @@
       -- Wave 1
       DIV0(
         monthly_sm_metrics.billable_user_count, 
-        zuora_licenses_per_subscription.license_user_count
+        COALESCE(
+          zuora_licenses_per_subscription.license_user_count, 
+          monthly_sm_metrics.license_user_count)
       )                                                                             AS license_utilization,
       monthly_sm_metrics.billable_user_count,
       monthly_sm_metrics.active_user_count,
@@ -306,7 +308,9 @@
       -- Wave 1
       DIV0(
         monthly_saas_metrics.billable_user_count, 
-        zuora_licenses_per_subscription.license_user_count
+        COALESCE(
+          zuora_licenses_per_subscription.license_user_count,
+          monthly_saas_metrics.subscription_seats)
       )                                                                             AS license_utilization,
       monthly_saas_metrics.billable_user_count,
       NULL                                                                          AS active_user_count,
