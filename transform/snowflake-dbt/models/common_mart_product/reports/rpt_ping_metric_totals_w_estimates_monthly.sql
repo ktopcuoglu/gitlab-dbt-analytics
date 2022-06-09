@@ -19,7 +19,7 @@
       ping_created_at_month             AS ping_created_at_month,
       ping_delivery_type                AS ping_delivery_type,
       ping_edition                      AS ping_edition,
-      ping_product_tier                 AS ping_product_tier, -- I think this needs to be taken out as it breaks out grain more
+      ping_product_tier                 AS ping_product_tier,
       ping_edition_product_tier         AS ping_edition_product_tier,
       stage_name                        AS stage_name,
       section_name                      AS section_name,
