@@ -234,6 +234,10 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
+      - name: dim_namespace_plan_subscription_hist_id
+        tests:
+          - unique
+          - not_null
 
   - name: prep_namespace
     description: '{{ doc("dim_namespace") }}'
