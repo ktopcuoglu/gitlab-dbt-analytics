@@ -101,7 +101,14 @@
       monthly_sm_metrics.billable_user_count,
       monthly_sm_metrics.active_user_count,
       monthly_sm_metrics.max_historical_user_count,
-      zuora_licenses_per_subscription.license_user_count,
+      COALESCE(
+        zuora_licenses_per_subscription.license_user_count, 
+        monthly_sm_metrics.license_user_count)                                      AS license_user_count,
+      IFF(
+        zuora_licenses_per_subscription.license_user_count IS NOT NULL, 
+        'Zuora',
+        'Service Ping')                                                             AS license_user_count_flag,
+
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -304,7 +311,13 @@
       monthly_saas_metrics.billable_user_count,
       NULL                                                                          AS active_user_count,
       monthly_saas_metrics.max_historical_user_count,
-      zuora_licenses_per_subscription.license_user_count,
+      COALESCE(
+        zuora_licenses_per_subscription.license_user_count,
+        monthly_saas_metrics.subscription_seats)                                    AS license_user_count,
+      IFF(
+        zuora_licenses_per_subscription.license_user_count IS NOT NULL,
+        'Zuora',
+        'gitlabdotcom')                                                             AS license_user_count_flag,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       action_active_users_project_repo_users.distinct_users AS action_monthly_active_users_project_repo_28_days_user,
