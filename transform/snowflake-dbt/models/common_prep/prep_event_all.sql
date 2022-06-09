@@ -6,7 +6,7 @@
 -- depends on: {{ ref('prep_event') }}
 WITH unioned_table AS (
 
-{{ schema_union_all('dotcom_usage_events_', 'prep_event', 'event_created_at', database_name=env_var('SNOWFLAKE_PREP_DATABASE')) }}
+{{ schema_union_all('dotcom_usage_events_', 'prep_event', database_name=env_var('SNOWFLAKE_PREP_DATABASE')) }}
 
 )
 

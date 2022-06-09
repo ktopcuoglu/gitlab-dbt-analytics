@@ -28,7 +28,8 @@ WITH source AS (
       local_annual_salary,
       REGEXP_REPLACE(local_annual_salary, '[0-9/-/#/./*]', '')                    AS annual_local_currency_code,
       REGEXP_REPLACE(usd_annual_salary, '[a-z/-/A-z/#/*]', '')::DECIMAL(10,2)     AS annual_amount_usd_value,
-      REGEXP_REPLACE(usd_annual_salary, '[0-9/-/#/./*]', '')                      AS annual_local_usd_code  
+      REGEXP_REPLACE(usd_annual_salary, '[0-9/-/#/./*]', '')                      AS annual_local_usd_code ,
+      uploaded_at
     FROM renamed
 
 )

@@ -172,7 +172,22 @@
       sm_free_users.active_group_runners_all_time_event,
       sm_free_users.active_project_runners_all_time_event,
       sm_free_users.gitaly_version,
-      sm_free_users.gitaly_servers_all_time_event,      
+      sm_free_users.gitaly_servers_all_time_event,
+      -- Wave 6
+      sm_free_users.api_fuzzing_scans_all_time_event,
+      sm_free_users.api_fuzzing_scans_28_days_event,
+      sm_free_users.coverage_fuzzing_scans_all_time_event,
+      sm_free_users.coverage_fuzzing_scans_28_days_event,
+      sm_free_users.secret_detection_scans_all_time_event,
+      sm_free_users.secret_detection_scans_28_days_event,
+      sm_free_users.dependency_scanning_scans_all_time_event,
+      sm_free_users.dependency_scanning_scans_28_days_event,
+      sm_free_users.container_scanning_scans_all_time_event,
+      sm_free_users.container_scanning_scans_28_days_event,
+      sm_free_users.dast_scans_all_time_event,
+      sm_free_users.dast_scans_28_days_event,
+      sm_free_users.sast_scans_all_time_event,
+      sm_free_users.sast_scans_28_days_event,     
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY sm_free_users.uuid, sm_free_users.hostname
                              ORDER BY sm_free_users.ping_created_at DESC
@@ -338,6 +353,21 @@
       "counts.ci_runners_project_type_active"                                                   AS active_project_runners_all_time_event,
       "gitaly.version"::VARCHAR                                                                 AS gitaly_version,
       "gitaly.servers"                                                                          AS gitaly_servers_all_time_event,
+      -- Wave 6
+      "usage_activity_by_stage.secure.api_fuzzing_scans"                                        AS api_fuzzing_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.api_fuzzing_scans"                                AS api_fuzzing_scans_28_days_event,
+      "usage_activity_by_stage.secure.coverage_fuzzing_scans"                                   AS coverage_fuzzing_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.coverage_fuzzing_scans"                           AS coverage_fuzzing_scans_28_days_event,
+      "usage_activity_by_stage.secure.secret_detection_scans"                                   AS secret_detection_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.secret_detection_scans"                           AS secret_detection_scans_28_days_event,
+      "usage_activity_by_stage.secure.dependency_scanning_scans"                                AS dependency_scanning_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.dependency_scanning_scans"                        AS dependency_scanning_scans_28_days_event,
+      "usage_activity_by_stage.secure.container_scanning_scans"                                 AS container_scanning_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.container_scanning_scans"                         AS container_scanning_scans_28_days_event,
+      "usage_activity_by_stage.secure.dast_scans"                                               AS dast_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.dast_scans"                                       AS dast_scans_28_days_event,
+      "usage_activity_by_stage.secure.sast_scans"                                               AS sast_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.sast_scans"                                       AS sast_scans_28_days_event,
       -- Data Quality Flag
       IFF(ROW_NUMBER() OVER (PARTITION BY dim_namespace_id ORDER BY reporting_month DESC) = 1,
           TRUE, FALSE)                                                                          AS is_latest_data
@@ -360,5 +390,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-08",
-    updated_date="2022-04-21"
+    updated_date="2022-06-01"
 ) }}

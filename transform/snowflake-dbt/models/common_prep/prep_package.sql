@@ -13,8 +13,7 @@
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
     ('prep_namespace', 'prep_namespace'),
-    ('prep_project', 'prep_project'),
-    ('prep_user', 'prep_user')
+    ('prep_project', 'prep_project')
 ]) }}
 
 , gitlab_dotcom_packages_packages_dedupe_source AS (
@@ -23,7 +22,7 @@
     FROM {{ ref('gitlab_dotcom_packages_packages_dedupe_source')}}
     {% if is_incremental() %}
 
-      WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+      WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -38,10 +37,8 @@
       prep_namespace.ultimate_parent_namespace_id,
       dim_date.date_id                                                    AS created_date_id,
       IFNULL(dim_namespace_plan_hist.dim_plan_id, 34)                     AS dim_plan_id,
-      prep_user.dim_user_id                                               AS creator_id,
-
+      gitlab_dotcom_packages_packages_dedupe_source.creator_id            AS creator_id,
       prep_project.namespace_is_internal,
-
       version::VARCHAR                                                    AS package_version,
       package_type::VARCHAR                                               AS package_type,
       gitlab_dotcom_packages_packages_dedupe_source.created_at::TIMESTAMP AS created_at,
@@ -57,9 +54,7 @@
     LEFT JOIN prep_namespace
       ON prep_project.dim_namespace_id = prep_namespace.dim_namespace_id
       AND is_currently_valid = TRUE
-    LEFT JOIN prep_user 
-      ON gitlab_dotcom_packages_packages_dedupe_source.creator_id = prep_user.dim_user_id
-    LEFT JOIN dim_date 
+    INNER JOIN dim_date 
       ON TO_DATE(gitlab_dotcom_packages_packages_dedupe_source.created_at) = dim_date.date_day
 
 )
@@ -69,5 +64,5 @@
     created_by="@mpeychet_",
     updated_by="@mpeychet_",
     created_date="2021-08-05",
-    updated_date="2021-08-05"
+    updated_date="2022-06-01"
 ) }}

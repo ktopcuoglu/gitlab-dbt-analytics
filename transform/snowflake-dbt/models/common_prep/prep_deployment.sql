@@ -22,15 +22,9 @@
     FROM {{ ref('gitlab_dotcom_deployments_dedupe_source') }} 
     {% if is_incremental() %}
 
-    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+    WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
-
-), prep_user AS (
-    
-    SELECT *
-    FROM {{ ref('prep_user') }} users
-    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
 
 ), joined AS (
 
@@ -40,7 +34,7 @@
       prep_project.ultimate_parent_namespace_id::NUMBER                                       AS ultimate_parent_namespace_id,
       dim_date.date_id::NUMBER                                                                AS created_date_id,
       IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)::NUMBER                                AS dim_plan_id,
-      prep_user.dim_user_id::NUMBER                                                           AS dim_user_id,
+      gitlab_dotcom_deployments_dedupe_source.user_id::NUMBER                                 AS dim_user_id,
       gitlab_dotcom_deployments_dedupe_source.iid::NUMBER                                     AS deployment_internal_id,
       gitlab_dotcom_deployments_dedupe_source.environment_id::NUMBER                          AS environment_id,
       gitlab_dotcom_deployments_dedupe_source.cluster_id::NUMBER                              AS cluster_id,
@@ -58,8 +52,7 @@
     LEFT JOIN prep_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_deployments_dedupe_source.created_at >= prep_namespace_plan_hist.valid_from
         AND gitlab_dotcom_deployments_dedupe_source.created_at < COALESCE(prep_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN prep_user ON gitlab_dotcom_deployments_dedupe_source.user_id = prep_user.dim_user_id
-    LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_deployments_dedupe_source.created_at) = dim_date.date_day
+    INNER JOIN dim_date ON TO_DATE(gitlab_dotcom_deployments_dedupe_source.created_at) = dim_date.date_day
 
 )
 
@@ -68,5 +61,5 @@
     created_by="@mpeychet_",
     updated_by="@chrissharp",
     created_date="2021-07-26",
-    updated_date="2022-03-09"
+    updated_date="2022-05-30"
 ) }}

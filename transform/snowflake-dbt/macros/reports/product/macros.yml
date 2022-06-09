@@ -1,0 +1,22 @@
+version: 2
+
+macros:
+  - name: pct_w_counters
+    description: '{{ doc("pct_w_counters") }}'
+    arguments:
+      - name: reporting_count
+        type: string
+        description: placeholder
+      - name: no_reporting_count
+        type: string
+        description: tbd
+
+  - name: usage_estimation
+    description: '{{ doc("usage_estimation") }}'
+    arguments:
+      - name: reporting_metric_count
+        type: string
+        description: placeholder
+      - name: percent_reporting
+        type: string
+        description: tbd

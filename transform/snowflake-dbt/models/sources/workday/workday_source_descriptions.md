@@ -443,4 +443,8 @@ The type of on time earings for the team member.
 {% docs workday_ote_usd %}
 The on time earnings of the team member in USD.
 {% enddocs %}
+
+{% docs workday_per_pay_period_amount %}
+The amount compensated for each pay period.
+{% enddocs %}
  

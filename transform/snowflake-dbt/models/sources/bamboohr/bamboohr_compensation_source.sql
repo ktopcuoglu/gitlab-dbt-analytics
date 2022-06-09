@@ -37,5 +37,6 @@ SELECT
   compensation_change_reason,
   pay_rate,
   IFF(compensation_type = 'Hourly', compensation_value * 80, compensation_value) AS compensation_value,
-  compensation_currency
+  compensation_currency,
+  uploaded_at
 FROM renamed

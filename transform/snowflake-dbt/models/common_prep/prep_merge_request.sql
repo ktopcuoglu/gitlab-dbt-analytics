@@ -12,8 +12,7 @@
     ('dim_date', 'dim_date'),
     ('dim_namespace_plan_hist', 'dim_namespace_plan_hist'),
     ('plans', 'gitlab_dotcom_plans_source'),
-    ('prep_project', 'prep_project'),
-    ('prep_user', 'prep_user')
+    ('prep_project', 'prep_project')
 ]) }}
 
 , gitlab_dotcom_merge_requests_source AS (
@@ -22,7 +21,7 @@
     FROM {{ ref('gitlab_dotcom_merge_requests_source')}}
     {% if is_incremental() %}
 
-      WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+      WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -81,7 +80,7 @@
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@chrisharp",
     created_date="2021-06-17",
-    updated_date="2021-06-17"
+    updated_date="2022-06-01"
 ) }}
