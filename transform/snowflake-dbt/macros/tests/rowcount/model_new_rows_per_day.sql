@@ -1,9 +1,9 @@
-{% macro model_new_rows_per_day(model_name, created_column, min_value, max_value=None, where_clause=None) %}
+{% macro model_new_rows_per_day(model_name, created_column, min_value, max_value=None, where_clause=None, lag_days=None) %}
 
 WITH dates AS (
 
     SELECT *
-    FROM {{ ref('date_details' )}}
+    FROM {{ ref('dim_date' )}}
     WHERE is_holiday = FALSE
     AND day_of_week IN (2,3,4,5,6)
 
@@ -18,7 +18,12 @@ WITH dates AS (
       COUNT(*)                                                      AS row_count,
       DATE_TRUNC('day', {{ created_column }})                       AS the_day
     FROM source
-    WHERE the_day = current_date-1
+    WHERE 
+    {% if lag_days == None %}
+      the_day = current_date - 1
+    {% else %}
+      the_day = current_date - {{ lag_days }}
+    {% endif %}
       AND the_day IN (SELECT DATE_ACTUAL FROM dates)
     {% if where_clause != None %}
       AND {{ where_clause }}

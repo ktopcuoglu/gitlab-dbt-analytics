@@ -1,0 +1,211 @@
+version: 2
+
+models:
+- name: rpt_event_xmau_metric_monthly
+  description: '{{ doc("rpt_event_xmau_metric_monthly") }}'
+  columns:
+    - name: xmau_metric_monthly_id
+      description: the unique ID of a monthly xMAU metric in rpt_xmau_metric_monthly
+      tests:
+        - not_null
+        - unique
+    - name: reporting_month
+      description: Month in which the product usage was reported. This model only looks at the last 28 days of the month.
+    - name: is_smau
+      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+    - name: is_gmau
+      description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+    - name: is_umau
+      description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+    - name: stage_name
+      description: The name of the product stage
+    - name: section_name
+      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+    - name: group_name
+      description: The name of the group (A stage has one or more groups.).
+    - name: user_group
+    - name: event_name_array
+    - name: event_count
+      description: The count of events
+    - name: namespace_count
+      description: The count of namespaces
+    - name: user_count
+      description: The count of users
+    - name: created_by
+      description: Who created this model?
+    - name: update_by
+      description: Who updated this model last?
+    - name: model_created_date
+      description: The date at which the model was created
+    - name: model_updated_date
+      description: The date at which the model code was last updated
+
+- name: rpt_event_plan_monthly
+  description: '{{ doc("rpt_event_plan_monthly") }}'
+  columns:
+    - name: event_plan_monthly_id
+      description: the unique ID of a montthly usage event plan in rpt_usage_event_plan_monthly
+      tests:
+        - not_null
+        - unique
+    - name: reporting_month
+      description: Month in which the product usage was reported. (this model only looks at the last 28 days of the month.)
+    - name: plan_id_at_event_date
+      description: The id of the plan on the day the event was created.
+    - name: event_name
+      description: The name tied to an event
+    - name: stage_name
+      description: The name of the product stage 
+    - name: section_name
+      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+    - name: group_name
+      description: The name of the group (A stage has one or more groups.).
+    - name: is_smau
+      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+    - name: is_gmau
+      description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+    - name: is_umau
+      description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+    - name: event_count
+      description: The count of events
+    - name: namespace_count
+      description: The count of namespaces
+    - name: user_count
+      description: The count of users
+    - name: created_by
+      description: Who created this model?
+    - name: update_by
+      description: Who updated this model last?
+    - name: model_created_date
+      description: The date at which the model was created
+    - name: model_updated_date
+      description: The date at which the model code was last updated
+
+- name: rpt_ping_metric_first_last_versions
+  description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
+  columns:
+    - name: ping_metric_first_last_versions_id
+      tests:
+        - not_null
+        - unique
+
+- name: rpt_ping_active_subscriptions_monthly
+  description: ' {{ doc("rpt_ping_active_subscriptions_monthly") }} '
+  columns:
+    - name: ping_active_subscriptions_monthly_id
+      tests:
+        - not_null
+        - unique
+
+- name: rpt_ping_subscriptions_on_versions_estimate_factors_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_on_versions_estimate_factors_monthly") }} '
+  columns:
+    - name: ping_subscriptions_on_versions_estimate_factors_monthly_id
+      tests:
+        - not_null
+        - unique
+      description: the unique composite ID for the rpt_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
+    - name: reporting_month
+      description: The month the dat was reported
+    - name: reporting_count
+      description: The number of seats/subscriptions that reported the metric
+    - name: no_reporting_count
+      description: The number of seats/subscriptions that didn't report the metric, but should have
+    - name: estimation_grain
+      description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+    - name: percent_reporting
+      description: The percentage of events being reported
+    - name: stage_name
+      description: The name of the product stage responsible for the metric
+    - name: section_name
+      description: The name of the product section responsible for the metric
+    - name: group_name
+      description: The name of the product group responsible for the metric
+    - name: is_smau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the stage's SMAU calculation
+    - name: is_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's GMAU calculation
+    - name: is_paid_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
+    - name: is_umau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
+
+- name: rpt_ping_metric_estimate_factors_monthly
+  description: ' {{ doc("rpt_ping_metric_estimate_factors_monthly") }} '
+  columns:
+    - name: ping_metric_estimate_factors_monthly_id
+      tests:
+        - not_null
+        - unique
+
+- name: rpt_ping_subscriptions_reported_estimate_factors_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_reported_estimate_factors_monthly") }} '
+  columns:
+    - name: ping_subscriptions_reported_estimate_factors_monthly_id
+      tests:
+        - not_null
+        - unique
+
+- name: rpt_ping_metric_totals_w_estimates_monthly
+  description: ' {{ doc("rpt_ping_metric_totals_w_estimates_monthly") }} '
+  columns:
+    - name: ping_metric_totals_w_estimates_monthly_id
+      tests:
+        - not_null
+        - unique
+      description: the unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
+    - name: metrics_path
+      description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
+    - name: reporting_month
+      description: The month the data was reported
+    - name: ping_edition
+      description: The edition of GitLab on the instance (EE, CE)
+    - name: actual_usage
+      description: The number of events that were reported
+    - name: estimated_usage
+      description: The estimated number of events that happened. but were not actually reported
+    - name: reporting_count
+      description: The number of seats/subscriptions that reported the metric
+    - name: no_reporting_count
+      description: The number of seats/subscriptions that didn't report the metric, but should have
+    - name: estimation_grain
+      description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+    - name: percent_reporting
+      description: The percentage of events being reported
+    - name: total_estimated_usage
+      description: The total estimated number of events that happened. but were not actually reported
+    - name: ping_product_tier
+      description: The product tier of the ping, inferred from the edition and the plan saved in the license (Core, Starter Premium, Ultimate)
+    - name: ping_main_edition_product_tier
+      description: A combination of the main_edition and the ping_product_tier (EE - Self-Managed - Free, EE - Self-Managed - Premium, EE - Self-Managed - Ultimate)
+    - name: stage_name
+      description: The name of the product stage responsible for the metric
+    - name: section_name
+      description: The name of the product section responsible for the metric
+    - name: group_name
+      description: The name of the product group responsible for the metric
+    - name: is_smau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the stage's SMAU calculation
+    - name: is_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's GMAU calculation
+    - name: is_paid_gmau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
+    - name: is_umau
+      description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
+
+
+- name: rpt_ping_subscriptions_reported_counts_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_reported_counts_monthly") }} '
+  columns:
+    - name: ping_subscriptions_reported_counts_monthly_id
+      tests:
+        - not_null
+        - unique
+
+- name: rpt_ping_subscriptions_on_versions_counts_monthly
+  description: ' {{ doc("rpt_ping_subscriptions_on_versions_counts_monthly") }} '
+  columns:
+    - name: ping_subscriptions_on_versions_counts_monthly_id
+      tests:
+        - not_null
+        - unique

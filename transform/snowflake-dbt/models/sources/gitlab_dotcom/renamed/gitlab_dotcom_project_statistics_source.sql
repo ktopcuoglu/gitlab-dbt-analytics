@@ -12,6 +12,7 @@ WITH source AS (
     commit_count::NUMBER                           AS commit_count,
     storage_size::NUMBER                           AS storage_size,
     repository_size::NUMBER                        AS repository_size,
+    container_registry_size::NUMBER                AS container_registry_size,
     lfs_objects_size::NUMBER                       AS lfs_objects_size,
     build_artifacts_size::NUMBER                   AS build_artifacts_size,
     packages_size::NUMBER                          AS packages_size,

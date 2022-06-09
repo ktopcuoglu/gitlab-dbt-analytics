@@ -698,6 +698,7 @@ tables:
       , wiki_size
       , snippets_size
       , uploads_size
+      , container_registry_size
       FROM project_statistics
   repository_languages:
     advanced_metadata: true
