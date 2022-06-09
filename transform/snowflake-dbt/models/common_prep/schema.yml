@@ -383,7 +383,7 @@ models:
       - name: plan_id_modified
         description: Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
       - name: plan_name_modified
-        description: Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan ids.
+        description: Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
 
   - name: prep_product_detail
     columns:
