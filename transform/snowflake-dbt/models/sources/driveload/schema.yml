@@ -19,7 +19,7 @@ models:
 - name: driveload_marketing_dnc_list_source
   description: List for unmarketable contacts in the email marketing db.
   columns:
-    - name: address
+    - name: email_address
       tests:
       - not_null
 - name: driveload_ssa_coverage_fitted_curves_source
