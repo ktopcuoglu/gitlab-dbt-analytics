@@ -8,7 +8,7 @@ WITH source AS (
       {{ dbt_utils.surrogate_key(['bookid', 'isbn13']) }} AS dim_book_id,    
       {{ dbt_utils.surrogate_key(['authors']) }} AS dim_author_id,    
       {{ dbt_utils.surrogate_key(['publisher']) }} AS dim_publisher_id, 
-      {{ dbt_utils.surrogate_key(['publication_date']) }} AS dim_publication_date_id, 
+      {{ get_date_id('publication_date') }} AS dim_publication_date_id, 
 
 
     
