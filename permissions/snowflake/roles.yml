@@ -4034,6 +4034,13 @@ roles:
         warehouses:
             - reporting
 
+    - smccormack:
+        member_of:
+            - bamboohr
+            - reporter
+        warehouses:
+            - dev_xs
+
     - snalamaru:
         member_of:
             - engineer
@@ -4762,6 +4769,11 @@ users:
         can_login: yes
         member_of:
             - sisense_restricted_safe
+
+    - smccormack:
+        can_login: yes
+        member_of:
+            - smccormack
 
     - snalamaru:
         can_login: yes
