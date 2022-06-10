@@ -2830,8 +2830,6 @@ models:
         description: This value consists of the only types of storage that GitLab currently limits, and thus are possible to be billable. This value is equivalent to `repository_size` + `lfs_objects_size` across all repositories under the top level namespace.
       - name: repository_bytes
         description: Total size of repository across all repositories under the top level namespace.
-      - name: container_registry_size
-        description: Total size of container registry under the top level namespace 
       - name: lfs_objects_bytes
         description: Total size of Large File Storage objects across all repositories under the top level namespace.
       - name: build_artifacts_bytes
