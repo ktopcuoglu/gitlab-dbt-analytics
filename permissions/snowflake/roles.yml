@@ -3751,6 +3751,7 @@ roles:
             - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
+            - customers_db
         warehouses:
             - dev_xs
 
@@ -4033,6 +4034,13 @@ roles:
             - restricted_safe
         warehouses:
             - reporting
+
+    - smccormack:
+        member_of:
+            - bamboohr
+            - reporter
+        warehouses:
+            - dev_xs
 
     - snalamaru:
         member_of:
@@ -4762,6 +4770,11 @@ users:
         can_login: yes
         member_of:
             - sisense_restricted_safe
+
+    - smccormack:
+        can_login: yes
+        member_of:
+            - smccormack
 
     - snalamaru:
         can_login: yes

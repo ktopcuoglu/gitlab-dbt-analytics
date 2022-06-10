@@ -234,6 +234,10 @@ models:
       - name: dim_namespace_id
         tests:
           - not_null
+      - name: dim_namespace_plan_subscription_hist_id
+        tests:
+          - unique
+          - not_null
 
   - name: prep_namespace
     description: '{{ doc("dim_namespace") }}'
@@ -376,6 +380,10 @@ models:
         tests:
           - not_null
           - unique
+      - name: plan_id_modified
+        description: Modified plan id to conform legacy gold and silver plan ids to ultimate and premium plan ids.
+      - name: plan_name_modified
+        description: Modified plan name to conform legacy gold and silver plan names to ultimate and premium plan names.
 
   - name: prep_product_detail
     columns:
