@@ -19,7 +19,6 @@ WITH date_details AS (
       DATE_TRUNC('month', date_details.date_actual) AS snapshot_month,
       namespace_statistics_snapshots.namespace_id,
       namespace_statistics_snapshots.repository_size,
-      namespace_statistics_snapshots.container_registry_size,
       namespace_statistics_snapshots.lfs_objects_size,
       namespace_statistics_snapshots.wiki_size,
       namespace_statistics_snapshots.build_artifacts_size,
