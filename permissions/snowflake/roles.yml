@@ -3751,6 +3751,7 @@ roles:
             - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
+            - customers_db
         warehouses:
             - dev_xs
 
