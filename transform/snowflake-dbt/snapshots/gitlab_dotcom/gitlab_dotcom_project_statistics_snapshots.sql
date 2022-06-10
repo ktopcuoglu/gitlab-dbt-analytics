@@ -12,7 +12,6 @@
               'packages_size',
               'wiki_size',
               'build_artifacts_size', 
-              'container_registry_size',
               'shared_runners_seconds', 
               'shared_runners_seconds_last_reset',
           ],
