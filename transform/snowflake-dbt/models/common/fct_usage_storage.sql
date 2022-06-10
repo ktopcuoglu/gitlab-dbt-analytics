@@ -103,7 +103,6 @@ WITH project_statistics_snapshot_monthly_all AS (
       SUM(COALESCE(purchased_storage.purchased_storage_gib, 0))                 AS purchased_storage_limit,
       SUM(namespace_storage_statistic_monthly_all.billable_storage_size)        AS billable_storage_size,
       SUM(namespace_storage_statistic_monthly_all.repository_size)              AS repository_size,
-      SUM(namespace_storage_statistic_monthly_all.container_registry_size)      AS container_registry_size,
       SUM(namespace_storage_statistic_monthly_all.lfs_objects_size)             AS lfs_objects_size,
       SUM(namespace_storage_statistic_monthly_all.build_artifacts_size)         AS build_artifacts_size,
       SUM(namespace_storage_statistic_monthly_all.packages_size)                AS packages_size,
