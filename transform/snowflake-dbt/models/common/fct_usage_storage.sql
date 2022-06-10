@@ -182,7 +182,6 @@ WITH project_statistics_snapshot_monthly_all AS (
       repository.purchased_storage * {{bytes_to_gib_conversion}}                AS total_purchased_storage_bytes,
       namespace.billable_storage_size                                           AS billable_storage_bytes,
       namespace.repository_size                                                 AS repository_bytes,
-      namespace.container_registry_size                                         AS container_registry_bytes,
       namespace.lfs_objects_size                                                AS lfs_objects_bytes,
       namespace.build_artifacts_size                                            AS build_artifacts_bytes,
       namespace.packages_size                                                   AS packages_bytes,
