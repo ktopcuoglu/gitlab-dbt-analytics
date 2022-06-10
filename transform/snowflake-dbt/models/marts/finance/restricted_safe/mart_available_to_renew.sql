@@ -369,7 +369,6 @@
       OR (
           mart_charge.is_single_fiscal_year_term_subscription = TRUE
           AND mart_charge.term_start_fiscal_year = '{{renewal_fiscal_year}}'
-          AND mart_charge.term_start_month != mart_charge.term_end_month
         )
 
 ), agg_charge_term_less_than_equal_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for charges with current terms <= 12 months. These terms do not need additional logic.
@@ -972,5 +971,5 @@
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2021-12-06",
-    updated_date="2022-06-02"
+    updated_date="2022-06-10"
 ) }}
