@@ -134,6 +134,8 @@ with open(models_filename, "r") as f:
         models_to_match.add(line.strip().lower().split(".")[-1])
 
 
+dashboards_spaces_to_check = [repo + '-dashboards' for repo in repos_to_check]
+
 # Recursively get all views and snippets that match and the views and sippets that use them.
 to_match = set()
 to_add = models_to_match.copy()
@@ -148,7 +150,7 @@ while len(to_add) > 0 and i < 7:  # A catch for run away loops
                 *[
                     value
                     for key, value in match.items()
-                    if key not in repos_to_check
+                    if key not in dashboards_spaces_to_check
                 ]
             )
         )
@@ -168,7 +170,7 @@ for line in models_to_match:
     if len(match) > 0:
 
         for key, value in match.items():
-            if key in repos_to_check:
+            if key in dashboards_spaces_to_check:
                 charts = match[key]
                 for keys, values in charts.items():
                     charts[keys] = list(values)
