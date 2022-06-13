@@ -110,7 +110,6 @@
         zuora_licenses_per_subscription.license_user_count IS NOT NULL, 
         'Zuora',
         'Service Ping')                                                             AS license_user_count_flag,
-
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
