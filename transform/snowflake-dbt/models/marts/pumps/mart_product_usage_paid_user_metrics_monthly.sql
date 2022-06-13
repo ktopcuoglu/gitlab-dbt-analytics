@@ -472,11 +472,12 @@
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = monthly_saas_metrics.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = monthly_saas_metrics.snapshot_month
     LEFT JOIN namespaces 
       ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
-    LEFT JOIN action_active_users_project_repo_users
-      ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
-      AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    
 
 ), unioned AS (
 
