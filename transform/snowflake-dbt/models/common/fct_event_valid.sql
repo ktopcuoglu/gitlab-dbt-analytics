@@ -121,9 +121,9 @@ fct_event_w_flags AS (
     dim_namespace_w_bdg.order_id,
     dim_namespace_w_bdg.dim_crm_account_id,
     dim_namespace_w_bdg.dim_billing_account_id,
-    paid_flag_by_day.plan_was_paid_at_event_date,
-    paid_flag_by_day.plan_id_at_event_date,
-    paid_flag_by_day.plan_name_at_event_date
+    COALESCE(paid_flag_by_day.plan_was_paid_at_event_date, FALSE) AS plan_was_paid_at_event_date,
+    COALESCE(paid_flag_by_day.plan_id_at_event_date, 34) AS plan_id_at_event_date,
+    COALESCE(paid_flag_by_day.plan_name_at_event_date, 'free') AS plan_name_at_event_date
   FROM fct_event_valid
   LEFT JOIN dim_namespace_w_bdg
     ON fct_event_valid.dim_ultimate_parent_namespace_id = dim_namespace_w_bdg.dim_namespace_id
@@ -180,5 +180,5 @@ gitlab_dotcom_fact AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-06-06"
+    updated_date="2022-06-13"
 ) }}
