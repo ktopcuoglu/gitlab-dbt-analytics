@@ -219,9 +219,6 @@ models:
       license:
         +schema: license_db
 
-      marketing_dnc:
-        +schema: marketing_dnc
-
       marketo:
         +schema: marketo
 
