@@ -11,6 +11,7 @@
               'build_artifacts_size',
               'storage_size',
               'packages_size',
+              'container_registry_size'
           ],
         )
     }}
