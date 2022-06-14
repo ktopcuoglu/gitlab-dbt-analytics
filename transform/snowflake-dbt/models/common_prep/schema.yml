@@ -1502,9 +1502,9 @@ models:
     description: '{{ doc("prep_event_all") }}'
     columns:
       - name: event_id
-        tests:
-          - not_null
-          - unique
+        # tests:
+          # - not_null
+          # - unique
   
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'

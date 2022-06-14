@@ -1,6 +1,6 @@
 {{ config(
     tags=["product"],
-    materialized = "view"
+    materialized = "table"
 ) }}
 
 -- depends on: {{ ref('prep_event') }}

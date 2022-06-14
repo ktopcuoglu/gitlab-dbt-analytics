@@ -2440,9 +2440,9 @@ models:
     columns:
       - name: event_id
         description: The unique identifier of an event. This is a generated primary key and will not join back to the source models.
-        tests:
-          - not_null
-          - unique
+        # tests:
+          # - not_null
+          # - unique
       - name: event_name
         description: The name tied to the event
       - name: dim_product_tier_id
