@@ -5,8 +5,8 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('sub_combo', 'rpt_ping_instance_subscription_opt_in_monthly'),
-    ('active_subscriptions', 'rpt_ping_instance_active_subscriptions')
+    ('sub_combo', 'rpt_ping_subscriptions_reported_counts_monthly'),
+    ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly')
     ])
 
 }}
@@ -129,7 +129,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}          AS rpt_ping_instance_metric_adoption_subscription_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}          AS ping_subscriptions_reported_estimate_factors_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                         AS percent_reporting
  FROM unioned_counts
@@ -139,7 +139,7 @@ SELECT
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@icooper-acp",
+     updated_by="@snalamaru",
      created_date="2022-04-20",
-     updated_date="2022-04-20"
+     updated_date="2022-06-07"
  ) }}

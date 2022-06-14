@@ -14,7 +14,7 @@
 , transformed AS (
 
     SELECT DISTINCT
-      {{ dbt_utils.surrogate_key(['metrics_path', 'ping_edition', 'version_is_prerelease']) }}                                                   AS rpt_ping_counter_statistics_id,
+      {{ dbt_utils.surrogate_key(['metrics_path', 'ping_edition', 'version_is_prerelease']) }}                                                   AS ping_metric_first_last_versions_id,
       metrics_path                                                                                                                               AS metrics_path,
       ping_edition                                                                                                                               AS ping_edition,
       version_is_prerelease                                                                                                                      AS version_is_prerelease,
@@ -74,7 +74,7 @@
 {{ dbt_audit(
     cte_ref="transformed",
     created_by="@icooper-acp",
-    updated_by="@icooper-acp",
+    updated_by="@snalamaru",
     created_date="2022-04-07",
-    updated_date="2022-04-15"
+    updated_date="2022-06-07"
 ) }}

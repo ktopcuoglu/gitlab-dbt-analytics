@@ -27,11 +27,6 @@ databases:
     - testing_db:
         shared: no
 
-    - brhea_prod:
-          shared: no
-    - brhea_prep:
-          shared: no
-
     - csharp_prod:
         shared: no
     - csharp_prep:
@@ -441,7 +436,6 @@ roles:
             - google_analytics_360
             - netsuite
             - keyhole_twitter
-            - marketing_dnc
             - marketo
             - pmg
             - snowflake_db
@@ -1791,21 +1785,6 @@ roles:
                     - prep.license_db.*
                     - raw.license_db.*
 
-    - marketing_dnc:
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.marketing_dnc
-                    - raw.marketing_dnc
-            tables:
-                read:
-                    - prep.marketing_dnc.*
-                    - raw.marketing_dnc.*
-
     - keyhole_twitter:
         privileges:
             databases:
@@ -2434,13 +2413,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - bleducmills:
-        member_of:
-            - reporter
-            - snowplow
-        warehouses:
-            - dev_xs
-
     - bbutterfield:
         member_of:
             - reporter
@@ -2448,46 +2420,6 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - reporting
-
-    - brhea:
-        member_of:
-            - reporter
-            - qualtrics
-            - qualtrics_sensitive
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - brhea_prep
-                - brhea_prod
-            schemas:
-                - brhea_prep.*
-                - brhea_prod.*
-            tables:
-                - brhea_prep.*.*
-                - brhea_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - brhea_prep
-                    - brhea_prod
-                write:
-                    - brhea_prep
-                    - brhea_prod
-            schemas:
-                read:
-                    - brhea_prep.*
-                    - brhea_prod.*
-                write:
-                    - brhea_prep.*
-                    - brhea_prod.*
-            tables:
-                read:
-                    - brhea_prep.*.*
-                    - brhea_prod.*.*
-                write:
-                    - brhea_prep.*.*
-                    - brhea_prod.*.*
 
     - cbalane:
         member_of:
@@ -2502,14 +2434,6 @@ roles:
             - restricted_safe
             - data_team_analyst
             - bi_tool_eval_read
-        warehouses:
-            - dev_xs
-
-    - chauenstein:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -2828,10 +2752,6 @@ roles:
                     - ian_prep.*.*
                     - ian_prod.*.*
 
-    - ianderson:
-        warehouses:
-            - admin
-
     - isharan:
         member_of:
             - data_team_analyst
@@ -3040,10 +2960,6 @@ roles:
             - analyst_sales
         warehouses:
             - dev_xs
-
-    - jrubi:
-        warehouses:
-            - admin
 
     - jstark:
         member_of:
@@ -3318,13 +3234,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - levans:
-        member_of:
-            - reporter
-            - snowplow
-        warehouses:
-            - reporting
-
     - lmai:
         member_of:
             - analyst_engineering
@@ -3341,10 +3250,6 @@ roles:
                     - prep.sensitive.bamboohr_id_employee_number_mapping
         warehouses:
             - dev_xs
-
-    - lvandijk:
-        warehouses:
-            - admin
 
     - lvinueza:
         member_of:
@@ -3751,6 +3656,7 @@ roles:
             - analyst_growth
             - restricted_safe
             - bi_tool_eval_read
+            - customers_db
         warehouses:
             - dev_xs
 
@@ -4034,6 +3940,13 @@ roles:
         warehouses:
             - reporting
 
+    - smccormack:
+        member_of:
+            - bamboohr
+            - reporter
+        warehouses:
+            - dev_xs
+
     - snalamaru:
         member_of:
             - engineer
@@ -4075,14 +3988,6 @@ roles:
                 write:
                     - snalamaru_prep.*.*
                     - snalamaru_prod.*.*
-
-    - sp: # External user - Protivitiy
-        member_of:
-            - analyst_finance
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs
 
     - statimatla:
         member_of:
@@ -4250,22 +4155,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - vbrew:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-        warehouses:
-            - dev_xs
-
-    - vnagy:
-        member_of:
-            - gitlab_dotcom_prep
-        warehouses:
-            - dev_xs
-
     - vprakash:
         member_of:
             - engineer
@@ -4376,20 +4265,10 @@ users:
         member_of:
             - bi_tool_eval_read
 
-    - bleducmills:
-        can_login: yes
-        member_of:
-            - bleducmills
-
     - bbutterfield:
         can_login: yes
         member_of:
             - bbutterfield
-
-    - brhea:
-        can_login: yes
-        member_of:
-            - brhea
 
     - cbalane:
         can_login: yes
@@ -4400,11 +4279,6 @@ users:
         can_login: yes
         member_of:
             - cbraza
-
-    - chauenstein:
-        can_login: yes
-        member_of:
-            - chauenstein
 
     - cmeddaugh:
         can_login: yes
@@ -4478,12 +4352,6 @@ users:
         member_of:
             - ian
 
-    - ianderson:
-        can_login: yes
-        member_of:
-            - ianderson
-            - securityadmin
-
     - isharan:
         can_login: yes
         member_of:
@@ -4522,12 +4390,6 @@ users:
         can_login: yes
         member_of:
             - jpetr
-
-    - jrubi:
-        can_login: yes
-        member_of:
-            - jrubi
-            - securityadmin
 
     - jstark:
         can_login: yes
@@ -4581,21 +4443,10 @@ users:
         can_login: no
         member_of: []
 
-    - levans:
-        can_login: yes
-        member_of:
-            - levans
-
     - lmai:
         can_login: yes
         member_of:
             - lmai
-
-    - lvandijk:
-        can_login: yes
-        member_of:
-            - lvandijk
-            - securityadmin
 
     - lvinueza:
         can_login: yes
@@ -4763,15 +4614,15 @@ users:
         member_of:
             - sisense_restricted_safe
 
+    - smccormack:
+        can_login: yes
+        member_of:
+            - smccormack
+
     - snalamaru:
         can_login: yes
         member_of:
             - snalamaru
-
-    - sp: # External user - Protivitiy
-        can_login: yes
-        member_of:
-            - sp
 
     - statimatla:
         can_login: yes
@@ -4807,16 +4658,6 @@ users:
         can_login: yes
         member_of:
             - vagrawal
-
-    - vbrew:
-        can_login: yes
-        member_of:
-            - vbrew
-
-    - vnagy:
-        can_login: yes
-        member_of:
-            - vnagy
 
     - vprakash:
         can_login: yes

@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-    ('metric_opt_in', 'rpt_ping_counter_statistics'),
+    ('metric_opt_in', 'rpt_ping_metric_first_last_versions'),
     ('mart_charge', 'mart_charge'),
     ('dim_charge', 'dim_charge'),
     ('fct_charge', 'fct_charge'),
@@ -226,7 +226,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_active_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                 AS rpt_ping_instance_active_subscriptions_id,
+        {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_active_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                 AS ping_active_subscriptions_monthly_id,
         active_subs_unioned.ping_created_at_month                                                                                                                                 AS ping_created_at_month,
         active_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
         active_subs_unioned.latest_active_subscription_id                                                                                                                         AS latest_active_subscription_id,
@@ -248,7 +248,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@icooper-acp",
+     updated_by="@snalamaru",
      created_date="2022-05-05",
-     updated_date="2022-05-06"
+     updated_date="2022-06-07"
  ) }}

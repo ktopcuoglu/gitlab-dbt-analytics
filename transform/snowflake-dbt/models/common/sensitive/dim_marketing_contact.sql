@@ -57,7 +57,7 @@ WITH sfdc_lead AS (
 
     SELECT *,
       ROW_NUMBER() OVER (PARTITION BY email_address ORDER BY CASE WHEN result IN ('undeliverable', 'do_not_send') THEN 2 ELSE 1 END DESC)                                                    AS record_number
-    FROM {{ref('dnc_list')}}
+    FROM {{ref('driveload_marketing_dnc_list_source')}}
     QUALIFY record_number = 1
 
 ), sfdc AS (
@@ -327,5 +327,5 @@ WITH sfdc_lead AS (
     created_by="@rmistry",
     updated_by="@jpeguero",
     created_date="2021-01-19",
-    updated_date="2022-04-07"
+    updated_date="2022-06-08"
 ) }}

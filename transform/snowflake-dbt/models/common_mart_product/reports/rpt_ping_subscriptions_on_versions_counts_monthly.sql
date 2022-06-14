@@ -4,8 +4,8 @@
 ) }}
 
 {{ simple_cte([
-    ('metric_opt_in', 'rpt_ping_counter_statistics'),
-    ('active_subscriptions', 'rpt_ping_instance_active_subscriptions')
+    ('metric_opt_in', 'rpt_ping_metric_first_last_versions'),
+    ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly')
     ])
 
 }}
@@ -36,7 +36,7 @@ Aggregate CTE to determine count of arr, subscriptions and licensed users for ea
 ), agg_subscriptions AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS rpt_ping_instance_subscription_metric_opt_in_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS ping_subscriptions_on_versions_counts_monthly_id,
     ping_created_at_month                                                                             AS ping_created_at_month,
     metrics_path                                                                                      AS metrics_path,
     ping_edition                                                                                      AS ping_edition,
@@ -51,7 +51,7 @@ FROM active_subscriptions_by_metric
  {{ dbt_audit(
      cte_ref="agg_subscriptions",
      created_by="@icooper-acp",
-     updated_by="@icooper-acp",
+     updated_by="@snalamaru",
      created_date="2022-04-20",
-     updated_date="2022-04-20"
+     updated_date="2022-06-08"
  ) }}

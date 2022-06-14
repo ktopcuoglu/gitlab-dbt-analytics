@@ -5,7 +5,7 @@
 
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
-    ('mart_pct', 'rpt_ping_instance_metric_adoption_monthly_all')
+    ('mart_pct', 'rpt_ping_metric_estimate_factors_monthly')
     ])
 
 }}
@@ -19,7 +19,7 @@
       ping_created_at_month             AS ping_created_at_month,
       ping_delivery_type                AS ping_delivery_type,
       ping_edition                      AS ping_edition,
-      ping_product_tier                 AS ping_product_tier, -- I think this needs to be taken out as it breaks out grain more
+      ping_product_tier                 AS ping_product_tier,
       ping_edition_product_tier         AS ping_edition_product_tier,
       stage_name                        AS stage_name,
       section_name                      AS section_name,
@@ -78,7 +78,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type']) }}     AS rpt_ping_instance_metric_estimated_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type']) }}     AS ping_metric_totals_w_estimates_monthly_id,
     -- identifiers
     metrics_path                                                                                                                                                        AS metrics_path,
     ping_created_at_month                                                                                                                                               AS ping_created_at_month,
@@ -110,7 +110,7 @@ SELECT
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@icooper-acp",
+     updated_by="@snalamaru",
      created_date="2022-04-20",
-     updated_date="2022-04-21"
+     updated_date="2022-06-08"
  ) }}
