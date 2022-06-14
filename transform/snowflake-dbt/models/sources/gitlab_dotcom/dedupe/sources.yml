@@ -99,9 +99,7 @@ sources:
         identifier: gitlab_db_cluster_groups
       - name: clusters_integration_elasticstack
         identifier: gitlab_db_clusters_integration_elasticstack
-        freshness:
-          warn_after: { count: 3, period: day }
-          error_after: { count: 7, period: day }
+        freshness: null
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects
@@ -140,6 +138,8 @@ sources:
         freshness:
           warn_after: {count: 7, period: day}
           error_after: {count: 15, period: day}
+      - name: deployment_approvals
+        identifier: gitlab_db_deployment_approvals
       - name: deployments
         identifier: gitlab_db_deployments
       - name: deployment_merge_requests
@@ -272,6 +272,8 @@ sources:
         identifier: gitlab_db_project_repositories
       - name: project_repository_storage_moves
         identifier: gitlab_db_project_repository_storage_moves
+      - name: project_settings
+        identifier: gitlab_db_project_settings
       - name: project_statistics
         identifier: gitlab_db_project_statistics
       - name: projects

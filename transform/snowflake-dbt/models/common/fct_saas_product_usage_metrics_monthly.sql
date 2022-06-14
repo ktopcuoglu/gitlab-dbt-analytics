@@ -194,6 +194,21 @@
       "counts.ci_runners_project_type_active"                                                   AS active_project_runners_all_time_event,
       "gitaly.version"::VARCHAR                                                                 AS gitaly_version,
       "gitaly.servers"                                                                          AS gitaly_servers_all_time_event,
+      -- Wave 6
+      "usage_activity_by_stage.secure.api_fuzzing_scans"                                        AS api_fuzzing_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.api_fuzzing_scans"                                AS api_fuzzing_scans_28_days_event,
+      "usage_activity_by_stage.secure.coverage_fuzzing_scans"                                   AS coverage_fuzzing_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.coverage_fuzzing_scans"                           AS coverage_fuzzing_scans_28_days_event,
+      "usage_activity_by_stage.secure.secret_detection_scans"                                   AS secret_detection_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.secret_detection_scans"                           AS secret_detection_scans_28_days_event,
+      "usage_activity_by_stage.secure.dependency_scanning_scans"                                AS dependency_scanning_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.dependency_scanning_scans"                        AS dependency_scanning_scans_28_days_event,
+      "usage_activity_by_stage.secure.container_scanning_scans"                                 AS container_scanning_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.container_scanning_scans"                         AS container_scanning_scans_28_days_event,
+      "usage_activity_by_stage.secure.dast_scans"                                               AS dast_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.dast_scans"                                       AS dast_scans_28_days_event,
+      "usage_activity_by_stage.secure.sast_scans"                                               AS sast_scans_all_time_event,
+      "usage_activity_by_stage_monthly.secure.sast_scans"                                       AS sast_scans_28_days_event,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
@@ -224,5 +239,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2021-04-12"
+    updated_date="2022-05-06"
 ) }}

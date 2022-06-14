@@ -37,6 +37,7 @@
       mart_crm_attribution_touchpoint.dim_crm_touchpoint_id,
       mart_crm_attribution_touchpoint.dim_campaign_id,
       mart_crm_attribution_touchpoint.sfdc_record_id, 
+      mart_crm_attribution_touchpoint.email_hash,
       COALESCE(mart_crm_attribution_touchpoint.crm_account_billing_country,mart_crm_attribution_touchpoint.crm_person_country) AS country, --5
       mart_crm_attribution_touchpoint.crm_person_title,
       mart_crm_attribution_touchpoint.bizible_salesforce_campaign,
@@ -88,6 +89,7 @@
       mart_crm_attribution_touchpoint.last_utm_content,
       mart_crm_attribution_touchpoint.bizible_integrated_campaign_grouping,
       mart_crm_attribution_touchpoint.touchpoint_segment,
+      mart_crm_attribution_touchpoint.is_fmm_influenced,
       mart_crm_attribution_touchpoint.gtm_motion,
       SUM(mart_crm_attribution_touchpoint.bizible_count_first_touch) AS first_weight,
       SUM(mart_crm_attribution_touchpoint.bizible_count_w_shaped) AS w_weight, 
@@ -108,7 +110,7 @@
     mart_crm_attribution_touchpoint.dim_crm_opportunity_id = linear_base.dim_crm_opportunity_id
     LEFT JOIN  campaigns_per_opp ON 
     mart_crm_attribution_touchpoint.dim_crm_opportunity_id =      campaigns_per_opp.dim_crm_opportunity_id
-    {{ dbt_utils.group_by(n=52) }}
+    {{ dbt_utils.group_by(n=54) }}
 
 )
 
@@ -117,5 +119,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-01-25",
-    updated_date="2022-03-02"
+    updated_date="2022-05-23"
 ) }}

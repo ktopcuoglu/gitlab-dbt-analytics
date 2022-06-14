@@ -37,9 +37,13 @@
 
       -- foreign keys
       renamed.dim_plan_subscription_id,
-      renamed.dim_namespace_id,
-      -- asusming if dim_plan_id is null that it is a free plan
-      IFNULL(renamed.dim_plan_id, 34)          AS dim_plan_id,
+      renamed.dim_namespace_id, 
+      --Please see dbt docs for a description of this column transformation.
+      CASE 
+        WHEN renamed.is_trial = TRUE AND LOWER(prep_gitlab_dotcom_plan.plan_name_modified) = 'ultimate' THEN 102
+        WHEN renamed.dim_plan_id IS NULL THEN 34
+        ELSE prep_gitlab_dotcom_plan.plan_id_modified
+      END AS dim_plan_id,
 
       -- date dimensions
       plan_subscription_start_date.date_id     AS plan_subscription_start_date_id,
@@ -75,7 +79,7 @@
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mpeychet_",
-    updated_by="@mpeychet_",
+    updated_by="@iweeks",
     created_date="2021-05-30",
-    updated_date="2021-05-30"
+    updated_date="2022-06-09"
 ) }}
