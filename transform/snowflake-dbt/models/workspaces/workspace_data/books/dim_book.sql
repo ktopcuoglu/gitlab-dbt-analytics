@@ -4,7 +4,7 @@ WITH source AS (
     --Primary Key
       {{ dbt_utils.surrogate_key(['bookid', 'isbn13']) }} AS dim_book_id,    
       title AS book_title, 
-      language,
+      language_code AS language,
       isbn, 
       num_pages AS pages_count
   FROM {{ ref('sheetload_books') }}
