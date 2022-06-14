@@ -411,6 +411,7 @@ roles:
             - zuora
             - zuora_api_sandbox_stitch
             - zuora_central_sandbox
+            - zuora_stitch_rest_api
         privileges:
             databases:
                 read:
@@ -748,6 +749,7 @@ roles:
                 read:
                     - prep.gitlab_dotcom
                     - prep.data_science
+                    - prep.zendesk
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
@@ -763,8 +765,10 @@ roles:
                 read:
                     - prep.gitlab_dotcom.*
                     - prep.data_science.*
+                    - prep.zendesk.*
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
+                    - prod.legacy.zendesk_tickets_xf
                     - prod.workspace_data_science.*
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
@@ -2322,6 +2326,23 @@ roles:
             tables:
                 read:
                     - raw.zuora_api_sandbox_stitch.*
+
+    - zuora_stitch_rest_api:
+        warehouses:
+            - dev_xs
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+            schemas:
+                read:
+                    - raw.zuora_stitch_rest_api
+                    - prep.zuora_stitch_rest_api
+            tables:
+                read:
+                    - raw.zuora_stitch_rest_api.*
+                    - prep.zuora_stitch_rest_api.*
 
     - zuora_query_api:
         warehouses:

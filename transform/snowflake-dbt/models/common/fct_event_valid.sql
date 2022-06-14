@@ -82,9 +82,9 @@ paid_flag_by_day AS (
 
   SELECT
     dim_ultimate_parent_namespace_id,
-    plan_was_paid_at_event_date,
-    plan_id_at_event_date,
-    plan_name_at_event_date,
+    plan_was_paid_at_event_timestamp AS plan_was_paid_at_event_date,
+    plan_id_at_event_timestamp AS plan_id_at_event_date,
+    plan_name_at_event_timestamp AS plan_name_at_event_date,
     event_created_at,
     event_date
   FROM fct_event_valid
@@ -180,5 +180,5 @@ gitlab_dotcom_fact AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-06-02"
+    updated_date="2022-06-06"
 ) }}

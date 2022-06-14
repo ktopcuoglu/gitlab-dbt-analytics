@@ -45,7 +45,7 @@
       AND ci_stages.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
     LEFT JOIN dim_ci_pipeline
       ON ci_stages.pipeline_id = dim_ci_pipeline.dim_ci_pipeline_id
-    LEFT JOIN dim_date
+    INNER JOIN dim_date
       ON TO_DATE(ci_stages.created_at) = dim_date.date_day
 
 )
@@ -55,5 +55,5 @@
     created_by="@mpeychet_",
     updated_by="@chrissharp",
     created_date="2021-06-29",
-    updated_date="2022-03-14"
+    updated_date="2022-06-01"
 ) }}

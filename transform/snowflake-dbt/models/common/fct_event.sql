@@ -21,9 +21,9 @@ fct_events AS (
     prep_event_all.parent_id,
     prep_event_all.dim_project_id,
     prep_event_all.event_created_at,
-    prep_event_all.plan_was_paid_at_event_date,
-    prep_event_all.plan_id_at_event_date,
-    prep_event_all.plan_name_at_event_date,
+    prep_event_all.plan_was_paid_at_event_timestamp,
+    prep_event_all.plan_id_at_event_timestamp,
+    prep_event_all.plan_name_at_event_timestamp,
     prep_event_all.days_since_user_creation_at_event_date,
     prep_event_all.days_since_namespace_creation_at_event_date,
     prep_event_all.days_since_project_creation_at_event_date,
@@ -59,9 +59,9 @@ gitlab_dotcom_fact AS (
     fct_events.parent_id,
     fct_events.parent_type,
     fct_events.event_name,
-    fct_events.plan_id_at_event_date,
-    fct_events.plan_name_at_event_date,
-    fct_events.plan_was_paid_at_event_date,
+    fct_events.plan_id_at_event_timestamp,
+    fct_events.plan_name_at_event_timestamp,
+    fct_events.plan_was_paid_at_event_timestamp,
     fct_events.days_since_user_creation_at_event_date,
     fct_events.days_since_namespace_creation_at_event_date,
     fct_events.days_since_project_creation_at_event_date,
@@ -77,5 +77,5 @@ gitlab_dotcom_fact AS (
     created_by="@icooper-acp",
     updated_by="@iweeks",
     created_date="2022-01-20",
-    updated_date="2022-06-02"
+    updated_date="2022-06-06"
 ) }}

@@ -53,8 +53,8 @@
     "stage_name": "plan"
   },
   {
-    "event_name": "issue_creation",
-    "source_cte_name": "prep_issue",
+    "event_name": "issue_creation_other",
+    "source_cte_name": "issue_creation_other_source",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -206,8 +206,8 @@
     "stage_name": "configure"
   },
   {
-    "event_name": "notes",
-    "source_cte_name": "prep_note",
+    "event_name": "notes_other",
+    "source_cte_name": "other_notes_source",
     "user_column_name": "author_id",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
     "project_column_name": "dim_project_id",
@@ -425,7 +425,6 @@
     ('prep_plan', 'prep_gitlab_dotcom_plan'),
     ('prep_namespace_plan_hist', 'prep_namespace_plan_hist'),
     ('prep_ci_stage', 'prep_ci_stage'),
-    ('prep_note', 'prep_note'),
     ('prep_todo', 'prep_todo'),
     ('prep_resource_label', 'prep_resource_label'),
     ('prep_environment_event', 'prep_environment_event'),
@@ -551,6 +550,12 @@
     WHERE target_type = 'WikiPage::Meta'
       AND event_action_type IN ('created', 'updated')
 
+), other_notes_source AS (
+
+    SELECT *
+    FROM prep_note
+    WHERE noteable_type NOT IN ('Epic', 'MergeRequest')
+
 ), epic_notes_source AS (
 
     SELECT *
@@ -577,6 +582,13 @@
       *
     FROM prep_issue
     WHERE ARRAY_CONTAINS('incident'::variant, labels)
+
+), issue_creation_other_source AS (
+    
+    SELECT
+      *
+    FROM prep_issue
+    WHERE NOT ARRAY_CONTAINS('incident'::variant, labels)
 
 ), data AS (
 

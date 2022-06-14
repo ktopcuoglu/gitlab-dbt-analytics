@@ -128,6 +128,9 @@ WITH dim_billing_account AS (
       dim_subscription.dim_subscription_id_original                                         AS dim_subscription_id_original,
       dim_subscription.subscription_status                                                  AS subscription_status,
       dim_subscription.subscription_sales_type                                              AS subscription_sales_type,
+      dim_subscription.invoice_owner_account                                                AS invoice_owner_account,
+      dim_subscription.creator_account                                                      AS creator_account,
+      dim_subscription.was_purchased_through_reseller                                       AS was_purchased_through_reseller,
       dim_subscription.subscription_name                                                    AS subscription_name,
       dim_subscription.subscription_name_slugify                                            AS subscription_name_slugify,
       dim_subscription.oldest_subscription_in_cohort                                        AS oldest_subscription_in_cohort,
@@ -246,5 +249,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2022-02-01"
+    updated_date="2022-06-03"
 ) }}
