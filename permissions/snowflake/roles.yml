@@ -3876,6 +3876,7 @@ roles:
 
     - smccormack:
         member_of:
+            - analyst_people
             - bamboohr
             - reporter
         warehouses:
