@@ -42,9 +42,7 @@ models:
     - name: model_updated_date
       description: Manually input ISO date of when model was updated
     - name: dbt_updated_at
-      description: 
     - name: dbt_created_at
-      description: 
 
 - name: rpt_event_plan_monthly
   description: '{{ doc("rpt_event_plan_monthly") }}'
@@ -91,9 +89,7 @@ models:
     - name: model_updated_date
       description: Manually input ISO date of when model was updated
     - name: dbt_updated_at
-      description: 
     - name: dbt_created_at
-      description: 
 
 - name: rpt_ping_metric_first_last_versions
   description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
@@ -219,9 +215,7 @@ models:
     - name: model_updated_date
       description: Manually input ISO date of when model was updated
     - name: dbt_updated_at
-      description: 
     - name: dbt_created_at
-      description: 
 
 
 - name: rpt_ping_subscriptions_reported_counts_monthly
