@@ -16,6 +16,8 @@ models:
     - name: classification
       tests:
       - not_null
+- name: driveload_netsuite_currency_exchange_rates_source
+  description: Currency exchange rates from Netsuite dowloaded 2022-06-09
 - name: driveload_ssa_coverage_fitted_curves_source
   description: Stores the result of fitting a curve to multiple metrics using the last 4 quarters as data points. These curves are leverage in the X-Ray dashboard and Quarterly Coverage metric reports.
   columns:
@@ -28,3 +30,13 @@ models:
     - name: agg_key_value
       tests:
       - not_null
+- name: driveload_zuora_revenue_billing_waterfall_report_apr22_source
+  description: April 2022 Zuora Revenue Billing Waterfall Report downloaded 2022-06-09
+- name: driveload_zuora_revenue_rc_rollforward_report_apr22_source
+  description: April 2022 Zuora Revenue RC Rollforward Report downloaded 2022-06-09
+- name: driveload_zuora_revenue_unreleased_pob_report_apr22_source
+  description: April 2022 Zuora Revenue Unleased POB Report downloaded 2022-06-09
+- name: driveload_zuora_revenue_unbill_rollforward_report_apr22_source
+  description: April 2022 Zuora Revenue Unbill Rollforward Report downloaded 2022-06-09
+- name: driveload_zuora_revenue_revenue_waterfall_report_apr22_source
+  description: April 2022 Zuora Revenue Revenue Waterfall Report downloaded 2022-06-09
