@@ -283,6 +283,8 @@ sources:
         freshness: null #https://gitlab.com/gitlab-data/analytics/-/issues/10835
       - name: protected_branches
         identifier: gitlab_db_protected_branches
+      - name: protected_environment_approval_rules
+        identifier: gitlab_db_protected_environment_approval_rules
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
