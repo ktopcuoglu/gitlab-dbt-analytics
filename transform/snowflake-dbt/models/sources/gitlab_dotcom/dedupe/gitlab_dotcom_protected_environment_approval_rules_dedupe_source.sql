@@ -5,7 +5,7 @@
 }}
 
 SELECT *
-FROM {{ source('gitlab_dotcom', 'gitlab_db_protected_environment_approval_rules') }}
+FROM {{ source('gitlab_dotcom', 'protected_environment_approval_rules') }}
 {% if is_incremental() %}
 
 WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
