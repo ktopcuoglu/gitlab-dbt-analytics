@@ -1456,7 +1456,7 @@ tables:
       , project_id
       , created_at
       , updated_at
-      , name character
+      , name
       , group_id
       , required_approval_count
       FROM protected_environments
