@@ -8,5 +8,4 @@ SELECT
   '2022-04-18'::DATE AS the_date,
   '2022-04-18 01:01:01'::TIMESTAMP AS the_timestamp,
   TRUE::BOOLEAN AS the_boolean
-
-  --  {{ source('mock_source','mock_source_table') }}
+  

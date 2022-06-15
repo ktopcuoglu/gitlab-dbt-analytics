@@ -516,7 +516,6 @@ roles:
             - analyst_core
             - snowflake_db
             - data_team_analyst
-            - general_data_masking
 
     - analytics_engineer_ga:
         member_of:
@@ -627,7 +626,6 @@ roles:
             - snowflake_db
             - static_admin
             - zoominfo
-            - general_data_masking
         warehouses:
             - dev_l
             - dev_xs
@@ -969,13 +967,6 @@ roles:
                     - prep.*.*
                     - prod.*.*
                     - raw.snapshots.*
-
-# ==========================================
-# Data Masking Roles
-# ==========================================
-    - general_data_masking:
-        warehouses:
-            - reporting
 
 
 # ==========================================
