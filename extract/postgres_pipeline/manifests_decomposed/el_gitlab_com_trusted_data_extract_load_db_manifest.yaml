@@ -610,11 +610,11 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_protected_environments' AS table_name
+        SELECT 'gitlab_db_protected_environment_approval_rules' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
-        FROM protected_environments
+        FROM protected_environment_approval_rules
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
