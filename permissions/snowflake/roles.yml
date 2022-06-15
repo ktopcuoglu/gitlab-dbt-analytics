@@ -4597,8 +4597,10 @@ users:
     - vprakash:
         can_login: yes
         member_of:
-            - vprakash
+            - accountadmin
             - securityadmin
+            - vprakash
+
 
     - warias:
         can_login: yes
