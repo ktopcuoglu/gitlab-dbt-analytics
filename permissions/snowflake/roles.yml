@@ -4601,7 +4601,6 @@ users:
             - securityadmin
             - vprakash
 
-
     - warias:
         can_login: yes
         member_of:
