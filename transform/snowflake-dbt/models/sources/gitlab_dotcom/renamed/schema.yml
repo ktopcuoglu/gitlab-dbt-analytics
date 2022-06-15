@@ -1251,8 +1251,6 @@ models:
         tests:
           - not_null
           - unique
-          - accepted_values:
-              values: [1, 2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
       - name: plan_name
         description: The english naming of the plan type (gold, silver, etc.)
         tags: ["tdf","gitlab_dotcom"]

@@ -2884,6 +2884,8 @@ models:
       - name: ultimate_parent_plan_id
         tests:
           - not_null
+          - accepted_values:
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
       - name: upstream_lineage
         tests:
           - not_null
