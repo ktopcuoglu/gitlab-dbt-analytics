@@ -206,3 +206,12 @@ models:
       - name: valid_to_date
       - name: rank_email_desc
         description: Identifies the email in descending order where 1 is equal to the the current email.
+
+  - name: workday_bamboohr_discretionary_bonuses
+    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
+
+  - name: workday_bamboohr_job_info_current_division_base
+    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
+
+  - name: workday_bamboohr_work_email
+    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.

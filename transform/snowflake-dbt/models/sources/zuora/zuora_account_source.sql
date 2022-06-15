@@ -1,6 +1,5 @@
 {{ config({
-    "alias": "zuora_account_source",
-    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"sfdc_account_code":"string"},{"account_number":"string"},{"additional_email_addresses":"string"},{"balance":"float"},{"bill_to_contact_id":"string"},{"communication_profile_id":"string"},{"sfdc_conversion_rate":"string"},{"created_by_id":"string"},{"credit_balance":"float"},{"crm_id":"string"},{"default_payment_method_id":"string"},{"account_id":"string"},{"invoice_template_id":"string"},{"account_name":"string"},{"account_notes":"string"},{"parent_id":"string"},{"sales_rep_name":"string"},{"sold_to_contact_id":"string"},{"tax_exempt_certificate_id":"string"},{"updated_by_id":"string"}]) }}'
+    "alias": "zuora_account_source"
 }) }}
 
 -- depends_on: {{ ref('zuora_excluded_accounts') }}

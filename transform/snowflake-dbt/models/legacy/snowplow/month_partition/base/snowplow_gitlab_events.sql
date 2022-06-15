@@ -391,4 +391,3 @@ WITH filtered_source as (
 
 SELECT *
 FROM unnested_unstruct
-ORDER BY derived_tstamp

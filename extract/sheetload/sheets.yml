@@ -23,6 +23,10 @@ sheets:
     owner: '@s_mccauley'
     tabs:
       - ar_aging_details
+  - name: books_tracer_bullet
+    owner: '@lisvinueza'
+    tabs:
+      - books
   - name: clari_export_forecast_net_iacv
     owner: '@mvilain'
     tabs:

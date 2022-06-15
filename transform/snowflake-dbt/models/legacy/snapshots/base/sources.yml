@@ -37,6 +37,8 @@ sources:
       - name: sheetload_comp_band_snapshots
       - name: sheetload_employee_location_factor_snapshots
         loaded_at_field: DATEADD(sec, dbt_updated_at, '1970-01-01')
+      - name: workday_employee_directory_snapshots
+      - name: workday_employee_mapping_snapshots
       - name: zuora_account_snapshots
       - name: zuora_amendment_snapshots
       - name: zuora_contact_snapshots
@@ -52,3 +54,4 @@ sources:
       - name: zuora_revenue_schedule_item_snapshots
       - name: zuora_subscription_snapshots
       - name: mart_available_to_renew_snapshot
+      - name: mart_charge_snapshot

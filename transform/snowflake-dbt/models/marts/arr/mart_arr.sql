@@ -3,8 +3,7 @@
         "materialized": "table",
         "transient": false,
         "schema": "restricted_safe_common_mart_sales",
-        "alias": "mart_arr",
-        "post-hook": '{{ apply_dynamic_data_masking(columns = [{"arr":"float"},{"mrr":"float"},{"dim_billing_account_id":"string"},{"sold_to_country":"string"},{"billing_account_name":"string"},{"billing_account_number":"string"},{"dim_crm_account_id":"string"},{"crm_account_name":"string"},{"dim_parent_crm_account_id":"string"},{"parent_crm_account_name":"string"},{"parent_crm_account_tsp_account_employees":"float"},{"parent_crm_account_tsp_max_family_employees":"float"},{"health_number":"float"},{"parent_crm_account_lam":"float"},{"parent_crm_account_lam_dev_count":"float"},{"dim_subscription_id":"string"},{"dim_subscription_id_original":"string"},{"subscription_name":"string"},{"subscription_name_slugify":"string"},{"oldest_subscription_in_cohort":"string"},{"subscription_lineage":"string"},{"quantity":"float"},{"arr_band_calc":"string"},{"created_by":"string"},{"updated_by":"string"}]) }}'
+        "alias": "mart_arr"
     })
 }}
 
@@ -129,6 +128,9 @@ WITH dim_billing_account AS (
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
+      dim_subscription.invoice_owner_account,
+      dim_subscription.creator_account,
+      dim_subscription.was_purchased_through_reseller,
 
       --product info
       dim_product_detail.product_tier_name                                            AS product_tier_name,
@@ -207,5 +209,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@jpeguero",
     created_date="2020-09-04",
-    updated_date="2022-02-01"
+    updated_date="2022-05-30"
 ) }}

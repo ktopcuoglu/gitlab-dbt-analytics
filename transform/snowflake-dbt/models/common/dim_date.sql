@@ -1,6 +1,5 @@
 {{ config({
-    "alias": "dim_date",
-    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"updated_by":"string"},{"created_by":"string"}]) }}'
+    "alias": "dim_date"
 }) }}
 
 WITH dates AS (

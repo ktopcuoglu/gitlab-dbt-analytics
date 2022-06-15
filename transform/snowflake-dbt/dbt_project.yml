@@ -15,6 +15,7 @@ source-paths: ["models"]
 test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
+analysis-paths: ["analysis"]
 target-path: "target"
 clean-targets:
     - "target"
@@ -73,9 +74,6 @@ vars:
   tomorrow: DATEADD('day',1,CURRENT_DATE())
 
 
-  datasiren:
-    'datasiren:schema_name': 'datasiren'
-
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
 
@@ -121,12 +119,6 @@ models:
   snowflake_spend:
     +materialized: table
 
-  datasiren:
-    +full_refresh: false
-    +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
-    +schema: datasiren
-    +tags: ["datasiren"]
-
   # ==================
   # GitLab Models
   # ==================
@@ -163,12 +155,6 @@ models:
       data_science:
         +schema: data_science
         +tags: ["data_science"]
-
-      datasiren:
-        +full_refresh: false
-        +materialized: incremental
-        +schema: datasiren
-        +tags: ["datasiren"]
 
       date:
         +materialized: table
@@ -236,9 +222,6 @@ models:
 
       license:
         +schema: license_db
-
-      marketing_dnc:
-        +schema: marketing_dnc
 
       marketo:
         +schema: marketo
@@ -394,11 +377,6 @@ models:
           +schema: restricted_safe_legacy
           +tags: ["safe"]
           secure: true
-
-      datasiren:
-        +schema: workspace_data
-        +materialized: view
-        +tags: ["datasiren"]
 
       date:
         +materialized: view
@@ -668,6 +646,9 @@ snapshots:
       +tags: ["daily"]
 
     sheetload:
+      +tags: ["daily"]
+
+    workday:
       +tags: ["daily"]
 
     zuora:

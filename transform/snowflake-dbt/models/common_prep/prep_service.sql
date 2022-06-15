@@ -20,7 +20,7 @@
     FROM {{ ref('gitlab_dotcom_services_source') }} 
     {% if is_incremental() %}
 
-    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+    WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
 
@@ -41,7 +41,7 @@
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND  service_source.created_at >= dim_namespace_plan_hist.valid_from
       AND  service_source.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN dim_date ON TO_DATE(service_source.created_at) = dim_date.date_day
+    INNER JOIN dim_date ON TO_DATE(service_source.created_at) = dim_date.date_day
 
 )
 
@@ -50,5 +50,5 @@
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-03-28",
-    updated_date="2022-03-28"
+    updated_date="2022-06-01"
 ) }}

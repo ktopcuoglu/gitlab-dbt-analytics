@@ -405,6 +405,24 @@ tables:
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  deployment_approvals:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'deployment_approvals'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , deployment_id
+      , user_id
+      , created_at
+      , updated_at
+      , status
+      , comment
+      , approval_rule_id
+      FROM deployment_approvals
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   deployments:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -617,7 +635,6 @@ tables:
       , created_at
       , updated_at
       , active
-      , properties
       , NULL AS template
       , push_events
       , issues_events
@@ -1009,6 +1026,7 @@ tables:
       , build_artifacts_size
       , storage_size
       , packages_size
+      , container_registry_size
       , updated_at
       FROM namespace_root_storage_statistics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
@@ -1078,6 +1096,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   notes:
+    additional_filtering: AND created_at NOT IN ( '2746-07-23 18:16:42.925+00 BC')
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'notes'
@@ -1426,6 +1445,25 @@ tables:
       FROM protected_branches
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  protected_environment_approval_rules:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'protected_environment_approval_rules'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , protected_environment_id
+      , user_id
+      , group_id
+      , created_at
+      , updated_at
+      , access_level
+      , required_approvals
+      , group_inheritance_type
+      FROM protected_environment_approval_rules
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   push_rules:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1630,7 +1668,7 @@ tables:
       , created_at
       , updated_at
       , active
-      , properties
+      , NULL AS properties
       , NULL AS template
       , push_events
       , issues_events

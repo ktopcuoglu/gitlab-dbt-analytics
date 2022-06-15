@@ -21,30 +21,32 @@ WITH source AS (
       data_by_row.value['customOTELocal']::VARCHAR          AS ote_local,
       data_by_row.value['customOTEUSD']::VARCHAR            AS ote_usd,
       data_by_row.value['customType']::VARCHAR              AS ote_type,
-      data_by_row.value['customVariablePay']::VARCHAR       AS variable_pay
+      data_by_row.value['customVariablePay']::VARCHAR       AS variable_pay,
+      uploaded_at
     FROM source,
     LATERAL FLATTEN(INPUT => parse_json(jsontext), OUTER => true) data_by_row
 
-), final AS (
+), 
+
+reformat AS (
 
     SELECT 
       target_earnings_update_id,
       employee_id,
       effective_date,
       variable_pay,
-      annual_amount_local,
-      SPLIT_PART(annual_amount_usd,' ',1)   AS annual_amount_usd_value,
-      ote_local,
-      SPLIT_PART(ote_usd,' ',1)             AS ote_usd,
-      ote_type
+      SPLIT_PART(annual_amount_local, ' ', 1) AS annual_amount_local,
+      SPLIT_PART(annual_amount_usd,' ', 1)   AS annual_amount_usd_value,
+      SPLIT_PART(ote_local,' ', 1) AS ote_local,
+      SPLIT_PART(ote_usd,' ', 1)             AS ote_usd,
+      SPLIT_PART(annual_amount_local, ' ', 2) AS annual_amount_local_currency_code,
+      SPLIT_PART(ote_local, ' ', 2) AS ote_local_currency_code,
+      ote_type,
+      uploaded_at
     FROM renamed
+    WHERE target_earnings_update_id != 23721 --incorrect order
 
 )
 
-SELECT *,
-  LAG(COALESCE(annual_amount_usd_value,0)) OVER (PARTITION BY employee_id 
-                                            ORDER BY target_earnings_update_id)                 AS prior_annual_amount_usd,
-  annual_amount_usd_value - prior_annual_amount_usd                                             AS change_in_annual_amount_usd
-FROM final
-WHERE target_earnings_update_id != 23721 --incorrect order
-
+SELECT *
+FROM reformat

@@ -1,8 +1,7 @@
 {{ config({
     "materialized": "incremental",
     "unique_key": "id",
-    "alias": "gitlab_dotcom_ci_builds_dedupe_source",
-    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"id":"number"},{"commit_id":"number"},{"name":"string"},{"options":"string"},{"ref":"string"},{"user_id":"number"},{"project_id":"number"},{"erased_by_id":"number"},{"environment":"string"},{"yaml_variables":"string"},{"auto_canceled_by_id":"number"}]) }}'
+    "alias": "gitlab_dotcom_ci_builds_dedupe_source"
     })
 }}
 
