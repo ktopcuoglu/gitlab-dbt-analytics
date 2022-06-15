@@ -68,7 +68,6 @@ models:
       - name: ultimate_parent_plan_id
         tests:
           - not_null
-
       - name: ultimate_parent_plan_title
         tests:
           - not_null
