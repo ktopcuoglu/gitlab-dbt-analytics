@@ -7,14 +7,14 @@
 WITH employees as (
 
     SELECT *
-    FROM {{ ref ('workday_employee_directory') }}
+    FROM {{ ref ('employee_directory') }}
     WHERE termination_date IS NULL
       AND hire_date <= CURRENT_DATE()
 
 ), contacts AS (
 
     SELECT *
-    FROM {{ ref ('blended_emergency_contacts_source') }}
+    FROM {{ ref ('bamboohr_emergency_contacts_source') }}
 
 ), contacts_aggregated AS (
 

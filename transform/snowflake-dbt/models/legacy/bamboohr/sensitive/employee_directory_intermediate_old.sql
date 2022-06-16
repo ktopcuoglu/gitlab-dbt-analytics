@@ -16,7 +16,7 @@ WITH RECURSIVE employee_directory AS (
     hire_location_factor,
     last_work_email,
     (first_name || ' ' || last_name) AS full_name
-  FROM {{ ref('workday_employee_directory') }}
+  FROM {{ ref('employee_directory') }}
 
 ),
 
@@ -30,28 +30,28 @@ date_details AS (
 department_info AS (
 
   SELECT *
-  FROM {{ ref('workday_bamboohr_job_info_current_division_base') }}
+  FROM {{ ref('bamboohr_job_info_current_division_base') }}
 
 ),
 
 job_role AS (
 
   SELECT *
-  FROM {{ ref('workday_bamboohr_job_role') }}
+  FROM {{ ref('bamboohr_job_role') }}
 
 ),
 
 location_factor AS (
 
   SELECT *
-  FROM {{ ref('blended_employee_location_factor_snapshots') }}
+  FROM {{ ref('employee_location_factor_snapshots') }}
 
 ),
 
 employment_status AS (
 
   SELECT *
-  FROM {{ ref('workday_bamboohr_employment_status_xf') }}
+  FROM {{ ref('bamboohr_employment_status_xf') }}
 
 ),
 
@@ -61,7 +61,7 @@ promotion AS (
     employee_id,
     effective_date,
     compensation_change_reason
-  FROM {{ ref('blended_compensation_source') }}
+  FROM {{ ref('bamboohr_compensation_source') }}
   WHERE compensation_change_reason = 'Promotion'
   GROUP BY 1, 2, 3
 
@@ -134,7 +134,7 @@ employment_status_records_check AS (
   SELECT
     employee_id,
     MIN(valid_from_date) AS employment_status_first_value
-  FROM {{ ref('workday_bamboohr_employment_status_xf') }}
+  FROM {{ ref('bamboohr_employment_status_xf') }}
   GROUP BY 1
 
 ),
@@ -156,14 +156,14 @@ sheetload_engineering_speciality AS (
 bamboohr_discretionary_bonuses_xf AS (
 
   SELECT *
-  FROM {{ ref('workday_bamboohr_directionary_bonuses_xf') }}
+  FROM {{ ref('bamboohr_directionary_bonuses_xf') }}
 
 ),
 
 fct_work_email AS (
 
   SELECT *
-  FROM {{ ref('workday_bamboohr_work_email') }}
+  FROM {{ ref('bamboohr_work_email') }}
 
 ),
 
@@ -323,7 +323,6 @@ base_layers AS (
     ARRAY_CONSTRUCT(reports_to, full_name) AS lineage
   FROM enriched
   WHERE NULLIF(reports_to, '') IS NOT NULL
-  AND full_name != reports_to -- Sid is reported as reporting to himself
 
 ),
 

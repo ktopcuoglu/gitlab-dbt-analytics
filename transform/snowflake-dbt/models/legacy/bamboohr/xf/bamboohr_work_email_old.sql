@@ -1,13 +1,13 @@
 WITH mapping as (
 
     SELECT *
-    FROM {{ref('workday_bamboohr_id_employee_number_mapping')}}
+    FROM {{ref('bamboohr_id_employee_number_mapping')}}
     --mapping on bamboohr_id_employee_number_mapping as this has accounted for all hired employees whereas bamboohr_directory_source has not
 
 ), bamboohr_directory AS (
 
     SELECT *
-    FROM {{ ref('blended_directory_source') }}
+    FROM {{ ref('bamboohr_directory_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id, DATE_TRUNC(day, uploaded_at) ORDER BY uploaded_at DESC) = 1
 
 ), intermediate AS (

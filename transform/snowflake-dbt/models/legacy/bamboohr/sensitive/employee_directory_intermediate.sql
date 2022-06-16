@@ -61,7 +61,7 @@ promotion AS (
     employee_id,
     effective_date,
     compensation_change_reason
-  FROM {{ ref('bamboohr_compensation_source') }}
+  FROM {{ ref('blended_compensation_source') }}
   WHERE compensation_change_reason = 'Promotion'
   GROUP BY 1, 2, 3
 
@@ -323,6 +323,7 @@ base_layers AS (
     ARRAY_CONSTRUCT(reports_to, full_name) AS lineage
   FROM enriched
   WHERE NULLIF(reports_to, '') IS NOT NULL
+  AND full_name != reports_to -- Sid is reported as reporting to himself
 
 ),
 

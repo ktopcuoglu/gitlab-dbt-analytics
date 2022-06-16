@@ -2,8 +2,13 @@
     "materialized":"table",
     "schema": "legacy",
     "database": env_var('SNOWFLAKE_PROD_DATABASE'),
+
     })
 }}
+
+{{ config(
+  enabled=false
+) }}
 
 WITH employee_directory_intermediate AS (
 

@@ -1,3 +1,6 @@
+{{ config(
+  enabled=false
+) }}
 WITH bamboohr_discretionary_bonuses AS (
 
     SELECT *

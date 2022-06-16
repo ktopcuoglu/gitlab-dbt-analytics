@@ -1,7 +1,7 @@
 WITH source AS (
   
     SELECT *
-    FROM {{ ref ('blended_employee_mapping_source') }}
+    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
     WHERE uploaded_row_number_desc = 1
 
 ), intermediate AS (

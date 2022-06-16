@@ -1,3 +1,8 @@
+{{ config(
+  enabled=false
+) }}
+
+
 WITH old AS (
   SELECT *
   FROM {{ ref('rpt_greenhouse_hired_employees_opening_ids') }} -- pempey_prod.legacy.rpt_greenhouse_hired_employees_opening_ids

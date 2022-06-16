@@ -1,3 +1,9 @@
+{{ config(
+  enabled=false
+) }}
+
+
+
 select
   'bamboohr_directionary_bonuses_xf' AS report_table,
   count(*) AS old_row_count,

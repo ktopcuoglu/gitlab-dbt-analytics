@@ -14,20 +14,20 @@ WITH dim_date AS (
       division_mapped_current           AS division, 
       department_modified               AS department,
       job_title                         AS job_title
-    FROM {{ ref('workday_employee_directory_intermediate') }}
+    FROM {{ ref('employee_directory_intermediate') }}
     WHERE is_termination_date = TRUE
       AND date_actual>='2020-02-01'
 
 ), separation_type AS (
 
     SELECT *
-    FROM {{ ref('blended_employment_status_source') }}
+    FROM {{ ref('bamboohr_employment_status_source') }}
     WHERE LOWER(employment_status) = 'terminated'
 
 ), eeoc AS (
 
     SELECT *
-    FROM {{ ref('workday_bamboohr_id_employee_number_mapping') }}
+    FROM {{ ref('bamboohr_id_employee_number_mapping') }}
 
 ), final AS (
 

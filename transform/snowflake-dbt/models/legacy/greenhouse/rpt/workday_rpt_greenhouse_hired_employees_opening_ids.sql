@@ -1,3 +1,8 @@
+
+{{ config(
+  enabled=false
+) }}
+
 WITH employees AS (
 
     SELECT * 

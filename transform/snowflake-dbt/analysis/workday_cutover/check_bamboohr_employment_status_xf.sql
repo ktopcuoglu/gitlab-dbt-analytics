@@ -1,3 +1,8 @@
+{{ config(
+  enabled=false
+) }}
+
+
 WITH map AS (
   SELECT *
   FROM {{ ref('map_employee_id') }} -- pempey_prep.workday.map_employee_id

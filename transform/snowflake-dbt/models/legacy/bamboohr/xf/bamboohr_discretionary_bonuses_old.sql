@@ -7,12 +7,12 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ ref('blended_bonus_source') }}
+  FROM {{ ref('bamboohr_custom_bonus_source') }}
 
 ), current_division_department_mapping AS (
 
     SELECT * 
-    FROM {{ ref('workday_bamboohr_job_info_current_division_base') }}
+    FROM {{ ref('bamboohr_job_info_current_division_base') }}
 
 ), filtered AS (
 
