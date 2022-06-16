@@ -156,6 +156,10 @@ sheets:
     owner: '@iweeks'
     tabs:
       - manual_public_company_metrics
+  - name: map_ramp_deals
+    owner: '@vagrawalg'
+    tabs:
+      - map_ramp_deals
   - name: mapping_sdr_sfdc_bamboohr
     owner: '@jpeguero'
     tabs:
