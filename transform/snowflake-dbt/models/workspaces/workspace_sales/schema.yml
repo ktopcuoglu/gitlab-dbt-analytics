@@ -11,3 +11,5 @@ models:
         tests:
             - not_null
             - unique
+  - name: sheetload_xactly_credit
+    description: Sheetload of Xactly credits loaded manually as a workaround while we finalize Xactly Sales Attainment modeling

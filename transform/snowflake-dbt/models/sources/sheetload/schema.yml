@@ -565,3 +565,6 @@ models:
     - name: valid_from
     - name: valid_to
     - name: is_current
+- name: sheetload_xactly_credit_source
+  description: Sheetload of Xactly credits loaded manually as a workaround while we finalize Xactly Sales Attainment modeling
+  

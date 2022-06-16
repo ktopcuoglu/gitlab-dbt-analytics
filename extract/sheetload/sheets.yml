@@ -304,3 +304,7 @@ sheets:
     owner: '@mpeychet_'
     tabs:
       - deleted_mrs
+  - name: xactly_credit_sheetload
+    owner: '@hselim'
+    tabs:
+      - xactly_credit_sheetload
