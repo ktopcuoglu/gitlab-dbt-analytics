@@ -73,6 +73,10 @@ sheets:
       - employee_location_factor
       - comp_band
       - location_factor_temporary_2020_december
+  - name: fy23_quota
+    owner: '@hselim'
+    tabs:
+      - fy23_quota
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
