@@ -13,7 +13,8 @@
     ('subscriptions', 'dim_subscription'),
     ('namespaces', 'dim_namespace'),
     ('charges', 'mart_charge'),
-    ('dates', 'dim_date')
+    ('dates', 'dim_date'),
+    ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace')
 ]) }}
 
 
@@ -40,6 +41,7 @@
       ORDER BY
         subscription_version DESC
     ) = 1
+
 ), zuora_licenses_per_subscription AS (
   
     SELECT
@@ -56,6 +58,13 @@
       AND charges.product_tier_name != 'Storage'
     {{ dbt_utils.group_by(n = 2) }}
     
+), action_active_users_project_repo_users AS (
+  
+    SELECT
+      *
+    FROM aggregated_metrics 
+    WHERE event_action = 'action_active_users_project_repo'
+  
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -314,7 +323,7 @@
         'gitlabdotcom')                                                             AS license_user_count_flag,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
-      monthly_saas_metrics.action_monthly_active_users_project_repo_28_days_user,
+      COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
       monthly_saas_metrics.merge_requests_28_days_user,
       monthly_saas_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_saas_metrics.commit_comment_all_time_event,
@@ -477,7 +486,9 @@
       AND zuora_licenses_per_subscription.month = monthly_saas_metrics.snapshot_month
     LEFT JOIN namespaces 
       ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
-    
+    LEFT JOIN action_active_users_project_repo_users
+      ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
+      AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -512,5 +523,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-11",
-    updated_date="2022-06-13"
+    updated_date="2022-06-14"
 ) }}

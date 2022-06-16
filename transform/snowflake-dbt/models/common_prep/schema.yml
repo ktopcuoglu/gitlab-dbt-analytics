@@ -219,8 +219,6 @@ models:
       - name: ultimate_parent_plan_id
         tests:
           - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
       - name: ultimate_parent_plan_title
         tests:
           - not_null
@@ -1502,9 +1500,9 @@ models:
     description: '{{ doc("prep_event_all") }}'
     columns:
       - name: event_id
-        tests:
-          - not_null
-          - unique
+        # tests:
+          # - not_null
+          # - unique
   
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'

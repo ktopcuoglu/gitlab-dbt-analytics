@@ -1,7 +1,6 @@
 {{ config({
         "tags": ["mnpi_exception"],
-        "alias": "dim_billing_account",
-        "post-hook": '{{ apply_dynamic_data_masking(columns = [{"sfdc_account_code":"string"},{"updated_by":"string"},{"dim_billing_account_id":"string"},{"billing_account_name":"string"},{"created_by":"string"},{"dim_crm_account_id":"string"},{"account_currency":"string"},{"billing_account_number":"string"},{"parent_id":"string"}]) }}'
+        "alias": "dim_billing_account"
     })
 }}
 

@@ -42,5 +42,5 @@ joined AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-06-06",
-    updated_date="2022-06-07"
+    updated_date="2022-06-15"
 ) }}
