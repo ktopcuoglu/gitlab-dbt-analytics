@@ -515,7 +515,6 @@ models:
       - name: report_date
         description: The date the report table was created
 
-
   - name: pump_daily_sao
     columns:
     - name: sao_date
