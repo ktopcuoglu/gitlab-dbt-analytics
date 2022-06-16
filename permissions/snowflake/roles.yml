@@ -3391,6 +3391,7 @@ roles:
     - mpetersen:
         member_of:
             - analyst_growth
+            - customers_db
             - restricted_safe
         warehouses:
             - dev_xs
