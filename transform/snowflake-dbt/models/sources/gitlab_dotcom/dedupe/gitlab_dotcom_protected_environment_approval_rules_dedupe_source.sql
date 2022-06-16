@@ -3,7 +3,7 @@
     "unique_key": "id"
     })
 }}
-
+ 
 SELECT *
 FROM {{ source('gitlab_dotcom', 'protected_environment_approval_rules') }}
 {% if is_incremental() %}
