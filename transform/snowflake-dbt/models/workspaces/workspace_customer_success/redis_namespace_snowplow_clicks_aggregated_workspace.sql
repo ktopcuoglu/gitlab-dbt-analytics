@@ -1,7 +1,7 @@
 {{
   config(
     materialized='table',
-    tags=["mnpi_exception"]
+    tags=["mnpi_exception", "product"]
   )
 }}
 
@@ -29,5 +29,5 @@ final AS (
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-05-24",
-    updated_date="2022-06-08"
+    updated_date="2022-06-15"
 ) }}
