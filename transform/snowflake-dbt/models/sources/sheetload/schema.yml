@@ -369,6 +369,21 @@ models:
     - name: fiscal_quarter
       tests:
         - not_null
+- name: sheetload_sdr_bdr_metric_targets_source
+  description: Source model for SDR/BDR metric targets by metric. 
+  columns: 
+    - name: sdr_or_bdr 
+      tests:
+        - not_null
+    - name: date_period
+      tests: 
+        - not_null
+    - name: metric
+      tests: 
+        - not_null
+    - name: target
+      tests: 
+        - not_null
 - name: sheetload_sisense_user_roles_source
   description: Source model for sisense users roles.
   columns:
