@@ -88,8 +88,6 @@ def generate_dbt_command(vars_dict):
         arguments=[dbt_generate_command],
         dag=dag,
     )
-)
-
 
 
 
