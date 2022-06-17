@@ -314,7 +314,7 @@
     "stage_name": "configure"
   },
   {
-    "event_name": "services",
+    "event_name": "integrations",
     "source_cte_name": "prep_service",
     "user_column_name": "NULL",
     "ultimate_parent_namespace_column_name": "ultimate_parent_namespace_id",
