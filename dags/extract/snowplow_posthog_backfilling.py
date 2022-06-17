@@ -1,13 +1,14 @@
-import json
+"""
+DAG for Snowplow -> PostHog backfilling
+"""
+
 import os
 from datetime import date, datetime
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
 from airflow_utils import (
     DBT_IMAGE,
-    dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
     partitions,
@@ -60,8 +61,8 @@ task_secrets = [
 ]
 
 start_date = datetime(2022, 1, 1, 0, 0, 0)
-dag_name = "snowplow_posthog_backfilling"
-
+DAG_NAME = "snowplow_posthog_backfill"
+SCHEMA_NAME = "gitlab_events"
 
 # Default arguments for the DAG
 default_args = {
@@ -72,11 +73,16 @@ default_args = {
     "start_date": start_date,
 }
 
-# Create the DAG
-def generate_dbt_command(vars_dict):
-    json_dict = json.dumps(vars_dict)
 
-    dbt_generate_command = f"""echo 'test'"""
+# Create the DAG
+def generate_dbt_command(vars_dict: dict, dag_name: str):
+    """
+    Generate generic command separated per time frame
+    to create tasks
+    """
+    run_command = 'echo test'
+
+    generated_command = f"""{run_command}"""
 
     return KubernetesPodOperator(
         **gitlab_defaults,
@@ -85,19 +91,17 @@ def generate_dbt_command(vars_dict):
         name=f"{dag_name}-{vars_dict['year']}-{vars_dict['month']}",
         secrets=task_secrets,
         env_vars=pod_env_vars,
-        arguments=[dbt_generate_command],
+        arguments=[generated_command],
         dag=dag,
     )
 
 
-
 dag = DAG(
-    dag_name,
+    DAG_NAME,
     default_args=default_args,
     schedule_interval=None,
     concurrency=2,
 )
 
-for month in partitions(start_date.date(), date.today(), "month"
-):
-    generate_dbt_command(month)
+for month in partitions(start_date.date(), date.today(), "month"):
+    generate_dbt_command(month, dag_name=DAG_NAME)
