@@ -373,6 +373,39 @@ tables:
       FROM container_expiration_policies
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  container_repositories:
+    export_schema: "gitlab_com"
+    export_table: container_repositories
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , project_id
+      , name
+      , created_at
+      , updated_at
+      , status
+      , expiration_policy_started_at
+      , expiration_policy_cleanup_status
+      , expiration_policy_completed_at
+      , migration_pre_import_started_at
+      , migration_pre_import_done_at
+      , migration_import_started_at
+      , migration_import_done_at
+      , migration_aborted_at
+      , migration_skipped_at
+      , migration_retries_count
+      , migration_skipped_reason
+      , migration_state
+      , migration_aborted_in_state
+      , migration_plan
+      , last_cleanup_deleted_tags_count
+      FROM container_repositories
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp 
+
+
+
   csv_issue_imports:
     export_schema: "gitlab_com"
     export_table: csv_issue_imports
@@ -405,6 +438,38 @@ tables:
       FROM dast_profiles
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  dependency_proxy_group_settings:
+    export_schema: "gitlab_com"
+    export_table: dependency_proxy_group_settings
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , group_id
+      , created_at
+      , updated_at
+      , enabled
+      FROM dependency_proxy_group_settings
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp 
+  dependency_proxy_image_ttl_group_policies:
+    export_schema: "gitlab_com"
+    export_table: dependency_proxy_image_ttl_group_policies
+    export_table_primary_key: group_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT created_at
+      , updated_at
+      , group_id
+      , ttl
+      , enabled
+      FROM dependency_proxy_image_ttl_group_policies
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp 
+
+
+
+
   deployment_approvals:
     dbt_source_model: true
     export_schema: 'gitlab_com'
