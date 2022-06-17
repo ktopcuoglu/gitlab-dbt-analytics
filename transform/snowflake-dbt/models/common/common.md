@@ -772,6 +772,34 @@ Installation dimension, based off of version usage data and version host table. 
 
 {% enddocs %}
 
+{% docs dim_order %}
+
+In Zuora Billing, an [Order](https://knowledgecenter.zuora.com/Billing/Subscriptions/Orders/AA_Overview_of_Orders) represents a complete transaction record. Multiple order actions can be taken in a single order. For example, a subscription can be created and other subscriptions can be managed in a single order for a given customer.
+
+{% enddocs %}
+
+{% docs dim_order_action %}
+
+[Order Actions](https://knowledgecenter.zuora.com/Billing/Subscriptions/Orders/AA_Overview_of_Orders/Order_Actions) are the tasks which can be performed on subscriptions in a single Order (see `dim_order` for more details). 
+
+The following actions are supported in the Orders module:
+
+- Create Subscription 
+- Terms And Conditions
+- Renewal
+- Cancellation
+- Owner Transfer
+- Add Product
+- Update Product
+- Remove Product
+- Suspend
+- Resume
+
+Multiple order actions can be grouped under a single Order. Previously multiple amendments would have been created to accomplish the same result. Now there can be a single `composite` amendment which encompasses all order actions taken in a single order.
+
+{% enddocs %}
+
+
 {% docs dim_order_type %}
 
 Order type dimension, based off of salesforce opportunity data, using the `generate_single_field_dimension` macro to create the final formatted SQL
