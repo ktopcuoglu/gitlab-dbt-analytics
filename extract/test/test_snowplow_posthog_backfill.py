@@ -12,8 +12,10 @@ import pytest
 # execution way in Airflow,
 # can't touch the original code
 
+test_path = "/extract/snowplow_posthog"
+
 abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = abs_path[: abs_path.find("extract")] + "/extract/snowplow_posthog"
+abs_path = abs_path[: abs_path.find("extract")] + test_path
 sys.path.append(abs_path)
 
 from extract.snowplow_posthog.backfill import (
