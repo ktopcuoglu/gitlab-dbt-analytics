@@ -2599,6 +2599,7 @@ roles:
     - fivetran_role:
         warehouses:
             - fivetran_warehouse
+            - loader
         privileges:
             databases:
                 read:
@@ -3941,6 +3942,7 @@ roles:
     - stitch:
         warehouses:
             - stitch
+            - loader
         privileges:
             databases:
                 read:
