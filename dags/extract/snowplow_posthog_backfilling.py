@@ -80,9 +80,8 @@ def generate_dbt_command(vars_dict: dict, dag_name: str):
     Generate generic command separated per time frame
     to create tasks
     """
-    run_command = 'echo test'
 
-    generated_command = f"""{run_command}"""
+    generated_command = f"""echo {dag_name}"""
 
     return KubernetesPodOperator(
         **gitlab_defaults,
