@@ -15,7 +15,7 @@ WITH RECURSIVE employee_directory AS (
     termination_date,
     hire_location_factor,
     last_work_email,
-    (first_name || ' ' || last_name) AS full_name
+    (COALESCE(first_name,'') || ' ' || COALESCE(last_name,'')) AS full_name
   FROM {{ ref('employee_directory') }}
 
 ),

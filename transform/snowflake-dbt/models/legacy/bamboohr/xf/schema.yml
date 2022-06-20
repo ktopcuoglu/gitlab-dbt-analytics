@@ -53,8 +53,6 @@ models:
       tests:
       - not_null
     - name: last_name
-      tests:
-      - not_null
     - name: job_title
     - name: supervisor
     - name: work_email
@@ -85,7 +83,7 @@ models:
   - name: bamboohr_discretionary_bonuses
     description: This model contains a list of Discretionary bonuses awarded (excludes other types of bonuses). It includes the employee ID to be able to join to the `employee_directory_analysis` model to understand the break down of discretionary bonuses given.
     columns:
-    - name: bonus_id
+    - name: unique_filter_key
       tests:
         - not_null
         - unique
