@@ -1,5 +1,5 @@
 {% docs mask_model %}
-This macro is designed do be applied as a post-hook on a table or view model.  It will pull the policy information from identified columns and create and apply the masking policy.  This needs to be done after the table or view has been created as it calls for information about the table or vew to know the data types of the columns to be masked.
+This macro is designed do be applied as a post-hook on a table or view model.  It will pull the policy information from identified columns and create and apply the masking policy.  This needs to be done after the table or view has been created as it calls for information about the table or view to know the data types of the columns to be masked.
 
 {% enddocs %}
 
@@ -19,7 +19,7 @@ Output:
 {% enddocs %}
 
 {% docs apply_masking_policy %}
-This macro is designed to collect the column data types of a specific table and use that information with passes masking policies to create and apply masking policies to all of the columns in a table.
+This macro is designed to collect the column data types of a specific table and use that information with passed masking policies to create and apply masking policies to all of the columns in a table.
 
 
 It takes 4 parameters:

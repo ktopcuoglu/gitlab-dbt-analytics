@@ -13,7 +13,7 @@ dbt run-operation get_columns_to_mask --args "{resource_type: 'model', table: 't
 {% endif %}
 
 {# 
-The models ans sources have a diffeerant structer in the graph object that
+The models and sources have a different structure in the graph object that
 needs to be accounted for in the selection of the proper objects.
 #}
 
