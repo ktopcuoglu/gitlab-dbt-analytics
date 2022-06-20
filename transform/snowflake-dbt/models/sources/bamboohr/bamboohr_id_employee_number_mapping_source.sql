@@ -61,7 +61,6 @@ WITH source AS (
       AND (LOWER(first_name) NOT LIKE '%greenhouse test%'
       AND LOWER(last_name) NOT LIKE '%test profile%'
       AND LOWER(last_name) != 'test-gitlab')
-      AND employee_id != 42039
     -- The same emplpyee can appear more than once in the same upload.
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_number, DATE_TRUNC(day, uploaded_at) ORDER BY uploaded_at DESC) = 1
 
