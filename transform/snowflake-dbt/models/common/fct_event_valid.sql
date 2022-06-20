@@ -25,8 +25,8 @@ fct_event_valid AS (
     */
 
     SELECT
-      fct_event.dim_user_id,
-      {{ dbt_utils.star(from=ref('fct_event'), except=["DIM_USER_ID", "CREATED_BY",
+      fct_event.dim_user_sk,
+      {{ dbt_utils.star(from=ref('fct_event'), except=["DIM_USER_SK", "CREATED_BY",
           "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }},
       xmau_metrics.group_name,
       xmau_metrics.section_name,
@@ -38,7 +38,7 @@ fct_event_valid AS (
     LEFT JOIN xmau_metrics
       ON fct_event.event_name = xmau_metrics.common_events_to_include
     LEFT JOIN dim_user
-      ON fct_event.dim_user_id = dim_user.dim_user_id
+      ON fct_event.dim_user_sk = dim_user.dim_user_sk
     WHERE DATE_TRUNC(MONTH,fct_event.event_created_at::DATE) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE)) 
       AND (fct_event.days_since_user_creation_at_event_date >= 0
            OR fct_event.days_since_user_creation_at_event_date IS NULL)
@@ -96,11 +96,11 @@ paid_flag_by_day AS (
 fct_event_w_flags AS (
 
   SELECT 
-    fct_event_valid.event_id,
+    fct_event_valid.event_pk,
     fct_event_valid.dim_event_date_id,
     fct_event_valid.dim_ultimate_parent_namespace_id,
     fct_event_valid.dim_project_id,
-    fct_event_valid.dim_user_id,
+    fct_event_valid.dim_user_sk,
     fct_event_valid.event_created_at,
     fct_event_valid.event_date,
     fct_event_valid.group_name,
@@ -137,13 +137,13 @@ gitlab_dotcom_fact AS (
 
   SELECT
     --Primary Key
-    event_id,
+    event_pk,
     
     --Foreign Keys
     dim_event_date_id,
     dim_ultimate_parent_namespace_id,
     dim_project_id,
-    dim_user_id,
+    dim_user_sk,
     dim_active_product_tier_id,
     dim_active_subscription_id,
     dim_crm_account_id,
@@ -180,5 +180,5 @@ gitlab_dotcom_fact AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-06-13"
+    updated_date="2022-06-20"
 ) }}

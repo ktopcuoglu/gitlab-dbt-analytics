@@ -6,7 +6,8 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_event_all', 'prep_event_all')
+    ('prep_event_all', 'prep_event_all'),
+    ('dim_user', 'dim_user')
     ])
 }},
 
@@ -16,7 +17,7 @@ fct_events AS (
     prep_event_all.event_id,
     prep_event_all.event_name,
     prep_event_all.ultimate_parent_namespace_id,
-    prep_event_all.dim_user_id,
+    {{ get_keyed_nulls('dim_user.dim_user_sk') }} AS dim_user_sk,
     prep_event_all.parent_type,
     prep_event_all.parent_id,
     prep_event_all.dim_project_id,
@@ -29,6 +30,9 @@ fct_events AS (
     prep_event_all.days_since_project_creation_at_event_date,
     CAST(prep_event_all.event_created_at AS DATE) AS event_date
   FROM prep_event_all
+  LEFT JOIN dim_user
+    --dim_user_id is the natural_key and will be renamed to user_id in a subsequent MR on prep_event.
+    ON prep_event_all.dim_user_id = dim_user.user_id
   
   {% if is_incremental() %}
 
@@ -43,13 +47,13 @@ gitlab_dotcom_fact AS (
 
   SELECT
     --Primary Key
-    fct_events.event_id,
+    fct_events.event_id AS event_pk,
     
     --Foreign Keys
     dim_date.date_id AS dim_event_date_id,
     fct_events.ultimate_parent_namespace_id AS dim_ultimate_parent_namespace_id,
     fct_events.dim_project_id,
-    fct_events.dim_user_id,
+    fct_events.dim_user_sk,
     
     --Time attributes
     fct_events.event_created_at,
@@ -77,5 +81,5 @@ gitlab_dotcom_fact AS (
     created_by="@icooper-acp",
     updated_by="@iweeks",
     created_date="2022-01-20",
-    updated_date="2022-06-06"
+    updated_date="2022-06-20"
 ) }}

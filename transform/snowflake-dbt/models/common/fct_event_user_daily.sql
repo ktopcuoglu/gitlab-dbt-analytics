@@ -11,15 +11,20 @@
 fct_event_user_daily AS (
 
   SELECT
-  {{ dbt_utils.surrogate_key(['event_date', 'dim_user_id','dim_ultimate_parent_namespace_id','event_name']) }} 
-                                                  AS event_user_daily_id,
+    --Primary Key
+    {{ dbt_utils.surrogate_key(['event_date', 'dim_user_sk','dim_ultimate_parent_namespace_id','event_name']) }} 
+                                                  AS event_user_daily_pk,
+    
+    --Foreign Keys                                              
     dim_active_product_tier_id,
     dim_active_subscription_id,
     dim_crm_account_id,
     dim_billing_account_id,
-    dim_user_id,
+    dim_user_sk,
     dim_ultimate_parent_namespace_id,
     dim_event_date_id,
+    
+    --Degenerate Dimensions (No stand-alone, promoted dimension table)
     event_date,
     event_name,
     plan_id_at_event_date,
@@ -32,9 +37,11 @@ fct_event_user_daily AS (
     is_gmau,
     is_umau,
     data_source,
+    
+    --Facts
     COUNT(*) AS event_count
   FROM fct_event_valid
-  WHERE dim_user_id IS NOT NULL
+  WHERE dim_user_sk != '6bb61e3b7bce0931da574d19d1d82c88'--missing member surrogate_key value
   {{ dbt_utils.group_by(n=20) }}
 
 )
@@ -44,5 +51,5 @@ fct_event_user_daily AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-05-16"
+    updated_date="2022-06-20"
 ) }}

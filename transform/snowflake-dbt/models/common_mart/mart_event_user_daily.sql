@@ -28,6 +28,7 @@ fact_with_dims AS (
     dim_namespace.namespace_creator_is_blocked,
     dim_namespace.created_at AS namespace_created_at,
     CAST(dim_namespace.created_at AS DATE) AS namespace_created_date,
+    dim_user.user_id,
     dim_user.created_at AS user_created_at,
     dim_date.first_day_of_month AS event_calendar_month,
     dim_date.quarter_name AS event_calendar_quarter,
@@ -36,7 +37,7 @@ fact_with_dims AS (
   LEFT JOIN dim_namespace
     ON fact.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
   LEFT JOIN dim_user
-    ON fact.dim_user_id = dim_user.dim_user_id
+    ON fact.dim_user_sk = dim_user.dim_user_sk
   LEFT JOIN dim_date
     ON fact.dim_event_date_id = dim_date.date_id
 
@@ -47,5 +48,5 @@ fact_with_dims AS (
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-01-28",
-    updated_date="2022-05-16"
+    updated_date="2022-06-20"
 ) }}

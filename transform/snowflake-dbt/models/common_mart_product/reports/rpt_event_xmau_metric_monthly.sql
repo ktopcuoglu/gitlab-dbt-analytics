@@ -17,7 +17,7 @@ mart_raw AS (
       WHEN stage_name = 'manage' THEN NULL ELSE stage_name
     END AS stage_name
   FROM mart_event_valid
-  WHERE dim_user_id IS NOT NULL
+  WHERE dim_user_sk != '6bb61e3b7bce0931da574d19d1d82c88'--missing member surrogate_key value
     AND (is_umau = TRUE 
          OR is_gmau = TRUE 
          OR is_smau = TRUE
@@ -54,12 +54,12 @@ paid_flag_by_month AS (
 mart_w_paid_deduped AS (
 
   SELECT
-    mart_with_date_range.event_id,
+    mart_with_date_range.event_pk,
     mart_with_date_range.event_date,
     mart_with_date_range.last_day_of_month,
     mart_with_date_range.last_day_of_quarter,
     mart_with_date_range.last_day_of_fiscal_year,
-    mart_with_date_range.dim_user_id,
+    mart_with_date_range.user_id,
     mart_with_date_range.event_name,
     mart_with_date_range.data_source,
     mart_with_date_range.dim_ultimate_parent_namespace_id,
@@ -94,7 +94,7 @@ total_results AS (
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
-    COUNT(DISTINCT(dim_user_id)) AS user_count
+    COUNT(DISTINCT(user_id)) AS user_count
   FROM mart_w_paid_deduped
   {{ dbt_utils.group_by(n=8) }}
   ORDER BY event_calendar_month DESC
@@ -115,7 +115,7 @@ free_results AS (
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
-    COUNT(DISTINCT(dim_user_id)) AS user_count
+    COUNT(DISTINCT(user_id)) AS user_count
   FROM mart_w_paid_deduped
   WHERE plan_was_paid_at_event_date = FALSE
   {{ dbt_utils.group_by(n=8) }}
@@ -137,7 +137,7 @@ paid_results AS (
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
-    COUNT(DISTINCT(dim_user_id)) AS user_count
+    COUNT(DISTINCT(user_id)) AS user_count
   FROM mart_w_paid_deduped
   WHERE plan_was_paid_at_event_date = TRUE
   {{ dbt_utils.group_by(n=8) }}
@@ -176,5 +176,5 @@ results AS (
     created_by="@icooper_acp",
     updated_by="@iweeks",
     created_date="2022-02-23",
-    updated_date="2022-05-16"
+    updated_date="2022-06-20"
 ) }}
