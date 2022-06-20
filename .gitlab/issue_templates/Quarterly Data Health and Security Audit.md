@@ -201,6 +201,14 @@ Below checklist of activities would be run once for quarter to validate security
     ORDER BY last_name;
    ```
 
+4. [ ] Check and set all refresh schedules for `Skip if unused`.
+
+    <details>
+
+   - [ ] GitLab Space
+   - [ ] SAFE Space
+   - [ ] SAFE Intermediate Space
+
 ## TRUSTED DATA
 1. [ ] Review all Golden Record TD tests and make sure they're passing.
 
