@@ -55,6 +55,7 @@ sources:
           override the BambooHR data.
       - name: event_dictionary_simplified
       - name: fmm_kpi_targets
+      - name: fy23_quota
       - name: gcp_active_cud
       - name: gitlab_contributing_organizations
       - name: gitlab_certification_tracking_dashboard

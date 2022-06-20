@@ -11,3 +11,5 @@ models:
         tests:
             - not_null
             - unique
+  - name: xactly_fy23_quota
+    description: Sheetload file load of FY23 quota from Xactly used temporarily as we work on Xactly Sales Attainment modeling
