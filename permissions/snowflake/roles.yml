@@ -2604,7 +2604,6 @@ roles:
 
     - fivetran_role:
         warehouses:
-            - fivetran_warehouse
             - loading
         privileges:
             databases:
@@ -3947,7 +3946,6 @@ roles:
 
     - stitch:
         warehouses:
-            - stitch
             - loading
         privileges:
             databases:
@@ -4650,9 +4648,6 @@ warehouses:
     - dev_xl:
         size: "x-large"
 
-    - fivetran_warehouse:
-        size: x-small
-
     - gainsight_xs:
         size: x-small
 
@@ -4667,9 +4662,6 @@ warehouses:
 
     - reporting:
         size: medium
-
-    - stitch:
-        size: x-small
 
     - target_snowflake:
         size: x-small
