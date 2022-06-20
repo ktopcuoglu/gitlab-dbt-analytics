@@ -2429,7 +2429,7 @@ models:
   - name: fct_event_valid
     description: '{{ doc("fct_event_valid") }}'
     columns:
-      - name: event_id
+      - name: event_pk
         description: The unique ID of an event.
         tests:
           - not_null
@@ -2456,7 +2456,7 @@ models:
   - name: fct_event
     description: '{{ doc("fct_event") }}'
     columns:
-      - name: event_id
+      - name: event_pk
         description: The unique identifier of an event. This is a generated primary key and will not join back to the source models.
         # tests:
           # - not_null
@@ -2507,7 +2507,7 @@ models:
   - name: fct_event_user_daily
     description: '{{ doc("fct_event_user_daily") }}'
     columns:
-      - name: event_user_daily_id
+      - name: event_user_daily_pk
         description: The unique ID of a daily event.
         tests:
           - not_null
@@ -2516,7 +2516,7 @@ models:
   - name: fct_event_instance_daily
     description: '{{ doc("fct_event_instance_daily") }}'
     columns:
-      - name: event_instance_daily_id
+      - name: event_instance_daily_pk
         description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
         tests:
           - not_null
@@ -2545,7 +2545,7 @@ models:
   - name: fct_event_namespace_daily
     description: '{{ doc("fct_event_namespace_daily") }}'
     columns:
-      - name: event_namespace_daily_id
+      - name: event_namespace_daily_pk
         description: The unique ID of a daily namespace level event.
         tests:
           - not_null
