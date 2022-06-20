@@ -2510,6 +2510,12 @@ roles:
                     - degan_prep.*.*
                     - degan_prod.*.*
 
+    - dmicovic:
+        member_of:
+            - analyst_core
+        warehouses:
+            - dev_xs
+
     - dpeterson:
         member_of:
             - analyst_growth
@@ -4242,6 +4248,11 @@ users:
         can_login: yes
         member_of:
             - degan
+
+    - dmicovic:
+        can_login: yes
+        member_of:
+            - dmicovic
 
     - dpeterson:
         can_login: yes
