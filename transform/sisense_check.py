@@ -30,8 +30,8 @@ def get_file_display_name(filepath: str) -> str:
     """
 
     if os.path.exists(filepath):
-        with open(filepath, encoding="UTF-8") as f:
-            data_map = yaml.safe_load(f)
+        with open(filepath, encoding="UTF-8") as file_to_load:
+            data_map = yaml.safe_load(file_to_load)
             display_name = data_map["display_name"]
     else:
         display_name = "Untitled"
@@ -81,8 +81,8 @@ for repo in repos_to_check:
                 if file.endswith(".sql"):
                     full_filename = f"{root}/{file}"
                     # print(full_filename)
-                    with open(full_filename, "r", encoding="UTF-8") as f:
-                        lines = f.readlines()
+                    with open(full_filename, "r", encoding="UTF-8") as file_to_open_yml:
+                        lines = file_to_open_yml.readlines()
                         ALL_LINES = " ".join(lines)
                         # Removes new lines following "from" and "join" b/c people don't follow style guide
                         clean_lines = re.sub(
@@ -133,8 +133,8 @@ for repo in repos_to_check:
 # Load in the list of models to match
 models_to_match = set()
 models_filename = f"{dirname}/transform/snowflake-dbt/to_check.txt"
-with open(models_filename, "r") as f:
-    lines = f.readlines()
+with open(models_filename, "r", encoding="UTF-8") as fp1:
+    lines = fp1.readlines()
     for line in lines:
         models_to_match.add(line.strip().lower().split(".")[-1])
 
@@ -185,5 +185,5 @@ for line in models_to_match:
         output_dict[line.strip()] = match
 
 
-with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w") as fp:
+with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w", encoding="UTF-8") as fp:
     json.dump(output_dict, fp)
