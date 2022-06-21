@@ -185,5 +185,7 @@ for line in models_to_match:
         output_dict[line.strip()] = match
 
 
-with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w", encoding="UTF-8") as fp:
+with open(
+    f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w", encoding="UTF-8"
+) as fp:
     json.dump(output_dict, fp)
