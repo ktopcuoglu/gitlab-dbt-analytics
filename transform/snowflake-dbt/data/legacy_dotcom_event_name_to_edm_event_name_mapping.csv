@@ -38,7 +38,7 @@ requirements,requirement_creation
 sast,sast_build_run
 secret_detection,secret_detection_build_run
 secure_stage_ci_jobs,
-services,services
+services,integrations
 snippets,snippets
 successful_ci_pipelines,successful_ci_pipeline_creation
 terraform_reports,terraform_reports
