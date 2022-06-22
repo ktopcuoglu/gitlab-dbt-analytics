@@ -7,29 +7,21 @@ from gitlabdata.orchestration_utils import snowflake_engine_factory
 from sqlalchemy.engine import Engine
 
 
-def get_load_command(stage_path):
+def get_load_command(start_date: str) -> str:
     """
     Generate a load command based on date
     """
-    try:
-        logging.info("Generating load command...")
+    return f"""
+        SELECT '{start_time}'
+		"""
 
-        load_command = f"""
-          select 'dt={execution_date}'
-        """
-
-    except:
-        logging.info("Failed to get copy command...")
-    finally:
-        return load_command
-
-
-def load_data():
+def load_data(execution_date):
     """
     run copy command to copy data from snowflake
     """
-    logging.info("Preparing copy data...")
+    logging.info("Preparing to load data...")
     config_dict = env.copy()
+		start_time = config_dict["START_TIME"]
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
