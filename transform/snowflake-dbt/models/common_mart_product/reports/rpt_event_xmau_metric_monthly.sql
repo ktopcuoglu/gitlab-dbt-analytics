@@ -18,15 +18,12 @@ mart_raw AS (
       ELSE stage_name
     END AS stage_name,
     /*
-    The SMAU events for the release, static_analysis, dynamic_analysis, and composition_analysis groups 
-    are only counted for SMAU and not GMAU. Putting a NULL for the group_name allows these events to not 
+    The SMAU events for certain groups such as the release, static_analysis, dynamic_analysis, and composition_analysis 
+    groups are only counted for SMAU and not GMAU. Putting a NULL for the group_name allows these events to not 
     roll up to the group in xMAU reporting while keeping the grain of this model intact.
     */
     CASE
-      WHEN is_smau = TRUE AND is_gmau = FALSE AND group_name = 'release' THEN NULL
-      WHEN is_smau = TRUE AND is_gmau = FALSE AND group_name = 'static_analysis' THEN NULL
-      WHEN is_smau = TRUE AND is_gmau = FALSE AND group_name = 'dynamic_analysis' THEN NULL
-      WHEN is_smau = TRUE AND is_gmau = FALSE AND group_name = 'composition_analysis' THEN NULL
+      WHEN is_smau = TRUE AND is_gmau = FALSE THEN NULL
       ELSE group_name
     END AS group_name
   FROM mart_event_valid
