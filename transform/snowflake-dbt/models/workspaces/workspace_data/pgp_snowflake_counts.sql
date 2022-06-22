@@ -7,7 +7,7 @@
 WITH postgres_counts AS (
 
     SELECT table_name,
-        created_date,
+        TRY_TO_DATE(created_date) AS created_date,
         updated_date,
         number_of_records
     FROM {{source('gitlab_dotcom','gitlab_pgp_export')}}
@@ -25,7 +25,7 @@ WITH postgres_counts AS (
         'gitlab_db_namespace_root_storage_statistics',
         'gitlab_ops_db_ci_stages')
     GROUP BY 1,2,3,4
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY table_name,created_date,updated_date ORDER BY updated_date DESC) = 1
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY table_name,TRY_TO_DATE(created_date),updated_date ORDER BY updated_date DESC) = 1
                   ORDER BY table_name, updated_date DESC
 ),  date_check AS (
 

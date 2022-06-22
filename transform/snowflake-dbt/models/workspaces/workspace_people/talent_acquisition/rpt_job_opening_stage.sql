@@ -54,3 +54,4 @@
     ON job_departments.department_id = departments.department_id
   WHERE application_stages.stage_entered_on IS NOT NULL
     AND jobs.job_opened_at IS NOT NULL
+    AND applications.application_id IS NOT NULL

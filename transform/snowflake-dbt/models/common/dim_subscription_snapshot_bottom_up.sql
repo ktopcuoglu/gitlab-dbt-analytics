@@ -83,7 +83,8 @@ WITH snapshot_dates AS (
     --Common Dimension Keys
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
       zuora_account_spined.account_id                                           AS dim_billing_account_id,
-      zuora_subscription_spined.invoice_owner_id                                AS dim_billing_account_id_invoice_owner,
+      zuora_subscription_spined.invoice_owner_id                                AS dim_billing_account_id_invoice_owner_account,
+      zuora_subscription_spined.creator_account_id                              AS dim_billing_account_id_creator_account,
       zuora_subscription_spined.sfdc_opportunity_id                             AS dim_crm_opportunity_id,
       {{ get_keyed_nulls('prep_amendment.dim_amendment_id') }}                  AS dim_amendment_id_subscription,
 
@@ -104,6 +105,10 @@ WITH snapshot_dates AS (
       zuora_subscription_spined.eoa_starter_bronze_offer_accepted,
       IFF(zuora_subscription_spined.created_by_id = '2c92a0fd55822b4d015593ac264767f2', -- All Self-Service / Web direct subscriptions are identified by that created_by_id
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
+      invoice_owner.account_name                                                AS invoice_owner_account,
+      creator_account.account_name                                              AS creator_account,
+      IFF(dim_billing_account_id_invoice_owner_account != dim_billing_account_id_creator_account, TRUE, FALSE)
+                                                                                AS was_purchased_through_reseller,
 
     --Date Information
       zuora_subscription_spined.subscription_start_date                         AS subscription_start_date,
@@ -142,6 +147,12 @@ WITH snapshot_dates AS (
     INNER JOIN zuora_account_spined
       ON zuora_subscription_spined.account_id = zuora_account_spined.account_id
       AND zuora_subscription_spined.snapshot_id = zuora_account_spined.snapshot_id
+    LEFT JOIN zuora_account_spined AS invoice_owner
+      ON zuora_subscription_spined.invoice_owner_id = invoice_owner.account_id
+      AND zuora_subscription_spined.snapshot_id = invoice_owner.snapshot_id
+    LEFT JOIN zuora_account_spined AS creator_account
+      ON zuora_subscription_spined.creator_account_id = creator_account.account_id
+      AND zuora_subscription_spined.snapshot_id = creator_account.snapshot_id
     LEFT JOIN map_merged_crm_account
       ON zuora_account_spined.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN prep_amendment
@@ -165,5 +176,5 @@ WITH snapshot_dates AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-28",
-    updated_date="2021-08-24"
+    updated_date="2022-06-03"
 ) }}

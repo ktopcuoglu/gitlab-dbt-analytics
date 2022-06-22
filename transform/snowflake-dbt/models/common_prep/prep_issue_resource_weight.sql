@@ -21,7 +21,7 @@
     FROM {{ ref('gitlab_dotcom_resource_weight_events_source') }} 
     {% if is_incremental() %}
 
-    WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
+    WHERE created_at > (SELECT MAX(created_at) FROM {{this}})
 
     {% endif %}
 
@@ -44,7 +44,7 @@
       ON dim_project.ultimate_parent_namespace_id = dim_namespace_plan_hist.dim_namespace_id
       AND  resource_weight_events.created_at >= dim_namespace_plan_hist.valid_from
       AND  resource_weight_events.created_at < COALESCE(dim_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN dim_date ON TO_DATE(resource_weight_events.created_at) = dim_date.date_day
+    INNER JOIN dim_date ON TO_DATE(resource_weight_events.created_at) = dim_date.date_day
 
 )
 

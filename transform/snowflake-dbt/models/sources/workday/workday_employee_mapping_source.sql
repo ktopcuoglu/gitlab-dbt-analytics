@@ -1,6 +1,6 @@
 WITH source AS (
   SELECT *
-  FROM {{ source('workday','employee_mapping') }}
+  FROM {{ source('snapshots','workday_employee_mapping_snapshots') }}
 ),
 
 renamed AS (
@@ -15,7 +15,7 @@ renamed AS (
     region::VARCHAR AS region,
     hire_date::DATE AS hire_date,
     country::VARCHAR AS country,
-    greenhouse_candidate_id::VARCHAR AS greenhouse_candidate_id,
+    greenhouse_candidate_id::NUMBER AS greenhouse_candidate_id,
     gender::VARCHAR AS gender,
     job_role::VARCHAR AS job_role,
     gender_dropdown::VARCHAR AS gender_dropdown,
@@ -31,7 +31,10 @@ renamed AS (
     locality::VARCHAR AS locality,
     termination_date::DATE AS termination_date,
     nationality::VARCHAR AS nationality,
-    _fivetran_synced::TIMESTAMP AS uploaded_at
+    _fivetran_synced::TIMESTAMP AS uploaded_at,
+    dbt_valid_from::TIMESTAMP AS valid_from,
+    dbt_valid_to::TIMESTAMP AS valid_to,
+    IFF(dbt_valid_to IS NULL,TRUE,FALSE) AS is_current
   FROM source
 
 )

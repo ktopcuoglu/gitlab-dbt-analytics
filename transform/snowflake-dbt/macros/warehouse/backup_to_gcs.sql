@@ -1,4 +1,4 @@
-{% macro backup_to_gcs() %}
+{% macro backup_to_gcs(TABLE_LIST_BACKUP, INCLUDED = True) %}
 
     {%- call statement('backup', fetch_result=true, auto_begin=true) -%}
 
@@ -24,9 +24,13 @@
                 {% set tables = dbt_utils.get_relations_by_prefix(schema.upper(), '', exclude='FIVETRAN_%', database=database) %}
 
                 {% for table in tables %}
-                    {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
-                    {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
-                    {{ backup_table_command }}
+                    {% if ((table.name in TABLE_LIST_BACKUP and INCLUDED == True) or (table.name not in TABLE_LIST_BACKUP and INCLUDED == False)) %}
+
+                        {{ log('Backing up ' ~ table.name ~ '...', info = true) }}
+                        {% set backup_table_command = get_backup_table_command(table, day_of_month) %}
+                        {{ backup_table_command }}
+
+                    {% endif %}
                 {% endfor %}
         
             {% endfor %}

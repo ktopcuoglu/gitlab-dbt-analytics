@@ -35,6 +35,7 @@ SELECT
   statistics.shared_runners_seconds,
   statistics.shared_runners_seconds_last_reset,
   storage.repository_size,
+  storage.container_registry_size,
   storage.lfs_objects_size,
   storage.wiki_size,
   storage.build_artifacts_size,

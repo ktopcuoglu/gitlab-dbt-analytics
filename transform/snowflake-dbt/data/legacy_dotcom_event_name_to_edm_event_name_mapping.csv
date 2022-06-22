@@ -22,13 +22,13 @@ issue_notes,issue_note_creation
 issue_resource_label_events,issue_resource_label_events
 issue_resource_milestone_events,issue_resource_milestone_events
 issue_resource_weight_events,issue_resource_weight_events
-issues,issue_creation
+issues,issue_creation_other
 labels,labels
 license_scanning,license_scanning_build_run
 merge_request_notes,merge_request_note_creation
 merge_requests,merge_request_creation
 milestones,milestones
-notes,notes
+notes,notes_other
 packages,package_creation
 project_auto_devops,project_auto_devops
 projects_prometheus_active,projects_prometheus_active
@@ -38,7 +38,7 @@ requirements,requirement_creation
 sast,sast_build_run
 secret_detection,secret_detection_build_run
 secure_stage_ci_jobs,
-services,services
+services,integrations
 snippets,snippets
 successful_ci_pipelines,successful_ci_pipeline_creation
 terraform_reports,terraform_reports

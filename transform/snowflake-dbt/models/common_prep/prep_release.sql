@@ -22,15 +22,9 @@
     FROM {{ ref('gitlab_dotcom_releases_dedupe_source') }} 
     {% if is_incremental() %}
 
-    WHERE updated_at >= (SELECT MAX(updated_at) FROM {{this}})
+    WHERE updated_at > (SELECT MAX(updated_at) FROM {{this}})
 
     {% endif %}
-
-), prep_user AS (
-    
-    SELECT *
-    FROM {{ ref('prep_user') }} users
-    WHERE {{ filter_out_blocked_users('users', 'dim_user_id') }}
 
 ), joined AS (
 
@@ -40,7 +34,7 @@
       prep_project.ultimate_parent_namespace_id::NUMBER                                    AS ultimate_parent_namespace_id,
       dim_date.date_id::NUMBER                                                             AS created_date_id,
       IFNULL(prep_namespace_plan_hist.dim_plan_id, 34)::NUMBER                             AS dim_plan_id,
-      prep_user.dim_user_id::NUMBER                                                        AS author_id,
+      gitlab_dotcom_releases_dedupe_source.author_id::NUMBER                               AS author_id,
       gitlab_dotcom_releases_dedupe_source.created_at::TIMESTAMP                           AS created_at,
       gitlab_dotcom_releases_dedupe_source.updated_at::TIMESTAMP                           AS updated_at
     FROM gitlab_dotcom_releases_dedupe_source
@@ -50,8 +44,7 @@
     LEFT JOIN prep_namespace_plan_hist ON prep_project.ultimate_parent_namespace_id = prep_namespace_plan_hist.dim_namespace_id
         AND gitlab_dotcom_releases_dedupe_source.created_at >= prep_namespace_plan_hist.valid_from
         AND gitlab_dotcom_releases_dedupe_source.created_at < COALESCE(prep_namespace_plan_hist.valid_to, '2099-01-01')
-    LEFT JOIN prep_user ON gitlab_dotcom_releases_dedupe_source.author_id = prep_user.dim_user_id
-    LEFT JOIN dim_date ON TO_DATE(gitlab_dotcom_releases_dedupe_source.created_at) = dim_date.date_day
+    INNER JOIN dim_date ON TO_DATE(gitlab_dotcom_releases_dedupe_source.created_at) = dim_date.date_day
 
 )
 
@@ -60,5 +53,5 @@
     created_by="@mpeychet_",
     updated_by="@chrissharp",
     created_date="2021-08-10",
-    updated_date="2022-03-09"
+    updated_date="2022-05-30"
 ) }}

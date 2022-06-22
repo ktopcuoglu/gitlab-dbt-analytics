@@ -23,6 +23,7 @@ WITH date_details AS (
 
     SELECT
       account_id,
+      account_name,
       crm_id
     FROM {{ ref('zuora_account_source') }}
 
@@ -32,7 +33,8 @@ WITH date_details AS (
       zuora_subscription.subscription_id                                        AS dim_subscription_id,
       map_merged_crm_account.dim_crm_account_id                                 AS dim_crm_account_id,
       zuora_account.account_id                                                  AS dim_billing_account_id,
-      zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner,
+      zuora_subscription.invoice_owner_id                                       AS dim_billing_account_id_invoice_owner_account,
+      zuora_subscription.creator_account_id                                     AS dim_billing_account_id_creator_account,
       zuora_subscription.sfdc_opportunity_id                                    AS dim_crm_opportunity_id,
       zuora_subscription.original_id                                            AS dim_subscription_id_original,
       zuora_subscription.previous_subscription_id                               AS dim_subscription_id_previous,
@@ -53,6 +55,10 @@ WITH date_details AS (
           'Self-Service', 'Sales-Assisted')                                     AS subscription_sales_type,
       zuora_subscription.namespace_name,
       zuora_subscription.namespace_id,
+      invoice_owner.account_name                                                AS invoice_owner_account,
+      creator_account.account_name                                              AS creator_account,
+      IFF(dim_billing_account_id_invoice_owner_account != dim_billing_account_id_creator_account, TRUE, FALSE)
+                                                                                AS was_purchased_through_reseller,
 
       --Date Information
       zuora_subscription.subscription_start_date                                AS subscription_start_date,
@@ -86,6 +92,10 @@ WITH date_details AS (
     FROM zuora_subscription
     INNER JOIN zuora_account
       ON zuora_subscription.account_id = zuora_account.account_id
+    LEFT JOIN zuora_account AS invoice_owner
+      ON zuora_subscription.invoice_owner_id = invoice_owner.account_id
+    LEFT JOIN zuora_account AS creator_account
+      ON zuora_subscription.creator_account_id = creator_account.account_id
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN date_details
@@ -96,7 +106,7 @@ WITH date_details AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-01-07",
-    updated_date="2022-01-19"
+    updated_date="2022-05-30"
 ) }}
