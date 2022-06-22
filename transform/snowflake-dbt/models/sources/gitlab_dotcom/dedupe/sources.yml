@@ -85,6 +85,8 @@ sources:
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners
         identifier: gitlab_db_ci_runners
+      - name: ci_secure_files
+        identifier: gitlab_db_ci_ci_secure_files
       - name: ci_sources_pipelines
         identifier: gitlab_db_ci_sources_pipelines
       - name: ci_stages
