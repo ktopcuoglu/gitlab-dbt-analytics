@@ -21,7 +21,7 @@ def load_data(execution_date):
     """
     logging.info("Preparing to load data...")
     config_dict = env.copy()
-    start_time = config_dict["START_TIME"]
+    start_time = "yolo"
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
