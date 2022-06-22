@@ -74,7 +74,7 @@ models:
       - name: first_flaky_at
       - name: last_flaky_at
 
-  - name: performance_indicators_yaml_current
+  - name: performance_indicators_yaml_latest
     description: This provides all current KPIs and PIs and their current description and target.
     columns:
         - name: pi_name
