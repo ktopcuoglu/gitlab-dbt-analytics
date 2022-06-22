@@ -7,7 +7,7 @@ from gitlabdata.orchestration_utils import snowflake_engine_factory
 from sqlalchemy.engine import Engine
 
 
-def get_load_command(start_date: str) -> str:
+def get_load_command(start_time: str) -> str:
     """
     Generate a load command based on date
     """
