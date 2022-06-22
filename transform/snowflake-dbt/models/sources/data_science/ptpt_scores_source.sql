@@ -15,7 +15,7 @@ WITH source AS (
 
     SELECT
 
-      data_by_row['namespace_id']::VARCHAR                AS crm_account_id,
+      data_by_row['namespace_id']::VARCHAR                  AS namespace_id,
       data_by_row['score_date']::TIMESTAMP                  AS score_date,
       data_by_row['score']::NUMBER(38,4)                    AS score,
       data_by_row['decile']::INT                            AS decile,
