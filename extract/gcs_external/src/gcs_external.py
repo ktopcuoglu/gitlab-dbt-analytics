@@ -12,7 +12,7 @@ def get_load_command(path_date: str) -> str:
     Generate a load command based on date
     """
     return f"""
-        SELECT '{start_time}', 'pizza'
+        SELECT '{path_date}', 'pizza'
     """
 
 def load_data(execution_date):
@@ -21,7 +21,7 @@ def load_data(execution_date):
     """
     logging.info("Preparing to load data...")
     config_dict = env.copy()
-    path_date = "config_dict["PATH_DATE"]"
+    path_date = config_dict["PATH_DATE"]
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
