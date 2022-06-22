@@ -1,6 +1,5 @@
 {{ config({
-    "alias": "gitlab_dotcom_namespaces_xf",
-    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"namespace_id":"number"},{"namespace_name":"string"},{"namespace_path":"string"},{"owner_id":"number"},{"parent_id":"number"},{"push_rule_id":"number"},{"creator_id":"number"},{"namespace_ultimate_parent_id":"variant"},{"plan_id":"number"},{"plan_is_paid":"boolean"}]) }}'
+    "alias": "gitlab_dotcom_namespaces_xf"
 }) }}
 
 {% set fields_to_mask = ['namespace_name', 'namespace_path'] %}

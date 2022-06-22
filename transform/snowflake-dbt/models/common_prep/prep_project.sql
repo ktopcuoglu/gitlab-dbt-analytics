@@ -119,7 +119,7 @@
 
       IFNULL(COUNT(DISTINCT members_source.member_id), 0)            AS member_count
     FROM projects_source
-    LEFT JOIN dim_date
+    INNER JOIN dim_date
       ON TO_DATE(projects_source.created_at) = dim_date.date_day
     LEFT JOIN prep_namespace
       ON projects_source.namespace_id = prep_namespace.dim_namespace_id

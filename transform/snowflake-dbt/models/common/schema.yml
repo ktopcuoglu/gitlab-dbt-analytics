@@ -573,6 +573,24 @@ models:
           - unique
         tags: [ "tdf", "purchase_channel", "common", "sales_funnel" ]
 
+  - name: dim_order
+    description: '{{ doc("dim_order") }}'
+    columns:
+      - name: dim_order_id
+        description: Unique identifier for each order which groups all order actions within an order
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_order_action
+    description: '{{ doc("dim_order_action") }}'
+    columns:
+      - name: dim_order_action_id
+        description: Unique identifier for each order action. These represent any action taken grouped under a single order.
+        tests:
+          - not_null
+          - unique
+
   - name: dim_order_type
     description: '{{ doc("dim_order_type") }}'
     columns:
@@ -966,6 +984,8 @@ models:
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year. This can either be by having a term greater than 12 months or having a linked subscription.
       - name: is_myb_with_multi_subs
         description: MYB = Multi-Year Booking. This boolean flag identifies if a subscription is booked for more than one year by using multiple linked subscriptions only. A subscription with a term greater than 12 but does not have linked subscriptions has a value of FALSE.
+      - name: was_purchased_through_reseller
+        description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
 
   - name: dim_subscription_snapshot_bottom_up
     description: Daily snapshot of subscriptions starting from 2020-03-01. This is built from the bottom up using snapshotted source tables.
@@ -976,6 +996,8 @@ models:
           - not_null
           - unique
         tags: ["tdf", "arr_snapshots"]
+      - name: was_purchased_through_reseller
+        description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
 
   - name: fct_campaign
     description: '{{ doc("fct_campaign") }}'
@@ -1441,6 +1463,62 @@ models:
           - dbt_utils.at_least_one
       - name: gitaly_servers_all_time_event  
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_scans_all_time_event
+        description: '{{ doc("api_fuzzing_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_scans_28_days_event  
+        description: '{{ doc("api_fuzzing_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_scans_all_time_event  
+        description: '{{ doc("coverage_fuzzing_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_scans_28_days_event  
+        description: '{{ doc("coverage_fuzzing_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_scans_all_time_event  
+        description: '{{ doc("secret_detection_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_scans_28_days_event  
+        description: '{{ doc("secret_detection_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_scans_all_time_event  
+        description: '{{ doc("dependency_scanning_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_scans_28_days_event  
+        description: '{{ doc("dependency_scanning_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_scans_all_time_event  
+        description: '{{ doc("container_scanning_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_scans_28_days_event  
+        description: '{{ doc("container_scanning_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_scans_all_time_event  
+        description: '{{ doc("dast_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_scans_28_days_event  
+        description: '{{ doc("dast_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_scans_all_time_event  
+        description: '{{ doc("sast_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_scans_28_days_event  
+        description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
       - name: is_latest_data
@@ -2380,9 +2458,9 @@ models:
     columns:
       - name: event_id
         description: The unique identifier of an event. This is a generated primary key and will not join back to the source models.
-        tests:
-          - not_null
-          - unique
+        # tests:
+          # - not_null
+          # - unique
       - name: event_name
         description: The name tied to the event
       - name: dim_product_tier_id
@@ -2409,12 +2487,12 @@ models:
         description: The name of the product group
       - name: event_created_at
         description: Timestamp of the event
-      - name: plan_id_at_event_date
-        description: The ID of the ultimate parent namespace's plan on the day the event was created. Defaults to '34' if a value is not available.
-      - name: plan_name_at_event_date
-        description: The name of the ultimate parent namespace's plan type on the day when the event was created. Defaults to 'free' if a value is not available.
-      - name: plan_was_paid_at_event_date
-        description: Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created
+      - name: plan_id_at_event_timestamp
+        description: The ID of the ultimate parent namespace's plan when the event was created. Defaults to '34' if a value is not available.
+      - name: plan_name_at_event_timestamp
+        description: The name of the ultimate parent namespace's plan type when the event was created. Defaults to 'free' if a value is not available.
+      - name: plan_was_paid_at_event_timestamp
+        description: Boolean flag which is set to True if the ultimate parent namespace's plan was paid when the event was created
       - name: data_source
         description: The source application where the data was extracted from.
       - name: created_by
@@ -2770,6 +2848,8 @@ models:
         description: This value consists of the only types of storage that GitLab currently limits, and thus are possible to be billable. This value is equivalent to `repository_size` + `lfs_objects_size` across all repositories under the top level namespace.
       - name: repository_bytes
         description: Total size of repository across all repositories under the top level namespace.
+      - name: container_registry_size
+        description: Total size of container registry under the top level namespace 
       - name: lfs_objects_bytes
         description: Total size of Large File Storage objects across all repositories under the top level namespace.
       - name: build_artifacts_bytes
@@ -2823,7 +2903,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
+              values: [2, 3, 4, 34, 67, 100, 101, 102, 103, 135]
       - name: upstream_lineage
         tests:
           - not_null
@@ -2892,8 +2972,6 @@ models:
         description: The **plan_id** associated with the namespace's subscription. This can be inheritted from the namespaces's ultimate parent.
         tests:
           - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
         tags: ["tdf", "common", "gainsight"]
       - name: gitlab_plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.

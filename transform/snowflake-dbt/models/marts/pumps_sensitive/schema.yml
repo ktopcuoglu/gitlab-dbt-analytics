@@ -482,6 +482,62 @@ models:
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: api_fuzzing_scans_all_time_event
+        description: '{{ doc("api_fuzzing_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: api_fuzzing_scans_28_days_event  
+        description: '{{ doc("api_fuzzing_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_scans_all_time_event  
+        description: '{{ doc("coverage_fuzzing_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: coverage_fuzzing_scans_28_days_event  
+        description: '{{ doc("coverage_fuzzing_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_scans_all_time_event  
+        description: '{{ doc("secret_detection_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: secret_detection_scans_28_days_event  
+        description: '{{ doc("secret_detection_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_scans_all_time_event  
+        description: '{{ doc("dependency_scanning_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dependency_scanning_scans_28_days_event  
+        description: '{{ doc("dependency_scanning_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_scans_all_time_event  
+        description: '{{ doc("container_scanning_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: container_scanning_scans_28_days_event  
+        description: '{{ doc("container_scanning_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_scans_all_time_event  
+        description: '{{ doc("dast_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: dast_scans_28_days_event  
+        description: '{{ doc("dast_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_scans_all_time_event  
+        description: '{{ doc("sast_scans_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: sast_scans_28_days_event  
+        description: '{{ doc("sast_scans_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
 
@@ -514,3 +570,9 @@ models:
         description: A field indicating if the employee is the be added or removed representing Hires and Terminations.
       - name: report_date
         description: The date the report table was created
+
+  - name: pump_daily_sao
+    columns:
+    - name: sao_date
+      tests:
+        - not_null

@@ -7,7 +7,9 @@ WITH source AS (
 
 ), intermediate AS (
 
-      SELECT d.value as data_by_row
+      SELECT 
+        d.value as data_by_row,
+        uploaded_at
       FROM source,
       LATERAL FLATTEN(INPUT => parse_json(jsontext), outer => true) d
 
@@ -18,7 +20,8 @@ WITH source AS (
            data_by_row['employeeId']::NUMBER         AS employee_id,
            data_by_row['customBonustype']::varchar   AS bonus_type,
            data_by_row['customBonusdate']::date      AS bonus_date,
-           data_by_row['customNominatedBy']::varchar AS bonus_nominator_type
+           data_by_row['customNominatedBy']::varchar AS bonus_nominator_type,
+           uploaded_at
       FROM intermediate
       WHERE bonus_date IS NOT NULL
 

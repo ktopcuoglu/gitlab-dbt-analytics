@@ -164,6 +164,21 @@
       free_user_metrics.active_project_runners_all_time_event,
       free_user_metrics.gitaly_version,
       free_user_metrics.gitaly_servers_all_time_event,
+      -- Wave 6
+      free_user_metrics.api_fuzzing_scans_all_time_event,
+      free_user_metrics.api_fuzzing_scans_28_days_event,
+      free_user_metrics.coverage_fuzzing_scans_all_time_event,
+      free_user_metrics.coverage_fuzzing_scans_28_days_event,
+      free_user_metrics.secret_detection_scans_all_time_event,
+      free_user_metrics.secret_detection_scans_28_days_event,
+      free_user_metrics.dependency_scanning_scans_all_time_event,
+      free_user_metrics.dependency_scanning_scans_28_days_event,
+      free_user_metrics.container_scanning_scans_all_time_event,
+      free_user_metrics.container_scanning_scans_28_days_event,
+      free_user_metrics.dast_scans_all_time_event,
+      free_user_metrics.dast_scans_28_days_event,
+      free_user_metrics.sast_scans_all_time_event,
+      free_user_metrics.sast_scans_28_days_event,   
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
@@ -318,6 +333,20 @@
         'active_project_runners_all_time_event',
         'gitaly_version',
         'gitaly_servers_all_time_event',
+        'api_fuzzing_scans_all_time_event',
+        'api_fuzzing_scans_28_days_event',
+        'coverage_fuzzing_scans_all_time_event',
+        'coverage_fuzzing_scans_28_days_event',
+        'secret_detection_scans_all_time_event',
+        'secret_detection_scans_28_days_event',
+        'dependency_scanning_scans_all_time_event',
+        'dependency_scanning_scans_28_days_event',
+        'container_scanning_scans_all_time_event',
+        'container_scanning_scans_28_days_event',
+        'dast_scans_all_time_event',
+        'dast_scans_28_days_event',
+        'sast_scans_all_time_event',
+        'sast_scans_28_days_event',
         'is_latest_data'
     ]
 ) }}
@@ -327,5 +356,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2022-04-21"
+    updated_date="2022-06-01"
 ) }}
