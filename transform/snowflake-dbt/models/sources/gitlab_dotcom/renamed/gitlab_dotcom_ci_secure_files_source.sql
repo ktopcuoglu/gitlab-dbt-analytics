@@ -10,11 +10,7 @@ WITH source AS (
     project_id::NUMBER      AS project_id,
     created_at::TIMESTAMP   AS created_at,
     updated_at::TIMESTAMP   AS updated_at,
-    file_store::NUMBER      AS file_store,
-    name::VARCHAR           AS name,
-    file::VARCHAR           AS file,
-    checksum::VARCHAR       AS checksum,
-    key_data::VARCHAR       AS key_data
+    name::VARCHAR           AS name
   FROM source
 
 )
