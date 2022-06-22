@@ -68,7 +68,7 @@ run_load = KubernetesPodOperator(
         SNOWFLAKE_LOAD_DATABASE,
         SNOWFLAKE_LOAD_WAREHOUSE,
     ],
-    env_vars={**pod_env_vars, "START_TIME": "{{ yesterday_ds }}"},
+    env_vars={**pod_env_vars, "PATH_DATE": "{{ yesterday_ds }}"},
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     arguments=[run_load_command],
