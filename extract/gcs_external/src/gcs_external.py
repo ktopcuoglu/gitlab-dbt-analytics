@@ -13,7 +13,7 @@ def get_load_command(start_date: str) -> str:
     """
     return f"""
         SELECT '{start_time}'
-		"""
+    """
 
 def load_data(execution_date):
     """
@@ -21,7 +21,7 @@ def load_data(execution_date):
     """
     logging.info("Preparing to load data...")
     config_dict = env.copy()
-		start_time = config_dict["START_TIME"]
+    start_time = config_dict["START_TIME"]
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
