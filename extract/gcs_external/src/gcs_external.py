@@ -24,7 +24,7 @@ def get_load_command(stage_path):
         return load_command
 
 
-def load_data(model, sensitive, timestamp, inc_start, inc_end):
+def load_data():
     """
     run copy command to copy data from snowflake
     """
