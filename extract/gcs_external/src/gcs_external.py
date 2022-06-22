@@ -7,7 +7,7 @@ from gitlabdata.orchestration_utils import snowflake_engine_factory
 from sqlalchemy.engine import Engine
 
 
-def get_load_command(start_date: str) -> str:
+def get_load_command(path_date: str) -> str:
     """
     Generate a load command based on date
     """
@@ -21,13 +21,13 @@ def load_data(execution_date):
     """
     logging.info("Preparing to load data...")
     config_dict = env.copy()
-    start_time = "config_dict["START_TIME"]"
+    path_date = "config_dict["PATH_DATE"]"
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
     try:
         connection = engine.connect()
-        load_command = get_load_command(execution_date)
+        load_command = get_load_command(path_date)
         logging.info("running copy command {load_command}")
         connection.execute(load_command).fetchone()
     except:
