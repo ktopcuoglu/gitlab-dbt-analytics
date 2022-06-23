@@ -53,6 +53,7 @@ task_identifier = "gcs-external-load"
 run_load_command = f"""
   {clone_repo_cmd} &&
   export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
+  export SNOWFLAKE_LOAD_WAREHOUSE="LOADING_XL" &&
   python3 /analytics/extract/gcs_external/src/gcs_external.py --execution_date={execution_date}
   """
 
@@ -66,7 +67,7 @@ run_load = KubernetesPodOperator(
         SNOWFLAKE_PASSWORD,
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_DATABASE,
-        SNOWFLAKE_LOAD_WAREHOUSE,
+        # SNOWFLAKE_LOAD_WAREHOUSE,
     ],
     env_vars={**pod_env_vars, "PATH_DATE": "{{ yesterday_ds }}"},
     affinity=get_affinity(False),

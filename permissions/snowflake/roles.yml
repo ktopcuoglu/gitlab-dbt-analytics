@@ -631,6 +631,7 @@ roles:
             - dev_xs
             - dev_m
             - loading
+            - loading_xl
         privileges:
             databases:
                 read:
@@ -694,6 +695,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - loading_xl
             - usage_ping
         owns:
             schemas:
@@ -2300,6 +2302,7 @@ roles:
             - dev_l
             - gitlab_postgres
             - loading
+            - loading_xl
             - transforming_xs
             - transforming_s
             - transforming_l
@@ -4669,6 +4672,9 @@ warehouses:
 
     - loading:
         size: x-small
+
+    - loading_xl:
+      size: x-large
 
     - reporting:
         size: medium
