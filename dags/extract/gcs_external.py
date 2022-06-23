@@ -14,10 +14,10 @@ from airflow_utils import (
 )
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_LOAD_DATABASE,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    SNOWFLAKE_PASSWORD,
-    SNOWFLAKE_USER,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -63,11 +63,11 @@ run_load = KubernetesPodOperator(
     task_id=task_identifier,
     name=task_identifier,
     secrets=[
-        SNOWFLAKE_USER,
-        SNOWFLAKE_PASSWORD,
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
-        SNOWFLAKE_LOAD_WAREHOUSE,
+    SNOWFLAKE_ACCOUNT,
+    SNOWFLAKE_LOAD_PASSWORD,
+    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_LOAD_USER,
+    SNOWFLAKE_LOAD_WAREHOUSE,
     ],
     env_vars={**pod_env_vars, "PATH_DATE": "{{ yesterday_ds }}"},
     affinity=get_affinity(False),
