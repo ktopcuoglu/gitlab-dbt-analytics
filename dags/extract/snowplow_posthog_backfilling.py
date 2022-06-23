@@ -8,6 +8,7 @@ from datetime import date, datetime
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
+    clone_and_setup_extraction_cmd,
     DBT_IMAGE,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -33,6 +34,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
 )
+
+
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -81,7 +84,10 @@ def generate_dbt_command(vars_dict: dict, dag_name: str):
     to create tasks
     """
 
-    generated_command = f"""echo {dag_name}"""
+    generated_command = f"""
+    {clone_and_setup_extraction_cmd} &&
+    python3 snowplow_posthog/backfill.py s3_posthog_push --month 202201
+"""
 
     return KubernetesPodOperator(
         **gitlab_defaults,
