@@ -2518,7 +2518,9 @@ roles:
 
     - dmicovic:
         member_of:
-            - analyst_core
+            - reporter
+            - analyst_marketing
+            - restricted_safe
         warehouses:
             - dev_xs
 
