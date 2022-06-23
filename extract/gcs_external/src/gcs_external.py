@@ -68,7 +68,8 @@ def load_data(execution_date):
         connection = engine.connect()
         load_command = get_load_command(path_date)
         logging.info("running copy command {load_command}")
-        connection.execute(load_command).fetchone()
+        results = connection.execute(load_command).fetchone()
+        logging.info(results)
     except:
         logging.info("Failed to run copy command...")
         raise
