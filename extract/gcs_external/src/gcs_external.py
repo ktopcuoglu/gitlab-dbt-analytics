@@ -54,7 +54,7 @@ def get_load_command(path_date: str) -> str:
         );
     """
 
-def load_data(execution_date):
+def load_data():
     """
     run copy command to copy data from snowflake
     """
