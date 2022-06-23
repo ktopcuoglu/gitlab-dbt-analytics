@@ -246,7 +246,7 @@ models:
   - name: gitlab_dotcom_ci_secure_files
     description: Base model for Gitlab.com CI Secure Files
     columns:
-      - name: id
+      - name: ci_secure_files_id
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
