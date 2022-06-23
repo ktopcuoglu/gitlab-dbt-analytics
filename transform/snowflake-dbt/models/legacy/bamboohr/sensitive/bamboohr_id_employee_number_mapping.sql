@@ -1,7 +1,7 @@
 WITH source AS (
   
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
+    FROM {{ ref ('blended_employee_mapping_source') }}
     WHERE uploaded_row_number_desc = 1
 
 ), intermediate AS (
@@ -53,7 +53,7 @@ WITH source AS (
         OR (LOWER(first_name) NOT LIKE '%greenhouse test%'
             and LOWER(last_name) NOT LIKE '%test profile%'
             and LOWER(last_name) != 'test-gitlab')
-        OR employee_id  NOT IN (42039, 42043)
+        OR employee_id  NOT IN (11569)  -- mock person
 
 
 )

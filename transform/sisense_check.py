@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-import os
-from os.path import dirname
 
+"""
+Script to detect Views, Snippets and Dashboards that reference a dbt model. It also checks recursevely for snippets/views that use a snippet/view that reference
+the dbt model.
+
+The output is a `sisense_elements.json` file.
+
+First run dbt list with the table names / lineage to look for and export it to the root directory for the dbt project and name the file `to_check.txt` example:
+
+dbt list -m sfdc_account_source+ netsuite_transaction_lines_source+ --exclude date_details dim_date > to_check.txt
+
+Assumes the Periscope Sisense Intermediate  Safe and the Sisense-Safe directory was checked out at the parent repository
+"""
+
+
+import os
 import re
 import json
 import yaml
 
-
-# First run dbt list with the table names / lineage to look for and export it to the root directory for the dbt project and name the file `to_check.txt` example:
-
-# dbt list -m sfdc_account_source+ netsuite_transaction_lines_source+ --exclude date_details dim_date > to_check.txt
-
-# Assumes the Periscope and the Sisense-Safe directory was checked out at the parent repository
 
 dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 parentdirname = os.path.dirname(dirname)
@@ -23,9 +30,9 @@ def get_file_display_name(filepath: str) -> str:
     """
 
     if os.path.exists(filepath):
-        with open(filepath) as f_:
-            dataMap = yaml.safe_load(f_)
-            display_name = dataMap["display_name"]
+        with open(filepath, encoding="UTF-8") as file_to_load:
+            data_map = yaml.safe_load(file_to_load)
+            display_name = data_map["display_name"]
     else:
         display_name = "Untitled"
 
@@ -41,9 +48,9 @@ def get_dashboard_name(sql_path: str) -> str:
     dashboard_dir_list = yaml_root.rsplit("/", 1)
     sql_file_name = dashboard_dir_list[-1].split(".")[0]
     yaml_path = f"{yaml_root}/{sql_file_name}.yaml"
-    dashboard_name = get_file_display_name(yaml_path)
+    dashboard_display_name = get_file_display_name(yaml_path)
 
-    return dashboard_name
+    return dashboard_display_name
 
 
 def get_chart_name(sql_path: str) -> str:
@@ -55,17 +62,17 @@ def get_chart_name(sql_path: str) -> str:
     sql_file_name = sql_path.split("/")[-1]
     yaml_file_name = sql_file_name.split(".")[0]
     yaml_path = f"{yaml_root}/{yaml_file_name}.yaml"
-    chart_name = get_file_display_name(yaml_path)
+    chart_display_name = get_file_display_name(yaml_path)
 
-    return chart_name
+    return chart_display_name
 
 
 # Get the file path for all files with a line that matches a table, view, or snippet call.
 paths_to_check = ["snippets", "views", "dashboards"]
 
-repos_to_check = ["periscope", "sisense-safe"]
+repos_to_check = ["periscope", "sisense-safe", "sisense-safe-intermediate"]
 
-periscope_table_dict = dict()
+periscope_table_dict = {}
 for repo in repos_to_check:
     for path in paths_to_check:
         fullpath = f"{parentdirname}/{repo}/{path}"
@@ -74,12 +81,12 @@ for repo in repos_to_check:
                 if file.endswith(".sql"):
                     full_filename = f"{root}/{file}"
                     # print(full_filename)
-                    with open(full_filename, "r") as f:
-                        lines = f.readlines()
-                        all_lines = " ".join(lines)
+                    with open(full_filename, "r", encoding="UTF-8") as file_to_open_yml:
+                        lines = file_to_open_yml.readlines()
+                        ALL_LINES = " ".join(lines)
                         # Removes new lines following "from" and "join" b/c people don't follow style guide
                         clean_lines = re.sub(
-                            r"(from|join)([\r\n]*)", r"\1 ", all_lines.lower()
+                            r"(from|join)([\r\n]*)", r"\1 ", ALL_LINES.lower()
                         )
                         new_lines = clean_lines.split("\n")
 
@@ -94,10 +101,10 @@ for repo in repos_to_check:
                                 for match in matches.groups():
                                     # Strip prefixes
                                     simplified_name = re.sub(
-                                        ".*\/analytics\/periscope\/", "", full_filename
+                                        r".*\/analytics\/periscope\/", "", full_filename
                                     )
                                     # print(match)
-                                    clean_match = re.sub("[\(].*?[\)]", "", match)
+                                    clean_match = re.sub(r"[\(].*?[\)]", "", match)
                                     match_table = periscope_table_dict.get(
                                         clean_match, {}
                                     )
@@ -113,9 +120,7 @@ for repo in repos_to_check:
                                         match_dashboard = match_table.get(label, {})
                                         match_dashboard.setdefault(
                                             dashboard_name, set()
-                                        ).add(
-                                            chart_name
-                                        )  #  file.lower()
+                                        ).add(chart_name)
                                         match_table[label] = match_dashboard
                                     else:
                                         match_table.setdefault(label, set()).add(
@@ -128,11 +133,13 @@ for repo in repos_to_check:
 # Load in the list of models to match
 models_to_match = set()
 models_filename = f"{dirname}/transform/snowflake-dbt/to_check.txt"
-with open(models_filename, "r") as f:
-    lines = f.readlines()
+with open(models_filename, "r", encoding="UTF-8") as fp1:
+    lines = fp1.readlines()
     for line in lines:
         models_to_match.add(line.strip().lower().split(".")[-1])
 
+
+dashboards_spaces_to_check = [repo + "-dashboards" for repo in repos_to_check]
 
 # Recursively get all views and snippets that match and the views and sippets that use them.
 to_match = set()
@@ -142,13 +149,13 @@ while len(to_add) > 0 and i < 7:  # A catch for run away loops
     to_check = to_add.copy()
     to_add = set()
     for line in to_check:
-        match = periscope_table_dict.get(line, dict())
+        match = periscope_table_dict.get(line, {})
         to_match = to_match.union(
             set().union(
                 *[
                     value
                     for key, value in match.items()
-                    if key not in {"sisense-safe-dashboards", "periscope-dashboards"}
+                    if key not in dashboards_spaces_to_check
                 ]
             )
         )
@@ -161,14 +168,14 @@ while len(to_add) > 0 and i < 7:  # A catch for run away loops
     i = i + 1
 
 # Restructure the lowest sets to arrays for json style formating
-output_dict = dict()
+output_dict = {}
 for line in models_to_match:
     match = periscope_table_dict.get(line, [])
 
     if len(match) > 0:
 
         for key, value in match.items():
-            if key in {"sisense-safe-dashboards", "periscope-dashboards"}:
+            if key in dashboards_spaces_to_check:
                 charts = match[key]
                 for keys, values in charts.items():
                     charts[keys] = list(values)
@@ -178,5 +185,7 @@ for line in models_to_match:
         output_dict[line.strip()] = match
 
 
-with open(f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w") as fp:
+with open(
+    f"{dirname}/transform/snowflake-dbt/sisense_elements.json", "w", encoding="UTF-8"
+) as fp:
     json.dump(output_dict, fp)

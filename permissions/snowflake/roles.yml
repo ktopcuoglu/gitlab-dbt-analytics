@@ -2347,6 +2347,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - atucker:
+        member_of:
+            - analyst_finance
+        warehouses:
+            - dev_xs
+
     - bbutterfield:
         member_of:
             - reporter
@@ -2510,6 +2516,15 @@ roles:
                     - degan_prep.*.*
                     - degan_prod.*.*
 
+    - dmicovic:
+        member_of:
+            - reporter
+            - analyst_marketing
+            - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
     - dpeterson:
         member_of:
             - analyst_growth
@@ -2598,7 +2613,7 @@ roles:
 
     - fivetran_role:
         warehouses:
-            - fivetran_warehouse
+            - loading
         privileges:
             databases:
                 read:
@@ -3940,7 +3955,7 @@ roles:
 
     - stitch:
         warehouses:
-            - stitch
+            - loading
         privileges:
             databases:
                 read:
@@ -4195,6 +4210,10 @@ users:
         member_of:
             - aperez
 
+    - atucker:
+        can_login: yes
+        member_of:
+            - atucker
 
     - bi_tool_eval:
         can_login: yes
@@ -4240,6 +4259,11 @@ users:
         can_login: yes
         member_of:
             - degan
+
+    - dmicovic:
+        can_login: yes
+        member_of:
+            - dmicovic
 
     - dpeterson:
         can_login: yes
@@ -4637,9 +4661,6 @@ warehouses:
     - dev_xl:
         size: "x-large"
 
-    - fivetran_warehouse:
-        size: x-small
-
     - gainsight_xs:
         size: x-small
 
@@ -4654,9 +4675,6 @@ warehouses:
 
     - reporting:
         size: medium
-
-    - stitch:
-        size: x-small
 
     - target_snowflake:
         size: x-small

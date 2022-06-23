@@ -1,5 +1,5 @@
 {{ simple_cte([
-    ('bamboohr_locality','bamboohr_id_employee_number_mapping_source'),
+    ('bamboohr_locality','blended_employee_mapping_source'),
     ('locality','dim_locality')
 ]) }}
 
