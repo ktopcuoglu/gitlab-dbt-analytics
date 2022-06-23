@@ -7,8 +7,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_alert_management_http_integrations_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_alerts_service_data_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_analytics_cycle_analytics_group_stages_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_application_settings_dedupe_source
@@ -159,7 +157,7 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_integrations_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_issuable_severities_dedupe_docs
+  - name: gitlab_dotcom_issuable_severities_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_issue_assignees_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -257,7 +255,7 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_protected_branches_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_db_protected_environment_approval_rules
+  - name: gitlab_dotcom_protected_environment_approval_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_push_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
