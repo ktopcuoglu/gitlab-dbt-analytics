@@ -12,7 +12,7 @@ def get_load_command(path_date: str) -> str:
     Generate a load command based on date
     """
     return f"""
-        create or replace temporary table "{load_db}"."container_registry"."joined_downloaded_tmp" as (
+        create or replace temporary table "RAW"."CONTAINER_REGISTRY"."joined_downloaded_tmp" as (
 
           with blob_downloaded as (
           
@@ -50,8 +50,6 @@ def get_load_command(path_date: str) -> str:
           inner join blob_downloaded on blob_downloaded.correlation_id = access.correlation_id
        
         );
-
-        
     """
 
 def load_data(execution_date):
@@ -61,7 +59,6 @@ def load_data(execution_date):
     logging.info("Preparing to load data...")
     config_dict = env.copy()
     path_date = config_dict["PATH_DATE"]
-    load_db = config_dict["SNOWFLAKE_LOAD_DATABASE"]
     engine = snowflake_engine_factory(config_dict, "SYSADMIN")
     logging.info(f"Engine Created: {engine}")
 
