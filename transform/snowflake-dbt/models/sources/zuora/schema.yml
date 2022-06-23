@@ -63,7 +63,7 @@ models:
     description: Source layer for Zuora Rate Plans for cleaning and renaming
   - name: zuora_rate_plan_charge_source
     description: Source layer for Zuora Rate Plan Charges for cleaning and renaming
-  - name: zuora_rate_plan_charge_tier
+  - name: zuora_rate_plan_charge_tier_source
     description: Source layer for Zuora Rate Plan Charge Tier
   - name: zuora_revenue_schedule_item_source
     description: Source layer for Zuora Revenue Schedule Item for cleaning and renaming
