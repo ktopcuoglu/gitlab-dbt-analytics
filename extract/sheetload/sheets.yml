@@ -266,10 +266,10 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - sdr_adaptive_data
-  - name: sdr_attainment_to_goal
-    owner: '@rkohnke'
-    tabs:
-      - sdr_attainment_to_goal
+  # - name: sdr_attainment_to_goal   -- Paused by https://gitlab.com/gitlab-data/analytics/-/merge_requests/6808
+  #   owner: '@rkohnke'
+  #   tabs:
+  #     - sdr_attainment_to_goal
   - name: sdr_count_snapshot
     owner: '@vikijuhasz'
     tabs:
