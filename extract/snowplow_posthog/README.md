@@ -32,4 +32,37 @@ You can read about the [Existing Snowplow load process in the handbook](https://
     * `aws_s3_snowplow_bucket`
     * `posthog_project_api_key`
     * `posthog_personal_api_key `
-    * `posthog_ host`
+    * `posthog_host`
+
+## Testing PostHog instance
+
+```python
+"""
+Test mode to check PostHog backfilling with one record
+
+Resources: https://posthog.com/docs/integrate/server/python
+"""
+
+from datetime import datetime
+import posthog
+from decouple import config
+
+from dateutil.tz import tzutc
+
+# get config properties - in this case, picked up from .env file
+posthog.project_api_key = config("posthog_project_api_key")
+posthog.personal_api_key = config("posthog_personal_api_key")
+posthog.host = config("posthog_host")
+
+# Optional
+# posthog.debug = True
+
+
+posthog.capture(
+    "gitlab_dotcom",
+    event="test_table_backfill",
+    properties={"id": "123", "category": "gitlab_events"},
+    timestamp=datetime.utcnow().replace(tzinfo=tzutc()),
+)
+
+```
