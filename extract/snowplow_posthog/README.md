@@ -18,6 +18,11 @@ Create a new PH Snowplow Loader program to feed the Snowplow JSON files in S3 to
 * Libraries
     * `posthog`
     * `python-decouple`
+    ```bash
+    pip install posthog
+    pip install python-decouple
+    ```
+
 * Secrets:
     * `aws_access_key_id`
     * `aws_secret_access_key`
