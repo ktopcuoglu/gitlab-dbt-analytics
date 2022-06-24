@@ -1,18 +1,23 @@
 """
-Main routine for SNOWPLOW -> POSTHOG historical backfilling
+Main routine for SNOWPLOW -> POSTHOG historical back-filling
 For this task will use PostHog Python API library.
 Library URL: https://posthog.com/docs/integrate/server/python
 """
 
+import datetime
 import yaml
 import sys
 from os import environ as env
+
+
 
 from fire import Fire
 from logging import info, basicConfig
 
 import boto3
 import gzip
+from dateutil.relativedelta import *
+
 
 ENCODING = "utf-8"
 
@@ -30,17 +35,20 @@ def get_s3_credentials() -> tuple:
 
     aws_access_key_id = env["POSTHOG_ACCESS_KEY_ID"]
     aws_secret_access_key = env["POSTHOG_SECRET_ACCESS_KEY"]
-    aws_s3_posthog_bucket = env["POSTHOG_S3_BUCKET"]
+    aws_s3_snowplow_bucket = env["SNOWPLOW_S3_BUCKET"]
 
-    return aws_access_key_id, aws_secret_access_key, aws_s3_posthog_bucket
+    return aws_access_key_id, aws_secret_access_key, aws_s3_snowplow_bucket
 
 
 def s3_list_files(client, bucket, prefix="") -> str:
     """
-    List files in specific S3 URL using yield
+    List files in specific S3 bucket using yield for in a cost-optimized fashion
+    and return the file name
     """
-    paginator = client.get_paginator("list_objects")
-    for result in client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents"):
+
+    results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
+
+    for result in results:
         yield result["Key"]
 
 
@@ -48,7 +56,7 @@ def s3_get_client(
     aws_access_key_id: str, aws_secret_access_key: str
 ) -> boto3.resources.base.ServiceResource:
     """
-    Get s3 client with the file list
+    Get and return s3 client object
     """
 
     session = boto3.Session(
@@ -57,48 +65,95 @@ def s3_get_client(
     return session.client("s3")
 
 
+def source_file_get_row(row: str) -> list:
+    """
+    Convert line from the file to a list of strings
+    """
+    separator = "\t"
+
+    return row.split(separator)[:-1]  # exclude newline character ('\n') at the end of the line
+
+
 def s3_load_source_file(client, bucket: str, file_name: str) -> list:
     """
-    Load data from object storage (for now, it is a S3 bucket)
+    Load file content from object storage (for now, it is a S3 bucket)
+    and return list
     """
     csv_obj = client.get_object(Bucket=bucket, Key=file_name)
 
     body = csv_obj["Body"]
 
+    # Handy trick to convert binary to text file
     with gzip.open(body, "rt") as gz_file:
         for line in gz_file.readlines():
-            yield line.split("\t")
+            yield source_file_get_row(line)
 
+
+def get_date_range(yyyymm: str) -> list:
+    """
+    Return the date range as a list (hourly level)
+    """
+    full_date = f"{yyyymm}01"
+    time_start = datetime.datetime.strptime(full_date, '%Y%m%d')
+    time_end = datetime.datetime.strptime(full_date, '%Y%m%d') + relativedelta(months=1)
+
+    ret_list = []
+
+    while time_start < time_end:
+        ret_list.append(time_start)
+
+        time_start += relativedelta(hours=1)
+
+    return ret_list
+
+
+def get_file_prefix(yyyymm: str) -> list:
+    """
+    Get the list of file prefix
+
+    Usage: "output/YYYY/MM/DD/HH24"
+    """
+
+    folder_name = "output/"
+
+    return [folder_name + x.strftime("%Y/%m/%d/%H") for x in get_date_range(yyyymm=yyyymm)]
 
 def s3_extraction(file_prefix: str) -> None:
 
     """
-    Load data from tsv files stored in an S3 Bucket and push it to PostHog.
+    Load data from .tsv files (even the extension is .gz) stored in an S3 Bucket and push it to PostHog.
     Loader will iterate through all files in the provided bucket that have the `.tsv`/`.gz` extension.
 
+    ----------------------------------------------------------------------------------------------------
+    The bucket structure for events in S3 is:
+
+    BUCKET_NAME
+        /output
+            /YYYY
+                /MM
+                    /DD
+                        /HH24
+                            /SnowPlowEnrichedGood-2-YYYY-MM-DD-HH24-MI-SS-UUID.gz
+    ----------------------------------------------------------------------------------------------------
+
+    File example: output/2022/06/06/04/SnowPlowEnrichedGood-2-2022-06-06-04-29-38-a3034baf-2167-42a5-9633-76318f7b5b8c.gz
     """
-    aws_access_key_id, aws_secret_access_key, aws_s3_posthog_bucket = get_s3_credentials
+    (
+        aws_access_key_id,
+        aws_secret_access_key,
+        aws_s3_snowplow_bucket,
+    ) = get_s3_credentials
 
     s3_client = s3_get_client(aws_access_key_id, aws_secret_access_key)
 
-    posthog_file_list = s3_list_files(s3_client, aws_s3_posthog_bucket, prefix="")
-    # for file in s3_list_files(
-    #     client=s3_client, bucket=aws_s3_posthog_bucket, prefix=file_prefix
-    # ):
+    snowplow_files = s3_list_files(s3_client, aws_s3_snowplow_bucket, prefix=file_prefix)
+    for file in snowplow_files:
         pass
 
 
 """
 Load routines
 """
-
-
-def get_row() -> list:
-    """
-    return list of values for one row from the file
-    """
-    pass
-
 
 def load_manifest_file(file_name: str) -> dict:
     """
@@ -119,7 +174,7 @@ def get_properties(schema_file: str, table_name: str, values: list) -> dict:
 
 def get_upload_structure(values: list) -> dict:
     """
-    return the prepared structure for the upload.
+    Return the prepared structure for the upload.
     Example of payload JSON to push to PostHog:
     {
         "event": "[event name]",
@@ -143,22 +198,34 @@ def get_upload_structure(values: list) -> dict:
     return api_skeleton
 
 
-def push_row_to_posthog(row: dict) -> None:
+def posthog_push_json(data: dict) -> None:
     """
-    use PostHog lib to push
+    Use PostHog lib to push
     historical record to PostHog as a part of BackFill process
     """
 
     pass
 
 
-def s3_posthog_push(month: str) -> None:
-    # get the data from S3 bucket
-    s3_extraction(file_prefix=month)
+def snowplow_posthog_backfill(month: str) -> None:
+    """
+    Entry point to trigger the back filling for Snowplow S3 -> PostHog 
+    """
 
-    # transform data from .tsv -> .json
 
-    # push data to PostHog
+
+
+        # get the data from S3 bucket
+        # s3_extraction(file_prefix=curr_month)
+    
+        # transform data from .tsv -> .json
+
+        # push data to PostHog
+        json_data = None
+
+        posthog_push_json(data=json_data)
+
+
 
 
 if __name__ == "__main__":
@@ -166,7 +233,7 @@ if __name__ == "__main__":
 
     Fire(
         {
-            "s3_posthog_push": s3_posthog_push,
+            "snowplow_posthog_backfill": snowplow_posthog_backfill,
         }
     )
     info("Upload complete.")
