@@ -36,6 +36,15 @@ You can read about the [Existing Snowplow load process in the handbook](https://
 
 ## Testing PostHog instance
 
+You need to have `.env` file in order to save secrets. 
+```dotenv
+posthog_project_api_key=**********
+posthog_personal_api_key=**********
+posthog_host=https://***********
+```
+
+This also can be done as a part of environment variables.
+
 ```python
 """
 Test mode to check PostHog backfilling with one record
