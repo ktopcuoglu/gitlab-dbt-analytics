@@ -11,13 +11,16 @@
 
 ## Motivation 
 
-Create a new PH Snowplow Loader program to feed the Snowplow JSON files in S3 to the PH Snowplow Adapter. Our goal is to have new Snowplow files fed into PostHog as often as possible (min hourly). You can read about the [existing Snowplow load process in the handbook](https://about.gitlab.com/handbook/business-technology/data-team/platform/snowplow/) - perhaps this provides some ideas to leverage when building the new PH Snowplow Loader.
+Create a new PH Snowplow Loader program to feed the Snowplow JSON files in S3 to the PH Snowplow Adapter.
+Our goal is to have new Snowplow files fed into PostHog as often as possible (min hourly). 
+You can read about the [Existing Snowplow load process in the handbook](https://about.gitlab.com/handbook/business-technology/data-team/platform/snowplow/) - perhaps this provides some ideas to leverage when building the new PH Snowplow Loader.
 
 ## Installation
 
 * Libraries
-    * `posthog`
-    * `python-decouple`
+    * [posthog](https://posthog.com/docs/integrate/server/python)
+    * [python-decouple](https://pypi.org/project/python-decouple/)
+  
     ```bash
     pip install posthog
     pip install python-decouple
