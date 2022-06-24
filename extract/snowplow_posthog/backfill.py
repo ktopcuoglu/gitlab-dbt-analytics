@@ -8,8 +8,7 @@ import datetime
 import yaml
 import sys
 from os import environ as env
-
-
+from itertools import zip_longest
 
 from fire import Fire
 from logging import info, basicConfig
@@ -17,7 +16,7 @@ from logging import info, basicConfig
 import boto3
 import gzip
 from dateutil.relativedelta import *
-
+from decouple import config
 
 ENCODING = "utf-8"
 
@@ -27,29 +26,17 @@ Extract routines
 """
 
 
-def get_s3_credentials() -> tuple:
+def s3_get_credentials() -> tuple:
     """
     This function returns the set of aws_access_key_id,aws_secret_access_key
     based on the the schema name provided.
     """
 
-    aws_access_key_id = env["POSTHOG_ACCESS_KEY_ID"]
-    aws_secret_access_key = env["POSTHOG_SECRET_ACCESS_KEY"]
-    aws_s3_snowplow_bucket = env["SNOWPLOW_S3_BUCKET"]
+    posthog_access_key_id = env["POSTHOG_ACCESS_KEY_ID"]
+    posthog_secret_access_key = env["POSTHOG_SECRET_ACCESS_KEY"]
+    snowplow_s3_bucket = env["SNOWPLOW_S3_BUCKET"]
 
-    return aws_access_key_id, aws_secret_access_key, aws_s3_snowplow_bucket
-
-
-def s3_list_files(client, bucket, prefix="") -> str:
-    """
-    List files in specific S3 bucket using yield for in a cost-optimized fashion
-    and return the file name
-    """
-
-    results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
-
-    for result in results:
-        yield result["Key"]
+    return posthog_access_key_id, posthog_secret_access_key, snowplow_s3_bucket
 
 
 def s3_get_client(
@@ -65,13 +52,33 @@ def s3_get_client(
     return session.client("s3")
 
 
+def s3_list_files(client, bucket, prefix="") -> str:
+    """
+    List files in specific S3 bucket using yield for in a cost-optimized fashion
+    and return the file name
+    """
+
+    results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
+
+    for result in results:
+        yield result["Key"]
+
+
 def source_file_get_row(row: str) -> list:
     """
     Convert line from the file to a list of strings
     """
     separator = "\t"
 
-    return row.split(separator)[:-1]  # exclude newline character ('\n') at the end of the line
+    if row is None:
+        return []
+
+    result = row.split(separator)
+
+    # exclude newline character ('\n') at the end of the line
+    if result[-1] == "\n":
+        return result[:-1]
+    return result
 
 
 def s3_load_source_file(client, bucket: str, file_name: str) -> list:
@@ -94,8 +101,8 @@ def get_date_range(yyyymm: str) -> list:
     Return the date range as a list (hourly level)
     """
     full_date = f"{yyyymm}01"
-    time_start = datetime.datetime.strptime(full_date, '%Y%m%d')
-    time_end = datetime.datetime.strptime(full_date, '%Y%m%d') + relativedelta(months=1)
+    time_start = datetime.datetime.strptime(full_date, "%Y%m%d")
+    time_end = datetime.datetime.strptime(full_date, "%Y%m%d") + relativedelta(months=1)
 
     ret_list = []
 
@@ -116,7 +123,11 @@ def get_file_prefix(yyyymm: str) -> list:
 
     folder_name = "output/"
 
-    return [folder_name + x.strftime("%Y/%m/%d/%H") for x in get_date_range(yyyymm=yyyymm)]
+    return [
+        f"""{folder_name}{day.strftime("%Y/%m/%d/%H")}"""
+        for day in get_date_range(yyyymm=yyyymm)
+    ]
+
 
 def s3_extraction(file_prefix: str) -> None:
 
@@ -139,14 +150,14 @@ def s3_extraction(file_prefix: str) -> None:
     File example: output/2022/06/06/04/SnowPlowEnrichedGood-2-2022-06-06-04-29-38-a3034baf-2167-42a5-9633-76318f7b5b8c.gz
     """
     (
-        aws_access_key_id,
-        aws_secret_access_key,
-        aws_s3_snowplow_bucket,
-    ) = get_s3_credentials
+        posthog_access_key_id,
+        posthog_secret_access_key,
+        snowplow_s3_bucket,
+    ) = s3_get_credentials
 
-    s3_client = s3_get_client(aws_access_key_id, aws_secret_access_key)
+    s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
-    snowplow_files = s3_list_files(s3_client, aws_s3_snowplow_bucket, prefix=file_prefix)
+    snowplow_files = s3_list_files(s3_client, snowplow_s3_bucket, prefix=file_prefix)
     for file in snowplow_files:
         pass
 
@@ -154,6 +165,20 @@ def s3_extraction(file_prefix: str) -> None:
 """
 Load routines
 """
+
+
+def posthog_get_credentials() -> tuple:
+    """
+    This function returns the set of PostHog secrets
+    based on the the schema name provided.
+    """
+
+    posthog_project_api_key = env["POSTHOG_ACCESS_KEY_ID"]
+    posthog_personal_api_key = env["POSTHOG_SECRET_ACCESS_KEY"]
+    posthog_host = env["SNOWPLOW_S3_BUCKET"]
+
+    return posthog_project_api_key, posthog_personal_api_key, posthog_host
+
 
 def load_manifest_file(file_name: str) -> dict:
     """
@@ -163,16 +188,21 @@ def load_manifest_file(file_name: str) -> dict:
         return yaml.load(yaml_file, Loader=yaml.FullLoader)
 
 
-def get_properties(schema_file: str, table_name: str, values: list) -> dict:
+def get_property_keys(schema_file: str, table_name: str) -> list:
+    """
+    Get list of property keys from the file
+    """
+    return load_manifest_file(file_name=schema_file).get(table_name, [])
+
+
+def get_properties(property_list: str, values: list) -> dict:
     """
     Get key-value pairs for properties for uploading
     """
-    properties_list = load_manifest_file(file_name=schema_file).get(table_name)
-
-    return dict(zip(properties_list, values))
+    return dict(zip_longest(property_list, values))
 
 
-def get_upload_structure(values: list) -> dict:
+def get_upload_structure(schema_file: str, table_name: str, values: list) -> dict:
     """
     Return the prepared structure for the upload.
     Example of payload JSON to push to PostHog:
@@ -188,12 +218,18 @@ def get_upload_structure(values: list) -> dict:
 
     """
 
+    properties = get_properties(
+        schema_file=schema_file, table_name=table_name, values=values
+    )
+
     api_skeleton = {
         "event": "[event name]",
         "distinct_id": "[your users' distinct id]",
         "properties": {"key1": "value1", "key2": "value2"},
         "timestamp": "[optional timestamp in ISO 8601 format]",
     }
+
+    api_skeleton["properties"] = properties
 
     return api_skeleton
 
@@ -209,23 +245,19 @@ def posthog_push_json(data: dict) -> None:
 
 def snowplow_posthog_backfill(month: str) -> None:
     """
-    Entry point to trigger the back filling for Snowplow S3 -> PostHog 
+    Entry point to trigger the back filling for Snowplow S3 -> PostHog
     """
 
+    # get the data from S3 bucket
+    # s3_extraction(file_prefix=curr_month)
 
+    # transform data from .tsv -> .json
 
+    # push data to PostHog
+    # json_data = None
 
-        # get the data from S3 bucket
-        # s3_extraction(file_prefix=curr_month)
-    
-        # transform data from .tsv -> .json
-
-        # push data to PostHog
-        json_data = None
-
-        posthog_push_json(data=json_data)
-
-
+    # posthog_push_json(data=json_data)
+    pass
 
 
 if __name__ == "__main__":
