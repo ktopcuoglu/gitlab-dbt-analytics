@@ -2430,28 +2430,80 @@ models:
     description: '{{ doc("fct_event_valid") }}'
     columns:
       - name: event_id
-        description: The unique ID of an event.
+        description: '{{ doc("event_id") }}'
         tests:
           - not_null
           - unique
-      # - name: group_name
-        # tests:
-          # - not_null
+      - name: dim_event_date_id
+        description: '{{ doc("dim_event_date_id") }}'
+      - name: dim_ultimate_parent_namespace_id
+        description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+      - name: dim_project_id
+        description: '{{ doc("dim_project_id") }}'
+      - name: dim_user_id
+        description: '{{ doc("dim_user_id") }}'
+      - name: dim_active_product_tier_id
+        description: '{{ doc("dim_active_product_tier_id") }}'
+      - name: dim_crm_account_id
+        description: '{{ doc("dim_crm_account_id") }}'
+      - name: dim_billing_account_id
+        description: '{{ doc("dim_billing_account_id") }}'
+      - name: event_created_at
+        description: '{{ doc("event_created_at") }}'
+      - name: event_date
+        description: '{{ doc("event_date") }}'
+      - name: group_name
+        description: '{{ doc("group_name") }}'
+        tests:
+          - not_null
       - name: section_name
+        description: '{{ doc("section_name") }}'
         tests:
           - not_null
       - name: stage_name
+        description: '{{ doc("stage_name") }}'
         tests:
           - not_null
       - name: is_smau
+        description: '{{ doc("is_smau") }}'
         tests:
           - not_null
       - name: is_gmau
+        description: '{{ doc("is_gmau") }}'
         tests:
           - not_null
       - name: is_umau
+        description: '{{ doc("is_umau") }}'
         tests:
           - not_null
+      - name: parent_id
+        description: '{{ doc("parent_id") }}'
+      - name: parent_type
+        description: '{{ doc("parent_type") }}'
+      - name: event_name
+        description: '{{ doc("event_name") }}'
+      - name: plan_id_at_event_date
+        description: '{{ doc("plan_id_at_event_date") }}'
+      - name: plan_name_at_event_date
+        description: '{{ doc("plan_name_at_event_date") }}'
+      - name: plan_was_paid_at_event_date
+        description: '{{ doc("plan_was_paid_at_event_date") }}'
+      - name: days_since_user_creation_at_event_date
+        description: '{{ doc("days_since_user_creation_at_event_date") }}'
+      - name: days_since_namespace_creation_at_event_date
+        description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
+      - name: days_since_project_creation_at_event_date
+        description: '{{ doc("days_since_project_creation_at_event_date") }}'
+      - name: data_source
+        description: '{{ doc("data_source") }}'
+      - name: created_by
+        description: '{{ doc("created_by") }}'
+      - name: updated_by
+        description: '{{ doc("updated_by") }}'
+      - name: model_created_date
+        description: '{{ doc("model_created_date") }}'
+      - name: model_updated_date
+        description: '{{ doc("model_updated_date") }}'
   
   - name: fct_event
     description: '{{ doc("fct_event") }}'
