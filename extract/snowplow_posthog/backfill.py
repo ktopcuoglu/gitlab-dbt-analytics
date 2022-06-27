@@ -10,6 +10,7 @@ import sys
 from os import environ as env
 from itertools import zip_longest
 
+import posthog
 from fire import Fire
 from logging import info, basicConfig
 import logging
@@ -19,7 +20,7 @@ from dateutil.relativedelta import *
 from logging import info
 
 ENCODING = "utf-8"
-EVENT_NAME = "gitlab_events"
+EVENT_NAME = "test_gitlab_events"
 DISTINCT_ID = "gitlab_dotcom"
 
 """
@@ -197,6 +198,7 @@ def s3_extraction(file_prefix: str) -> None:
 
     folders = s3_get_folders(file_prefix)
 
+    # get folders
     for folder in folders:
 
         logging.info(f"File {folder}...")
@@ -205,12 +207,17 @@ def s3_extraction(file_prefix: str) -> None:
             client=s3_client, bucket=snowplow_s3_bucket, prefix=folder
         )
 
+        # get files
         for snowplow_file in snowplow_files:
             # logging.info(f"..... {snowplow_file}")
+
+            # get row
             for row in s3_load_source_file(
                 client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
             ):
                 json_prepared = get_properties(property_list=property_list, values=row)
+                # push row to PostHog
+                posthog_push_json(json_prepared)
 
 
 """
@@ -293,15 +300,14 @@ def posthog_push_json(data: dict) -> None:
     Use PostHog lib to push
     historical record to PostHog as a part of BackFill process
     """
+    posthog.capture(
+        DISTINCT_ID,
+        event=EVENT_NAME,
+        properties=data,
+        timestamp=datetime.utcnow().replace(tzinfo=tzutc()),
+    )
 
-    # posthog.capture(
-    #     DISTINCT_ID,
-    #     event=EVENT_NAME,
-    #     properties=data,
-    #     timestamp=datetime.utcnow().replace(tzinfo=tzutc()),
-    # )
 
-    pass
 
 
 def snowplow_posthog_backfill(day: str) -> None:
@@ -318,7 +324,7 @@ def snowplow_posthog_backfill(day: str) -> None:
     # json_data = None
 
     # posthog_push_json(data=json_data)
-    pass
+
 
 
 if __name__ == "__main__":
