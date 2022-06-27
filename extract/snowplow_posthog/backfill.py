@@ -59,7 +59,7 @@ def s3_list_files(client, bucket, prefix="") -> str:
     and return the file name
     """
 
-    results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
+    results = client.list_objects_v2(Bucket=bucket, Prefix=str(prefix)).get("Contents")
 
     for result in results:
         yield result["Key"]
@@ -176,7 +176,7 @@ def s3_extraction(file_prefix: str) -> None:
 
     s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
-    snowplow_files = s3_list_files(s3_client, snowplow_s3_bucket, prefix=file_prefix)
+    snowplow_files = s3_list_files(client=s3_client, bucket=snowplow_s3_bucket, prefix=file_prefix)
 
     for file in snowplow_files:
         logging.info(f"File {file}...")
