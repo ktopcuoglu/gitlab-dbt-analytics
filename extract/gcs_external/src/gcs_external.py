@@ -13,7 +13,7 @@ def get_load_command(path_date: str) -> str:
     """
     return f"""
         
-        create or replace temporary table "RAW"."CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" as (
+        create or replace table "RAW"."CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" as (
 
           with blob_downloaded as (
           
