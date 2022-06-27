@@ -9,7 +9,7 @@ from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow.models import Variable
 from airflow_utils import (
-    clone_and_setup_extraction_cmd,
+    clone_repo_cmd,
     DATA_IMAGE,
     gitlab_defaults,
     gitlab_pod_env_vars,
