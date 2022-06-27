@@ -19,6 +19,8 @@ import gzip
 from dateutil.relativedelta import *
 from logging import info
 from dateutil.tz import tzutc
+from datetime import datetime
+
 
 ENCODING = "utf-8"
 EVENT_NAME = "test_gitlab_events"
