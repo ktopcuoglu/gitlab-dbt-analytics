@@ -38,7 +38,7 @@ def get_load_command(path_date: str) -> str:
           WHERE $1:msg='access'
           )
           
-          SELECP
+          SELECT
             blob_downloaded.correlation_id,
             blob_downloaded.timestamp,
             blob_downloaded.root_repo,
@@ -70,7 +70,7 @@ def load_data():
         results = connection.execute(load_command).fetchone()
         logging.info(results)
     except:
-        logging.error(f"Failed to load. Snowflake returned: {results}")
+        logging.error(f"Failed to load")
         raise
     finally:
         connection.close()
