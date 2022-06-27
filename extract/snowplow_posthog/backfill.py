@@ -69,10 +69,10 @@ def s3_list_files(aws_access_key_id, aws_secret_access_key, bucket, prefix="") -
     #     yield result["Key"]
 
     s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=str(prefix))
-
+    logging.info(f"BUCKET: {s3_bucket}...")
     # Iterate through files and upload
-    for obj in s3_bucket["Contents"]:
-        yield obj["Key"]
+    # for obj in s3_bucket["Contents"]:
+    #     yield obj["Key"]
 
 
 def source_file_get_row(row: str) -> list:
