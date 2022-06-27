@@ -65,7 +65,7 @@ def s3_list_files(client, bucket, prefix="") -> str:
     #
     # results = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
 
-    result =client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
+    results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
 
     for result in results:
         yield result["Key"]
