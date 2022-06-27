@@ -63,12 +63,12 @@ def s3_list_files(aws_access_key_id, aws_secret_access_key, bucket, prefix="") -
     )
     s3_client = session.client("s3")
     #
-    # results = s3_client.list_objects_v2(Bucket=bucket, Prefix=str(prefix)).get("Contents")
+    # results = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
     #
     # for result in results:
     #     yield result["Key"]
 
-    # s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=str(prefix))
+    # s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=prefix)
     #
     # info(f"BUCKET: {s3_bucket}...")
 
@@ -291,9 +291,9 @@ def snowplow_posthog_backfill(day: str) -> None:
     """
     Entry point to trigger the back filling for Snowplow S3 -> PostHog
     """
-
+    file_prefix = str(day)
     # get the data from S3 bucket
-    s3_extraction(file_prefix=day)
+    s3_extraction(file_prefix=file_prefix)
 
     # transform data from .tsv -> .json
 
