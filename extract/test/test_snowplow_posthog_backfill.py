@@ -23,7 +23,7 @@ from extract.snowplow_posthog.backfill import (
     load_manifest_file,
     source_file_get_row,
     get_date_range,
-    get_file_prefix,
+    s3_get_folders,
     get_properties,
     get_property_keys,
 )
@@ -144,7 +144,7 @@ def test_get_file_prefix(test_value, expected_length):
     test get_file_prefix()
     """
 
-    result = get_file_prefix(test_value)
+    result = s3_get_folders(test_value)
 
     assert len(result) == expected_length
 

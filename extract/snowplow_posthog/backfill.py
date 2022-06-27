@@ -141,7 +141,7 @@ def get_date_range(input_date: str) -> list:
     return ret_list
 
 
-def get_file_prefix(yyyymm: str) -> list:
+def s3_get_folders(yyyymm: str) -> list:
     """
     Get the list of file prefix
 
@@ -188,7 +188,7 @@ def s3_extraction(file_prefix: str) -> None:
 
     # s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
-    folders = get_file_prefix(file_prefix)
+    folders = s3_get_folders(file_prefix)
 
     for folder in folders:
 
