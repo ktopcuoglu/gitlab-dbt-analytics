@@ -19,8 +19,6 @@ abs_path = abs_path[: abs_path.find("extract")] + test_path
 sys.path.append(abs_path)
 
 
-LOCAL_TEST = True
-
 from extract.snowplow_posthog.backfill import (
     load_manifest_file,
     source_file_get_row,
@@ -32,6 +30,17 @@ from extract.snowplow_posthog.backfill import (
 
 MANIFEST_FILE = "../snowplow_posthog/backfill_schema.yaml"
 
+TEST_DATE_RANGE = [
+    ("20220505", 24),
+    ("20200606", 24),
+    ("202201", 31 * 24),
+    ("202202", 28 * 24),
+    ("202203", 31 * 24),
+    ("202204", 30 * 24),
+    ("2022", 365 * 24),
+    ("2020", 366 * 24),
+]
+
 
 def test_load_manifest_file() -> None:
     """
@@ -42,9 +51,9 @@ def test_load_manifest_file() -> None:
 
     property_list = manifest_file.get("gitlab_events")
 
-    assert not manifest_file is None
+    assert manifest_file is not None
 
-    assert not property_list is None
+    assert property_list is not None
 
     assert isinstance(manifest_file, dict)
 
@@ -88,12 +97,7 @@ def test_source_file_get_row(test_value, expected_length):
 
 @pytest.mark.parametrize(
     "test_value, expected_length",
-    [
-        ("202201", 31 * 24),
-        ("202202", 28 * 24),
-        ("202203", 31 * 24),
-        ("202204", 30 * 24),
-    ],
+    TEST_DATE_RANGE,
 )
 def test_get_date_range(test_value, expected_length):
     """
@@ -111,12 +115,6 @@ def test_get_date_range(test_value, expected_length):
     # check last hour in the month
     assert "23:00:00" in str(result[-1])
 
-    # check first day of month
-    assert "-01" in str(result[0])
-
-    # check last day of month
-    assert str(float(expected_length) / 24)[:-2] in str(result[-1])
-
     # check month for first day
     assert test_value[4:6] in str(result[0])
 
@@ -126,19 +124,20 @@ def test_get_date_range(test_value, expected_length):
     # check year
     assert test_value[:4] in str(result[-1])
 
+    # Checks applicable for YYYY and YYYYMM
+    if len(test_value) < 7:
+        # check first day of month
+        assert "-01" in str(result[0])
+
+        # check last day of month
+        assert (
+            int(str(result[-1])[8:11]) >= 28
+        )  # the last day should be at least 28 days in a month
+
 
 @pytest.mark.parametrize(
     "test_value, expected_length",
-    [
-        ("202002", 29 * 24),
-        ("202102", 28 * 24),
-        ("202111", 30 * 24),
-        ("202104", 30 * 24),
-        ("202201", 31 * 24),
-        ("202202", 28 * 24),
-        ("202203", 31 * 24),
-        ("202204", 30 * 24),
-    ],
+    TEST_DATE_RANGE,
 )
 def test_get_file_prefix(test_value, expected_length):
     """
@@ -182,12 +181,3 @@ def test_get_properties():
 
     assert isinstance(result, dict)
     assert property_list == list(result.keys())
-
-
-if __name__ == "__main__":
-    test_load_manifest_file()
-    test_source_file_get_row()
-    test_get_date_range()
-    test_get_file_prefix()
-    test_get_property_keys()
-    test_get_properties()

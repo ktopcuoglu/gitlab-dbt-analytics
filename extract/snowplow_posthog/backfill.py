@@ -96,13 +96,27 @@ def s3_load_source_file(client, bucket: str, file_name: str) -> list:
             yield source_file_get_row(line)
 
 
-def get_date_range(yyyymm: str) -> list:
+def get_date_range(input_date: str) -> list:
     """
     Return the date range as a list (hourly level)
+    Input is string and can take values:
+    - YYYY     - will get a full year range  (2022     -> 2022-01-01 - 2022-12-31)
+    - YYYYMM   - will get a full month range (202201   -> 2022-01-01 - 2022-01-31)
+    - YYYYMMDD - will get a date year range  (20220101 -> 2022-01-01 - 2022-01-01)
     """
-    full_date = f"{yyyymm}01"
+
+    if len(input_date) == 4:  # YYYY
+        time_delta = relativedelta(years=1)
+        full_date = f"{input_date}0101"
+    elif len(input_date) == 6:  # YYYYMM
+        time_delta = relativedelta(months=1)
+        full_date = f"{input_date}01"
+    elif len(input_date) == 8:  # YYYYMMDD
+        time_delta = relativedelta(days=1)
+        full_date = f"{input_date}"
+
     time_start = datetime.datetime.strptime(full_date, "%Y%m%d")
-    time_end = datetime.datetime.strptime(full_date, "%Y%m%d") + relativedelta(months=1)
+    time_end = datetime.datetime.strptime(full_date, "%Y%m%d") + time_delta
 
     ret_list = []
 
@@ -125,7 +139,7 @@ def get_file_prefix(yyyymm: str) -> list:
 
     return [
         f"""{folder_name}{day.strftime("%Y/%m/%d/%H")}"""
-        for day in get_date_range(yyyymm=yyyymm)
+        for day in get_date_range(input_date=yyyymm)
     ]
 
 
