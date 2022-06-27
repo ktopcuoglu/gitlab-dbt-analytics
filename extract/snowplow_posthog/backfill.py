@@ -62,13 +62,13 @@ def s3_list_files(aws_access_key_id, aws_secret_access_key, bucket, prefix="") -
         aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key
     )
     s3_client = session.client("s3")
-
+    #
     # results = s3_client.list_objects_v2(Bucket=bucket, Prefix=str(prefix)).get("Contents")
     #
     # for result in results:
     #     yield result["Key"]
 
-    s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=prefix)
+    s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=str(prefix))
 
     # Iterate through files and upload
     for obj in s3_bucket["Contents"]:
