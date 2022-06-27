@@ -17,7 +17,7 @@ mart_raw AS (
       WHEN stage_name = 'manage' THEN NULL ELSE stage_name
     END AS stage_name
   FROM mart_event_valid
-  WHERE dim_user_sk != '6bb61e3b7bce0931da574d19d1d82c88'--missing member surrogate_key value
+  WHERE is_null_user = FALSE
     AND (is_umau = TRUE 
          OR is_gmau = TRUE 
          OR is_smau = TRUE

@@ -41,7 +41,7 @@ fct_event_user_daily AS (
     --Facts
     COUNT(*) AS event_count
   FROM fct_event_valid
-  WHERE dim_user_sk != '6bb61e3b7bce0931da574d19d1d82c88'--missing member surrogate_key value
+  WHERE is_null_user = FALSE
   {{ dbt_utils.group_by(n=20) }}
 
 )

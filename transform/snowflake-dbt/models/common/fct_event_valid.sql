@@ -101,6 +101,7 @@ fct_event_w_flags AS (
     fct_event_valid.dim_ultimate_parent_namespace_id,
     fct_event_valid.dim_project_id,
     fct_event_valid.dim_user_sk,
+    fct_event_valid.is_null_user,
     fct_event_valid.event_created_at,
     fct_event_valid.event_date,
     fct_event_valid.group_name,
@@ -155,6 +156,7 @@ gitlab_dotcom_fact AS (
     event_date,
     
     --Degenerate Dimensions (No stand-alone, promoted dimension table)
+    is_null_user,
     group_name,
     section_name,
     stage_name,

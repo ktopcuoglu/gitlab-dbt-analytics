@@ -28,7 +28,8 @@ fct_events AS (
     prep_event_all.days_since_user_creation_at_event_date,
     prep_event_all.days_since_namespace_creation_at_event_date,
     prep_event_all.days_since_project_creation_at_event_date,
-    CAST(prep_event_all.event_created_at AS DATE) AS event_date
+    CAST(prep_event_all.event_created_at AS DATE) AS event_date,
+    IFF(prep_event_all.dim_user_id IS NULL, TRUE, FALSE) AS is_null_user
   FROM prep_event_all
   LEFT JOIN dim_user
     --dim_user_id is the natural_key and will be renamed to user_id in a subsequent MR on prep_event.
@@ -60,6 +61,7 @@ gitlab_dotcom_fact AS (
     fct_events.event_date,
     
     --Degenerate Dimensions (No stand-alone, promoted dimension table)
+    fct_events.is_null_user,
     fct_events.parent_id,
     fct_events.parent_type,
     fct_events.event_name,
