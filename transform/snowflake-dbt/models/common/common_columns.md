@@ -10,7 +10,7 @@ The unique identifier of the ultimate parent namespace's latest product tier, ea
 
 {% enddocs %}
 
-{% docs dim_active_subscripton_id %}
+{% docs dim_active_subscription_id %}
 
 The unique identifier of the ultimate parent namespace's latest subscription, easily joined to `dim_subscription`
 
@@ -136,6 +136,24 @@ Boolean flag which is set to True if the ultimate parent namespace's plan was pa
 
 {% enddocs %}
 
+{% docs plan_id_at_event_timestamp %}
+
+The ID of the ultimate parent namespace's plan at the timestamp the event was created (ex. 34, 100, 101, etc). Defaults to '34' (free) if a value is not available
+
+{% enddocs %}
+
+{% docs plan_name_at_event_timestamp %}
+
+The name of the ultimate parent namespace's plan type at the timestamp when the event was created (ex. free, premium, ultimate). Defaults to 'free' if a value is not available
+
+{% enddocs %}
+
+{% docs plan_was_paid_at_event_timestamp %}
+
+Boolean flag which is set to True if the ultimate parent namespace's plan was paid at the timestamp when the event was created. Defaults to False if a value is not available
+
+{% enddocs %}
+
 {% docs days_since_user_creation_at_event_date %}
 
 The count of days between user creation and the event. This will be NULL if a user is not associated with the event
@@ -247,5 +265,23 @@ Manually input ISO date of when model was original created
 {% docs model_updated_date %}
 
 Manually input ISO date of when model was updated
+
+{% enddocs %}
+
+{% docs event_count %}
+
+The count of events generated
+
+{% enddocs %}
+
+{% docs user_count %}
+
+ The count of distinct users who generated an event
+
+{% enddocs %}
+
+{% docs ultimate_parent_namespace_count %}
+
+ The count of distinct ultimate parent namespaces in which an event was generated
 
 {% enddocs %}
