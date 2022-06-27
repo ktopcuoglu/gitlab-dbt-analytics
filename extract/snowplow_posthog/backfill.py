@@ -210,7 +210,7 @@ def s3_extraction(file_prefix: str) -> None:
             for row in s3_load_source_file(
                 client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
             ):
-                json_prepared = get_properties(property_list=property_list, row=row)
+                json_prepared = get_properties(property_list=property_list, values=row)
 
 
 """
