@@ -12,10 +12,20 @@
 mart_raw AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('mart_event_valid'), except=["STAGE_NAME"]) }},
+    {{ dbt_utils.star(from=ref('mart_event_valid'), except=["STAGE_NAME", "GROUP_NAME"]) }},
     CASE
-      WHEN stage_name = 'manage' THEN NULL ELSE stage_name
-    END AS stage_name
+      WHEN stage_name = 'manage' THEN NULL 
+      ELSE stage_name
+    END AS stage_name,
+    /*
+    The SMAU events for certain groups such as the release, static_analysis, dynamic_analysis, and composition_analysis 
+    groups are only counted for SMAU and not GMAU. Putting a NULL for the group_name allows these events to not 
+    roll up to the group in xMAU reporting while keeping the grain of this model intact.
+    */
+    CASE
+      WHEN is_smau = TRUE AND is_gmau = FALSE THEN NULL
+      ELSE group_name
+    END AS group_name
   FROM mart_event_valid
   WHERE is_null_user = FALSE
     AND (is_umau = TRUE 
@@ -176,5 +186,5 @@ results AS (
     created_by="@icooper_acp",
     updated_by="@iweeks",
     created_date="2022-02-23",
-    updated_date="2022-06-20"
+    updated_date="2022-06-21"
 ) }}

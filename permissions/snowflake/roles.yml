@@ -2347,6 +2347,12 @@ roles:
         warehouses:
             - dev_xs
 
+    - atucker:
+        member_of:
+            - analyst_finance
+        warehouses:
+            - dev_xs
+
     - bbutterfield:
         member_of:
             - reporter
@@ -2512,7 +2518,10 @@ roles:
 
     - dmicovic:
         member_of:
-            - analyst_core
+            - reporter
+            - analyst_marketing
+            - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - dev_xs
 
@@ -2604,7 +2613,6 @@ roles:
 
     - fivetran_role:
         warehouses:
-            - fivetran_warehouse
             - loading
         privileges:
             databases:
@@ -3875,6 +3883,17 @@ roles:
                     - rparker_prep.*.*
                     - rparker_prod.*.*
 
+    - sgladchun:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - sisense_restricted_safe:
         member_of:
             - reporter
@@ -3947,7 +3966,6 @@ roles:
 
     - stitch:
         warehouses:
-            - stitch
             - loading
         privileges:
             databases:
@@ -3976,7 +3994,7 @@ roles:
 
     - target_snowflake:
         warehouses:
-            - target_snowflake
+            - loading
         privileges:
             databases:
                 read:
@@ -4203,6 +4221,10 @@ users:
         member_of:
             - aperez
 
+    - atucker:
+        can_login: yes
+        member_of:
+            - atucker
 
     - bi_tool_eval:
         can_login: yes
@@ -4558,6 +4580,16 @@ users:
         member_of:
             - securityadmin
 
+    - sgladchun:
+        can_login: yes 
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+
     - sisense_restricted_safe:
         can_login: yes
         member_of:
@@ -4650,9 +4682,6 @@ warehouses:
     - dev_xl:
         size: "x-large"
 
-    - fivetran_warehouse:
-        size: x-small
-
     - gainsight_xs:
         size: x-small
 
@@ -4667,12 +4696,6 @@ warehouses:
 
     - reporting:
         size: medium
-
-    - stitch:
-        size: x-small
-
-    - target_snowflake:
-        size: x-small
 
     - transforming_s:
         size: small

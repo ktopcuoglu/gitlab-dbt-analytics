@@ -44,7 +44,7 @@ WITH employees AS (
         ELSE bamboohr_engineering_division_mapping.section_name END as sub_department,
       engineering_employees.job_title_speciality,
       CASE 
-        WHEN engineering_employees.employee_id IN (41965,41996,41453,41482,41974,41487,42029,40914,41954,46) 
+        WHEN engineering_employees.employee_id IN (11480,11522,11500,11555,11013,11008,10979,10442,10072,11491) 
             OR LOWER(engineering_employees.job_title) LIKE '%backend%' 
           THEN 'backend'
         WHEN LOWER(engineering_employees.job_title) LIKE '%fullstack%'

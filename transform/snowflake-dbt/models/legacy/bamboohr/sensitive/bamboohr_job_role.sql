@@ -1,7 +1,7 @@
 WITH source AS (
 
   SELECT *
-  FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
+  FROM {{ ref ('blended_employee_mapping_source') }}
 
 ),
 
@@ -39,6 +39,11 @@ intermediate AS (
   FROM source
   QUALIFY ROW_NUMBER() OVER (PARTITION BY unique_key
     ORDER BY DATE_TRUNC('day', effective_date) ASC, DATE_TRUNC('hour', effective_date) DESC) = 1
+  /*
+  This type of filtering does not account for a change back to a previous value
+  and will return incorrect ranges for effective values.  This can be solved with a
+  gaps and islands solution
+  */
 
 ),
 
