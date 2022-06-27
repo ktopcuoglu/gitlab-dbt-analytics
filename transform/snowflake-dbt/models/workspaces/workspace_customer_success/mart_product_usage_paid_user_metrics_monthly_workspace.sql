@@ -71,14 +71,7 @@
       *
     FROM aggregated_metrics 
     WHERE event_action = 'p_terraform_state_api_unique_users'
-  
-), i_search_paid_users AS (
-  
-    SELECT
-      *
-    FROM aggregated_metrics 
-    WHERE event_action = 'i_search_paid'
-  
+   
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -507,9 +500,6 @@
     LEFT JOIN p_terraform_state_api_unique_users
       ON p_terraform_state_api_unique_users.date_month = monthly_saas_metrics.snapshot_month 
       AND p_terraform_state_api_unique_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
-    LEFT JOIN i_search_paid_users
-      ON i_search_paid_users.date_month = monthly_saas_metrics.snapshot_month 
-      AND i_search_paid_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
