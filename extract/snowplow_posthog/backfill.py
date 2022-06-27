@@ -29,8 +29,7 @@ Extract routines
 
 def s3_get_credentials() -> tuple:
     """
-    This function returns the set of aws_access_key_id,aws_secret_access_key
-    based on the the schema name provided.
+    This function returns the set of aws_access_key_id,aws_secret_access_key and snowplow bucket
     """
 
     posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
@@ -81,7 +80,9 @@ def s3_list_files(client, bucket, prefix="") -> str:
 
 def source_file_get_row(row: str) -> list:
     """
-    Convert line from the file to a list of strings
+    Convert line from the source file to a list of strings
+    Input: 'xxx'  'YYY' 'zzz'
+    Output ['xxx', 'YYY', 'zzz']
     """
     separator = "\t"
 
@@ -99,7 +100,7 @@ def source_file_get_row(row: str) -> list:
 def s3_load_source_file(client, bucket: str, file_name: str) -> list:
     """
     Load file content from object storage (for now, it is a S3 bucket)
-    and return list
+    and return
     """
     csv_obj = client.get_object(Bucket=bucket, Key=file_name)
 
@@ -206,11 +207,9 @@ def s3_extraction(file_prefix: str) -> None:
 
         for snowplow_file in snowplow_files:
             # logging.info(f"..... {snowplow_file}")
-            for source_file_row in s3_load_source_file(
+            for row in s3_load_source_file(
                 client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
             ):
-                row = source_file_get_row(source_file_row)
-
                 json_prepared = get_properties(property_list=property_list, row=row)
 
 

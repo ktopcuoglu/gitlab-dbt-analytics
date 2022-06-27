@@ -104,8 +104,9 @@ def generate_dbt_command(vars_dict: dict, dag_name: str):
 
 
     generated_command = f"""
-    {clone_and_setup_extraction_cmd} &&
-    python3 snowplow_posthog/backfill.py snowplow_posthog_backfill --day {vars_dict['year']}{vars_dict['month']}{vars_dict['day']}
+    {clone_repo_cmd} &&
+    cd analytics/extract/snowplow_posthog/ && 
+    python3 backfill.py snowplow_posthog_backfill --day {vars_dict['year']}{vars_dict['month']}{vars_dict['day']}
 """
 
     return KubernetesPodOperator(
