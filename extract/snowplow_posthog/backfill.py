@@ -32,9 +32,9 @@ def s3_get_credentials() -> tuple:
     based on the the schema name provided.
     """
 
-    posthog_access_key_id = env["POSTHOG_ACCESS_KEY_ID"]
-    posthog_secret_access_key = env["POSTHOG_SECRET_ACCESS_KEY"]
-    snowplow_s3_bucket = env["SNOWPLOW_S3_BUCKET"]
+    posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
+    posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
+    snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
     return posthog_access_key_id, posthog_secret_access_key, snowplow_s3_bucket
 
@@ -173,9 +173,9 @@ def posthog_get_credentials() -> tuple:
     based on the the schema name provided.
     """
 
-    posthog_project_api_key = env["POSTHOG_ACCESS_KEY_ID"]
-    posthog_personal_api_key = env["POSTHOG_SECRET_ACCESS_KEY"]
-    posthog_host = env["SNOWPLOW_S3_BUCKET"]
+    posthog_project_api_key = env["POSTHOG_PROJECT_API_KEY"]
+    posthog_personal_api_key = env["POSTHOG_PERSONAL_API_KEY"]
+    posthog_host = env["POSTHOG_HOST"]
 
     return posthog_project_api_key, posthog_personal_api_key, posthog_host
 
