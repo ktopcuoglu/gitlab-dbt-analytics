@@ -3994,7 +3994,7 @@ roles:
 
     - target_snowflake:
         warehouses:
-            - target_snowflake
+            - loading
         privileges:
             databases:
                 read:
@@ -4581,6 +4581,7 @@ users:
             - securityadmin
 
     - sgladchun:
+        can_login: yes 
         member_of:
             - analyst_finance
             - bamboohr_analytics
@@ -4588,8 +4589,6 @@ users:
             - analyst_marketing
             - data_team_analyst
             - restricted_safe
-        warehouses:
-            - dev_xs
 
     - sisense_restricted_safe:
         can_login: yes
@@ -4697,9 +4696,6 @@ warehouses:
 
     - reporting:
         size: medium
-
-    - target_snowflake:
-        size: x-small
 
     - transforming_s:
         size: small
