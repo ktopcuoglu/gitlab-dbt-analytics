@@ -182,15 +182,15 @@ def s3_extraction(file_prefix: str) -> None:
 
     File example: output/2022/06/06/04/SnowPlowEnrichedGood-2-2022-06-06-04-29-38-a3034baf-2167-42a5-9633-76318f7b5b8c.gz
     """
-    # (
-    #     posthog_access_key_id,
-    #     posthog_secret_access_key,
-    #     snowplow_s3_bucket,
-    # ) = s3_get_credentials
+    (
+        posthog_access_key_id,
+        posthog_secret_access_key,
+        snowplow_s3_bucket,
+    ) = s3_get_credentials
 
-    posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
-    posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
-    snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
+    # posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
+    # posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
+    # snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
     property_list = get_property_keys(
         schema_file="backfill_schema.yml", table_name="gitlab_events"
@@ -262,46 +262,16 @@ def get_properties(property_list: str, values: list) -> dict:
     return dict(zip_longest(property_list, values))
 
 
-# def get_upload_structure(schema_file: str, table_name: str, values: list) -> dict:
-#     """
-#     Return the prepared structure for the upload.
-#     Example of payload JSON to push to PostHog:
-#     {
-#         "event": "[event name]",
-#         "distinct_id": "[your users' distinct id]",
-#         "properties": {
-#             "key1": "value1",
-#             "key2": "value2"
-#         },
-#         "timestamp": "[optional timestamp in ISO 8601 format]"
-#     }
-#
-#     """
-#
-#     properties = get_properties(
-#         schema_file=schema_file, table_name=table_name, values=values
-#     )
-#
-#     api_skeleton = {
-#         "event": "[event name]",
-#         "distinct_id": "[your users' distinct id]",
-#         "properties": {"key1": "value1", "key2": "value2"},
-#         "timestamp": "[optional timestamp in ISO 8601 format]",
-#     }
-#
-#     api_skeleton['distinct_id'] = DISTINCT_ID
-#     api_skeleton["event_name"] = EVENT_NAME
-#     api_skeleton["properties"] = properties
-#     api_skeleton["timestamp"] = datetime.datetime.utcnow().isoformat()
-#
-#     return api_skeleton
-
 def posthog_authorize() -> None:
     """
     Authorize PostHog access
     """
 
-    (posthog_project_api_key, posthog_personal_api_key, posthog_host) = posthog_get_credentials()
+    (
+        posthog_project_api_key,
+        posthog_personal_api_key,
+        posthog_host,
+    ) = posthog_get_credentials()
 
     posthog.project_api_key = posthog_project_api_key
     posthog.personal_api_key = posthog_personal_api_key
@@ -330,13 +300,6 @@ def snowplow_posthog_backfill(day: str) -> None:
 
     # get the data from S3 bucket
     s3_extraction(file_prefix=str(day))
-
-    # transform data from .tsv -> .json
-
-    # push data to PostHog
-    # json_data = None
-
-    # posthog_push_json(data=json_data)
 
 
 if __name__ == "__main__":
