@@ -37,7 +37,7 @@ def s3_get_credentials() -> tuple:
     posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
     snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
-    return posthog_access_key_id, posthog_secret_access_key, snowplow_s3_bucket
+    return (posthog_access_key_id, posthog_secret_access_key, snowplow_s3_bucket)
 
 
 def s3_get_client(
@@ -164,15 +164,20 @@ def s3_extraction(file_prefix: str) -> None:
 
     File example: output/2022/06/06/04/SnowPlowEnrichedGood-2-2022-06-06-04-29-38-a3034baf-2167-42a5-9633-76318f7b5b8c.gz
     """
-    (
-        posthog_access_key_id,
-        posthog_secret_access_key,
-        snowplow_s3_bucket,
-    ) = s3_get_credentials
+    # (
+    #     posthog_access_key_id,
+    #     posthog_secret_access_key,
+    #     snowplow_s3_bucket,
+    # ) = s3_get_credentials
+
+    posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
+    posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
+    snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
     s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
     snowplow_files = s3_list_files(s3_client, snowplow_s3_bucket, prefix=file_prefix)
+
     for file in snowplow_files:
         logging.info(f"File {file}...")
 
@@ -217,39 +222,39 @@ def get_properties(property_list: str, values: list) -> dict:
     return dict(zip_longest(property_list, values))
 
 
-def get_upload_structure(schema_file: str, table_name: str, values: list) -> dict:
-    """
-    Return the prepared structure for the upload.
-    Example of payload JSON to push to PostHog:
-    {
-        "event": "[event name]",
-        "distinct_id": "[your users' distinct id]",
-        "properties": {
-            "key1": "value1",
-            "key2": "value2"
-        },
-        "timestamp": "[optional timestamp in ISO 8601 format]"
-    }
-
-    """
-
-    properties = get_properties(
-        schema_file=schema_file, table_name=table_name, values=values
-    )
-
-    api_skeleton = {
-        "event": "[event name]",
-        "distinct_id": "[your users' distinct id]",
-        "properties": {"key1": "value1", "key2": "value2"},
-        "timestamp": "[optional timestamp in ISO 8601 format]",
-    }
-
-    api_skeleton["event_name"] = EVENT_NAME
-    api_skeleton['distinct_id'] = DISTINCT_ID
-    api_skeleton["properties"] = properties
-    api_skeleton["timestamp"] = datetime.datetime.utcnow().isoformat()
-
-    return api_skeleton
+# def get_upload_structure(schema_file: str, table_name: str, values: list) -> dict:
+#     """
+#     Return the prepared structure for the upload.
+#     Example of payload JSON to push to PostHog:
+#     {
+#         "event": "[event name]",
+#         "distinct_id": "[your users' distinct id]",
+#         "properties": {
+#             "key1": "value1",
+#             "key2": "value2"
+#         },
+#         "timestamp": "[optional timestamp in ISO 8601 format]"
+#     }
+#
+#     """
+#
+#     properties = get_properties(
+#         schema_file=schema_file, table_name=table_name, values=values
+#     )
+#
+#     api_skeleton = {
+#         "event": "[event name]",
+#         "distinct_id": "[your users' distinct id]",
+#         "properties": {"key1": "value1", "key2": "value2"},
+#         "timestamp": "[optional timestamp in ISO 8601 format]",
+#     }
+#
+#     api_skeleton['distinct_id'] = DISTINCT_ID
+#     api_skeleton["event_name"] = EVENT_NAME
+#     api_skeleton["properties"] = properties
+#     api_skeleton["timestamp"] = datetime.datetime.utcnow().isoformat()
+#
+#     return api_skeleton
 
 
 def posthog_push_json(data: dict) -> None:
@@ -257,6 +262,13 @@ def posthog_push_json(data: dict) -> None:
     Use PostHog lib to push
     historical record to PostHog as a part of BackFill process
     """
+
+    # posthog.capture(
+    #     DISTINCT_ID,
+    #     event=EVENT_NAME,
+    #     properties=data,
+    #     timestamp=datetime.utcnow().replace(tzinfo=tzutc()),
+    # )
 
     pass
 
