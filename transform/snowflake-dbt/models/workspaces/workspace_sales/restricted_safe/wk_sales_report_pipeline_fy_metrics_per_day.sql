@@ -1,4 +1,4 @@
-{{ config(alias='report_pipeline_metrics_fy_day') }}
+{{ config(alias='report_pipeline_fy_metrics_per_day') }}
 
 WITH date_details AS (
 
@@ -358,12 +358,12 @@ WITH date_details AS (
       ------------------------------
     
       -- pipe gen
-      COALESCE(pipeline_gen.pipe_gen_count,0)                             AS cfy_pipe_gen_count,
-      COALESCE(pipeline_gen.pipe_gen_net_arr,0)                           AS cfy_pipe_gen_net_arr,
+      COALESCE(pipeline_gen.pipe_gen_count,0)                           AS cfy_pipe_gen_count,
+      COALESCE(pipeline_gen.pipe_gen_net_arr,0)                         AS cfy_pipe_gen_net_arr,
 
        -- sao gen
-      COALESCE(sao_gen.sao_deal_count,0)                                  AS cfy_cfy_sao_deal_count,
-      COALESCE(sao_gen.sao_net_arr,0)                                     AS cfy_sao_net_arr,
+      COALESCE(sao_gen.sao_deal_count,0)                                AS cfy_cfy_sao_deal_count,
+      COALESCE(sao_gen.sao_net_arr,0)                                   AS cfy_sao_net_arr,
 
        -- one year ago sao gen
       COALESCE(minus_1_year_sao_gen.sao_net_arr,0)                      AS minus_1_year_fy_sao_net_arr,
