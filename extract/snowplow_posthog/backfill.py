@@ -21,7 +21,6 @@ from logging import info
 from dateutil.tz import tzutc
 
 
-
 ENCODING = "utf-8"
 EVENT_NAME = "test_gitlab_events"
 DISTINCT_ID = "gitlab_dotcom"
@@ -220,7 +219,7 @@ def s3_extraction(file_prefix: str) -> None:
             ):
                 json_prepared = get_properties(property_list=property_list, values=row)
                 # push row to PostHog
-                # posthog_push_json(json_prepared)
+                posthog_push_json(json_prepared)
 
 
 """
@@ -307,10 +306,8 @@ def posthog_push_json(data: dict) -> None:
         DISTINCT_ID,
         event=EVENT_NAME,
         properties=data,
-        timestamp=datetime.utcnow().replace(tzinfo=tzutc()),
+        timestamp=datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
-
-
 
 
 def snowplow_posthog_backfill(day: str) -> None:
@@ -327,7 +324,6 @@ def snowplow_posthog_backfill(day: str) -> None:
     # json_data = None
 
     # posthog_push_json(data=json_data)
-
 
 
 if __name__ == "__main__":
