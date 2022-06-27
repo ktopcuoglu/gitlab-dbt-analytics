@@ -5,7 +5,6 @@ from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
 from airflow_utils import (
     DATA_IMAGE,
-    clone_repo_cmd,
     gitlab_defaults,
     slack_failed_task,
     gitlab_pod_env_vars,
