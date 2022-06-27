@@ -68,9 +68,9 @@ def s3_list_files(aws_access_key_id, aws_secret_access_key, bucket, prefix="") -
     # for result in results:
     #     yield result["Key"]
 
-    s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=str(prefix))
-
-    info(f"BUCKET: {s3_bucket}...")
+    # s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=str(prefix))
+    #
+    # info(f"BUCKET: {s3_bucket}...")
 
     # Iterate through files and upload
     # for obj in s3_bucket["Contents"]:
@@ -188,10 +188,12 @@ def s3_extraction(file_prefix: str) -> None:
 
     # s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
-    snowplow_files = s3_list_files(posthog_access_key_id, posthog_secret_access_key, bucket=snowplow_s3_bucket, prefix=file_prefix)
+    folders = get_file_prefix(file_prefix)
 
-    for file in snowplow_files:
-        logging.info(f"File {file}...")
+    for folder in folders:
+        # snowplow_files = s3_list_files(posthog_access_key_id, posthog_secret_access_key, bucket=snowplow_s3_bucket, prefix=file_prefix)
+
+        logging.info(f"File {folder}...")
 
 
 """
