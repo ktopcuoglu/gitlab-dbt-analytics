@@ -24,10 +24,6 @@ from kubernetes_helpers import get_affinity, get_toleration
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
 GIT_BRANCH = env["GIT_BRANCH"]
-pod_env_vars = {
-    "CI_PROJECT_DIR": "/analytics",
-    "SNOWFLAKE_PROD_DATABASE": "PROD",
-}
 
 # Default arguments for the DAG
 default_args = {
@@ -49,8 +45,7 @@ airflow_home = env["AIRFLOW_HOME"]
 task_identifier = "gcs-external-load"
 
 run_load_command = f"""
-  {clone_repo_cmd} &&
-  export PYTHONPATH="$CI_PROJECT_DIR/orchestration/:$PYTHONPATH" &&
+  {clone_and_setup_extraction_cmd} &&
   export SNOWFLAKE_LOAD_WAREHOUSE="LOADING_XL" &&
   python3 /analytics/extract/gcs_external/src/gcs_external.py
   """
@@ -68,7 +63,7 @@ run_load = KubernetesPodOperator(
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
     ],
-    env_vars={**pod_env_vars, "PATH_DATE": "{{ yesterday_ds }}"},
+    env_vars={**gitlab_pod_env_vars, "PATH_DATE": "{{ yesterday_ds }}"},
     affinity=get_affinity(False),
     tolerations=get_toleration(False),
     arguments=[run_load_command],
