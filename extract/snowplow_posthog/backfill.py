@@ -237,7 +237,7 @@ def posthog_get_credentials() -> tuple:
     posthog_personal_api_key = env["POSTHOG_PERSONAL_API_KEY"]
     posthog_host = env["POSTHOG_HOST"]
 
-    return posthog_project_api_key, posthog_personal_api_key, posthog_host
+    return (posthog_project_api_key, posthog_personal_api_key, posthog_host)
 
 
 def load_manifest_file(file_name: str) -> dict:
@@ -296,6 +296,17 @@ def get_properties(property_list: str, values: list) -> dict:
 #
 #     return api_skeleton
 
+def posthog_authorize() -> None:
+    """
+    Authorize PostHog access
+    """
+
+    (posthog_project_api_key, posthog_personal_api_key, posthog_host) = posthog_get_credentials()
+
+    posthog.project_api_key = posthog_project_api_key
+    posthog.personal_api_key = posthog_personal_api_key
+    posthog.host = posthog_host
+
 
 def posthog_push_json(data: dict) -> None:
     """
@@ -314,6 +325,8 @@ def snowplow_posthog_backfill(day: str) -> None:
     """
     Entry point to trigger the back filling for Snowplow S3 -> PostHog
     """
+
+    posthog_authorize()
 
     # get the data from S3 bucket
     s3_extraction(file_prefix=str(day))
