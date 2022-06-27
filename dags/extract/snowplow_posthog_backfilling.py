@@ -13,7 +13,6 @@ from airflow_utils import (
     DATA_IMAGE,
     gitlab_defaults,
     gitlab_pod_env_vars,
-    partitions,
     slack_failed_task,
 )
 from kube_secrets import (
@@ -64,23 +63,10 @@ task_secrets = [
     SALT_IP,
     SALT_NAME,
     SALT_PASSWORD,
-    SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_PASSWORD,
-    SNOWFLAKE_TRANSFORM_ROLE,
-    SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_TRANSFORM_WAREHOUSE,
-    SNOWFLAKE_USER,
-    SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
-    SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE,
 ]
 
 start_date = datetime.strptime(Variable.get("POSTHOG_BACKFILL_START_DATE", default_var="2022-06-01"), "%Y-%m-%d")
 end_date = datetime.strptime(Variable.get("POSTHOG_BACKFILL_END_DATE", default_var="2021-06-20"), "%Y-%m-%d")
-
-# start_date = datetime.strptime("2022-06-01", "%Y-%m-%d")
-# end_date = datetime.strptime("2021-05-20", "%Y-%m-%d")
 
 DAG_NAME = "snowplow_posthog_backfill"
 SCHEMA_NAME = "gitlab_events"
@@ -101,7 +87,6 @@ def generate_dbt_command(vars_dict: dict, dag_name: str):
     Generate generic command separated per time frame
     to create tasks
     """
-
 
     generated_command = f"""
     {clone_repo_cmd} &&
