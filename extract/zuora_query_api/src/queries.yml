@@ -23,4 +23,4 @@ tables:
         , CreatedDate
         , UpdatedById
         , UpdatedDate
-      FROM User
+      FROM orderactionrateplan
