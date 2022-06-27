@@ -17,12 +17,12 @@ def get_load_command(path_date: str) -> str:
           WITH blob_downloaded AS (
           
           SELECT
-            $1:correlation_id     AS correlation_id,
-            $1:time::timestamp    AS timestamp,
-            $1:root_repo::varchar AS root_repo,
-            $1:vars_name::varchar AS vars_name,
-            $1:digest::varchar    AS digest,
-            $1:size_bytes::int    AS size_bytes
+            $1:correlation_id::VARCHAR     AS correlation_id,
+            $1:time::TIMESTAMP             AS timestamp,
+            $1:root_repo::VARCHAR          AS root_repo,
+            $1:vars_name::VARCHAR          AS vars_name,
+            $1:digest::VARCHAR             AS digest,
+            $1:size_bytes::INT             AS size_bytes
           FROM @raw.container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
           WHERE $1:msg='blob downloaded'
@@ -30,9 +30,9 @@ def get_load_command(path_date: str) -> str:
           ), access AS (
           
           SELECT
-            $1:correlation_id     AS correlation_id,
-            $1:time::timestamp    AS timestamp,
-            $1:remote_ip::varchar AS remote_ip
+            $1:correlation_id::VARCHAR     AS correlation_id,
+            $1:time::TIMESTAMP             AS timestamp,
+            $1:remote_ip::VARCHAR          AS remote_ip
           FROM @raw.container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
           WHERE $1:msg='access'
