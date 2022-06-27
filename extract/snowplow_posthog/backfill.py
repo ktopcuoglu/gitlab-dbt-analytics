@@ -182,15 +182,15 @@ def s3_extraction(file_prefix: str) -> None:
 
     File example: output/2022/06/06/04/SnowPlowEnrichedGood-2-2022-06-06-04-29-38-a3034baf-2167-42a5-9633-76318f7b5b8c.gz
     """
-    (
-        posthog_access_key_id,
-        posthog_secret_access_key,
-        snowplow_s3_bucket,
-    ) = s3_get_credentials
+    # (
+    #     posthog_access_key_id,
+    #     posthog_secret_access_key,
+    #     snowplow_s3_bucket,
+    # ) = s3_get_credentials
 
-    # posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
-    # posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
-    # snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
+    posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
+    posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
+    snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
     property_list = get_property_keys(
         schema_file="backfill_schema.yml", table_name="gitlab_events"
