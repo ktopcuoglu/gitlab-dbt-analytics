@@ -28,7 +28,7 @@ Determine latest version for each subscription to determine if the potential met
   SELECT
       ping_created_at_month             AS ping_created_at_month,
       dim_installation_id               AS dim_installation_id,
-      latest_active_subscription_id     AS latest_active_subscription_id,
+      latest_subscription_id            AS latest_subscription_id,
       ping_edition                      AS ping_edition,
       version_is_prerelease             AS version_is_prerelease,
       major_minor_version_id            AS major_minor_version_id,
@@ -36,7 +36,7 @@ Determine latest version for each subscription to determine if the potential met
   FROM mart_ping_instance_metric_monthly
       WHERE ping_delivery_type = 'Self-Managed'
       QUALIFY ROW_NUMBER() OVER (
-            PARTITION BY ping_created_at_month, latest_active_subscription_id, dim_installation_id
+            PARTITION BY ping_created_at_month, latest_subscription_id, dim_installation_id
               ORDER BY major_minor_version_id DESC) = 1
 
 /*
@@ -48,7 +48,7 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
     SELECT
         ping_created_at_month             AS ping_created_at_month,
         dim_installation_id               AS dim_installation_id,
-        latest_active_subscription_id     AS latest_active_subscription_id,
+        latest_subscription_id            AS latest_subscription_id,
         ping_edition                      AS ping_edition,
         version_is_prerelease             AS version_is_prerelease,
         major_minor_version_id            AS major_minor_version_id,
@@ -64,7 +64,7 @@ Get the count of pings each month per subscription_name_slugify
   SELECT
     ping_created_at_month                       AS ping_created_at_month,
     dim_installation_id                         AS dim_installation_id,
-    latest_active_subscription_id               AS latest_active_subscription_id,
+    latest_subscription_id                      AS latest_subscription_id,
     COUNT(DISTINCT(dim_ping_instance_id))       AS ping_count
   FROM mart_ping_instance_metric
       {{ dbt_utils.group_by(n=3)}}
@@ -81,7 +81,7 @@ Join subscription information with count of pings
   FROM deduped_subscriptions_w_versions
     INNER JOIN ping_counts
   ON deduped_subscriptions_w_versions.ping_created_at_month = ping_counts.ping_created_at_month
-    AND deduped_subscriptions_w_versions.latest_active_subscription_id = ping_counts.latest_active_subscription_id
+    AND deduped_subscriptions_w_versions.latest_subscription_id = ping_counts.latest_subscription_id
     AND deduped_subscriptions_w_versions.dim_installation_id = ping_counts.dim_installation_id
 /*
 Aggregate mart_charge information (used as the basis of truth), this gets rid of host deviation
@@ -121,7 +121,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
   SELECT
     mart_charge_cleaned.arr_month                                                                           AS ping_created_at_month,
     joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
-    mart_charge_cleaned.dim_subscription_id                                                                 AS latest_active_subscription_id,
+    mart_charge_cleaned.dim_subscription_id                                                                 AS latest_subscription_id,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
     joined_subscriptions.version_is_prerelease                                                              AS version_is_prerelease,
     joined_subscriptions.major_minor_version_id                                                             AS major_minor_version_id,
@@ -133,7 +133,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
     FALSE                                                                                                   AS is_missing_charge_subscription
   FROM mart_charge_cleaned
     LEFT OUTER JOIN joined_subscriptions
-  ON joined_subscriptions.latest_active_subscription_id = mart_charge_cleaned.dim_subscription_id
+  ON joined_subscriptions.latest_subscription_id = mart_charge_cleaned.dim_subscription_id
       AND joined_subscriptions.ping_created_at_month = mart_charge_cleaned.arr_month
 
 /*
@@ -153,7 +153,7 @@ Grab the latest values to join to missing subs
               ORDER BY arr_month DESC) = 1
 
 /*
-This CTE below grabs the missing installation/subs for each month missing from arr_counts_joined (active_subs) where there are actual pings from that install/sub combo)
+This CTE below grabs the missing installation/subs for each month missing from arr_counts_joined (latest_subs) where there are actual pings from that install/sub combo)
 */
 
 ), missing_subs AS (
@@ -161,7 +161,7 @@ This CTE below grabs the missing installation/subs for each month missing from a
     SELECT
         ping_created_at_month                   AS ping_created_at_month,
         dim_installation_id                     AS dim_installation_id,
-        latest_active_subscription_id           AS latest_active_subscription_id,
+        latest_subscription_id                  AS latest_subscription_id,
         ping_edition                            AS ping_edition,
         version_is_prerelease                   AS version_is_prerelease,
         MAX(major_minor_version_id)             AS major_minor_version_id,
@@ -169,8 +169,8 @@ This CTE below grabs the missing installation/subs for each month missing from a
         COUNT(DISTINCT(dim_ping_instance_id))   AS ping_count
     FROM mart_ping_instance_metric
         WHERE is_last_ping_of_month = TRUE
-          AND CONCAT(latest_active_subscription_id, to_varchar(ping_created_at_month)) NOT IN
-            (SELECT DISTINCT(CONCAT(latest_active_subscription_id, to_varchar(ping_created_at_month))) FROM arr_counts_joined)
+          AND CONCAT(latest_subscription_id, to_varchar(ping_created_at_month)) NOT IN
+            (SELECT DISTINCT(CONCAT(latest_subscription_id, to_varchar(ping_created_at_month))) FROM arr_counts_joined)
           {{ dbt_utils.group_by(n=5)}}
 
 /*
@@ -187,14 +187,14 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         TRUE                                                  AS is_missing_charge_subscription
     FROM missing_subs
         INNER JOIN latest_mart_charge_values
-    ON missing_subs.latest_active_subscription_id = latest_mart_charge_values.dim_subscription_id
+    ON missing_subs.latest_subscription_id = latest_mart_charge_values.dim_subscription_id
 
-), active_subs_unioned AS (
+), latest_subs_unioned AS (
 
     SELECT
         ping_created_at_month,
         dim_installation_id,
-        latest_active_subscription_id,
+        latest_subscription_id,
         ping_edition,
         version_is_prerelease,
         major_minor_version_id,
@@ -211,7 +211,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
     SELECT
         ping_created_at_month,
         dim_installation_id,
-        latest_active_subscription_id,
+        latest_subscription_id,
         ping_edition,
         version_is_prerelease,
         major_minor_version_id,
@@ -226,21 +226,21 @@ Join to capture missing metrics, uses the last value found for these in fct_char
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_active_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                 AS ping_active_subscriptions_monthly_id,
-        active_subs_unioned.ping_created_at_month                                                                                                                                 AS ping_created_at_month,
-        active_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
-        active_subs_unioned.latest_active_subscription_id                                                                                                                         AS latest_active_subscription_id,
-        active_subs_unioned.ping_edition                                                                                                                                          AS ping_edition,
-        active_subs_unioned.version_is_prerelease                                                                                                                                 AS version_is_prerelease,
-        active_subs_unioned.major_minor_version_id                                                                                                                                AS major_minor_version_id,
-        active_subs_unioned.instance_user_count                                                                                                                                   AS instance_user_count,
-        FLOOR(active_subs_unioned.licensed_user_count)                                                                                                                            AS licensed_user_count,
-        active_subs_unioned.arr                                                                                                                                                   AS arr,
-        active_subs_unioned.mrr                                                                                                                                                   As mrr,
-        IFNULL(active_subs_unioned.ping_count, 0)                                                                                                                                 AS ping_count,
-        IFF(active_subs_unioned.ping_edition IS NULL, FALSE, TRUE)                                                                                                                AS has_sent_pings,
-        active_subs_unioned.is_missing_charge_subscription                                                                                                                        AS is_missing_charge_subscription
-    FROM active_subs_unioned
+        {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                        AS ping_latest_subscriptions_monthly_id,
+        latest_subs_unioned.ping_created_at_month                                                                                                                                 AS ping_created_at_month,
+        latest_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
+        latest_subs_unioned.latest_subscription_id                                                                                                                                AS latest_subscription_id,
+        latest_subs_unioned.ping_edition                                                                                                                                          AS ping_edition,
+        latest_subs_unioned.version_is_prerelease                                                                                                                                 AS version_is_prerelease,
+        latest_subs_unioned.major_minor_version_id                                                                                                                                AS major_minor_version_id,
+        latest_subs_unioned.instance_user_count                                                                                                                                   AS instance_user_count,
+        FLOOR(latest_subs_unioned.licensed_user_count)                                                                                                                            AS licensed_user_count,
+        latest_subs_unioned.arr                                                                                                                                                   AS arr,
+        latest_subs_unioned.mrr                                                                                                                                                   As mrr,
+        IFNULL(latest_subs_unioned.ping_count, 0)                                                                                                                                 AS ping_count,
+        IFF(latest_subs_unioned.ping_edition IS NULL, FALSE, TRUE)                                                                                                                AS has_sent_pings,
+        latest_subs_unioned.is_missing_charge_subscription                                                                                                                        AS is_missing_charge_subscription
+    FROM latest_subs_unioned
       WHERE ping_created_at_month < DATE_TRUNC('month', CURRENT_DATE)
 
 )
