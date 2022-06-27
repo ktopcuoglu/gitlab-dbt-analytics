@@ -18,7 +18,6 @@ import boto3
 import gzip
 from dateutil.relativedelta import *
 from logging import info
-from datetime import datetime
 from dateutil.tz import tzutc
 
 
