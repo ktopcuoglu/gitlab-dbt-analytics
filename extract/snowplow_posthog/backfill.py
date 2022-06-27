@@ -53,17 +53,19 @@ def s3_get_client(
     return session.client("s3")
 
 
-def s3_list_files(aws_access_key_id, aws_secret_access_key, bucket, prefix="") -> str:
+def s3_list_files(client, bucket, prefix="") -> str:
     """
     List files in specific S3 bucket using yield for in a cost-optimized fashion
     and return the file name
     """
-    session = boto3.Session(
-        aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key
-    )
-    s3_client = session.client("s3")
+    # session = boto3.Session(
+    #     aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key
+    # )
+    # s3_client = session.client("s3")
     #
-    results = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
+    # results = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
+
+    result =client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
 
     for result in results:
         yield result["Key"]
@@ -186,19 +188,20 @@ def s3_extraction(file_prefix: str) -> None:
     posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
     snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
-    # s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
+    s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
     folders = s3_get_folders(file_prefix)
 
     for folder in folders:
 
-
         logging.info(f"File {folder}...")
 
-        snowplow_files = s3_list_files(posthog_access_key_id, posthog_secret_access_key, bucket=snowplow_s3_bucket, prefix=folder)
+        snowplow_files = s3_list_files(client=s3_client, bucket=snowplow_s3_bucket, prefix=folder)
 
         for snowplow_file in snowplow_files:
             logging.info(f"..... {snowplow_file}")
+            # for row in s3_load_source_file(client =, bucket=, file_name=):
+
 
 
 """
