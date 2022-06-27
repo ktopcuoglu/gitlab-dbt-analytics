@@ -188,6 +188,10 @@ def s3_extraction(file_prefix: str) -> None:
     posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
     snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
+    property_list = get_property_keys(
+        schema_file="backfill_schema.yml", table_name="gitlab_events"
+    )
+
     s3_client = s3_get_client(posthog_access_key_id, posthog_secret_access_key)
 
     folders = s3_get_folders(file_prefix)
@@ -196,12 +200,18 @@ def s3_extraction(file_prefix: str) -> None:
 
         logging.info(f"File {folder}...")
 
-        snowplow_files = s3_list_files(client=s3_client, bucket=snowplow_s3_bucket, prefix=folder)
+        snowplow_files = s3_list_files(
+            client=s3_client, bucket=snowplow_s3_bucket, prefix=folder
+        )
 
         for snowplow_file in snowplow_files:
-            logging.info(f"..... {snowplow_file}")
-            # for row in s3_load_source_file(client =, bucket=, file_name=):
+            # logging.info(f"..... {snowplow_file}")
+            for source_file_row in s3_load_source_file(
+                client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
+            ):
+                row = source_file_get_row(source_file_row)
 
+                json_prepared = get_properties(property_list=property_list, row=row)
 
 
 """
