@@ -362,7 +362,7 @@ WITH date_details AS (
       COALESCE(pipeline_gen.pipe_gen_net_arr,0)                         AS cfy_pipe_gen_net_arr,
 
        -- sao gen
-      COALESCE(sao_gen.sao_deal_count,0)                                AS cfy_cfy_sao_deal_count,
+      COALESCE(sao_gen.sao_deal_count,0)                                AS cfy_sao_deal_count,
       COALESCE(sao_gen.sao_net_arr,0)                                   AS cfy_sao_net_arr,
 
        -- one year ago sao gen
