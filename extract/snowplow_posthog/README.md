@@ -19,11 +19,9 @@ You can read about the [Existing Snowplow load process in the handbook](https://
 
 * Libraries
     * [posthog](https://posthog.com/docs/integrate/server/python)
-    * [python-decouple](https://pypi.org/project/python-decouple/)
   
     ```bash
     pip install posthog
-    pip install python-decouple
     ```
 
 * Secrets:
@@ -35,6 +33,14 @@ You can read about the [Existing Snowplow load process in the handbook](https://
     * `posthog_host`
 
 ## Testing PostHog instance
+
+
+Install needed library for testing (as this is optional, but handy):
+* [python-decouple](https://pypi.org/project/python-decouple/)
+
+```python
+pip install python-decouple
+```
 
 You need to have `.env` file in order to save secrets. 
 ```dotenv
