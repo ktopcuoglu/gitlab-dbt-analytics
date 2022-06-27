@@ -12,6 +12,10 @@ WITH source AS (
       alliance_partner,
       order_type,
       area,
+      user_segment,
+      user_geo,
+      user_region,
+      user_area,
       allocated_target
     FROM source
 
