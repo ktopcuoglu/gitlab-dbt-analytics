@@ -1,5 +1,4 @@
 import logging
-import sys
 from os import environ as env
 
 from fire import Fire
@@ -13,33 +12,33 @@ def get_load_command(path_date: str) -> str:
     """
     return f"""
         
-        create or replace table "RAW"."CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" as (
+        CREATE OR REPLACE TABLE "RAW"."CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" AS (
 
-          with blob_downloaded as (
+          WITH blob_downloaded AS (
           
-          select
-            $1:correlation_id     as correlation_id,
-            $1:time::timestamp    as timestamp,
-            $1:root_repo::varchar as root_repo,
-            $1:vars_name::varchar as vars_name,
-            $1:digest::varchar    as digest,
-            $1:size_bytes::int    as size_bytes
-          from @raw.container_registry.container_registry/dt={path_date}
+          SELECT
+            $1:correlation_id     AS correlation_id,
+            $1:time::timestamp    AS timestamp,
+            $1:root_repo::varchar AS root_repo,
+            $1:vars_name::varchar AS vars_name,
+            $1:digest::varchar    AS digest,
+            $1:size_bytes::int    AS size_bytes
+          FROM @raw.container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
-          where $1:msg='blob downloaded'
+          WHERE $1:msg='blob downloaded'
           
-          ), access as (
+          ), access AS (
           
-          select
-            $1:correlation_id     as correlation_id,
-            $1:time::timestamp    as timestamp,
-            $1:remote_ip::varchar as remote_ip
-          from @raw.container_registry.container_registry/dt={path_date}
+          SELECT
+            $1:correlation_id     AS correlation_id,
+            $1:time::timestamp    AS timestamp,
+            $1:remote_ip::varchar AS remote_ip
+          FROM @raw.container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
-          where $1:msg='access'
+          WHERE $1:msg='access'
           )
           
-          select
+          SELECT
             blob_downloaded.correlation_id,
             blob_downloaded.timestamp,
             blob_downloaded.root_repo,
@@ -47,11 +46,12 @@ def get_load_command(path_date: str) -> str:
             blob_downloaded.digest,
             blob_downloaded.size_bytes,
             access.remote_ip
-          from access
-          inner join blob_downloaded on blob_downloaded.correlation_id = access.correlation_id
+          FROM access
+          INNER JOIN blob_downloaded ON blob_downloaded.correlation_id = access.correlation_id
        
         );
     """
+
 
 def load_data():
     """
