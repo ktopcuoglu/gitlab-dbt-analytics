@@ -31,7 +31,11 @@ You can read about the [Existing Snowplow load process in the handbook](https://
     * `posthog_project_api_key`
     * `posthog_personal_api_key `
     * `posthog_host`
-
+* `Airflow` variables
+```bash
+POSTHOG_BACKFILL_START_DATE=YYYY-MM-DD
+POSTHOG_BACKFILL_END_DATE=YYYY-MM-DD
+```
 ## Testing PostHog instance
 
 

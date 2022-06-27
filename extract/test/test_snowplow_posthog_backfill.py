@@ -28,7 +28,7 @@ from extract.snowplow_posthog.backfill import (
     get_property_keys,
 )
 
-MANIFEST_FILE = "../snowplow_posthog/backfill_schema.yaml"
+MANIFEST_FILE = "../snowplow_posthog/backfill_schema.yml"
 
 TEST_DATE_RANGE = [
     ("20220505", 24),

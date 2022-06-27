@@ -16,10 +16,11 @@ from logging import info, basicConfig
 import boto3
 import gzip
 from dateutil.relativedelta import *
-from decouple import config
+from logging import info
 
 ENCODING = "utf-8"
-
+EVENT_NAME = "gitlab_events"
+DISTINCT_ID = "gitlab_dotcom"
 
 """
 Extract routines
@@ -173,7 +174,7 @@ def s3_extraction(file_prefix: str) -> None:
 
     snowplow_files = s3_list_files(s3_client, snowplow_s3_bucket, prefix=file_prefix)
     for file in snowplow_files:
-        pass
+        logging.info(f"File {file}...")
 
 
 """
@@ -243,7 +244,10 @@ def get_upload_structure(schema_file: str, table_name: str, values: list) -> dic
         "timestamp": "[optional timestamp in ISO 8601 format]",
     }
 
+    api_skeleton["event_name"] = EVENT_NAME
+    api_skeleton['distinct_id'] = DISTINCT_ID
     api_skeleton["properties"] = properties
+    api_skeleton["timestamp"] = datetime.datetime.utcnow().isoformat()
 
     return api_skeleton
 
@@ -257,13 +261,13 @@ def posthog_push_json(data: dict) -> None:
     pass
 
 
-def snowplow_posthog_backfill(month: str) -> None:
+def snowplow_posthog_backfill(day: str) -> None:
     """
     Entry point to trigger the back filling for Snowplow S3 -> PostHog
     """
 
     # get the data from S3 bucket
-    # s3_extraction(file_prefix=curr_month)
+    s3_extraction(file_prefix=day)
 
     # transform data from .tsv -> .json
 
