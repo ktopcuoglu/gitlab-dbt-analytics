@@ -198,6 +198,7 @@ multiple_gmau_in_smau AS (
 adjusted_smau AS (
 
   SELECT
+    results.xmau_metric_monthly_id,
     results.event_calendar_month,
     results.is_umau,
     results.is_gmau,
