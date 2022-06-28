@@ -555,7 +555,9 @@ models:
       - name: max_historical_user_count
         description: Maximum active user count ever reported over the lifetime of the customer's subcription.
       - name: license_user_count
-        description: Count of licensed users purchased with the customer's subcription.
+        description: Count of licensed users purchased with the customer's subscription. This count of licensed users is fetched from Zuora whenever a value exists in Zuora source, if not then it is fetched from Service Ping for Self-managed Customers or from gitlabdotcom for SaaS Customers.
+      - name: license_user_count_source
+        description: Source of license_user_count, values include - `zuora` or `gitlabdotcom` or `Service Ping`.
       - name: umau_28_days_user
         description: '{{ doc("umau_28_days_user_desc") }}'
       - name: action_monthly_active_users_project_repo_28_days_user
