@@ -1,3 +1,6 @@
+"""
+DAG for gsc external
+"""
 import os
 from datetime import datetime, timedelta
 
@@ -41,7 +44,7 @@ dag = DAG("el_gcs_external", default_args=default_args, schedule_interval="0 3 *
 
 airflow_home = env["AIRFLOW_HOME"]
 
-task_identifier = "gcs-external-load"
+TASK_IDENTIFIER = "gcs-external-load"
 
 run_load_command = f"""
   {clone_and_setup_extraction_cmd} &&
@@ -52,8 +55,8 @@ run_load_command = f"""
 run_load = KubernetesPodOperator(
     **gitlab_defaults,
     image=DATA_IMAGE,
-    task_id=task_identifier,
-    name=task_identifier,
+    task_id=TASK_IDENTIFIER,
+    name=TASK_IDENTIFIER,
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_DATABASE,

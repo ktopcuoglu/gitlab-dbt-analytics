@@ -1,9 +1,11 @@
+"""
+The main module for gcs
+"""
 import logging
 from os import environ as env
 
 from fire import Fire
 from gitlabdata.orchestration_utils import snowflake_engine_factory
-from sqlalchemy.engine import Engine
 
 
 def get_load_command(path_date: str) -> str:
@@ -11,11 +13,10 @@ def get_load_command(path_date: str) -> str:
     Generate a load command based on date
     """
     return f"""
-        
+
         CREATE OR REPLACE TABLE "RAW"."CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" AS (
 
           WITH blob_downloaded AS (
-          
           SELECT
             $1:correlation_id::VARCHAR     AS correlation_id,
             $1:time::TIMESTAMP             AS timestamp,
@@ -25,10 +26,8 @@ def get_load_command(path_date: str) -> str:
             $1:size_bytes::INT             AS size_bytes
           FROM @raw.container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
-          WHERE $1:msg='blob downloaded'
-          
-          ), access AS (
-          
+            WHERE $1:msg='blob downloaded'
+            ), access AS (
           SELECT
             $1:correlation_id::VARCHAR     AS correlation_id,
             $1:time::TIMESTAMP             AS timestamp,
@@ -37,7 +36,6 @@ def get_load_command(path_date: str) -> str:
             (file_format=>json_generic)
           WHERE $1:msg='access'
           )
-          
           SELECT
             blob_downloaded.correlation_id,
             blob_downloaded.timestamp,
@@ -48,7 +46,7 @@ def get_load_command(path_date: str) -> str:
             access.remote_ip
           FROM access
           INNER JOIN blob_downloaded ON blob_downloaded.correlation_id = access.correlation_id
-       
+
         );
     """
 
@@ -70,7 +68,7 @@ def load_data():
         results = connection.execute(load_command).fetchone()
         logging.info(results)
     except:
-        logging.error(f"Failed to load")
+        logging.error("Failed to load")
         raise
     finally:
         connection.close()
