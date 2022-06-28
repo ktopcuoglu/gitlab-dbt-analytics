@@ -396,6 +396,11 @@ Ideally, the purpose of this data model is to identify the usage pings that can 
 The metric list identifed can be found in the macro [`sales_wave_2_3_metrics`](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/sales_wave_2_3_metrics.sql).
 {% enddocs %}
 
+{% docs prep_gainsight_source_model_counts %}
+This data model is used to capture the counts for all the source tables used for Gainsight.
+
+{% enddocs %}
+
 {% docs prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics %}
 
 A recreation of `prep_usage_ping_subscription_mapped_wave_2_3_metrics` for _SaaS_ users.

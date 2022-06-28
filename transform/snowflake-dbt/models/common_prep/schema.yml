@@ -1261,6 +1261,15 @@ models:
       - name: incident_management_total_unique_counts_monthly
         description: SMAU Metric
 
+  - name: prep_gainsight_source_model_counts
+    description: '{{ doc("prep_gainsight_source_model_counts") }}'
+    columns:
+      - name: model_name
+        description: Name of the Model
+      - name: row_count
+        description: Number of records in the table
+        description: SMAU Metric
+
   - name: prep_saas_usage_ping_free_user_metrics
     description: '{{ doc("prep_saas_usage_ping_free_user_metrics") }}'
     columns:
