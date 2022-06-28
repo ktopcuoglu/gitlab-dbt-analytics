@@ -1687,11 +1687,11 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , access_level
-      , group_id
+      , source_id
+      , source_type
+      , path
       , created_at
       , updated_at
-      , saml_group_name text
       FROM routes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
