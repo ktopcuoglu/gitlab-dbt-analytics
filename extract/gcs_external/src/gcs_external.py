@@ -14,7 +14,7 @@ def get_load_command(path_date: str) -> str:
     """
     return f"""
 
-        CREATE OR REPLACE TABLE "RAW"."CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" AS (
+        CREATE OR REPLACE TABLE "CONTAINER_REGISTRY"."JOINED_{path_date.replace('-','_')}" AS (
 
           WITH blob_downloaded AS (
           SELECT
