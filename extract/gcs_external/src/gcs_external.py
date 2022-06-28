@@ -64,7 +64,7 @@ def load_data():
     try:
         connection = engine.connect()
         load_command = get_load_command(path_date)
-        logging.info("running copy command {load_command}")
+        logging.info(f"running copy command {load_command}")
         results = connection.execute(load_command).fetchone()
         logging.info(results)
     except:
