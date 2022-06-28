@@ -204,7 +204,7 @@ def s3_extraction(file_prefix: str) -> None:
     # get folders
     for folder in folders:
 
-        logging.info(f"File {folder}...")
+        logging.info(f"Folder: {folder}...")
 
         snowplow_files = s3_list_files(
             client=s3_client, bucket=snowplow_s3_bucket, prefix=folder
@@ -212,7 +212,7 @@ def s3_extraction(file_prefix: str) -> None:
 
         # get files
         for snowplow_file in snowplow_files:
-            # logging.info(f"..... {snowplow_file}")
+            logging.info(f"     File: {snowplow_file}")
 
             # get row
             for row in s3_load_source_file(
