@@ -31,18 +31,6 @@ Extract routines
 """
 
 
-def s3_get_credentials() -> tuple:
-    """
-    This function returns the set of aws_access_key_id,aws_secret_access_key and snowplow bucket
-    """
-
-    posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
-    posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
-    snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
-
-    return (posthog_access_key_id, posthog_secret_access_key, snowplow_s3_bucket)
-
-
 def s3_get_client(
     aws_access_key_id: str, aws_secret_access_key: str
 ) -> boto3.resources.base.ServiceResource:
@@ -61,25 +49,11 @@ def s3_list_files(client, bucket, prefix="") -> str:
     List files in specific S3 bucket using yield for in a cost-optimized fashion
     and return the file name
     """
-    # session = boto3.Session(
-    #     aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key
-    # )
-    # s3_client = session.client("s3")
-    #
-    # results = s3_client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
 
     results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
 
     for result in results:
         yield result["Key"]
-
-    # s3_bucket = s3_client.list_objects(Bucket=bucket, Prefix=prefix)
-    #
-    # info(f"BUCKET: {s3_bucket}...")
-
-    # Iterate through files and upload
-    # for obj in s3_bucket["Contents"]:
-    #     yield obj["Key"]
 
 
 def source_file_get_row(row: str) -> list:
@@ -88,15 +62,16 @@ def source_file_get_row(row: str) -> list:
     Input: 'xxx'  'YYY' 'zzz'
     Output ['xxx', 'YYY', 'zzz']
     """
-    separator = "\t"
+    field_separator = "\t"
+    new_line_separator = "\n"
 
     if row is None:
         return []
 
-    result = row.split(separator)
+    result = row.split(field_separator)
 
     # exclude newline character ('\n') at the end of the line
-    if result[-1] == "\n":
+    if result[-1] == new_line_separator:
         return result[:-1]
     return result
 
@@ -163,7 +138,7 @@ def s3_get_folders(yyyymm: str) -> list:
     ]
 
 
-def s3_extraction(file_prefix: str) -> None:
+def posthog_processing(file_prefix: str) -> None:
 
     """
     Load data from .tsv files (even the extension is .gz) stored in an S3 Bucket and push it to PostHog.
@@ -183,11 +158,6 @@ def s3_extraction(file_prefix: str) -> None:
 
     File example: output/2022/06/06/04/SnowPlowEnrichedGood-2-2022-06-06-04-29-38-a3034baf-2167-42a5-9633-76318f7b5b8c.gz
     """
-    # (
-    #     posthog_access_key_id,
-    #     posthog_secret_access_key,
-    #     snowplow_s3_bucket,
-    # ) = s3_get_credentials
 
     posthog_access_key_id = env["POSTHOG_AWS_ACCESS_KEY_ID"]
     posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
@@ -214,13 +184,13 @@ def s3_extraction(file_prefix: str) -> None:
         for snowplow_file in snowplow_files:
             logging.info(f"     File: {snowplow_file}")
 
-            # get row
+            # get rows
             for row in s3_load_source_file(
                 client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
             ):
                 json_prepared = get_properties(property_list=property_list, values=row)
                 # push row to PostHog
-                # posthog_push_json(json_prepared)
+                posthog_push_json(json_prepared)
 
 
 """
@@ -299,8 +269,8 @@ def snowplow_posthog_backfill(day: str) -> None:
 
     posthog_authorize()
 
-    # get the data from S3 bucket
-    s3_extraction(file_prefix=str(day))
+    # process data
+    posthog_processing(file_prefix=str(day))
 
 
 if __name__ == "__main__":
