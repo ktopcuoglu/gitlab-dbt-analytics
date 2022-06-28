@@ -1,5 +1,5 @@
 """
-DAG for gsc external
+DAG for gcs external
 """
 import os
 from datetime import datetime, timedelta
