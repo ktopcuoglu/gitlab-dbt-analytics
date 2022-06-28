@@ -119,7 +119,7 @@ def get_date_range(from_date:datetime, to_date:datetime) -> list:
     Get the list of dict partitioned year/month/day to slice tasks per day
     Usage:
     ------------------------------------------------------------------
-    Input: 2022-06-01 - 2022-05-02
+    Input: 2022-06-01 - 2022-06-02
     Output: [{'year': '2022', 'month': '06', 'day': '01'},
             {'year': '2022', 'month': '06', 'day': '02'}]
     ------------------------------------------------------------------

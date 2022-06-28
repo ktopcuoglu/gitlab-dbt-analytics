@@ -79,7 +79,7 @@ def source_file_get_row(row: str) -> list:
 def s3_load_source_file(client, bucket: str, file_name: str) -> list:
     """
     Load file content from object storage (for now, it is a S3 bucket)
-    and return
+    and return file line per line
     """
     csv_obj = client.get_object(Bucket=bucket, Key=file_name)
 
@@ -127,7 +127,9 @@ def s3_get_folders(yyyymm: str) -> list:
     """
     Get the list of file prefix
 
-    Usage: "output/YYYY/MM/DD/HH24"
+    Usage:
+    Input: YYYYMM or YYYYMMDD
+    Output: "output/YYYY/MM/DD/HH24" (24 list members for each day)
     """
 
     folder_name = "output/"
@@ -228,6 +230,8 @@ def get_property_keys(schema_file: str, table_name: str) -> list:
 def get_properties(property_list: str, values: list) -> dict:
     """
     Get key-value pairs for properties for uploading
+    Input: ['a', 'b', 'c'] and [1, 2, 3]
+    Output: {'a': 1, 'b': 2 , 'c': 3}
     """
     return dict(zip_longest(property_list, values))
 
