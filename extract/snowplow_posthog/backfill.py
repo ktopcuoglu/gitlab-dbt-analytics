@@ -220,7 +220,7 @@ def s3_extraction(file_prefix: str) -> None:
             ):
                 json_prepared = get_properties(property_list=property_list, values=row)
                 # push row to PostHog
-                posthog_push_json(json_prepared)
+                # posthog_push_json(json_prepared)
 
 
 """
