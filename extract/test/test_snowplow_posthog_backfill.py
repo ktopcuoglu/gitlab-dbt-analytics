@@ -12,10 +12,10 @@ import pytest
 # execution way in Airflow,
 # can't touch the original code
 
-test_path = "/extract/snowplow_posthog"
+TEST_PATH = "/extract/snowplow_posthog"
 
 abs_path = os.path.dirname(os.path.realpath(__file__))
-abs_path = abs_path[: abs_path.find("extract")] + test_path
+abs_path = abs_path[: abs_path.find("extract")] + TEST_PATH
 sys.path.append(abs_path)
 
 
@@ -151,7 +151,7 @@ def test_get_file_prefix(test_value, expected_length):
     assert isinstance(result, list)
 
     for res in result:
-        "output/" in res
+        assert "output/" in res
 
 
 def test_get_property_keys():

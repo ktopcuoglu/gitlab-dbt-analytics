@@ -14,10 +14,11 @@ import posthog
 from fire import Fire
 from logging import info, basicConfig
 import logging
+
 import boto3
 import gzip
 from dateutil.relativedelta import *
-from logging import info
+
 from dateutil.tz import tzutc
 
 
@@ -229,8 +230,7 @@ Load routines
 
 def posthog_get_credentials() -> tuple:
     """
-    This function returns the set of PostHog secrets
-    based on the the schema name provided.
+    This function returns the set of PostHog secrets.
     """
 
     posthog_project_api_key = env["POSTHOG_PROJECT_API_KEY"]
@@ -276,6 +276,7 @@ def posthog_authorize() -> None:
     posthog.project_api_key = posthog_project_api_key
     posthog.personal_api_key = posthog_personal_api_key
     posthog.host = posthog_host
+    posthog.sync_mode = True
 
 
 def posthog_push_json(data: dict) -> None:
