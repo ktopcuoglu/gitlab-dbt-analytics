@@ -24,7 +24,7 @@ def get_load_command(path_date: str) -> str:
             $1:vars_name::VARCHAR          AS vars_name,
             $1:digest::VARCHAR             AS digest,
             $1:size_bytes::INT             AS size_bytes
-          FROM @raw.container_registry.container_registry/dt={path_date}
+          FROM @container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
             WHERE $1:msg='blob downloaded'
             ), access AS (
@@ -32,7 +32,7 @@ def get_load_command(path_date: str) -> str:
             $1:correlation_id::VARCHAR     AS correlation_id,
             $1:time::TIMESTAMP             AS timestamp,
             $1:remote_ip::VARCHAR          AS remote_ip
-          FROM @raw.container_registry.container_registry/dt={path_date}
+          FROM @container_registry.container_registry/dt={path_date}
             (file_format=>json_generic)
           WHERE $1:msg='access'
           )
