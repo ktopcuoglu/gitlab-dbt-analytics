@@ -745,6 +745,22 @@ tables:
         FROM todos
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_saml_group_links' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM saml_group_links
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
+        UNION ALL
+        SELECT 'gitlab_db_slack_integrations' AS table_name
+        , DATE(created_at) as created_date
+        , DATE(updated_at) as updated_date
+        , count(*) as number_of_records
+        FROM slack_integrations
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2,3
   cluster_11:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
@@ -828,14 +844,6 @@ tables:
         , count(*) as number_of_records
         FROM project_daily_statistics
         WHERE DATE(date) > current_date - interval '8' day
-        GROUP BY 1,2
-        UNION ALL
-        SELECT 'gitlab_db_audit_events' AS table_name
-        , DATE(created_at) as created_date
-        , 'null' as updated_date
-        , count(*) as number_of_records
-        FROM audit_events
-        WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2
   cluster_13:
     dbt_source_model: true

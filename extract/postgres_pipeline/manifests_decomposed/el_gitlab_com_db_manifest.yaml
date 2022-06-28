@@ -1687,12 +1687,27 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
+      , access_level
+      , group_id
+      , created_at
+      , updated_at
+      , saml_group_name text
+      FROM routes
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  saml_group_links:
+    export_schema: 'gitlab_com'
+    export_table: 'saml_group_links'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
       , source_id
       , source_type
       , path
       , created_at
       , updated_at
-      FROM routes
+      FROM saml_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   security_scans:
@@ -1746,6 +1761,24 @@ tables:
       , inherit_from_id
       , instance
       FROM integrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  slack_integrations:
+    export_schema: 'gitlab_com'
+    export_table: 'slack_integrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , service_id
+      , team_id
+      , team_name
+      , alias
+      , user_id
+      , created_at
+      , updated_at
+      , bot_user_id
+      FROM slack_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   snippets:
