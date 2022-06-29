@@ -402,7 +402,7 @@ tables:
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp 
+        AND '{END_TIMESTAMP}'::timestamp
   compliance_management_frameworks:
     export_schema: 'gitlab_com'
     export_table: 'compliance_management_frameworks'
@@ -1719,11 +1719,11 @@ tables:
     import_db: GITLAB_DB
     import_query: |-
       SELECT id
-      , source_id
-      , source_type
-      , path
+      , access_level
+      , group_id
       , created_at
       , updated_at
+      , saml_group_name
       FROM saml_group_links
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
