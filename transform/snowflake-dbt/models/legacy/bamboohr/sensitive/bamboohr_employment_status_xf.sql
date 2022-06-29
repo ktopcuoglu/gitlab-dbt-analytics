@@ -1,19 +1,19 @@
 WITH bamboohr_employment_status AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_employment_status_source') }}
+    FROM {{ ref ('blended_employment_status_source') }}
 
 ), employment_log AS (
 
    SELECT
-    status_id,
+    employment_status_sequence,
     employee_id,
     employment_status,
     termination_type,
     effective_date                                                                              AS valid_from_date,
-    LEAD(effective_date) OVER (PARTITION BY employee_id ORDER BY effective_date, status_id)     AS valid_to_date,
-    LEAD(employment_status) OVER (PARTITION BY employee_id ORDER BY effective_date, status_id)  AS next_employment_status,
-    LAG(employment_status) OVER (PARTITION BY employee_id ORDER BY effective_date, status_id)   AS previous_employment_status
+    LEAD(effective_date) OVER (PARTITION BY employee_id ORDER BY effective_date, employment_status_sequence)     AS valid_to_date,
+    LEAD(employment_status) OVER (PARTITION BY employee_id ORDER BY effective_date, employment_status_sequence)  AS next_employment_status,
+    LAG(employment_status) OVER (PARTITION BY employee_id ORDER BY effective_date, employment_status_sequence)   AS previous_employment_status
     FROM bamboohr_employment_status
 
 ), final AS (

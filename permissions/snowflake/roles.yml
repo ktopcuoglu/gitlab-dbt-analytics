@@ -2518,7 +2518,10 @@ roles:
 
     - dmicovic:
         member_of:
-            - analyst_core
+            - reporter
+            - analyst_marketing
+            - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - dev_xs
 
@@ -3880,6 +3883,17 @@ roles:
                     - rparker_prep.*.*
                     - rparker_prod.*.*
 
+    - sgladchun:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - sisense_restricted_safe:
         member_of:
             - reporter
@@ -3980,7 +3994,7 @@ roles:
 
     - target_snowflake:
         warehouses:
-            - target_snowflake
+            - loading
         privileges:
             databases:
                 read:
@@ -4566,6 +4580,16 @@ users:
         member_of:
             - securityadmin
 
+    - sgladchun:
+        can_login: yes 
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+
     - sisense_restricted_safe:
         can_login: yes
         member_of:
@@ -4672,9 +4696,6 @@ warehouses:
 
     - reporting:
         size: medium
-
-    - target_snowflake:
-        size: x-small
 
     - transforming_s:
         size: small

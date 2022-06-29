@@ -21,7 +21,16 @@
              sheetload_sales_funnel_targets_matrix_source.user_area)        AS user_segment_geo_region_area
     FROM {{ ref('sheetload_sales_funnel_targets_matrix_source') }}
 
-) , fiscal_months AS (
+), sheetload_sales_funnel_partner_alliance_targets_matrix_source AS (
+
+    SELECT 
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.*,
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.area    AS user_segment_geo_region_area
+    FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
+    WHERE month NOT LIKE 'FY22%' -- Since these targets where set at the segment-area grain and not the segment-geo-region-area that we want to use
+                                 -- Also, the FY22 hierarchy is already correctly modelled, the one that need this introduction is the FY23 hierarchy
+
+), fiscal_months AS (
 
     SELECT DISTINCT
       fiscal_month_name_fy,
@@ -107,7 +116,30 @@
       AND sheetload_sales_funnel_targets_matrix_source.user_geo IS NOT NULL
       AND sheetload_sales_funnel_targets_matrix_source.user_region IS NOT NULL
       AND sheetload_sales_funnel_targets_matrix_source.user_area IS NOT NULL
-  
+
+), user_hierarchy_sheetload_partner_alliance AS (
+/*
+  To get a complete picture of the hierarchy and to ensure fidelity with the TOPO model, we will union in the distinct hierarchy values from the partner and alliance file.
+*/
+
+    SELECT DISTINCT 
+      fiscal_months.fiscal_year,
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment,
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_geo,
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_region,
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_area,
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment_geo_region_area,
+      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, 1)      AS is_last_user_hierarchy_in_fiscal_year,
+      COALESCE(final_scd.is_last_user_area_in_fiscal_year, 0)           AS is_last_user_area_in_fiscal_year
+    FROM sheetload_sales_funnel_partner_alliance_targets_matrix_source
+    INNER JOIN fiscal_months
+      ON sheetload_sales_funnel_partner_alliance_targets_matrix_source.month = fiscal_months.fiscal_month_name_fy
+    LEFT JOIN final_scd
+      ON LOWER(sheetload_sales_funnel_partner_alliance_targets_matrix_source.user_segment_geo_region_area) = LOWER(final_scd.user_segment_geo_region_area)
+        AND fiscal_months.fiscal_year = final_scd.fiscal_year
+    WHERE sheetload_sales_funnel_partner_alliance_targets_matrix_source.area != 'N/A'
+      AND sheetload_sales_funnel_partner_alliance_targets_matrix_source.area IS NOT NULL
+
 ), user_hierarchy_stamped_opportunity AS (
 /*
   To get a complete picture of the hierarchy and to ensure fidelity with the stamped opportunities, we will union in the distinct hierarchy values from the stamped opportunities.
@@ -136,14 +168,14 @@
 */
 
     SELECT DISTINCT
-      COALESCE(final_scd.user_segment, user_hierarchy_stamped_opportunity.user_segment, user_hierarchy_sheetload.user_segment)                                                                              AS user_segment,
-      COALESCE(final_scd.user_geo, user_hierarchy_stamped_opportunity.user_geo, user_hierarchy_sheetload.user_geo)                                                                                          AS user_geo,
-      COALESCE(final_scd.user_region, user_hierarchy_stamped_opportunity.user_region, user_hierarchy_sheetload.user_region)                                                                                 AS user_region,
-      COALESCE(final_scd.user_area, user_hierarchy_stamped_opportunity.user_area, user_hierarchy_sheetload.user_area)                                                                                       AS user_area,
-      COALESCE(final_scd.user_segment_geo_region_area, user_hierarchy_stamped_opportunity.user_segment_geo_region_area, user_hierarchy_sheetload.user_segment_geo_region_area)                              AS user_segment_geo_region_area,
-      COALESCE(final_scd.fiscal_year, user_hierarchy_stamped_opportunity.fiscal_year, user_hierarchy_sheetload.fiscal_year)                                                                                 AS fiscal_year,
-      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, user_hierarchy_stamped_opportunity.is_last_user_hierarchy_in_fiscal_year, user_hierarchy_sheetload.is_last_user_hierarchy_in_fiscal_year)   AS is_last_user_hierarchy_in_fiscal_year,
-      COALESCE(final_scd.is_last_user_area_in_fiscal_year, user_hierarchy_stamped_opportunity.is_last_user_area_in_fiscal_year, user_hierarchy_sheetload.is_last_user_area_in_fiscal_year)                  AS is_last_user_area_in_fiscal_year
+      COALESCE(final_scd.user_segment, user_hierarchy_stamped_opportunity.user_segment, user_hierarchy_sheetload.user_segment, user_hierarchy_sheetload_partner_alliance.user_segment)                                                                              AS user_segment,
+      COALESCE(final_scd.user_geo, user_hierarchy_stamped_opportunity.user_geo, user_hierarchy_sheetload.user_geo, user_hierarchy_sheetload_partner_alliance.user_geo)                                                                                          AS user_geo,
+      COALESCE(final_scd.user_region, user_hierarchy_stamped_opportunity.user_region, user_hierarchy_sheetload.user_region, user_hierarchy_sheetload_partner_alliance.user_region)                                                                                 AS user_region,
+      COALESCE(final_scd.user_area, user_hierarchy_stamped_opportunity.user_area, user_hierarchy_sheetload.user_area, user_hierarchy_sheetload_partner_alliance.user_area)                                                                                       AS user_area,
+      COALESCE(final_scd.user_segment_geo_region_area, user_hierarchy_stamped_opportunity.user_segment_geo_region_area, user_hierarchy_sheetload.user_segment_geo_region_area, user_hierarchy_sheetload_partner_alliance.user_segment_geo_region_area)                              AS user_segment_geo_region_area,
+      COALESCE(final_scd.fiscal_year, user_hierarchy_stamped_opportunity.fiscal_year, user_hierarchy_sheetload.fiscal_year, user_hierarchy_sheetload_partner_alliance.fiscal_year)                                                                                 AS fiscal_year,
+      COALESCE(final_scd.is_last_user_hierarchy_in_fiscal_year, user_hierarchy_stamped_opportunity.is_last_user_hierarchy_in_fiscal_year, user_hierarchy_sheetload.is_last_user_hierarchy_in_fiscal_year, user_hierarchy_sheetload_partner_alliance.is_last_user_hierarchy_in_fiscal_year)   AS is_last_user_hierarchy_in_fiscal_year,
+      COALESCE(final_scd.is_last_user_area_in_fiscal_year, user_hierarchy_stamped_opportunity.is_last_user_area_in_fiscal_year, user_hierarchy_sheetload.is_last_user_area_in_fiscal_year, user_hierarchy_sheetload_partner_alliance.is_last_user_area_in_fiscal_year)                  AS is_last_user_area_in_fiscal_year
     FROM final_scd
     FULL OUTER JOIN user_hierarchy_stamped_opportunity
       ON LOWER(user_hierarchy_stamped_opportunity.user_segment_geo_region_area) = LOWER(final_scd.user_segment_geo_region_area)
@@ -151,6 +183,9 @@
     FULL OUTER JOIN user_hierarchy_sheetload
       ON LOWER(user_hierarchy_sheetload.user_segment_geo_region_area) = LOWER(final_scd.user_segment_geo_region_area)
         AND user_hierarchy_sheetload.fiscal_year = final_scd.fiscal_year
+    FULL OUTER JOIN user_hierarchy_sheetload_partner_alliance
+      ON LOWER(user_hierarchy_sheetload_partner_alliance.user_segment_geo_region_area) = LOWER(final_scd.user_segment_geo_region_area)
+        AND user_hierarchy_sheetload_partner_alliance.fiscal_year = final_scd.fiscal_year
 
 ), final AS (
 
@@ -182,5 +217,5 @@
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2021-01-05",
-    updated_date="2022-03-18"
+    updated_date="2022-06-22"
 ) }}

@@ -45,8 +45,6 @@ models:
       tests:
       - not_null
     - name: last_name
-      tests:
-      - not_null
     - name: job_title
     - name: supervisor
     - name: work_email
@@ -77,7 +75,7 @@ models:
   - name: bamboohr_discretionary_bonuses
     description: This model contains a list of Discretionary bonuses awarded (excludes other types of bonuses). It includes the employee ID to be able to join to the `employee_directory_analysis` model to understand the break down of discretionary bonuses given.
     columns:
-    - name: bonus_id
+    - name: unique_filter_key
       tests:
         - not_null
         - unique
@@ -198,12 +196,3 @@ models:
       - name: valid_to_date
       - name: rank_email_desc
         description: Identifies the email in descending order where 1 is equal to the the current email.
-
-  - name: workday_bamboohr_discretionary_bonuses
-    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
-
-  - name: workday_bamboohr_job_info_current_division_base
-    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.
-
-  - name: workday_bamboohr_work_email
-    description: The is a report for supporting the transition to Workday from BambooHR, to be compared to the normal table of the same name.

@@ -97,10 +97,10 @@ models:
 - name: sheetload_scalable_employment_values
 - name: sheetload_sdr_adaptive_data
   description: Table with data for SDR ramping and status by month.
-- name: sheetload_sdr_attainment_to_goal
-  description: Source model for SDR attainment and goals by month.
 - name: sheetload_sdr_count_snapshot
   description: SDR counts by fiscal quarter and sales segment.
+- name: sheetload_sdr_bdr_metric_targets
+  description: Source model for SDR/BDR metric targets by metric. 
 - name: sheetload_sisense_users
   description: source model for Sisense users.
 - name: sheetload_sisense_user_roles

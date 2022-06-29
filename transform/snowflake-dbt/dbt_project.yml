@@ -281,6 +281,7 @@ models:
 
       workday:
         +schema: workday
+        +materialized: table
 
       zendesk:
         +schema: zendesk

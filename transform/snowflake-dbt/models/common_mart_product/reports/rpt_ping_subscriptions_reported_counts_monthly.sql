@@ -4,7 +4,7 @@
 ) }}
 
 {{ simple_cte([
-  ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly'),
+  ('latest_subscriptions', 'rpt_ping_latest_subscriptions_monthly'),
   ('mart_ping_instance_metric', 'mart_ping_instance_metric')
     ])
 
@@ -12,15 +12,15 @@
 
 -- Determine monthly sub and user count
 
-, dedupe_active_subscriptions AS (
+, dedupe_latest_subscriptions AS (
 
   SELECT
     ping_created_at_month                                             AS ping_created_at_month,
     --ping_edition                                                      AS ping_edition,
-    latest_active_subscription_id                                     AS latest_active_subscription_id,
+    latest_subscription_id                                            AS latest_subscription_id,
     licensed_user_count                                               AS licensed_user_count,
     arr                                                               AS arr
-  FROM active_subscriptions
+  FROM latest_subscriptions
     {{ dbt_utils.group_by(n=4)}}
 
 ), subscription_info AS (
@@ -30,9 +30,9 @@
     --ping_edition                                                      AS ping_edition,
     1                                                                 AS key,
     SUM(arr)                                                          AS total_arr,
-    COUNT(DISTINCT latest_active_subscription_id)                     AS total_subscription_count,
+    COUNT(DISTINCT latest_subscription_id)                            AS total_subscription_count,
     SUM(licensed_user_count)                                          AS total_licensed_users
-  FROM dedupe_active_subscriptions
+  FROM dedupe_latest_subscriptions
       {{ dbt_utils.group_by(n=2)}}
 
 ), metrics AS (
