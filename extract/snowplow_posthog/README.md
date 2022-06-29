@@ -38,7 +38,6 @@ POSTHOG_BACKFILL_END_DATE=YYYY-MM-DD
 ```
 ## Testing PostHog instance
 
-
 Install needed library for testing (as this is optional, but handy):
 * [python-decouple](https://pypi.org/project/python-decouple/)
 
@@ -84,4 +83,14 @@ posthog.capture(
     timestamp=datetime.utcnow().replace(tzinfo=tzutc()),
 )
 
+```
+
+## Process representation
+
+```mermaid
+graph TD;
+  SN[Snowplow S3 Bucket]--List files-->S3_F[Get files from S3];
+  S3_F--Read lines-->TR[.tsv to .json transformation];
+  TR--Push .json-->PH[PostHog ingest];
+  PH--Save data-->PH_STORE[Data stored in PostHog];
 ```
