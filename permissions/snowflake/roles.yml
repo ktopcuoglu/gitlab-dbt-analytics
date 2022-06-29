@@ -4586,12 +4586,7 @@ users:
     - sgladchun:
         can_login: yes 
         member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
+            - sgladchun
 
     - sisense_restricted_safe:
         can_login: yes
@@ -4698,7 +4693,7 @@ warehouses:
         size: x-small
 
     - loading_xl:
-      size: x-large
+        size: x-large
 
     - reporting:
         size: medium
