@@ -4693,7 +4693,7 @@ warehouses:
         size: x-small
 
     - loading_xl:
-      size: x-large
+        size: x-large
 
     - reporting:
         size: medium
