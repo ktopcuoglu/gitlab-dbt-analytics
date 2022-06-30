@@ -109,8 +109,7 @@
       IFF(
         zuora_licenses_per_subscription.license_user_count IS NOT NULL, 
         'Zuora',
-        'Service Ping')                                                             AS license_user_count_flag,
-
+        'Service Ping')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -321,7 +320,7 @@
       IFF(
         zuora_licenses_per_subscription.license_user_count IS NOT NULL,
         'Zuora',
-        'gitlabdotcom')                                                             AS license_user_count_flag,
+        'gitlabdotcom')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
@@ -522,7 +521,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@snalamaru",
     created_date="2022-01-14",
-    updated_date="2022-06-08"
+    updated_date="2022-06-28"
 ) }}
