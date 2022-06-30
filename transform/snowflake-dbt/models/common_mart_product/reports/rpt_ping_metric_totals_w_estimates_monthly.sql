@@ -16,7 +16,7 @@
 
     SELECT
       metrics_path                      AS metrics_path,
-      ping_created_at_month             AS ping_created_at_month,
+      ping_created_date_month           AS ping_created_date_month,
       ping_delivery_type                AS ping_delivery_type,
       ping_edition                      AS ping_edition,
       ping_product_tier                 AS ping_product_tier,
@@ -45,7 +45,7 @@
       mart_pct.estimation_grain         AS estimation_grain
     FROM fact
       INNER JOIN mart_pct
-    ON fact.ping_created_at_month = mart_pct.ping_created_at_month
+    ON fact.ping_created_date_month = mart_pct.ping_created_date_month
       AND fact.metrics_path = mart_pct.metrics_path
       AND fact.ping_edition = mart_pct.ping_edition
   WHERE ping_delivery_type = 'Self-Managed'
@@ -78,10 +78,10 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type']) }}     AS ping_metric_totals_w_estimates_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition', 'estimation_grain', 'ping_edition_product_tier', 'ping_delivery_type']) }}   AS ping_metric_totals_w_estimates_monthly_id,
     -- identifiers
     metrics_path                                                                                                                                                        AS metrics_path,
-    ping_created_at_month                                                                                                                                               AS ping_created_at_month,
+    ping_created_date_month                                                                                                                                             AS ping_created_date_month,
     ping_delivery_type                                                                                                                                                  AS ping_delivery_type,
     -- ping attributes
     ping_edition                                                                                                                                                        AS ping_edition,

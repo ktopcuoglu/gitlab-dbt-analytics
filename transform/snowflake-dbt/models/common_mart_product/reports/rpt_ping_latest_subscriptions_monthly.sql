@@ -26,7 +26,7 @@ Determine latest version for each subscription to determine if the potential met
 , subscriptions_w_versions AS (
 
   SELECT
-      ping_created_at_month             AS ping_created_at_month,
+      ping_created_date_month           AS ping_created_date_month,
       dim_installation_id               AS dim_installation_id,
       latest_subscription_id            AS latest_subscription_id,
       ping_edition                      AS ping_edition,
@@ -36,7 +36,7 @@ Determine latest version for each subscription to determine if the potential met
   FROM mart_ping_instance_metric_monthly
       WHERE ping_delivery_type = 'Self-Managed'
       QUALIFY ROW_NUMBER() OVER (
-            PARTITION BY ping_created_at_month, latest_subscription_id, dim_installation_id
+            PARTITION BY ping_created_date_month, latest_subscription_id, dim_installation_id
               ORDER BY major_minor_version_id DESC) = 1
 
 /*
@@ -46,7 +46,7 @@ Deduping the mart to ensure instance_user_count isn't counted 2+ times
 ), deduped_subscriptions_w_versions AS (
 
     SELECT
-        ping_created_at_month             AS ping_created_at_month,
+        ping_created_date_month           AS ping_created_date_month,
         dim_installation_id               AS dim_installation_id,
         latest_subscription_id            AS latest_subscription_id,
         ping_edition                      AS ping_edition,
@@ -62,7 +62,7 @@ Get the count of pings each month per subscription_name_slugify
 ), ping_counts AS (
 
   SELECT
-    ping_created_at_month                       AS ping_created_at_month,
+    ping_created_date_month                     AS ping_created_date_month,
     dim_installation_id                         AS dim_installation_id,
     latest_subscription_id                      AS latest_subscription_id,
     COUNT(DISTINCT(dim_ping_instance_id))       AS ping_count
@@ -80,7 +80,7 @@ Join subscription information with count of pings
     ping_counts.ping_count
   FROM deduped_subscriptions_w_versions
     INNER JOIN ping_counts
-  ON deduped_subscriptions_w_versions.ping_created_at_month = ping_counts.ping_created_at_month
+  ON deduped_subscriptions_w_versions.ping_created_date_month = ping_counts.ping_created_date_month
     AND deduped_subscriptions_w_versions.latest_subscription_id = ping_counts.latest_subscription_id
     AND deduped_subscriptions_w_versions.dim_installation_id = ping_counts.dim_installation_id
 /*
@@ -119,7 +119,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
 ), arr_counts_joined AS (
 
   SELECT
-    mart_charge_cleaned.arr_month                                                                           AS ping_created_at_month,
+    mart_charge_cleaned.arr_month                                                                           AS ping_created_date_month,
     joined_subscriptions.dim_installation_id                                                                AS dim_installation_id,
     mart_charge_cleaned.dim_subscription_id                                                                 AS latest_subscription_id,
     joined_subscriptions.ping_edition                                                                       AS ping_edition,
@@ -134,7 +134,7 @@ Join mart_charge information bringing in mart_charge subscriptions which DO NOT 
   FROM mart_charge_cleaned
     LEFT OUTER JOIN joined_subscriptions
   ON joined_subscriptions.latest_subscription_id = mart_charge_cleaned.dim_subscription_id
-      AND joined_subscriptions.ping_created_at_month = mart_charge_cleaned.arr_month
+      AND joined_subscriptions.ping_created_date_month = mart_charge_cleaned.arr_month
 
 /*
 Grab the latest values to join to missing subs
@@ -159,7 +159,7 @@ This CTE below grabs the missing installation/subs for each month missing from a
 ), missing_subs AS (
 
     SELECT
-        ping_created_at_month                   AS ping_created_at_month,
+        ping_created_date_month                 AS ping_created_date_month,
         dim_installation_id                     AS dim_installation_id,
         latest_subscription_id                  AS latest_subscription_id,
         ping_edition                            AS ping_edition,
@@ -169,8 +169,8 @@ This CTE below grabs the missing installation/subs for each month missing from a
         COUNT(DISTINCT(dim_ping_instance_id))   AS ping_count
     FROM mart_ping_instance_metric
         WHERE is_last_ping_of_month = TRUE
-          AND CONCAT(latest_subscription_id, to_varchar(ping_created_at_month)) NOT IN
-            (SELECT DISTINCT(CONCAT(latest_subscription_id, to_varchar(ping_created_at_month))) FROM arr_counts_joined)
+          AND CONCAT(latest_subscription_id, to_varchar(ping_created_date_month)) NOT IN
+            (SELECT DISTINCT(CONCAT(latest_subscription_id, to_varchar(ping_created_date_month))) FROM arr_counts_joined)
           {{ dbt_utils.group_by(n=5)}}
 
 /*
@@ -192,7 +192,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
 ), latest_subs_unioned AS (
 
     SELECT
-        ping_created_at_month,
+        ping_created_date_month,
         dim_installation_id,
         latest_subscription_id,
         ping_edition,
@@ -209,7 +209,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         UNION ALL
 
     SELECT
-        ping_created_at_month,
+        ping_created_date_month,
         dim_installation_id,
         latest_subscription_id,
         ping_edition,
@@ -226,8 +226,8 @@ Join to capture missing metrics, uses the last value found for these in fct_char
 ), final AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ping_created_at_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                        AS ping_latest_subscriptions_monthly_id,
-        latest_subs_unioned.ping_created_at_month                                                                                                                                 AS ping_created_at_month,
+        {{ dbt_utils.surrogate_key(['ping_created_date_month', 'latest_subscription_id', 'dim_installation_id', 'ping_edition', 'version_is_prerelease']) }}                      AS ping_latest_subscriptions_monthly_id,
+        latest_subs_unioned.ping_created_date_month                                                                                                                               AS ping_created_date_month,
         latest_subs_unioned.dim_installation_id                                                                                                                                   AS dim_installation_id,
         latest_subs_unioned.latest_subscription_id                                                                                                                                AS latest_subscription_id,
         latest_subs_unioned.ping_edition                                                                                                                                          AS ping_edition,
@@ -241,7 +241,7 @@ Join to capture missing metrics, uses the last value found for these in fct_char
         IFF(latest_subs_unioned.ping_edition IS NULL, FALSE, TRUE)                                                                                                                AS has_sent_pings,
         latest_subs_unioned.is_missing_charge_subscription                                                                                                                        AS is_missing_charge_subscription
     FROM latest_subs_unioned
-      WHERE ping_created_at_month < DATE_TRUNC('month', CURRENT_DATE)
+      WHERE ping_created_date_month < DATE_TRUNC('month', CURRENT_DATE)
 
 )
 
