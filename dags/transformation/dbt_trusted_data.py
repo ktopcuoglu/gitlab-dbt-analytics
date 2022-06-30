@@ -53,8 +53,8 @@ default_args = {
     "dagrun_timeout": timedelta(hours=6),
 }
 
-# Runs every 6 hours
-dag_schedule = "0 */6 * * *"
+# Run once a day at 6AM UTC
+dag_schedule = "0 6 * * *"
 
 # Create the DAG
 dag = DAG(

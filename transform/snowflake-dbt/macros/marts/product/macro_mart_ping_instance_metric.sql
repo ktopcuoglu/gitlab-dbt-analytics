@@ -95,22 +95,22 @@
     {{ dbt_utils.group_by(n=21)}}
 
 
-  ), latest_active_subscription AS (
+  ), latest_subscription AS (
 
     SELECT
-        dim_subscription_id             AS latest_active_subscription_id,
+        dim_subscription_id             AS latest_subscription_id,
         dim_subscription_id_original    AS dim_subscription_id_original
     FROM dim_subscription
         WHERE subscription_status IN ('Active', 'Cancelled')
 
-  ), license_subscriptions_w_latest_active_subscription AS (
+  ), license_subscriptions_w_latest_subscription AS (
 
     SELECT
       license_subscriptions.*,
-      latest_active_subscription.latest_active_subscription_id
+      latest_subscription.latest_subscription_id
       FROM license_subscriptions
-        LEFT JOIN latest_active_subscription
-      ON license_subscriptions.dim_subscription_id_original = latest_active_subscription.dim_subscription_id_original
+        LEFT JOIN latest_subscription
+      ON license_subscriptions.dim_subscription_id_original = latest_subscription.dim_subscription_id_original
 
   ), joined AS (
 
@@ -132,24 +132,24 @@
         dim_ping_instance.license_md5                                                                                                   AS license_md5,
         dim_ping_instance.is_trial                                                                                                      AS is_trial,
         fct_ping_instance_metric.umau_value                                                                                             AS umau_value,
-        license_subscriptions_w_latest_active_subscription.license_id                                                                   AS license_id,
-        license_subscriptions_w_latest_active_subscription.license_company_name                                                         AS license_company_name,
-        license_subscriptions_w_latest_active_subscription.latest_active_subscription_id                                                AS latest_active_subscription_id,
-        license_subscriptions_w_latest_active_subscription.original_subscription_name_slugify                                           AS original_subscription_name_slugify,
-        license_subscriptions_w_latest_active_subscription.product_category_array                                                       AS product_category_array,
-        license_subscriptions_w_latest_active_subscription.product_rate_plan_name_array                                                 AS product_rate_plan_name_array,
-        license_subscriptions_w_latest_active_subscription.subscription_start_month                                                     AS subscription_start_month,
-        license_subscriptions_w_latest_active_subscription.subscription_end_month                                                       AS subscription_end_month,
-        license_subscriptions_w_latest_active_subscription.dim_billing_account_id                                                       AS dim_billing_account_id,
-        license_subscriptions_w_latest_active_subscription.crm_account_name                                                             AS crm_account_name,
-        license_subscriptions_w_latest_active_subscription.dim_parent_crm_account_id                                                    AS dim_parent_crm_account_id,
-        license_subscriptions_w_latest_active_subscription.parent_crm_account_name                                                      AS parent_crm_account_name,
-        license_subscriptions_w_latest_active_subscription.parent_crm_account_billing_country                                           AS parent_crm_account_billing_country,
-        license_subscriptions_w_latest_active_subscription.parent_crm_account_sales_segment                                             AS parent_crm_account_sales_segment,
-        license_subscriptions_w_latest_active_subscription.parent_crm_account_industry                                                  AS parent_crm_account_industry,
-        license_subscriptions_w_latest_active_subscription.parent_crm_account_owner_team                                                AS parent_crm_account_owner_team,
-        license_subscriptions_w_latest_active_subscription.parent_crm_account_sales_territory                                           AS parent_crm_account_sales_territory,
-        license_subscriptions_w_latest_active_subscription.technical_account_manager                                                    AS technical_account_manager,
+        license_subscriptions_w_latest_subscription.license_id                                                                          AS license_id,
+        license_subscriptions_w_latest_subscription.license_company_name                                                                AS license_company_name,
+        license_subscriptions_w_latest_subscription.latest_subscription_id                                                              AS latest_subscription_id,
+        license_subscriptions_w_latest_subscription.original_subscription_name_slugify                                                  AS original_subscription_name_slugify,
+        license_subscriptions_w_latest_subscription.product_category_array                                                              AS product_category_array,
+        license_subscriptions_w_latest_subscription.product_rate_plan_name_array                                                        AS product_rate_plan_name_array,
+        license_subscriptions_w_latest_subscription.subscription_start_month                                                            AS subscription_start_month,
+        license_subscriptions_w_latest_subscription.subscription_end_month                                                              AS subscription_end_month,
+        license_subscriptions_w_latest_subscription.dim_billing_account_id                                                              AS dim_billing_account_id,
+        license_subscriptions_w_latest_subscription.crm_account_name                                                                    AS crm_account_name,
+        license_subscriptions_w_latest_subscription.dim_parent_crm_account_id                                                           AS dim_parent_crm_account_id,
+        license_subscriptions_w_latest_subscription.parent_crm_account_name                                                             AS parent_crm_account_name,
+        license_subscriptions_w_latest_subscription.parent_crm_account_billing_country                                                  AS parent_crm_account_billing_country,
+        license_subscriptions_w_latest_subscription.parent_crm_account_sales_segment                                                    AS parent_crm_account_sales_segment,
+        license_subscriptions_w_latest_subscription.parent_crm_account_industry                                                         AS parent_crm_account_industry,
+        license_subscriptions_w_latest_subscription.parent_crm_account_owner_team                                                       AS parent_crm_account_owner_team,
+        license_subscriptions_w_latest_subscription.parent_crm_account_sales_territory                                                  AS parent_crm_account_sales_territory,
+        license_subscriptions_w_latest_subscription.technical_account_manager                                                           AS technical_account_manager,
         COALESCE(is_paid_subscription, FALSE)                                                                                           AS is_paid_subscription,
         COALESCE(is_program_subscription, FALSE)                                                                                        AS is_program_subscription,
         dim_ping_instance.ping_delivery_type                                                                                            AS ping_delivery_type,
@@ -185,9 +185,9 @@
         ON dim_ping_instance.dim_host_id = dim_hosts.host_id
           AND dim_ping_instance.ip_address_hash = dim_hosts.source_ip_hash
           AND dim_ping_instance.dim_instance_id = dim_hosts.instance_id
-      LEFT JOIN license_subscriptions_w_latest_active_subscription
-        ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_active_subscription.license_md5
-          AND dim_date.first_day_of_month = license_subscriptions_w_latest_active_subscription.reporting_month
+      LEFT JOIN license_subscriptions_w_latest_subscription
+        ON dim_ping_instance.license_md5 = license_subscriptions_w_latest_subscription.license_md5
+          AND dim_date.first_day_of_month = license_subscriptions_w_latest_subscription.reporting_month
       LEFT JOIN dim_location
         ON fct_ping_instance_metric.dim_location_country_id = dim_location.dim_location_country_id
       WHERE ping_delivery_type = 'Self-Managed'
@@ -209,7 +209,7 @@
       dim_instance_id,
       dim_license_id,
       dim_installation_id,
-      latest_active_subscription_id,
+      latest_subscription_id,
       dim_billing_account_id,
       dim_parent_crm_account_id,
       major_minor_version_id,

@@ -95,10 +95,10 @@ models:
         - not_null
         - unique
 
-- name: rpt_ping_active_subscriptions_monthly
-  description: ' {{ doc("rpt_ping_active_subscriptions_monthly") }} '
+- name: rpt_ping_latest_subscriptions_monthly
+  description: ' {{ doc("rpt_ping_latest_subscriptions_monthly") }} '
   columns:
-    - name: ping_active_subscriptions_monthly_id
+    - name: ping_latest_subscriptions_monthly_id
       tests:
         - not_null
         - unique
