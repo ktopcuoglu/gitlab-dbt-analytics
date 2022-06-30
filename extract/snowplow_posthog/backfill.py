@@ -44,16 +44,24 @@ def s3_get_client(
     return session.client("s3")
 
 
-def s3_list_files(client, bucket, prefix="") -> str:
+def s3_list_files(client, **base_kwargs) -> str:
     """
     List files in specific S3 bucket using yield for in a cost-optimized fashion
     and return the file name
     """
 
-    results = client.list_objects_v2(Bucket=bucket, Prefix=prefix).get("Contents")
-
-    for result in results:
-        yield result["Key"]
+    continuation_token = None
+    while True:
+        list_kwargs = dict(MaxKeys=1000, **base_kwargs)
+        if continuation_token:
+            list_kwargs["ContinuationToken"] = continuation_token
+        response = client.list_objects_v2(**list_kwargs)
+        # yield from response.get('Contents', [])
+        for result in response.get("Contents", []):
+            yield result["Key"]  # yield file name
+        if not response.get("IsTruncated"):  # At the end of the list?
+            break
+        continuation_token = response.get("NextContinuationToken")
 
 
 def source_file_get_row(row: str) -> list:
@@ -179,7 +187,7 @@ def posthog_processing(file_prefix: str) -> None:
         logging.info(f"Folder: {folder}...")
 
         snowplow_files = s3_list_files(
-            client=s3_client, bucket=snowplow_s3_bucket, prefix=folder
+            client=s3_client, Bucket=snowplow_s3_bucket, Prefix=folder
         )
 
         # get files
