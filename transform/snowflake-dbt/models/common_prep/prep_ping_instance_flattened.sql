@@ -1,5 +1,6 @@
 {{ config(
     tags=["product", "mnpi_exception"],
+    full_refresh = false,
     materialized = "incremental",
     unique_key = "ping_instance_flattened_id"
 ) }}
