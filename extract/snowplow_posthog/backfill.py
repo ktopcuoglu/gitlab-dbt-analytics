@@ -192,7 +192,7 @@ def posthog_processing(file_prefix: str) -> None:
 
         # get files
         for no_files, snowplow_file in enumerate(snowplow_files, start=1):
-            logging.info(f"     File: {no_files}/{len(list(snowplow_files))} {snowplow_file}")
+            logging.info(f"     File: {snowplow_file}")
 
             # get rows
             for row in s3_load_source_file(
