@@ -92,6 +92,25 @@ graph TD;
   PH--Save data-->PH_STORE[Data stored in PostHog];
 ```
 
+## Known issues
+
+**What can go wrong?** 
+
+From what we know here is the list of potential issue can happen:
+* `PostHog` [can't accept records](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1010756609)
+    * **Action**: ping the `PostHog` team in Slack and ask for support
+* [Bad performance when ingest data](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1010079665) to `PostHog` - either it is too slow or `DAG` failed due to slow ingesting into the `PostHog`
+    * **Action**: Ping `GitLab` IT Systems Engineers in Slack [#gitlab-posthog-data](https://gitlab.slack.com/archives/C02QQGGG6FJ/p1654690509663749?thread_ts=1654635836.118379&cid=C02QQGGG6FJ) channel 
+* Any other issue with the pipeline
+    * **Action**: check the code for the pipeline `/snowplow_posthog/bakfill.py` and debug it, the previous chapter can help you with the flow explained
+
+## Facts
+
+* There are plenty of data per day (`~45M` records approx. per day)
+* Data in airflow are loaded per day (each task is separated per day)
+* Each row is transformed from .tsv to .json file format
+* Data is transformed and pushed to PostHog using [Python PostHoglibrary](https://posthog.com/docs/integrate/server/python) as the producer [suggested](https://posthog.com/docs/integrate/ingest-historic-data)
+* Data volume [benchmark](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1012031398) explained the volume of data and rough estimation about the throughout
 
 ## Testing PostHog python library locally
 
