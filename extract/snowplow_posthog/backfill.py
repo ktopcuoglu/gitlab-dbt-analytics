@@ -47,20 +47,31 @@ def s3_get_client(
 def s3_list_files(client, **base_kwargs) -> str:
     """
     List files in specific S3 bucket using yield for in a cost-optimized fashion
-    and return the file name
+    and return the file name.
+    As the native function list_objects_v2 return 1000 files as per default.
+    The current function is workaround to overcome this limitation,
+    in case there are more than 1000 files in the folder.
+    Probably not gonna happen, but want to be on the safe side.
+
+    Input: s3 client, bucket and prefix as *base_kwargs
+    Output: list of files names yielded for the performance purpose.
     """
 
     continuation_token = None
     while True:
         list_kwargs = dict(MaxKeys=1000, **base_kwargs)
+
         if continuation_token:
             list_kwargs["ContinuationToken"] = continuation_token
+
         response = client.list_objects_v2(**list_kwargs)
-        # yield from response.get('Contents', [])
+
         for result in response.get("Contents", []):
             yield result["Key"]  # yield file name
+
         if not response.get("IsTruncated"):  # At the end of the list?
             break
+
         continuation_token = response.get("NextContinuationToken")
 
 
@@ -88,6 +99,8 @@ def s3_load_source_file(client, bucket: str, file_name: str) -> list:
     """
     Load file content from object storage (for now, it is a S3 bucket)
     and return file line per line
+    Input: file fetched by file_name from desired bucket
+    Output: row from the file represented as a list
     """
     csv_obj = client.get_object(Bucket=bucket, Key=file_name)
 
