@@ -191,7 +191,7 @@ def posthog_processing(file_prefix: str) -> None:
         )
 
         # get files
-        for no_files, snowplow_file in enumerate(snowplow_files, start=1):
+        for snowplow_file in snowplow_files:
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
