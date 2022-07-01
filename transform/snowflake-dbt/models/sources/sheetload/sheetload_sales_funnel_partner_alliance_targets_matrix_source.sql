@@ -14,6 +14,10 @@ WITH source AS (
       alliance_partner::VARCHAR                           AS alliance_partner,
       order_type::VARCHAR                                 AS order_type,
       area::VARCHAR                                       AS area,
+      user_segment::VARCHAR                               AS user_segment,
+      user_geo::VARCHAR 	                          AS user_geo,
+      user_region::VARCHAR 	                          AS user_region,
+      user_area::VARCHAR                                  AS user_area,
       REPLACE(allocated_target, ',', '')::FLOAT           AS allocated_target,
       TO_TIMESTAMP(TO_NUMERIC("_UPDATED_AT"))::TIMESTAMP  AS last_updated_at
     FROM source

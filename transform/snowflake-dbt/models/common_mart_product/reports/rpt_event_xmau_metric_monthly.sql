@@ -5,7 +5,8 @@
 
 {{ simple_cte([
     ('dim_date','dim_date'),
-    ('mart_event_valid', 'mart_event_valid')
+    ('mart_event_valid', 'mart_event_valid'),
+    ('xmau_metrics', 'map_gitlab_dotcom_xmau_metrics')
     ])
 }},
 
@@ -179,12 +180,51 @@ results AS (
     results_wo_pk.*
   FROM results_wo_pk
 
+), 
+
+multiple_gmau_in_smau AS (
+  --Find stages that have multiple GMAU groups in SMAU, each would appear as its own record + deduped record
+  SELECT 
+    stage_name,
+    COUNT(DISTINCT group_name) AS group_count --count of groups included in smau
+  FROM xmau_metrics
+  WHERE smau = TRUE --stage's smau event
+    AND gmau = TRUE --group's gmau event
+  GROUP BY 1
+  HAVING group_count > 1 --more than 1 group in SMAU
+
+), 
+
+adjusted_smau AS (
+
+  SELECT
+    results.xmau_metric_monthly_id,
+    results.event_calendar_month,
+    results.is_umau,
+    results.is_gmau,
+    CASE
+      WHEN results.is_gmau = TRUE AND multiple_gmau_in_smau.stage_name IS NOT NULL --GMAU metrics for a stage with multiple groups in SMAU
+        THEN FALSE
+      ELSE results.is_smau
+    END AS is_smau,
+    results.section_name,
+    results.stage_name,
+    results.group_name,
+    results.user_group,
+    results.event_name_array,
+    results.event_count,
+    results.ultimate_parent_namespace_count,
+    results.user_count
+  FROM results
+  LEFT JOIN multiple_gmau_in_smau
+    ON results.stage_name = multiple_gmau_in_smau.stage_name
+
 )
 
 {{ dbt_audit(
-    cte_ref="results",
+    cte_ref="adjusted_smau",
     created_by="@icooper_acp",
     updated_by="@iweeks",
     created_date="2022-02-23",
-    updated_date="2022-06-21"
+    updated_date="2022-06-27"
 ) }}

@@ -24,7 +24,7 @@ models:
           tests:
             - not_null
 
-  - name: feature_flags_historical
+  - name: feature_flags_yaml_historical
     description: This is the base table built on the snapshots of all feature flags
     columns:
       - name: name
@@ -33,7 +33,7 @@ models:
       - name: milestone
       - name: is_default_enabled
 
-  - name: feature_flags_latest
+  - name: feature_flags_yaml_latest
     description: This is the latest version of all existing feature flags
     columns:
       - name: name
@@ -74,7 +74,7 @@ models:
       - name: first_flaky_at
       - name: last_flaky_at
 
-  - name: performance_indicators_yaml_current
+  - name: performance_indicators_yaml_latest
     description: This provides all current KPIs and PIs and their current description and target.
     columns:
         - name: pi_name

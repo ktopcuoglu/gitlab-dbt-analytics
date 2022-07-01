@@ -96,9 +96,9 @@
 
 {% enddocs %}
 
-{% docs rpt_ping_active_subscriptions_monthly %}
+{% docs rpt_ping_latest_subscriptions_monthly %}
 
-**Description:**  Self-Managed Service Pings with Latest Active Subscriptions, ARR Charges and Ping Counts by Installation, Month
+**Description:**  Self-Managed Service Pings with Latest Subscriptions, ARR Charges and Ping Counts by Installation, Month
 - Latest Subscription, Version, ARR, MRR and Ping Count information in included. 
 
 **Data Grain:**

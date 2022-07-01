@@ -10,39 +10,37 @@ models:
         - not_null
         - unique
     - name: event_calendar_month
-      description: The first day of the calendar month of the event (ex. 2022-05-01, etc). This model only looks at the last 28 days of the month.
+      description: '{{ doc("event_calendar_month") }}'
     - name: is_smau
-      description: Boolean flag set to True if the event is chosen for the stage's SMAU metric
+      description: '{{ doc("is_smau") }}'
     - name: is_gmau
-      description: Boolean flag set to True if the event is chosen for the group's GMAU metric
+      description: '{{ doc("is_gmau") }}'
     - name: is_umau
-      description: Boolean flag set to True if the event is chosen for the UMAU metric
+      description: '{{ doc("is_umau") }}'
     - name: stage_name
-      description: The name of the product stage (ex. secure, plan, create, etc)
+      description: '{{ doc("stage_name") }}'
     - name: section_name
-      description: The name of the product section (ex. dev, ops, etc)
+      description: '{{ doc("section_name") }}'
     - name: group_name
-      description: The name of the product group (ex. code_review, project_management, etc)
+      description: '{{ doc("group_name") }}'
     - name: user_group
-      description: Type of user based on the ultimate parent namespace's plan on the last event of the month (total, free, paid). Trial namespaces are considered to be free
+      description: '{{ doc("user_group") }}'
     - name: event_name_array
-      description: Array containing the event_names included in the xMAU metric
+      description: '{{ doc("event_name_array") }}'
     - name: event_count
-      description: The count of events generated
+      description: '{{ doc("event_count") }}'
     - name: ultimate_parent_namespace_count
-      description: The count of distinct ultimate parent namespaces in which an event was generated
+      description: '{{ doc("ultimate_parent_namespace_count") }}'
     - name: user_count
-      description: The count of distinct users who generated an event
+      description: '{{ doc("user_count") }}'
     - name: created_by
-      description: The GitLab handle of the original model creator
+      description: '{{ doc("created_by") }}'
     - name: updated_by
-      description: The GitLab handle of the most recent model editor
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: Manually input ISO date of when model was original created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: Manually input ISO date of when model was updated
-    - name: dbt_updated_at
-    - name: dbt_created_at
+      description: '{{ doc("model_updated_date") }}'
 
 - name: rpt_event_plan_monthly
   description: '{{ doc("rpt_event_plan_monthly") }}'
@@ -53,43 +51,41 @@ models:
         - not_null
         - unique
     - name: event_calendar_month
-      description: The first day of the calendar month of the event (ex. 2022-05-01, etc). This model only looks at the last 28 days of the month.
+      description: '{{ doc("event_calendar_month") }}'
     - name: event_calendar_quarter
-      description: The calendar quarter of the event (ex. 2022-Q2, etc)
+      description: '{{ doc("event_calendar_quarter") }}'
     - name: event_calendar_year
-      description: The calendar year of the event (ex. 2022, etc)
+      description: '{{ doc("event_calendar_year") }}'
     - name: plan_id_at_event_date
-      description: The ID of the ultimate parent namespace's plan on the last event of the month (ex. 34, 100, 101, etc)
+      description: '{{ doc("plan_id_at_event_date") }}'
     - name: event_name
-      description: The name tied to an event
+      description: '{{ doc("event_name") }}'
     - name: is_smau
-      description: Boolean flag set to True if the event is chosen for the stage's SMAU metric
+      description: '{{ doc("is_smau") }}'
     - name: is_gmau
-      description: Boolean flag set to True if the event is chosen for the group's GMAU metric
+      description: '{{ doc("is_gmau") }}'
     - name: is_umau
-      description: Boolean flag set to True if the event is chosen for the UMAU metric
+      description: '{{ doc("is_umau") }}'
     - name: stage_name
-      description: The name of the product stage (ex. secure, plan, create, etc)
+      description: '{{ doc("stage_name") }}'
     - name: section_name
-      description: The name of the product section (ex. dev, ops, etc)
+      description: '{{ doc("section_name") }}'
     - name: group_name
-      description: The name of the product group (ex. code_review, project_management, etc)
+      description: '{{ doc("group_name") }}'
     - name: event_count
-      description: The count of events generated
+      description: '{{ doc("event_count") }}'
     - name: ultimate_parent_namespace_count
-      description: The count of distinct ultimate parent namespaces in which an event was generated
+      description: '{{ doc("ultimate_parent_namespace_count") }}'
     - name: user_count
-      description: The count of distinct users who generated an event
+      description: '{{ doc("user_count") }}'
     - name: created_by
-      description: The GitLab handle of the original model creator
+      description: '{{ doc("created_by") }}'
     - name: updated_by
-      description: The GitLab handle of the most recent model editor
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: Manually input ISO date of when model was original created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: Manually input ISO date of when model was updated
-    - name: dbt_updated_at
-    - name: dbt_created_at
+      description: '{{ doc("model_updated_date") }}'
 
 - name: rpt_ping_metric_first_last_versions
   description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
@@ -99,10 +95,10 @@ models:
         - not_null
         - unique
 
-- name: rpt_ping_active_subscriptions_monthly
-  description: ' {{ doc("rpt_ping_active_subscriptions_monthly") }} '
+- name: rpt_ping_latest_subscriptions_monthly
+  description: ' {{ doc("rpt_ping_latest_subscriptions_monthly") }} '
   columns:
-    - name: ping_active_subscriptions_monthly_id
+    - name: ping_latest_subscriptions_monthly_id
       tests:
         - not_null
         - unique
