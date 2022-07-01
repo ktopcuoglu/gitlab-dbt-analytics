@@ -99,7 +99,8 @@ graph TD;
 From what we know here is the list of potential issue can happen:
 * `PostHog` [can't accept records](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1010756609)
     * **Action**: ping the `PostHog` team in Slack and ask for support
-* [Bad performance when ingest data](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1010079665) to `PostHog` - either it is too slow or `DAG` failed due to slow ingesting into the `PostHog`
+* [Bad performance when ingest data](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1010079665) to `PostHog` - either it is too slow or `DAG` failed due to slow ingesting into the `PostHog`. This is the most significant issue happened as our part of processing - getting the data from `S3` and transform from `.tsv` to `.json` is acceptable think.
+    * The entire load **without** pushing data to PostHog is done around `20-30` minutes for 1 day of data. Details [here](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1008150746) 
     * **Action**: Ping `GitLab` IT Systems Engineers in Slack [#gitlab-posthog-data](https://gitlab.slack.com/archives/C02QQGGG6FJ/p1654690509663749?thread_ts=1654635836.118379&cid=C02QQGGG6FJ) channel 
 * Any other issue with the pipeline
     * **Action**: check the code for the pipeline `/snowplow_posthog/bakfill.py` and debug it, the previous chapter can help you with the flow explained
@@ -111,6 +112,12 @@ From what we know here is the list of potential issue can happen:
 * Each row is transformed from .tsv to .json file format
 * Data is transformed and pushed to PostHog using [Python PostHoglibrary](https://posthog.com/docs/integrate/server/python) as the producer [suggested](https://posthog.com/docs/integrate/ingest-historic-data)
 * Data volume [benchmark](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1012031398) explained the volume of data and rough estimation about the throughout
+* The current project for data back-fill point to `test_data_team_backfill` project - for prod load, probably should go into `Default` (or some other project), need to check with the business. If you want to switch the project, please alter the secret `posthog_project_api_key`. 
+This can be done following the steps:
+    * Go to https://posthog-poc.gitlab.systems
+    * Under the section `project` on the left top side choose the project you want to ingest data
+    * Press the `Settings` _(wheel icon next to the project name)_
+    * Go to Section `Project Variables` and pick up the value under `Project API Key`
 
 ## Testing PostHog python library locally
 
