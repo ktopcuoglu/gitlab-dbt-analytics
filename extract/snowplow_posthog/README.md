@@ -16,7 +16,7 @@ You can read about the [Existing Snowplow load process in the handbook](https://
 * [GitLab->PostHog Project Plan](https://docs.google.com/spreadsheets/d/1zsm-vGz1cuwO0x-5HH0grpP6Oj3c_Y6trED6A11ipDY/edit#gid=0)
 * [GitLab / PostHog Regular Check-in](https://docs.google.com/document/d/1mSzO7bdJwGP2OHz7Xig1u7ZwdkqiyjhQO3v632md5nE/edit#)
 * [Existing Snowplow load process in the handbook](https://about.gitlab.com/handbook/business-technology/data-team/platform/snowplow/)
-* [GitLab Snowplow infrastrucure](https://docs.gitlab.com/ee/development/snowplow/infrastructure.html)
+* [GitLab Snowplow infrastructure](https://docs.gitlab.com/ee/development/snowplow/infrastructure.html)
 
 
 ### Technical resources 
@@ -182,3 +182,32 @@ If you run above script and everything passed fine, you should ensure the record
 2. Open project `test_data_team_backfill`
 3. Click `Live Events`
 4. You should see your record added `a second ago`
+
+
+## Considerations
+
+What was discussed parallelization option to push `PostHog` Python library in a multi-thread fashion, here are links to help this happens:
+* [Multiprocessing vs. Threading in Python](https://blog.floydhub.com/multiprocessing-vs-threading-in-python-what-every-data-scientist-needs-to-know/)
+* [Multiprocessing in Python](https://machinelearningmastery.com/multiprocessing-in-python/) (recommend this article)
+* `TL;DR` here is the simple example enough to understand how to implement parallel proceses: 
+```python
+import multiprocessing
+import time
+import random
+
+NO_OF_PROCESSES = 10 # suggest to (use no_of_cores - 2) to avoid overkill
+
+def ingesting(number):
+    print(f"Hey, start processing: {number}")
+    time.sleep(random.randint(1,NO_OF_PROCESSES))
+    print(f"Hey, end processing: {number}")
+
+
+if __name__ == "__main__":
+    for i in range(NO_OF_PROCESSES):
+        p = multiprocessing.Process(target=ingesting, args=(i,))
+        p.start()
+
+    p.join()
+
+```
