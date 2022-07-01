@@ -7,7 +7,7 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_event_all', 'prep_event_all'),
-    ('dim_user', 'dim_user')
+    ('prep_user', 'prep_user')
     ])
 }},
 
@@ -17,7 +17,8 @@ fct_events AS (
     prep_event_all.event_id,
     prep_event_all.event_name,
     prep_event_all.ultimate_parent_namespace_id,
-    {{ get_keyed_nulls('dim_user.dim_user_sk') }} AS dim_user_sk,
+    prep_event_all.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
+    {{ get_keyed_nulls('prep_user.dim_user_sk') }} AS dim_user_sk,
     prep_event_all.parent_type,
     prep_event_all.parent_id,
     prep_event_all.dim_project_id,
@@ -31,9 +32,9 @@ fct_events AS (
     CAST(prep_event_all.event_created_at AS DATE) AS event_date,
     IFF(prep_event_all.dim_user_id IS NULL, TRUE, FALSE) AS is_null_user
   FROM prep_event_all
-  LEFT JOIN dim_user
+  LEFT JOIN prep_user
     --dim_user_id is the natural_key and will be renamed to user_id in a subsequent MR on prep_event.
-    ON prep_event_all.dim_user_id = dim_user.user_id
+    ON prep_event_all.dim_user_id = prep_user.user_id
   
   {% if is_incremental() %}
 
@@ -55,6 +56,7 @@ gitlab_dotcom_fact AS (
     fct_events.ultimate_parent_namespace_id AS dim_ultimate_parent_namespace_id,
     fct_events.dim_project_id,
     fct_events.dim_user_sk,
+    fct_events.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
     
     --Time attributes
     fct_events.event_created_at,

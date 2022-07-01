@@ -21,6 +21,7 @@ fct_event_user_daily AS (
     dim_crm_account_id,
     dim_billing_account_id,
     dim_user_sk,
+    dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
     dim_ultimate_parent_namespace_id,
     dim_event_date_id,
     
@@ -42,7 +43,7 @@ fct_event_user_daily AS (
     COUNT(*) AS event_count
   FROM fct_event_valid
   WHERE is_null_user = FALSE
-  {{ dbt_utils.group_by(n=20) }}
+  {{ dbt_utils.group_by(n=21) }}
 
 )
 
