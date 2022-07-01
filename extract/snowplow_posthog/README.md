@@ -1,4 +1,4 @@
-# Snowpolow - Posthog back-fill
+# `Snowpolow` - `PostHog` back-fill
 
 ## Motivation 
 
@@ -9,7 +9,7 @@ You can read about the [Existing Snowplow load process in the handbook](https://
 ## Resources 
 
 * Issue: [Build PH: Snowplow Loader (Data team) - data backfill implementation](https://gitlab.com/gitlab-data/analytics/-/issues/13055)
-* Slack: [Slack #gitlab-posthog-data](https://gitlab.slack.com/archives/C02QQGGG6FJ/p1654690509663749?thread_ts=1654635836.118379&cid=C02QQGGG6FJ) the easiest way for communication with the `PostHog` team and `GitLab` IT Systems Engineers
+* Slack : [Slack #gitlab-posthog-data](https://gitlab.slack.com/archives/C02QQGGG6FJ/p1654690509663749?thread_ts=1654635836.118379&cid=C02QQGGG6FJ) the easiest way for communication with the `PostHog` team and `GitLab` IT Systems Engineers
 * Recorded sessions:
     * [2022-06-30 | PostHog agreement about backfill approach](https://www.youtube.com/watch?v=k-a5a1tybWM) 
     * [2022-07-01 | Ved and Radovan brainstorm and discuss about PostHog handover issue](https://youtu.be/NWLgVYSnihw)
@@ -22,11 +22,15 @@ You can read about the [Existing Snowplow load process in the handbook](https://
 
 ### Technical resources 
 
-here is the list of resources needed for debug, development and troubleshooting:
+Here is the list of resources needed for debug, development and troubleshooting:
 * URL for the `PostHog` (POC) instance: `https://posthog-poc.gitlab.systems`
 * `S3` bucket where the `SnowPlow` data are stored: 
     * URL: [gitlab-com-snowplow-events/output](https://s3.console.aws.amazon.com/s3/buckets/gitlab-com-snowplow-events?region=us-east-1&prefix=output/&showversions=false)
     * Access: you need at least a `read` access to the bucket
+    * If you need an access to the `S3` bucket, please refer to the issue [#16088](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/16088) and create a similar one
+* GCP cluster:
+    * [Data infrastructure (test)](https://console.cloud.google.com/kubernetes/workload/overview?project=gitlab-analysis&pageState=(%22savedViews%22:(%22i%22:%22e69accb4dbcf4ff893a90691ba09c17f%22,%22c%22:%5B%5D,%22n%22:%5B%22testing%22%5D)))
+    * [PostHog installation](https://console.cloud.google.com/kubernetes/clusters/details/us-west1-c/posthog-poc-cluster/details?project=gitlab-analysis)
 
 ## POC installation
 
@@ -65,7 +69,7 @@ For successful run the TEST or PROD pipeline, you should set up secrets.
     ```
     * or you should find it in `1password`: vault = `Data Team`, item = `posthog_secrets`
 
-Here is the list of secrets needed for `PostHog` back-filling:
+Here is the list of secrets needed for `PostHog` backfill:
 * `aws_access_key_id`
 * `aws_secret_access_key`
 * `aws_s3_snowplow_bucket`
@@ -119,7 +123,7 @@ From what we know here is the list of potential issue can happen:
 * Each row is transformed from .tsv to .json file format
 * Data is transformed and pushed to PostHog using [Python PostHoglibrary](https://posthog.com/docs/integrate/server/python) as the producer [suggested](https://posthog.com/docs/integrate/ingest-historic-data)
 * Data volume [benchmark](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1012031398) explained the volume of data and rough estimation about the throughout
-* The current project for data back-fill point to `test_data_team_backfill` project - for prod load, probably should go into `Default` (or some other project), need to check with the business. If you want to switch the project, please alter the secret `posthog_project_api_key`. 
+* The current project for data backfill point to `test_data_team_backfill` project - for prod load, probably should go into `Default` (or some other project), need to check with the business. If you want to switch the project, please alter the secret `posthog_project_api_key`. 
 This can be done following the steps:
     * Go to https://posthog-poc.gitlab.systems
     * Under the section `project` on the left top side choose the project you want to ingest data
@@ -149,7 +153,7 @@ This also can be done as a part of environment variables.
 
 ```python
 """
-Test mode to check PostHog backfilling with one record
+Test mode to check PostHog backfill with one record
 
 Resources: https://posthog.com/docs/integrate/server/python
 """
