@@ -218,6 +218,7 @@ adjusted_smau AS (
   FROM results
   LEFT JOIN multiple_gmau_in_smau
     ON results.stage_name = multiple_gmau_in_smau.stage_name
+  WHERE event_calendar_month < DATE_TRUNC('month', CURRENT_DATE)
 
 )
 
@@ -226,5 +227,5 @@ adjusted_smau AS (
     created_by="@icooper_acp",
     updated_by="@iweeks",
     created_date="2022-02-23",
-    updated_date="2022-06-27"
+    updated_date="2022-07-01"
 ) }}
