@@ -186,7 +186,7 @@ def posthog_processing(file_prefix: str) -> None:
     posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
     snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
-    logging.getLogger("requests.packages.urllib3.connectionpool").setLevel(
+    logging.getLogger("botocore.vendored.requests.packages.urllib3.connectionpool").setLevel(
         logging.WARNING
     )
 
