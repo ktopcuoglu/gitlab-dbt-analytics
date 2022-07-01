@@ -94,7 +94,7 @@ graph TD;
 
 ## Known issues
 
-**What can go wrong?** 
+### What can go wrong? 
 
 From what we know here is the list of potential issue can happen:
 * `PostHog` [can't accept records](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1010756609)
@@ -104,6 +104,12 @@ From what we know here is the list of potential issue can happen:
     * **Action**: Ping `GitLab` IT Systems Engineers in Slack [#gitlab-posthog-data](https://gitlab.slack.com/archives/C02QQGGG6FJ/p1654690509663749?thread_ts=1654635836.118379&cid=C02QQGGG6FJ) channel 
 * Any other issue with the pipeline
     * **Action**: check the code for the pipeline `/snowplow_posthog/bakfill.py` and debug it, the previous chapter can help you with the flow explained
+
+### Status
+
+* [2022-06-29](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1011120938)
+* [2022-06-30](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1013038593)
+* [2022-07-01](https://gitlab.com/gitlab-data/analytics/-/issues/13055#note_1013039540)
 
 ## Facts
 
