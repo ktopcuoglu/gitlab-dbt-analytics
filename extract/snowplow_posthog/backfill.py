@@ -186,6 +186,7 @@ def posthog_processing(file_prefix: str) -> None:
     posthog_secret_access_key = env["POSTHOG_AWS_SECRET_ACCESS_KEY"]
     snowplow_s3_bucket = env["POSTHOG_AWS_S3_SNOWPLOW_BUCKET"]
 
+    # reduce the noise in log file
     logging.getLogger("botocore.vendored.requests.packages.urllib3.connectionpool").setLevel(
         logging.WARNING
     )
@@ -209,7 +210,7 @@ def posthog_processing(file_prefix: str) -> None:
 
         # get files
         for snowplow_file in snowplow_files:
-            # logging.info(f"     File: {snowplow_file}")
+            logging.info(f"     File: {snowplow_file}")
 
             # get rows
             for row in s3_load_source_file(
