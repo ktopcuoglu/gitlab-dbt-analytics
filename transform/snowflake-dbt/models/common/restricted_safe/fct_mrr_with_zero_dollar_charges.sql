@@ -1,6 +1,5 @@
 {{ config({
-    "alias": "fct_mrr_all",
-    "post-hook": '{{ apply_dynamic_data_masking(columns = [{"arr":"float"},{"dim_charge_id":"string"},{"dim_product_detail_id":"string"},{"created_by":"string"},{"dim_billing_account_id":"string"},{"dim_crm_account_id":"string"},{"dim_subscription_id":"string"},{"mrr":"float"},{"mrr_id":"string"},{"updated_by":"string"}]) }}'
+    "alias": "fct_mrr_all"
 }) }}
 
 /* grain: one record per rate_plan_charge per month */

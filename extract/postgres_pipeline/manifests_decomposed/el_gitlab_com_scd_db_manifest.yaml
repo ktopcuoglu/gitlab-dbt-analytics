@@ -121,19 +121,6 @@ tables:
       , cluster_id
       , group_id
       FROM cluster_groups
-  compliance_management_frameworks:
-    export_schema: 'gitlab_com'
-    export_table: 'compliance_management_frameworks'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      , description
-      , color
-      , namespace_id
-      , pipeline_configuration_full_path
-      FROM compliance_management_frameworks
   columns:
     advanced_metadata: true
     export_schema: 'gitlab_com'
@@ -468,6 +455,19 @@ tables:
       SELECT milestone_id
       , release_id
       FROM milestone_releases
+  namespace_package_settings:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'namespace_package_settings'
+    export_table_primary_key: namespace_id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT namespace_id
+      , maven_duplicates_allowed
+      , maven_duplicate_exception_regex
+      , generic_duplicates_allowed
+      , generic_duplicate_exception_regex
+      FROM namespace_package_settings
   namespace_statistics:
     dbt_snapshots: true
     dbt_source_model: true
@@ -496,6 +496,17 @@ tables:
       , created_at
       , scopes
       FROM oauth_access_tokens
+  packages_build_infos:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'packages_build_infos'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-    
+      SELECT  id
+      , package_id
+      , pipeline_id 
+      FROM packages_build_infos
   pages_domains:
     dbt_source_model: true
     export_schema: 'gitlab_com'

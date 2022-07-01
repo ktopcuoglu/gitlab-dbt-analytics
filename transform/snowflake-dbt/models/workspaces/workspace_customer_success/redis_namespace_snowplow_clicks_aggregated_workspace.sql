@@ -10,7 +10,9 @@ WITH clicks_filtered AS (
     *
   FROM {{ ref('redis_namespace_snowplow_clicks_workspace') }}
   WHERE event_action IN (
-    'action_active_users_project_repo'
+    'action_active_users_project_repo',
+    'p_terraform_state_api_unique_users',
+    'i_search_paid'
   )
 ),
 
@@ -27,7 +29,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@iweeks",
     created_date="2022-05-24",
-    updated_date="2022-06-08"
+    updated_date="2022-06-27"
 ) }}

@@ -1,6 +1,6 @@
 WITH source AS (
   SELECT * 
-  FROM {{ ref('bamboohr_job_info_source') }}
+  FROM {{ ref('blended_job_info_source') }}
 ),
 
 bamboohr_employment_status AS (
@@ -24,7 +24,7 @@ sheetload_job_roles AS (
 cleaned AS (
 
     SELECT 
-      job_id,
+      job_sequence,
       source.employee_id,
       job_title,
       source.effective_date, --the below case when statement is also used in employee_directory_analysis until we upgrade to 0.14.0 of dbt
@@ -42,7 +42,7 @@ cleaned AS (
            ELSE NULLIF(division, '') END                                        AS division,
       entity,
       reports_to,
-      (LAG(DATEADD('day',-1,source.effective_date), 1) OVER (PARTITION BY source.employee_id ORDER BY source.effective_date DESC, job_id DESC)) AS effective_end_date
+      (LAG(DATEADD('day',-1,source.effective_date), 1) OVER (PARTITION BY source.employee_id ORDER BY source.effective_date DESC, job_sequence DESC)) AS effective_end_date
     FROM source
 
     
@@ -51,7 +51,7 @@ cleaned AS (
 joined AS (
 
     SELECT 
-      cleaned.job_id,
+      cleaned.job_sequence,
       cleaned.employee_id,
       cleaned.job_title,
       cleaned.effective_date,

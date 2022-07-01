@@ -52,6 +52,8 @@ seeds:
   +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" #PROD
   +schema: legacy
   +quote_columns: False
+  +post-hook:
+    - "{{ mask_model() }}"
 
   data_tests:
     +database: "{{ env_var('SNOWFLAKE_PREP_DATABASE') }}" #PREP
@@ -95,6 +97,8 @@ models:
   +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
   +schema: legacy  # Top level override since profiles defaults to PREP
   +copy_grants: true # Maintain any existing Permifrost grants
+  +post-hook:
+    - "{{ mask_model() }}"
 
   # ------------------
   # Snowplow Package https://hub.getdbt.com/fishtown-analytics/snowplow/latest/
@@ -278,6 +282,7 @@ models:
 
       workday:
         +schema: workday
+        +materialized: table
 
       zendesk:
         +schema: zendesk
@@ -613,6 +618,8 @@ models:
 # Snapshot Configs
 # ======
 snapshots:
+  +post-hook:
+    - "{{ mask_model() }}"
   gitlab_snowflake:
     target_database: "{{ env_var('SNOWFLAKE_SNAPSHOT_DATABASE') }}" #RAW in production
     target_schema: "snapshots"

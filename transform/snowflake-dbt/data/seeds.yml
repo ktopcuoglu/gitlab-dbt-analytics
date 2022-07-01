@@ -11,15 +11,11 @@ seeds:
     description: CSV with personal email domains and a description of how they should be matched to look for them.
   - name: marketing_site_file_classification_mapping
     description: This is a csv loaded by dbt seed for mapping marketing file paths to divisions/department classifications.
-  - name: version_usage_stats_to_stage_mappings
-    description: '{{ doc("version_usage_stats_to_stage_mappings_doc") }}'
   - name: zuora_excluded_accounts
     description: '{{ doc("zuora_excluded_accounts_doc") }}'
   - name: version_blacklisted_instance_uuid
     description: '{{ doc("version_blacklisted_instance_uuid") }}'
   - name: map_saas_event_to_smau
     description: '{{ doc("map_saas_event_to_smau") }}'
-  - name: subscription_opportunity_mapping
-    description: '{{ doc("subscription_opportunity_mapping") }}'
   - name: director_location_factors
     description: '{{ doc("director_location_factors") }}'

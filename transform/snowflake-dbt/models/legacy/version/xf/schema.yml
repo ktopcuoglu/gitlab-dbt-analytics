@@ -1,13 +1,6 @@
 version: 2
 
 models:
-    - name: version_active_instances
-      description: instances checked for new version or send a usage ping
-      columns:
-          - name: host_id
-          - name: ping_type
-            description: an instance checked for new version or send a usage ping
-
     - name: version_releases
       description: This model represents the different minor (X.y) versions released at GitLab.
       columns:

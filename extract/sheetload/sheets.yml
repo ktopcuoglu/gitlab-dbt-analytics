@@ -73,6 +73,10 @@ sheets:
       - employee_location_factor
       - comp_band
       - location_factor_temporary_2020_december
+  - name: fy23_quota
+    owner: '@hselim'
+    tabs:
+      - fy23_quota
   - name: engineering_contributing_organizations
     owner: '@kwiebers'
     tabs:
@@ -156,6 +160,10 @@ sheets:
     owner: '@iweeks'
     tabs:
       - manual_public_company_metrics
+  - name: map_ramp_deals
+    owner: '@vagrawalg'
+    tabs:
+      - map_ramp_deals
   - name: mapping_sdr_sfdc_bamboohr
     owner: '@jpeguero'
     tabs:
@@ -238,6 +246,10 @@ sheets:
     owner: '@paul_armstrong'
     tabs:
       - sales_training_completion_dates
+  - name: sdr_bdr_metric_targets
+    owner: '@rkohnke'
+    tabs: 
+      - sdr_bdr_metric_targets
   - name: territory_mapping
     owner: '@rkohnke'
     tabs:
@@ -258,10 +270,10 @@ sheets:
     owner: '@rkohnke'
     tabs:
       - sdr_adaptive_data
-  - name: sdr_attainment_to_goal
-    owner: '@rkohnke'
-    tabs:
-      - sdr_attainment_to_goal
+  # - name: sdr_attainment_to_goal   -- Paused by https://gitlab.com/gitlab-data/analytics/-/merge_requests/6808
+  #   owner: '@rkohnke'
+  #   tabs:
+  #     - sdr_attainment_to_goal
   - name: sdr_count_snapshot
     owner: '@vikijuhasz'
     tabs:
@@ -304,3 +316,7 @@ sheets:
     owner: '@mpeychet_'
     tabs:
       - deleted_mrs
+  - name: xactly_credit_sheetload
+    owner: '@hselim'
+    tabs:
+      - xactly_credit_sheetload

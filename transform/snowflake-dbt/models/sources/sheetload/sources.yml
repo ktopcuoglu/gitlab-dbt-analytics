@@ -55,6 +55,7 @@ sources:
           override the BambooHR data.
       - name: event_dictionary_simplified
       - name: fmm_kpi_targets
+      - name: fy23_quota
       - name: gcp_active_cud
       - name: gitlab_contributing_organizations
       - name: gitlab_certification_tracking_dashboard
@@ -80,6 +81,7 @@ sources:
       - name: manual_arr_true_up_allocation
       - name: manual_public_company_metrics
       - name: manual_downgrade_dotcom_tracking
+      - name: map_ramp_deals
       - name: mapping_sdr_sfdc_bamboohr
       - name: marketing_core_users_from_docs_gitlab_com
       - name: marketing_kpi_benchmarks
@@ -101,10 +103,10 @@ sources:
       - name: sales_training_completion_dates
       - name: sales_funnel_targets_matrix
       - name: sales_funnel_partner_alliance_targets_matrix
+      - name: sdr_bdr_metric_targets
       - name: territory_mapping
       - name: scalable_employment_values
       - name: sdr_adaptive_data
-      - name: sdr_attainment_to_goal
       - name: sdr_count_snapshot
       - name: sisense_users
       - name: sisense_user_roles
@@ -113,3 +115,4 @@ sources:
       - name: usage_ping_metrics_sections
       - name: values_certificate
       - name: yc_companies
+      - name: xactly_credit_sheetload

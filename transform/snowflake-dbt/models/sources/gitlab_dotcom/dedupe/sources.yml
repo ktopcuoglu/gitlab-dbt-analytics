@@ -283,6 +283,11 @@ sources:
         freshness: null #https://gitlab.com/gitlab-data/analytics/-/issues/10835
       - name: protected_branches
         identifier: gitlab_db_protected_branches
+      - name: protected_environment_approval_rules
+        identifier: gitlab_db_protected_environment_approval_rules
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 15, period: day}
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
@@ -299,10 +304,14 @@ sources:
         identifier: gitlab_db_resource_weight_events
       - name: routes
         identifier: gitlab_db_routes
+      - name: saml_group_links
+        identifier: gitlab_db_saml_group_links
       - name: saml_providers
         identifier: gitlab_db_saml_providers
       - name: services
         identifier: gitlab_db_services
+      - name: slack_integrations
+        identifier: gitlab_db_slack_integrations
       - name: shards
         identifier: gitlab_db_shards
       - name: sprints

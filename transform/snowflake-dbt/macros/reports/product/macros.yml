@@ -6,17 +6,17 @@ macros:
     arguments:
       - name: reporting_count
         type: string
-        description: placeholder
+        description: This is the amount of subscriptions/seats reporting metric.
       - name: no_reporting_count
         type: string
-        description: tbd
+        description: This is the amount of subscriptions/seats NOT reporting metric.
 
   - name: usage_estimation
     description: '{{ doc("usage_estimation") }}'
     arguments:
-      - name: reporting_metric_count
+      - name: recorded_usage
         type: string
-        description: placeholder
+        description: This is the summed usage across all subscriptions recorded.
       - name: percent_reporting
         type: string
-        description: tbd
+        description: This is the percentage of subscriptions/seats recording usage on a given metric.

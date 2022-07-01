@@ -223,12 +223,6 @@ Information on the Enterprise Dimensional Model can be found in the [handbook](h
 
 {% enddocs %}
 
-{% docs prep_usage_ping_metric_detail %}
-
-This table contains every Usage Ping metric name and path.
-
-{% enddocs %}
-
 {% docs prep_usage_self_managed_seat_link %}
 
 This prep table contains Seat Link data at a daily grain for downstream aggregation and summarization, as well as flags for data quality.

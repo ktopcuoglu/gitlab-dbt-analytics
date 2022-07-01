@@ -78,6 +78,8 @@ models:
 - name: sheetload_manual_arr_true_up_allocation
 - name: sheetload_manual_public_company_metrics
 - name: sheetload_manual_downgrade_dotcom_tracking
+- name: sheetload_map_ramp_deals
+  description:  In Salesforce opportunity there is a field SSP ID which maps out-year ramp opportunities to its first year opportunity. However this field was introduced end of 2021 and is blank for historical. It's used by revenue accounting team, so we can't modify/backfill this field. To accurately produce financial report, we are mapping historical ramp deals manually in GSheet which will be used for different analysis and planning work.
 - name: sheetload_mapping_sdr_sfdc_bamboohr
   description: Mapping table with the sfdc user id of Sales Development Representative (SDR) and their respective BambooHR id.
 - name: sheetload_marketing_core_users_from_docs_gitlab_com
@@ -95,10 +97,10 @@ models:
 - name: sheetload_scalable_employment_values
 - name: sheetload_sdr_adaptive_data
   description: Table with data for SDR ramping and status by month.
-- name: sheetload_sdr_attainment_to_goal
-  description: Source model for SDR attainment and goals by month.
 - name: sheetload_sdr_count_snapshot
   description: SDR counts by fiscal quarter and sales segment.
+- name: sheetload_sdr_bdr_metric_targets
+  description: Source model for SDR/BDR metric targets by metric. 
 - name: sheetload_sisense_users
   description: source model for Sisense users.
 - name: sheetload_sisense_user_roles

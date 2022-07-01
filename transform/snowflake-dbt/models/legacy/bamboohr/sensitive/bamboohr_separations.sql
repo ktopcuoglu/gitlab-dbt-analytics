@@ -21,7 +21,7 @@ WITH dim_date AS (
 ), separation_type AS (
 
     SELECT *
-    FROM {{ ref('bamboohr_employment_status_source') }}
+    FROM {{ ref('blended_employment_status_source') }}
     WHERE LOWER(employment_status) = 'terminated'
 
 ), eeoc AS (
