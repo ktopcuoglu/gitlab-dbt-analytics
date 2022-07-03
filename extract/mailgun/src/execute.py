@@ -98,6 +98,7 @@ def extract_logs(event):
 
 
 if __name__ == "__main__":
+    snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
     for event in events:
         file_name = f'{event}.json'
         results = extract_logs(event)
