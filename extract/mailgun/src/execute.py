@@ -97,8 +97,8 @@ def extract_logs(event):
 
 
 if __name__ == "__main__":
-    for e in events:
-        file_name = f'{e}.json'
+    for event in events:
+        file_name = f'{event}.json'
         results = extract_logs(event)
 
         with open(file_name, 'w') as outfile:
