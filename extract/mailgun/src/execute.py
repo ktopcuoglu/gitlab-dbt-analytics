@@ -77,12 +77,16 @@ def extract_logs(event):
 
                 items = data.get('items')
                 formatted_data = reformat_data(items)
+                if len(formatted_data) == 0:
+                    break
                 all_results = all_results[:] + formatted_data[:]
 
             else:
                 data = get_logs(api_key, domain, event, formatted_date).json()
                 items = data.get('items')
                 formatted_data = reformat_data(items)
+                if len(formatted_data) == 0:
+                    break
                 all_results = all_results[:] + formatted_data[:]
 
             page_token = data.get("paging").get('next')
