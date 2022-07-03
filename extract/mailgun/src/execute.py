@@ -107,6 +107,6 @@ if __name__ == "__main__":
             json.dump(results, outfile)
 
         snowflake_stage_load_copy_remove(
-                file_name, "mailgun.mailgun_load", "mailgun.events", snowflake_engine
+                file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
         )
 
