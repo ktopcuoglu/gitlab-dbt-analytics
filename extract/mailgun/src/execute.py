@@ -19,13 +19,13 @@ api_key = env.get("MAILGUN_API_KEY")
 
 domains = ['mg.gitlab.com']
 events = [
-    'rejected',
-    'delivered',
-    'failed',
-    'opened',
+#    'rejected',
+#    'delivered',
+#    'failed',
+#    'opened',
     'clicked',
-    'unsubscribed',
-    'complained'
+#    'unsubscribed',
+#    'complained'
 ]
 
 
@@ -34,27 +34,27 @@ def reformat_data(items: List[Dict]):
     if items and len(items) > 0:
         for i in items:
             new_dict = {
-                "id": i.get('id'),
-                "message-id": i.get('message').get('headers').get('message-id'),
-                "timestamp": i.get('timestamp'),
-                "tags": i.get('tags'),
-                "event": i.get('event'),
-                "delivery-status-code": i.get('delivery-status').get('code'),
-                "delivery-status-message": i.get('delivery-status').get('message'),
-                "log-level": i.get('log-level'),
-                "url": i.get('url'),
-                "recipient": i.get('recipient'),
-                "sender": i.get('envelope').get('sender'),
-                "targets": i.get('envelope').get('targets'),
-                "subject": i.get('message').get('headers').get('subject'),
-                "city": i.get('geolocation').get('city'),
-                "region": i.get('geolocation').get('region'),
-                "country": i.get('geolocation').get('country'),
-                "is-routed": i.get('flags').get('is-routed'),
-                "is-authenticated": i.get('flags').get('is-authenticated'),
-                "is-system-test": i.get('flags').get('is-system-test'),
-                "is-test-mode": i.get('flags').get('is-test-mode'),
-            }
+                "id": d.get('id'),
+                "message-id": d.get('message', {}).get('headers', {}).get('message-id', ''),
+                "timestamp": d.get('timestamp'),
+                "tags": d.get('tags'),
+                "event": d.get('event'),
+                "delivery-status-code": d.get('delivery-status', {}).get('code', ''),
+                "delivery-status-message": d.get('delivery-status', {}).get('description', ''),
+                "log-level": d.get('log-level'),
+                "url": d.get('url'),
+                "recipient": d.get('recipient'),
+                "sender": d.get('envelope', {}).get('sender', ''),
+                "targets": d.get('envelope', {}).get('targets', ''),
+                "subject": d.get('message', {}).get('headers').get('subject', ''),
+                "city": d.get('geolocation', {}).get('city', ''),
+                "region": d.get('geolocation', {}).get('region', ''),
+                "country": d.get('geolocation', {}).get('country', ''),
+                "is-routed": d.get('flags', {}).get('is-routed', ''),
+                "is-authenticated": d.get('flags', {}).get('is-authenticated', ''),
+                "is-system-test": d.get('flags', {}).get('is-system-test', ''),
+                "is-test-mode": d.get('flags', {}).get('is-test-mode', ''),
+    }
             formatted_data.append(new_dict)
 
     return formatted_data
