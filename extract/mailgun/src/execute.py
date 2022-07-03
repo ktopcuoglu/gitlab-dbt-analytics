@@ -31,7 +31,7 @@ events = [
 
 def reformat_data(items: List[Dict]):
     formatted_data = []
-    if items:
+    if items and len(items) > 0:
         for i in items:
             new_dict = {
                 "id": i.get('id'),
@@ -76,19 +76,12 @@ def extract_logs(event):
                         auth=("api", api_key)).json()
 
                 items = data.get('items')
-                if len(items) == 0:
-                    break
-
                 formatted_data = reformat_data(items)
                 all_results = all_results[:] + formatted_data[:]
 
             else:
                 data = get_logs(api_key, domain, event, formatted_date).json()
                 items = data.get('items')
-
-                if len(items) == 0:
-                    break
-
                 formatted_data = reformat_data(items)
                 all_results = all_results[:] + formatted_data[:]
 
