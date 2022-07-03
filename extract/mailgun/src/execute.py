@@ -1,9 +1,11 @@
 from os import environ as env
 import requests
 import json
+import datetime
 from pandas import DataFrame
 from typing import Dict, Tuple, List
 from api import get_logs
+from email import utils
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -62,6 +64,9 @@ def extract_logs(event):
     page_token = None
     all_results: List[Dict] = []
 
+    start_date = datetime.datetime.strptime('2021-02-01', '%Y-%m-%d')
+    formatted_date = utils.format_datetime(start_date)
+
     for domain in domains:
 
         while True:
@@ -78,7 +83,7 @@ def extract_logs(event):
                 all_results = all_results[:] + formatted_data[:]
 
             else:
-                data = get_logs(api_key, domain, event).json()
+                data = get_logs(api_key, domain, event, formatted_date).json()
                 items = data.get('items')
 
                 if len(items) == 0:

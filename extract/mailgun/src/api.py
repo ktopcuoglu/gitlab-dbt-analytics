@@ -8,7 +8,8 @@ def get_stats():
         params={"event": ["accepted", "delivered", "failed"],"duration": "1m"})
 
 
-def get_logs(api_key, domain, event):
+def get_logs(api_key, domain, event, formatted_date):
+
     return requests.get(
         f"https://api.mailgun.net/v3/{domain}/events",
         auth=("api", api_key),
