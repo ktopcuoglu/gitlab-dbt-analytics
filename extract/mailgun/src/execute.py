@@ -2,7 +2,7 @@ from os import environ as env
 import requests
 import json
 from pandas import DataFrame
-
+from typing import Dict, Tuple, List
 from api import get_logs
 
 from gitlabdata.orchestration_utils import (
