@@ -13,7 +13,6 @@ from gitlabdata.orchestration_utils import (
 
 config_dict = env.copy()
 
-base_url = env.get('MAILGUN_BASE_URL')
 api_key = env.get("MAILGUN_API_KEY")
 
 domains = ['mg.gitlab.com']
@@ -63,7 +62,7 @@ def extract_logs(event):
     page_token = None
     all_results: List[Dict] = []
 
-    for d in domains:
+    for domain in domains:
 
         while True:
             if page_token:
@@ -79,7 +78,7 @@ def extract_logs(event):
                 all_results = all_results[:] + formatted_data[:]
 
             else:
-                data = get_logs(d, event).json()
+                data = get_logs(api_key, domain, event).json()
                 items = data.get('items')
 
                 if len(items) == 0:
