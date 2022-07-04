@@ -80,7 +80,7 @@ def extract_logs(event):
 
                 items = data.get('items')
                 formatted_data = reformat_data(items)
-                logging.info(f"Data retrieved length: {len(formatted_data)}")
+                info(f"Data retrieved length: {len(formatted_data)}")
                 if len(formatted_data) == 0:
                     break
                 all_results = all_results[:] + formatted_data[:]
@@ -89,7 +89,7 @@ def extract_logs(event):
                 data = get_logs(api_key, domain, event, formatted_date).json()
                 items = data.get('items')
                 formatted_data = reformat_data(items)
-                logging.info(f"Data retrieved length: {len(formatted_data)}")
+                info(f"Data retrieved length: {len(formatted_data)}")
                 if len(formatted_data) == 0:
                     break
                 all_results = all_results[:] + formatted_data[:]
@@ -107,6 +107,8 @@ def load_event_logs(event):
 
     file_name = f'{event}.json'
     results = extract_logs(event)
+
+    info(f"Results length: {len(results)}")
 
     with open(file_name, 'w') as outfile:
         json.dump(results, outfile)
