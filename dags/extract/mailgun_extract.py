@@ -18,7 +18,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    GCP_SERVICE_CREDS,
+    MAILGUN_API_KEY,
 )
 
 from kubernetes_helpers import get_affinity, get_toleration
@@ -67,6 +67,7 @@ for e in events:
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
             SNOWFLAKE_LOAD_PASSWORD,
+            MAILGUN_API_KEY,
         ],
         env_vars={
             **pod_env_vars,
