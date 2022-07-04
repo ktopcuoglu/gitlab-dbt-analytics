@@ -3,6 +3,7 @@ import requests
 import json
 import datetime
 from pandas import DataFrame
+from logging import error, info, basicConfig, getLogger, warning
 from typing import Dict, Tuple, List
 from api import get_logs
 from email import utils
