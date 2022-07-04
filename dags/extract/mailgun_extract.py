@@ -41,13 +41,13 @@ default_args = {
 dag = DAG("mailgun_extract", default_args=default_args, schedule_interval="0 23 * * *")
 
 events = [
-#    'rejected',
-#    'delivered',
-#    'failed',
-#    'opened',
+    'rejected',
+    'delivered',
+    'failed',
+    'opened',
     'clicked',
-#    'unsubscribed',
-#    'complained'
+    'unsubscribed',
+    'complained'
 ]
 
 for e in events:
