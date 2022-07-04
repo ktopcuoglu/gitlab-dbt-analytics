@@ -310,6 +310,15 @@ WITH sfdc_opportunity_xf AS (
               ELSE 0 
            END)                                                                   AS cfy_open_1plus_net_arr,
 
+      SUM(CASE
+            WHEN oppty.close_fiscal_year = today.current_fiscal_year
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_1_plus = 1
+              AND oppty.net_arr < 1000000
+                THEN oppty.net_arr
+              ELSE 0
+           END)                                                                   AS cfy_open_1plus_under_1m_net_arr,   
+      
       SUM(CASE 
             WHEN oppty.close_fiscal_year = today.current_fiscal_year
               AND oppty.is_eligible_open_pipeline_flag = 1
