@@ -1507,7 +1507,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_clusters
                     - raw.tap_postgres.gitlab_db_clusters_applications_cert_managers
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
-                    - raw.tap_postgres.gitlab_db_clusters_applications_elastic_stacks
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
                     - raw.tap_postgres.gitlab_db_clusters_applications_ingress
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter

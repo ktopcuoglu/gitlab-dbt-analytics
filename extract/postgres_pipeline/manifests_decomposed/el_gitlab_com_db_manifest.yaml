@@ -323,23 +323,6 @@ tables:
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_elastic_stacks:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_elastic_stacks'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , version
-      , created_at
-      , updated_at
-      , status_reason
-      FROM clusters_applications_elastic_stacks
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   clusters_integration_elasticstack:
     export_schema: 'gitlab_com'
     export_table: 'clusters_integration_elasticstack'
