@@ -3,16 +3,14 @@ import requests
 import json
 import datetime
 from os import environ as env
-from pandas import DataFrame
-from logging import error, info, basicConfig, getLogger, warning
-from typing import Dict, Tuple, List
+from logging import info, basicConfig, getLogger
+from typing import Dict, List
 from email import utils
 from fire import Fire
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
-    dataframe_uploader,
 )
 
 config_dict = env.copy()
