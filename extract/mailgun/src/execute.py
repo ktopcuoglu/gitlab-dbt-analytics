@@ -28,30 +28,30 @@ def reformat_data(items: List[Dict]):
     if items and len(items) > 0:
         for i in items:
             new_dict = {
-                "id"                     : i.get("id", ""),
-                "message-id"             : i.get("message", {})
-                    .get("headers", {})
-                    .get("message-id", ""),
-                "timestamp"              : i.get("timestamp", ""),
-                "tags"                   : i.get("tags", ""),
-                "event"                  : i.get("event", ""),
-                "delivery-status-code"   : i.get("delivery-status", {}).get("code", ""),
+                "id": i.get("id", ""),
+                "message-id": i.get("message", {})
+                .get("headers", {})
+                .get("message-id", ""),
+                "timestamp": i.get("timestamp", ""),
+                "tags": i.get("tags", ""),
+                "event": i.get("event", ""),
+                "delivery-status-code": i.get("delivery-status", {}).get("code", ""),
                 "delivery-status-message": i.get("delivery-status", {}).get(
-                        "description", ""
+                    "description", ""
                 ),
-                "log-level"              : i.get("log-level", ""),
-                "url"                    : i.get("url", ""),
-                "recipient"              : i.get("recipient", ""),
-                "sender"                 : i.get("envelope", {}).get("sender", ""),
-                "targets"                : i.get("envelope", {}).get("targets", ""),
-                "subject"                : i.get("message", {}).get("headers").get("subject", ""),
-                "city"                   : i.get("geolocation", {}).get("city", ""),
-                "region"                 : i.get("geolocation", {}).get("region", ""),
-                "country"                : i.get("geolocation", {}).get("country", ""),
-                "is-routed"              : i.get("flags", {}).get("is-routed", ""),
-                "is-authenticated"       : i.get("flags", {}).get("is-authenticated", ""),
-                "is-system-test"         : i.get("flags", {}).get("is-system-test", ""),
-                "is-test-mode"           : i.get("flags", {}).get("is-test-mode", ""),
+                "log-level": i.get("log-level", ""),
+                "url": i.get("url", ""),
+                "recipient": i.get("recipient", ""),
+                "sender": i.get("envelope", {}).get("sender", ""),
+                "targets": i.get("envelope", {}).get("targets", ""),
+                "subject": i.get("message", {}).get("headers").get("subject", ""),
+                "city": i.get("geolocation", {}).get("city", ""),
+                "region": i.get("geolocation", {}).get("region", ""),
+                "country": i.get("geolocation", {}).get("country", ""),
+                "is-routed": i.get("flags", {}).get("is-routed", ""),
+                "is-authenticated": i.get("flags", {}).get("is-authenticated", ""),
+                "is-system-test": i.get("flags", {}).get("is-system-test", ""),
+                "is-test-mode": i.get("flags", {}).get("is-test-mode", ""),
             }
             formatted_data.append(new_dict)
 
@@ -67,9 +67,9 @@ def get_logs(domain, event, formatted_date):
     :return:
     """
     return requests.get(
-            f"https://api.mailgun.net/v3/{domain}/events",
-            auth=("api", api_key),
-            params={"begin": formatted_date, "ascending": "yes", "event": event},
+        f"https://api.mailgun.net/v3/{domain}/events",
+        auth=("api", api_key),
+        params={"begin": formatted_date, "ascending": "yes", "event": event},
     )
 
 
@@ -130,7 +130,7 @@ def load_event_logs(event):
         json.dump(results, outfile)
 
     snowflake_stage_load_copy_remove(
-            file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
+        file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
     )
 
 
