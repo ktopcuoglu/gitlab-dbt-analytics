@@ -6,6 +6,7 @@ from pandas import DataFrame
 from typing import Dict, Tuple, List
 from api import get_logs
 from email import utils
+from fire import Fire
 
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
@@ -97,16 +98,26 @@ def extract_logs(event):
     return all_results
 
 
-if __name__ == "__main__":
+def load_event_logs(event):
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
-    for event in events:
-        file_name = f'{event}.json'
-        results = extract_logs(event)
 
-        with open(file_name, 'w') as outfile:
-            json.dump(results, outfile)
+    file_name = f'{event}.json'
+    results = extract_logs(event)
 
-        snowflake_stage_load_copy_remove(
-                file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
-        )
+    with open(file_name, 'w') as outfile:
+        json.dump(results, outfile)
+
+    snowflake_stage_load_copy_remove(
+            file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
+    )
+
+
+if __name__ == "__main__":
+    basicConfig(stream=sys.stdout, level=20)
+    getLogger("snowflake.connector.cursor").disabled = True
+    Fire(
+            {"load_event_logs": load_event_logs}
+    )
+    info("Complete.")
+
 

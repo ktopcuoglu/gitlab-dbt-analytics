@@ -40,30 +40,41 @@ default_args = {
 
 dag = DAG("mailgun_extract", default_args=default_args, schedule_interval="0 23 * * *")
 
+events = [
+#    'rejected',
+#    'delivered',
+#    'failed',
+#    'opened',
+    'clicked',
+#    'unsubscribed',
+#    'complained'
+]
 
-# don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
-pmg_extract_command = f"{clone_and_setup_extraction_cmd} && python mailgun/src/execute.py"
+for e in events:
+    # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
+    mailgun_extract_command = f"{clone_and_setup_extraction_cmd} && " \
+                              f"python mailgun/src/execute.py load_event_logs --event {e}"
 
-pmg_operator = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DATA_IMAGE,
-    task_id="mailgun-extract",
-    name="mailgun-extract",
-    secrets=[
-        SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_DATABASE,
-        SNOWFLAKE_LOAD_ROLE,
-        SNOWFLAKE_LOAD_USER,
-        SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_LOAD_PASSWORD,
-    ],
-    env_vars={
-        **pod_env_vars,
-        "START_TIME": "{{ execution_date.isoformat() }}",
-        "END_TIME": "{{ yesterday_ds }}",
-    },
-    affinity=get_affinity(False),
-    tolerations=get_toleration(False),
-    arguments=[pmg_extract_command],
-    dag=dag,
-)
+    mailgun_operator = KubernetesPodOperator(
+        **gitlab_defaults,
+        image=DATA_IMAGE,
+        task_id="mailgun-extract",
+        name="mailgun-extract",
+        secrets=[
+            SNOWFLAKE_ACCOUNT,
+            SNOWFLAKE_LOAD_DATABASE,
+            SNOWFLAKE_LOAD_ROLE,
+            SNOWFLAKE_LOAD_USER,
+            SNOWFLAKE_LOAD_WAREHOUSE,
+            SNOWFLAKE_LOAD_PASSWORD,
+        ],
+        env_vars={
+            **pod_env_vars,
+            "START_TIME": "{{ execution_date.isoformat() }}",
+            "END_TIME": "{{ yesterday_ds }}",
+        },
+        affinity=get_affinity(False),
+        tolerations=get_toleration(False),
+        arguments=[mailgun_extract_command],
+        dag=dag,
+    )
