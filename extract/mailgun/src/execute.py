@@ -68,7 +68,6 @@ def extract_logs(event):
                 data = requests.get(
                         page_token,
                         auth=("api", api_key)).json()
-                info(f"Token {data}")
                 items = data.get('items')
                 formatted_data = reformat_data(items)
                 info(f"Data retrieved length: {len(formatted_data)}")
@@ -77,12 +76,7 @@ def extract_logs(event):
                 all_results = all_results[:] + formatted_data[:]
 
             else:
-                info(api_key)
-                info(domain)
-                info(event)
-                info(formatted_date)
                 data = get_logs(api_key, domain, event, formatted_date).json()
-                info(f"No token {data}")
                 items = data.get('items')
                 formatted_data = reformat_data(items)
                 info(f"Data retrieved length: {len(formatted_data)}")
