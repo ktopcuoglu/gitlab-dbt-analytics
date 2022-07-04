@@ -34,16 +34,16 @@ def reformat_data(items: List[Dict]):
     if items and len(items) > 0:
         for i in items:
             new_dict = {
-                "id": i.get('id'),
+                "id": i.get('id', ''),
                 "message-id": i.get('message', {}).get('headers', {}).get('message-id', ''),
-                "timestamp": i.get('timestamp'),
-                "tags": i.get('tags'),
-                "event": i.get('event'),
+                "timestamp": i.get('timestamp', ''),
+                "tags": i.get('tags', ''),
+                "event": i.get('event', ''),
                 "delivery-status-code": i.get('delivery-status', {}).get('code', ''),
                 "delivery-status-message": i.get('delivery-status', {}).get('description', ''),
-                "log-level": i.get('log-level'),
-                "url": i.get('url'),
-                "recipient": i.get('recipient'),
+                "log-level": i.get('log-level', ''),
+                "url": i.get('url', ''),
+                "recipient": i.get('recipient', ''),
                 "sender": i.get('envelope', {}).get('sender', ''),
                 "targets": i.get('envelope', {}).get('targets', ''),
                 "subject": i.get('message', {}).get('headers').get('subject', ''),
@@ -54,7 +54,7 @@ def reformat_data(items: List[Dict]):
                 "is-authenticated": i.get('flags', {}).get('is-authenticated', ''),
                 "is-system-test": i.get('flags', {}).get('is-system-test', ''),
                 "is-test-mode": i.get('flags', {}).get('is-test-mode', ''),
-    }
+            }
             formatted_data.append(new_dict)
 
     return formatted_data
