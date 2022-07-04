@@ -62,7 +62,6 @@ for e in events:
         name=f"mailgun-extract-{e}",
         secrets=[
             SNOWFLAKE_ACCOUNT,
-            SNOWFLAKE_LOAD_DATABASE,
             SNOWFLAKE_LOAD_ROLE,
             SNOWFLAKE_LOAD_USER,
             SNOWFLAKE_LOAD_WAREHOUSE,
