@@ -58,8 +58,8 @@ for e in events:
     mailgun_operator = KubernetesPodOperator(
         **gitlab_defaults,
         image=DATA_IMAGE,
-        task_id="mailgun-extract",
-        name="mailgun-extract",
+        task_id=f"mailgun-extract-{e}",
+        name=f"mailgun-extract-{e}",
         secrets=[
             SNOWFLAKE_ACCOUNT,
             SNOWFLAKE_LOAD_DATABASE,
