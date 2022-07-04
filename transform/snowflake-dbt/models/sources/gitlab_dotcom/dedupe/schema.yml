@@ -305,8 +305,6 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_terraform_states_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_timelogs_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_todos_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_uploads_dedupe_source
