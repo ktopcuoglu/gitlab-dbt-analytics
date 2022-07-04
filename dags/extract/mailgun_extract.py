@@ -38,7 +38,12 @@ default_args = {
     "start_date": datetime(2020, 1, 1),
 }
 
-dag = DAG("mailgun_extract", default_args=default_args, schedule_interval="0 23 * * *")
+dag = DAG(
+    "mailgun_extract",
+    default_args=default_args,
+    schedule_interval="0 23 * * *",
+    concurrency=1,
+)
 
 events = [
     "rejected",
