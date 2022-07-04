@@ -1,7 +1,8 @@
-from os import environ as env
+import sys
 import requests
 import json
 import datetime
+from os import environ as env
 from pandas import DataFrame
 from logging import error, info, basicConfig, getLogger, warning
 from typing import Dict, Tuple, List
