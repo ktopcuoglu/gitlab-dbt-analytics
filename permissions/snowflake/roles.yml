@@ -1534,7 +1534,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
-                    - raw.tap_postgres.gitlab_db_experiment_users
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
                     - raw.tap_postgres.gitlab_db_gitlab_subscription_histories
                     - raw.tap_postgres.gitlab_db_group_group_links
