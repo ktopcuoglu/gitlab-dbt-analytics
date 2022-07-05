@@ -1374,21 +1374,6 @@ tables:
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  project_tracing_settings:
-    export_schema: "gitlab_com"
-    export_table: project_tracing_settings
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , external_url
-      FROM project_tracing_settings
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  projects:
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
