@@ -17,7 +17,7 @@ sources:
       - name: clari_export_forecast_net_iacv
       - name: email_domain_classification
       - name: financial_metrics_program_phase_1
-      - name: netsuite_currency_exchange_rates
+      - name: marketing_dnc_list
       - name: ssa_coverage_fitted_curves
       - name: ssa_quarterly_aggregated_metrics_for_coverage
       - name: zuora_revenue_billing_waterfall_report_apr22

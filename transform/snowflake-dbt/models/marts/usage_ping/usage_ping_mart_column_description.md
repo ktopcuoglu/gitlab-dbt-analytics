@@ -134,45 +134,11 @@ Boolean flag which is set to True if the instance has been identified as a stagi
 
 {% enddocs %}
 
-{% docs group_name %}
-
-Name of the group which is responsible for this metric
-
-{% enddocs %}
-
-{% docs stage_name %}
-
-Name of the stage which is responsible for this metric
-
-{% enddocs %}
-
-{% docs section_name %}
-
-Name of the section which is responsible for this metric
-
-{% enddocs %}
-
-{% docs is_smau %}
-
-Boolean flag set to true if the metrics is one of the counters chosen for SMAU calculation 	
-
-{% enddocs %}
-
-{% docs is_gmau %}
-
-Boolean flag set to true if the metrics is one of the counters chosen for GMAU calculation
-
-{% enddocs %}
-
 {% docs is_paid_gmau %}
 
 Boolean flag set to true if the metrics is one of the counters chosen for paid GMAU calculation
 
 {% enddocs %}
-
-{% docs is_umau %}
-
-Boolean flag set to true if the metrics is one of the counters chosen for UMAU calculation	{% enddocs %}
 
 {% docs source_ip_hash%}		
 
@@ -285,22 +251,6 @@ Timestamp when the usage ping payloads has been recorded
 {% docs monthly_metric_value%}
 
 On a given month M, value for the metric path on a specific instance
-
-{% enddocs %}
-
-{% docs created_by%}		
-
-{% enddocs %}
-
-{% docs updated_by%}		
-
-{% enddocs %}
-
-{% docs model_created_date%}		
-
-{% enddocs %}
-
-{% docs model_updated_date%}
 
 {% enddocs %}
 

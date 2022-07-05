@@ -14,11 +14,11 @@ folders:
     folder_name: financial_metrics_program_phase_1
     table_name: financial_metrics_program_phase_1
     table_replace_append: 0 # For Append 1 and to replace 0 , This is the old behavior of this table where it will replace the table and reload not modifying the same.
-  - name: netsuite_currency_exchange_rates
-    owner: '@michellecooper'
-    folder_name: netsuite_currency_exchange_rates
-    table_name: netsuite_currency_exchange_rates
-    table_replace_append: 0
+  - name: marketing_dnc_list
+    owner: '@jeanpeguero'
+    folder_name: marketing_do_not_contact_list
+    table_name: marketing_dnc_list
+    table_replace_append: 1
   - name: ssa_coverage_fitted_curves
     owner: '@jeanpeguero'
     folder_name: ssa_coverage_fitted_curves

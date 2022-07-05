@@ -6,7 +6,7 @@
 {{ simple_cte([
     ('mart_ping_instance_metric_monthly', 'mart_ping_instance_metric_monthly'),
     ('sub_combo', 'rpt_ping_subscriptions_reported_counts_monthly'),
-    ('active_subscriptions', 'rpt_ping_active_subscriptions_monthly')
+    ('latest_subscriptions', 'rpt_ping_latest_subscriptions_monthly')
     ])
 
 }}
@@ -26,12 +26,12 @@
     mart_ping_instance_metric_monthly.is_gmau                                         AS is_gmau,
     mart_ping_instance_metric_monthly.is_paid_gmau                                    AS is_paid_gmau,
     mart_ping_instance_metric_monthly.is_umau                                         AS is_umau,
-    mart_ping_instance_metric_monthly.latest_active_subscription_id                   AS latest_active_subscription_id,
-    active_subscriptions.licensed_user_count                                          AS licensed_user_count
+    mart_ping_instance_metric_monthly.latest_subscription_id                          AS latest_subscription_id,
+    latest_subscriptions.licensed_user_count                                          AS licensed_user_count
   FROM mart_ping_instance_metric_monthly
-    INNER JOIN active_subscriptions
-  ON mart_ping_instance_metric_monthly.latest_active_subscription_id = active_subscriptions.latest_active_subscription_id
-      AND mart_ping_instance_metric_monthly.ping_created_at_month = active_subscriptions.ping_created_at_month
+    INNER JOIN latest_subscriptions
+  ON mart_ping_instance_metric_monthly.latest_subscription_id = latest_subscriptions.latest_subscription_id
+      AND mart_ping_instance_metric_monthly.ping_created_at_month = latest_subscriptions.ping_created_at_month
     WHERE time_frame = '28d'
       AND ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=12)}}
@@ -50,7 +50,7 @@
         is_gmau                                         AS is_gmau,
         is_paid_gmau                                    AS is_paid_gmau,
         is_umau                                         AS is_umau,
-        COUNT(DISTINCT latest_active_subscription_id)   AS subscription_count,
+        COUNT(DISTINCT latest_subscription_id)          AS subscription_count,
         SUM(licensed_user_count)                        AS seat_count
     FROM arr_joined
     {{ dbt_utils.group_by(n=10)}}

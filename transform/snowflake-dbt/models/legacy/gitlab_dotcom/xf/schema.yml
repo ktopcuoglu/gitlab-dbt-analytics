@@ -483,8 +483,6 @@ models:
         tests:
           - not_null:
               severity: warn
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
       - name: plan_title
         description: Whether or not the namespace associated with the project is subscribed to a paid plan. This can be inheritted from the namespaces's ultimate parent.
         tests:
@@ -715,22 +713,6 @@ models:
           - not_null
       - name: is_blocked_namespace
         description: boolean flag set to TRUE if the creator of the namespace is a blocked user
-  - name: gitlab_dotcom_usage_data_events_blocked_users
-    description: '{{ doc("gitlab_dotcom_usage_data_events_blocked_users") }}'
-    columns:
-      - name: event_name
-        tests:
-          - not_null
-      - name: stage_name
-        tests:
-          - not_null
-      - name: is_representative_of_stage
-        tests:
-          - not_null
-        description: This column represents whether or not this action represents being active for the entire stage. One action per stage has this designation.
-      - name: event_created_at
-        tests:
-          - not_null      
   - name: gitlab_dotcom_users_xf
     description: '{{ doc("gitlab_dotcom_users_xf") }}'
     columns:

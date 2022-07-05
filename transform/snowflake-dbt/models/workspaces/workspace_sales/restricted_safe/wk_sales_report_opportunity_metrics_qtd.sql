@@ -253,7 +253,7 @@ WITH sfdc_opportunity_xf AS (
     --------------------------------------------------------------------------------
     -- Fiscal year metrics
   
-        SUM(CASE 
+      SUM(CASE 
             WHEN oppty.close_fiscal_year = today.current_fiscal_year
                   AND oppty.is_stage_1_plus = 1 
                   AND oppty.is_eligible_open_pipeline_flag = 1 
@@ -294,13 +294,13 @@ WITH sfdc_opportunity_xf AS (
           END)                                                                    AS cfy_created_deal_count,
 
       -- NEXT Q Deal count
-        -- Net ARR
+      -- Net ARR
 
       SUM(CASE
         WHEN oppty.close_fiscal_year = today.current_fiscal_year
             THEN oppty.booked_net_arr
           ELSE 0 
-      END)                                                                   AS cfy_booked_net_arr,
+      END)                                                                        AS cfy_booked_net_arr,
       
       SUM(CASE
             WHEN oppty.close_fiscal_year = today.current_fiscal_year
@@ -310,7 +310,7 @@ WITH sfdc_opportunity_xf AS (
               ELSE 0 
            END)                                                                   AS cfy_open_1plus_net_arr,
 
-      SUM (CASE 
+      SUM(CASE 
             WHEN oppty.close_fiscal_year = today.current_fiscal_year
               AND oppty.is_eligible_open_pipeline_flag = 1
               AND oppty.is_stage_3_plus = 1
@@ -318,13 +318,13 @@ WITH sfdc_opportunity_xf AS (
               ELSE 0 
             END)                                                                  AS cfy_open_3plus_net_arr,
 
-      SUM (CASE 
+      SUM(CASE 
             WHEN oppty.close_fiscal_year = today.current_fiscal_year
               AND oppty.is_eligible_open_pipeline_flag = 1
               AND oppty.is_stage_4_plus = 1
                 THEN  oppty.net_arr 
             ELSE 0 
-           END)                                                                  AS cfy_open_4plus_net_arr,
+           END)                                                                   AS cfy_open_4plus_net_arr,
 
       -- created pipeline in year
       SUM(CASE
@@ -342,14 +342,79 @@ WITH sfdc_opportunity_xf AS (
               AND  (oppty.is_won = 1 OR (oppty.is_lost = 1 AND oppty.is_renewal = 1))
                 THEN oppty.net_arr
               ELSE 0 
-          END)                                                                   AS cfy_created_and_closed_net_arr
-  
+          END)                                                                   AS cfy_created_and_closed_net_arr,
 
+      -----------------------------------------------------------------------------------------------------------
+      -----------------------------------------------------------------------------------------------------------
+      -- next 4 quarters
+
+      -- DEAL COUNT      
+      SUM(CASE 
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+              AND oppty.is_stage_1_plus = 1 
+              AND oppty.is_eligible_open_pipeline_flag = 1
+                THEN oppty.calculated_deal_count 
+            ELSE 0 
+          END)                                                                   AS next_4q_open_1plus_deal_count,
+
+      SUM(CASE 
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+              AND oppty.is_stage_3_plus = 1 
+              AND oppty.is_eligible_open_pipeline_flag = 1
+                THEN oppty.calculated_deal_count 
+            ELSE 0 
+          END)                                                                  AS next_4q_open_3plus_deal_count,
+
+      SUM(CASE 
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+              AND oppty.is_stage_4_plus = 1 
+              AND oppty.is_eligible_open_pipeline_flag = 1
+                THEN oppty.calculated_deal_count  
+            ELSE 0 
+          END)                                                                 AS next_4q_open_4plus_deal_count,
+      
+      -- NET ARR
+      SUM(CASE
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+                THEN oppty.booked_net_arr
+            ELSE 0 
+          END)                                                                 AS next_4q_booked_net_arr,            
+  
+      SUM(CASE  
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_1_plus = 1
+                THEN oppty.net_arr 
+            ELSE 0 
+          END)                                                                 AS next_4q_open_1plus_net_arr,
+
+      SUM(CASE  
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_3_plus = 1
+                THEN oppty.net_arr 
+            ELSE 0 
+          END)                                                                 AS next_4q_open_3plus_net_arr,
+
+      SUM(CASE  
+            WHEN oppty.close_fiscal_quarter_date >= today.current_fiscal_quarter_date
+              AND oppty.close_fiscal_quarter_date <= DATEADD(month,12,today.current_fiscal_quarter_date)
+              AND oppty.is_eligible_open_pipeline_flag = 1
+              AND oppty.is_stage_4_plus = 1
+                THEN oppty.net_arr 
+            ELSE 0 
+          END)                                                                 AS next_4q_open_4plus_net_arr
 
     FROM sfdc_opportunity_xf oppty
     -- identify todays quarter and fiscal quarter
-        CROSS JOIN today
-   GROUP BY 1,2,3
+    CROSS JOIN today
+    GROUP BY 1,2,3
 
 ), pipe_gen_yoy AS (
   

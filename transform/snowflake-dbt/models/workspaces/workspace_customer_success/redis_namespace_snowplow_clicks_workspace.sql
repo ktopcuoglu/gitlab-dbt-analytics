@@ -13,7 +13,9 @@ WITH redis_clicks AS (
     'g_analytics_valuestream',
     'action_active_users_project_repo',
     'push_package',
-    'ci_templates_unique'
+    'ci_templates_unique',
+    'p_terraform_state_api_unique_users',
+    'i_search_paid'
   )
 ),
 
@@ -40,7 +42,7 @@ joined AS (
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@iweeks",
     created_date="2022-06-06",
-    updated_date="2022-06-07"
+    updated_date="2022-06-27"
 ) }}

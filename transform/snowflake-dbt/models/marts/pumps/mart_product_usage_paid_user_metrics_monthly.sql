@@ -11,7 +11,10 @@
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
     ('subscriptions', 'dim_subscription'),
-    ('namespaces', 'dim_namespace')
+    ('namespaces', 'dim_namespace'),
+    ('charges', 'mart_charge'),
+    ('dates', 'dim_date'),
+    ('aggregated_metrics', 'redis_namespace_snowplow_clicks_aggregated_workspace')
 ]) }}
 
 
@@ -38,9 +41,31 @@
       ORDER BY
         subscription_version DESC
     ) = 1
-)
 
-, sm_paid_user_metrics AS (
+), zuora_licenses_per_subscription AS (
+  
+    SELECT
+      dates.first_day_of_month AS month,
+      subscriptions.dim_subscription_id_original,
+      SUM(charges.quantity) AS license_user_count
+    FROM charges
+    JOIN dates ON charges.effective_start_month <= dates.date_actual
+      AND (charges.effective_end_month > dates.date_actual
+       OR charges.effective_end_month IS NULL)
+      AND dates.day_of_month = 1
+    LEFT JOIN subscriptions ON charges.dim_subscription_id = subscriptions.dim_subscription_id
+    WHERE charges.subscription_status IN ('Active','Cancelled')
+      AND charges.product_tier_name != 'Storage'
+    {{ dbt_utils.group_by(n = 2) }}
+    
+), action_active_users_project_repo_users AS (
+  
+    SELECT
+      *
+    FROM aggregated_metrics 
+    WHERE event_action = 'action_active_users_project_repo'
+  
+), sm_paid_user_metrics AS (
 
     SELECT
       monthly_sm_metrics.snapshot_month,
@@ -69,11 +94,22 @@
       location_country.iso_3_country_code,
       'Self-Managed'                                                                AS delivery_type,
       -- Wave 1
-      monthly_sm_metrics.license_utilization,
+      DIV0(
+        monthly_sm_metrics.billable_user_count, 
+        COALESCE(
+          zuora_licenses_per_subscription.license_user_count, 
+          monthly_sm_metrics.license_user_count)
+      )                                                                             AS license_utilization,
       monthly_sm_metrics.billable_user_count,
       monthly_sm_metrics.active_user_count,
       monthly_sm_metrics.max_historical_user_count,
-      monthly_sm_metrics.license_user_count,
+      COALESCE(
+        zuora_licenses_per_subscription.license_user_count, 
+        monthly_sm_metrics.license_user_count)                                      AS license_user_count,
+      IFF(
+        zuora_licenses_per_subscription.license_user_count IS NOT NULL, 
+        'Zuora',
+        'Service Ping')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -236,6 +272,9 @@
       ON subscriptions.dim_subscription_id = monthly_sm_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = monthly_sm_metrics.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = monthly_sm_metrics.snapshot_month
 
 ), saas_paid_user_metrics AS (
 
@@ -266,14 +305,25 @@
       NULL                                                                          AS iso_3_country_code,
       'SaaS'                                                                        AS delivery_type,
       -- Wave 1
-      monthly_saas_metrics.license_utilization,
+      DIV0(
+        monthly_saas_metrics.billable_user_count, 
+        COALESCE(
+          zuora_licenses_per_subscription.license_user_count,
+          monthly_saas_metrics.subscription_seats)
+      )                                                                             AS license_utilization,
       monthly_saas_metrics.billable_user_count,
       NULL                                                                          AS active_user_count,
       monthly_saas_metrics.max_historical_user_count,
-      monthly_saas_metrics.subscription_seats,
+      COALESCE(
+        zuora_licenses_per_subscription.license_user_count,
+        monthly_saas_metrics.subscription_seats)                                    AS license_user_count,
+      IFF(
+        zuora_licenses_per_subscription.license_user_count IS NOT NULL,
+        'Zuora',
+        'gitlabdotcom')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
-      monthly_saas_metrics.action_monthly_active_users_project_repo_28_days_user,
+      COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
       monthly_saas_metrics.merge_requests_28_days_user,
       monthly_saas_metrics.projects_with_repositories_enabled_28_days_user,
       monthly_saas_metrics.commit_comment_all_time_event,
@@ -431,8 +481,14 @@
       ON subscriptions.dim_subscription_id = monthly_saas_metrics.dim_subscription_id
     LEFT JOIN most_recent_subscription_version
       ON subscriptions.subscription_name = most_recent_subscription_version.subscription_name
+    LEFT JOIN zuora_licenses_per_subscription 
+      ON zuora_licenses_per_subscription.dim_subscription_id_original = monthly_saas_metrics.dim_subscription_id_original
+      AND zuora_licenses_per_subscription.month = monthly_saas_metrics.snapshot_month
     LEFT JOIN namespaces 
       ON namespaces.dim_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN action_active_users_project_repo_users
+      ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
+      AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -465,7 +521,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mdrussell",
+    updated_by="@snalamaru",
     created_date="2021-06-11",
-    updated_date="2022-05-25"
+    updated_date="2022-06-28"
 ) }}

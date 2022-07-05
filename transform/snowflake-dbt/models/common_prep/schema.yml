@@ -219,8 +219,6 @@ models:
       - name: ultimate_parent_plan_id
         tests:
           - not_null
-          - accepted_values:
-              values: [2, 3, 4, 34, 67, 100, 101, 102, 103]
       - name: ultimate_parent_plan_title
         tests:
           - not_null
@@ -797,20 +795,6 @@ models:
       - name: ci_templates_usage_28_days_event
       - name: project_management_issue_milestone_changed_28_days_user
       - name: project_management_issue_iteration_changed_28_days_user
-
-  - name: prep_usage_ping_metric_detail
-    description: '{{ doc("prep_usage_ping_metric_detail") }}'
-    columns:
-      - name: metrics_path
-        description: path name of metric (counts.ci_builds instead of ci_builds given there are three ci_builds metrics)
-      - name: metrics_path_column_name
-        description: metric path name converted to a column name for ease of macro population
-      - name: full_metrics_path
-        description: raw_usage_data_payload appended with path name of metric
-      - name: main_json_name
-        description: the main json this usage metric comes from
-      - name: feature_name
-        description: the name of the feature that this usage metric is meant to capture
 
   - name: prep_usage_ping_subscription_mapped_gmau
     description: '{{ doc("prep_usage_ping_subscription_mapped_gmau") }}'
@@ -1502,9 +1486,9 @@ models:
     description: '{{ doc("prep_event_all") }}'
     columns:
       - name: event_id
-        tests:
-          - not_null
-          - unique
+        # tests:
+          # - not_null
+          # - unique
   
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'

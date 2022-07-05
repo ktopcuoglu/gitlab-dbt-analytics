@@ -9,36 +9,38 @@ models:
       tests:
         - not_null
         - unique
-    - name: reporting_month
-      description: Month in which the product usage was reported. This model only looks at the last 28 days of the month.
+    - name: event_calendar_month
+      description: '{{ doc("event_calendar_month") }}'
     - name: is_smau
-      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_smau") }}'
     - name: is_gmau
-      description: Denotes whether the event is identified as the stage's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_gmau") }}'
     - name: is_umau
-      description: Denotes whether the event is identified as the stage's UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_umau") }}'
     - name: stage_name
-      description: The name of the product stage
+      description: '{{ doc("stage_name") }}'
     - name: section_name
-      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      description: '{{ doc("section_name") }}'
     - name: group_name
-      description: The name of the group (A stage has one or more groups.).
+      description: '{{ doc("group_name") }}'
     - name: user_group
+      description: '{{ doc("user_group") }}'
     - name: event_name_array
+      description: '{{ doc("event_name_array") }}'
     - name: event_count
-      description: The count of events
-    - name: namespace_count
-      description: The count of namespaces
+      description: '{{ doc("event_count") }}'
+    - name: ultimate_parent_namespace_count
+      description: '{{ doc("ultimate_parent_namespace_count") }}'
     - name: user_count
-      description: The count of users
+      description: '{{ doc("user_count") }}'
     - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: The date at which the model was created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: The date at which the model code was last updated
+      description: '{{ doc("model_updated_date") }}'
 
 - name: rpt_event_plan_monthly
   description: '{{ doc("rpt_event_plan_monthly") }}'
@@ -48,38 +50,42 @@ models:
       tests:
         - not_null
         - unique
-    - name: reporting_month
-      description: Month in which the product usage was reported. (this model only looks at the last 28 days of the month.)
+    - name: event_calendar_month
+      description: '{{ doc("event_calendar_month") }}'
+    - name: event_calendar_quarter
+      description: '{{ doc("event_calendar_quarter") }}'
+    - name: event_calendar_year
+      description: '{{ doc("event_calendar_year") }}'
     - name: plan_id_at_event_date
-      description: The id of the plan on the day the event was created.
+      description: '{{ doc("plan_id_at_event_date") }}'
     - name: event_name
-      description: The name tied to an event
-    - name: stage_name
-      description: The name of the product stage 
-    - name: section_name
-      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
-    - name: group_name
-      description: The name of the group (A stage has one or more groups.).
+      description: '{{ doc("event_name") }}'
     - name: is_smau
-      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      description: '{{ doc("is_smau") }}'
     - name: is_gmau
-      description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      description: '{{ doc("is_gmau") }}'
     - name: is_umau
-      description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/#structure) for metric definitions
+      description: '{{ doc("is_umau") }}'
+    - name: stage_name
+      description: '{{ doc("stage_name") }}'
+    - name: section_name
+      description: '{{ doc("section_name") }}'
+    - name: group_name
+      description: '{{ doc("group_name") }}'
     - name: event_count
-      description: The count of events
-    - name: namespace_count
-      description: The count of namespaces
+      description: '{{ doc("event_count") }}'
+    - name: ultimate_parent_namespace_count
+      description: '{{ doc("ultimate_parent_namespace_count") }}'
     - name: user_count
-      description: The count of users
+      description: '{{ doc("user_count") }}'
     - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: The date at which the model was created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: The date at which the model code was last updated
+      description: '{{ doc("model_updated_date") }}'
 
 - name: rpt_ping_metric_first_last_versions
   description: ' {{ doc("rpt_ping_metric_first_last_versions") }} '
@@ -89,10 +95,10 @@ models:
         - not_null
         - unique
 
-- name: rpt_ping_active_subscriptions_monthly
-  description: ' {{ doc("rpt_ping_active_subscriptions_monthly") }} '
+- name: rpt_ping_latest_subscriptions_monthly
+  description: ' {{ doc("rpt_ping_latest_subscriptions_monthly") }} '
   columns:
-    - name: ping_active_subscriptions_monthly_id
+    - name: ping_latest_subscriptions_monthly_id
       tests:
         - not_null
         - unique
@@ -105,16 +111,18 @@ models:
         - not_null
         - unique
       description: the unique composite ID for the rpt_ping_instance_metric_adoption_monthly model consisting of reporting_month, metrics_path, and estimation_grain
-    - name: reporting_month
-      description: The month the dat was reported
+    - name: ping_created_at_month
+      description: The month when the ping was created
     - name: reporting_count
-      description: The number of seats/subscriptions that reported the metric
-    - name: no_reporting_count
-      description: The number of seats/subscriptions that didn't report the metric, but should have
+      description: The number of seats/subscriptions that reported on a version with the metric
+    - name: not_reporting_count
+      description: The number of seats/subscriptions that did not report on a version with the metric
+    - name: total_count
+      description: The total number of active seats/subscriptions that could have reported on a version with the metric
     - name: estimation_grain
-      description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
+      description: The estimation methodology being used, made up of a condition (ie. on a version with the metric) and a measure (ex. subscription count)
     - name: percent_reporting
-      description: The percentage of events being reported
+      description: The percentage of seats/subscriptions on a version with the metric
     - name: stage_name
       description: The name of the product stage responsible for the metric
     - name: section_name
@@ -122,13 +130,13 @@ models:
     - name: group_name
       description: The name of the product group responsible for the metric
     - name: is_smau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for the stage's SMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for the stage's SMAU calculation
     - name: is_gmau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's GMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for the group's GMAU calculation
     - name: is_paid_gmau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for the group's paid GMAU calculation
     - name: is_umau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for UMAU calculation
 
 - name: rpt_ping_metric_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_metric_estimate_factors_monthly") }} '
@@ -156,28 +164,16 @@ models:
       description: the unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
     - name: metrics_path
       description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
-    - name: reporting_month
-      description: The month the data was reported
+    - name: ping_created_at_month
+      description: The month when the ping was created
+    - name: ping_delivery_type
+      description: How the product is delivered to the installation (Self-Managed, SaaS)
     - name: ping_edition
-      description: The edition of GitLab on the instance (EE, CE)
-    - name: actual_usage
-      description: The number of events that were reported
-    - name: estimated_usage
-      description: The estimated number of events that happened. but were not actually reported
-    - name: reporting_count
-      description: The number of seats/subscriptions that reported the metric
-    - name: no_reporting_count
-      description: The number of seats/subscriptions that didn't report the metric, but should have
-    - name: estimation_grain
-      description: The grain the estimation is being applied to (i.e. subscription based estimation, seat based estimation)
-    - name: percent_reporting
-      description: The percentage of events being reported
-    - name: total_estimated_usage
-      description: The total estimated number of events that happened. but were not actually reported
+      description: The edition of GitLab on the installation (EE, CE)
     - name: ping_product_tier
       description: The product tier of the ping, inferred from the edition and the plan saved in the license (Core, Starter Premium, Ultimate)
-    - name: ping_main_edition_product_tier
-      description: A combination of the main_edition and the ping_product_tier (EE - Self-Managed - Free, EE - Self-Managed - Premium, EE - Self-Managed - Ultimate)
+    - name: ping_edition_product_tier
+      description: A combination of the ping_edition and the ping_product_tier (EE - Self-Managed - Free, EE - Self-Managed - Premium, EE - Self-Managed - Ultimate)
     - name: stage_name
       description: The name of the product stage responsible for the metric
     - name: section_name
@@ -185,13 +181,37 @@ models:
     - name: group_name
       description: The name of the product group responsible for the metric
     - name: is_smau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for the stage's SMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for the stage's SMAU calculation
     - name: is_gmau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's GMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for the group's GMAU calculation
     - name: is_paid_gmau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for the group's paid GMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for the group's paid GMAU calculation
     - name: is_umau
-      description: Boolean flag set to True if the metrics is one of the counters chosen for UMAU calculation
+      description: Boolean flag set to True if the metric is one of the counters chosen for UMAU calculation
+    - name: reporting_count
+      description: The number of seats/subscriptions that met the condition (ex. reported the metric)
+    - name: not_reporting_count
+      description: The number of seats/subscriptions that did not meet the condition (ex. report the metric)
+    - name: percent_reporting
+      description: The percentage of the measure (subscriptions or seats) meeting the condition (ex. reporting the metric)
+    - name: estimation_grain
+      description: The estimation methodology being used, made up of a condition (ex. reporting a metric) and a measure (ex. subscription count)
+    - name: total_usage_with_estimate
+      description: Total usage, including the estimate
+    - name: estimated_usage
+      description: Estimated usage based on recorded data and estimation grain/methodology
+    - name: recorded_usage
+      description: Actual recorded usage
+    - name: created_by
+      description: The GitLab handle of the original model creator
+    - name: updated_by
+      description: The GitLab handle of the most recent model editor
+    - name: model_created_date
+      description: Manually input ISO date of when model was original created
+    - name: model_updated_date
+      description: Manually input ISO date of when model was updated
+    - name: dbt_updated_at
+    - name: dbt_created_at
 
 
 - name: rpt_ping_subscriptions_reported_counts_monthly

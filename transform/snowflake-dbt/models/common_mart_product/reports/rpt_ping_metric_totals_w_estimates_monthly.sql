@@ -104,6 +104,7 @@ SELECT
     ROUND(total_usage_with_estimate - recorded_usage)                                                                                                                   AS estimated_usage,
     recorded_usage                                                                                                                                                      AS recorded_usage
  FROM joined_counts_w_percentage
+ WHERE ping_created_at_month < DATE_TRUNC('month', CURRENT_DATE)
 
 )
 
@@ -112,5 +113,5 @@ SELECT
      created_by="@icooper-acp",
      updated_by="@snalamaru",
      created_date="2022-04-20",
-     updated_date="2022-06-08"
+     updated_date="2022-07-01"
  ) }}

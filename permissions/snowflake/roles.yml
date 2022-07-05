@@ -27,11 +27,6 @@ databases:
     - testing_db:
         shared: no
 
-    - brhea_prod:
-          shared: no
-    - brhea_prep:
-          shared: no
-
     - csharp_prod:
         shared: no
     - csharp_prep:
@@ -441,7 +436,6 @@ roles:
             - google_analytics_360
             - netsuite
             - keyhole_twitter
-            - marketing_dnc
             - marketo
             - pmg
             - snowflake_db
@@ -637,6 +631,7 @@ roles:
             - dev_xs
             - dev_m
             - loading
+            - loading_xl
         privileges:
             databases:
                 read:
@@ -700,6 +695,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - loading_xl
             - usage_ping
         owns:
             schemas:
@@ -973,72 +969,6 @@ roles:
                     - prep.*.*
                     - prod.*.*
                     - raw.snapshots.*
-
-
-    - data_observability:
-        warehouses:
-            - data_obs_wh_1
-        privileges:
-            databases:
-                read:
-                    - prod
-                    - raw
-                    - prep
-                    - snowflake
-            schemas:
-                read:
-                    - prod.restricted_safe_common_mart_sales
-                    - prod.restricted_safe_common
-                    - prod.common
-                    - prod.legacy
-                    - prod.workspace_data
-                    - raw.airflow_stitch
-                    - raw.dbt
-                    - prep.zuora
-                    - prep.gitlab_dotcom
-                    - prep.snowplow
-                    - prep.dbt
-                    - prep.airflow
-                    - snowflake.account_usage
-                    - raw.sheetload
-            tables:
-                read:
-                    - prod.restricted_safe_common_mart_sales.mart_arr
-                    - prod.restricted_safe_common.fct_mrr
-                    - prod.restricted_safe_common.dim_crm_account
-                    - prod.common.dim_product_detail
-                    - prod.common.dim_billing_account
-                    - prod.common.fct_usage_ping_payload
-                    - prod.common.dim_date
-                    - prod.common.dim_subscription
-                    - prod.legacy.gitlab_dotcom_ci_job_artifacts
-                    - prod.legacy.gitlab_dotcom_namespaces_xf
-                    - prod.legacy.gitlab_dotcom_usage_data_events
-                    - prod.workspace_data.airflow_dag
-                    - prod.workspace_data.airflow_dag_run
-                    - prod.workspace_data.dbt_test_results
-                    - prod.workspace_data.dbt_run_results
-                    - prod.workspace_data.dbt_failing_tests
-                    - prod.workspace_data.dbt_compilation_runtime
-                    - prod.workspace_data.dbt_last_successful_test_runs
-                    - raw.airflow_stitch.dag_run
-                    - raw.airflow_stitch.dag
-                    - raw.dbt.test_run_results
-                    - raw.dbt.run_results
-                    - raw.dbt.manifest
-                    - raw.dbt.snapshots_run_results
-                    - prep.airflow.airflow_dag_run_source
-                    - prep.airflow.airflow_dag_source
-                    - prep.dbt.dbt_test_results_source
-                    - prep.dbt.dbt_run_results_source
-                    - prep.dbt.dbt_model_source
-                    - prep.dbt.dbt_snapshots_results_source
-                    - prep.zuora.zuora_account_source
-                    - prep.zuora.zuora_subscription_source
-                    - prep.gitlab_dotcom.gitlab_dotcom_ci_builds_dedupe_source
-                    - prep.gitlab_dotcom.gitlab_dotcom_notes_dedupe_source
-                    - prep.snowplow.snowplow_gitlab_good_events_source
-                    - snowflake.account_usage.query_history
 
 # ==========================================
 # Object Roles
@@ -1575,15 +1505,9 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_trigger_requests
                     - raw.tap_postgres.gitlab_db_ci_variables
                     - raw.tap_postgres.gitlab_db_clusters
-                    - raw.tap_postgres.gitlab_db_clusters_applications_cert_managers
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
-                    - raw.tap_postgres.gitlab_db_clusters_applications_elastic_stacks
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
-                    - raw.tap_postgres.gitlab_db_clusters_applications_ingress
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter
-                    - raw.tap_postgres.gitlab_db_clusters_applications_knative
-                    - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
-                    - raw.tap_postgres.gitlab_db_clusters_applications_runners
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
@@ -1610,7 +1534,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
-                    - raw.tap_postgres.gitlab_db_experiment_users
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
                     - raw.tap_postgres.gitlab_db_gitlab_subscription_histories
                     - raw.tap_postgres.gitlab_db_group_group_links
@@ -1648,7 +1571,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
                     - raw.tap_postgres.gitlab_db_project_auto_devops
-                    - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics
                     - raw.tap_postgres.gitlab_db_project_features
                     - raw.tap_postgres.gitlab_db_project_group_links
@@ -1673,7 +1595,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_subscriptions
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
-                    - raw.tap_postgres.gitlab_db_timelogs
                     - raw.tap_postgres.gitlab_db_todos
                     - raw.tap_postgres.gitlab_db_todos_errors
                     - raw.tap_postgres.gitlab_db_todos_validate
@@ -1790,21 +1711,6 @@ roles:
                 read:
                     - prep.license_db.*
                     - raw.license_db.*
-
-    - marketing_dnc:
-        privileges:
-            databases:
-                read:
-                    - prep
-                    - raw
-            schemas:
-                read:
-                    - prep.marketing_dnc
-                    - raw.marketing_dnc
-            tables:
-                read:
-                    - prep.marketing_dnc.*
-                    - raw.marketing_dnc.*
 
     - keyhole_twitter:
         privileges:
@@ -2387,6 +2293,7 @@ roles:
             - dev_l
             - gitlab_postgres
             - loading
+            - loading_xl
             - transforming_xs
             - transforming_s
             - transforming_l
@@ -2434,10 +2341,9 @@ roles:
         warehouses:
             - dev_xs
 
-    - bleducmills:
+    - atucker:
         member_of:
-            - reporter
-            - snowplow
+            - analyst_finance
         warehouses:
             - dev_xs
 
@@ -2448,46 +2354,6 @@ roles:
             - bi_tool_eval_read
         warehouses:
             - reporting
-
-    - brhea:
-        member_of:
-            - reporter
-            - qualtrics
-            - qualtrics_sensitive
-        warehouses:
-            - dev_xs
-        owns:
-            databases:
-                - brhea_prep
-                - brhea_prod
-            schemas:
-                - brhea_prep.*
-                - brhea_prod.*
-            tables:
-                - brhea_prep.*.*
-                - brhea_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - brhea_prep
-                    - brhea_prod
-                write:
-                    - brhea_prep
-                    - brhea_prod
-            schemas:
-                read:
-                    - brhea_prep.*
-                    - brhea_prod.*
-                write:
-                    - brhea_prep.*
-                    - brhea_prod.*
-            tables:
-                read:
-                    - brhea_prep.*.*
-                    - brhea_prod.*.*
-                write:
-                    - brhea_prep.*.*
-                    - brhea_prod.*.*
 
     - cbalane:
         member_of:
@@ -2502,14 +2368,6 @@ roles:
             - restricted_safe
             - data_team_analyst
             - bi_tool_eval_read
-        warehouses:
-            - dev_xs
-
-    - chauenstein:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - restricted_safe
         warehouses:
             - dev_xs
 
@@ -2652,6 +2510,15 @@ roles:
                     - degan_prep.*.*
                     - degan_prod.*.*
 
+    - dmicovic:
+        member_of:
+            - reporter
+            - analyst_marketing
+            - restricted_safe
+            - bi_tool_eval_read
+        warehouses:
+            - dev_xs
+
     - dpeterson:
         member_of:
             - analyst_growth
@@ -2740,7 +2607,7 @@ roles:
 
     - fivetran_role:
         warehouses:
-            - fivetran_warehouse
+            - loading
         privileges:
             databases:
                 read:
@@ -2827,10 +2694,6 @@ roles:
                 write:
                     - ian_prep.*.*
                     - ian_prod.*.*
-
-    - ianderson:
-        warehouses:
-            - admin
 
     - isharan:
         member_of:
@@ -3040,10 +2903,6 @@ roles:
             - analyst_sales
         warehouses:
             - dev_xs
-
-    - jrubi:
-        warehouses:
-            - admin
 
     - jstark:
         member_of:
@@ -3318,13 +3177,6 @@ roles:
         member_of: []
         warehouses: []
 
-    - levans:
-        member_of:
-            - reporter
-            - snowplow
-        warehouses:
-            - reporting
-
     - lmai:
         member_of:
             - analyst_engineering
@@ -3341,10 +3193,6 @@ roles:
                     - prep.sensitive.bamboohr_id_employee_number_mapping
         warehouses:
             - dev_xs
-
-    - lvandijk:
-        warehouses:
-            - admin
 
     - lvinueza:
         member_of:
@@ -3552,6 +3400,7 @@ roles:
     - mpetersen:
         member_of:
             - analyst_growth
+            - customers_db
             - restricted_safe
         warehouses:
             - dev_xs
@@ -4028,6 +3877,17 @@ roles:
                     - rparker_prep.*.*
                     - rparker_prod.*.*
 
+    - sgladchun:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - sisense_restricted_safe:
         member_of:
             - reporter
@@ -4037,6 +3897,7 @@ roles:
 
     - smccormack:
         member_of:
+            - analyst_people
             - bamboohr
             - reporter
         warehouses:
@@ -4084,14 +3945,6 @@ roles:
                     - snalamaru_prep.*.*
                     - snalamaru_prod.*.*
 
-    - sp: # External user - Protivitiy
-        member_of:
-            - analyst_finance
-            - data_team_analyst
-            - restricted_safe
-        warehouses:
-            - dev_xs
-
     - statimatla:
         member_of:
             - adaptive
@@ -4107,7 +3960,7 @@ roles:
 
     - stitch:
         warehouses:
-            - stitch
+            - loading
         privileges:
             databases:
                 read:
@@ -4135,7 +3988,7 @@ roles:
 
     - target_snowflake:
         warehouses:
-            - target_snowflake
+            - loading
         privileges:
             databases:
                 read:
@@ -4258,22 +4111,6 @@ roles:
         warehouses:
             - dev_xs
 
-    - vbrew:
-        member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-        warehouses:
-            - dev_xs
-
-    - vnagy:
-        member_of:
-            - gitlab_dotcom_prep
-        warehouses:
-            - dev_xs
-
     - vprakash:
         member_of:
             - engineer
@@ -4378,26 +4215,20 @@ users:
         member_of:
             - aperez
 
+    - atucker:
+        can_login: yes
+        member_of:
+            - atucker
 
     - bi_tool_eval:
         can_login: yes
         member_of:
             - bi_tool_eval_read
 
-    - bleducmills:
-        can_login: yes
-        member_of:
-            - bleducmills
-
     - bbutterfield:
         can_login: yes
         member_of:
             - bbutterfield
-
-    - brhea:
-        can_login: yes
-        member_of:
-            - brhea
 
     - cbalane:
         can_login: yes
@@ -4408,11 +4239,6 @@ users:
         can_login: yes
         member_of:
             - cbraza
-
-    - chauenstein:
-        can_login: yes
-        member_of:
-            - chauenstein
 
     - cmeddaugh:
         can_login: yes
@@ -4438,6 +4264,11 @@ users:
         can_login: yes
         member_of:
             - degan
+
+    - dmicovic:
+        can_login: yes
+        member_of:
+            - dmicovic
 
     - dpeterson:
         can_login: yes
@@ -4486,12 +4317,6 @@ users:
         member_of:
             - ian
 
-    - ianderson:
-        can_login: yes
-        member_of:
-            - ianderson
-            - securityadmin
-
     - isharan:
         can_login: yes
         member_of:
@@ -4530,12 +4355,6 @@ users:
         can_login: yes
         member_of:
             - jpetr
-
-    - jrubi:
-        can_login: yes
-        member_of:
-            - jrubi
-            - securityadmin
 
     - jstark:
         can_login: yes
@@ -4589,21 +4408,10 @@ users:
         can_login: no
         member_of: []
 
-    - levans:
-        can_login: yes
-        member_of:
-            - levans
-
     - lmai:
         can_login: yes
         member_of:
             - lmai
-
-    - lvandijk:
-        can_login: yes
-        member_of:
-            - lvandijk
-            - securityadmin
 
     - lvinueza:
         can_login: yes
@@ -4766,6 +4574,11 @@ users:
         member_of:
             - securityadmin
 
+    - sgladchun:
+        can_login: yes 
+        member_of:
+            - sgladchun
+
     - sisense_restricted_safe:
         can_login: yes
         member_of:
@@ -4780,11 +4593,6 @@ users:
         can_login: yes
         member_of:
             - snalamaru
-
-    - sp: # External user - Protivitiy
-        can_login: yes
-        member_of:
-            - sp
 
     - statimatla:
         can_login: yes
@@ -4821,21 +4629,12 @@ users:
         member_of:
             - vagrawal
 
-    - vbrew:
-        can_login: yes
-        member_of:
-            - vbrew
-
-    - vnagy:
-        can_login: yes
-        member_of:
-            - vnagy
-
     - vprakash:
         can_login: yes
         member_of:
-            - vprakash
+            - accountadmin
             - securityadmin
+            - vprakash
 
     - warias:
         can_login: yes
@@ -4846,11 +4645,6 @@ users:
         can_login: yes
         member_of:
             - zzhang
-
-    - data_obs_user_1: # External user - Data Observability Vendor
-        can_login: yes
-        member_of:
-            - data_observability
 
 # ==========================================
 # Warehouses
@@ -4877,9 +4671,6 @@ warehouses:
     - dev_xl:
         size: "x-large"
 
-    - fivetran_warehouse:
-        size: x-small
-
     - gainsight_xs:
         size: x-small
 
@@ -4892,14 +4683,11 @@ warehouses:
     - loading:
         size: x-small
 
+    - loading_xl:
+        size: x-large
+
     - reporting:
         size: medium
-
-    - stitch:
-        size: x-small
-
-    - target_snowflake:
-        size: x-small
 
     - transforming_s:
         size: small
@@ -4918,6 +4706,3 @@ warehouses:
 
     - usage_ping:
         size: small
-
-    - data_obs_wh_1:
-        size: x-small
