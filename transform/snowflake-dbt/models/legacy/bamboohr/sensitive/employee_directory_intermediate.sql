@@ -257,7 +257,7 @@ enriched AS (
         employee_directory.termination_date::DATE, {{ max_date_in_bamboo_analyses() }}
       ) >= date_details.date_actual
       -- active employees that have been rehired will have a termination date less than 
-      -- the rehierdate and they need to be included wile excluding thouse terminated after
+      -- the rehire date and they need to be included while excluding those terminated after
       -- the rehire date
       OR (employee_directory.rehire_date::DATE <= date_details.date_actual
       AND IFF(employee_directory.termination_date > employee_directory.rehire_date, employee_directory.termination_date,
