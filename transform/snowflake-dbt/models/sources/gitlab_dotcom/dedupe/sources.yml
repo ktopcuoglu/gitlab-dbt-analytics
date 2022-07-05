@@ -424,9 +424,6 @@ sources:
         identifier: gitlab_db_project_feature_usages
       - name: project_incident_management_settings
         identifier: gitlab_db_project_incident_management_settings
-      - name: project_tracing_settings
-        identifier: gitlab_db_project_tracing_settings
-        freshness: null
       - name: remote_mirrors
         identifier: gitlab_db_remote_mirrors
       - name: security_scans
