@@ -1505,15 +1505,9 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_trigger_requests
                     - raw.tap_postgres.gitlab_db_ci_variables
                     - raw.tap_postgres.gitlab_db_clusters
-                    - raw.tap_postgres.gitlab_db_clusters_applications_cert_managers
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
-                    - raw.tap_postgres.gitlab_db_clusters_applications_elastic_stacks
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
-                    - raw.tap_postgres.gitlab_db_clusters_applications_ingress
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter
-                    - raw.tap_postgres.gitlab_db_clusters_applications_knative
-                    - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
-                    - raw.tap_postgres.gitlab_db_clusters_applications_runners
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
@@ -1540,7 +1534,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
-                    - raw.tap_postgres.gitlab_db_experiment_users
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
                     - raw.tap_postgres.gitlab_db_gitlab_subscription_histories
                     - raw.tap_postgres.gitlab_db_group_group_links
@@ -1578,7 +1571,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
                     - raw.tap_postgres.gitlab_db_project_auto_devops
-                    - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics
                     - raw.tap_postgres.gitlab_db_project_features
                     - raw.tap_postgres.gitlab_db_project_group_links
@@ -1603,7 +1595,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_subscriptions
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
-                    - raw.tap_postgres.gitlab_db_timelogs
                     - raw.tap_postgres.gitlab_db_todos
                     - raw.tap_postgres.gitlab_db_todos_errors
                     - raw.tap_postgres.gitlab_db_todos_validate

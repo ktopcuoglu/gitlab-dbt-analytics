@@ -254,9 +254,6 @@ sources:
         identifier: gitlab_db_programming_languages
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
-      - name: project_custom_attributes
-        identifier: gitlab_db_project_custom_attributes
-        freshness: null
       - name: project_features
         identifier: gitlab_db_project_features
         freshness:
@@ -285,9 +282,7 @@ sources:
         identifier: gitlab_db_protected_branches
       - name: protected_environment_approval_rules
         identifier: gitlab_db_protected_environment_approval_rules
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 15, period: day}
+        freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
@@ -324,8 +319,6 @@ sources:
         identifier: gitlab_db_snippets
       - name: terraform_states
         identifier: gitlab_db_terraform_states
-      - name: timelogs
-        identifier: gitlab_db_timelogs
       - name: todos
         identifier: gitlab_db_todos
       - name: user_details
