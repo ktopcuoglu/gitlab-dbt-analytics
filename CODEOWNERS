@@ -79,10 +79,10 @@ docker-compose.yml  @jjstark @paul_armstrong @vedprakash2021
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_latest.sql        @tpoole1 @chrissharp @snalamaru @mdrussell @iweeks 
 /transform/snowflake-dbt/models/legacy/gitlab_data_yaml/base/flaky_tests_historical.sql    @tpoole1 @chrissharp @snalamaru @mdrussell @iweeks 
 
-/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks 
+/transform/snowflake-dbt/models/sources/gitlab_dotcom/      @vedprakash2021 @rbacovic @jjstark @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks 
 /transform/snowflake-dbt/models/legacy/gitlab_dotcom/       @tpoole1 @chrissharp @snalamaru @mdrussell @jeanpeguero @iweeks 
 
-/transform/snowflake-dbt/models/sources/greenhouse/         @jjstark @paul_armstrong @pempey @iweeks 
+/transform/snowflake-dbt/models/sources/greenhouse/         @jjstark @rigerta @paul_armstrong @pempey @iweeks 
 /transform/snowflake-dbt/models/legacy/greenhouse/          @pempey @iweeks 
 
 /transform/snowflake-dbt/models/sources/handbook/           @pempey @iweeks @jjstark @paul_armstrong
