@@ -84,14 +84,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_clusters_applications_elastic_stacks' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM clusters_applications_elastic_stacks
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_group_import_states' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -225,14 +217,6 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM status_page_published_incidents
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_status_page_settings' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM status_page_settings
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
   cluster_2:
@@ -430,14 +414,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        SELECT 'gitlab_db_project_custom_attributes' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM project_custom_attributes
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_environments' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
@@ -459,14 +435,6 @@ tables:
         , DATE(updated_at) as updated_date
         , count(*) as number_of_records
         FROM identities
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
-        SELECT 'gitlab_db_experiment_users' AS table_name
-        , DATE(created_at) as created_date
-        , DATE(updated_at) as updated_date
-        , count(*) as number_of_records
-        FROM experiment_users
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
