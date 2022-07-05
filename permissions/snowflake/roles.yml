@@ -1595,7 +1595,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_subscriptions
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
-                    - raw.tap_postgres.gitlab_db_timelogs
                     - raw.tap_postgres.gitlab_db_todos
                     - raw.tap_postgres.gitlab_db_todos_errors
                     - raw.tap_postgres.gitlab_db_todos_validate

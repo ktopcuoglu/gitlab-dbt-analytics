@@ -1872,24 +1872,6 @@ tables:
       FROM terraform_states
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  timelogs:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'timelogs'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , time_spent
-      , user_id
-      , created_at
-      , updated_at
-      , issue_id
-      , merge_request_id
-      , CASE WHEN spent_at < '1970-01-01' THEN NULL ELSE spent_at END AS spent_at
-      FROM timelogs
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   todos:
     dbt_source_model: true
     export_schema: 'gitlab_com'

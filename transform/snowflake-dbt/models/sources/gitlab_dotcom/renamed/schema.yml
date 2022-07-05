@@ -1679,23 +1679,6 @@ models:
         tests:
           - not_null
 
-  - name: gitlab_dotcom_timelogs_source
-    description: Base model for timelogs table.
-    columns:
-      - name: timelog_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: user_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
   - name: gitlab_dotcom_todos_source
     description: Base model for Gitlab.com todos
     columns:
