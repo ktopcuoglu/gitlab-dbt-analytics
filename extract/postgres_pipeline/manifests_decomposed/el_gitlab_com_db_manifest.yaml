@@ -402,7 +402,24 @@ tables:
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp 
+        AND '{END_TIMESTAMP}'::timestamp
+  compliance_management_frameworks:
+    export_schema: 'gitlab_com'
+    export_table: 'compliance_management_frameworks'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , description
+      , color
+      , namespace_id
+      , pipeline_configuration_full_path
+      , created_at
+      , updated_at
+      FROM compliance_management_frameworks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   csv_issue_imports:
     export_schema: "gitlab_com"
     export_table: csv_issue_imports
@@ -1695,6 +1712,21 @@ tables:
       FROM routes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  saml_group_links:
+    export_schema: 'gitlab_com'
+    export_table: 'saml_group_links'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , access_level
+      , group_id
+      , created_at
+      , updated_at
+      , saml_group_name
+      FROM saml_group_links
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   security_scans:
     export_schema: "gitlab_com"
     export_table: security_scans
@@ -1746,6 +1778,24 @@ tables:
       , inherit_from_id
       , instance
       FROM integrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  slack_integrations:
+    export_schema: 'gitlab_com'
+    export_table: 'slack_integrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , service_id
+      , team_id
+      , team_name
+      , alias
+      , user_id
+      , created_at
+      , updated_at
+      , bot_user_id
+      FROM slack_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   snippets:

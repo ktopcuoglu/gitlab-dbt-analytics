@@ -365,17 +365,26 @@ models:
     - name: start_month
       tests:
         - not_null
-- name: sheetload_sdr_attainment_to_goal_source
-  description: Source model for SDR attainment and goals by month.
-  columns:
-    - name: current_month
-      tests:
-        - not_null
 - name: sheetload_sdr_count_snapshot_source
   description: Source model for SDR counts by fiscal quarter and sales segment.
   columns:
     - name: fiscal_quarter
       tests:
+        - not_null
+- name: sheetload_sdr_bdr_metric_targets_source
+  description: Source model for SDR/BDR metric targets by metric. 
+  columns: 
+    - name: sdr_or_bdr 
+      tests:
+        - not_null
+    - name: date_period
+      tests: 
+        - not_null
+    - name: metric
+      tests: 
+        - not_null
+    - name: target
+      tests: 
         - not_null
 - name: sheetload_sisense_user_roles_source
   description: Source model for sisense users roles.

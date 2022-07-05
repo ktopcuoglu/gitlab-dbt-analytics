@@ -12,3 +12,15 @@ tables:
         , Username
         , CreatedDate
       FROM User
+  orderactionrateplan:
+    query: |-
+      SELECT
+        deleted
+        , Id
+        , OrderActionId
+        , RatePlanId
+        , CreatedById
+        , CreatedDate
+        , UpdatedById
+        , UpdatedDate
+      FROM orderactionrateplan

@@ -25,11 +25,7 @@
 
     SELECT 
       sheetload_sales_funnel_partner_alliance_targets_matrix_source.*,
-      sheetload_sales_funnel_partner_alliance_targets_matrix_source.area    AS user_segment_geo_region_area,
-      REPLACE(SPLIT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.area, '-')[0], '"', '') AS user_segment,
-      REPLACE(SPLIT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.area, '-')[1], '"', '') AS user_geo,
-      REPLACE(SPLIT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.area, '-')[2], '"', '') AS user_region,
-      REPLACE(SPLIT(sheetload_sales_funnel_partner_alliance_targets_matrix_source.area, '-')[3], '"', '') AS user_area
+      sheetload_sales_funnel_partner_alliance_targets_matrix_source.area    AS user_segment_geo_region_area
     FROM {{ ref('sheetload_sales_funnel_partner_alliance_targets_matrix_source') }}
     WHERE month NOT LIKE 'FY22%' -- Since these targets where set at the segment-area grain and not the segment-geo-region-area that we want to use
                                  -- Also, the FY22 hierarchy is already correctly modelled, the one that need this introduction is the FY23 hierarchy
