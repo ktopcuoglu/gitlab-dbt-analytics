@@ -1100,8 +1100,6 @@ models:
         tests:
           - not_null
           - unique
-  - name: driveload_netsuite_currency_exchange_rates
-    description: Currency exchange rates from Netsuite dowloaded 2022-06-09
   - name: driveload_zuora_revenue_billing_waterfall_report_apr22
     description: April 2022 Zuora Revenue Billing Waterfall Report downloaded 2022-06-09
   - name: driveload_zuora_revenue_rc_rollforward_report
