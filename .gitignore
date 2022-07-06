@@ -28,3 +28,4 @@ config.json
 .ipynb_checkpoints/*
 /transform/snowflake-dbt/*.ipynb
 /transform/safe_models.json
+.env

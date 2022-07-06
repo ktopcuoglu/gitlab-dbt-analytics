@@ -35,7 +35,7 @@ WITH postgres_counts AS (
     GROUP BY 1
 ),  sub_group AS (
 
-    {% set tables = ['label_priorities', 'labels', 'ldap_group_links', 'namespaces', 'packages_packages', 'ci_runner_projects', 'push_rules', 'requirements', 'todos', 'project_auto_devops', 'application_settings', 'ci_triggers', 'clusters_applications_elastic_stacks', 'users', 'zoom_meetings', 'alert_management_http_integrations', 'approval_project_rules', 'clusters', 'issue_metrics', 'jira_tracker_data', 'lists', 'sprints', 'users_ops_dashboard_projects', 'bulk_imports', 'cluster_agent_tokens',  'experiment_users', 'protected_branches', 'timelogs', 'project_features', 'milestones', 'alert_management_alerts', 'ci_group_variables', 'cluster_agents', 'emails', 'user_custom_attributes', 'grafana_integrations', 'security_scans', 'lfs_objects_projects' , 'merge_request_metrics', 'merge_requests_closing_issues', 'path_locks', 'approval_merge_request_rules' , 'csv_issue_imports', 'cluster_projects', 'vulnerabilities', 'releases', 'subscriptions', 'terraform_states', 'project_tracing_settings', 'notification_settings', 'environments', 'epics', 'in_product_marketing_emails', 'jira_imports', 'services', 'onboarding_progresses', 'project_custom_attributes', 'analytics_cycle_analytics_group_stages', 'approvals', 'ci_pipeline_schedule_variables', 'ci_runners', 'ci_trigger_requests', 'boards', 'projects', 'identities', 'lfs_objects', 'prometheus_alerts', 'snippets', 'system_note_metadata', 'merge_request_blocks', 'merge_request_diffs', 'experiment_subjects', 'deployments', 'merge_requests', 'remote_mirrors', 'integrations', 'events', 'ci_stages', 'ci_pipelines', 'ci_job_artifacts', 'ci_pipeline_schedules' , 'boards_epic_boards' ,'web_hooks', 'routes', 'notes' ,'issues','status_page_published_incidents', 'dast_profiles','notes', 'ci_builds'] %}
+    {% set tables = ['label_priorities', 'labels', 'ldap_group_links', 'namespaces', 'packages_packages', 'ci_runner_projects', 'push_rules', 'requirements', 'todos', 'project_auto_devops', 'application_settings', 'ci_triggers', 'users', 'zoom_meetings', 'alert_management_http_integrations', 'approval_project_rules', 'clusters', 'issue_metrics', 'jira_tracker_data', 'lists', 'sprints', 'users_ops_dashboard_projects', 'bulk_imports', 'cluster_agent_tokens', 'protected_branches', 'project_features', 'milestones', 'alert_management_alerts', 'ci_group_variables', 'cluster_agents', 'emails', 'user_custom_attributes', 'grafana_integrations', 'security_scans', 'lfs_objects_projects' , 'merge_request_metrics', 'merge_requests_closing_issues', 'path_locks', 'approval_merge_request_rules' , 'csv_issue_imports', 'cluster_projects', 'vulnerabilities', 'releases', 'subscriptions', 'terraform_states', 'notification_settings', 'environments', 'epics', 'in_product_marketing_emails', 'jira_imports', 'services', 'onboarding_progresses', 'analytics_cycle_analytics_group_stages', 'approvals', 'ci_pipeline_schedule_variables', 'ci_runners', 'ci_trigger_requests', 'boards', 'projects', 'identities', 'lfs_objects', 'prometheus_alerts', 'snippets', 'system_note_metadata', 'merge_request_blocks', 'merge_request_diffs', 'experiment_subjects', 'deployments', 'merge_requests', 'remote_mirrors', 'integrations', 'events', 'ci_stages', 'ci_pipelines', 'ci_job_artifacts', 'ci_pipeline_schedules' , 'boards_epic_boards' ,'web_hooks', 'routes', 'notes' ,'issues','status_page_published_incidents', 'dast_profiles','notes', 'ci_builds'] %}
 
     {% for table in tables %}
     SELECT snowflake.id,
@@ -91,16 +91,6 @@ UNION ALL
     ON DATE(snowflake.updated_at) >= date_check.updated_date
     AND date_check.table_name = 'gitlab_db_group_import_states'
     QUALIFY ROW_NUMBER() OVER (PARTITION BY group_id ORDER BY updated_date DESC) = 1
-    UNION ALL
-    SELECT snowflake.project_id,
-        'gitlab_db_status_page_settings'                                                       AS table_name,
-        DATE(snowflake.created_at)                                                             AS created_date,
-        DATE(snowflake.updated_at)                                                             AS updated_date
-    FROM {{source('gitlab_dotcom','status_page_settings')}}                                    AS snowflake
-    INNER JOIN date_check
-    ON DATE(snowflake.updated_at) >= date_check.updated_date
-    AND date_check.table_name = 'gitlab_db_status_page_settings'
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY project_id ORDER BY updated_date DESC) = 1
     UNION ALL
     SELECT snowflake.user_id,
         'gitlab_db_user_preferences'                                                           AS table_name,

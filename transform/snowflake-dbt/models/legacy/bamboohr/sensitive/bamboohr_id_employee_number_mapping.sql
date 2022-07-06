@@ -32,12 +32,12 @@ WITH source AS (
       nationality,
       region,
       CASE
-        WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico') 
+        WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico','United States of America') 
           THEN 'NORAM'
-        WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
+        WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico','United States of America') 
           THEN 'LATAM'
         ELSE region END                                                                AS region_modified,
-        IFF(country='United States', 
+        IFF(country IN ('United States','United States of America'), 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US')   AS gender_region,
         greenhouse_candidate_id,

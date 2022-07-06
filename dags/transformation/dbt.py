@@ -11,7 +11,6 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
-    clone_repo_cmd,
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -90,6 +89,7 @@ dag = DAG(
 )
 dag.doc_md = __doc__
 
+
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime) -> str:
     """
@@ -101,7 +101,7 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
     run every week.
     """
 
-    ## TODO: make this not hardcoded
+    # TODO: make this not hardcoded
     current_weekday = timestamp.isoweekday()
 
     # run a full-refresh once per week (on sunday early AM)
@@ -111,18 +111,12 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
         return "dbt-non-product-models-run"
 
 
-# branching_dbt_run = BranchPythonOperator(
-#    task_id="branching-dbt-run",
-#    python_callable=lambda: dbt_run_or_refresh(datetime.now()),
-#    dag=dag,
-# )
-
 # run non-product models on small warehouse
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -164,8 +158,8 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt --no-use-colors test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
+    dbt --no-use-colors test --profiles-dir profile --target prod --exclude snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
