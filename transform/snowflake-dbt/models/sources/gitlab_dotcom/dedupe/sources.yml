@@ -254,9 +254,6 @@ sources:
         identifier: gitlab_db_programming_languages
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
-      - name: project_custom_attributes
-        identifier: gitlab_db_project_custom_attributes
-        freshness: null
       - name: project_features
         identifier: gitlab_db_project_features
         freshness:
@@ -285,9 +282,7 @@ sources:
         identifier: gitlab_db_protected_branches
       - name: protected_environment_approval_rules
         identifier: gitlab_db_protected_environment_approval_rules
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 15, period: day}
+        freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
@@ -304,10 +299,14 @@ sources:
         identifier: gitlab_db_resource_weight_events
       - name: routes
         identifier: gitlab_db_routes
+      - name: saml_group_links
+        identifier: gitlab_db_saml_group_links
       - name: saml_providers
         identifier: gitlab_db_saml_providers
       - name: services
         identifier: gitlab_db_services
+      - name: slack_integrations
+        identifier: gitlab_db_slack_integrations
       - name: shards
         identifier: gitlab_db_shards
       - name: sprints
@@ -320,8 +319,6 @@ sources:
         identifier: gitlab_db_snippets
       - name: terraform_states
         identifier: gitlab_db_terraform_states
-      - name: timelogs
-        identifier: gitlab_db_timelogs
       - name: todos
         identifier: gitlab_db_todos
       - name: user_details
@@ -427,9 +424,6 @@ sources:
         identifier: gitlab_db_project_feature_usages
       - name: project_incident_management_settings
         identifier: gitlab_db_project_incident_management_settings
-      - name: project_tracing_settings
-        identifier: gitlab_db_project_tracing_settings
-        freshness: null
       - name: remote_mirrors
         identifier: gitlab_db_remote_mirrors
       - name: security_scans

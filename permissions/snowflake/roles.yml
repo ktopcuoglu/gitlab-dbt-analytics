@@ -631,6 +631,7 @@ roles:
             - dev_xs
             - dev_m
             - loading
+            - loading_xl
         privileges:
             databases:
                 read:
@@ -694,6 +695,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - loading_xl
             - usage_ping
         owns:
             schemas:
@@ -1503,15 +1505,9 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_trigger_requests
                     - raw.tap_postgres.gitlab_db_ci_variables
                     - raw.tap_postgres.gitlab_db_clusters
-                    - raw.tap_postgres.gitlab_db_clusters_applications_cert_managers
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
-                    - raw.tap_postgres.gitlab_db_clusters_applications_elastic_stacks
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
-                    - raw.tap_postgres.gitlab_db_clusters_applications_ingress
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter
-                    - raw.tap_postgres.gitlab_db_clusters_applications_knative
-                    - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
-                    - raw.tap_postgres.gitlab_db_clusters_applications_runners
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
@@ -1538,7 +1534,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
-                    - raw.tap_postgres.gitlab_db_experiment_users
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
                     - raw.tap_postgres.gitlab_db_gitlab_subscription_histories
                     - raw.tap_postgres.gitlab_db_group_group_links
@@ -1576,7 +1571,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
                     - raw.tap_postgres.gitlab_db_project_auto_devops
-                    - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics
                     - raw.tap_postgres.gitlab_db_project_features
                     - raw.tap_postgres.gitlab_db_project_group_links
@@ -1601,7 +1595,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_subscriptions
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
-                    - raw.tap_postgres.gitlab_db_timelogs
                     - raw.tap_postgres.gitlab_db_todos
                     - raw.tap_postgres.gitlab_db_todos_errors
                     - raw.tap_postgres.gitlab_db_todos_validate
@@ -2300,6 +2293,7 @@ roles:
             - dev_l
             - gitlab_postgres
             - loading
+            - loading_xl
             - transforming_xs
             - transforming_s
             - transforming_l
@@ -4169,6 +4163,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - webrahim:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - zzhang:
         member_of:
             - adaptive
@@ -4583,12 +4585,7 @@ users:
     - sgladchun:
         can_login: yes 
         member_of:
-            - analyst_finance
-            - bamboohr_analytics
-            - customers_db
-            - analyst_marketing
-            - data_team_analyst
-            - restricted_safe
+            - sgladchun
 
     - sisense_restricted_safe:
         can_login: yes
@@ -4652,6 +4649,11 @@ users:
         member_of:
             - warias
 
+    - webrahim:
+        can_login: yes
+        member_of:
+            - webrahim
+
     - zzhang:
         can_login: yes
         member_of:
@@ -4693,6 +4695,9 @@ warehouses:
 
     - loading:
         size: x-small
+
+    - loading_xl:
+        size: x-large
 
     - reporting:
         size: medium
