@@ -79,7 +79,7 @@ def generate_task_command(vars_dict: dict, dag_name: str):
 
     return KubernetesPodOperator(
         **gitlab_defaults,
-        image=DATA_IMAGE,
+        image="registry.gitlab.com/gitlab-data/data-image/data-image:v1.0.3",
         task_id=f"{dag_name}-{vars_dict['year']}-{vars_dict['month']}-{vars_dict['day']}",
         name=f"{dag_name}-{vars_dict['year']}-{vars_dict['month']}-{vars_dict['day']}",
         secrets=task_secrets,
