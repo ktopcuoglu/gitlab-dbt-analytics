@@ -4163,6 +4163,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - webrahim:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - zzhang:
         member_of:
             - adaptive
@@ -4640,6 +4648,11 @@ users:
         can_login: yes
         member_of:
             - warias
+
+    - webrahim:
+        can_login: yes
+        member_of:
+            - webrahim
 
     - zzhang:
         can_login: yes
