@@ -164,9 +164,6 @@ tables:
         WHERE DATE(updated_at) > current_date - interval '8' day
         GROUP BY 1,2,3
         UNION ALL
-        WHERE DATE(updated_at) > current_date - interval '8' day
-        GROUP BY 1,2,3
-        UNION ALL
         SELECT 'gitlab_db_application_settings' AS table_name
         , DATE(created_at) as created_date
         , DATE(updated_at) as updated_date
