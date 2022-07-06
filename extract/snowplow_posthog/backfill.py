@@ -289,7 +289,7 @@ def posthog_push_json(data: dict) -> None:
         DISTINCT_ID,
         event=EVENT_NAME,
         properties=data,
-        timestamp=data.collector_tstamp #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
+        timestamp=data["collector_tstamp"] #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
 
 
