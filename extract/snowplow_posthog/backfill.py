@@ -23,7 +23,7 @@ from dateutil.tz import tzutc
 
 
 ENCODING = "utf-8"
-EVENT_NAME = "test_gitlab_events"
+EVENT_NAME = "test_gitlab_events_ved"
 DISTINCT_ID = "gitlab_dotcom"
 
 """
@@ -218,6 +218,7 @@ def posthog_processing(file_prefix: str) -> None:
             ):
                 json_prepared = get_properties(property_list=property_list, values=row)
                 # push row to PostHog
+
                 posthog_push_json(json_prepared)
 
 
@@ -288,7 +289,7 @@ def posthog_push_json(data: dict) -> None:
         DISTINCT_ID,
         event=EVENT_NAME,
         properties=data,
-        timestamp=datetime.datetime.utcnow().replace(tzinfo=tzutc()),
+        timestamp=data.collector_tstamp #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
 
 
