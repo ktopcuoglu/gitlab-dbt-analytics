@@ -23,8 +23,8 @@ from dateutil.tz import tzutc
 
 
 ENCODING = "utf-8"
-EVENT_NAME = "test_gitlab_events_ved"
-DISTINCT_ID = "gitlab_dotcom"
+#EVENT_NAME = "test_gitlab_events_ved"
+#DISTINCT_ID = "gitlab_dotcom"
 
 """
 Extract routines
@@ -284,10 +284,16 @@ def posthog_push_json(data: dict) -> None:
     """
     Use PostHog lib to push
     historical record to PostHog as a part of BackFill process
+    Change log Ved
+    Removed the timestamp to the collector_tstamp (	Timestamp for the event recorded by the collector) because when this event was stored in the posthog it was showing that it was generated now not as back date event. 
+    Moved event from hard coded value of EVENT_NAME = "test_gitlab_events_ved"   to value coming in each event.  
+    DISTINCT ID is set as user_ipaddress.
+    These 3 were suggested by PostHog team. 
     """
+    DISTINCT_ID=data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
-        event=EVENT_NAME,
+        event=data["event"],
         properties=data,
         timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
