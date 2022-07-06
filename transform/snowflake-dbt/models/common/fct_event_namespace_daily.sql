@@ -40,7 +40,7 @@ fct_event_namespace_daily AS (
       
       --Facts
       COUNT(*) AS event_count,
-      COUNT(DISTINCT(dim_user_sk)) AS user_count
+      COUNT(DISTINCT(dim_user_id)) AS user_count
     FROM fct_event_valid
     {{ dbt_utils.group_by(n=20) }}
         

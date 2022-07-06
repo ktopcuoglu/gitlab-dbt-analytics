@@ -12,7 +12,7 @@ fct_event_user_daily AS (
 
   SELECT
     --Primary Key
-    {{ dbt_utils.surrogate_key(['event_date', 'dim_user_sk','dim_ultimate_parent_namespace_id','event_name']) }} 
+    {{ dbt_utils.surrogate_key(['event_date', 'dim_user_id', 'dim_ultimate_parent_namespace_id', 'event_name']) }} 
                                                   AS event_user_daily_pk,
     
     --Foreign Keys                                              
@@ -21,7 +21,7 @@ fct_event_user_daily AS (
     dim_crm_account_id,
     dim_billing_account_id,
     dim_user_sk,
-    dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
+    dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be updated to user_id in a future MR.
     dim_ultimate_parent_namespace_id,
     dim_event_date_id,
     

@@ -26,7 +26,7 @@ fct_event_valid AS (
 
     SELECT
       fct_event.dim_user_sk,
-      fct_event.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
+      fct_event.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be updated to user_id in a future MR.
       {{ dbt_utils.star(from=ref('fct_event'), except=["DIM_USER_SK", "DIM_USER_ID", "CREATED_BY",
           "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }},
       xmau_metrics.group_name,
@@ -147,7 +147,7 @@ gitlab_dotcom_fact AS (
     dim_ultimate_parent_namespace_id,
     dim_project_id,
     dim_user_sk,
-    dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
+    dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be updated to user_id in a future MR.
     dim_active_product_tier_id,
     dim_latest_subscription_id,
     dim_crm_account_id,

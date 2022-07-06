@@ -29,7 +29,6 @@ fact_with_dims AS (
     dim_namespace.namespace_creator_is_blocked,
     dim_namespace.created_at AS namespace_created_at,
     CAST(dim_namespace.created_at AS DATE) AS namespace_created_date,
-    dim_user.user_id,
     dim_user.created_at AS user_created_at,
     COALESCE(dim_project.is_learn_gitlab, FALSE) AS project_is_learn_gitlab,
     COALESCE(dim_project.is_imported, FALSE) AS project_is_imported,
@@ -53,5 +52,5 @@ fact_with_dims AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-05-05",
-    updated_date="2022-06-20"
+    updated_date="2022-07-01"
 ) }}

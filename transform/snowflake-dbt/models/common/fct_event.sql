@@ -17,7 +17,7 @@ fct_events AS (
     prep_event_all.event_id,
     prep_event_all.event_name,
     prep_event_all.ultimate_parent_namespace_id,
-    prep_event_all.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
+    prep_event_all.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be updated to user_id in a future MR.
     {{ get_keyed_nulls('prep_user.dim_user_sk') }} AS dim_user_sk,
     prep_event_all.parent_type,
     prep_event_all.parent_id,
@@ -56,7 +56,7 @@ gitlab_dotcom_fact AS (
     fct_events.ultimate_parent_namespace_id AS dim_ultimate_parent_namespace_id,
     fct_events.dim_project_id,
     fct_events.dim_user_sk,
-    fct_events.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be deprecated in a future MR.
+    fct_events.dim_user_id,--dim_user_id is the current foreign key, and is a natural_key, and will be updated to user_id in a future MR.
     
     --Time attributes
     fct_events.event_created_at,
