@@ -52,5 +52,5 @@ mart_usage_event_plan_monthly AS (
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-02-22",
-    updated_date="2022-06-20"
+    updated_date="2022-07-01"
 ) }}

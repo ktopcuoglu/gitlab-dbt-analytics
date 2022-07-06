@@ -28,7 +28,7 @@ mart_raw AS (
       ELSE group_name
     END AS group_name
   FROM mart_event_valid
-  WHERE is_null_user = FALSE
+  WHERE dim_user_id IS NOT NULL
     AND (is_umau = TRUE 
          OR is_gmau = TRUE 
          OR is_smau = TRUE
@@ -62,21 +62,38 @@ paid_flag_by_month AS (
 
 ),
 
+multiple_gmau_in_smau AS (
+  --Find stages that have multiple GMAU groups in SMAU, each would appear as its own record + deduped record
+  SELECT 
+    stage_name,
+    COUNT(DISTINCT group_name) AS group_count --count of groups included in smau
+  FROM xmau_metrics
+  WHERE smau = TRUE --stage's smau event
+    AND gmau = TRUE --group's gmau event
+  GROUP BY 1
+  HAVING group_count > 1 --more than 1 group in SMAU
+
+), 
+
 mart_w_paid_deduped AS (
 
   SELECT
-    mart_with_date_range.event_pk,
+    mart_with_date_range.event_id,
     mart_with_date_range.event_date,
     mart_with_date_range.last_day_of_month,
     mart_with_date_range.last_day_of_quarter,
     mart_with_date_range.last_day_of_fiscal_year,
-    mart_with_date_range.user_id,
+    mart_with_date_range.dim_user_id,
     mart_with_date_range.event_name,
     mart_with_date_range.data_source,
     mart_with_date_range.dim_ultimate_parent_namespace_id,
     mart_with_date_range.is_umau,
     mart_with_date_range.is_gmau,
-    mart_with_date_range.is_smau,
+    CASE
+      WHEN mart_with_date_range.is_gmau = TRUE AND multiple_gmau_in_smau.stage_name IS NOT NULL --GMAU metrics for a stage with multiple groups in SMAU
+        THEN FALSE
+      ELSE mart_with_date_range.is_smau
+    END AS is_smau,
     mart_with_date_range.section_name,
     mart_with_date_range.stage_name,
     mart_with_date_range.group_name,
@@ -88,6 +105,53 @@ mart_w_paid_deduped AS (
   LEFT JOIN paid_flag_by_month
     ON mart_with_date_range.dim_ultimate_parent_namespace_id = paid_flag_by_month.dim_ultimate_parent_namespace_id
       AND mart_with_date_range.event_calendar_month = paid_flag_by_month.event_calendar_month
+  LEFT JOIN multiple_gmau_in_smau
+    ON mart_with_date_range.stage_name = multiple_gmau_in_smau.stage_name
+
+),
+
+mart_for_multiple_gmau_in_smau AS (
+
+  SELECT
+    mart_with_date_range.event_id,
+    mart_with_date_range.event_date,
+    mart_with_date_range.last_day_of_month,
+    mart_with_date_range.last_day_of_quarter,
+    mart_with_date_range.last_day_of_fiscal_year,
+    mart_with_date_range.dim_user_id,
+    mart_with_date_range.event_name,
+    mart_with_date_range.data_source,
+    mart_with_date_range.dim_ultimate_parent_namespace_id,
+    mart_with_date_range.is_umau,
+    FALSE AS is_gmau,
+    mart_with_date_range.is_smau,
+    mart_with_date_range.section_name,
+    mart_with_date_range.stage_name,
+    NULL AS group_name,
+    mart_with_date_range.event_calendar_month,
+    mart_with_date_range.event_calendar_quarter,
+    mart_with_date_range.event_calendar_year,
+    paid_flag_by_month.plan_was_paid_at_event_date
+  FROM mart_with_date_range
+  LEFT JOIN paid_flag_by_month
+    ON mart_with_date_range.dim_ultimate_parent_namespace_id = paid_flag_by_month.dim_ultimate_parent_namespace_id
+      AND mart_with_date_range.event_calendar_month = paid_flag_by_month.event_calendar_month
+  INNER JOIN multiple_gmau_in_smau --only want stages in this CTE
+    ON mart_with_date_range.stage_name = multiple_gmau_in_smau.stage_name
+  WHERE mart_with_date_range.is_smau = TRUE --only want SMAU events
+    
+
+), 
+
+final_mart AS (
+
+  SELECT *
+  FROM mart_w_paid_deduped
+
+  UNION ALL 
+
+  SELECT *
+  FROM mart_for_multiple_gmau_in_smau
 
 ),
 
@@ -105,8 +169,8 @@ total_results AS (
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
-    COUNT(DISTINCT(user_id)) AS user_count
-  FROM mart_w_paid_deduped
+    COUNT(DISTINCT(dim_user_id)) AS user_count
+  FROM final_mart
   {{ dbt_utils.group_by(n=8) }}
   ORDER BY event_calendar_month DESC
 
@@ -126,8 +190,8 @@ free_results AS (
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
-    COUNT(DISTINCT(user_id)) AS user_count
-  FROM mart_w_paid_deduped
+    COUNT(DISTINCT(dim_user_id)) AS user_count
+  FROM final_mart
   WHERE plan_was_paid_at_event_date = FALSE
   {{ dbt_utils.group_by(n=8) }}
   ORDER BY event_calendar_month DESC
@@ -148,8 +212,8 @@ paid_results AS (
     ARRAY_AGG(DISTINCT event_name) WITHIN GROUP (ORDER BY event_name) AS event_name_array,
     COUNT(*) AS event_count,
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
-    COUNT(DISTINCT(user_id)) AS user_count
-  FROM mart_w_paid_deduped
+    COUNT(DISTINCT(dim_user_id)) AS user_count
+  FROM final_mart
   WHERE plan_was_paid_at_event_date = TRUE
   {{ dbt_utils.group_by(n=8) }}
   ORDER BY event_calendar_month DESC
@@ -179,52 +243,14 @@ results AS (
     {{ dbt_utils.surrogate_key(['event_calendar_month', 'user_group', 'section_name', 'stage_name', 'group_name']) }} AS xmau_metric_monthly_id,
     results_wo_pk.*
   FROM results_wo_pk
-
-), 
-
-multiple_gmau_in_smau AS (
-  --Find stages that have multiple GMAU groups in SMAU, each would appear as its own record + deduped record
-  SELECT 
-    stage_name,
-    COUNT(DISTINCT group_name) AS group_count --count of groups included in smau
-  FROM xmau_metrics
-  WHERE smau = TRUE --stage's smau event
-    AND gmau = TRUE --group's gmau event
-  GROUP BY 1
-  HAVING group_count > 1 --more than 1 group in SMAU
-
-), 
-
-adjusted_smau AS (
-
-  SELECT
-    results.xmau_metric_monthly_id,
-    results.event_calendar_month,
-    results.is_umau,
-    results.is_gmau,
-    CASE
-      WHEN results.is_gmau = TRUE AND multiple_gmau_in_smau.stage_name IS NOT NULL --GMAU metrics for a stage with multiple groups in SMAU
-        THEN FALSE
-      ELSE results.is_smau
-    END AS is_smau,
-    results.section_name,
-    results.stage_name,
-    results.group_name,
-    results.user_group,
-    results.event_name_array,
-    results.event_count,
-    results.ultimate_parent_namespace_count,
-    results.user_count
-  FROM results
-  LEFT JOIN multiple_gmau_in_smau
-    ON results.stage_name = multiple_gmau_in_smau.stage_name
+  WHERE event_calendar_month < DATE_TRUNC('month', CURRENT_DATE)
 
 )
 
 {{ dbt_audit(
-    cte_ref="adjusted_smau",
+    cte_ref="results",
     created_by="@icooper_acp",
     updated_by="@iweeks",
     created_date="2022-02-23",
-    updated_date="2022-06-27"
+    updated_date="2022-07-01"
 ) }}
