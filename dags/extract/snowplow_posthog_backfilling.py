@@ -24,23 +24,7 @@ from kube_secrets import (
     POSTHOG_PROJECT_API_KEY,
     POSTHOG_PERSONAL_API_KEY,
     POSTHOG_HOST,
-    SALT,
-    SALT_EMAIL,
-    SALT_IP,
-    SALT_NAME,
-    SALT_PASSWORD,
-    SNOWFLAKE_ACCOUNT,
-    SNOWFLAKE_PASSWORD,
-    SNOWFLAKE_TRANSFORM_ROLE,
-    SNOWFLAKE_TRANSFORM_SCHEMA,
-    SNOWFLAKE_TRANSFORM_WAREHOUSE,
-    SNOWFLAKE_USER,
-    SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
-    SNOWFLAKE_LOAD_USER,
-    SNOWFLAKE_LOAD_WAREHOUSE,
 )
-
 
 
 # Load the env vars into a dict and set Secrets
@@ -58,15 +42,14 @@ task_secrets = [
     POSTHOG_PROJECT_API_KEY,
     POSTHOG_PERSONAL_API_KEY,
     POSTHOG_HOST,
-    SALT,
-    SALT_EMAIL,
-    SALT_IP,
-    SALT_NAME,
-    SALT_PASSWORD,
 ]
 
-start_date = datetime.strptime(Variable.get("POSTHOG_BACKFILL_START_DATE", default_var="2022-06-01"), "%Y-%m-%d")
-end_date = datetime.strptime(Variable.get("POSTHOG_BACKFILL_END_DATE", default_var="2021-06-20"), "%Y-%m-%d")
+start_date = datetime.strptime(
+    Variable.get("POSTHOG_BACKFILL_START_DATE", default_var="2022-06-01"), "%Y-%m-%d"
+)
+end_date = datetime.strptime(
+    Variable.get("POSTHOG_BACKFILL_END_DATE", default_var="2021-06-20"), "%Y-%m-%d"
+)
 
 DAG_NAME = "snowplow_posthog_backfill"
 SCHEMA_NAME = "gitlab_events"
@@ -82,7 +65,7 @@ default_args = {
 
 
 # Create the DAG
-def generate_dbt_command(vars_dict: dict, dag_name: str):
+def generate_task_command(vars_dict: dict, dag_name: str):
     """
     Generate generic command separated per time frame
     to create tasks
@@ -114,7 +97,7 @@ dag = DAG(
 )
 
 
-def get_date_range(from_date:datetime, to_date:datetime) -> list:
+def get_date_range(from_date: datetime, to_date: datetime) -> list:
     """
     Get the list of dict partitioned year/month/day to slice tasks per day
     Usage:
@@ -143,4 +126,4 @@ def get_date_range(from_date:datetime, to_date:datetime) -> list:
 
 
 for date_range in get_date_range(start_date.date(), end_date.date()):
-    generate_dbt_command(vars_dict=date_range, dag_name=DAG_NAME)
+    generate_task_command(vars_dict=date_range, dag_name=DAG_NAME)
