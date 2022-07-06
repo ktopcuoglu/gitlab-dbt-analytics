@@ -20,3 +20,8 @@ sources:
       - name: marketing_dnc_list
       - name: ssa_coverage_fitted_curves
       - name: ssa_quarterly_aggregated_metrics_for_coverage
+      - name: zuora_revenue_billing_waterfall_report_apr22
+      - name: zuora_revenue_rc_rollforward_report
+      - name: zuora_revenue_unreleased_pob_report
+      - name: zuora_revenue_unbill_rollforward_report
+      - name: zuora_revenue_revenue_waterfall_report_apr22
