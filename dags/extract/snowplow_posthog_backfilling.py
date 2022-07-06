@@ -93,7 +93,7 @@ dag = DAG(
     DAG_NAME,
     default_args=default_args,
     schedule_interval=None,
-    concurrency=15,
+    concurrency=3,
 )
 
 
