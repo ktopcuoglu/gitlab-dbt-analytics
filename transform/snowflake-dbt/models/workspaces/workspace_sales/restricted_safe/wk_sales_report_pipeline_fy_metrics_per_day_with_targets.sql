@@ -62,7 +62,7 @@ WITH date_details AS (
         SUM(cfy_pipe_gen_net_arr)                     AS cfy_pipe_gen_net_arr,
 
         -- sao gen
-        SUM(cfy_cfy_sao_deal_count)                   AS cfy_sao_deal_count,
+        SUM(cfy_sao_deal_count)                   AS cfy_sao_deal_count,
         SUM(cfy_sao_net_arr)                          AS cfy_sao_net_arr,
 
         -- churned net_arr
