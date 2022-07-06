@@ -17,7 +17,7 @@ import logging
 
 import boto3
 import gzip
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 
 from dateutil.tz import tzutc
 

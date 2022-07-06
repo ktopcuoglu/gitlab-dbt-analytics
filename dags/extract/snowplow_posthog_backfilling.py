@@ -3,7 +3,7 @@ DAG for Snowplow -> PostHog backfilling
 """
 
 import os
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
@@ -73,7 +73,7 @@ def generate_task_command(vars_dict: dict, dag_name: str):
 
     generated_command = f"""
     {clone_repo_cmd} &&
-    cd analytics/extract/snowplow_posthog/ && 
+    cd analytics/extract/snowplow_posthog/ &&
     python3 backfill.py snowplow_posthog_backfill --day {vars_dict['year']}{vars_dict['month']}{vars_dict['day']}
 """
 
