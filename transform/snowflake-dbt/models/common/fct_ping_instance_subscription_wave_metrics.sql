@@ -12,7 +12,7 @@
 {{ simple_cte([
     ('instance_types', 'dim_host_instance_type'),
     ('map_license_subscription','map_license_subscription_account'),
-    ('fct_ping_instance','fct_ping_instance')
+    ('fct_ping_instance','fct_ping_instance'),
     ('prep_ping_instance','prep_ping_instance')
 ]) }}
 
