@@ -14,7 +14,8 @@
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
     ('dim_product_tier', 'dim_product_tier'),
-    ('prep_ping_instance', 'prep_ping_instance')
+    ('prep_ping_instance', 'prep_ping_instance'),
+    ('dim_crm_account','dim_crm_account')
     ])
 
 }}
@@ -79,6 +80,8 @@
       dim_ping_instance_id                                                            AS dim_ping_instance_id,
       dim_product_tier_id                                                             AS dim_product_tier_id,
       COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)        AS dim_subscription_id,
+      prep_subscription.dim_crm_account_id                                            AS dim_crm_account_id,
+      dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_location_country_id                                                         AS dim_location_country_id,
       dim_date.date_id                                                                AS dim_ping_date_id,
       dim_instance_id                                                                 AS dim_instance_id,
@@ -95,6 +98,8 @@
       ON prep_usage_ping_cte.license_md5 = prep_license.license_md5
     LEFT JOIN prep_subscription
       ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
+    INNER JOIN dim_crm_account
+      ON subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
@@ -105,5 +110,5 @@
     created_by="@icooper-acp",
     updated_by="@snalamaru",
     created_date="2022-03-08",
-    updated_date="2022-05-16"
+    updated_date="2022-07-07"
 ) }}
