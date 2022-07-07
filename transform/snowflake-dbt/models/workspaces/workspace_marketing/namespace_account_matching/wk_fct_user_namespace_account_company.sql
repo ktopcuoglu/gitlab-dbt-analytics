@@ -12,7 +12,8 @@ This table assumes the highest access level for the user on the namespace
     ('memberships','gitlab_dotcom_memberships'),
     ('namespace','dim_namespace'),
     ('company_bridge','wk_bdg_user_company'),
-    ('marketing_contact','dim_marketing_contact')
+    ('marketing_contact','dim_marketing_contact'),
+    ('access_levels','gitlab_dotcom_access_levels_source')
 ])}},
 
 namespace_companies_accounts AS (
@@ -28,8 +29,10 @@ namespace_companies_accounts AS (
     
   -- Degenerate Dimensions
     memberships.is_billable,
+    memberships.access_level,
+    access_levels.access_level_name,
     IFF(namespace.creator_id = memberships.user_id, TRUE, FALSE) AS is_creator,
-    IFF(access_level = 50, TRUE, FALSE) AS is_owner 
+    IFF(memberships.access_level = 50, TRUE, FALSE) AS is_owner 
 
   -- Facts   
 
@@ -40,7 +43,9 @@ namespace_companies_accounts AS (
     ON memberships.user_id = company_bridge.gitlab_dotcom_user_id
   LEFT JOIN marketing_contact
     ON memberships.user_id = marketing_contact.gitlab_dotcom_user_id
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY memberships.namespace_id,user_id ORDER BY access_level DESC) = 1
+  LEFT JOIN access_levels
+    ON memberships.access_level = access_levels.access_level
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace.dim_namespace_id,user_id ORDER BY memberships.access_level DESC) = 1
 )
 
 SELECT *

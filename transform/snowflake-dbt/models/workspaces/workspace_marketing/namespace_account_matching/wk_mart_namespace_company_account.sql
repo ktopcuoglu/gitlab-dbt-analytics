@@ -52,7 +52,7 @@ domain_matching AS (
     AND users.email_domain = company_domain_account.email_domain
   LEFT JOIN company_domain
     ON users.email_domain = company_domain.email_domain
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY namespaces.ultimate_parent_namespace_id,user_namespace_account_company.user_id ORDER BY is_creator,is_owner ) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY namespaces.ultimate_parent_namespace_id,user_namespace_account_company.user_id ORDER BY user_namespace_account_company.access_level ) = 1
 ),
 
 top_namespace_domain AS (
