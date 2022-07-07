@@ -99,7 +99,7 @@
     LEFT JOIN prep_subscription
       ON prep_license.dim_subscription_id = prep_subscription.dim_subscription_id
     INNER JOIN dim_crm_account
-      ON subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
+      ON prep_subscription.dim_crm_account_id = dim_crm_account.dim_crm_account_id
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
