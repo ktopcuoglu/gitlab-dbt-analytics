@@ -65,6 +65,13 @@
     FROM aggregated_metrics 
     WHERE event_action = 'action_active_users_project_repo'
   
+), p_terraform_state_api_unique_users AS (
+  
+    SELECT
+      *
+    FROM aggregated_metrics 
+    WHERE event_action = 'p_terraform_state_api_unique_users'
+   
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -109,8 +116,7 @@
       IFF(
         zuora_licenses_per_subscription.license_user_count IS NOT NULL, 
         'Zuora',
-        'Service Ping')                                                             AS license_user_count_flag,
-
+        'Service Ping')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -321,7 +327,7 @@
       IFF(
         zuora_licenses_per_subscription.license_user_count IS NOT NULL,
         'Zuora',
-        'gitlabdotcom')                                                             AS license_user_count_flag,
+        'gitlabdotcom')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
@@ -385,7 +391,7 @@
       monthly_saas_metrics.analytics_28_days_user,
       monthly_saas_metrics.issues_edit_28_days_user,
       monthly_saas_metrics.user_packages_28_days_user,
-      monthly_saas_metrics.terraform_state_api_28_days_user,
+      COALESCE(p_terraform_state_api_unique_users.distinct_users, 0) AS terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
       -- Wave 3.2
       monthly_saas_metrics.auto_devops_enabled,
@@ -490,6 +496,9 @@
     LEFT JOIN action_active_users_project_repo_users
       ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
       AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN p_terraform_state_api_unique_users
+      ON p_terraform_state_api_unique_users.date_month = monthly_saas_metrics.snapshot_month 
+      AND p_terraform_state_api_unique_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -522,7 +531,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mdrussell",
-    updated_by="@mdrussell",
+    updated_by="@snalamaru",
     created_date="2022-01-14",
-    updated_date="2022-06-08"
+    updated_date="2022-06-28"
 ) }}

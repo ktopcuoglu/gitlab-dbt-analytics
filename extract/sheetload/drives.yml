@@ -29,3 +29,28 @@ folders:
     folder_name: ssa_quarterly_aggregated_metrics_for_coverage
     table_name: ssa_quarterly_aggregated_metrics_for_coverage
     table_replace_append: 0
+  - name: zuora_revenue_billing_waterfall_report_apr22
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_billing_waterfall_report
+    table_name: zuora_revenue_billing_waterfall_report_apr22
+    table_replace_append: 0
+  - name: zuora_revenue_rc_rollforward_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_rc_rollforward_report
+    table_name: zuora_revenue_rc_rollforward_report
+    table_replace_append: 0
+  - name: zuora_revenue_unreleased_pob_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_unreleased_pob_report
+    table_name: zuora_revenue_unreleased_pob_report
+    table_replace_append: 0
+  - name: zuora_revenue_unbill_rollforward_report
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_unbill_rollforward_report
+    table_name: zuora_revenue_unbill_rollforward_report
+    table_replace_append: 0
+  - name: zuora_revenue_revenue_waterfall_report_apr22
+    owner: '@michellecooper'
+    folder_name: zuora_revenue_revenue_waterfall_report
+    table_name: zuora_revenue_revenue_waterfall_report_apr22
+    table_replace_append: 0

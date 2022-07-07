@@ -323,23 +323,6 @@ tables:
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  clusters_applications_elastic_stacks:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_applications_elastic_stacks'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , cluster_id
-      , status
-      , version
-      , created_at
-      , updated_at
-      , status_reason
-      FROM clusters_applications_elastic_stacks
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   clusters_integration_elasticstack:
     export_schema: 'gitlab_com'
     export_table: 'clusters_integration_elasticstack'
@@ -402,7 +385,24 @@ tables:
       , last_cleanup_deleted_tags_count
       FROM container_repositories
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp 
+        AND '{END_TIMESTAMP}'::timestamp
+  compliance_management_frameworks:
+    export_schema: 'gitlab_com'
+    export_table: 'compliance_management_frameworks'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , name
+      , description
+      , color
+      , namespace_id
+      , pipeline_configuration_full_path
+      , created_at
+      , updated_at
+      FROM compliance_management_frameworks
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   csv_issue_imports:
     export_schema: "gitlab_com"
     export_table: csv_issue_imports
@@ -1312,22 +1312,6 @@ tables:
       FROM project_auto_devops
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  project_custom_attributes:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'project_custom_attributes'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , key
-      , value
-      FROM project_custom_attributes
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   project_daily_statistics:
     export_schema: 'gitlab_com'
     export_table: 'project_daily_statistics'
@@ -1390,21 +1374,6 @@ tables:
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  project_tracing_settings:
-    export_schema: "gitlab_com"
-    export_table: project_tracing_settings
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , created_at
-      , updated_at
-      , project_id
-      , external_url
-      FROM project_tracing_settings
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  projects:
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1695,6 +1664,21 @@ tables:
       FROM routes
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  saml_group_links:
+    export_schema: 'gitlab_com'
+    export_table: 'saml_group_links'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , access_level
+      , group_id
+      , created_at
+      , updated_at
+      , saml_group_name
+      FROM saml_group_links
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   security_scans:
     export_schema: "gitlab_com"
     export_table: security_scans
@@ -1746,6 +1730,24 @@ tables:
       , inherit_from_id
       , instance
       FROM integrations
+      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
+  slack_integrations:
+    export_schema: 'gitlab_com'
+    export_table: 'slack_integrations'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , service_id
+      , team_id
+      , team_name
+      , alias
+      , user_id
+      , created_at
+      , updated_at
+      , bot_user_id
+      FROM slack_integrations
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   snippets:
@@ -1805,23 +1807,6 @@ tables:
       FROM status_page_published_incidents
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  status_page_settings:
-    export_schema: "gitlab_com"
-    export_table: status_page_settings
-    export_table_primary_key: project_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT project_id
-      , created_at
-      , updated_at
-      , enabled
-      , aws_s3_bucket_name
-      , aws_region
-      , aws_access_key
-      , status_page_url
-      FROM status_page_settings
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   subscriptions:
     dbt_source_model: true
     export_schema: 'gitlab_com'
@@ -1870,24 +1855,6 @@ tables:
       , updated_at
       , file_store
       FROM terraform_states
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
-  timelogs:
-    dbt_source_model: true
-    export_schema: 'gitlab_com'
-    export_table: 'timelogs'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , time_spent
-      , user_id
-      , created_at
-      , updated_at
-      , issue_id
-      , merge_request_id
-      , CASE WHEN spent_at < '1970-01-01' THEN NULL ELSE spent_at END AS spent_at
-      FROM timelogs
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   todos:

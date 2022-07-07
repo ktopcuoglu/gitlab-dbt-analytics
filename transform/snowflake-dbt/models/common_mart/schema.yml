@@ -5,210 +5,266 @@ models:
   description: '{{ doc("mart_event_valid") }}'
   columns:
     - name: event_id
-      description: The unique identifier of an event. This is a generated primary key and will not join back to the source models
+      description: '{{ doc("event_id") }}'
       tests:
         - not_null
         - unique
-    - name: dim_active_product_tier_id
-      description: The unique identifier of the ultimate parent namespace's latest product tier, easily joined to dim_product_tier
-    - name: dim_active_subscription_id
-      description: The unique identifier of the ultimate parent namespace's latest subscription, easily joined to dim_subscription
     - name: dim_event_date_id
-      description: The unique id of the event date, easily joined to dim_date
-    - name: dim_crm_account_id
-      description: The unique id of a crm account, easily joined to dim_crm_account
-    - name: dim_billing_account_id
-      description: The identifier of the Zuora account associated with the subscription, easily joined to dim_billing_account
+      description: '{{ doc("dim_event_date_id") }}'
     - name: dim_ultimate_parent_namespace_id
-      description: The unique identifier of the ultimate parent namespace in which the event was generated, easily joined to dim_namespace
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
     - name: dim_project_id
-      description: The unique identifier of the project in which the event was generated, easily joined to dim_project. This will be NULL if the event is not tied to a project (ex. epics)
+      description: '{{ doc("dim_project_id") }}'
     - name: dim_user_id
-      description: The unique identifier of the user who generated the event, easily joined to dim_user. This will be NULL if the event is not tied to a specific user
+      description: '{{ doc("dim_user_id") }}'
+    - name: dim_active_product_tier_id
+      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_active_subscription_id
+      description: '{{ doc("dim_active_subscription_id") }}'
+    - name: dim_crm_account_id
+      description: '{{ doc("dim_crm_account_id") }}'
+    - name: dim_billing_account_id
+      description: '{{ doc("dim_billing_account_id") }}'
     - name: event_created_at
-      description: Timestamp of the event
+      description: '{{ doc("event_created_at") }}'
     - name: event_date
-      description: The date when the event was created
-    - name: parent_id
-      description: The unique identifier of the project (dim_project_id) associated with the event. If no project is associated, the ultimate parent namespace associated with the event. This will be NULL if neither a project or namespace is associated with the event
-    - name: parent_type
-      description: Denotes whether the event was associate with a project or namespace ('project' or 'group'). This will be NULL if neither a project or namespace is associated with the event
-    - name: is_smau
-      description: Boolean flag set to True if the event is chosen for the stage's SMAU calculation
-    - name: is_gmau
-      description: Boolean flag set to True if the event is chosen for the group's GMAU calculation
-    - name: is_umau
-      description: Boolean flag set to True if the event is chosen for the UMAU calculation
-    - name: event_name
-      description: The name tied to the event
-    - name: stage_name
-      description: The name of the product stage
-    - name: section_name
-      description: The name of the product section
+      description: '{{ doc("event_date") }}'
     - name: group_name
-      description: The name of the product group
+      description: '{{ doc("group_name") }}'
+      tests:
+        - not_null
+    - name: section_name
+      description: '{{ doc("section_name") }}'
+      tests:
+        - not_null
+    - name: stage_name
+      description: '{{ doc("stage_name") }}'
+      tests:
+        - not_null
+    - name: is_smau
+      description: '{{ doc("is_smau") }}'
+      tests:
+        - not_null
+    - name: is_gmau
+      description: '{{ doc("is_gmau") }}'
+      tests:
+        - not_null
+    - name: is_umau
+      description: '{{ doc("is_umau") }}'
+      tests:
+        - not_null
+    - name: parent_id
+      description: '{{ doc("parent_id") }}'
+    - name: parent_type
+      description: '{{ doc("parent_type") }}'
+    - name: event_name
+      description: '{{ doc("event_name") }}'
     - name: plan_id_at_event_date
-      description: The ID of the ultimate parent namespace's plan on the day the event was created. Defaults to '34' if a value is not available.
+      description: '{{ doc("plan_id_at_event_date") }}'
     - name: plan_name_at_event_date
-      description: The name of the ultimate parent namespace's plan type on the day when the event was created. Defaults to 'free' if a value is not available.
+      description: '{{ doc("plan_name_at_event_date") }}'
     - name: plan_was_paid_at_event_date
-      description: Boolean flag which is set to True if the ultimate parent namespace's plan was paid on the day when the event was created
+      description: '{{ doc("plan_was_paid_at_event_date") }}'
     - name: days_since_user_creation_at_event_date
-      description: The count of days between user creation and the event. This will be NULL if a user is not associated with the event
+      description: '{{ doc("days_since_user_creation_at_event_date") }}'
     - name: days_since_namespace_creation_at_event_date
-      description: The count of days between ultimate parent namespace creation and the event
+      description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
     - name: days_since_project_creation_at_event_date
-      description: The count of days between project creation and the event. This will be NULL if a project is not associated with the event
-    - name: data_source
-      description: The source application where the data was extracted from
+      description: '{{ doc("days_since_project_creation_at_event_date") }}'
     - name: namespace_is_internal
-      description: Boolean flag set to True if the ultimate parent namespace in which the event was created is identified as an internal GitLab namespace
+      description: '{{ doc("namespace_is_internal") }}'
     - name: namespace_creator_is_blocked
-      description: Boolean flag set to True if the ultimate parent namespace creator is in a 'blocked' or 'banned' state
+      description: '{{ doc("namespace_creator_is_blocked") }}'
     - name: namespace_created_at
-      description: The timestamp of the ultimate parent namespace creation
+      description: '{{ doc("namespace_created_at") }}'
     - name: namespace_created_date
-      description: The date of the ultimate parent namespace creation
+      description: '{{ doc("namespace_created_date") }}'
     - name: user_created_at
-      description: The timestamp of the user creation
+      description: '{{ doc("user_created_at") }}'
     - name: project_is_learn_gitlab
-      description: Boolean flag set to True if the project in which the event was generated was a Learn GitLab project, one automatically created during user onboarding
+      description: '{{ doc("project_is_learn_gitlab") }}'
     - name: project_is_imported
-      description: Boolean flag set to True if the project in which the event was generated was imported
+      description: '{{ doc("project_is_imported") }}'
+    - name: event_calendar_month
+      description: '{{ doc("event_calendar_month") }}'
+    - name: event_calendar_quarter
+      description: '{{ doc("event_calendar_quarter") }}'
+    - name: event_calendar_year
+      description: '{{ doc("event_calendar_year") }}'
+    - name: data_source
+      description: '{{ doc("data_source") }}'
     - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: The date at which the model was created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: The date at which the model code was last updated
+      description: '{{ doc("model_updated_date") }}'
 
 - name: mart_event_namespace_daily
   description: '{{ doc("mart_event_namespace_daily") }}'
   columns:
     - name: event_namespace_daily_id
-      description: the unique ID combination of the event_date, event_name, and dim_ultimate_parent_namespace_id in mart_event_namespace_daily.
+      description: The unique ID of a daily namespace level event.
       tests:
         - not_null
-        - unique
-    - name: event_date
-      description: The date when the event was created.
-    - name: event_name
-      description: The name tied to an event
-    - name: dim_product_tier_id
-      description: The unique id of a Product Tier in the dim_product_tier model.
-    - name: dim_subscripton_id
-      description: The unique id of a subscription from the dim_subscription model
+        - unique   
+    - name: dim_event_date_id
+      description: '{{ doc("dim_event_date_id") }}'
+    - name: dim_ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
+    - name: dim_active_product_tier_id
+      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_active_subscription_id
+      description: '{{ doc("dim_active_subscription_id") }}'
     - name: dim_crm_account_id
-      description: The unique id of a crm account in the dim_crm_account model.
+      description: '{{ doc("dim_crm_account_id") }}'
     - name: dim_billing_account_id
-      description: The unqiue id of a billing account in the dim_billing_account model.
-    - name: stage_name
-      description: The name of the product stage
-    - name: section_name
-      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      description: '{{ doc("dim_billing_account_id") }}'
+    - name: event_date
+      description: '{{ doc("event_date") }}'
     - name: group_name
-      description: The name of the group (A stage has one or more groups.).
-    - name: data_source
-      description: The source application where the data was extracted from.
-    - name: plan_id_at_event_date
-      description: The id of the plan on the day the event was created.
-    - name: plan_name_at_event_date
-      description: The name of the plan type when the event was created
-    - name: plan_was_paid_at_event_date
-      description: Defines whether the plan was paid or free when the event was created
-    - name: dim_instance_id
-      description: The unique id of an instance from the dim_instance model.
-    - name: dim_namespace_id
-      description: The unique id of the ultimate parent namespace from the dim_namespace model.
-    - name: namespace_created_at
-      description: The date when the namespace was created.
-    - name: days_since_namespace_created
-      description: The days since the namespace was created.
+      description: '{{ doc("group_name") }}'
+      tests:
+        - not_null
+    - name: section_name
+      description: '{{ doc("section_name") }}'
+      tests:
+        - not_null
+    - name: stage_name
+      description: '{{ doc("stage_name") }}'
+      tests:
+        - not_null
     - name: is_smau
-      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_smau") }}'
+      tests:
+        - not_null
     - name: is_gmau
-      description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_gmau") }}'
+      tests:
+        - not_null
     - name: is_umau
-      description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_umau") }}'
+      tests:
+        - not_null
+    - name: event_name
+      description: '{{ doc("event_name") }}'
     - name: event_count
-      description: The count of events
-    - name: distinct_user_count
-      description: The count of distinct users
+      description: '{{ doc("event_count") }}'
+    - name: user_count
+      description: '{{ doc("user_count") }}'
+    - name: namespace_created_at
+      description: '{{ doc("namespace_created_at") }}'
+    - name: namespace_created_date
+      description: '{{ doc("namespace_created_date") }}'
+    - name: plan_id_at_event_date
+      description: '{{ doc("plan_id_at_event_date") }}'
+    - name: plan_name_at_event_date
+      description: '{{ doc("plan_name_at_event_date") }}'
+    - name: plan_was_paid_at_event_date
+      description: '{{ doc("plan_was_paid_at_event_date") }}'
+    - name: days_since_namespace_creation_at_event_date
+      description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
+    - name: event_calendar_month
+      description: '{{ doc("event_calendar_month") }}'
+    - name: event_calendar_quarter
+      description: '{{ doc("event_calendar_quarter") }}'
+    - name: event_calendar_year
+      description: '{{ doc("event_calendar_year") }}'
+    - name: data_source
+      description: '{{ doc("data_source") }}'
     - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: The date at which the model was created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: The date at which the model code was last updated
+      description: '{{ doc("model_updated_date") }}'
 
 - name: mart_event_user_daily
   description: '{{ doc("mart_event_user_daily") }}'
   columns:
     - name: event_user_daily_id
-      description: the unique composite ID for the mart_event_user_daily model consisting of event_date, dim_user_id, dim_ultimate_parent_namespace_id, and event_name.
+      description: The unique ID of a daily event.
       tests:
         - not_null
         - unique
-    - name: event_date
-      description: The date when the event was created.
+    - name: dim_event_date_id
+      description: '{{ doc("dim_event_date_id") }}'
+    - name: dim_ultimate_parent_namespace_id
+      description: '{{ doc("dim_ultimate_parent_namespace_id") }}'
     - name: dim_user_id
-      description: The unique id of a user in the dim_user model.
-    - name: dim_namespace_id
-      description: The unique id of the ultimate parent namespace from the dim_namespace model.
-    - name: dim_instance_id
-      description: The unique id of an instance from the dim_instance model.
-    - name: plan_id_at_event_date
-      description: The id of the plan on the day the event was created.
-    - name: event_name
-      description: The name tied to an event
-    - name: dim_product_tier_id
-      description: The unique id of a Product Tier in the dim_product_tier model.
-    - name: dim_subscripton_id
-      description: The unique id of a subscription from the dim_subscription model
+      description: '{{ doc("dim_user_id") }}'
+    - name: dim_active_product_tier_id
+      description: '{{ doc("dim_active_product_tier_id") }}'
+    - name: dim_active_subscription_id
+      description: '{{ doc("dim_active_subscription_id") }}'
     - name: dim_crm_account_id
-      description: The unique id of a crm account in the dim_crm_account model.
+      description: '{{ doc("dim_crm_account_id") }}'
     - name: dim_billing_account_id
-      description: The unqiue id of a billing account in the dim_billing_account model.
-    - name: stage_name
-      description: The name of the product stage
-    - name: section_name
-      description: The name of the section (Sections are a collection of stages. We attempt to align these logically along common workflows like Dev, Sec and Ops.).
+      description: '{{ doc("dim_billing_account_id") }}'
+    - name: event_date
+      description: '{{ doc("event_date") }}'
     - name: group_name
-      description: The name of the group (A stage has one or more groups.).
-    - name: data_source
-      description: The source application where the data was extracted from.
-    - name: plan_name_at_event_date
-      description: The name of the plan type when the event was created
-    - name: plan_was_paid_at_event_date
-      description: Defines whether the plan was paid or free when the event was created
-    - name: namespace_is_internal
-      description: Tells whether this namespace is internal or not
-    - name: namespace_created_at
-      description: The date when the nampespace was created.
-    - name: days_since_namespace_created
-      description: The days since the namespace was created.
-    - name: days_since_namespace_creation_at_event_date
-      description: The days since the namespace was created from the day the event was created.
+      description: '{{ doc("group_name") }}'
+      tests:
+        - not_null
+    - name: section_name
+      description: '{{ doc("section_name") }}'
+      tests:
+        - not_null
+    - name: stage_name
+      description: '{{ doc("stage_name") }}'
+      tests:
+        - not_null
     - name: is_smau
-      description: Denotes whether the event is identified as the stage's SMAU (stage monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_smau") }}'
+      tests:
+        - not_null
     - name: is_gmau
-      description: Denotes whether the event is identified as the group's GMAU (group monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_gmau") }}'
+      tests:
+        - not_null
     - name: is_umau
-      description: Denotes whether the event is identified as the UMAU (unique monthly active user) metric. See [Page](https://internal-handbook.gitlab.io/product/performance-indicators/) for metric definitions
+      description: '{{ doc("is_umau") }}'
+      tests:
+        - not_null
+    - name: event_name
+      description: '{{ doc("event_name") }}'
     - name: event_count
-      description: The count of events
+      description: '{{ doc("event_count") }}'
+    - name: plan_id_at_event_date
+      description: '{{ doc("plan_id_at_event_date") }}'
+    - name: plan_name_at_event_date
+      description: '{{ doc("plan_name_at_event_date") }}'
+    - name: plan_was_paid_at_event_date
+      description: '{{ doc("plan_was_paid_at_event_date") }}'
+    - name: namespace_is_internal
+      description: '{{ doc("namespace_is_internal") }}'
+    - name: namespace_created_at
+      description: '{{ doc("namespace_created_at") }}'
+    - name: namespace_created_date
+      description: '{{ doc("namespace_created_date") }}'
+    - name: user_created_at
+      description: '{{ doc("user_created_at") }}'
+    - name: event_calendar_month
+      description: '{{ doc("event_calendar_month") }}'
+    - name: event_calendar_quarter
+      description: '{{ doc("event_calendar_quarter") }}'
+    - name: event_calendar_year
+      description: '{{ doc("event_calendar_year") }}'
+    - name: data_source
+      description: '{{ doc("data_source") }}'
     - name: created_by
-      description: Who created this model?
-    - name: update_by
-      description: Who updated this model last?
+      description: '{{ doc("created_by") }}'
+    - name: updated_by
+      description: '{{ doc("updated_by") }}'
     - name: model_created_date
-      description: The date at which the model was created
+      description: '{{ doc("model_created_date") }}'
     - name: model_updated_date
-      description: The date at which the model code was last updated
+      description: '{{ doc("model_updated_date") }}'
 
 - name: mart_ping_instance_metric
   description: ' {{ doc("mart_ping_instance_metric") }} '
