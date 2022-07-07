@@ -74,16 +74,16 @@ def get_logs(domain, event, formatted_date):
     )
 
 
-def extract_logs(event):
+def extract_logs(event, start_date: datetime.datetime):
     """
 
+    :param start_date:
     :param event:
     :return:
     """
     page_token = None
     all_results: List[Dict] = []
 
-    start_date = datetime.datetime.strptime("2021-02-01", "%Y-%m-%d")
     formatted_date = utils.format_datetime(start_date)
 
     for domain in domains:
@@ -115,15 +115,22 @@ def extract_logs(event):
     return all_results
 
 
-def load_event_logs(event):
+def load_event_logs(event: str, full_refresh: bool = False):
     """
 
+    :param full_refresh:
     :param event:
     """
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
     file_name = f"{event}.json"
-    results = extract_logs(event)
+
+    if full_refresh:
+        start_date = datetime.date(2021, 2, 1)
+    else:
+        start_date = datetime.datetime.now() - datetime.timedelta(days=1)
+
+    results = extract_logs(event, start_date)
 
     info(f"Results length: {len(results)}")
 
