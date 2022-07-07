@@ -40,7 +40,7 @@ default_args = {
 dag = DAG(
     "mailgun_extract",
     default_args=default_args,
-    schedule_interval="0 23 * * *",
+    schedule_interval="30 8 * * *",
     concurrency=1,
 )
 
@@ -58,7 +58,7 @@ for e in events:
     # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
     mailgun_extract_command = (
         f"{clone_and_setup_extraction_cmd} && "
-        f"python mailgun/src/execute.py load_event_logs --event {e}"
+        f"python mailgun/src/execute.py load_event_logs --event {e} --full_refresh True"
     )
 
     mailgun_operator = KubernetesPodOperator(

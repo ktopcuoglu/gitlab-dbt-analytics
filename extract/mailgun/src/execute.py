@@ -126,7 +126,7 @@ def load_event_logs(event: str, full_refresh: bool = False):
     file_name = f"{event}.json"
 
     if full_refresh:
-        start_date = datetime.date(2021, 2, 1)
+        start_date = datetime.datetime(2021, 2, 1)
     else:
         start_date = datetime.datetime.now() - datetime.timedelta(hours=36)
 
