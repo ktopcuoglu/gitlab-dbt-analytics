@@ -20,8 +20,7 @@ import gzip
 from dateutil.relativedelta import relativedelta
 
 from dateutil.tz import tzutc
-import warnings
-warnings.filterwarnings("ignore")
+
 
 ENCODING = "utf-8"
 #EVENT_NAME = "test_gitlab_events_ved"
