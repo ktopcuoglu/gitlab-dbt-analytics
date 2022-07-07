@@ -71,9 +71,6 @@ models:
       - name: email
         meta:
           sensitive: true
-      - name: visitor_id
-        meta:
-          sensitive: true
   - name: bizible_facts_source
     columns:
       - name: email
