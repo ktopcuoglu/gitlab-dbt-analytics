@@ -201,7 +201,7 @@ def posthog_processing(file_prefix: str) -> None:
 
     # get folders
     for folder in folders:
-
+        logging.getLogger().setLevel(logging.INFO)
         logging.info(f"Folder: {folder}...")
 
         snowplow_files = s3_list_files(
@@ -210,6 +210,8 @@ def posthog_processing(file_prefix: str) -> None:
 
         # get files
         for snowplow_file in snowplow_files:
+            logging.getLogger().setLevel(logging.INFO)
+            
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
