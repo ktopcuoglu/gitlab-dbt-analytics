@@ -58,7 +58,7 @@ for e in events:
     # don't add a newline at the end of this because it gets added to in the K8sPodOperator arguments
     mailgun_extract_command = (
         f"{clone_and_setup_extraction_cmd} && "
-        f"python mailgun/src/execute.py load_event_logs --event {e} --full_refresh True"
+        f"python mailgun/src/execute.py load_event_logs --event {e} --full_refresh False"
     )
 
     mailgun_operator = KubernetesPodOperator(
