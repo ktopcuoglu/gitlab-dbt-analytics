@@ -12,7 +12,7 @@ from itertools import zip_longest
 
 import posthog
 from fire import Fire
-from logging import info, basicConfig
+from logging import CRITICAL, info, basicConfig
 import logging
 
 import boto3
@@ -20,7 +20,6 @@ import gzip
 from dateutil.relativedelta import relativedelta
 
 from dateutil.tz import tzutc
-import warnings
 
 
 ENCODING = "utf-8"
@@ -292,6 +291,7 @@ def posthog_push_json(data: dict) -> None:
     DISTINCT ID is set as user_ipaddress.
     These 3 were suggested by PostHog team. 
     """
+    logging.getLogger().setLevel(logging.CRITICAL)
     DISTINCT_ID=data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
@@ -299,8 +299,6 @@ def posthog_push_json(data: dict) -> None:
         properties=data,
         timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
-    warnings.filterwarnings("ignore")
-
 
 def snowplow_posthog_backfill(day: str) -> None:
     """
