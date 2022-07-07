@@ -17,7 +17,7 @@ Attach metrics_path to subscription IF the subscription is on a version which it
 , latest_subscriptions_by_metric AS (
 
   SELECT
-    latest_subscriptions.ping_created_at_month                          AS ping_created_at_month,
+    latest_subscriptions.ping_created_date_month                        AS ping_created_date_month,
     latest_subscriptions.arr                                            AS arr,
     latest_subscriptions.latest_subscription_id                         AS latest_subscription_id,
     latest_subscriptions.licensed_user_count                            AS licensed_user_count,
@@ -36,8 +36,8 @@ Aggregate CTE to determine count of arr, subscriptions and licensed users for ea
 ), agg_subscriptions AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition']) }}          AS ping_subscriptions_on_versions_counts_monthly_id,
-    ping_created_at_month                                                                             AS ping_created_at_month,
+    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition']) }}        AS ping_subscriptions_on_versions_counts_monthly_id,
+    ping_created_date_month                                                                           AS ping_created_date_month,
     metrics_path                                                                                      AS metrics_path,
     ping_edition                                                                                      AS ping_edition,
     SUM(arr)                                                                                          AS total_arr,
