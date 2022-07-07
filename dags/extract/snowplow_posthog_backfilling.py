@@ -60,6 +60,7 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
+    "retries": 5,
     "start_date": start_date,
 }
 
@@ -93,7 +94,7 @@ dag = DAG(
     DAG_NAME,
     default_args=default_args,
     schedule_interval=None,
-    concurrency=3,
+    concurrency=5,
 )
 
 
