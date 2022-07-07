@@ -46,8 +46,8 @@
     LEFT JOIN instance_types
       ON prep_ping_instance_with_license.raw_usage_data_payload['uuid']::VARCHAR = instance_types.instance_uuid
       AND prep_ping_instance_with_license.raw_usage_data_payload['hostname']::VARCHAR = instance_types.instance_hostname
-    LEFT JOIN map_license_subscription_account
-      ON usage_pings_with_license_md5.license_md5 = REPLACE(map_license_subscription_account.license_md5, '-')
+    LEFT JOIN map_license_subscription
+      ON usage_pings_with_license_md5.license_md5 = REPLACE(map_license_subscription.license_md5, '-')
     LEFT OUTER JOIN fct_ping_instance 
       ON prep_ping_instance_with_license.dim_ping_instance_id = fct_ping_instance.dim_ping_instance_id
     QUALIFY ROW_NUMBER() OVER (
