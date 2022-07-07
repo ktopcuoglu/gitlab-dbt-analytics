@@ -13,11 +13,11 @@ WITH source AS (
 
     SELECT
 
-      data_by_row['id']::VARCHAR                          AS id,
+      data_by_row['id']::VARCHAR                          AS mailgun_event_id,
       data_by_row['message-id']::VARCHAR                  AS message_id,
-      data_by_row['timestamp']::VARCHAR                   AS timestamp,
+      data_by_row['timestamp']::VARCHAR                   AS event_timestamp,
+      data_by_row['event']::VARCHAR                       AS event_type,
       data_by_row['tags']::VARCHAR                        AS tags,
-      data_by_row['event']::VARCHAR                       AS event,
       data_by_row['delivery-status-code']::VARCHAR        AS delivery_status_code,
       data_by_row['delivery-status-message']::VARCHAR     AS delivery_status_message,
       data_by_row['log-level']::VARCHAR                   AS log_level,
