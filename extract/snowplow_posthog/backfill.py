@@ -277,7 +277,8 @@ def posthog_authorize() -> None:
     posthog.project_api_key = posthog_project_api_key
     posthog.personal_api_key = posthog_personal_api_key
     posthog.host = posthog_host
-    posthog.sync_mode = True
+    #posthog.sync_mode = True
+    
     posthog.debug = True
 
 
