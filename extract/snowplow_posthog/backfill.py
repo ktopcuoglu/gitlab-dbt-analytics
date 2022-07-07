@@ -12,19 +12,16 @@ from itertools import zip_longest
 
 import posthog
 from fire import Fire
-from logging import CRITICAL, info, basicConfig
+from logging import info, basicConfig
 import logging
 
 import boto3
 import gzip
 from dateutil.relativedelta import relativedelta
 
-from dateutil.tz import tzutc
-
-
 ENCODING = "utf-8"
-#EVENT_NAME = "test_gitlab_events_ved"
-#DISTINCT_ID = "gitlab_dotcom"
+# EVENT_NAME = "test_gitlab_events_ved"
+# DISTINCT_ID = "gitlab_dotcom"
 
 """
 Extract routines
@@ -211,7 +208,7 @@ def posthog_processing(file_prefix: str) -> None:
         # get files
         for snowplow_file in snowplow_files:
             logging.getLogger().setLevel(logging.INFO)
-            
+
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
@@ -277,10 +274,10 @@ def posthog_authorize() -> None:
     ) = posthog_get_credentials()
 
     posthog.project_api_key = posthog_project_api_key
-    #posthog.personal_api_key = posthog_personal_api_key
+    # posthog.personal_api_key = posthog_personal_api_key
     posthog.host = posthog_host
-    #posthog.sync_mode = True
-    #posthog.debug = True
+    # posthog.sync_mode = True
+    # posthog.debug = True
 
 
 def posthog_push_json(data: dict) -> None:
@@ -288,19 +285,22 @@ def posthog_push_json(data: dict) -> None:
     Use PostHog lib to push
     historical record to PostHog as a part of BackFill process
     Change log Ved
-    Removed the timestamp to the collector_tstamp (	Timestamp for the event recorded by the collector) because when this event was stored in the posthog it was showing that it was generated now not as back date event. 
-    Moved event from hard coded value of EVENT_NAME = "test_gitlab_events_ved"   to value coming in each event.  
+    Removed the timestamp to the collector_tstamp (	Timestamp for the event recorded by the collector) because when this event was stored in the posthog it was showing that it was generated now not as back date event.
+    Moved event from hard coded value of EVENT_NAME = "test_gitlab_events_ved"   to value coming in each event.
     DISTINCT ID is set as user_ipaddress.
-    These 3 were suggested by PostHog team. 
+    These 3 were suggested by PostHog team.
     """
     logging.getLogger().setLevel(logging.CRITICAL)
-    DISTINCT_ID=data["user_ipaddress"]
+    DISTINCT_ID = data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
         event=data["event"],
         properties=data,
-        timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
+        timestamp=datetime.datetime.fromisoformat(
+            data["collector_tstamp"]
+        ),  # datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
+
 
 def snowplow_posthog_backfill(day: str) -> None:
     """
