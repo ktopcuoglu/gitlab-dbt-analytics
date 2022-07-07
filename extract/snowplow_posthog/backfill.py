@@ -20,11 +20,12 @@ import gzip
 from dateutil.relativedelta import relativedelta
 
 from dateutil.tz import tzutc
-
+import warnings
+warnings.filterwarnings("ignore")
 
 ENCODING = "utf-8"
-EVENT_NAME = "test_gitlab_events_ved"
-DISTINCT_ID = "gitlab_dotcom"
+#EVENT_NAME = "test_gitlab_events_ved"
+#DISTINCT_ID = "gitlab_dotcom"
 
 """
 Extract routines
@@ -291,12 +292,12 @@ def posthog_push_json(data: dict) -> None:
     DISTINCT ID is set as user_ipaddress.
     These 3 were suggested by PostHog team. 
     """
-    #DISTINCT_ID=data["user_ipaddress"]
+    DISTINCT_ID=data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
-        event=EVENT_NAME, # data["event"],
+        event=data["event"],
         properties=data,
-        timestamp=datetime.datetime.utcnow().replace(tzinfo=tzutc()), #datetime.datetime.fromisoformat(data["collector_tstamp"]) 
+        timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
 
 
