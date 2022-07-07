@@ -270,6 +270,7 @@ def posthog_authorize() -> None:
 
     (
         posthog_project_api_key,
+        posthog_personal_api_key,
         posthog_host,
     ) = posthog_get_credentials()
 
@@ -293,9 +294,9 @@ def posthog_push_json(data: dict) -> None:
     #DISTINCT_ID=data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
-        event=EVENT_NAME #data["event"],
+        event=EVENT_NAME, # data["event"],
         properties=data,
-        timestamp=datetime.datetime.utcnow().replace(tzinfo=tzutc()) #datetime.datetime.fromisoformat(data["collector_tstamp"])
+        timestamp=datetime.datetime.utcnow().replace(tzinfo=tzutc()), #datetime.datetime.fromisoformat(data["collector_tstamp"]) 
     )
 
 
