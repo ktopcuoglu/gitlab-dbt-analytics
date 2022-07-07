@@ -1,8 +1,8 @@
 import json
-from google.cloud import bigquery
 import logging
 from os import environ as env
 from typing import List
+from google.cloud import bigquery
 
 from pandas import DataFrame
 from big_query_client import BigQueryClient
@@ -17,6 +17,9 @@ config_dict = env.copy()
 
 
 def get_billing_data_query(start_date: str) -> str:
+    """
+    sql to run in bigquery for daily partition
+    """
     return f"""
         SELECT 
           billing_account_id,
