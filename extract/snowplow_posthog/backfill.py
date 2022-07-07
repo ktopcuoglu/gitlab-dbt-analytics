@@ -23,8 +23,8 @@ from dateutil.tz import tzutc
 
 
 ENCODING = "utf-8"
-#EVENT_NAME = "test_gitlab_events_ved"
-#DISTINCT_ID = "gitlab_dotcom"
+EVENT_NAME = "test_gitlab_events_ved"
+DISTINCT_ID = "gitlab_dotcom"
 
 """
 Extract routines
@@ -270,7 +270,6 @@ def posthog_authorize() -> None:
 
     (
         posthog_project_api_key,
-        posthog_personal_api_key,
         posthog_host,
     ) = posthog_get_credentials()
 
@@ -291,12 +290,12 @@ def posthog_push_json(data: dict) -> None:
     DISTINCT ID is set as user_ipaddress.
     These 3 were suggested by PostHog team. 
     """
-    DISTINCT_ID=data["user_ipaddress"]
+    #DISTINCT_ID=data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
-        event=data["event"],
+        event=EVENT_NAME #data["event"],
         properties=data,
-        timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
+        timestamp=datetime.datetime.utcnow().replace(tzinfo=tzutc()) #datetime.datetime.fromisoformat(data["collector_tstamp"])
     )
 
 
