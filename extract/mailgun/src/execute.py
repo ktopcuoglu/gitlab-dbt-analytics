@@ -19,9 +19,9 @@ api_key = env.get("MAILGUN_API_KEY")
 domains = ["mg.gitlab.com"]
 
 
-def reformat_data(items: List[Dict]):
+def reformat_data(items: List[Dict]) -> List[Dict]:
     """
-
+    Extracts the fields we want from the nested json response.
     :param items:
     :return:
     """
@@ -59,9 +59,9 @@ def reformat_data(items: List[Dict]):
     return formatted_data
 
 
-def get_logs(domain, event, formatted_date):
+def get_logs(domain: str, event: str, formatted_date: str) -> requests.Response:
     """
-
+    Small convenience wrapper function for mailgun event requests,
     :param domain:
     :param event:
     :param formatted_date:
@@ -74,9 +74,9 @@ def get_logs(domain, event, formatted_date):
     )
 
 
-def extract_logs(event, start_date: datetime.datetime):
+def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
     """
-
+    Requests and retrieves the event logs for a particular event.
     :param start_date:
     :param event:
     :return:
@@ -117,9 +117,9 @@ def extract_logs(event, start_date: datetime.datetime):
 
 def load_event_logs(event: str, full_refresh: bool = False):
     """
-
-    :param full_refresh:
+    CLI main function, starting point for setting up engine and processing data.
     :param event:
+    :param full_refresh:
     """
     snowflake_engine = snowflake_engine_factory(config_dict, "LOADER")
 
