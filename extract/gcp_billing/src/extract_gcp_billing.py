@@ -1,6 +1,6 @@
 import json
 from google.cloud import bigquery
-from logging import info
+import logging
 from os import environ as env
 from typing import List
 
@@ -35,7 +35,8 @@ def get_billing_data_query(start_date: str) -> str:
           usage,
           credits,
           invoice,
-          cost_type
+          cost_type,
+          DATE(_PARTITIONTIME)
         FROM gitlab_com_billing.gcp_billing_export_v1_017B02_778F9C_493B83
         WHERE DATE(_PARTITIONTIME)= '{start_date}'
     """
@@ -48,7 +49,7 @@ def write_date_json(date: str, df: DataFrame) -> List[str]:
     Chunks to avoid any possible issue with Snowflake file size constraint.
     """
 
-    info(f"{df.shape[0]} rows to write")
+    logging.info(f"{df.shape[0]} rows to write")
 
     file_names = []
 
@@ -56,17 +57,19 @@ def write_date_json(date: str, df: DataFrame) -> List[str]:
     for i in range(0, df.shape[0], row_chunk_size):
         chunk = df[i : i + row_chunk_size]
         file_name = f"gcp_billing_reporting_data_{date}_{i//row_chunk_size}.json"
-        info(f"Writing file {file_name}")
+        logging.info(f"Writing file {file_name}")
 
         chunk.to_json(file_name, orient="records", date_format="iso")
 
-        info(f"{file_name} written")
+        logging.info(f"{file_name} written")
         file_names.append(file_name)
 
     return file_names
 
 
 if __name__ == "__main__":
+
+    logging.basicConfig(level=20)
 
     credentials = json.loads(config_dict["GCP_BILLING_ACCOUNT_CREDENTIALS"])
 
@@ -93,3 +96,5 @@ if __name__ == "__main__":
             "gcp_billing.gcp_billing_export_combined",
             snowflake_engine,
         )
+
+    logging.info("Complete.")
