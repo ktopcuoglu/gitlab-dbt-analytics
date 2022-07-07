@@ -20,6 +20,7 @@ import gzip
 from dateutil.relativedelta import relativedelta
 
 from dateutil.tz import tzutc
+import warnings
 
 
 ENCODING = "utf-8"
@@ -298,6 +299,7 @@ def posthog_push_json(data: dict) -> None:
         properties=data,
         timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
+    warnings.filterwarnings("ignore")
 
 
 def snowplow_posthog_backfill(day: str) -> None:
