@@ -201,6 +201,7 @@ def posthog_processing(file_prefix: str) -> None:
 
     # get folders
     for folder in folders:
+        logging.getLogger().setLevel(logging.WARNING)
 
         logging.info(f"Folder: {folder}...")
 
@@ -210,6 +211,7 @@ def posthog_processing(file_prefix: str) -> None:
 
         # get files
         for snowplow_file in snowplow_files:
+            logging.getLogger().setLevel(logging.WARNING)
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
