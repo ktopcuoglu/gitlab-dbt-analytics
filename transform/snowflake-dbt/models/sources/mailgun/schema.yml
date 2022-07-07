@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: mailgun_events_source
+    description: This table has marketo lead information.
