@@ -12,7 +12,7 @@ from itertools import zip_longest
 
 import posthog
 from fire import Fire
-from logging import info, basicConfig
+from logging import CRITICAL, info, basicConfig
 import logging
 
 import boto3
@@ -201,7 +201,7 @@ def posthog_processing(file_prefix: str) -> None:
 
     # get folders
     for folder in folders:
-
+        logging.getLogger().setLevel(logging.INFO)
         logging.info(f"Folder: {folder}...")
 
         snowplow_files = s3_list_files(
@@ -210,6 +210,8 @@ def posthog_processing(file_prefix: str) -> None:
 
         # get files
         for snowplow_file in snowplow_files:
+            logging.getLogger().setLevel(logging.INFO)
+            
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
@@ -275,9 +277,10 @@ def posthog_authorize() -> None:
     ) = posthog_get_credentials()
 
     posthog.project_api_key = posthog_project_api_key
-    posthog.personal_api_key = posthog_personal_api_key
+    #posthog.personal_api_key = posthog_personal_api_key
     posthog.host = posthog_host
-    posthog.sync_mode = True
+    #posthog.sync_mode = True
+    #posthog.debug = True
 
 
 def posthog_push_json(data: dict) -> None:
@@ -290,6 +293,7 @@ def posthog_push_json(data: dict) -> None:
     DISTINCT ID is set as user_ipaddress.
     These 3 were suggested by PostHog team. 
     """
+    logging.getLogger().setLevel(logging.CRITICAL)
     DISTINCT_ID=data["user_ipaddress"]
     posthog.capture(
         DISTINCT_ID,
@@ -297,7 +301,6 @@ def posthog_push_json(data: dict) -> None:
         properties=data,
         timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
-
 
 def snowplow_posthog_backfill(day: str) -> None:
     """
