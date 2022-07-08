@@ -9,7 +9,8 @@
 
 
 person_domains AS (
-
+  -- Collects the email domains and company ids for each crm account.
+  -- And collects stats to be used for later ranking.
   SELECT DISTINCT
     crm_person.dim_crm_account_id,
     crm_person.email_domain,
@@ -32,6 +33,7 @@ person_domains AS (
 ),
 
 domain_ranks AS (
+  -- Finds stats and ranks for each email domain related to a company id.
   SELECT
     *,
     number_of_account_domain_persons / number_of_account_persons AS account_domain_user_ratio,
@@ -42,7 +44,7 @@ domain_ranks AS (
   WHERE is_business_email
 )
 
-
+-- Finds the crm account ids and email domain rank for each company.
 SELECT DISTINCT
   company_id,
   email_domain,
@@ -51,7 +53,6 @@ SELECT DISTINCT
       number_of_account_persons, dim_crm_account_id) AS account_domain_rank,
   LAST_VALUE(dim_crm_account_id) OVER (
     PARTITION BY company_id, email_domain ORDER BY number_of_domain_persons,
-      number_of_account_persons, dim_crm_account_id) AS dim_crm_account_id,
-  TO_ARRAY(email_domain) AS domain_list
+      number_of_account_persons, dim_crm_account_id) AS crm_account_id
 FROM domain_ranks
 WHERE domain_rank < 4

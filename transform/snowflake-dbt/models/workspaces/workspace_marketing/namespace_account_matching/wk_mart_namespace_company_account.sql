@@ -19,13 +19,15 @@ user_namespace_account_company AS (
 ),
 
 domain_matching AS (
-
+  -- Joins dimension tables and changes the grain to the ultimate parent namespace
   SELECT
     user_namespace_account_company.user_id,
     user_namespace_account_company.is_creator,
     user_namespace_account_company.is_owner,
     namespaces.ultimate_parent_namespace_id,
     company.source_company_id,
+    users.email_domain,
+    users.email_domain_classification
     COALESCE(
       user_namespace_account_company.crm_account_id,
       company_domain_account.dim_crm_account_id
@@ -50,15 +52,13 @@ top_namespace_domain AS (
   -- Find the top used user email domains for the ultimate parent namespace for matching
   SELECT
     domain_matching.ultimate_parent_namespace_id,
-    users.email_domain,
-    IFF(users.email_domain_classification IS NULL, TRUE, FALSE) AS is_business_email,
+    domain_matching.email_domain,
+    IFF(domain_matching.email_domain_classification IS NULL, TRUE, FALSE) AS is_business_email,
     COUNT(DISTINCT domain_matching.user_id) AS number_of_users,
     ROW_NUMBER() OVER (
       PARTITION BY domain_matching.ultimate_parent_namespace_id
       ORDER BY number_of_users DESC) AS domain_rank
   FROM domain_matching
-  LEFT JOIN users
-    ON domain_matching.user_id = users.dim_user_id
   WHERE is_business_email = TRUE
   GROUP BY 1, 2, 3
   QUALIFY domain_rank = 1
@@ -66,7 +66,7 @@ top_namespace_domain AS (
 ),
 
 namespace_domain_account AS (
-
+  -- Finds the crm account related to the top namespace email domain.
   SELECT DISTINCT
     top_namespace_domain.ultimate_parent_namespace_id,
     top_namespace_domain.email_domain,
@@ -154,7 +154,7 @@ namespace_company AS (
 
 
 namespace_account AS (
-
+  -- Measures and applies logic for determining the best match for a namespace and crm account
   SELECT
     ultimate_parent_namespace_id,
     crm_account_id,
@@ -226,7 +226,7 @@ namespace_account AS (
 ),
 
 subscription_accounts AS (
-
+  -- Finds the direct link between namespace and crm account.
   SELECT DISTINCT
     dim_namespace_id AS namespace_id,
     dim_crm_account_id AS crm_account_id
@@ -239,20 +239,20 @@ subscription_accounts AS (
 ),
 
 direct_company_account AS (
-
+  -- Finds the source company that is associated with the direct link crm account
   SELECT
     subscription_accounts.namespace_id,
-    crm_account.dim_crm_account_id AS crm_account_id,
+    crm_account.crm_account_id,
     company.source_company_id
   FROM subscription_accounts
   LEFT JOIN crm_account
-    ON subscription_accounts.crm_account_id = crm_account.dim_crm_account_id
+    ON subscription_accounts.crm_account_id = crm_account.crm_account_id
   LEFT JOIN company
     ON crm_account.crm_account_zoom_info_dozisf_zi_id = company.company_id
 ),
 
 source_company_accounts AS (
-
+  -- Finds all of the crm account related to a source company id
   SELECT
     company.source_company_id,
     COUNT(DISTINCT crm_account.dim_crm_account_id) AS number_of_accounts,
