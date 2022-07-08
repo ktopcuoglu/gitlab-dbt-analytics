@@ -10,7 +10,6 @@ from big_query_client import BigQueryClient
 from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
-    dataframe_uploader,
 )
 
 config_dict = env.copy()
