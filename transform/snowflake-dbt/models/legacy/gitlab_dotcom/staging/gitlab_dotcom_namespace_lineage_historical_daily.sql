@@ -7,7 +7,8 @@
 {{ simple_cte([
     ('map_namespace_internal', 'map_namespace_internal'),
     ('namespace_subscription_snapshots', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
-    ('namespace_lineage','gitlab_dotcom_namespace_lineage_scd')
+    ('namespace_lineage','gitlab_dotcom_namespace_lineage_scd'),
+    ('prep_gitlab_dotcom_plan','prep_gitlab_dotcom_plan')
 ]) }}
 ,
 
@@ -37,10 +38,12 @@ with_plans AS (
     SELECT
       namespace_lineage_daily.*,
       IFNULL(map_namespace_internal.ultimate_parent_namespace_id IS NOT NULL, FALSE)  AS namespace_is_internal,
-      IFF(namespace_subscription_snapshots.is_trial
-            AND IFNULL(namespace_subscription_snapshots.plan_id, 34) NOT IN (34, 103), -- Excluded Premium (103) and Free (34) Trials from being remapped as Ultimate Trials
-          102, -- All historical trial GitLab subscriptions were Ultimate/Gold Trials (102)
-          IFNULL(namespace_subscription_snapshots.plan_id, 34))                       AS ultimate_parent_plan_id,
+      --Please see dbt docs for a description of this column transformation.
+      CASE 
+        WHEN namespace_subscription_snapshots.is_trial = TRUE AND LOWER(prep_gitlab_dotcom_plan.plan_name_modified) = 'ultimate' THEN 102
+        WHEN namespace_subscription_snapshots.plan_id IS NULL THEN 34
+        ELSE prep_gitlab_dotcom_plan.plan_id_modified
+      END AS ultimate_parent_plan_id,
       namespace_subscription_snapshots.seats,
       namespace_subscription_snapshots.seats_in_use,
       namespace_subscription_snapshots.max_seats_used
@@ -51,6 +54,8 @@ with_plans AS (
       ON namespace_lineage_daily.ultimate_parent_id = namespace_subscription_snapshots.namespace_id
       AND namespace_lineage_daily.snapshot_day BETWEEN namespace_subscription_snapshots.valid_from::DATE
                                                AND IFNULL(namespace_subscription_snapshots.valid_to::DATE, CURRENT_DATE)
+    LEFT JOIN prep_gitlab_dotcom_plan
+      ON namespace_subscription_snapshots.plan_id = prep_gitlab_dotcom_plan.dim_plan_id
     QUALIFY ROW_NUMBER() OVER(
       PARTITION BY
         namespace_lineage_daily.namespace_id,

@@ -50,7 +50,7 @@ fct_event_valid AS (
 deduped_namespace_bdg AS (
 
   SELECT
-    namespace_order_subscription.dim_subscription_id AS dim_active_subscription_id,
+    namespace_order_subscription.dim_subscription_id AS dim_latest_subscription_id,
     namespace_order_subscription.order_id,
     namespace_order_subscription.dim_crm_account_id,
     namespace_order_subscription.dim_billing_account_id,
@@ -68,7 +68,7 @@ dim_namespace_w_bdg AS (
   SELECT
     dim_namespace.dim_namespace_id,
     dim_namespace.dim_product_tier_id AS dim_active_product_tier_id,
-    deduped_namespace_bdg.dim_active_subscription_id,
+    deduped_namespace_bdg.dim_latest_subscription_id,
     deduped_namespace_bdg.order_id,
     deduped_namespace_bdg.dim_crm_account_id,
     deduped_namespace_bdg.dim_billing_account_id
@@ -117,13 +117,13 @@ fct_event_w_flags AS (
     fct_event_valid.days_since_project_creation_at_event_date,
     fct_event_valid.data_source,
     dim_namespace_w_bdg.dim_active_product_tier_id,
-    dim_namespace_w_bdg.dim_active_subscription_id,
+    dim_namespace_w_bdg.dim_latest_subscription_id,
     dim_namespace_w_bdg.order_id,
     dim_namespace_w_bdg.dim_crm_account_id,
     dim_namespace_w_bdg.dim_billing_account_id,
-    paid_flag_by_day.plan_was_paid_at_event_date,
-    paid_flag_by_day.plan_id_at_event_date,
-    paid_flag_by_day.plan_name_at_event_date
+    COALESCE(paid_flag_by_day.plan_was_paid_at_event_date, FALSE) AS plan_was_paid_at_event_date,
+    COALESCE(paid_flag_by_day.plan_id_at_event_date, 34) AS plan_id_at_event_date,
+    COALESCE(paid_flag_by_day.plan_name_at_event_date, 'free') AS plan_name_at_event_date
   FROM fct_event_valid
   LEFT JOIN dim_namespace_w_bdg
     ON fct_event_valid.dim_ultimate_parent_namespace_id = dim_namespace_w_bdg.dim_namespace_id
@@ -145,7 +145,7 @@ gitlab_dotcom_fact AS (
     dim_project_id,
     dim_user_id,
     dim_active_product_tier_id,
-    dim_active_subscription_id,
+    dim_latest_subscription_id,
     dim_crm_account_id,
     dim_billing_account_id,
     order_id,
@@ -180,5 +180,5 @@ gitlab_dotcom_fact AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-04-09",
-    updated_date="2022-06-06"
+    updated_date="2022-06-13"
 ) }}

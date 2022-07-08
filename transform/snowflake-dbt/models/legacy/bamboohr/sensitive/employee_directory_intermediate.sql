@@ -15,7 +15,7 @@ WITH RECURSIVE employee_directory AS (
     termination_date,
     hire_location_factor,
     last_work_email,
-    (first_name || ' ' || last_name) AS full_name
+    (COALESCE(first_name,'') || ' ' || COALESCE(last_name,'')) AS full_name
   FROM {{ ref('employee_directory') }}
 
 ),
@@ -61,7 +61,7 @@ promotion AS (
     employee_id,
     effective_date,
     compensation_change_reason
-  FROM {{ ref('bamboohr_compensation_source') }}
+  FROM {{ ref('blended_compensation_source') }}
   WHERE compensation_change_reason = 'Promotion'
   GROUP BY 1, 2, 3
 
@@ -256,6 +256,12 @@ enriched AS (
       AND COALESCE(
         employee_directory.termination_date::DATE, {{ max_date_in_bamboo_analyses() }}
       ) >= date_details.date_actual
+      -- active employees that have been rehired will have a termination date less than 
+      -- the rehire date and they need to be included while excluding those terminated after
+      -- the rehire date
+      OR (employee_directory.rehire_date::DATE <= date_details.date_actual
+      AND IFF(employee_directory.termination_date > employee_directory.rehire_date, employee_directory.termination_date,
+            {{ max_date_in_bamboo_analyses() }}) >= date_details.date_actual)
   LEFT JOIN department_info
     ON employee_directory.employee_id = department_info.employee_id
       AND date_details.date_actual BETWEEN department_info.effective_date
@@ -323,6 +329,7 @@ base_layers AS (
     ARRAY_CONSTRUCT(reports_to, full_name) AS lineage
   FROM enriched
   WHERE NULLIF(reports_to, '') IS NOT NULL
+  AND full_name != reports_to -- Sid is reported as reporting to himself
 
 ),
 

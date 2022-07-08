@@ -1,7 +1,7 @@
 WITH source AS (
   
     SELECT *
-    FROM {{ ref ('bamboohr_id_employee_number_mapping_source') }}
+    FROM {{ ref ('blended_employee_mapping_source') }}
     WHERE uploaded_row_number_desc = 1
 
 ), intermediate AS (
@@ -32,12 +32,12 @@ WITH source AS (
       nationality,
       region,
       CASE
-        WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico') 
+        WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico','United States of America') 
           THEN 'NORAM'
-        WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
+        WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico','United States of America') 
           THEN 'LATAM'
         ELSE region END                                                                AS region_modified,
-        IFF(country='United States', 
+        IFF(country IN ('United States','United States of America'), 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US')   AS gender_region,
         greenhouse_candidate_id,
@@ -53,7 +53,7 @@ WITH source AS (
         OR (LOWER(first_name) NOT LIKE '%greenhouse test%'
             and LOWER(last_name) NOT LIKE '%test profile%'
             and LOWER(last_name) != 'test-gitlab')
-        OR employee_id  NOT IN (42039, 42043)
+        OR employee_id  NOT IN (11569)  -- mock person
 
 
 )

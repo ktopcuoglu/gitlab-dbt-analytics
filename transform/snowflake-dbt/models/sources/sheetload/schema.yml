@@ -75,6 +75,12 @@ models:
     - name: field_segment
       tests:
       - not_null
+- name: sheetload_fy23_quota_source
+  description: Load of FY23 Xactly quotas used temporarily as we model for the Xactly Sales Attainment data.
+  columns: 
+    - name: assignment_id 
+      tests:
+        - not_null
 - name: sheetload_gcp_active_cud_source
   description: table of committed use discounts (CUD) in GCP
 - name: sheetload_gitlab_contributing_organizations_source
@@ -254,6 +260,8 @@ models:
   - name: metric_name
     tests:
     - not_null
+- name: sheetload_map_ramp_deals_source
+  description:  In Salesforce opportunity there is a field SSP ID which maps out-year ramp opportunities to its first year opportunity. However this field was introduced end of 2021 and is blank for historical. It's used by revenue accounting team, so we can't modify/backfill this field. To accurately produce financial report, we are mapping historical ramp deals manually in GSheet which will be used for different analysis and planning work.
 - name: sheetload_mapping_sdr_sfdc_bamboohr_source
   description: Mapping table with the sfdc user id of Sales Development Representative (SDR) and their respective BambooHR id.
   columns:
@@ -357,17 +365,26 @@ models:
     - name: start_month
       tests:
         - not_null
-- name: sheetload_sdr_attainment_to_goal_source
-  description: Source model for SDR attainment and goals by month.
-  columns:
-    - name: current_month
-      tests:
-        - not_null
 - name: sheetload_sdr_count_snapshot_source
   description: Source model for SDR counts by fiscal quarter and sales segment.
   columns:
     - name: fiscal_quarter
       tests:
+        - not_null
+- name: sheetload_sdr_bdr_metric_targets_source
+  description: Source model for SDR/BDR metric targets by metric. 
+  columns: 
+    - name: sdr_or_bdr 
+      tests:
+        - not_null
+    - name: date_period
+      tests: 
+        - not_null
+    - name: metric
+      tests: 
+        - not_null
+    - name: target
+      tests: 
         - not_null
 - name: sheetload_sisense_user_roles_source
   description: Source model for sisense users roles.
@@ -565,3 +582,6 @@ models:
     - name: valid_from
     - name: valid_to
     - name: is_current
+- name: sheetload_xactly_credit_source
+  description: Sheetload of Xactly credits loaded manually as a workaround while we finalize Xactly Sales Attainment modeling
+  

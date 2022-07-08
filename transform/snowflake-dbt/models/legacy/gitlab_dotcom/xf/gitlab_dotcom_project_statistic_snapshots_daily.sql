@@ -25,6 +25,7 @@ WITH date_details AS (
       project_snapshots.commit_count,
       project_snapshots.storage_size,
       project_snapshots.repository_size,
+      project_snapshots.container_registry_size,
       project_snapshots.lfs_objects_size,
       project_snapshots.build_artifacts_size,
       project_snapshots.packages_size,

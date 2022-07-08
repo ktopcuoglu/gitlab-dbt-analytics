@@ -9,6 +9,19 @@ WITH sfdc_opportunity AS (
           product_category
     FROM {{ref('sfdc_opportunity')}}
 
+), sfdc_opportunity_raw AS (
+/*
+JK 2022-06-16: Adding comp_new_logo_override__c directly from RAW SFDC object
+This field is required for High Value First Order dashboard. I will create another MR so that 
+it is added to EDMs and when we do a source table migration from legacy to EDMs for Workspace Sales,
+we can delete this connection and use the mart table directly. 
+*/
+
+    SELECT 
+      id AS opportunity_id,
+      comp_new_logo_override__c
+    FROM {{ source('salesforce', 'opportunity') }}
+
 ), sfdc_users_xf AS (
 
     SELECT * FROM {{ref('wk_sales_sfdc_users_xf')}}
@@ -495,10 +508,16 @@ WITH sfdc_opportunity AS (
       --sfdc_opportunity_xf.upside_swing_deal_iacv,
       --sfdc_opportunity_xf.weighted_iacv,
 
-
       -- fields form opportunity source
       sfdc_opportunity.opportunity_category,
-      sfdc_opportunity.product_category
+      sfdc_opportunity.product_category,
+    
+      -- JK 2022-06-16 temporary field for FO dashboard
+      CASE sfdc_opportunity_raw.comp_new_logo_override__c
+        WHEN 'Yes'
+          THEN 1 
+        ELSE 0
+      END                                 AS is_comp_new_logo_override
     
     FROM {{ref('sfdc_opportunity_xf')}} sfdc_opportunity_xf
     -- not all fields are in opportunity xf
@@ -509,7 +528,7 @@ WITH sfdc_opportunity AS (
     -- pipeline creation date
     LEFT JOIN date_details stage_1_date 
       ON stage_1_date.date_actual = sfdc_opportunity_xf.stage_1_discovery_date::date
-      -- pipeline creation date
+    -- pipeline creation date
     LEFT JOIN date_details stage_3_date 
       ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
     -- partner account details
@@ -518,7 +537,10 @@ WITH sfdc_opportunity AS (
     -- NF 20211105 resale partner
     LEFT JOIN sfdc_accounts_xf resale_account
       ON resale_account.account_id = sfdc_opportunity_xf.fulfillment_partner 
-   -- NF 20210906 remove JiHu opties from the models
+    -- JK 20220616 temp solution to add New Logo Override field 
+    LEFT JOIN sfdc_opportunity_raw
+      ON sfdc_opportunity.opportunity_id = sfdc_opportunity_raw.opportunity_id
+    -- NF 20210906 remove JiHu opties from the models
     WHERE sfdc_opportunity_xf.is_jihu_account = 0
 
 ), net_iacv_to_net_arr_ratio AS (

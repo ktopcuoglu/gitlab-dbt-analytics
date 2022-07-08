@@ -15,3 +15,7 @@ pumps:
     timestamp_column: null
     sensitive: True
     owner: '@aperez349'
+  - model: pump_daily_sao
+    timestamp_column: sao_date
+    sensitive: True
+    owner: '@paul_armstrong'

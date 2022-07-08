@@ -6,7 +6,7 @@ WITH mapping as (
 ), bamboohr_directory AS (
 
     SELECT *
-    FROM {{ ref ('bamboohr_directory_source') }}
+    FROM {{ ref ('blended_directory_source') }}
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY uploaded_at DESC) =1 
 
 ), department_info as (
@@ -14,14 +14,14 @@ WITH mapping as (
     SELECT 
       employee_id,
       LAST_VALUE(job_title) RESPECT NULLS 
-          OVER (PARTITION BY employee_id ORDER BY job_id) AS last_job_title,
+          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_job_title,
       LAST_VALUE(reports_to) RESPECT NULLS
-          OVER (PARTITION BY employee_id ORDER BY job_id) AS last_supervisor,
+          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_supervisor,
       LAST_VALUE(department) RESPECT NULLS
-          OVER (PARTITION BY employee_id ORDER BY job_id) AS last_department,
+          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_department,
       LAST_VALUE(division) RESPECT NULLS
-          OVER  (PARTITION BY employee_id ORDER BY job_id) AS last_division       
-    FROM {{ ref ('bamboohr_job_info_source') }}
+          OVER  (PARTITION BY employee_id ORDER BY job_sequence) AS last_division       
+    FROM {{ ref ('blended_job_info_source') }}
 
 ), cost_center AS (
 
@@ -43,7 +43,7 @@ WITH mapping as (
     SELECT 
       employee_id,
       effective_date as hire_date
-    FROM {{ref('bamboohr_employment_status_source')}}
+    FROM {{ref('blended_employment_status_source')}}
     WHERE employment_status != 'Terminated'
     QUALIFY ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY effective_date) = 1
 

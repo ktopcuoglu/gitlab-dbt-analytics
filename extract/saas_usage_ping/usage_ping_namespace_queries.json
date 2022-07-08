@@ -306,12 +306,6 @@
     "level": "namespace"
   },
   {
-    "counter_name": "counts.projects_with_tracing_enabled",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(project_tracing_settings.id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_project_tracing_settings_dedupe_source AS project_tracing_settings LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = project_tracing_settings.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id  GROUP BY 1,2",
-    "time_window_query": false,
-    "level": "namespace"
-  },
-  {
     "counter_name": "counts.projects_with_error_tracking_enabled",
     "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(project_error_tracking_settings.project_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_project_error_tracking_settings_dedupe_source AS project_error_tracking_settings  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects ON projects.id = project_error_tracking_settings.project_id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON projects.namespace_id = namespaces.id LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE project_error_tracking_settings.enabled = TRUE GROUP BY 1",
     "time_window_query": false,
@@ -2502,12 +2496,6 @@
     "level": "namespace"
   },
   {
-    "counter_name": "usage_activity_by_stage.monitor.projects_with_tracing_enabled",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(DISTINCT projects.creator_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_project_tracing_settings_dedupe_source AS project_tracing_settings ON project_tracing_settings.project_id = projects.id LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id  LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id  GROUP BY 1,2",
-    "time_window_query": false,
-    "level": "namespace"
-  },
-  {
     "counter_name": "usage_activity_by_stage.monitor.projects_with_error_tracking_enabled",
     "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(DISTINCT projects.creator_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_project_error_tracking_settings_dedupe_source AS project_error_tracking_settings ON project_error_tracking_settings.project_id = projects.id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id  LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE project_error_tracking_settings.enabled = TRUE GROUP BY 1",
     "time_window_query": false,
@@ -3074,12 +3062,6 @@
   {
     "counter_name": "usage_activity_by_stage_monthly.monitor.operations_dashboard_default_dashboard",
     "counter_query": "SELECT COUNT(users.id) FROM prep.gitlab_dotcom.gitlab_dotcom_users_dedupe_source AS users WHERE (users.state IN ('active')) AND (users.user_type IS NULL OR users.user_type IN (NULL, 6, 4)) AND users.dashboard = 8 AND users.created_at BETWEEN between_start_date AND between_end_date",
-    "time_window_query": true,
-    "level": "namespace"
-  },
-  {
-    "counter_name": "usage_activity_by_stage_monthly.monitor.projects_with_tracing_enabled",
-    "counter_query": "SELECT namespaces_xf.namespace_ultimate_parent_id AS id, namespaces_xf.namespace_ultimate_parent_id,  COUNT(DISTINCT projects.creator_id) AS counter_value  FROM prep.gitlab_dotcom.gitlab_dotcom_projects_dedupe_source AS projects INNER JOIN prep.gitlab_dotcom.gitlab_dotcom_project_tracing_settings_dedupe_source AS project_tracing_settings ON project_tracing_settings.project_id = projects.id  LEFT JOIN prep.gitlab_dotcom.gitlab_dotcom_namespaces_dedupe_source AS namespaces ON namespaces.id = projects.namespace_id  LEFT JOIN prod.legacy.gitlab_dotcom_namespaces_xf AS namespaces_xf ON namespaces.id = namespaces_xf.namespace_id WHERE projects.created_at BETWEEN between_start_date AND between_end_date GROUP BY 1",
     "time_window_query": true,
     "level": "namespace"
   },
