@@ -5,18 +5,17 @@ Library URL: https://posthog.com/docs/integrate/server/python
 """
 
 import datetime
-import yaml
 import sys
 from os import environ as env
 from itertools import zip_longest
-
-import posthog
-from fire import Fire
 from logging import info, basicConfig
 import logging
-
-import boto3
 import gzip
+
+import yaml
+import posthog
+from fire import Fire
+import boto3
 from dateutil.relativedelta import relativedelta
 
 ENCODING = "utf-8"
@@ -221,21 +220,15 @@ def posthog_processing(file_prefix: str) -> None:
                 posthog_push_json(json_prepared)
 
 
-"""
-Load routines
-"""
-
-
 def posthog_get_credentials() -> tuple:
     """
     This function returns the set of PostHog secrets.
     """
 
     posthog_project_api_key = env["POSTHOG_PROJECT_API_KEY"]
-    posthog_personal_api_key = env["POSTHOG_PERSONAL_API_KEY"]
     posthog_host = env["POSTHOG_HOST"]
 
-    return (posthog_project_api_key, posthog_personal_api_key, posthog_host)
+    return (posthog_project_api_key, posthog_host)
 
 
 def load_manifest_file(file_name: str) -> dict:
@@ -269,7 +262,6 @@ def posthog_authorize() -> None:
 
     (
         posthog_project_api_key,
-        posthog_personal_api_key,
         posthog_host,
     ) = posthog_get_credentials()
 
@@ -291,10 +283,11 @@ def posthog_push_json(data: dict) -> None:
     These 3 were suggested by PostHog team.
     """
     logging.getLogger().setLevel(logging.CRITICAL)
-    DISTINCT_ID = data["user_ipaddress"]
+    distinct_id = data["user_ipaddress"]
+    event_name = data["event"]
     posthog.capture(
-        DISTINCT_ID,
-        event=data["event"],
+        distinct_id,
+        event=event_name,
         properties=data,
         timestamp=datetime.datetime.fromisoformat(
             data["collector_tstamp"]
