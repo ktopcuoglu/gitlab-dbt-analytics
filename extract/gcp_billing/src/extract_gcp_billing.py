@@ -20,7 +20,7 @@ def get_billing_data_query(start_date: str) -> str:
     sql to run in bigquery for daily partition
     """
     return f"""
-        SELECT 
+        SELECT
           billing_account_id,
           service,
           sku,
