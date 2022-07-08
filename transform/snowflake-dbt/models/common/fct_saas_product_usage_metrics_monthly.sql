@@ -20,7 +20,11 @@
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
     WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
-      AND zuora_subscriptions.product_rate_plan_charge_name != '1,000 CI Minutes'
+      AND zuora_subscriptions.product_rate_plan_charge_name NOT IN (
+        '1,000 CI Minutes',
+        'Gitlab Storage 10GB - 1 Year',
+        'Premium Support'
+      )
     {{ dbt_utils.group_by(n=4)}}
 
 ), gitlab_seats AS (
