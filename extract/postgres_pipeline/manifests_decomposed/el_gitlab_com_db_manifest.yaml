@@ -1374,6 +1374,7 @@ tables:
       FROM project_settings
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  projects:
     dbt_snapshots: true
     dbt_source_model: true
     export_schema: 'gitlab_com'
