@@ -5,7 +5,7 @@
 {{
     config({
         "materialized": "incremental",
-        "unique_key": "dim_usage_ping_id"
+        "unique_key": "dim_ping_instance_id"
     })
 }}
 
@@ -13,7 +13,8 @@
     ('instance_types', 'dim_host_instance_type'),
     ('map_license_subscription','map_license_subscription_account'),
     ('fct_ping_instance','fct_ping_instance'),
-    ('prep_ping_instance','prep_ping_instance')
+    ('prep_ping_instance','prep_ping_instance'),
+    ('dim_ping_instance','dim_ping_instance')
 ]) }}
 
 , prep_ping_instance_with_license AS (
@@ -51,7 +52,7 @@
     LEFT OUTER JOIN fct_ping_instance 
       ON prep_ping_instance_with_license.dim_ping_instance_id = fct_ping_instance.dim_ping_instance_id
     QUALIFY ROW_NUMBER() OVER (
-      PARTITION BY dim_usage_ping_id
+      PARTITION BY dim_ping_instance_id
         ORDER BY ping_created_at DESC
       ) = 1
 )
