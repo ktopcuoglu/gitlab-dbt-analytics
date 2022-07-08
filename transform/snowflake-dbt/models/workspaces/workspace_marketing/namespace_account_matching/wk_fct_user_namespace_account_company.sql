@@ -4,7 +4,7 @@
 ) }}
 
 /*
-This table is a derived fct table from a future fct_membership.  
+This table is a derived fct table from a future fct_membership.
 This table has a grain of user_id->namespace_id->crm_account_id->company_id
 This table assumes the highest access level for the user on the namespace
 */
@@ -14,27 +14,37 @@ This table assumes the highest access level for the user on the namespace
     ('company_bridge','wk_bdg_user_company'),
     ('marketing_contact','dim_marketing_contact'),
     ('access_levels','gitlab_dotcom_access_levels_source')
-])}},
+]) }},
 
 namespace_companies_accounts AS (
 
   SELECT
-  -- Primary Key
+    -- Primary Key
+    {{ dbt_utils.surrogate_key(['memberships.user_id',
+      'namespace.dim_namespace_id',
+      'company_bridge.company_id',
+      'marketing_contact.dim_crm_account_id']) }} AS user_namespace_account_company_pk,
 
-  -- Foreign Keys
+    -- Foreign Keys
+    {{ get_keyed_nulls(dbt_utils.surrogate_key(['memberships.user_id'])) }} AS dim_user_sk,
+    {{ get_keyed_nulls(dbt_utils.surrogate_key(['namespace.dim_namespace_id'])) }} AS dim_namespace_sk,
+    {{ get_keyed_nulls(dbt_utils.surrogate_key(['company_bridge.company_id'])) }} AS dim_company_sk,
+    {{ get_keyed_nulls(dbt_utils.surrogate_key(['marketing_contact.dim_crm_account_id'])) }} AS dim_crm_account_sk,
+
+    -- Legacy Keys
     memberships.user_id,
     namespace.dim_namespace_id AS namespace_id,
     company_bridge.company_id,
     marketing_contact.dim_crm_account_id AS crm_account_id,
-    
-  -- Degenerate Dimensions
+
+    -- Degenerate Dimensions
     memberships.is_billable,
     memberships.access_level,
     access_levels.access_level_name,
     IFF(namespace.creator_id = memberships.user_id, TRUE, FALSE) AS is_creator,
-    IFF(memberships.access_level = 50, TRUE, FALSE) AS is_owner 
+    IFF(memberships.access_level = 50, TRUE, FALSE) AS is_owner
 
-  -- Facts   
+    -- Facts   
 
   FROM memberships
   LEFT JOIN namespace
@@ -45,7 +55,8 @@ namespace_companies_accounts AS (
     ON memberships.user_id = marketing_contact.gitlab_dotcom_user_id
   LEFT JOIN access_levels
     ON memberships.access_level = access_levels.access_level
-  QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace.dim_namespace_id,user_id ORDER BY memberships.access_level DESC) = 1
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace.dim_namespace_id,
+    memberships.user_id ORDER BY memberships.access_level DESC) = 1
 )
 
 SELECT *
