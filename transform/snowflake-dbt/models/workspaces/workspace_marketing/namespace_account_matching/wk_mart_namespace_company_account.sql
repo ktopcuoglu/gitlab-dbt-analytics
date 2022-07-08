@@ -27,7 +27,7 @@ domain_matching AS (
     namespaces.ultimate_parent_namespace_id,
     company.source_company_id,
     users.email_domain,
-    users.email_domain_classification
+    users.email_domain_classification,
     COALESCE(
       user_namespace_account_company.crm_account_id,
       company_domain_account.dim_crm_account_id
