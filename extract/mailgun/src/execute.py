@@ -100,7 +100,7 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
 
                 first_timestamp = formatted_data[0].get('timestamp')
                 str_stamp = datetime.datetime.fromtimestamp(first_timestamp).strftime("%d-%m-%Y %H:%M:%S.%f")
-                logging.info(f"Processed data starting on {str_stamp}")
+                info(f"Processed data starting on {str_stamp}")
 
                 all_results = all_results[:] + formatted_data[:]
 
