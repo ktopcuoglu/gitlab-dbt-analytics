@@ -93,9 +93,15 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
                 data = requests.get(page_token, auth=("api", api_key)).json()
                 items = data.get("items")
                 formatted_data = reformat_data(items)
+
                 info(f"Data retrieved length: {len(formatted_data)}")
                 if len(formatted_data) == 0:
                     break
+
+                first_timestamp = formatted_data[0].get('timestamp')
+                str_stamp = datetime.datetime.fromtimestamp(first_timestamp).strftime("%d-%m-%Y %H:%M:%S.%f")
+                logging.info(f"Processed data starting on {str_stamp}")
+
                 all_results = all_results[:] + formatted_data[:]
 
             else:
