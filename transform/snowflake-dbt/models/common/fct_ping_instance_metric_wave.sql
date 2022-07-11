@@ -20,7 +20,7 @@
 
     SELECT
     -- usage ping meta data 
-    fct_ping_instance.dim_ping_insatance_id              AS dim_ping_insatance_id, 
+    fct_ping_instance.dim_ping_instance_id              AS dim_ping_insatance_id, 
     dim_ping_instance.ping_created_at                    AS ping_created_at,
     dim_ping_instance.ping_created_at_28_days_earlier    AS ping_created_at_28_days_earlier,
     dim_ping_instance.ping_created_at_year               AS ping_created_at_year,
@@ -44,7 +44,6 @@
     dim_ping_instance.installation_type                  AS installation_type, 
     dim_ping_instance.is_internal                        AS is_internal, 
     dim_ping_instance.is_staging                         AS is_staging, 
-
    -- instance user statistics 
     fct_ping_instance.license_billable_users             AS license_billable_users, 
     fct_ping_instance.instance_user_count                AS instance_user_count, 
@@ -58,7 +57,7 @@
     fct_ping_instance.dim_license_id,
     fct_ping_instance.dim_crm_account_id,
     fct_ping_instance.dim_parent_crm_account_id,
-    map_license_subscription.is_usage_ping_license_in_licenseDot,
+    --map_license_subscription.is_usage_ping_license_in_licenseDot,
     map_license_subscription.is_license_mapped_to_subscription,
     map_license_subscription.is_license_subscription_id_valid,
     fct_ping_instance.dim_location_country_id,
