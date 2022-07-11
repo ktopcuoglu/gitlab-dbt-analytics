@@ -219,6 +219,8 @@ def posthog_processing(file_prefix: str) -> None:
 
                 posthog_push_json(json_prepared)
 
+    posthog.shutdown()
+
 
 def posthog_get_credentials() -> tuple:
     """
