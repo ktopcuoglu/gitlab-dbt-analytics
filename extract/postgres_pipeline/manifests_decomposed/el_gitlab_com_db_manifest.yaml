@@ -1580,6 +1580,23 @@ tables:
       FROM requirements
       WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
+  resource_iteration_events:
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'resource_iteration_events'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , user_id
+      , issue_id
+      , merge_request_id
+      , iteration_id
+      , created_at
+      , action
+      FROM resource_iteration_events
+      WHERE created_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
+        AND '{END_TIMESTAMP}'::timestamp
   resource_label_events:
     advanced_metadata: true
     dbt_source_model: true
