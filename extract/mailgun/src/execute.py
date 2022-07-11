@@ -19,45 +19,6 @@ api_key = env.get("MAILGUN_API_KEY")
 domains = ["mg.gitlab.com"]
 
 
-def reformat_data(items: List[Dict]) -> List[Dict]:
-    """
-    Extracts the fields we want from the nested json response.
-    :param items:
-    :return:
-    """
-    formatted_data = []
-    if items and len(items) > 0:
-        for i in items:
-            new_dict = {
-                "id": i.get("id", ""),
-                "message-id": i.get("message", {})
-                .get("headers", {})
-                .get("message-id", ""),
-                "timestamp": i.get("timestamp", ""),
-                "tags": i.get("tags", ""),
-                "event": i.get("event", ""),
-                "delivery-status-code": i.get("delivery-status", {}).get("code", ""),
-                "delivery-status-message": i.get("delivery-status", {}).get(
-                    "description", ""
-                ),
-                "log-level": i.get("log-level", ""),
-                "url": i.get("url", ""),
-                "recipient": i.get("recipient", ""),
-                "sender": i.get("envelope", {}).get("sender", ""),
-                "targets": i.get("envelope", {}).get("targets", ""),
-                "subject": i.get("message", {}).get("headers").get("subject", ""),
-                "city": i.get("geolocation", {}).get("city", ""),
-                "region": i.get("geolocation", {}).get("region", ""),
-                "country": i.get("geolocation", {}).get("country", ""),
-                "is-routed": i.get("flags", {}).get("is-routed", ""),
-                "is-authenticated": i.get("flags", {}).get("is-authenticated", ""),
-                "is-system-test": i.get("flags", {}).get("is-system-test", ""),
-                "is-test-mode": i.get("flags", {}).get("is-test-mode", ""),
-            }
-            formatted_data.append(new_dict)
-
-    return formatted_data
-
 
 def get_logs(domain: str, event: str, formatted_date: str) -> requests.Response:
     """
@@ -92,26 +53,27 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
             if page_token:
                 data = requests.get(page_token, auth=("api", api_key)).json()
                 items = data.get("items")
-                formatted_data = reformat_data(items)
 
-                info(f"Data retrieved length: {len(formatted_data)}")
-                if len(formatted_data) == 0:
+                info(f"Data retrieved length: {len(items)}")
+
+                if len(items) == 0:
                     break
 
-                first_timestamp = formatted_data[0].get('timestamp')
+                first_timestamp = items[0].get('timestamp')
                 str_stamp = datetime.datetime.fromtimestamp(first_timestamp).strftime("%d-%m-%Y %H:%M:%S.%f")
                 info(f"Processed data starting on {str_stamp}")
 
-                all_results = all_results[:] + formatted_data[:]
+                all_results = all_results[:] + items[:]
 
             else:
                 data = get_logs(domain, event, formatted_date).json()
                 items = data.get("items")
-                formatted_data = reformat_data(items)
-                info(f"Data retrieved length: {len(formatted_data)}")
-                if len(formatted_data) == 0:
+                info(f"Data retrieved length: {len(items)}")
+
+                if len(items) == 0:
                     break
-                all_results = all_results[:] + formatted_data[:]
+
+                all_results = all_results[:] + items[:]
 
             page_token = data.get("paging").get("next")
 
