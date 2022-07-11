@@ -805,6 +805,14 @@ tables:
         FROM audit_events
         WHERE DATE(created_at) > current_date - interval '8' day
         GROUP BY 1,2
+        UNION ALL
+        SELECT 'gitlab_db_resource_iteration_events' AS table_name
+        , DATE(created_at) as created_date
+        , 'null' as updated_date
+        , count(*) as number_of_records
+        FROM resource_iteration_events
+        WHERE DATE(created_at) > current_date - interval '8' day
+        GROUP BY 1,2
   cluster_13:
     dbt_source_model: true
     export_schema: 'gitlab_dotcom'
