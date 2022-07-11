@@ -33,7 +33,8 @@
 
     SELECT
       prep_ping_instance.*,
-      --(prep_ping_instance.raw_usage_data_payload:license_md5::TEXT)                                       AS license_md5,
+      --(prep_ping_instance.raw_usage_data_payload:license_md5::TEXT)                                     AS license_md5,
+      prep_ping_instance.raw_usage_data_payload:license_billable_users::NUMBER                            AS license_billable_users, 
       TO_DATE(prep_ping_instance.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
       (prep_ping_instance.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
       prep_ping_instance.raw_usage_data_payload:usage_activity_by_stage_monthly.manage.events::NUMBER     AS umau_value
@@ -64,6 +65,7 @@
       dim_location_country_id                             AS dim_location_country_id,
       license_trial_ends_on                               AS license_trial_ends_on,
       license_subscription_id                             AS license_subscription_id,
+      license_billable_users                              AS license_billable_users,
       Instance_user_count                                 AS Instance_user_count,
       historical_max_users                                AS historical_max_users,
       license_user_count                                  AS license_user_count,
@@ -91,10 +93,11 @@
       dim_host_id                                                                     AS dim_host_id,
       dim_installation_id                                                             AS dim_installation_id,
       prep_license.dim_license_id                                                     AS dim_license_id,
-      license_md5                                                                     AS license_md5,
+      prep_usage_ping_cte.license_md5                                                 AS license_md5,
+      license_billable_users                                                          AS license_billable_users,
       Instance_user_count                                                             AS Instance_user_count,
       historical_max_users                                                            AS historical_max_users,
-      license_user_count                                                              AS license_user_count,
+      prep_usage_ping_cte.license_user_count                                          AS license_user_count,
       ping_created_at                                                                 AS ping_created_at,
       umau_value                                                                      AS umau_value,
       license_subscription_id                                                         AS dim_subscription_license_id,
