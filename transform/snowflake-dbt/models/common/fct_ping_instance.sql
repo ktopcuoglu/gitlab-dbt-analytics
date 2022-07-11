@@ -60,6 +60,7 @@
       dim_instance_id                                     AS dim_instance_id,
       dim_installation_id                                 AS dim_installation_id,
       dim_product_tier.dim_product_tier_id                AS dim_product_tier_id,
+      UUID                                                AS uuid,
       ping_created_at                                     AS ping_created_at,
       license_md5                                         AS license_md5,
       dim_location_country_id                             AS dim_location_country_id,
@@ -92,6 +93,7 @@
       dim_instance_id                                                                 AS dim_instance_id,
       dim_host_id                                                                     AS dim_host_id,
       dim_installation_id                                                             AS dim_installation_id,
+      UUID                                                                            AS uuid,
       prep_license.dim_license_id                                                     AS dim_license_id,
       prep_usage_ping_cte.license_md5                                                 AS license_md5,
       license_billable_users                                                          AS license_billable_users,
@@ -102,6 +104,8 @@
       umau_value                                                                      AS umau_value,
       license_subscription_id                                                         AS dim_subscription_license_id,
       IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)   AS is_trial,
+      product_tier                                                                    AS product_tier,
+      main_edition                                                                    AS main_edition_product_tier,
       'VERSION_DB'                                                                    AS data_source
     FROM prep_usage_ping_cte
     LEFT JOIN prep_license
