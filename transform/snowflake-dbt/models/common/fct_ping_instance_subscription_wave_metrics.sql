@@ -39,7 +39,7 @@
     map_license_subscription.is_license_mapped_to_subscription,
     map_license_subscription.is_license_subscription_id_valid,
     fct_ping_instance.dim_location_country_id,
-    prep_ping_instance_with_license.license_user_count,
+    dim_ping_instance.license_user_count,
 
     {{ sales_wave_2_3_metrics() }}
 
