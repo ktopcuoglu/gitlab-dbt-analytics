@@ -19,6 +19,11 @@ folders:
     folder_name: marketing_do_not_contact_list
     table_name: marketing_dnc_list
     table_replace_append: 1
+  - name: lam_corrections
+    owner: '@jeanpeguero'
+    folder_name: lam_corrections
+    table_name: lam_corrections
+    table_replace_append: 1
   - name: ssa_coverage_fitted_curves
     owner: '@jeanpeguero'
     folder_name: ssa_coverage_fitted_curves
