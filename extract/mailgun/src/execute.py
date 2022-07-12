@@ -118,7 +118,7 @@ def load_event_logs(event: str, full_refresh: bool = False):
         json.dump(results, outfile)
 
     snowflake_stage_load_copy_remove(
-        file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
+        file_name, f"mailgun.mailgun_load_{event}", "mailgun.mailgun_events", snowflake_engine
     )
 
 
