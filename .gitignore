@@ -30,3 +30,4 @@ config.json
 /transform/snowflake-dbt/dbt_modules/*
 /transform/snowflake-dbt/dbt_packages/*
 /transform/safe_models.json
+.env

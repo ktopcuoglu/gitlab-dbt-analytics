@@ -14,7 +14,7 @@ DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.27"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 DBT_IMAGE_1_1 = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.2"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
-ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v0.0.25"
+ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.4"
 
 DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
 DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"

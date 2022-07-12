@@ -16,7 +16,7 @@
 , arr_joined AS (
 
   SELECT
-    mart_ping_instance_metric_monthly.ping_created_at_month                           AS ping_created_at_month,
+    mart_ping_instance_metric_monthly.ping_created_date_month                         AS ping_created_date_month,
     mart_ping_instance_metric_monthly.metrics_path                                    AS metrics_path,
     mart_ping_instance_metric_monthly.ping_edition                                    AS ping_edition,
     mart_ping_instance_metric_monthly.stage_name                                      AS stage_name,
@@ -31,7 +31,7 @@
   FROM mart_ping_instance_metric_monthly
     INNER JOIN latest_subscriptions
   ON mart_ping_instance_metric_monthly.latest_subscription_id = latest_subscriptions.latest_subscription_id
-      AND mart_ping_instance_metric_monthly.ping_created_at_month = latest_subscriptions.ping_created_at_month
+      AND mart_ping_instance_metric_monthly.ping_created_date_month = latest_subscriptions.ping_created_date_month
     WHERE time_frame = '28d'
       AND ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=12)}}
@@ -40,7 +40,7 @@
 ), count_tbl AS (
 
     SELECT
-        ping_created_at_month                           AS ping_created_at_month,
+        ping_created_date_month                         AS ping_created_date_month,
         metrics_path                                    AS metrics_path,
         ping_edition                                    AS ping_edition,
         stage_name                                      AS stage_name,
@@ -60,7 +60,7 @@
 ), joined_counts AS (
 
     SELECT
-        count_tbl.ping_created_at_month                         AS ping_created_at_month,
+        count_tbl.ping_created_date_month                       AS ping_created_date_month,
         count_tbl.metrics_path                                  AS metrics_path,
         -- count_tbl.ping_edition                                  AS ping_edition,
         sub_combo.ping_edition                                  AS ping_edition, --change to pull from sub_combo, which has both CE and EE records
@@ -79,7 +79,7 @@
         total_licensed_users - reported_seat_count              AS not_reporting_seat_count
     FROM count_tbl
     LEFT JOIN sub_combo
-      ON count_tbl.ping_created_at_month = sub_combo.ping_created_at_month
+      ON count_tbl.ping_created_date_month = sub_combo.ping_created_date_month
       AND count_tbl.metrics_path = sub_combo.metrics_path
       -- AND count_tbl.ping_edition = sub_combo.ping_edition --don't join on ping_edition because subscriptions will all report on EE
 
@@ -89,7 +89,7 @@
 ), unioned_counts AS (
 
   SELECT
-    ping_created_at_month                                       AS ping_created_at_month,
+    ping_created_date_month                                     AS ping_created_date_month,
     metrics_path                                                AS metrics_path,
     ping_edition                                                AS ping_edition,
     stage_name                                                  AS stage_name,
@@ -108,7 +108,7 @@
   UNION ALL
 
   SELECT
-    ping_created_at_month                                       AS ping_created_at_month,
+    ping_created_date_month                                     AS ping_created_date_month,
     metrics_path                                                AS metrics_path,
     ping_edition                                                AS ping_edition,
     stage_name                                                  AS stage_name,
@@ -119,7 +119,7 @@
     is_paid_gmau                                                AS is_paid_gmau,
     is_umau                                                     AS is_umau,
     reported_seat_count                                         AS reporting_count,
-    not_reporting_seat_count                                     AS not_reporting_count,
+    not_reporting_seat_count                                    AS not_reporting_count,
     total_licensed_users                                        AS total_count,
     'reported metric - seat based estimation'                   AS estimation_grain
   FROM joined_counts
@@ -129,7 +129,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}          AS ping_subscriptions_reported_estimate_factors_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition', 'estimation_grain']) }}         AS ping_subscriptions_reported_estimate_factors_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                         AS percent_reporting
  FROM unioned_counts

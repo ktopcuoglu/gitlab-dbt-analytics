@@ -256,6 +256,12 @@ enriched AS (
       AND COALESCE(
         employee_directory.termination_date::DATE, {{ max_date_in_bamboo_analyses() }}
       ) >= date_details.date_actual
+      -- active employees that have been rehired will have a termination date less than 
+      -- the rehire date and they need to be included while excluding those terminated after
+      -- the rehire date
+      OR (employee_directory.rehire_date::DATE <= date_details.date_actual
+      AND IFF(employee_directory.termination_date > employee_directory.rehire_date, employee_directory.termination_date,
+            {{ max_date_in_bamboo_analyses() }}) >= date_details.date_actual)
   LEFT JOIN department_info
     ON employee_directory.employee_id = department_info.employee_id
       AND date_details.date_actual BETWEEN department_info.effective_date
