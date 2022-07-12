@@ -19,7 +19,6 @@ api_key = env.get("MAILGUN_API_KEY")
 domains = ["mg.gitlab.com"]
 
 
-
 def get_logs(domain: str, event: str, formatted_date: str) -> requests.Response:
     """
     Small convenience wrapper function for mailgun event requests,
@@ -51,7 +50,13 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
 
         while True:
             if page_token:
-                data = requests.get(page_token, auth=("api", api_key)).json()
+                response = requests.get(page_token, auth=("api", api_key))
+                try:
+                    data = response.json()
+                except json.decoder.JSONDecodeError:
+                    error("No response received")
+                    break
+
                 items = data.get("items")
 
                 info(f"Data retrieved length: {len(items)}")
@@ -66,7 +71,14 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
                 all_results = all_results[:] + items[:]
 
             else:
-                data = get_logs(domain, event, formatted_date).json()
+                response = get_logs(domain, event, formatted_date)
+
+                try:
+                    data = response.json()
+                except json.decoder.JSONDecodeError:
+                    error("No response received")
+                    break
+
                 items = data.get("items")
                 info(f"Data retrieved length: {len(items)}")
 
