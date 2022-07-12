@@ -9,7 +9,7 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
-from logging import info, basicConfig, getLogger
+from logging import info, basicConfig, getLogger, error
 from os import environ as env
 from typing import Dict, List
 
@@ -17,46 +17,6 @@ config_dict = env.copy()
 
 api_key = env.get("MAILGUN_API_KEY")
 domains = ["mg.gitlab.com"]
-
-
-def reformat_data(items: List[Dict]) -> List[Dict]:
-    """
-    Extracts the fields we want from the nested json response.
-    :param items:
-    :return:
-    """
-    formatted_data = []
-    if items and len(items) > 0:
-        for i in items:
-            new_dict = {
-                "id": i.get("id", ""),
-                "message-id": i.get("message", {})
-                .get("headers", {})
-                .get("message-id", ""),
-                "timestamp": i.get("timestamp", ""),
-                "tags": i.get("tags", ""),
-                "event": i.get("event", ""),
-                "delivery-status-code": i.get("delivery-status", {}).get("code", ""),
-                "delivery-status-message": i.get("delivery-status", {}).get(
-                    "description", ""
-                ),
-                "log-level": i.get("log-level", ""),
-                "url": i.get("url", ""),
-                "recipient": i.get("recipient", ""),
-                "sender": i.get("envelope", {}).get("sender", ""),
-                "targets": i.get("envelope", {}).get("targets", ""),
-                "subject": i.get("message", {}).get("headers").get("subject", ""),
-                "city": i.get("geolocation", {}).get("city", ""),
-                "region": i.get("geolocation", {}).get("region", ""),
-                "country": i.get("geolocation", {}).get("country", ""),
-                "is-routed": i.get("flags", {}).get("is-routed", ""),
-                "is-authenticated": i.get("flags", {}).get("is-authenticated", ""),
-                "is-system-test": i.get("flags", {}).get("is-system-test", ""),
-                "is-test-mode": i.get("flags", {}).get("is-test-mode", ""),
-            }
-            formatted_data.append(new_dict)
-
-    return formatted_data
 
 
 def get_logs(domain: str, event: str, formatted_date: str) -> requests.Response:
@@ -90,22 +50,44 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
 
         while True:
             if page_token:
-                data = requests.get(page_token, auth=("api", api_key)).json()
-                items = data.get("items")
-                formatted_data = reformat_data(items)
-                info(f"Data retrieved length: {len(formatted_data)}")
-                if len(formatted_data) == 0:
+                response = requests.get(page_token, auth=("api", api_key))
+                try:
+                    data = response.json()
+                except json.decoder.JSONDecodeError:
+                    error("No response received")
                     break
-                all_results = all_results[:] + formatted_data[:]
+
+                items = data.get("items")
+
+                info(f"Data retrieved length: {len(items)}")
+
+                if len(items) == 0:
+                    break
+
+                first_timestamp = items[0].get("timestamp")
+                str_stamp = datetime.datetime.fromtimestamp(first_timestamp).strftime(
+                    "%d-%m-%Y %H:%M:%S.%f"
+                )
+                info(f"Processed data starting on {str_stamp}")
+
+                all_results = all_results[:] + items[:]
 
             else:
-                data = get_logs(domain, event, formatted_date).json()
-                items = data.get("items")
-                formatted_data = reformat_data(items)
-                info(f"Data retrieved length: {len(formatted_data)}")
-                if len(formatted_data) == 0:
+                response = get_logs(domain, event, formatted_date)
+
+                try:
+                    data = response.json()
+                except json.decoder.JSONDecodeError:
+                    error("No response received")
                     break
-                all_results = all_results[:] + formatted_data[:]
+
+                items = data.get("items")
+                info(f"Data retrieved length: {len(items)}")
+
+                if len(items) == 0:
+                    break
+
+                all_results = all_results[:] + items[:]
 
             page_token = data.get("paging").get("next")
 
@@ -128,7 +110,7 @@ def load_event_logs(event: str, full_refresh: bool = False):
     if full_refresh:
         start_date = datetime.datetime(2021, 2, 1)
     else:
-        start_date = datetime.datetime.now() - datetime.timedelta(days=36)
+        start_date = datetime.datetime.now() - datetime.timedelta(hours=16)
 
     results = extract_logs(event, start_date)
 
@@ -138,7 +120,10 @@ def load_event_logs(event: str, full_refresh: bool = False):
         json.dump(results, outfile)
 
     snowflake_stage_load_copy_remove(
-        file_name, "mailgun.mailgun_load", "mailgun.mailgun_events", snowflake_engine
+        file_name,
+        f"mailgun.mailgun_load_{event}",
+        "mailgun.mailgun_events",
+        snowflake_engine,
     )
 
 

@@ -40,8 +40,7 @@ default_args = {
 dag = DAG(
     "mailgun_extract",
     default_args=default_args,
-    schedule_interval="30 8 * * *",
-    concurrency=1,
+    schedule_interval="0 */12 * * *",
 )
 
 events = [
