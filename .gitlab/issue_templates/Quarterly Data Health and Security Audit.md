@@ -321,7 +321,80 @@ Below checklist of activities would be run once for quarter to validate security
 
      * [ ]  Pull the report for business logic changes made to the `mart_crm_opportunity` model from the link (https://gitlab.com/gitlab-data/analytics/-/commits/master/transform/snowflake-dbt/models/marts/sales_funnel/restricted_safe/mart_crm_opportunity.sql?search=) by filtering on label “Business logic change”.
 
-          
+## DBT Execution
+1. [ ] Generate report on top 25 long running dbt models
+
+    <details>
+
+    * [ ] Run below SQL script (set manual the previous quarter)
+
+     ```sql
+        WITH RANGE_PREVIOUS_QUARTER AS
+        (
+          SELECT 
+            MIN(date_day) AS first_day_fq,
+            MAX(date_day) AS last_day_fq
+          FROM "PROD"."COMMON"."DIM_DATE"
+          --set the year and quarter you want to audit
+          WHERE fiscal_year = <--fiscal year-->
+          AND fiscal_quarter = <--fiscal quarter-->
+        )
+
+        , DISTINCT_SELECT AS
+        ( 
+          SELECT distinct
+          model_name
+        , compilation_started_at
+        , model_execution_time
+        FROM 
+        "PROD"."WORKSPACE_DATA"."DBT_RUN_RESULTS"
+        JOIN range_previous_quarter
+        WHERE 1=1
+        --AND model_name = 'bamboohr_budget_vs_actual'
+        AND compilation_started_at >= first_day_fq
+        AND compilation_started_at <= last_day_fq
+        )
+
+        --select * from DISTINCT_SELECT
+
+        , AVG_PER_MONTH AS
+        (
+          SELECT
+          model_name 
+        , YEAR(compilation_started_at) || LPAD(MONTH(compilation_started_at),2,0) AS compilation_started_at_month
+        , AVG(model_execution_time) AS avg_execution_time
+        FROM distinct_select
+        GROUP BY 1,2
+        )
+
+        --select * from avg_per_month
+
+        , MONTH_COMPARE AS
+        (
+          SELECT 
+          model_name 
+        , compilation_started_at_month 
+        , LAG(avg_execution_time,2) OVER (PARTITION BY model_name ORDER BY compilation_started_at_month) AS avg_execution_time_first_month_of_quarter
+        , LAG(avg_execution_time,1) OVER (PARTITION BY model_name ORDER BY compilation_started_at_month) AS avg_execution_time_month_month_of_quarter
+        , avg_execution_time AS avg_execution_time_third_month_of_quarter
+        FROM avg_per_month
+        )
+
+        --select * from month_compare
+
+        SELECT 
+          model_name  
+        , avg_execution_time_first_month_of_quarter
+        , avg_execution_time_month_month_of_quarter
+        , avg_execution_time_third_month_of_quarter
+        , (avg_execution_time_third_month_of_quarter / avg_execution_time_first_month_of_quarter) delta_first_last
+        FROM month_compare
+        --WHERE compilation_started_at_month = 202205
+        QUALIFY ROW_NUMBER() OVER (PARTITION BY model_name ORDER BY compilation_started_at_month DESC) = 1
+        ORDER BY 4 desc
+        LIMIT 25
+    ```
+
 
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
