@@ -323,6 +323,27 @@ Below checklist of activities would be run once for quarter to validate security
 
           
 
+## AIRFLOW
+1. [ ] Validate off-boarded employees have been removed from Airflow access.
+    <details>
+
+    ```sql
+      SELECT									 
+        employee.employee_id,									 
+        employee.first_name,									 
+        employee.last_name,									 
+        employee.hire_date,									 
+        employee.rehire_date,									 
+        employee.termination_date,	
+        airflow.email,
+        airflow.active									 
+      FROM prep.sensitive.employee_directory employee 									 
+      RIGHT OUTER JOIN raw.airflow_stitch.ab_user  airflow									 
+        ON employee.last_work_email = airflow.email									   
+      WHERE airflow.active ='TRUE'									 
+      AND employee.termination_date IS NOT NULL
+    ```
+
 
 <!-- DO NOT EDIT BELOW THIS LINE -->
 /label ~"Team::Data Platform" ~Snowflake ~TDF ~"Data Team" ~"Priority::1-Ops" ~"workflow::4 - scheduled" ~"Quarterly Data Health and Security Audit" ~"Periscope / Sisense"
