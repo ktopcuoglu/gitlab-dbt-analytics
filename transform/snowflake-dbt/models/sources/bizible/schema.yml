@@ -66,9 +66,10 @@ models:
           sensitive: true
   - name: bizible_currencies_source
   - name: bizible_customer_ab_tests_source
-    - name: visitor_id
-      meta:
-        sensitive: true
+    columns:
+      - name: visitor_id
+        meta:
+          sensitive: true
   - name: bizible_email_to_visitor_ids_source
     columns:
       - name: email_to_visitor_id
