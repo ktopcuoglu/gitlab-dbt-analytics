@@ -20,7 +20,7 @@
 
     SELECT
     -- usage ping meta data 
-    fct_ping_instance.dim_ping_instance_id              AS dim_ping_insatance_id, 
+    fct_ping_instance.dim_ping_instance_id              AS dim_ping_instance_id, 
     dim_ping_instance.ping_created_at                    AS ping_created_at,
     dim_ping_instance.ping_created_at_28_days_earlier    AS ping_created_at_28_days_earlier,
     dim_ping_instance.ping_created_at_year               AS ping_created_at_year,
