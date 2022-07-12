@@ -64,8 +64,10 @@ def extract_logs(event: str, start_date: datetime.datetime) -> List[Dict]:
                 if len(items) == 0:
                     break
 
-                first_timestamp = items[0].get('timestamp')
-                str_stamp = datetime.datetime.fromtimestamp(first_timestamp).strftime("%d-%m-%Y %H:%M:%S.%f")
+                first_timestamp = items[0].get("timestamp")
+                str_stamp = datetime.datetime.fromtimestamp(first_timestamp).strftime(
+                    "%d-%m-%Y %H:%M:%S.%f"
+                )
                 info(f"Processed data starting on {str_stamp}")
 
                 all_results = all_results[:] + items[:]
@@ -118,7 +120,10 @@ def load_event_logs(event: str, full_refresh: bool = False):
         json.dump(results, outfile)
 
     snowflake_stage_load_copy_remove(
-        file_name, f"mailgun.mailgun_load_{event}", "mailgun.mailgun_events", snowflake_engine
+        file_name,
+        f"mailgun.mailgun_load_{event}",
+        "mailgun.mailgun_events",
+        snowflake_engine,
     )
 
 
