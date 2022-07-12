@@ -9,7 +9,7 @@ from gitlabdata.orchestration_utils import (
     snowflake_engine_factory,
     snowflake_stage_load_copy_remove,
 )
-from logging import info, basicConfig, getLogger
+from logging import info, basicConfig, getLogger, error
 from os import environ as env
 from typing import Dict, List
 
