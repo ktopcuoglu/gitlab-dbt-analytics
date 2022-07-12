@@ -447,4 +447,8 @@ The on time earnings of the team member in USD.
 {% docs workday_per_pay_period_amount %}
 The amount compensated for each pay period.
 {% enddocs %}
+
+{% docs workday_workday_id %}
+A unique identifier for the event from the workday application.
+{% enddocs %}
  
