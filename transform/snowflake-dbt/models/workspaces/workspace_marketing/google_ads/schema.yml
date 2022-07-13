@@ -2,4 +2,4 @@ version: 2
 
 models:
   - name: google_ad_group_hourly_stats
-    description: [Google Ad](https://ads.google.com/) data
+    description: '{{ doc("google_ad_group_hourly_stats_docs") }}'
