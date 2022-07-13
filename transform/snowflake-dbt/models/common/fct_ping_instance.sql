@@ -67,7 +67,7 @@
       license_trial_ends_on                               AS license_trial_ends_on,
       license_subscription_id                             AS license_subscription_id,
       license_billable_users                              AS license_billable_users,
-      Instance_user_count                                 AS Instance_user_count,
+      Instance_user_count                                 AS instance_user_count,
       historical_max_users                                AS historical_max_users,
       license_user_count                                  AS license_user_count,
       umau_value                                          AS umau_value,
