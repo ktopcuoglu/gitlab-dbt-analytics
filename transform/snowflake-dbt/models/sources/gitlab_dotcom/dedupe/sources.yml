@@ -294,6 +294,8 @@ sources:
         identifier: gitlab_db_repository_languages
       - name: requirements
         identifier: gitlab_db_requirements
+      - name: resource_iteration_events
+        identifier: gitlab_db_resource_label_events
       - name: resource_label_events
         identifier: gitlab_db_resource_label_events
       - name: resource_milestone_events
