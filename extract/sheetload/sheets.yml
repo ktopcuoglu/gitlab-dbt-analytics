@@ -115,6 +115,11 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - gitlab_slack_stats
+  - name: google_ip_ranges
+    owner: '@pempey'
+    tabs:
+      - google_user_ip_ranges
+      - google_cloud_ip_ranges
   - name: headcount
     owner: '@wwright'
     tabs:
