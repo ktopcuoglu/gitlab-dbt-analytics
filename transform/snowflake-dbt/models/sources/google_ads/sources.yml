@@ -6,7 +6,7 @@ sources:
     schema: google_ads
     loaded_at_field: _fivetran_synced
     loader: fivetran
-    description: [Google Ads data](https://ads.google.com/) -- [Original Issue](https://gitlab.com/gitlab-data/analytics/-/issues/11519)
+    description: Google Ads data [Original Issue](https://gitlab.com/gitlab-data/analytics/-/issues/11519)
 
     quoting:
       database: true
