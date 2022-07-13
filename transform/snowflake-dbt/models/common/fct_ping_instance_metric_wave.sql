@@ -30,7 +30,7 @@
  
     -- instance settings 
     fct_ping_instance.uuid                               AS uuid, 
-    dim_ping_instance.ping_delivery_source               AS ping_delivery_source, 
+    dim_ping_instance.ping_delivery_type              AS ping_delivery_type, 
     dim_ping_instance.version                            AS instance_version, 
     dim_ping_instance.cleaned_version                    AS cleaned_version,
     dim_ping_instance.version_is_prerelease              AS version_is_prerelease,
