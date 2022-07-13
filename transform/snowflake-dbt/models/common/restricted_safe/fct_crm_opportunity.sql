@@ -159,6 +159,7 @@
       sfdc_opportunity.fulfillment_partner,
       sfdc_opportunity.platform_partner,
       sfdc_opportunity.partner_track,
+      sfdc_opportunity.resale_partner_track,
       sfdc_opportunity.is_public_sector_opp,
       sfdc_opportunity.is_registration_from_portal,
       sfdc_opportunity.calculated_discount,
@@ -220,7 +221,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@jeanpeguero",
     created_date="2020-11-30",
-    updated_date="2022-03-17"
+    updated_date="2022-07-13"
 ) }}

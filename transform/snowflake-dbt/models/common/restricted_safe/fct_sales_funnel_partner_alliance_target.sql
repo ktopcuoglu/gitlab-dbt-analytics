@@ -146,7 +146,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
      unioned_targets.fiscal_year,
      unioned_targets.sales_qualified_source,
      unioned_targets.dim_sales_qualified_source_id,
-     unioned_targets.alliance_partner                                                                                               AS alliance_type,
+     unioned_targets.alliance_partner,
      unioned_targets.dim_alliance_type_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
@@ -175,7 +175,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@jpeguero",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2022-03-07"
+    updated_date="2022-07-13"
 ) }}

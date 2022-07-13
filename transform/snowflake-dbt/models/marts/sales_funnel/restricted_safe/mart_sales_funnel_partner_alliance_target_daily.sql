@@ -26,6 +26,7 @@
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sqs_bucket_engagement,
       dim_channel_type.channel_type_name,
+      fct_sales_funnel_target.alliance_partner,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
       fct_sales_funnel_target.allocated_target
@@ -62,7 +63,7 @@
 
     SELECT
       {{ dbt_utils.surrogate_key(['date_day', 'kpi_name', 'crm_user_sales_segment', 'crm_user_geo', 'crm_user_region',
-        'crm_user_area', 'order_type_name', 'alliance_type_name', 'sales_qualified_source_name']) }}                              AS primary_key,
+        'crm_user_area', 'order_type_name', 'alliance_partner', 'alliance_type_name', 'sales_qualified_source_name']) }}          AS primary_key,
       date_day                                                                                                                    AS target_date,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
       first_day_of_week,
@@ -78,6 +79,7 @@
       crm_user_sales_segment_region_grouped,
       order_type_name,
       order_type_grouped,
+      alliance_partner,
       alliance_type_name,
       alliance_type_short_name,
       sales_qualified_source_name,
@@ -86,16 +88,16 @@
       allocated_target                                                                                                            AS monthly_allocated_target,
       daily_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, first_day_of_week ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_partner, alliance_type_name, sales_qualified_source_name, first_day_of_week ORDER BY date_day)
                                                                                                                                   AS wtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, target_month ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_partner, alliance_type_name, sales_qualified_source_name, target_month ORDER BY date_day)
                                                                                                                                   AS mtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_partner, alliance_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)
                                                                                                                                   AS qtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, fiscal_year ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_partner, alliance_type_name, sales_qualified_source_name, fiscal_year ORDER BY date_day)
                                                                                                                                   AS ytd_allocated_target
 
     FROM monthly_targets_daily
@@ -105,7 +107,7 @@
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
     created_by="@jpeguero",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2022-03-07",
+    updated_date="2022-07-13",
   ) }}
