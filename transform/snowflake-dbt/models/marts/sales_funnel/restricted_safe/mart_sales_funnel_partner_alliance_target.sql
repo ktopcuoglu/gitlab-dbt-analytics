@@ -25,6 +25,7 @@
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sqs_bucket_engagement,
       dim_channel_type.channel_type_name,
+      fct_sales_funnel_target.alliance_partner,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
       fct_sales_funnel_target.allocated_target
@@ -48,7 +49,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@jpeguero",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2022-03-07",
+    updated_date="2022-07-13",
   ) }}
