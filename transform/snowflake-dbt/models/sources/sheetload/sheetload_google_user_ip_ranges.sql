@@ -7,7 +7,7 @@ WITH source AS (
 
 renamed AS (
   SELECT
-    meta.value['creationTime']::TIMESTAMP AS data_pulled_at,
+    meta.value['creationTime']::TIMESTAMP AS creation_at,
     prefixes.value['ipv4Prefix']::VARCHAR AS ip_v4_prefix,
     PARSE_IP(ip_v4_prefix, 'INET')['ipv4']::NUMBER AS ipv4,
     TO_CHAR(ipv4, REPEAT('X', LENGTH(ipv4))) AS hex_ipv4,
