@@ -97,7 +97,7 @@
       prep_license.dim_license_id                                                     AS dim_license_id,
       prep_usage_ping_cte.license_md5                                                 AS license_md5,
       license_billable_users                                                          AS license_billable_users,
-      Instance_user_count                                                             AS Instance_user_count,
+      Instance_user_count                                                             AS instance_user_count,
       historical_max_users                                                            AS historical_max_users,
       prep_usage_ping_cte.license_user_count                                          AS license_user_count,
       ping_created_at                                                                 AS ping_created_at,
