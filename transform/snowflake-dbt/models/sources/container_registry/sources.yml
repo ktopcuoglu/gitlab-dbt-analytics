@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: container_registry
+    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    schema: container_registry
+
+    tables:
+      - name: container_registry_download_logs_raw
+        description: This view is generated using dbt to union a dynamic set of dynamically named tables.
