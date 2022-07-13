@@ -99,9 +99,6 @@ sources:
         identifier: gitlab_db_ci_variables
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
-      - name: clusters_integration_elasticstack
-        identifier: gitlab_db_clusters_integration_elasticstack
-        freshness: null
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects

@@ -323,20 +323,6 @@ tables:
       FROM clusters
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-  clusters_integration_elasticstack:
-    export_schema: 'gitlab_com'
-    export_table: 'clusters_integration_elasticstack'
-    export_table_primary_key: cluster_id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT cluster_id
-      , enabled
-      , chart_version
-      , created_at
-      , updated_at
-      FROM clusters_integration_elasticstack
-      WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
-        AND '{END_TIMESTAMP}'::timestamp
   container_expiration_policies:
     export_schema: "gitlab_com"
     export_table: container_expiration_policies
