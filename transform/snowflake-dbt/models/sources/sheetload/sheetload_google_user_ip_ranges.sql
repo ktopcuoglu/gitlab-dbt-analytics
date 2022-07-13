@@ -1,6 +1,6 @@
 WITH source AS (
 
-  SELECT * 
+  SELECT *
   FROM {{ source('sheetload','google_user_ip_ranges') }}
 
 ),
@@ -32,5 +32,5 @@ renamed AS (
   INNER JOIN LATERAL FLATTEN(INPUT => meta.value['prefixes']) AS prefixes
 )
 
-SELECT * 
+SELECT *
 FROM renamed
