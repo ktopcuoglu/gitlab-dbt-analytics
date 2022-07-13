@@ -14,13 +14,13 @@ WITH mapping as (
     SELECT 
       employee_id,
       LAST_VALUE(job_title) RESPECT NULLS 
-          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_job_title,
+          OVER (PARTITION BY employee_id ORDER BY effective_date , job_sequence) AS last_job_title,
       LAST_VALUE(reports_to) RESPECT NULLS
-          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_supervisor,
+          OVER (PARTITION BY employee_id ORDER BY effective_date, job_sequence) AS last_supervisor,
       LAST_VALUE(department) RESPECT NULLS
-          OVER (PARTITION BY employee_id ORDER BY job_sequence) AS last_department,
+          OVER (PARTITION BY employee_id ORDER BY effective_date, job_sequence) AS last_department,
       LAST_VALUE(division) RESPECT NULLS
-          OVER  (PARTITION BY employee_id ORDER BY job_sequence) AS last_division       
+          OVER  (PARTITION BY employee_id ORDER BY effective_date, job_sequence) AS last_division       
     FROM {{ ref ('blended_job_info_source') }}
 
 ), cost_center AS (
@@ -88,7 +88,6 @@ WITH mapping as (
       ON rehire.employee_id = mapping.employee_id
     LEFT JOIN cost_center
       ON cost_center.employee_id = mapping.employee_id  
-    WHERE mapping.hire_date < date_trunc('week', dateadd(week, 3, CURRENT_DATE))
 
 )
 
