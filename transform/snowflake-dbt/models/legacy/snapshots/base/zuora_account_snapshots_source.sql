@@ -57,6 +57,8 @@ WITH source AS (
       sspchannel__c                                          AS ssp_channel,
       porequired__c                                          AS po_required,
 
+      
+      multiyeardealsubscriptionlinkage__c                    AS multi_year_deal_subscription_linkage,
       -- financial info
       lastinvoicedate                                        AS last_invoice_date,
 
