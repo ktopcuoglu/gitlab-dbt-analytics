@@ -28,7 +28,7 @@
 
     SELECT DISTINCT
       --surrogate_key
-      {{ dbt_utils.surrogate_key(['page.page_group', 'page.page_type', 'page.page_sub_type']) }} AS dim_website_page_sk,
+      {{ dbt_utils.surrogate_key(['letters_urlpath']) }} AS dim_website_page_sk,
       letters_urlpath,
       app_id,
       page_urlhost,
