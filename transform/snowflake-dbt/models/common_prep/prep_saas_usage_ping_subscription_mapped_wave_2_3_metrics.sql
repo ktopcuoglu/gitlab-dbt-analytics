@@ -23,7 +23,7 @@
       *,
       CASE
         WHEN instance_type = 'Production' THEN 1
-        WHEN instance_type = 'Non-Production' THEN 1
+        WHEN instance_type = 'Non-Production' THEN 2
         WHEN instance_type = 'Unknown' THEN 3
         ELSE 4
       END AS ordering_field
