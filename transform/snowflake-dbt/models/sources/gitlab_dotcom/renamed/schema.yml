@@ -1531,7 +1531,7 @@ models:
           - not_null
 
   - name: gitlab_dotcom_resource_iteration_events_source
-    description: '{{ doc("gitlab_dotcom_iteration_label_events_source") }}'
+    description: '{{ doc("gitlab_dotcom_resource_iteration_events_source") }}'
     columns:
       - name: resource_iteration_events_id
         tags: ["tdf","gitlab_dotcom"]
