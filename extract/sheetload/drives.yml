@@ -20,7 +20,7 @@ folders:
     table_name: marketing_dnc_list
     table_replace_append: 1
   - name: lam_corrections
-    owner: '@jeanpeguero'
+    owner: '@paul_armstrong'
     folder_name: lam_corrections
     table_name: lam_corrections
     table_replace_append: 1
