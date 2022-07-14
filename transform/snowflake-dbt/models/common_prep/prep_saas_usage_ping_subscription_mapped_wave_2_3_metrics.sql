@@ -28,7 +28,7 @@
         ELSE 4
       END AS ordering_field
     FROM instance_types
-),
+)
 
 , joined AS (
 
