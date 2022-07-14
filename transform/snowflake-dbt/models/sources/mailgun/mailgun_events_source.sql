@@ -2,6 +2,7 @@ WITH source AS (
 
     SELECT *
     FROM {{ source('mailgun', 'mailgun_events') }}
+    WHERE jsontext != '[]'
 
 ), intermediate AS (
 
