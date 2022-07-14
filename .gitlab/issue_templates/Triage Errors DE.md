@@ -7,7 +7,9 @@ Airflow Task Link: <!-- link to airflow log with error -->
 {longer error description text from log}
 ```
 
-Or 
+Downstream Airflow tasks or dbt models that were skipped: <!-- None -->
+  <!-- list any downstream tasks that were skipped because of this error -->
+
 
 Monte Carlo incident link: <!-- link to the Monte Carlo incident page -->
 
