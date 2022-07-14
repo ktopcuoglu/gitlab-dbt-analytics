@@ -10,7 +10,7 @@ WITH source AS (
       user_id::NUMBER                       AS user_id,
       issue_id::NUMBER                      AS issue_id,
       merge_request_id::NUMBER              AS merge_request_id,
-      resource_iteration_events_id::NUMBER  AS resource_iteration_events_id,
+      iteration_id::NUMBER                  AS iteration_id,
       created_at::TIMESTAMP                 AS created_at,
       action::NUMBER                        AS action 
     FROM source
