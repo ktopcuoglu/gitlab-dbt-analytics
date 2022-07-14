@@ -44,3 +44,5 @@ models:
   description: Zuora Revenue Unbill Rollforward Report downloaded quarterly
 - name: driveload_zuora_revenue_revenue_waterfall_report_apr22_source
   description: April 2022 Zuora Revenue Revenue Waterfall Report downloaded 2022-06-09
+- name: driveload_lam_corrections
+  description: Snapshot LAM values correction file.
