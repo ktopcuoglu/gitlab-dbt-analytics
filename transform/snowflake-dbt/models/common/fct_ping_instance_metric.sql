@@ -107,6 +107,7 @@
       dim_host_id                                                                                                 AS dim_host_id,
       dim_installation_id                                                                                         AS dim_installation_id,
       dim_license_id                                                                                              AS dim_license_id,
+      license_md5                                                                                                 AS license_md5,
       ping_created_at                                                                                             AS ping_created_at,
       umau_value                                                                                                  AS umau_value,
       license_subscription_id                                                                                     AS dim_subscription_license_id,
