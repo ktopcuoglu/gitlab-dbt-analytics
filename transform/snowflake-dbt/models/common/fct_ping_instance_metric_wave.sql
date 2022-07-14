@@ -12,14 +12,13 @@
 {{ simple_cte([
     ('instance_types', 'dim_host_instance_type'),
     ('map_license_subscription','map_license_subscription_account'),
-    ('fct_ping_instance','fct_ping_instance'),
-    ('dim_ping_instance','dim_ping_instance')
+    ('fct_ping_instance','fct_ping_instance')
 ]) }}
 
 
-, fct_ping_instance_with_license_MD5  AS (
+, dim_ping_instance_with_license_MD5  AS (
     SELECT *
-    FROM {{ ref('fct_ping_instance') }}
+    FROM {{ ref('dim_ping_instance') }}
     WHERE license_md5 IS NOT NULL
 )
 
@@ -27,13 +26,13 @@
 
     SELECT
     -- usage ping meta data 
-    fct_ping_instance_with_license_MD5.dim_ping_instance_id                                    AS dim_ping_instance_id, 
-    fct_ping_instance_with_license_MD5.ping_created_at                                         AS ping_created_at,
-    TO_DATE(DATEADD('days', -28, fct_ping_instance_with_license_MD5.ping_created_at))          AS ping_created_at_28_days_earlier,
-    TO_DATE(DATE_TRUNC('YEAR', fct_ping_instance_with_license_MD5.ping_created_at))            AS ping_created_at_year,
-    TO_DATE(DATE_TRUNC('MONTH', fct_ping_instance_with_license_MD5.ping_created_at))           AS ping_created_at_month,
-    TO_DATE(DATE_TRUNC('WEEK', fct_ping_instance_with_license_MD5.ping_created_at))            AS ping_created_at_week,
-    TO_DATE(DATE_TRUNC('DAY', fct_ping_instance_with_license_MD5.ping_created_at))             AS ping_created_at_date,
+    dim_ping_instance_with_license_MD5.dim_ping_instance_id                                    AS dim_ping_instance_id, 
+    dim_ping_instance_with_license_MD5.ping_created_at                                         AS ping_created_at,
+    dim_ping_instance_with_license_MD5.ping_created_date_28_days_earlier                       AS ping_created_date_28_days_earlier,
+    dim_ping_instance_with_license_MD5.ping_created_date_year                                  AS ping_created_date_year,
+    dim_ping_instance_with_license_MD5.ping_created_date_month                                 AS ping_created_date_month,
+    dim_ping_instance_with_license_MD5.ping_created_date_week                                  AS ping_created_date_week,
+    dim_ping_instance_with_license_MD5.ping_created_at_date                                    AS ping_created_at_date,
  
     -- instance settings 
     fct_ping_instance_with_license_MD5.uuid                                                    AS uuid, 
