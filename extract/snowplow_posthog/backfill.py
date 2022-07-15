@@ -211,13 +211,23 @@ def posthog_processing(file_prefix: str) -> None:
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
+            event_count=0
+            start_dt= datetime.datetime.now()
             for row in s3_load_source_file(
                 client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
-            ):
+            ):  
+                event_count += 1
+                if event_count % posthog.flush_at == 0:
+                    delta = datetime.datetime.now() - start_dt
+                    start_dt = datetime.datetime.now()
+                    print(f"time to process {posthog.flush_at} events was {delta}")
                 json_prepared = get_properties(property_list=property_list, values=row)
                 # push row to PostHog
 
                 posthog_push_json(json_prepared)
+                if event_count % posthog.flush_at == 0:
+                    posthog.flush()
+                    print(f"Flushed after {event_count}")
 
     posthog.shutdown()
 
@@ -272,6 +282,12 @@ def posthog_authorize() -> None:
     posthog.host = posthog_host
     # posthog.sync_mode = True
     # posthog.debug = True
+    posthog.flush_at = 1000
+    posthog.max_queue_size = 10000
+    posthog.flush_interval = 60
+    posthog.thread = 5
+    posthog.gzip = True
+    posthog.sync_mode = False
 
 
 def posthog_push_json(data: dict) -> None:

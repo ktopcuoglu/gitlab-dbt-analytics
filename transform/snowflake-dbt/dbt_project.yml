@@ -205,6 +205,9 @@ models:
         +materialized: table
         +schema: gitlab_ops
 
+      google_ads:
+        +schema: google_ads
+
       google_analytics_360:
         +materialized: table
         +schema: google_analytics_360

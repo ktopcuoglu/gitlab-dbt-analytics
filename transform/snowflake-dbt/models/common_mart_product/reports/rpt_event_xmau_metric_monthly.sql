@@ -28,7 +28,7 @@ mart_raw AS (
       ELSE group_name
     END AS group_name
   FROM mart_event_valid
-  WHERE dim_user_id IS NOT NULL
+  WHERE is_null_user = FALSE
     AND (is_umau = TRUE 
          OR is_gmau = TRUE 
          OR is_smau = TRUE
@@ -78,7 +78,7 @@ multiple_gmau_in_smau AS (
 mart_w_paid_deduped AS (
 
   SELECT
-    mart_with_date_range.event_id,
+    mart_with_date_range.event_pk,
     mart_with_date_range.event_date,
     mart_with_date_range.last_day_of_month,
     mart_with_date_range.last_day_of_quarter,
@@ -113,7 +113,7 @@ mart_w_paid_deduped AS (
 mart_for_multiple_gmau_in_smau AS (
 
   SELECT
-    mart_with_date_range.event_id,
+    mart_with_date_range.event_pk,
     mart_with_date_range.event_date,
     mart_with_date_range.last_day_of_month,
     mart_with_date_range.last_day_of_quarter,
