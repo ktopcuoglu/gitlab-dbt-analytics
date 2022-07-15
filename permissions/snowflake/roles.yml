@@ -436,6 +436,7 @@ roles:
             - google_analytics_360
             - netsuite
             - keyhole_twitter
+            - mailgun
             - marketo
             - pmg
             - snowflake_db
@@ -1749,6 +1750,22 @@ roles:
                     - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
+
+    - mailgun:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.mailgun
+                    - raw.mailgun
+            tables:
+                read:
+                    - prep.mailgun.*
+                    - raw.mailgun.*
+
 
     - marketo:
           privileges:
