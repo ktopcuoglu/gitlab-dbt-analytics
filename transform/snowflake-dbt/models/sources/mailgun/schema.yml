@@ -4,6 +4,9 @@ models:
   - name: mailgun_events_source
     description: This table has marketo lead information.
     columns:
+      - name: mailgun_event_id
+        tests:
+          - not_null
       - name: message_id
         meta:
           sensitive: true
