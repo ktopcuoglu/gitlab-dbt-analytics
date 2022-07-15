@@ -25,3 +25,9 @@ models:
       - name: country
         meta:
           sensitive: true
+      - name: subject
+        meta:
+          sensitive: true
+      - name: url
+        meta:
+          sensitive: true
