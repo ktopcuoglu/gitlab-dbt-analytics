@@ -1,6 +1,6 @@
 {{ config(
     materialized='view',
-    database=env_var('SNOWFLAKE_LOAD_DATABASE'),
+    database=env_var('SNOWFLAKE_PREP_DATABASE'),
     schema='container_registry'
 ) }}
 

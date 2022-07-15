@@ -2,7 +2,8 @@ version: 2
 
 sources:
   - name: container_registry
-    database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
+    # The custom generate_database_name is not called so the logic is applied manually
+    #database: '{{ target.database + "_" + env_var("SNOWFLAKE_PREP_DATABASE") }}'
     schema: container_registry
 
     tables:

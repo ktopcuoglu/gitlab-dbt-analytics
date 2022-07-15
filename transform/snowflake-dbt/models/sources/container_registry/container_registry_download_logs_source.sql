@@ -1,6 +1,8 @@
+-- can not define custom database in source.yml source('container_registry','container_registry_download_logs_raw')
+
 WITH source AS (
   SELECT *
-  FROM {{ source('container_registry','container_registry_download_logs_raw') }}
+  FROM {{ ref('container_registry_download_logs_raw') }} 
 ),
 
 renamed AS (
@@ -12,6 +14,7 @@ renamed AS (
     digest::VARCHAR AS container_digest,
     size_bytes::NUMBER AS download_size_bytes,
     remote_ip::VARCHAR AS downloaded_by_ip,
+    PARSE_IP(remote_ip, 'INET') AS parsed_ip,
     PARSE_IP(remote_ip, 'INET')['ipv4']::NUMBER AS downloaded_by_ip4,
     TO_CHAR(downloaded_by_ip4, REPEAT('X', LENGTH(downloaded_by_ip4))) AS downloaded_by_hex_ip4,
     PARSE_IP(remote_ip, 'INET')['hex_ipv6']::VARCHAR AS downloaded_by_hex_ipv6,
