@@ -5,7 +5,10 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_ping_instance', 'prep_ping_instance')
+    ('prep_ping_instance', 'prep_ping_instance'),
+    ('dim_license','dim_license'),
+    ('fct_charge','fct_charge'),
+    ('dim_product_detail','dim_product_detail')
     ])
 
 }}
@@ -44,6 +47,21 @@ SELECT DISTINCT
       LEFT JOIN last_ping_of_month_flag
         ON usage_data_w_date.id = last_ping_of_month_flag.id
 
+), dedicated_instance AS (
+
+  SELECT 
+      DISTINCT prep_ping_instance.uuid
+  FROM 
+      prep_ping_instance
+      INNER JOIN dim_license
+        ON prep_ping_instance.license_md5 = dim_license.license_md5
+      INNER JOIN fct_charge
+        ON dim_license.dim_subscription_id = fct_charge.dim_subscription_id
+      INNER JOIN dim_product_detail
+        ON fct_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id 
+  WHERE 
+      LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%'
+        
 ), final AS (
 
     SELECT DISTINCT
@@ -119,6 +137,8 @@ SELECT DISTINCT
       major_version * 100 + minor_version                                                                           AS major_minor_version_id,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
+        WHEN EXISTS (SELECT 1 FROM dedicated_instance di 
+                     WHERE fct_w_month_flag.uuid = di.uuid)     THEN 'Dedicated'
         ELSE 'Self-Managed'
         END                                                                                                         AS ping_delivery_type,
       CASE
