@@ -12,5 +12,5 @@ WITH unioned_table AS (
 
 SELECT *
 FROM unioned_table
---filter to the last rolling 18 months of data for query performance tuning
-WHERE DATE_TRUNC(MONTH, derived_tstamp::DATE) >= DATEADD(MONTH, -18, DATE_TRUNC(MONTH,CURRENT_DATE)) 
+--filter to the last rolling 24 months of data for query performance tuning
+WHERE DATE_TRUNC(MONTH, derived_tstamp::DATE) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE)) 
