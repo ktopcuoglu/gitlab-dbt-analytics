@@ -23,6 +23,7 @@
       refr_medium                                                           AS referrer_medium
     FROM events
     WHERE event IN ('struct', 'page_view', 'unstruct')
+    AND page_urlpath IS NOT NULL
 
 ), dim_with_pk AS (
 
