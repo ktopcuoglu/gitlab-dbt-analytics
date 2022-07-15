@@ -47,7 +47,7 @@ dag = DAG(
 # Task 1
 ptc_scoring_command = f"""
     {clone_data_science_repo_cmd} &&
-    cd data-science-projects/propensity-to-churn/prod && 
+    cd data-science-projects/propensity-to-contract-and-churn/prod && 
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(
