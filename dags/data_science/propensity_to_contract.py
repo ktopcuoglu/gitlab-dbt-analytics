@@ -8,18 +8,17 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
-    clone_data_science_ptc_repo_cmd,
+    data_test_ssh_key_cmd,
 )
 from kube_secrets import (
-    GCP_SERVICE_CREDS,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 from kubernetes_helpers import get_affinity, get_toleration
-
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -38,6 +37,28 @@ default_args = {
     "dagrun_timeout": timedelta(hours=2),
 }
 
+# Prepare the cmd
+DATA_SCIENCE_PTC_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-contract-and-churn.git"
+DATA_SCIENCE_PTC_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-contract-and-churn.git"
+
+clone_data_science_ptc_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATA_SCIENCE_PTC_HTTP_REPO}";
+        else
+        export REPO="{DATA_SCIENCE_PTC_SSH_REPO}";
+    fi &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd propensity-to-contract-and-churn &&
+    git checkout $GIT_COMMIT &&
+    echo pwd && 
+    cd .."""
+
 # Create the DAG
 # Run on the 9th of every month
 dag = DAG(
@@ -47,7 +68,7 @@ dag = DAG(
 # Task 1
 ptc_scoring_command = f"""
     {clone_data_science_ptc_repo_cmd} &&
-    cd data-science-projects/propensity-to-contract-and-churn/prod && 
+    cd propensity-to-contract-and-churn/prod && 
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(
@@ -61,6 +82,7 @@ KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
+        GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
     arguments=[ptc_scoring_command],

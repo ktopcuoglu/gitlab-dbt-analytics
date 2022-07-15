@@ -8,7 +8,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
-    clone_data_science_ptp_repo_cmd,
+    data_test_ssh_key_cmd,
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -17,6 +17,7 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -38,8 +39,29 @@ default_args = {
     "dagrun_timeout": timedelta(hours=2),
 }
 
+# Prepare the cmd
+DATA_SCIENCE_PTP_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
+DATA_SCIENCE_PTP_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
+
+clone_data_science_ptp_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATA_SCIENCE_PTP_HTTP_REPO}";
+        else
+        export REPO="{DATA_SCIENCE_PTP_SSH_REPO}";
+    fi &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd propensity-to-purchase &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
+
 # Create the DAG
-#Run Every Monday
+# Run Every Monday
 dag = DAG(
     "propensity_to_purchase_trial", default_args=default_args, schedule_interval="0 12 * * 1"
 )
@@ -47,7 +69,7 @@ dag = DAG(
 # Task 1
 ptpt_scoring_command = f"""
     {clone_data_science_ptp_repo_cmd} &&
-    cd data-science-projects/propensity-to-purchase/prod && 
+    cd propensity-to-purchase/prod && 
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(
@@ -61,6 +83,7 @@ KubernetesPodOperator(
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
         SNOWFLAKE_LOAD_PASSWORD,
+        GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
     arguments=[ptpt_scoring_command],
