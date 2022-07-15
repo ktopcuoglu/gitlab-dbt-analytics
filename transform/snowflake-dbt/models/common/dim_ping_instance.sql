@@ -60,7 +60,7 @@ SELECT DISTINCT
       INNER JOIN dim_product_detail
         ON fct_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id 
   WHERE 
-      LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%'
+      LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
         
 ), final AS (
 
