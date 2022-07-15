@@ -243,6 +243,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_ci_secure_files
+    description: Base model for Gitlab.com CI Secure Files
+    columns:
+      - name: ci_secure_files_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_dast_profiles_source
     description: Base model for Gitlab.com dast_profiles
     columns:
@@ -1312,14 +1321,6 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-  - name: gitlab_dotcom_project_custom_attributes_source
-    description: Base model for Gitlab.com project custom attributes
-    columns:
-      - name: project_custom_attribute_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
   - name: gitlab_dotcom_project_features_source
     description: Base model for Gitlab.com project features
     columns:
@@ -1538,6 +1539,15 @@ models:
         tests:
           - not_null
 
+  - name: gitlab_dotcom_resource_iteration_events_source
+    description: A base model for Gitlab.com Gitlab.com resource_iteration_events.
+    columns:
+      - name: resource_iteration_events_id
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+          - unique
+
   - name: gitlab_dotcom_resource_label_events_source
     description: '{{ doc("gitlab_dotcom_resource_label_events_source") }}'
     columns:
@@ -1679,23 +1689,6 @@ models:
           - not_null
           - unique
       - name: created_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-
-  - name: gitlab_dotcom_timelogs_source
-    description: Base model for timelogs table.
-    columns:
-      - name: timelog_id
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
-          - unique
-      - name: user_id
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null

@@ -165,7 +165,7 @@
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
         dim_ping_instance.ping_created_at                                                                                               AS ping_created_at,
-        dim_date.first_day_of_month                                                                                                     AS ping_created_at_month,
+        dim_date.first_day_of_month                                                                                                     AS ping_created_date_month,
         fct_ping_instance_metric.time_frame                                                                                             AS time_frame,
         fct_ping_instance_metric.dim_host_id                                                                                            AS dim_host_id,
         fct_ping_instance_metric.dim_instance_id                                                                                        AS dim_instance_id,
@@ -263,7 +263,7 @@
       technical_account_manager,
 
       ping_created_at,
-      ping_created_at_month,
+      ping_created_date_month,
       is_last_ping_of_month
 
 

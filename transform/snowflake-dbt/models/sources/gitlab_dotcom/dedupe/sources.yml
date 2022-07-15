@@ -85,6 +85,8 @@ sources:
         identifier: gitlab_db_ci_runner_projects
       - name: ci_runners
         identifier: gitlab_db_ci_runners
+      - name: ci_secure_files
+        identifier: gitlab_db_ci_secure_files
       - name: ci_sources_pipelines
         identifier: gitlab_db_ci_sources_pipelines
       - name: ci_stages
@@ -97,13 +99,13 @@ sources:
         identifier: gitlab_db_ci_variables
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
-      - name: clusters_integration_elasticstack
-        identifier: gitlab_db_clusters_integration_elasticstack
-        freshness: null
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects
         identifier: gitlab_db_cluster_projects
+        freshness:
+          warn_after: { count: 3, period: day }
+          error_after: { count: 7, period: day }
       - name: clusters
         identifier: gitlab_db_clusters
       - name: clusters_applications_cert_managers
@@ -254,9 +256,6 @@ sources:
         identifier: gitlab_db_programming_languages
       - name: project_auto_devops
         identifier: gitlab_db_project_auto_devops
-      - name: project_custom_attributes
-        identifier: gitlab_db_project_custom_attributes
-        freshness: null
       - name: project_features
         identifier: gitlab_db_project_features
         freshness:
@@ -285,9 +284,7 @@ sources:
         identifier: gitlab_db_protected_branches
       - name: protected_environment_approval_rules
         identifier: gitlab_db_protected_environment_approval_rules
-        freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 15, period: day}
+        freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
@@ -296,6 +293,8 @@ sources:
         identifier: gitlab_db_repository_languages
       - name: requirements
         identifier: gitlab_db_requirements
+      - name: resource_iteration_events
+        identifier: gitlab_db_resource_iteration_events
       - name: resource_label_events
         identifier: gitlab_db_resource_label_events
       - name: resource_milestone_events
@@ -324,8 +323,6 @@ sources:
         identifier: gitlab_db_snippets
       - name: terraform_states
         identifier: gitlab_db_terraform_states
-      - name: timelogs
-        identifier: gitlab_db_timelogs
       - name: todos
         identifier: gitlab_db_todos
       - name: user_details
@@ -406,8 +403,8 @@ sources:
       - name: jira_imports
         identifier: gitlab_db_jira_imports
         freshness:
-          warn_after: {count: 2, period: day}
-          error_after: {count: 4, period: day}
+          warn_after: {count: 7, period: day}
+          error_after: {count: 15, period: day}
       - name: jira_tracker_data
         identifier: gitlab_db_jira_tracker_data
       - name: ldap_group_links
@@ -431,9 +428,6 @@ sources:
         identifier: gitlab_db_project_feature_usages
       - name: project_incident_management_settings
         identifier: gitlab_db_project_incident_management_settings
-      - name: project_tracing_settings
-        identifier: gitlab_db_project_tracing_settings
-        freshness: null
       - name: remote_mirrors
         identifier: gitlab_db_remote_mirrors
       - name: security_scans

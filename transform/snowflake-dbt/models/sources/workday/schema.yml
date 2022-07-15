@@ -10,9 +10,7 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - employee_id
-            - bonus_date
-            - bonus_type
-            - initiated_at
+            - workday_id
     columns:
       - name: employee_id
         description: '{{ doc("workday_employee_id") }}'
@@ -33,6 +31,10 @@ models:
         description: '{{ doc("workday_uploaded_at") }}'
       - name: initiated_at
         description: '{{ doc("workday_initiated_at") }}'
+      - name: workday_id
+        description: '{{ doc("workday_workday_id") }}'
+        tests:
+          - unique
 
   - name: workday_compensation_source
     description: '{{ doc("workday_compensation") }}'

@@ -1100,3 +1100,24 @@ models:
         tests:
           - not_null
           - unique
+  - name: driveload_zuora_revenue_billing_waterfall_report_apr22
+    description: April 2022 Zuora Revenue Billing Waterfall Report downloaded 2022-06-09
+  - name: driveload_zuora_revenue_rc_rollforward_report
+    description: Zuora Revenue RC Rollforward Report downloaded quarterly
+  - name: driveload_zuora_revenue_unreleased_pob_report
+    description: Zuora Revenue Unleased POB Report downloaded quarterly
+  - name: driveload_zuora_revenue_unbill_rollforward_report
+    description: Zuora Revenue Unbill Rollforward Report downloaded quarterly
+  - name: driveload_zuora_revenue_revenue_waterfall_report_apr22
+    description: April 2022 Zuora Revenue Revenue Waterfall Report downloaded 2022-06-09
+  - name: netsuite_currency_exchange_rates
+    description: Exchange rate between a transaction currency and base currency on a given day provided by Netsuite.
+    columns:
+      - name: base_currency
+        description: Currency the transaction is being exchanged to from the transaction currency
+      - name: transaction_currency
+        description: Currency the transaction took place in 
+      - name: exchange_rate
+        description: Rate of exchange between the transaction and base currency
+      - name: effective_date
+        description: When the exchange rate was effective

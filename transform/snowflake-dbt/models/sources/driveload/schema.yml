@@ -34,3 +34,13 @@ models:
     - name: agg_key_value
       tests:
       - not_null
+- name: driveload_zuora_revenue_billing_waterfall_report_apr22_source
+  description: April 2022 Zuora Revenue Billing Waterfall Report downloaded 2022-06-09
+- name: driveload_zuora_revenue_rc_rollforward_report_source
+  description: Zuora Revenue RC Rollforward Report downloaded quarterly
+- name: driveload_zuora_revenue_unreleased_pob_report_source
+  description: Zuora Revenue Unleased POB Report downloaded quarterly
+- name: driveload_zuora_revenue_unbill_rollforward_report_source
+  description: Zuora Revenue Unbill Rollforward Report downloaded quarterly
+- name: driveload_zuora_revenue_revenue_waterfall_report_apr22_source
+  description: April 2022 Zuora Revenue Revenue Waterfall Report downloaded 2022-06-09
