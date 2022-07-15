@@ -15,8 +15,15 @@ DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.4"
 
-DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
-DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
+DATA_SCIENCE_PTP_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
+DATA_SCIENCE_PTP_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
+
+DATA_SCIENCE_PTE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-expand.git"
+DATA_SCIENCE_PTE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science-projects/propensity-to-expand.git"
+
+DATA_SCIENCE_PTC_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-contract-and-churn.git"
+DATA_SCIENCE_PTC_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science-projects/propensity-to-contract-and-churn.git"
+
 
 analytics_pipelines_dag = [
     "dbt",
@@ -324,15 +331,49 @@ dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
 
-clone_data_science_repo_cmd = f"""
+clone_data_science_ptp_repo_cmd = f"""
     {data_test_ssh_key_cmd} &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
     if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
-        export REPO="{DATA_SCIENCE_HTTP_REPO}";
+        export REPO="{DATA_SCIENCE_PTP_HTTP_REPO}";
         else
-        export REPO="{DATA_SCIENCE_SSH_REPO}";
+        export REPO="{DATA_SCIENCE_PTP_SSH_REPO}";
+    fi &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd data-science &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
+
+clone_data_science_pte_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATA_SCIENCE_PTE_HTTP_REPO}";
+        else
+        export REPO="{DATA_SCIENCE_PTE_SSH_REPO}";
+    fi &&
+    echo "git clone -b main --single-branch --depth 1 $REPO" &&
+    git clone -b main --single-branch --depth 1 $REPO &&
+    echo "checking out commit $GIT_COMMIT" &&
+    cd data-science &&
+    git checkout $GIT_COMMIT &&
+    cd .."""
+
+clone_data_science_ptc_repo_cmd = f"""
+    {data_test_ssh_key_cmd} &&
+    if [[ -z "$GIT_COMMIT" ]]; then
+        export GIT_COMMIT="HEAD"
+    fi
+    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
+        export REPO="{DATA_SCIENCE_PTC_HTTP_REPO}";
+        else
+        export REPO="{DATA_SCIENCE_PTC_SSH_REPO}";
     fi &&
     echo "git clone -b main --single-branch --depth 1 $REPO" &&
     git clone -b main --single-branch --depth 1 $REPO &&

@@ -8,7 +8,7 @@ from airflow_utils import (
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,
-    clone_data_science_repo_cmd,
+    clone_data_science_pte_repo_cmd,
 )
 from kube_secrets import (
     GCP_SERVICE_CREDS,
@@ -46,7 +46,7 @@ dag = DAG(
 
 # Task 1
 pte_scoring_command = f"""
-    {clone_data_science_repo_cmd} &&
+    {clone_data_science_pte_repo_cmd} &&
     cd data-science-projects/propensity-to-expand/prod && 
     papermill scoring_code.ipynb -p is_local_development False
 """
