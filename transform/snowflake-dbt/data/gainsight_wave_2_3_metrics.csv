@@ -58,7 +58,7 @@ wave,metric_name
 3.1,counts.remote_mirrors
 3.1,usage_activity_by_stage.create.projects_enforcing_code_owner_approval
 3.1,usage_activity_by_stage_monthly.configure.project_clusters_enabled
-3.1,analytics_total_unique_counts_monthly
+3.1,redis_hll_counters.analytics.analytics_total_unique_counts_monthly
 3.1,redis_hll_counters.issues_edit.issues_edit_total_unique_counts_monthly
 3.1,redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly
 3.1,redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly
