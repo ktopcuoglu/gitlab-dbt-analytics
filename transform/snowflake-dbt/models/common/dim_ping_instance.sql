@@ -49,18 +49,15 @@ SELECT DISTINCT
 
 ), dedicated_instance AS (
 
-  SELECT 
-      DISTINCT prep_ping_instance.uuid
-  FROM 
-      prep_ping_instance
-      INNER JOIN prep_license
-        ON prep_ping_instance.license_md5 = prep_license.license_md5
-      INNER JOIN prep_charge
-        ON prep_license.dim_subscription_id = prep_charge.dim_subscription_id
-      INNER JOIN prep_product_detail
-        ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id 
-  WHERE 
-      LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
+  SELECT DISTINCT prep_ping_instance.uuid
+  FROM prep_ping_instance
+  INNER JOIN prep_license
+    ON prep_ping_instance.license_md5 = prep_license.license_md5
+  INNER JOIN prep_charge
+    ON prep_license.dim_subscription_id = prep_charge.dim_subscription_id
+  INNER JOIN prep_product_detail
+    ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id 
+  WHERE LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
         
 ), final AS (
 
