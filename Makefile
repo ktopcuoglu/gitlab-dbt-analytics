@@ -108,7 +108,7 @@ update-containers:
 # DBT
 ########################################################################################################################
 prepare-dbt:
-	which poetry || python3 -m pip install poetry
+	which poetry || python -m pip install poetry
 	cd transform/snowflake-dbt/ && poetry install
 	"$(DBT_DEPS)"
 
