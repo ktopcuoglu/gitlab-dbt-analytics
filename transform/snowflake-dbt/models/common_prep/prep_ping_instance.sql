@@ -1,6 +1,5 @@
 {{ config(
     tags=["product", "mnpi_exception"],
-    full_refresh = false,    
     materialized = "incremental",
     unique_key = "dim_ping_instance_id"
 ) }}
