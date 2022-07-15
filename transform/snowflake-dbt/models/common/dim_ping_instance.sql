@@ -6,9 +6,9 @@
 {{ simple_cte([
     ('dim_date', 'dim_date'),
     ('prep_ping_instance', 'prep_ping_instance'),
-    ('dim_license','dim_license'),
-    ('fct_charge','fct_charge'),
-    ('dim_product_detail','dim_product_detail')
+    ('prep_license','prep_license'),
+    ('prep_charge','prep_charge'),
+    ('prep_product_detail','prep_product_detail')
     ])
 
 }}
@@ -53,14 +53,14 @@ SELECT DISTINCT
       DISTINCT prep_ping_instance.uuid
   FROM 
       prep_ping_instance
-      INNER JOIN dim_license
-        ON prep_ping_instance.license_md5 = dim_license.license_md5
-      INNER JOIN fct_charge
-        ON dim_license.dim_subscription_id = fct_charge.dim_subscription_id
-      INNER JOIN dim_product_detail
-        ON fct_charge.dim_product_detail_id = dim_product_detail.dim_product_detail_id 
+      INNER JOIN prep_license
+        ON prep_ping_instance.license_md5 = prep_license.license_md5
+      INNER JOIN prep_charge
+        ON prep_license.dim_subscription_id = prep_charge.dim_subscription_id
+      INNER JOIN prep_product_detail
+        ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id 
   WHERE 
-      LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
+      LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
         
 ), final AS (
 
