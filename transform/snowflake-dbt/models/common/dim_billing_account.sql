@@ -37,7 +37,7 @@
         ELSE zuora_account.po_required
       END                                                   AS po_required,
       zuora_account.auto_pay,
-      zuora_payment_method.payment_method_type,
+      zuora_payment_method.payment_method_type              AS default_payment_method_type,
       zuora_account.is_deleted,
       zuora_account.batch
     FROM zuora_account
