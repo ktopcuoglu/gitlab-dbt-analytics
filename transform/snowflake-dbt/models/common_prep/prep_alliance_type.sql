@@ -17,12 +17,18 @@ WITH sfdc_opportunity_source AS (
 ), alliance_type AS (
 
     SELECT
-      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity_source.fulfillment_partner') }},
-      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity_source.fulfillment_partner') }}
+      {{ alliance_type('fulfillment_partner.account_name', 'partner_account.account_name',
+                       'sfdc_opportunity_source.close_date', 'sfdc_opportunity_source.partner_track',
+                       'sfdc_opportunity_source.resale_partner_track', 'sfdc_opportunity_source.deal_path') }},
+      {{ alliance_type_short('fulfillment_partner.account_name', 'partner_account.account_name',
+                             'sfdc_opportunity_source.close_date', 'sfdc_opportunity_source.partner_track',
+                             'sfdc_opportunity_source.resale_partner_track', 'sfdc_opportunity_source.deal_path') }}
     FROM sfdc_opportunity_source
     LEFT JOIN sfdc_account_source      AS fulfillment_partner
       ON sfdc_opportunity_source.fulfillment_partner = fulfillment_partner.account_id
-    WHERE sfdc_opportunity_source.fulfillment_partner IS NOT NULL
+    LEFT JOIN sfdc_account_source AS partner_account
+      ON sfdc_opportunity_source.partner_account = partner_account.account_id
+    WHERE alliance_type IS NOT NULL
 
 ), final AS (
 

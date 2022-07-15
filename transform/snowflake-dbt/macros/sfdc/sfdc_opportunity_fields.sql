@@ -590,8 +590,8 @@ WITH first_contact  AS (
       END                                                                                         AS is_contract_reset,
 
       -- alliance type fields
-      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
-      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+      {{ alliance_type('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }},
+      {{ alliance_type_short('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }},
 
       --  quote information
       quote.dim_quote_id,
@@ -955,6 +955,8 @@ WITH first_contact  AS (
       ON sfdc_opportunity.stage_1_discovery_date::DATE = stage_1_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
+    LEFT JOIN sfdc_account AS partner_account
+      ON sfdc_opportunity.partner_account = partner_account.account_id
     {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
     {%- endif %}
