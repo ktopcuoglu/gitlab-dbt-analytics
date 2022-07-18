@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: dim_website_page
+    columns:
+      - name: dim_website_page_sk
+        tests:
+          - not_null
+          - unique
