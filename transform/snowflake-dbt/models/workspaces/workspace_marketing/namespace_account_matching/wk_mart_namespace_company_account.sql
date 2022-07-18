@@ -76,7 +76,7 @@ namespace_domain_account AS (
       top_namespace_domain.ultimate_parent_namespace_id,
       top_namespace_domain.email_domain
       ORDER BY company_domain_account.account_domain_rank DESC,
-        company_domain_account.dim_crm_account_id ASC) AS namespace_account_rank
+        company_domain_account.crm_account_id ASC) AS namespace_account_rank
   FROM top_namespace_domain
   INNER JOIN company_domain_account
     ON top_namespace_domain.email_domain = company_domain_account.email_domain
