@@ -28,10 +28,14 @@
       fct_sales_funnel_target.alliance_partner,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
+      dim_alliance_type_hist.alliance_type_name         AS alliance_type_name_hist,
+      dim_alliance_type_hist.alliance_type_short_name   AS alliance_type_short_name_hist,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
     LEFT JOIN dim_alliance_type
       ON fct_sales_funnel_target.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
+    LEFT JOIN dim_alliance_type AS dim_alliance_type_hist
+      ON fct_sales_funnel_target.dim_alliance_type_hist_id = dim_alliance_type_hist.dim_alliance_type_id
     LEFT JOIN dim_sales_qualified_source
       ON fct_sales_funnel_target.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
     LEFT JOIN dim_channel_type
@@ -51,5 +55,5 @@
     created_by="@jpeguero",
     updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2022-07-13",
+    updated_date="2022-07-18",
   ) }}

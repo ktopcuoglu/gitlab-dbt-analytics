@@ -36,7 +36,7 @@ macros:
       - name: sales_region
         type: string
         description: Sales region field to use for grouping
-  - name: alliance_type
+  - name: alliance_partner
     description: This macro applies business logic to identify alliance partners in the Channel business. The Macro uses the same names that are found in the source data.
     arguments:
       - name: fulfillment_partner_name
@@ -45,7 +45,7 @@ macros:
       - name: fulfillment_partner
         type: string
         description: Fulfillment / Resale Partner account id from the opportunity object.
-  - name: alliance_type_short
+  - name: alliance_partner_short
     description: This macro applies business logic to identify alliance partners in the Channel business. The Macro abbreviates the source names to shorter names selected by the business that will be used in reporting.
     arguments:
       - name: partner_account_name
