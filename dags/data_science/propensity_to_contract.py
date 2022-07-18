@@ -33,7 +33,7 @@ default_args = {
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=1),
-    "start_date": datetime(2022, 07, 16),
+    "start_date": datetime(2022, 7, 16),
     "dagrun_timeout": timedelta(hours=2),
 }
 
