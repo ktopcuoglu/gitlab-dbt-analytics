@@ -32,7 +32,7 @@
       {{ dbt_utils.surrogate_key(['page_urlhost','clean_urlpath']) }}     AS dim_website_page_sk,
       app_id,
       page_urlhost,
-      clean_urlpath,
+      RTRIM(clean_urlpath, '/')                                           AS clean_urlpath,
       page_group,
       page_type,
       page_sub_type,
