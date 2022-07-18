@@ -13,17 +13,28 @@
 
 }}
 
-, page_views_w_dim AS (
+, page_views_w_clean_url AS (
 
     SELECT
       REGEXP_REPLACE(page_url_path, '^[^a-zA-Z]*|[0-9]|(\-\/+)|\.html$|\/$', '') AS clean_urlpath,
-      dim_website_page_sk,
       session_id,
       page_view_start                                                            AS page_view_start_at,
       page_view_end                                                              AS page_view_end_at,
       time_engaged_in_s                                                          AS engaged_seconds
     FROM page_views
-    LEFT JOIN dim_website_page ON page_views.clean_urlpath = dim_website_page.clean_urlpath
+)
+
+, page_views_w_dim AS (
+
+    SELECT
+      dim_website_page_sk,
+      session_id,
+      page_view_start_at,
+      page_view_end_at,
+      engaged_seconds
+    FROM page_views_w_clean_url
+    LEFT JOIN dim_website_page ON page_views_w_clean_url.clean_urlpath = dim_website_page.clean_urlpath
+
 )
 
 SELECT *
