@@ -39,12 +39,11 @@ from kube_secrets import (
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
-GIT_BRANCH = env["GIT_BRANCH"]
+GIT_BRANCH = """{{ var.value.dbt_1_1_branch }}"""
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 
 # This value is set based on the commit hash setter task in dbt_snapshot
-pull_commit_hash = """export GIT_COMMIT="fc7161faa1ce93c23cc0bf51a68f4772fc9adced" """
-
+pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_1_1_hash }}" """
 
 # Default arguments for the DAG
 default_args = {
@@ -133,6 +132,26 @@ dbt_non_product_models_task = KubernetesPodOperator(
 )
 
 
+# run product models on large warehouse
+dbt_product_models_command = f"""
+    {pull_commit_hash} &&
+    {dbt_install_deps_cmd} &&
+    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
+    dbt --no-use-colors test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
+"""
+
+dbt_product_models_task = KubernetesPodOperator(
+    **gitlab_defaults,
+    image=DBT_IMAGE_1_1,
+    task_id="dbt-product-models-run",
+    name="dbt-product-models-run",
+    secrets=secrets_list,
+    env_vars=pod_env_vars,
+    arguments=[dbt_product_models_command],
+    dag=dag,
+)
+
 
 # dbt-test
 dbt_test_cmd = f"""
@@ -155,6 +174,4 @@ dbt_test = KubernetesPodOperator(
     dag=dag,
 )
 
-
 dbt_non_product_models_task >> dbt_test
-
