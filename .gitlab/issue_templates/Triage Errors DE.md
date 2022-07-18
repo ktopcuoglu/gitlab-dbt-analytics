@@ -1,5 +1,6 @@
 <!-- Subject format should be: YYYY-MM-DD | task name | Error line from log-->
 <!-- example: 2020-05-15 | dbt-non-product-models-run | Database Error in model sheetload_manual_downgrade_dotcom_tracking -->
+<!-- example: 2020-05-15 | monte-carlo-data | raw:snapshots - anomalies found in table netsuite_entity_snapshots | 35h since update -->
 
 Airflow Task Link: <!-- link to airflow log with error -->
 
@@ -12,7 +13,9 @@ Downstream Airflow tasks or dbt models that were skipped: <!-- None -->
 
 
 Monte Carlo incident link: <!-- link to the Monte Carlo incident page -->
-
+```
+{longer error description text from the notification}
+```
 
 ## DE Triage Guidelines
 
