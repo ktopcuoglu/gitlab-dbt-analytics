@@ -40,7 +40,9 @@ default_args = {
 }
 
 # Prepare the cmd
-DATA_SCIENCE_PTP_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
+DATA_SCIENCE_PTP_SSH_REPO = (
+    "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
+)
 DATA_SCIENCE_PTP_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
 
 clone_data_science_ptp_repo_cmd = f"""
@@ -63,7 +65,9 @@ clone_data_science_ptp_repo_cmd = f"""
 # Create the DAG
 # Run Every Monday
 dag = DAG(
-    "propensity_to_purchase_trial", default_args=default_args, schedule_interval="0 12 * * 1"
+    "propensity_to_purchase_trial",
+    default_args=default_args,
+    schedule_interval="0 12 * * 1",
 )
 
 # Task 1
