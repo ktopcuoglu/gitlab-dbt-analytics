@@ -433,9 +433,11 @@ roles:
             - boneyard
             - dbt_analytics
             - gitlab_data_yaml
+            - google_ads
             - google_analytics_360
             - netsuite
             - keyhole_twitter
+            - mailgun
             - marketo
             - pmg
             - snowflake_db
@@ -1679,6 +1681,20 @@ roles:
                     - prep.sensitive.greenhouse_stage_intermediate
                     - raw.greenhouse.*
 
+    - google_ads:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.google_ads
+                    - raw.google_ads
+            tables:
+                read:
+                    - prep.google_ads.*
+                    - raw.google_ads.*
 
     - handbook:
         warehouses:
@@ -1742,6 +1758,22 @@ roles:
                     - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
+
+    - mailgun:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.mailgun
+                    - raw.mailgun
+            tables:
+                read:
+                    - prep.mailgun.*
+                    - raw.mailgun.*
+
 
     - marketo:
           privileges:
@@ -3300,6 +3332,7 @@ roles:
          - analytics_engineer_rd
          - restricted_safe
          - bi_tool_eval_read
+         - zuora
         warehouses:
             - dev_xs
         owns:

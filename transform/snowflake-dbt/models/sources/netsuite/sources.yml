@@ -24,6 +24,7 @@ sources:
       - name: budget_category
       - name: classes
       - name: consolidated_exchange_rates
+      - name: currency_exchange_rates
       - name: currencies
       - name: customers
       - name: departments

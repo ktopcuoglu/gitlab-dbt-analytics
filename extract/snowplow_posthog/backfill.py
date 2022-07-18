@@ -5,26 +5,22 @@ Library URL: https://posthog.com/docs/integrate/server/python
 """
 
 import datetime
-import yaml
 import sys
 from os import environ as env
 from itertools import zip_longest
+from logging import info, basicConfig
+import logging
+import gzip
 
+import yaml
 import posthog
 from fire import Fire
-from logging import CRITICAL, info, basicConfig
-import logging
-
 import boto3
-import gzip
 from dateutil.relativedelta import relativedelta
 
-from dateutil.tz import tzutc
-
-
 ENCODING = "utf-8"
-#EVENT_NAME = "test_gitlab_events_ved"
-#DISTINCT_ID = "gitlab_dotcom"
+# EVENT_NAME = "test_gitlab_events_ved"
+# DISTINCT_ID = "gitlab_dotcom"
 
 """
 Extract routines
@@ -211,22 +207,29 @@ def posthog_processing(file_prefix: str) -> None:
         # get files
         for snowplow_file in snowplow_files:
             logging.getLogger().setLevel(logging.INFO)
-            
+
             logging.info(f"     File: {snowplow_file}")
 
             # get rows
+            event_count=0
+            start_dt= datetime.datetime.now()
             for row in s3_load_source_file(
                 client=s3_client, bucket=snowplow_s3_bucket, file_name=snowplow_file
-            ):
+            ):  
+                event_count += 1
+                if event_count % posthog.flush_at == 0:
+                    delta = datetime.datetime.now() - start_dt
+                    start_dt = datetime.datetime.now()
+                    print(f"time to process {posthog.flush_at} events was {delta}")
                 json_prepared = get_properties(property_list=property_list, values=row)
                 # push row to PostHog
 
                 posthog_push_json(json_prepared)
+                if event_count % posthog.flush_at == 0:
+                    posthog.flush()
+                    print(f"Flushed after {event_count}")
 
-
-"""
-Load routines
-"""
+    posthog.shutdown()
 
 
 def posthog_get_credentials() -> tuple:
@@ -235,10 +238,9 @@ def posthog_get_credentials() -> tuple:
     """
 
     posthog_project_api_key = env["POSTHOG_PROJECT_API_KEY"]
-    posthog_personal_api_key = env["POSTHOG_PERSONAL_API_KEY"]
     posthog_host = env["POSTHOG_HOST"]
 
-    return (posthog_project_api_key, posthog_personal_api_key, posthog_host)
+    return (posthog_project_api_key, posthog_host)
 
 
 def load_manifest_file(file_name: str) -> dict:
@@ -272,15 +274,20 @@ def posthog_authorize() -> None:
 
     (
         posthog_project_api_key,
-        posthog_personal_api_key,
         posthog_host,
     ) = posthog_get_credentials()
 
     posthog.project_api_key = posthog_project_api_key
-    #posthog.personal_api_key = posthog_personal_api_key
+    # posthog.personal_api_key = posthog_personal_api_key
     posthog.host = posthog_host
-    #posthog.sync_mode = True
-    #posthog.debug = True
+    # posthog.sync_mode = True
+    # posthog.debug = True
+    posthog.flush_at = 1000
+    posthog.max_queue_size = 10000
+    posthog.flush_interval = 60
+    posthog.thread = 5
+    posthog.gzip = True
+    posthog.sync_mode = False
 
 
 def posthog_push_json(data: dict) -> None:
@@ -288,19 +295,23 @@ def posthog_push_json(data: dict) -> None:
     Use PostHog lib to push
     historical record to PostHog as a part of BackFill process
     Change log Ved
-    Removed the timestamp to the collector_tstamp (	Timestamp for the event recorded by the collector) because when this event was stored in the posthog it was showing that it was generated now not as back date event. 
-    Moved event from hard coded value of EVENT_NAME = "test_gitlab_events_ved"   to value coming in each event.  
+    Removed the timestamp to the collector_tstamp (	Timestamp for the event recorded by the collector) because when this event was stored in the posthog it was showing that it was generated now not as back date event.
+    Moved event from hard coded value of EVENT_NAME = "test_gitlab_events_ved"   to value coming in each event.
     DISTINCT ID is set as user_ipaddress.
-    These 3 were suggested by PostHog team. 
+    These 3 were suggested by PostHog team.
     """
     logging.getLogger().setLevel(logging.CRITICAL)
-    DISTINCT_ID=data["user_ipaddress"]
+    distinct_id = data["user_ipaddress"]
+    event_name = data["event"]
     posthog.capture(
-        DISTINCT_ID,
-        event=data["event"],
+        distinct_id,
+        event=event_name,
         properties=data,
-        timestamp=datetime.datetime.fromisoformat(data["collector_tstamp"]) #datetime.datetime.utcnow().replace(tzinfo=tzutc()),
+        timestamp=datetime.datetime.fromisoformat(
+            data["collector_tstamp"]
+        ),  # datetime.datetime.utcnow().replace(tzinfo=tzutc()),
     )
+
 
 def snowplow_posthog_backfill(day: str) -> None:
     """

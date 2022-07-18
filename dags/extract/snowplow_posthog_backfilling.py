@@ -10,7 +10,7 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 from airflow.models import Variable
 from airflow_utils import (
     clone_repo_cmd,
-    DATA_IMAGE,
+    # DATA_IMAGE,
     gitlab_defaults,
     gitlab_pod_env_vars,
     slack_failed_task,

@@ -15,7 +15,7 @@
 , dedupe_latest_subscriptions AS (
 
   SELECT
-    ping_created_at_month                                             AS ping_created_at_month,
+    ping_created_date_month                                           AS ping_created_date_month,
     --ping_edition                                                      AS ping_edition,
     latest_subscription_id                                            AS latest_subscription_id,
     licensed_user_count                                               AS licensed_user_count,
@@ -26,7 +26,7 @@
 ), subscription_info AS (
 
   SELECT
-    ping_created_at_month                                             AS ping_created_at_month,
+    ping_created_date_month                                           AS ping_created_date_month,
     --ping_edition                                                      AS ping_edition,
     1                                                                 AS key,
     SUM(arr)                                                          AS total_arr,
@@ -38,7 +38,7 @@
 ), metrics AS (
 
     SELECT --grab all metrics and editions reported on a given month
-      ping_created_at_month,
+      ping_created_date_month,
       metrics_path,
       ping_edition,
       1 AS key
@@ -51,8 +51,8 @@
 ), sub_combo AS (
 
     SELECT
-      {{ dbt_utils.surrogate_key(['subscription_info.ping_created_at_month', 'metrics.metrics_path', 'metrics.ping_edition']) }}          AS ping_subscriptions_reported_counts_monthly_id,
-      subscription_info.ping_created_at_month                                                                                             AS ping_created_at_month,
+      {{ dbt_utils.surrogate_key(['subscription_info.ping_created_date_month', 'metrics.metrics_path', 'metrics.ping_edition']) }}        AS ping_subscriptions_reported_counts_monthly_id,
+      subscription_info.ping_created_date_month                                                                                           AS ping_created_date_month,
       metrics.metrics_path                                                                                                                AS metrics_path,
       metrics.ping_edition                                                                                                                AS ping_edition,
       subscription_info.total_arr                                                                                                         AS total_arr,
@@ -61,7 +61,7 @@
     FROM subscription_info
         INNER JOIN metrics
     ON subscription_info.key = metrics.key
-      AND subscription_info.ping_created_at_month = metrics.ping_created_at_month
+      AND subscription_info.ping_created_date_month = metrics.ping_created_date_month
 
 )
 
