@@ -314,17 +314,20 @@ WITH first_contact  AS (
       created_date_detail.fiscal_quarter_name_fy                                                  AS created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter                                             AS created_fiscal_quarter_date,
 
+      {{ get_date_id('net_arr_created_date.first_day_of_month') }}                                AS iacv_created_date_id,
       net_arr_created_date.first_day_of_month                                                     AS iacv_created_month,
       net_arr_created_date.fiscal_year                                                            AS iacv_created_fiscal_year,
       net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
 
+      {{ get_date_id('created_date_detail.date_actual') }}                                        AS net_arr_created_date_id,
       created_date_detail.date_actual                                                             AS net_arr_created_date,
       created_date_detail.first_day_of_month                                                      AS net_arr_created_month,
       created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
 
+      {{ get_date_id('net_arr_created_date.date_actual') }}                                       AS pipeline_created_date_id,
       net_arr_created_date.date_actual                                                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                                                     AS pipeline_created_month,
       net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
