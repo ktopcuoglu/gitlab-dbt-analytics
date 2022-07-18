@@ -61,6 +61,8 @@
       sfdc_opportunity.sales_accepted_date_id,
       sfdc_opportunity.close_date,
       sfdc_opportunity.close_date_id,
+      sfdc_opportunity.net_arr_created_date_id,
+      sfdc_opportunity.pipeline_created_date_id,
       sfdc_opportunity.stage_0_pending_acceptance_date,
       sfdc_opportunity.stage_0_pending_acceptance_date_id,
       sfdc_opportunity.stage_1_discovery_date,
@@ -222,5 +224,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-03-17"
+    updated_date="2022-07-18"
 ) }}
