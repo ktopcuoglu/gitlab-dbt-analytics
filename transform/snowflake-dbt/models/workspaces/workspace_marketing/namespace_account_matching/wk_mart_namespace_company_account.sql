@@ -30,7 +30,7 @@ domain_matching AS (
     users.email_domain_classification,
     COALESCE(
       user_namespace_account_company.crm_account_id,
-      company_domain_account.dim_crm_account_id
+      company_domain_account.crm_account_id
     ) AS crm_account_id
   FROM user_namespace_account_company
   LEFT JOIN namespaces
@@ -70,7 +70,7 @@ namespace_domain_account AS (
   SELECT DISTINCT
     top_namespace_domain.ultimate_parent_namespace_id,
     top_namespace_domain.email_domain,
-    company_domain_account.dim_crm_account_id,
+    company_domain_account.crm_account_id,
     company_domain_account.account_domain_rank,
     ROW_NUMBER() OVER (PARTITION BY
       top_namespace_domain.ultimate_parent_namespace_id,
@@ -301,7 +301,7 @@ mart AS (
     COALESCE(
       IFF(source_company_accounts.number_of_accounts = 1,
         source_company_accounts.list_of_accounts[0], NULL),
-      namespace_domain_account.dim_crm_account_id) AS company_linked_account,
+      namespace_domain_account.crm_account_id) AS company_linked_account,
     COALESCE(namespace_crm_account_id, company_linked_account) AS combined_crm_account_id,
     CASE
       WHEN actual_crm_account_id IS NOT NULL THEN 'actual_account'
