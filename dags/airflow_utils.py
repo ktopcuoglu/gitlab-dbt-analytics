@@ -322,7 +322,7 @@ dbt_install_deps_nosha_cmd = f"""
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
- 
+
 # command to exclude models (for test models) in dbt test command
 run_command_test_exclude = "--exclude staging.gitlab_com edm_snapshot"
 

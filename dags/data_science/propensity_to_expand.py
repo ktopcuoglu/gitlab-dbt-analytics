@@ -40,7 +40,9 @@ default_args = {
 
 
 # Prepare the cmd
-DATA_SCIENCE_PTE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-expand.git"
+DATA_SCIENCE_PTE_SSH_REPO = (
+    "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-expand.git"
+)
 DATA_SCIENCE_PTE_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-expand.git"
 
 clone_data_science_pte_repo_cmd = f"""
@@ -60,7 +62,7 @@ clone_data_science_pte_repo_cmd = f"""
     git checkout $GIT_COMMIT &&
     echo pwd && 
     cd .."""
-    
+
 # Create the DAG
 # Run on the 9th of every month
 dag = DAG(
