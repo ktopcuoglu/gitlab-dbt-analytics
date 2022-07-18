@@ -257,7 +257,7 @@ gitlab_pod_env_vars = {
 }
 
 # git commands
-data_test_ssh_key_cmd = f"""
+data_test_ssh_key_cmd = """
     export DATA_TEST_BRANCH="main" &&
     export DATA_SIREN_BRANCH="master" &&
     mkdir ~/.ssh/ &&

@@ -18,7 +18,6 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
-from kubernetes_helpers import get_affinity, get_toleration
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
@@ -56,7 +55,7 @@ clone_data_science_ptc_repo_cmd = f"""
     echo "checking out commit $GIT_COMMIT" &&
     cd propensity-to-contract-and-churn &&
     git checkout $GIT_COMMIT &&
-    echo pwd && 
+    echo pwd &&
     cd .."""
 
 # Create the DAG
@@ -68,7 +67,7 @@ dag = DAG(
 # Task 1
 ptc_scoring_command = f"""
     {clone_data_science_ptc_repo_cmd} &&
-    cd propensity-to-contract-and-churn/prod && 
+    cd propensity-to-contract-and-churn/prod &&
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(

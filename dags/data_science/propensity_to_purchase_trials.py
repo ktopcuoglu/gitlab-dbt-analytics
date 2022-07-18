@@ -11,7 +11,6 @@ from airflow_utils import (
     data_test_ssh_key_cmd,
 )
 from kube_secrets import (
-    GCP_SERVICE_CREDS,
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
     SNOWFLAKE_LOAD_ROLE,
@@ -19,7 +18,6 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_WAREHOUSE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
 )
-from kubernetes_helpers import get_affinity, get_toleration
 
 
 # Load the env vars into a dict and set Secrets
@@ -73,7 +71,7 @@ dag = DAG(
 # Task 1
 ptpt_scoring_command = f"""
     {clone_data_science_ptp_repo_cmd} &&
-    cd propensity-to-purchase/prod && 
+    cd propensity-to-purchase/prod &&
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(
