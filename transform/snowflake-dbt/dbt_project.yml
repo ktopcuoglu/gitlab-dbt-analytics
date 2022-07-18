@@ -226,6 +226,12 @@ models:
       license:
         +schema: license_db
 
+      mailgun:
+        +schema: mailgun
+        sensitive:
+          +schema: sensitive
+          secure: true
+
       marketo:
         +schema: marketo
 
