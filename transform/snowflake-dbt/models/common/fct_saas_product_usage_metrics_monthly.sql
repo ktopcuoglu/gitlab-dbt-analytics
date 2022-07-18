@@ -6,7 +6,8 @@
     ('saas_usage_ping', 'prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics'),
     ('zuora_subscriptions', 'bdg_subscription_product_rate_plan'),
     ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
-    ('dates', 'dim_date')
+    ('dates', 'dim_date'),
+    ('charges', 'fct_charge')
 ]) }}
 
 , saas_subscriptions AS (
@@ -19,11 +20,16 @@
     FROM zuora_subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
+    LEFT JOIN charges 
+      ON charges.dim_subscription_id = zuora_subscriptions.dim_subscription_id
     WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
-      AND zuora_subscriptions.product_rate_plan_charge_name NOT IN (
-        '1,000 CI Minutes',
-        'Gitlab Storage 10GB - 1 Year',
-        'Premium Support'
+      AND (
+        zuora_subscriptions.product_rate_plan_charge_name NOT IN (
+          '1,000 CI Minutes',
+          'Gitlab Storage 10GB - 1 Year',
+          'Premium Support'
+        )
+        OR charges.charge_type != 'OneTime'
       )
     {{ dbt_utils.group_by(n=4)}}
 
