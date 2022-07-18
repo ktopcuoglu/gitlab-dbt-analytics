@@ -242,11 +242,11 @@ direct_company_account AS (
   -- Finds the source company that is associated with the direct link crm account
   SELECT
     subscription_accounts.namespace_id,
-    crm_account.crm_account_id,
+    crm_account.dim_crm_account_id AS crm_account_id,
     company.source_company_id
   FROM subscription_accounts
   LEFT JOIN crm_account
-    ON subscription_accounts.crm_account_id = crm_account.crm_account_id
+    ON subscription_accounts.crm_account_id = crm_account.dim_crm_account_id
   LEFT JOIN company
     ON crm_account.crm_account_zoom_info_dozisf_zi_id = company.company_id
 ),
