@@ -36,7 +36,7 @@ WITH sfdc_opportunity_source AS (
                              'sfdc_opportunity_source.resale_partner_track', 'sfdc_opportunity_source.deal_path') }} AS alliance_type_short,
       MIN(dim_date.first_day_of_fiscal_quarter)                                                                      AS valid_from,
       MAX(dim_date.last_day_of_fiscal_quarter)                                                                       AS valid_to,
-      IFF(valid_to >= MAX(current_fiscal_year.last_day_of_fiscal_quarter), TRUE, FALSE)                                          AS is_currently_valid
+      IFF(valid_to >= MAX(current_fiscal_year.last_day_of_fiscal_quarter), TRUE, FALSE)                              AS is_currently_valid
     FROM sfdc_opportunity_source
     LEFT JOIN sfdc_account_source      AS fulfillment_partner
       ON sfdc_opportunity_source.fulfillment_partner = fulfillment_partner.account_id
