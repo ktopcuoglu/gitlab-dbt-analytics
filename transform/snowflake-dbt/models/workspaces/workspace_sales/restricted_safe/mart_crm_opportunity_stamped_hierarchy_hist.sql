@@ -333,7 +333,6 @@
       ON pipeline_created_date.date_id = fct_crm_opportunity.pipeline_created_date_id
     LEFT JOIN dim_date AS arr_created_date
       ON arr_created_date.date_id = fct_crm_opportunity.arr_created_date_id
-
 )
 
 {{ dbt_audit(

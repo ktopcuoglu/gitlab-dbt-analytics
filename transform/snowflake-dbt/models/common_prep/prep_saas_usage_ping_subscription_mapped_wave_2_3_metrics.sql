@@ -18,6 +18,18 @@
     ('instance_types', 'dim_host_instance_type')
 ]) }}
 
+, instance_types_ordering AS (
+    SELECT
+      *,
+      CASE
+        WHEN instance_type = 'Production' THEN 1
+        WHEN instance_type = 'Non-Production' THEN 2
+        WHEN instance_type = 'Unknown' THEN 3
+        ELSE 4
+      END AS ordering_field
+    FROM instance_types
+)
+
 , joined AS (
 
     SELECT 
@@ -27,10 +39,10 @@
       prep_saas_usage_ping_namespace.counter_value,
       dim_date.first_day_of_month                           AS reporting_month, 
       bdg_namespace_subscription.dim_subscription_id,
-      instance_types.instance_type
+      instance_types_ordering.instance_type
     FROM prep_saas_usage_ping_namespace
-    LEFT JOIN instance_types
-      ON prep_saas_usage_ping_namespace.dim_namespace_id = instance_types.namespace_id
+    LEFT JOIN instance_types_ordering
+      ON prep_saas_usage_ping_namespace.dim_namespace_id = instance_types_ordering.namespace_id
     INNER JOIN dim_date
       ON prep_saas_usage_ping_namespace.ping_date = dim_date.date_day
     INNER JOIN bdg_namespace_subscription
@@ -45,7 +57,9 @@
         bdg_namespace_subscription.dim_subscription_id,
         prep_saas_usage_ping_namespace.dim_namespace_id,
         prep_saas_usage_ping_namespace.ping_name
-      ORDER BY prep_saas_usage_ping_namespace.ping_date DESC
+        ORDER BY 
+          prep_saas_usage_ping_namespace.ping_date DESC,
+          instance_types_ordering.ordering_field ASC --prioritizing Production instances
     ) = 1
 
 ), pivoted AS (
@@ -65,7 +79,7 @@
 {{ dbt_audit(
     cte_ref="pivoted",
     created_by="@mpeychet_",
-    updated_by="@snalamaru",
+    updated_by="@mdrussell",
     created_date="2021-03-22",
-    updated_date="2021-10-07"
+    updated_date="2022-07-14"
 ) }}
