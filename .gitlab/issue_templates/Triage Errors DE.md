@@ -22,8 +22,6 @@ Downstream Airflow tasks or dbt models that were skipped: <!-- None -->
 1. [ ] Confirm that there are no errors in our process which could be a cause. If there are no errors it is likely an external failure. 
 2. [ ] Check the [source contact spreadsheet](https://docs.google.com/spreadsheets/d/1VKvqyn7wy6HqpWS9T3MdPnE6qbfH2kGPQDFg2qPcp6U/edit#gid=0) for details on who to contact to assist 
 3. [ ] Add the label with the source to this issue.
-4. [ ] In case the notification comes from Monte Carlo, investigate within the platform and if necessary, open an issue on GitLab. There is a possibility of quick-triaging Monte Carlo related incidents by reacting directly to the incident notification on Slack. You can mark the incident as `Fixed`, `Expected`, `False Positive`, `No Action Needed` or `Investigating`. 
-
  
 </details>
 
