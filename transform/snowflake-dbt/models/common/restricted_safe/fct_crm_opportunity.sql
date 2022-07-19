@@ -63,6 +63,7 @@
       sfdc_opportunity.close_date_id,
       sfdc_opportunity.net_arr_created_date_id,
       sfdc_opportunity.pipeline_created_date_id,
+      sfdc_opportunity.arr_created_date_id,
       sfdc_opportunity.stage_0_pending_acceptance_date,
       sfdc_opportunity.stage_0_pending_acceptance_date_id,
       sfdc_opportunity.stage_1_discovery_date,

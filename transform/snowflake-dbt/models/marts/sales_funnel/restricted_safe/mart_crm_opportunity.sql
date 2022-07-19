@@ -80,6 +80,7 @@
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
       net_arr_created_date.date_actual                                     AS net_arr_created_date,
       pipeline_created_date.date_actual                                    AS pipeline_created_date,
+      arr_created_date.date_actual                                         AS arr_created_date,
       fct_crm_opportunity.dim_crm_opportunity_id,
       dim_crm_opportunity.opportunity_name,
       dim_crm_account.parent_crm_account_name,
@@ -288,6 +289,8 @@
       ON net_arr_created_date.date_id = fct_crm_opportunity.net_arr_created_date_id
     LEFT JOIN dim_date AS pipeline_created_date
       ON pipeline_created_date.date_id = fct_crm_opportunity.pipeline_created_date_id
+    LEFT JOIN dim_date AS arr_created_date
+      ON arr_created_date.date_id = fct_crm_opportunity.arr_created_date_id
 
 )
 

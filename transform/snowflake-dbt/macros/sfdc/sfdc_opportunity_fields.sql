@@ -320,6 +320,9 @@ WITH first_contact  AS (
       net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
 
+      {{ get_date_id('sfdc_opportunity.iacv_created_date')}}                                      AS arr_created_date_id,
+      sfdc_opportunity.iacv_created_date                                                          AS arr_created_date,
+
       {{ get_date_id('created_date_detail.date_actual') }}                                        AS net_arr_created_date_id,
       created_date_detail.date_actual                                                             AS net_arr_created_date,
       created_date_detail.first_day_of_month                                                      AS net_arr_created_month,
