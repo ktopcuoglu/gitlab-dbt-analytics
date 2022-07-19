@@ -33,52 +33,52 @@ default_args = {
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=1),
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2022, 7, 16),
     "dagrun_timeout": timedelta(hours=2),
 }
 
-
 # Prepare the cmd
-DATA_SCIENCE_PTE_SSH_REPO = (
-    "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-expand.git"
+DATA_SCIENCE_PTP_SSH_REPO = (
+    "git@gitlab.com:gitlab-data/data-science-projects/propensity-to-purchase.git"
 )
-DATA_SCIENCE_PTE_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-expand.git"
+DATA_SCIENCE_PTP_HTTP_REPO = "https://gitlab_analytics:$GITLAB_ANALYTICS_PRIVATE_TOKEN@gitlab.com/gitlab-data/data-science-projects/propensity-to-purchase.git"
 
-clone_data_science_pte_repo_cmd = f"""
+clone_data_science_ptp_repo_cmd = f"""
     {data_test_ssh_key_cmd} &&
     if [[ -z "$GIT_COMMIT" ]]; then
         export GIT_COMMIT="HEAD"
     fi
     if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
-        export REPO="{DATA_SCIENCE_PTE_HTTP_REPO}";
+        export REPO="{DATA_SCIENCE_PTP_HTTP_REPO}";
         else
-        export REPO="{DATA_SCIENCE_PTE_SSH_REPO}";
+        export REPO="{DATA_SCIENCE_PTP_SSH_REPO}";
     fi &&
     echo "git clone -b main --single-branch --depth 1 $REPO" &&
     git clone -b main --single-branch --depth 1 $REPO &&
     echo "checking out commit $GIT_COMMIT" &&
-    cd propensity-to-expand &&
+    cd propensity-to-purchase &&
     git checkout $GIT_COMMIT &&
-    echo pwd &&
     cd .."""
 
 # Create the DAG
-# Run on the 9th of every month
+# Run Every Monday
 dag = DAG(
-    "propensity_to_expand", default_args=default_args, schedule_interval="0 12 9 * *"
+    "propensity_to_purchase_trial",
+    default_args=default_args,
+    schedule_interval="0 12 * * 1",
 )
 
 # Task 1
-pte_scoring_command = f"""
-    {clone_data_science_pte_repo_cmd} &&
-    cd propensity-to-expand/prod &&
+ptpt_scoring_command = f"""
+    {clone_data_science_ptp_repo_cmd} &&
+    cd propensity-to-purchase/prod &&
     papermill scoring_code.ipynb -p is_local_development False
 """
 KubernetesPodOperator(
     **gitlab_defaults,
     image=ANALYST_IMAGE,
-    task_id="propensity-to-expand",
-    name="propensity-to-expand",
+    task_id="propensity-to-purchase-trial",
+    name="propensity-to-purchase-trial",
     secrets=[
         SNOWFLAKE_ACCOUNT,
         SNOWFLAKE_LOAD_ROLE,
@@ -88,6 +88,6 @@ KubernetesPodOperator(
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
-    arguments=[pte_scoring_command],
+    arguments=[ptpt_scoring_command],
     dag=dag,
 )

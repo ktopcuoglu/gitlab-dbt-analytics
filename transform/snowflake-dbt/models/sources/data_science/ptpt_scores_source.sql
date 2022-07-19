@@ -1,7 +1,7 @@
 WITH source AS (
 
     SELECT *
-    FROM {{ source('data_science', 'ptc_scores') }}
+    FROM {{ source('data_science', 'ptpt_scores') }}
 
 ), intermediate AS (
 
@@ -15,14 +15,13 @@ WITH source AS (
 
     SELECT
 
-      data_by_row['crm_account_id']::VARCHAR                AS crm_account_id,
+      data_by_row['namespace_id']::VARCHAR                  AS namespace_id,
       data_by_row['score_date']::TIMESTAMP                  AS score_date,
       data_by_row['score']::NUMBER(38,4)                    AS score,
       data_by_row['decile']::INT                            AS decile,
       data_by_row['importance']::INT                        AS importance,
       data_by_row['grouping']::INT                          AS score_group,
       data_by_row['insights']::VARCHAR                      AS insights,
-      data_by_row['renewal_date']::TIMESTAMP                AS renewal_date,
       uploaded_at::TIMESTAMP                                AS uploaded_at
 
     FROM intermediate
