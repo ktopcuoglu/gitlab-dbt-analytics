@@ -1,7 +1,7 @@
 {{ config(
     tags=["mnpi_exception", "product"],
     materialized = "incremental",
-    unique_key = "event_id"
+    unique_key = "event_pk"
 ) }}
 
 {{ simple_cte([
