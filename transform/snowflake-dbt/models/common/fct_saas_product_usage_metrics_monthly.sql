@@ -235,7 +235,7 @@
       "counts.projects_with_external_status_checks"                                             AS projects_status_checks_all_time_event,
       "counts.external_status_checks"                                                           AS external_status_checks_all_time_event,
       "redis_hll_counters.search.i_search_paid_monthly"                                         AS paid_license_search_28_days_user,
-      "redis_hll_counters.manage.unique_active_users_monthly"                                   AS last_activity_28_days_user,
+      -- "redis_hll_counters.manage.unique_active_users_monthly"                                   AS last_activity_28_days_user,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
