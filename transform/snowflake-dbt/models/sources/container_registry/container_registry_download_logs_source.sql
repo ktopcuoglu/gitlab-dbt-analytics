@@ -1,5 +1,9 @@
 -- can not define custom database in source.yml source('container_registry','container_registry_download_logs_raw')
 
+{{ config(
+    materialized='table'
+) }}
+
 WITH source AS (
   SELECT DISTINCT *
   FROM {{ ref('container_registry_download_logs_raw') }}

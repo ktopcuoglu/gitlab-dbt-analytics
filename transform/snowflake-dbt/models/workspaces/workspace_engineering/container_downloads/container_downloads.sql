@@ -16,6 +16,7 @@
 add_gcp_source AS (
 
   SELECT
+    container_downloads.correlation_id,
     container_downloads.downloaded_at,
     container_downloads.root_repository,
     container_downloads.container_path,
@@ -23,9 +24,8 @@ add_gcp_source AS (
     IFF(ip_ranges.scope IS NULL, 'Non-GCP', ip_ranges.scope) AS gcp_scope
   FROM container_downloads
   LEFT JOIN ip_ranges
-    ON 
-      container_downloads.downloaded_by_hex_ip >= ip_ranges.hex_ip_range_start
-         AND container_downloads.downloaded_by_hex_ip <= ip_ranges.hex_ip_range_end
+    ON container_downloads.downloaded_by_hex_ip >= ip_ranges.hex_ip_range_start
+      AND container_downloads.downloaded_by_hex_ip <= ip_ranges.hex_ip_range_end
 
 ),
 
@@ -36,7 +36,7 @@ agg_download_data AS (
     add_gcp_source.root_repository,
     add_gcp_source.container_path,
     add_gcp_source.gcp_scope,
-    COUNT(*) AS download_count,
+    COUNT(add_gcp_source.correlation_id) AS download_count,
     SUM(add_gcp_source.download_size_bytes) AS total_bytes,
     AVG(add_gcp_source.download_size_bytes) AS avg_bytes,
     total_bytes / 1000 / 1000 / 1000 AS total_gb,
@@ -69,6 +69,7 @@ report AS (
     namespaces.creator_id,
     namespaces.current_member_count,
     namespaces.current_project_count,
+    agg_download_data.download_count,
     agg_download_data.gcp_scope,
     agg_download_data.total_bytes,
     agg_download_data.avg_bytes,

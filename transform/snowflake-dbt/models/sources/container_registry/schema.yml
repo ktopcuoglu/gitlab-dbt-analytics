@@ -3,15 +3,12 @@ models:
 
   - name: container_registry_download_logs_source
     description: The list of ip that are available to users of google cloud services.
-    tests: 
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - downloaded_at
-            - container_digest
-            - downloaded_by_ip
+
     columns:
       - name: correlation_id
         description: An identifier used to connect different parts of the logs together.
+        tests:
+          - unique
       - name: downloaded_at
         description: The timestamp of when the download occurred.
       - name: root_repository
