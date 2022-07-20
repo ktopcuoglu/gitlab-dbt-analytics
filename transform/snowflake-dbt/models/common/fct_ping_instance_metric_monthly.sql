@@ -27,7 +27,6 @@ final AS (
     fct_ping_instance_metric.dim_host_id AS dim_host_id,
     fct_ping_instance_metric.dim_installation_id AS dim_installation_id,
     fct_ping_instance_metric.dim_license_id AS dim_license_id,
-    fct_ping_instance_metric.license_md5 AS license_md5,
     fct_ping_instance_metric.ping_created_at AS ping_created_at,
     fct_ping_instance_metric.umau_value AS umau_value,
     fct_ping_instance_metric.dim_subscription_license_id AS dim_subscription_license_id,
@@ -36,11 +35,10 @@ final AS (
   FROM fct_ping_instance_metric
   INNER JOIN dim_ping_instance
     ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
-  WHERE --time_frame IN('28d', 'all')
-    --AND 
-    is_last_ping_of_month = TRUE
-  --  AND has_timed_out = FALSE
-  --  AND metric_value IS NOT NULL
+  WHERE time_frame IN('28d', 'all')
+    AND is_last_ping_of_month = TRUE
+    AND has_timed_out = FALSE
+    AND metric_value IS NOT NULL
 
   {% if is_incremental() %}
                 
