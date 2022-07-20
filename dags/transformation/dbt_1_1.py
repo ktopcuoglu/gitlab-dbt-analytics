@@ -116,7 +116,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt --quiet --no-print --no-use-colors --debug run --profiles-dir profile --target prod --models +dim_subscription; 
+    dbt run --profiles-dir profile --target prod --models +dim_subscription; 
     ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
