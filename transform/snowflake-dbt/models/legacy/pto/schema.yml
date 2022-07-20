@@ -1,60 +1,39 @@
 version: 2
 
 models:
-    - name: gitlab_pto_source
-      description: '{{ doc("gitlab_pto_source") }}'
+    - name: gitlab_pto
       columns:
         - name: end_date
           description: '{{ doc("gitlab_pto_end_date") }}'
-          tests:
-            - not_null
         - name: start_date
           description: '{{ doc("gitlab_pto_start_date") }}'
-          tests:
-            - not_null
         - name: pto_status
           description: '{{ doc("gitlab_pto_pto_status") }}'
-          tests:
-            - not_null
+        - name: pto_status_name 
+          description: The decoded `pto_status`
         - name: employee_day_length
           description: '{{ doc("gitlab_pto_employee_day_length") }}'
-          tests:
-            - not_null
         - name: employee_department
           description: '{{ doc("gitlab_pto_employee_department") }}'
-          tests:
-            - not_null
         - name: employee_division
           description: '{{ doc("gitlab_pto_employee_division") }}'
-          tests:
-            - not_null
         - name: hr_employee_id
-          description: '{{ doc("gitlab_pto_hr_employee_id") }}'
+          description: The employee id of Workday
           tests:
             - not_null
         - name: employee_uuid
           description: '{{ doc("gitlab_pto_employee_uuid") }}'
-          tests:
-            - not_null
         - name: pto_uuid
           description: '{{ doc("gitlab_pto_pto_uuid") }}'
-          tests:
-            - not_null
         - name: pto_date
           description: '{{ doc("gitlab_pto_pto_date") }}'
         - name: pto_ends_at
           description: '{{ doc("gitlab_pto_pto_ends_at") }}'
         - name: is_holiday
           description: '{{ doc("gitlab_pto_is_holiday") }}'
-          tests:
-            - not_null
         - name: recorded_hours
           description: '{{ doc("gitlab_pto_recorded_hours") }}'
-          tests:
-            - not_null
         - name: pto_starts_at
           description: '{{ doc("gitlab_pto_pto_starts_at") }}'
         - name: total_hours
           description: '{{ doc("gitlab_pto_total_hours") }}'
-          tests:
-            - not_null
