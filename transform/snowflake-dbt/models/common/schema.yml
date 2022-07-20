@@ -1521,6 +1521,62 @@ models:
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: packages_pushed_registry_all_time_event
+        description: '{{ doc("packages_pushed_registry_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: packages_pulled_registry_all_time_event
+        description: '{{ doc("packages_pulled_registry_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: compliance_dashboard_view_28_days_user
+        description: '{{ doc("compliance_dashboard_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_screen_view_28_days_user
+        description: '{{ doc("audit_screen_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: instance_audit_screen_view_28_days_user
+        description: '{{ doc("instance_audit_screen_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: credential_inventory_view_28_days_user
+        description: '{{ doc("credential_inventory_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: compliance_frameworks_pipeline_28_days_event
+        description: '{{ doc("compliance_frameworks_pipeline_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_streaming_destinations_all_time_event
+        description: '{{ doc("groups_streaming_destinations_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_streaming_destinations_28_days_event
+        description: '{{ doc("groups_streaming_destinations_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_event_destinations_all_time_event
+        description: '{{ doc("audit_event_destinations_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_event_destinations_28_days_event
+        description: '{{ doc("audit_event_destinations_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_status_checks_all_time_event
+        description: '{{ doc("projects_status_checks_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: external_status_checks_all_time_event
+        description: '{{ doc("external_status_checks_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: paid_license_search_28_days_user
+        description: '{{ doc("paid_license_search_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping
 

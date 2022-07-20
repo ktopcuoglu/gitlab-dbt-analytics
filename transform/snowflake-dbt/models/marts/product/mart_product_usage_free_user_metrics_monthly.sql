@@ -164,7 +164,7 @@
       free_user_metrics.active_project_runners_all_time_event,
       free_user_metrics.gitaly_version,
       free_user_metrics.gitaly_servers_all_time_event,
-      -- Wave 6
+      -- Wave 6.0
       free_user_metrics.api_fuzzing_scans_all_time_event,
       free_user_metrics.api_fuzzing_scans_28_days_event,
       free_user_metrics.coverage_fuzzing_scans_all_time_event,
@@ -178,7 +178,22 @@
       free_user_metrics.dast_scans_all_time_event,
       free_user_metrics.dast_scans_28_days_event,
       free_user_metrics.sast_scans_all_time_event,
-      free_user_metrics.sast_scans_28_days_event,   
+      free_user_metrics.sast_scans_28_days_event,
+      -- Wave 6.1
+      free_user_metrics.packages_pushed_registry_all_time_event,
+      free_user_metrics.packages_pulled_registry_all_time_event,
+      free_user_metrics.compliance_dashboard_view_28_days_user,
+      free_user_metrics.audit_screen_view_28_days_user,
+      free_user_metrics.instance_audit_screen_view_28_days_user,
+      free_user_metrics.credential_inventory_view_28_days_user,
+      free_user_metrics.compliance_frameworks_pipeline_28_days_event,
+      free_user_metrics.groups_streaming_destinations_all_time_event,
+      free_user_metrics.groups_streaming_destinations_28_days_event,
+      free_user_metrics.audit_event_destinations_all_time_event,
+      free_user_metrics.audit_event_destinations_28_days_event,
+      free_user_metrics.projects_status_checks_all_time_event,
+      free_user_metrics.external_status_checks_all_time_event,
+      free_user_metrics.paid_license_search_28_days_user,   
       -- Data Quality Flag
       free_user_metrics.is_latest_data
     FROM free_user_metrics
@@ -347,6 +362,20 @@
         'dast_scans_28_days_event',
         'sast_scans_all_time_event',
         'sast_scans_28_days_event',
+        'packages_pushed_registry_all_time_event',
+        'packages_pulled_registry_all_time_event',
+        'compliance_dashboard_view_28_days_user',
+        'audit_screen_view_28_days_user',
+        'instance_audit_screen_view_28_days_user',
+        'credential_inventory_view_28_days_user',
+        'compliance_frameworks_pipeline_28_days_event',
+        'groups_streaming_destinations_all_time_event',
+        'groups_streaming_destinations_28_days_event',
+        'audit_event_destinations_all_time_event',
+        'audit_event_destinations_28_days_event',
+        'projects_status_checks_all_time_event',
+        'external_status_checks_all_time_event',
+        'paid_license_search_28_days_user', 
         'is_latest_data'
     ]
 ) }}
@@ -356,5 +385,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-14",
-    updated_date="2022-06-01"
+    updated_date="2022-07-20"
 ) }}
