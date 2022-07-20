@@ -134,12 +134,14 @@ SELECT DISTINCT
       major_version * 100 + minor_version                                                                           AS major_minor_version_id,
       CASE
         WHEN uuid = 'ea8bf810-1d6f-4a6a-b4fd-93e8cbd8b57f'      THEN 'SaaS'
-        WHEN EXISTS (SELECT 1 FROM dedicated_instance di 
-                     WHERE fct_w_month_flag.uuid = di.uuid)     THEN 'Dedicated'
         ELSE 'Self-Managed'
         END                                                                                                         AS ping_delivery_type,
       CASE
-        WHEN ping_delivery_type = 'SaaS'                THEN TRUE
+        WHEN EXISTS (SELECT 1 FROM dedicated_instance di 
+                     WHERE fct_w_month_flag.uuid = di.uuid)     THEN TRUE
+        ELSE FALSE END                                                                                              AS is_saas_dedicated,
+      CASE
+        WHEN ping_delivery_type = 'SaaS'                        THEN TRUE
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE
         WHEN hostname = 'gitlab.com'                            THEN TRUE
         WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE
@@ -152,7 +154,7 @@ SELECT DISTINCT
       )                                                         THEN TRUE
         ELSE FALSE END                                                                                              AS is_staging,
         CASE
-          WHEN last_ping_of_month_flag = TRUE      THEN TRUE
+          WHEN last_ping_of_month_flag = TRUE                   THEN TRUE
           ELSE FALSE
           END                                                                                                       AS is_last_ping_of_month
     FROM fct_w_month_flag
