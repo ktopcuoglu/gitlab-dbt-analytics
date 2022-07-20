@@ -35,22 +35,16 @@
     -- Subscription, License and CRM account info
     fct_ping_instance_metric_with_license.dim_subscription_id                                  AS dim_subscription_id,
     fct_ping_instance_metric_with_license.dim_license_id                                       AS dim_license_id,
-    fct_ping_instance.dim_crm_account_id                                                       AS dim_crm_account_id,
-    fct_ping_instance.dim_parent_crm_account_id                                                AS dim_parent_crm_account_id,
+    --fct_ping_instance.dim_crm_account_id                                                       AS dim_crm_account_id,
+   -- fct_ping_instance.dim_parent_crm_account_id                                                AS dim_parent_crm_account_id,
     --map_license_subscription.is_usage_ping_license_in_licenseDot,
   --  map_license_subscription.is_license_mapped_to_subscription                                 AS is_license_mapped_to_subscription,
   --  map_license_subscription.is_license_subscription_id_valid                                  AS is_license_subscription_id_valid,
   --  IFF(map_license_subscription.dim_license_id IS NULL, FALSE, TRUE)                          AS is_usage_ping_license_in_CDot,
     fct_ping_instance_metric_with_license.dim_location_country_id                              AS dim_location_country_id,
-  --  fct_ping_instance_with_license_MD5.license_user_count                                      AS license_user_count,
+   -- fct_ping_instance_with_license_MD5.license_user_count                                      AS license_user_count,
     fct_ping_instance_metric_with_license.metrics_path                                         AS metrics_path,
-    CASE WHEN metrics_path IN ('gitlab_shared_runners_enabled','container_registry_enabled','object_store.packages.enabled','instance_auto_devops_enabled',
-    'prometheus_enabled','gitlab_shared_runners_enabled','prometheus_metrics_enabled','usage_activity_by_stage.manage.group_saml_enabled','geo_enabled') 
-     THEN {{ convert_variant_to_boolean_field("metric_value") }} 
-         WHEN metrics_path IN ('gitaly.version')
-     THEN metric_value::VARCHAR
-    ELSE  {{ null_negative_numbers("metric_value") }} END, ---Can be converted to a nested macro?         
-     fct_ping_instance_metric_with_license.metric_value                                        AS metric_value,
+    metric_value,                                           
     fct_ping_instance_metric_with_license.dim_product_tier_id                                  AS dim_product_tier_id,
     fct_ping_instance_metric_with_license.dim_ping_date_id                                     AS dim_ping_date_id,
     fct_ping_instance_metric_with_license.dim_installation_id                                  AS dim_installation_id,
@@ -60,9 +54,9 @@
     FROM fct_ping_instance_metric_with_license
     INNER JOIN gainsight_wave_2_3_metrics
       ON fct_ping_instance_metric_with_license.metrics_path = gainsight_wave_2_3_metrics.metric_name
-    LEFT JOIN fct_ping_instance
-      ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  fct_ping_instance.dim_ping_instance_id
-    where fct_ping_instance_metric_with_license.dim_subscription_id IS NOT NULL
+     -- LEFT JOIN fct_ping_instance
+     -- ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  fct_ping_instance.dim_ping_instance_id
+    WHERE fct_ping_instance_metric_with_license.dim_subscription_id IS NOT NULL
 
 
 ), pivoted AS (
@@ -74,17 +68,21 @@
       dim_subscription_id,
       dim_license_id,
       license_md5,
-      dim_crm_account_id,
-      dim_parent_crm_account_id,
+     -- dim_crm_account_id,
+     -- dim_parent_crm_account_id,
       dim_location_country_id,
       dim_product_tier_id,
       dim_ping_date_id,
       dim_installation_id,
       dim_subscription_license_id,
-      MAX(ping_created_at) AS ping_created_at,
-      {{ dbt_utils.pivot('metrics_path', gainsight_wave_metrics, then_value='metric_value') }}
+      --license_user_count,
+      {{ ping_instance_wave_metrics() }}
+
     FROM final
-    {{ dbt_utils.group_by(n=13)}}
+        QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY final.dim_ping_instance_id
+        ORDER BY final.ping_created_at DESCs
+      ) = 1
 
   
   {% if is_incremental() %}
