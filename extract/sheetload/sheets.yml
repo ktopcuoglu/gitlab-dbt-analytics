@@ -137,6 +137,10 @@ sheets:
     owner: '@ken_aguilar'
     tabs:
       - infrastructure_missing_employees
+  - name: hiring_manager_survey
+    owner: '@pempey'
+    tabs:
+      - hiring_manager_survey_responses
   - name: job_roles_prior_to_2020_02
     owner: '@pluthra'
     tabs:
