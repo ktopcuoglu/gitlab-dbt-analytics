@@ -285,6 +285,9 @@ sources:
       - name: protected_environment_approval_rules
         identifier: gitlab_db_protected_environment_approval_rules
         freshness: null
+      - name: protected_environments
+        identifier: gitlab_db_protected_environments
+        freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
