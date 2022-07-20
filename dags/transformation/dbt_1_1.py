@@ -116,7 +116,7 @@ dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --log-format json --target prod --models +dim_subscription; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -131,29 +131,7 @@ dbt_non_product_models_task = KubernetesPodOperator(
     dag=dag,
 )
 
-
-# run product models on large warehouse
-dbt_product_models_command = f"""
-    {pull_commit_hash} &&
-    {dbt_install_deps_cmd} &&
-    export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-    dbt --no-use-colors test --profiles-dir profile --target prod --models +dim_subscription; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-"""
-
-dbt_product_models_task = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
-    task_id="dbt-product-models-run",
-    name="dbt-product-models-run",
-    secrets=secrets_list,
-    env_vars=pod_env_vars,
-    arguments=[dbt_product_models_command],
-    dag=dag,
-)
-
-
-# dbt-test
+ # dbt-test
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
