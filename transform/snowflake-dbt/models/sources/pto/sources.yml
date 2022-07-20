@@ -4,7 +4,7 @@ sources:
   - name: pto
     database: '{{ env_var("SNOWFLAKE_LOAD_DATABASE") }}'
     schema: pto
-    loader: Airflow
+    loader: Snowpipe
     loaded_at_field: uploaded_at
 
     quoting:
