@@ -39,8 +39,6 @@
       dim_parent_crm_account_id,
       dim_crm_account_id
     FROM dim_crm_account
-
-)
   
 ), cohort_base AS (
   
