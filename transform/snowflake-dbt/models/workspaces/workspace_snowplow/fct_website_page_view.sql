@@ -17,6 +17,8 @@
       RTRIM(
         REGEXP_REPLACE(page_url_path, '^[^a-zA-Z]*|[0-9]|(\-\/+)|\.html$|\/$', '')
         , '/')                                                                      AS clean_urlpath,
+      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
+      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
       user_snowplow_domain_id,
       'page_view'                                                                   AS event_name,
@@ -36,6 +38,8 @@
 
     SELECT
       dim_website_page_sk,
+      namespace_nk,
+      project_nk,
       session_id,
       user_snowplow_domain_id,
       event_name,
@@ -54,6 +58,8 @@
       RTRIM(
         REGEXP_REPLACE(page_url_path, '^[^a-zA-Z]*|[0-9]|(\-\/+)|\.html$|\/$', '')
         , '/')                                                                      AS clean_urlpath,
+      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
+      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
       user_snowplow_domain_id,
       event_name,
@@ -74,6 +80,8 @@
 , unstruct_w_dim AS (
     SELECT
       dim_website_page_sk,
+      namespace_nk,
+      project_nk,
       session_id,
       user_snowplow_domain_id,
       event_name,
