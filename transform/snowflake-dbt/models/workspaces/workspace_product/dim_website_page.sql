@@ -14,12 +14,10 @@
     SELECT
       app_id,
       page_urlhost,
-      RTRIM(
-        REGEXP_REPLACE(page_urlpath, '^[^a-zA-Z]*|[0-9]|(\-\/+)|\.html$|\/$', '')
-        , '/')                                                                      AS clean_urlpath,
-      SPLIT_PART(clean_urlpath, '/' ,1)                                             AS page_group,
-      SPLIT_PART(clean_urlpath, '/' ,2)                                             AS page_type,
-      SPLIT_PART(clean_urlpath, '/' ,3)                                             AS page_sub_type,
+      {{ clean_url('page_urlpath') }}                                               AS clean_url_path,
+      SPLIT_PART(clean_url_path, '/' ,1)                                            AS page_group,
+      SPLIT_PART(clean_url_path, '/' ,2)                                            AS page_type,
+      SPLIT_PART(clean_url_path, '/' ,3)                                            AS page_sub_type,
       refr_medium                                                                   AS referrer_medium,
       max(uploaded_at)                                                              AS max_event_timestamp
     FROM events
@@ -38,10 +36,10 @@
 
     SELECT DISTINCT
       --surrogate_key
-      {{ dbt_utils.surrogate_key(['page_urlhost','clean_urlpath']) }}               AS dim_website_page_sk,
+      {{ dbt_utils.surrogate_key(['page_urlhost','clean_url_path']) }}               AS dim_website_page_sk,
       app_id,
       page_urlhost,
-      clean_urlpath,
+      clean_url_path,
       page_group,
       page_type,
       page_sub_type,

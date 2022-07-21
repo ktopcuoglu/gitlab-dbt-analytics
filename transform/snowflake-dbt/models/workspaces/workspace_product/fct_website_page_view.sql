@@ -14,9 +14,7 @@
 , page_views_w_clean_url AS (
 
     SELECT
-      RTRIM(
-        REGEXP_REPLACE(page_url_path, '^[^a-zA-Z]*|[0-9]|(\-\/+)|\.html$|\/$', '')
-        , '/')                                                                      AS clean_urlpath,
+      {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
@@ -49,15 +47,13 @@
       engaged_seconds,
       NULL                                                                          AS collector_tstamp
     FROM page_views_w_clean_url
-    LEFT JOIN dim_website_page ON page_views_w_clean_url.clean_urlpath = dim_website_page.clean_urlpath
+    LEFT JOIN dim_website_page ON page_views_w_clean_url.clean_url_path = dim_website_page.clean_url_path
 
 )
 
 , unstruct_w_clean_url AS (
     SELECT
-      RTRIM(
-        REGEXP_REPLACE(page_url_path, '^[^a-zA-Z]*|[0-9]|(\-\/+)|\.html$|\/$', '')
-        , '/')                                                                      AS clean_urlpath,
+      {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
@@ -91,7 +87,7 @@
       engaged_seconds,
       collector_tstamp
     FROM unstruct_w_clean_url
-    LEFT JOIN dim_website_page ON unstruct_w_clean_url.clean_urlpath = dim_website_page.clean_urlpath
+    LEFT JOIN dim_website_page ON unstruct_w_clean_url.clean_url_path = dim_website_page.clean_url_path
 )
 
 SELECT *
