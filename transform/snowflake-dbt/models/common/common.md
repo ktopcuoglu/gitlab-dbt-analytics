@@ -1348,7 +1348,6 @@ This new table will include all flattened target values for each metric for each
 - Include only the `Last Pings of the Month`
 - Include `has_timed_out = FALSE` - to remove Metrics that have timed out during ping generation
 - Include `metric_value IS NOT NULL` - Only include Metrics with valid Values
-- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
