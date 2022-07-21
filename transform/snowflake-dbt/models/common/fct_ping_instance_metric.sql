@@ -79,7 +79,9 @@
       prep_license.dim_license_id                                                                          AS dim_license_id,
       dim_date.date_id                                                                                     AS dim_ping_date_id,
       COALESCE(license_subscription_id, prep_subscription.dim_subscription_id)                             AS dim_subscription_id,
-      IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial
+      IFF(prep_usage_ping_cte.ping_created_at < license_trial_ends_on, TRUE, FALSE)                        AS is_trial,
+      IFF(prep_license.dim_subscription_id IS NOT NULL, TRUE, FALSE)                                       AS is_license_mapped_to_subscription, -- does the license table have a value in both license_id and subscription_id
+      IFF(prep_subscription.dim_subscription_id IS NULL, FALSE, TRUE)                                      AS is_license_subscription_id_valid   -- is the subscription_id in the license table valid (does it exist in the subscription table?)
     FROM prep_usage_ping_cte
     LEFT JOIN prep_license
       ON prep_usage_ping_cte.license_md5 = prep_license.license_md5
@@ -111,6 +113,9 @@
       ping_created_at                                                                                             AS ping_created_at,
       umau_value                                                                                                  AS umau_value,
       license_subscription_id                                                                                     AS dim_subscription_license_id,
+      is_license_mapped_to_subscription                                                                           AS is_license_mapped_to_subscription,
+      is_license_subscription_id_valid                                                                            AS is_license_subscription_id_valid,
+      IFF(dim_license_id IS NULL, FALSE, TRUE)                                                                    AS is_service_ping_license_in_customerDot,
       'VERSION_DB'                                                                                                AS data_source,
       metric_attributes.time_frame                                                                                AS time_frame
   FROM joined_payload
@@ -124,5 +129,5 @@
     created_by="@icooper-acp",
     updated_by="@snalamaru",
     created_date="2022-03-08",
-    updated_date="2022-05-16"
+    updated_date="2022-07-21"
 ) }}
