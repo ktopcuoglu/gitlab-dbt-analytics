@@ -112,17 +112,14 @@ prepare-dbt:
 	cd transform/snowflake-dbt/ && poetry install
 	"$(DBT_DEPS)"
 
-pip-dbt-shell:
-	cd transform/snowflake-dbt/ && poetry shell;
-
-run-dbt-deps:
-	"$(DBT_DEPS)"
+run-dbt-no-deps:
 	cd transform/snowflake-dbt/ && poetry shell;
 
 dbt-deps:
-	cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run dbt deps
+	"$(DBT_DEPS)"
 
 run-dbt:
+	"$(DBT_DEPS)"
 	cd transform/snowflake-dbt/ && poetry shell;
 
 run-dbt-docs:
