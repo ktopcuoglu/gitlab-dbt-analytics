@@ -47,6 +47,7 @@
     fct_ping_instance_metric_with_license.metrics_path                                         AS metrics_path,
     fct_ping_instance_metric_with_license..metric_value,                                       AS metric_value,    
     fct_ping_instance_metric_with_license.ping_created_at                                      AS ping_created_at,
+    fct_ping_instance_metric_with_license.hostname                                             AS hostname
 
     FROM fct_ping_instance_metric_with_license
     INNER JOIN gainsight_wave_2_3_metrics
@@ -77,6 +78,7 @@
       license_billable_users,
       historical_max_user_count,
       instance_user_count,
+      hostname,
       is_license_mapped_to_subscription,
       is_license_subscription_id_valid,
       is_service_ping_license_in_customerDot,
