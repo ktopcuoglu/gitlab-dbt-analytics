@@ -98,6 +98,7 @@ Enhanced version of `common.fct_event_user_daily`
 
 **Filters:**
 - For SaaS, include only production gitlab.com installation
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)
@@ -194,6 +195,7 @@ Enhanced version of `common.fct_event_user_daily`
 - Includes metrics for 28 Day and All-Time timeframes
 - Include only the `Last Pings of the Month`
 - For SaaS, include only production gitlab.com installation
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `is_last_ping_of_month` = last ping created per calendar month per Installation (`dim_installation_id`)

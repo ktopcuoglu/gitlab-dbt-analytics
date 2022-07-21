@@ -1198,6 +1198,40 @@ This new table will include all flattened target values for each metric for each
 
 {% enddocs %}
 
+{% docs fct_ping_instance_metric_rolling_24_months %}
+
+**Description:** Atomic Level Instance Service Ping Metric data For All Metrics by Ping
+- The data includes a single row per Ping and Metric.  The basic Id's for Subscription, Product and Location are included. 
+
+**Data Grain:**
+- dim_ping_instance_id
+- metrics_path
+
+**Filters:**
+- UUID is NOT NULL  -  Filter In-Valid Data from Source
+- version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp
+
+**Business Logic in this Model:** 
+- `data_source` = 'VERSION_DB'
+  - GitLab, GitLab Dedicated and Self-Managed Service Pings come through the Version Database.
+- Metrics that timed out (return -1) are set to a value of 0
+
+**Other Comments:**
+- The `fct_ping_instance_metric` table is built directly from the [prep_ping_instance table](https://gitlab-data.gitlab.io/analytics/#!/model/model.gitlab_snowflake.prep_ping_instance) which brings in Instance Service Ping data one record per Service Ping.  Along with the Instance information a 'Payload' column with an array of Metrics is captured in the Service Ping. 
+- Sums, Counts and Percents of Usage (called metrics) is captured along with the Implementation Information at the Instance Level and sent to GitLab. The Instance Owner determines whether Service Ping data will be sent or not. 
+- GitLab implementations can be Customer Hosted (Self-Managed), GitLab Hosted (referred to as SaaS or Dotcom data) or GitLab Dedicated Hosted (where each Installation is Hosted by GitLab but on Separate Servers).  
+- `dim_ping_instance_id` is the unique identifier for the service ping and is synonymous with `id` in the source data
+- `dim_instance_id` is synonymous with `uuid` in the source data
+- `dim_installation_id` is the unique identifier for the actual installation. It is a combination of `dim_instance_id` and `dim_host_id`. `dim_host_id` is required because there can be multiple installations that share the same `dim_instance_id` (ex: gitlab.com has several installations sharing the same dim_instance_id: gitlab.com, staging.gitlab.com, etc)
+- Multiple Instances can be hosted on each Implementation. Multiple Installations can be included within each Instance which is determined by Host_id. (Instance_id || Host_id = Installation_id)
+- Service Ping data is captured at a particular point in time with `all-time, 7_day and 28_day` metrics.  The metrics are only pertinent to the Ping Date and Time and can not be aggregated across Ping Dates. Service Pings are normally compared WoW, MoM, YoY,  etc.  
+- The different types of Service Pings are shown here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping), [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
+- [GitLab Dedicated Implementation](https://docs.gitlab.com/ee/subscriptions/gitlab_dedicated/#gitlab-dedicated) service pings will function similar to Self-Managed Implementations.
+- [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
+
+{% enddocs %}
+
 {% docs fct_ping_instance %}
 
 **Description:** Atomic Level Instance Service Ping with Identifiers by Ping
@@ -1243,6 +1277,7 @@ This new table will include all flattened target values for each metric for each
 - time_frame = '7d'
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
@@ -1276,6 +1311,7 @@ This new table will include all flattened target values for each metric for each
 - time_frame = '28d'
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
@@ -1312,6 +1348,7 @@ This new table will include all flattened target values for each metric for each
 - Include only the `Last Pings of the Month`
 - Include `has_timed_out = FALSE` - to remove Metrics that have timed out during ping generation
 - Include `metric_value IS NOT NULL` - Only include Metrics with valid Values
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
@@ -1346,6 +1383,7 @@ This new table will include all flattened target values for each metric for each
 - time_frame = 'all'
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
+- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
