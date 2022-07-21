@@ -97,6 +97,12 @@ WITH dim_billing_account AS (
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
       dim_crm_account.parent_crm_account_lam                                          AS parent_crm_account_lam,
       dim_crm_account.parent_crm_account_lam_dev_count                                AS parent_crm_account_lam_dev_count,
+      dim_crm_account.parent_crm_account_demographics_sales_segment                   AS parent_crm_account_demographics_sales_segment,
+      dim_crm_account.parent_crm_account_demographics_geo                             AS parent_crm_account_demographics_geo,
+      dim_crm_account.parent_crm_account_demographics_region                          AS parent_crm_account_demographics_region,
+      dim_crm_account.parent_crm_account_demographics_area                            AS parent_crm_account_demographics_area,
+      dim_crm_account.parent_crm_account_demographics_territory                       AS parent_crm_account_demographics_territory,
+      
 
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
