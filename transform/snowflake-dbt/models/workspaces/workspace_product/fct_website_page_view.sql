@@ -1,5 +1,6 @@
 {{ config(
-        materialized = "incremental"
+        materialized = "incremental",
+        unique_key = "fct_website_page_sk",
 ) }}
 
 {{ 
