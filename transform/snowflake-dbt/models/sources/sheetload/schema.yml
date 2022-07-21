@@ -128,6 +128,20 @@ models:
   - name: plan
     tests:
     - not_null
+- name: sheetload_hiring_manager_survey_responses_source
+  description: Responses from the hiring manager survey
+  columns:
+    - name: responded_at
+    - name: overall_rating
+      description: Original question - How would you rate your overall experience with this recruitment process?
+    - name: additional_feedback
+      description: Original question - Please provide any additional details about your hiring experience.
+    - name: sourced_by_ta
+      description: Original question - Did Talent Acquisition source and manage this candidate?
+    - name: recruiter_communication
+      description: Original question - How would you rate the communication you received from your Recruiter?
+    - name: ta_customer_service_rating
+      description: Original question - How would you rate the customer service you and your new hire experienced from the Talent Acquisition team?
 - name: sheetload_ic_collaboration_competency_source
   description: This is a list of all who have completed the IC collaboraiton competency knowledge assessment.
 - name: sheetload_ic_results_competency_source
