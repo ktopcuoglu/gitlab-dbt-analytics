@@ -71,3 +71,9 @@ models:
           - not_null
           - unique
   - name: fct_website_page_view
+    description: TBD
+    columns:
+      - name: fct_website_page_sk
+        tests:
+          - not_null
+          - unique

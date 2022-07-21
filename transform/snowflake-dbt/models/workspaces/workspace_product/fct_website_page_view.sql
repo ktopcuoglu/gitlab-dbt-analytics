@@ -19,6 +19,7 @@
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
       user_snowplow_domain_id,
+      page_view_id                                                                  AS event_id,
       'page_view'                                                                   AS event_name,
       page_view_start                                                               AS page_view_start_at,
       page_view_end                                                                 AS page_view_end_at,
@@ -35,11 +36,20 @@
 , page_views_w_dim AS (
 
     SELECT
+      -- surrogate_key
+      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS fct_website_page_sk,
+
+      -- dimension_keys
       dim_website_page_sk,
+      
+      -- natural_keys
       namespace_nk,
       project_nk,
       session_id,
+      event_id,
       user_snowplow_domain_id,
+
+      -- other attributes
       event_name,
       NULL                                                                          AS sf_formid,
       page_view_start_at,
@@ -57,6 +67,7 @@
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
+      event_id,
       user_snowplow_domain_id,
       event_name,
       sf_formid,
@@ -75,11 +86,20 @@
 
 , unstruct_w_dim AS (
     SELECT
+      -- surrogate_key
+      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS fct_website_page_sk,
+
+      -- dimension_keys
       dim_website_page_sk,
+
+      -- natural_keys
       namespace_nk,
       project_nk,
       session_id,
+      event_id,
       user_snowplow_domain_id,
+
+      -- other attributes
       event_name,
       sf_formid,
       page_view_start_at,
@@ -95,5 +115,5 @@ FROM page_views_w_dim
 
 UNION ALL
 
-SELECT *
+SELECT  *
 FROM unstruct_w_dim
