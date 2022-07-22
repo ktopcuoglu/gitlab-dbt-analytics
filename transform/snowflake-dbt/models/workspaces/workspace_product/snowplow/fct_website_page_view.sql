@@ -1,6 +1,6 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "fct_website_page_sk",
+        unique_key = "website_page_view_pk",
 ) }}
 
 {{ 
@@ -16,8 +16,8 @@
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       page_url_host,
-      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
-      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
+      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS dim_namespace_id,
+      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS dim_project_id,
       session_id,
       user_snowplow_domain_id,
       page_view_id                                                                  AS event_id,
@@ -36,26 +36,29 @@
 ), page_views_w_dim AS (
 
     SELECT
-      -- surrogate_key
-      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS fct_website_page_sk,
+      -- Primary Key
+      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS website_page_view_pk,
 
-      -- dimension_keys
+      -- Foreign Keys
       dim_website_page_sk,
-      
-      -- natural_keys
-      namespace_nk,
-      project_nk,
+      dim_namespace_id,
+      dim_project_id,
+
+      --Time attributes
+      page_view_start_at,
+      page_view_end_at,
+      collector_tstamp,
+      NULL                                                                          AS collector_tstamp,
+
+      -- Natural Keys
       session_id,
       event_id,
       user_snowplow_domain_id,
 
-      -- other attributes
+      -- Attributes
       event_name,
       NULL                                                                          AS sf_formid,
-      page_view_start_at,
-      page_view_end_at,
-      engaged_seconds,
-      NULL                                                                          AS collector_tstamp
+      engaged_seconds
     FROM page_views_w_clean_url
     LEFT JOIN dim_website_page ON page_views_w_clean_url.clean_url_path = dim_website_page.clean_url_path
     AND page_views_w_clean_url.page_url_host = dim_website_page.page_url_host
@@ -67,8 +70,8 @@
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       page_url_host,
-      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
-      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
+      REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS dim_namespace_id,
+      REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS dim_project_id,
       session_id,
       event_id,
       user_snowplow_domain_id,
@@ -91,36 +94,48 @@
 , unstruct_w_dim AS (
 
     SELECT
-      -- surrogate_key
-      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS fct_website_page_sk,
+      -- Primary Key
+      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS website_page_view_pk,
 
-      -- dimension_keys
+      -- Foreign Keys
       dim_website_page_sk,
+      dim_namespace_id,
+      dim_project_id,
 
-      -- natural_keys
-      namespace_nk,
-      project_nk,
+      --Time attributes
+      page_view_start_at,
+      page_view_end_at,
+      collector_tstamp,
+
+      -- Natural Keys
       session_id,
       event_id,
       user_snowplow_domain_id,
 
-      -- other attributes
+      -- Attributes
       event_name,
       sf_formid,
-      page_view_start_at,
-      page_view_end_at,
-      engaged_seconds,
-      collector_tstamp
+      engaged_seconds
     FROM unstruct_w_clean_url
     LEFT JOIN dim_website_page ON unstruct_w_clean_url.clean_url_path = dim_website_page.clean_url_path
     AND unstruct_w_clean_url.page_url_host = dim_website_page.page_url_host
 
 )
 
-SELECT *
-FROM page_views_w_dim
+, unioned AS (
+    SELECT *
+    FROM page_views_w_dim
 
-UNION ALL
+    UNION ALL
 
-SELECT  *
-FROM unstruct_w_dim
+    SELECT  *
+    FROM unstruct_w_dim
+)
+
+{{ dbt_audit(
+    cte_ref="unioned",
+    created_by="@chrissharp",
+    updated_by="@chrissharp",
+    created_date="2022-07-22",
+    updated_date="2022-07-22"
+) }}

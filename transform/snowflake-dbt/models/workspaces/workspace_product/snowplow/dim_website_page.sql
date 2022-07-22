@@ -34,11 +34,15 @@
 ), dim_with_pk AS (
 
     SELECT DISTINCT
-      --surrogate_key
+      -- Surrogate Key
       {{ dbt_utils.surrogate_key(['page_url_host','clean_url_path']) }}               AS dim_website_page_sk,
+
+      -- Natural Keys
       app_id,
       page_url_host,
       clean_url_path,
+
+      -- Attributes
       page_group,
       page_type,
       page_sub_type,
@@ -48,5 +52,10 @@
 
 )
 
-SELECT *
-FROM dim_with_pk
+{{ dbt_audit(
+    cte_ref="dim_with_pk",
+    created_by="@chrissharp",
+    updated_by="@chrissharp",
+    created_date="2022-07-22",
+    updated_date="2022-07-22"
+) }}
