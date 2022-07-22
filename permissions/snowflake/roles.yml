@@ -748,6 +748,8 @@ roles:
                     - prep.gitlab_dotcom
                     - prep.data_science
                     - prep.zendesk
+                    - prep.snowplow
+                    - prep.snowplow_2022_01
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
@@ -755,6 +757,7 @@ roles:
                     - prod.restricted_safe_common_mart_sales
                     - prod.common_mart_product
                     - prod.common_mart_marketing
+                    - prod.common
                     - raw.*
                 write:
                     - prod.boneyard
@@ -764,14 +767,22 @@ roles:
                     - prep.gitlab_dotcom.*
                     - prep.data_science.*
                     - prep.zendesk.*
+                    - prep.snowplow_2022_01.snowplow_structured_events
+                    - prep.snowplow_2022_01.snowplow_gitlab_events_experiment_contexts
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.zendesk_tickets_xf
+                    - prod.legacy.customers_db_trial_histories
+                    - prod.legacy.gitlab_dotcom_memberships
+                    - prod.legacy.gitlab_dotcom_user_details
+                    - prod.legacy.gitlab_dotcom_users_xf
                     - prod.workspace_data_science.*
                     - prod.restricted_safe_workspace_sales.*
                     - prod.restricted_safe_common_mart_sales.*
                     - prod.common_mart_product.*
                     - prod.common_mart_marketing.*
+                    - prod.common.dim_namespace
+                    - prod.common.dim_order_hist
                     - raw.*.*
                 write:
                     - prod.boneyard.*
