@@ -47,7 +47,6 @@
       --Time attributes
       page_view_start_at,
       page_view_end_at,
-      collector_tstamp,
       NULL                                                                          AS collector_tstamp,
 
       -- Natural Keys
