@@ -198,3 +198,4 @@ models:
           - unique
       - name: employee_id
       - name: user_id
+      - name: gitlab_username
