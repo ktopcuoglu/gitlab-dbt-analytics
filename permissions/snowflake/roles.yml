@@ -19,6 +19,8 @@ databases:
         shared: no
     - zoominfo_inbound:
         shared: yes
+    - monte_carlo:
+        shared: yes
 
 # User / Testing
     - bi_tool_eval:
