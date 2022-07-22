@@ -938,6 +938,7 @@ roles:
                 - prod.common_mart_product
                 - prod.legacy
                 - prep.sensitive
+                - monte_carlo.prod_insights
             tables:
                 - prod.common.*
                 - prod.common_mapping.*
@@ -947,12 +948,14 @@ roles:
                 - prod.common_mart_product.*
                 - prod.legacy.*
                 - prep.sensitive.*
+                - monte_carlo.prod_insights.*
         privileges:
             databases:
                 read:
                     - prep
                     - prod
                     - raw
+                    - monte_carlo
                 write:
                     - prep
                     - prod
@@ -960,6 +963,7 @@ roles:
             schemas:
                 read:
                     - raw.*
+                    - monte_carlo.prod_insights
                 write:
                     - prep.*
                     - prod.*
@@ -967,6 +971,7 @@ roles:
             tables:
                 read:
                     - raw.*.*
+                    - monte_carlo.prod_insights.*
                 write:
                     - prep.*.*
                     - prod.*.*
