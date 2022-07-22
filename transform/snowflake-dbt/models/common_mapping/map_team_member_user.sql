@@ -2,9 +2,9 @@ WITH employees AS (
   -- Attempts to get the most recent username for a team member
   SELECT DISTINCT
     employee_id,
-    LAST_VALUE(gitlab_username) OVER 
-      (PARTITION BY employee_id ORDER BY uploaded_at ASC) AS gitlab_username
-  FROM {{ ref('blended_employee_mapping_source') }} 
+    LAST_VALUE(gitlab_username)
+    OVER (PARTITION BY employee_id ORDER BY uploaded_at ASC) AS gitlab_username
+  FROM {{ ref('blended_employee_mapping_source') }}
   WHERE NULLIF(gitlab_username, '') IS NOT NULL
 
 ),
@@ -14,7 +14,7 @@ users AS (
   SELECT
     user_id,
     user_name
-  FROM {{ ref('gitlab_dotcom_users_source') }} 
+  FROM {{ ref('gitlab_dotcom_users_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY user_name ORDER BY last_activity_on DESC ) = 1
 
 ),
@@ -40,4 +40,3 @@ map AS (
     created_date="2022-07-22",
     updated_date="2022-07-22"
 ) }}
-
