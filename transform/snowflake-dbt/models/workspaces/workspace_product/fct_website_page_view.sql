@@ -9,7 +9,6 @@
     ('unstruct_events', 'snowplow_unstructured_events_all'),
     ('dim_website_page', 'dim_website_page')
     ])
-
 }}
 
 , page_views_w_clean_url AS (
@@ -33,9 +32,8 @@
     AND uploaded_at > (SELECT max(page_view_end_at) FROM {{ this }})
 
     {% endif %}
-)
 
-, page_views_w_dim AS (
+), page_views_w_dim AS (
 
     SELECT
       -- surrogate_key
@@ -65,6 +63,7 @@
 )
 
 , unstruct_w_clean_url AS (
+
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
       page_url_host,
@@ -86,9 +85,11 @@
     AND collector_tstamp > (SELECT max(collector_tstamp) FROM {{ this }})
 
     {% endif %}
+
 )
 
 , unstruct_w_dim AS (
+
     SELECT
       -- surrogate_key
       {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS fct_website_page_sk,
@@ -113,6 +114,7 @@
     FROM unstruct_w_clean_url
     LEFT JOIN dim_website_page ON unstruct_w_clean_url.clean_url_path = dim_website_page.clean_url_path
     AND unstruct_w_clean_url.page_url_host = dim_website_page.page_url_host
+
 )
 
 SELECT *

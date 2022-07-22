@@ -6,7 +6,6 @@
 {{ simple_cte([
     ('events', 'snowplow_unnested_events_all')
     ])
-
 }}
 
 , page AS (
