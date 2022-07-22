@@ -151,7 +151,7 @@ dbt_snapshot_models_command = f"""
 
 dbt_snapshot_models_run = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-run-model-snapshots",
     name="dbt-run-model-snapshots",
     trigger_rule="all_done",
@@ -171,7 +171,7 @@ dbt_test_snapshots_cmd = f"""
 
 dbt_test_snapshot_models = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-test-snapshots",
     name="dbt-test-snapshots",
     trigger_rule="all_done",
