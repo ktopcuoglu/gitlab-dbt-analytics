@@ -3,7 +3,7 @@
     ('dim_order_type','dim_order_type'),
     ('fct_sales_funnel_target', 'fct_sales_funnel_partner_alliance_target'),
     ('dim_sales_qualified_source', 'dim_sales_qualified_source'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date','dim_date'),
     ('dim_crm_user_hierarchy_stamped', 'dim_crm_user_hierarchy_stamped')
@@ -28,14 +28,10 @@
       dim_channel_type.channel_type_name,
       dim_alliance_type.alliance_type_name,
       dim_alliance_type.alliance_type_short_name,
-      dim_alliance_type_hist.alliance_type_name        AS alliance_type_name_hist,
-      dim_alliance_type_hist.alliance_type_short_name  AS alliance_type_short_name_hist,
       fct_sales_funnel_target.allocated_target
     FROM fct_sales_funnel_target
     LEFT JOIN dim_alliance_type
       ON fct_sales_funnel_target.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
-    LEFT JOIN dim_alliance_type AS dim_alliance_type_hist
-      ON fct_sales_funnel_target.dim_alliance_type_hist_id = dim_alliance_type_hist.dim_alliance_type_id
     LEFT JOIN dim_sales_qualified_source
       ON fct_sales_funnel_target.dim_sales_qualified_source_id = dim_sales_qualified_source.dim_sales_qualified_source_id
     LEFT JOIN dim_channel_type
@@ -66,7 +62,7 @@
 
     SELECT
       {{ dbt_utils.surrogate_key(['date_day', 'kpi_name', 'crm_user_sales_segment', 'crm_user_geo', 'crm_user_region',
-        'crm_user_area', 'order_type_name', 'alliance_type_name_hist', 'alliance_type_name', 'sales_qualified_source_name']) }}        AS primary_key,
+        'crm_user_area', 'order_type_name', 'alliance_type_name', 'sales_qualified_source_name']) }}                              AS primary_key,
       date_day                                                                                                                    AS target_date,
       DATEADD('day', 1, target_date)                                                                                              AS report_target_date,
       first_day_of_week,
@@ -84,24 +80,22 @@
       order_type_grouped,
       alliance_type_name,
       alliance_type_short_name,
-      alliance_type_name_hist,
-      alliance_type_short_name_hist,
       sales_qualified_source_name,
       sqs_bucket_engagement,
       channel_type_name,
       allocated_target                                                                                                            AS monthly_allocated_target,
       daily_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name_hist, alliance_type_name, sales_qualified_source_name, first_day_of_week ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, first_day_of_week ORDER BY date_day)
                                                                                                                                   AS wtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name_hist, alliance_type_name, sales_qualified_source_name, target_month ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, target_month ORDER BY date_day)
                                                                                                                                   AS mtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name_hist, alliance_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, fiscal_quarter_name ORDER BY date_day)
                                                                                                                                   AS qtd_allocated_target,
       SUM(daily_allocated_target) OVER(PARTITION BY kpi_name, crm_user_sales_segment, crm_user_geo, crm_user_region,
-                             crm_user_area, order_type_name, alliance_type_name_hist, alliance_type_name, sales_qualified_source_name, fiscal_year ORDER BY date_day)
+                             crm_user_area, order_type_name, alliance_type_name, sales_qualified_source_name, fiscal_year ORDER BY date_day)
                                                                                                                                   AS ytd_allocated_target
 
     FROM monthly_targets_daily

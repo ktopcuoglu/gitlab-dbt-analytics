@@ -72,7 +72,7 @@ Model to map revenue from Zuora Revenue to the appropriate account (revenue, con
 
 {% enddocs %}
 
-{% docs dim_alliance_type %}
+{% docs dim_alliance_type_scd %}
 Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
 
 [Technology Partners Handbook Reference](https://about.gitlab.com/handbook/alliances/#technology-partners)

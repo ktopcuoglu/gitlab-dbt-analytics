@@ -3,7 +3,7 @@
       ('sfdc_user_hierarchy_stamped', 'prep_crm_user_hierarchy_stamped'),
       ('sales_qualified_source', 'prep_sales_qualified_source'),
       ('order_type', 'prep_order_type'),
-      ('alliance_type', 'prep_alliance_type'),
+      ('alliance_type', 'prep_alliance_type_scd'),
       ('channel_type', 'prep_channel_type'),
       ('date_details_source', 'date_details_source')
 ])}}
@@ -32,7 +32,6 @@
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                                           AS dim_sales_qualified_source_id,
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                                   AS dim_order_type_id,
       {{ get_keyed_nulls('alliance_type.dim_alliance_type_id') }}                                                                             AS dim_alliance_type_id,
-      {{ get_keyed_nulls('alliance_type_hist.dim_alliance_type_id') }}                                                                        AS dim_alliance_type_hist_id,
       {{ get_keyed_nulls('channel_type.dim_channel_type_id') }}                                                                               AS dim_channel_type_id
     FROM sheetload_sales_funnel_partner_alliance_targets_matrix_source
     LEFT JOIN date
@@ -43,8 +42,6 @@
       ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_partner_alliance_targets_matrix_source.order_type") }} = {{ sales_funnel_text_slugify("order_type.order_type_name") }}
     LEFT JOIN alliance_type
       ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_partner_alliance_targets_matrix_source.alliance_partner") }} = {{ sales_funnel_text_slugify("alliance_type.alliance_type_name") }}
-    LEFT JOIN alliance_type AS alliance_type_hist
-      ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_partner_alliance_targets_matrix_source.alliance_partner_hist") }} = {{ sales_funnel_text_slugify("alliance_type_hist.alliance_type_name") }}
     LEFT JOIN channel_type
       ON {{ sales_funnel_text_slugify("sheetload_sales_funnel_partner_alliance_targets_matrix_source.channel_type") }} = {{ sales_funnel_text_slugify("channel_type.channel_type_name") }}
 
@@ -85,7 +82,6 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       target_matrix.dim_channel_type_id,
       target_matrix.alliance_partner,
       target_matrix.dim_alliance_type_id,
-      target_matrix.dim_alliance_type_hist_id,
       fy22_user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped,
       fy22_user_hierarchy.dim_crm_user_hierarchy_stamped_id,
       fy22_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
@@ -116,7 +112,6 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
       target_matrix.dim_channel_type_id,
       target_matrix.alliance_partner,
       target_matrix.dim_alliance_type_id,
-      target_matrix.dim_alliance_type_hist_id,
       fy23_and_beyond_user_hierarchy.crm_opp_owner_sales_segment_geo_region_area_stamped,
       fy23_and_beyond_user_hierarchy.dim_crm_user_hierarchy_stamped_id,
       fy23_and_beyond_user_hierarchy.dim_crm_opp_owner_sales_segment_stamped_id,
@@ -153,12 +148,11 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
      unioned_targets.dim_sales_qualified_source_id,
      unioned_targets.alliance_partner,
      unioned_targets.dim_alliance_type_id,
-     unioned_targets.dim_alliance_type_hist_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
      unioned_targets.channel_type,
      unioned_targets.dim_channel_type_id,
-     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                             AS crm_user_sales_segment_geo_region_area,
+     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                            AS crm_user_sales_segment_geo_region_area,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)           AS dim_crm_user_hierarchy_live_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)   AS dim_crm_user_sales_segment_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                       AS dim_crm_user_geo_id,
@@ -174,7 +168,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
     FROM unioned_targets
     LEFT JOIN sfdc_user_hierarchy_live
       ON unioned_targets.dim_crm_user_hierarchy_stamped_id = sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id
-    {{ dbt_utils.group_by(n=24) }}
+    {{ dbt_utils.group_by(n=23) }}
 
 )
 

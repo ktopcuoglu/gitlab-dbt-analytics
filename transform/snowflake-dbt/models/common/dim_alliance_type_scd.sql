@@ -11,7 +11,7 @@ WITH alliance_type AS (
       valid_from,
       valid_to,
       is_currently_valid
-    FROM {{ ref('prep_alliance_type') }}
+    FROM {{ ref('prep_alliance_type_scd') }}
 )
 
 {{ dbt_audit(

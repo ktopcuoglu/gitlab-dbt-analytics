@@ -11,9 +11,7 @@ WITH source AS (
       sales_qualified_source::VARCHAR                     AS sales_qualified_source,
       IFF(sales_qualified_source::VARCHAR = 'Channel Generated', 'Partner Sourced', 'Co-sell')
                                                           AS sqs_bucket_engagement,
-      alliance_partner::VARCHAR                           AS alliance_partner_hist,
-      IFF(alliance_partner = 'Non-Alliance Partners', 'Channel Partners', alliance_partner::VARCHAR)
-                                                          AS alliance_partner,
+      alliance_partner::VARCHAR                           AS alliance_partner,
       order_type::VARCHAR                                 AS order_type,
       area::VARCHAR                                       AS area,
       user_segment::VARCHAR                               AS user_segment,

@@ -6,7 +6,7 @@
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date')
 ]) }}
@@ -126,10 +126,8 @@
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
       dim_dr_partner_engagement.dr_partner_engagement_name,
-      dim_alliance_type.alliance_type_name,
-      dim_alliance_type.alliance_type_short_name,
-      dim_alliance_type_hist.alliance_type_name                            AS alliance_type_name_hist,
-      dim_alliance_type_hist.alliance_type_short_name                      AS alliance_type_short_name_hist,
+      dim_alliance_type_current.alliance_type_name,
+      dim_alliance_type_current.alliance_type_short_name,
       dim_channel_type.channel_type_name,
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
@@ -295,10 +293,8 @@
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_dr_partner_engagement
       ON fct_crm_opportunity.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
-    LEFT JOIN dim_alliance_type
-      ON fct_crm_opportunity.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
-    LEFT JOIN dim_alliance_type AS dim_alliance_type_hist
-      ON fct_crm_opportunity.dim_alliance_type_hist_id = dim_alliance_type_hist.dim_alliance_type_id
+    LEFT JOIN dim_alliance_type AS dim_alliance_type_current
+      ON fct_crm_opportunity.dim_alliance_type_current_id = dim_alliance_type_current.dim_alliance_type_id
     LEFT JOIN dim_channel_type
       ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
     LEFT JOIN dim_crm_user_hierarchy_stamped_sales_segment

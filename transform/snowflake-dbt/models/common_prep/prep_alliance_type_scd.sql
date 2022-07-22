@@ -28,10 +28,10 @@ WITH sfdc_opportunity_source AS (
 ), alliance_type AS (
 
     SELECT
-      {{ alliance_partner_hist('fulfillment_partner.account_name', 'partner_account.account_name',
+      {{ alliance_partner('fulfillment_partner.account_name', 'partner_account.account_name',
                        'sfdc_opportunity_source.close_date', 'sfdc_opportunity_source.partner_track',
                        'sfdc_opportunity_source.resale_partner_track', 'sfdc_opportunity_source.deal_path') }}       AS alliance_type,
-      {{ alliance_partner_short_hist('fulfillment_partner.account_name', 'partner_account.account_name',
+      {{ alliance_partner_short('fulfillment_partner.account_name', 'partner_account.account_name',
                              'sfdc_opportunity_source.close_date', 'sfdc_opportunity_source.partner_track',
                              'sfdc_opportunity_source.resale_partner_track', 'sfdc_opportunity_source.deal_path') }} AS alliance_type_short,
       MIN(dim_date.first_day_of_fiscal_quarter)                                                                      AS valid_from,

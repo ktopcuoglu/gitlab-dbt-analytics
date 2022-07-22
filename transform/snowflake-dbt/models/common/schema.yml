@@ -200,8 +200,8 @@ models:
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
 
-  - name: dim_alliance_type
-    description: '{{ doc("dim_alliance_type") }}'
+  - name: dim_alliance_type_scd
+    description: '{{ doc("dim_alliance_type_scd") }}'
     columns:
       - name: dim_alliance_type_id
         description: Alliance type from prep table identifying the type of alliance relationship the partner has with GitLab.
