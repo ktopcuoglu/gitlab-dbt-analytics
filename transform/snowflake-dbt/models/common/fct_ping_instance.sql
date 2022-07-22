@@ -99,7 +99,7 @@
       prep_usage_ping_cte.license_md5                                                 AS license_md5,
       license_billable_users                                                          AS license_billable_users,
       Instance_user_count                                                             AS instance_user_count,
-      historical_max_users                                                            AS historical_max_users,
+      historical_max_users                                                            AS historical_max_user_count,
       prep_usage_ping_cte.license_user_count                                          AS license_user_count,
       hostname                                                                        AS hostname,
       umau_value                                                                      AS umau_value,

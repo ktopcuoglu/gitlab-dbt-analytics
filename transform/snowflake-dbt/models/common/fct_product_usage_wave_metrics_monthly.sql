@@ -6,7 +6,9 @@
     ('subscriptions', 'bdg_subscription_product_rate_plan'),
     ('dates', 'dim_date'),
     ('seat_link', 'fct_usage_self_managed_seat_link'),
-    ('smau', 'fct_usage_ping_subscription_mapped_smau')
+   -- ('smau', 'fct_usage_ping_subscription_mapped_smau'),
+    ('dim_ping_instance', 'dim_ping_instance'),
+    ('fct_ping_instance_metric_wave', 'fct_ping_instance_metric_wave')
 ]) }}
 
 
@@ -23,29 +25,10 @@
     WHERE product_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=4)}}
 
-), smau_convert AS (
+), ping_instance_metric_wave_sm_mnth AS (
 
-    SELECT distinct
-      dim_subscription_id,
-      uuid,
-      hostname,
-      snapshot_month,
-      {{ convert_variant_to_number_field('manage_analytics_total_unique_counts_monthly') }}                                         AS analytics_28_days_user,
-      {{ convert_variant_to_number_field('plan_redis_hll_counters_issues_edit_issues_edit_total_unique_counts_monthly') }}          AS issues_edit_28_days_user,
-      {{ convert_variant_to_number_field('package_redis_hll_counters_user_packages_user_packages_total_unique_counts_monthly') }}   AS user_packages_28_days_user,
-      {{ convert_variant_to_number_field('configure_redis_hll_counters_terraform_p_terraform_state_api_unique_users_monthly') }}    AS terraform_state_api_28_days_user,
-      {{ convert_variant_to_number_field('monitor_incident_management_activer_user_28_days') }}                                     AS incident_management_28_days_user
-    FROM smau
-
-), usage_ping AS (
-
-    SELECT *,
-           dim_ping_instance.ping_created_at_month,
-           dim_ping_instance.ping_delivery_type,
-            dim_ping_instance.cleaned_version
-    FROM {{ ref('fct_ping_instance_metric_wave') }}
-    LEFT OUTER JOIN {{ ref('dim_ping_instance') }}
-    ON fct_ping_instance_metric_wave.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
+    SELECT fct_ping_instance_metric_wave.*
+    FROM fct_ping_instance_metric_wave
     WHERE dim_subscription_id IS NOT NULL
       AND ping_delivery_type = 'Self-Managed'
     QUALIFY ROW_NUMBER() OVER (
@@ -64,28 +47,28 @@
       sm_subscriptions.dim_subscription_id_original,
       sm_subscriptions.dim_billing_account_id,
       sm_subscriptions.snapshot_month,
-      {{ get_date_id('sm_subscriptions.snapshot_month') }}                                    AS snapshot_date_id,
-      seat_link.report_date                                                                   AS seat_link_report_date,
-      {{ get_date_id('seat_link.report_date') }}                                              AS seat_link_report_date_id,
+      {{ get_date_id('sm_subscriptions.snapshot_month') }}                                                       AS snapshot_date_id,
+      seat_link.report_date                                                                                      AS seat_link_report_date,
+      {{ get_date_id('seat_link.report_date') }}                                                                 AS seat_link_report_date_id,
       usage_ping.dim_usage_ping_id,
       usage_ping.ping_created_at,
-      {{ get_date_id('usage_ping.ping_created_at') }}                                         AS ping_created_date_id,
-      usage_ping.uuid,
-      usage_ping.hostname,
-      usage_ping.instance_type,
-      usage_ping.dim_license_id,
-      usage_ping.license_md5,
-      usage_ping.cleaned_version,
-      usage_ping.dim_location_country_id,
+      {{ get_date_id('fct_product_usage_wave_1_3_metrics_monthly.ping_created_at') }}                             AS ping_created_date_id,
+      ping_instance_metric_wave_sm.uuid,
+      ping_instance_metric_wave_sm.hostname,
+      ping_instance_metric_wave_sm.instance_type,
+      ping_instance_metric_wave_sm.dim_license_id,
+      ping_instance_metric_wave_sm.license_md5,
+      ping_instance_metric_wave_sm.cleaned_version,
+      ping_instance_metric_wave_sm.dim_location_country_id,
       -- Wave 1
       DIV0(
-          usage_ping.license_billable_users,
-          IFNULL(usage_ping.license_user_count, seat_link.license_user_count)
-          )                                                                                   AS license_utilization,
-      usage_ping.license_billable_users                                                       AS billable_user_count,
-      usage_ping.instance_user_count                                                          AS active_user_count,
-      IFNULL(usage_ping.historical_max_users, seat_link.max_historical_user_count)            AS max_historical_user_count,
-      IFNULL(usage_ping.license_user_count, seat_link.license_user_count)                     AS license_user_count,
+          fct_product_usage_wave_1_3_metrics_monthly.license_billable_users,
+          IFNULL(fct_product_usage_wave_1_3_metrics_monthly.license_user_count, seat_link.license_user_count)
+          )                                                                                                     AS license_utilization,
+      usage_ping.license_billable_users                                                                         AS billable_user_count,
+      usage_ping.instance_user_count                                                                            AS active_user_count,
+      IFNULL(usage_ping.historical_max_users, seat_link.max_historical_user_count)                              AS max_historical_user_count,
+      IFNULL(usage_ping.license_user_count, seat_link.license_user_count)                                       AS license_user_count,
       -- Wave 2 & 3
       usage_ping.umau_28_days_user,
       usage_ping.action_monthly_active_users_project_repo_28_days_user,
@@ -266,18 +249,15 @@
     LEFT JOIN seat_link
       ON sm_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
       AND sm_subscriptions.snapshot_month = seat_link.snapshot_month
-    LEFT JOIN smau_convert
-      ON sm_subscriptions.dim_subscription_id = smau_convert.dim_subscription_id
-      AND sm_subscriptions.snapshot_month = smau_convert.snapshot_month
-      AND usage_ping.uuid = smau_convert.uuid
-      AND usage_ping.hostname = smau_convert.hostname
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
-    created_by="@ischweickartDD",
-    updated_by="@mdrussell",
-    created_date="2021-02-08",
-    updated_date="2021-05-06"
+    created_by="@snalamaru",
+    updated_by="@snalamaru",
+    created_date="2021-007-21",
+    updated_date="2021-07-21"
 ) }}
+
+

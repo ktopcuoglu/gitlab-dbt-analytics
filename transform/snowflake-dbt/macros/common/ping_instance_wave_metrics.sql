@@ -1,4 +1,4 @@
-{%- macro wave_metrics(metrics_path, metric_value) -%}
+{%- macro ping_instance_wave_metrics(metrics_path, metric_value) -%}
 
 --usage ping data - devops metrics ( wave 2 & 3.0)
 CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.manage.events' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS umau_28_days_user,

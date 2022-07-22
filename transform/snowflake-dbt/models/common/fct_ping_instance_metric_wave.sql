@@ -39,16 +39,18 @@
     fct_ping_instance_metric_with_license.dim_product_tier_id                                  AS dim_product_tier_id, 
     fct_ping_instance_metric_with_license.dim_ping_date_id                                     AS dim_ping_date_id,
     fct_ping_instance_metric_with_license.dim_installation_id                                  AS dim_installation_id,
-    fct_ping_instance_metric_with_license.dim_subscription_license_id                          AS dim_subscription_license_id
-    fct_ping_instance_with.license_user_count                                                  AS license_user_count,
-    fct_ping_instance_with.license_user_count                                                  AS license_billable_users,
-    fct_ping_instance_with.license_user_count                                                  AS historical_max_user_count,
-    fct_ping_instance_with.license_user_count                                                  AS instance_user_count,
+    fct_ping_instance_metric_with_license.dim_subscription_license_id                          AS dim_subscription_license_id,
+    fct_ping_instance.license_user_count                                                       AS license_user_count,
+    fct_ping_instance.license_billable_users                                                   AS license_billable_users,
+    fct_ping_instance.historical_max_user_count                                                AS historical_max_user_count,
+    fct_ping_instance.instance_user_count                                                      AS instance_user_count,
     fct_ping_instance_metric_with_license.metrics_path                                         AS metrics_path,
-    fct_ping_instance_metric_with_license..metric_value,                                       AS metric_value,    
+    fct_ping_instance_metric_with_license.metric_value                                         AS metric_value,    
     fct_ping_instance_metric_with_license.ping_created_at                                      AS ping_created_at,
-    fct_ping_instance_metric_with_license.hostname                                             AS hostname
-
+    fct_ping_instance.hostname                                                                 AS hostname,
+    fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_mapped_to_subscription,
+    fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_subscription_id_valid,
+    fct_ping_instance_metric_with_license.is_service_ping_license_in_customerDot               AS is_service_ping_license_in_customerDot
     FROM fct_ping_instance_metric_with_license
     INNER JOIN gainsight_wave_2_3_metrics
       ON fct_ping_instance_metric_with_license.metrics_path = gainsight_wave_2_3_metrics.metric_name
