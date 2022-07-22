@@ -235,6 +235,7 @@ roles:
                     - raw
                     - snowflake
                     - testing_db
+                    - monte_carlo
                 write:
                     - prep
                     - prod
@@ -246,6 +247,7 @@ roles:
                     - prod.*
                     - raw.*
                     - testing_db.*
+                    - monte_carlo.prod_insights
                 write:
                     - prep.*
                     - prod.*
@@ -257,6 +259,7 @@ roles:
                     - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
+                    - monte_carlo.prod_insights.*
                 write:
                     - prep.*.*
                     - prod.*.*
