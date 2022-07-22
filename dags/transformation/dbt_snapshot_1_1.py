@@ -11,7 +11,7 @@ from airflow.operators.python_operator import (
 from airflow.models import Variable
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
-    DBT_IMAGE,
+    DBT_IMAGE_1_1,
     dbt_install_deps_cmd,
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
