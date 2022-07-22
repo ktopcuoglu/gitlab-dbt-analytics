@@ -16,6 +16,7 @@
 
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
+      page_url_host,
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
@@ -59,12 +60,14 @@
       NULL                                                                          AS collector_tstamp
     FROM page_views_w_clean_url
     LEFT JOIN dim_website_page ON page_views_w_clean_url.clean_url_path = dim_website_page.clean_url_path
+    AND page_views_w_clean_url.page_url_host = dim_website_page.page_url_host
 
 )
 
 , unstruct_w_clean_url AS (
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
+      page_url_host,
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS namespace_nk,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS project_nk,
       session_id,
@@ -109,6 +112,7 @@
       collector_tstamp
     FROM unstruct_w_clean_url
     LEFT JOIN dim_website_page ON unstruct_w_clean_url.clean_url_path = dim_website_page.clean_url_path
+    AND unstruct_w_clean_url.page_url_host = dim_website_page.page_url_host
 )
 
 SELECT *

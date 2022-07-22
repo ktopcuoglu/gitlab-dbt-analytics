@@ -13,7 +13,7 @@
 
     SELECT
       app_id,
-      page_urlhost,
+      page_urlhost                                                                  AS page_url_host,
       {{ clean_url('page_urlpath') }}                                               AS clean_url_path,
       SPLIT_PART(clean_url_path, '/' ,1)                                            AS page_group,
       SPLIT_PART(clean_url_path, '/' ,2)                                            AS page_type,
@@ -38,7 +38,7 @@
       --surrogate_key
       {{ dbt_utils.surrogate_key(['page_urlhost','clean_url_path']) }}               AS dim_website_page_sk,
       app_id,
-      page_urlhost,
+      page_url_host,
       clean_url_path,
       page_group,
       page_type,
