@@ -749,7 +749,7 @@ roles:
                     - prep.data_science
                     - prep.zendesk
                     - prep.snowplow
-                    - prep.snowplow_2022_01
+                    - prep.snowplow_*_*
                     - prod.boneyard
                     - prod.legacy
                     - prod.workspace_data_science
@@ -767,8 +767,8 @@ roles:
                     - prep.gitlab_dotcom.*
                     - prep.data_science.*
                     - prep.zendesk.*
-                    - prep.snowplow_2022_01.snowplow_structured_events
-                    - prep.snowplow_2022_01.snowplow_gitlab_events_experiment_contexts
+                    - prep.snowplow_*_*.snowplow_structured_events
+                    - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
                     - prod.boneyard.*
                     - prod.legacy.gitlab_dotcom_namespaces_xf
                     - prod.legacy.zendesk_tickets_xf
