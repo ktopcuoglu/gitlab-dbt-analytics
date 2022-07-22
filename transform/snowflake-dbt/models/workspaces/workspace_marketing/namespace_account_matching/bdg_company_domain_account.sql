@@ -41,7 +41,7 @@ domain_ranks AS (
       PARTITION BY company_id ORDER BY number_of_domain_persons DESC,
         email_domain ASC ) AS domain_rank
   FROM person_domains
-  WHERE is_business_email
+  WHERE is_business_email = TRUE
 )
 
 -- Finds the crm account ids and email domain rank for each company.
