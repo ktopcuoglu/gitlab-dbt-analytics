@@ -97,7 +97,7 @@ dbt_snapshot_cmd = f"""
 
 dbt_snapshot = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-snapshots",
     name="dbt-snapshots",
     secrets=task_secrets,
@@ -108,7 +108,7 @@ dbt_snapshot = KubernetesPodOperator(
 
 dbt_commit_hash_setter = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE,
+    image=DBT_IMAGE_1_1,
     task_id="dbt-commit-hash-setter",
     name="dbt-commit-hash-setter",
     env_vars=pod_env_vars,
