@@ -44,7 +44,7 @@
       dim_namespace_id,
       dim_project_id,
 
-      --Time attributes
+      --Time Attributes
       page_view_start_at,
       page_view_end_at,
       NULL                                                                          AS collector_tstamp,
@@ -101,7 +101,7 @@
       dim_namespace_id,
       dim_project_id,
 
-      --Time attributes
+      --Time Attributes
       page_view_start_at,
       page_view_end_at,
       collector_tstamp,

@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: dim_website_page
+    description: Dimension for the analysis of webpages used according to the page_urlpath in Snowplow.
+    columns:
+      - name: dim_website_page_sk
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_website_page_view
+    description: TBD
+    columns:
+      - name: website_page_view_pk
+        tests:
+          - not_null
+          - unique
