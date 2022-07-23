@@ -24,15 +24,15 @@ final AS (
     FROM fct_ping_instance_metric
     LEFT JOIN dim_ping_metric
       ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
-    WHERE time_frame = 'all'
+    WHERE DATE_TRUNC(MONTH, fct_ping_instance_metric.ping_created_at::DATE) >= DATEADD(MONTH, -13, DATE_TRUNC(MONTH,CURRENT_DATE))
         
 )
 
 
 {{ dbt_audit(
     cte_ref="final",
-    created_by="@icooper-acp",
+    created_by="@iweeks",
     updated_by="@iweeks",
-    created_date="2022-05-03",
+    created_date="2022-07-20",
     updated_date="2022-07-20"
 ) }}
