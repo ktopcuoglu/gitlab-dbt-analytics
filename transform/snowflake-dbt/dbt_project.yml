@@ -430,10 +430,6 @@ models:
           +tags: ["safe"]
           secure: true
 
-      poc:
-        +tags: ["poc", "product"]
-        +enabled: true
-
       retention:
         +schema: restricted_safe_legacy
         +tags: ["safe"]
