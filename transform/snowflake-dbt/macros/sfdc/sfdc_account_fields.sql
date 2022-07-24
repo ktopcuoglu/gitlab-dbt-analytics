@@ -18,6 +18,17 @@ WITH map_merged_crm_account AS (
    -- this filter will only be applied on an incremental run
    AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
 
+
+), lam_corrections AS (
+
+    SELECT
+      dim_parent_crm_account_id                 AS dim_parent_crm_account_id,
+      dev_count                                 AS dev_count,
+      estimated_capped_lam                      AS estimated_capped_lam,
+      first_day_of_month                        AS first_day_of_month,
+      REPLACE(first_day_of_month, '-', '-')     AS snapshot_id
+    FROM {{ ref('driveload_lam_corrections_source') }}
+
    {% endif %}
 {%- endif %}
 
@@ -175,8 +186,13 @@ WITH map_merged_crm_account AS (
       sfdc_account.carr_this_account,
       sfdc_account.carr_account_family,
       sfdc_account.potential_arr_lam,
+      {%- if model_type == 'live' %}
       sfdc_account.lam                                                    AS parent_crm_account_lam,
       sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
+      {%- elif model_type == 'snapshot' %}
+      IFNULL(lam_corrections.estimated_capped_lam, sfdc_account.lam)      AS parent_crm_account_lam,
+      IFNULL(lam_corrections.dev_count, sfdc_account.lam_dev_count)       AS parent_crm_account_lam_dev_count,
+      {%- endif %}
       sfdc_account.fy22_new_logo_target_list,
       sfdc_account.is_first_order_available,
       sfdc_account.gitlab_com_user,
@@ -260,6 +276,10 @@ WITH map_merged_crm_account AS (
     LEFT JOIN sfdc_users AS account_owner
       ON account_owner.user_id = sfdc_account.owner_id
         AND account_owner.snapshot_id = sfdc_account.snapshot_id
+    LEFT JOIN lam_corrections
+      ON ultimate_parent_account.account_id = lam_corrections.dim_parent_crm_account_id
+        AND sfdc_account.snapshot_id = lam_corrections.snapshot_id
+
     {%- endif %}
 
 )
