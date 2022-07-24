@@ -26,7 +26,7 @@ WITH map_merged_crm_account AS (
       dev_count                                 AS dev_count,
       estimated_capped_lam                      AS estimated_capped_lam,
       first_day_of_month                        AS first_day_of_month,
-      REPLACE(first_day_of_month, '-', '-')     AS snapshot_id
+      REPLACE(first_day_of_month, '-', '')      AS snapshot_id
     FROM {{ ref('driveload_lam_corrections_source') }}
 
    {% endif %}
