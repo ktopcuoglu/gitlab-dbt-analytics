@@ -18,6 +18,7 @@ WITH map_merged_crm_account AS (
    -- this filter will only be applied on an incremental run
    AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
 
+{% endif %}
 
 ), lam_corrections AS (
 
@@ -29,7 +30,6 @@ WITH map_merged_crm_account AS (
       REPLACE(first_day_of_month, '-', '')      AS snapshot_id
     FROM {{ ref('driveload_lam_corrections_source') }}
 
-   {% endif %}
 {%- endif %}
 
 ), sfdc_account AS (
