@@ -19,3 +19,5 @@ seeds:
     description: '{{ doc("map_saas_event_to_smau") }}'
   - name: director_location_factors
     description: '{{ doc("director_location_factors") }}'
+  - name: gitlab_dotcom_access_levels
+    description: '{{ doc("gitlab_dotcom_access_levels") }}'
