@@ -54,7 +54,7 @@ namespace_companies_accounts AS (
   LEFT JOIN marketing_contact
     ON memberships.user_id = marketing_contact.gitlab_dotcom_user_id
   LEFT JOIN access_levels
-    ON memberships.access_level = access_levels.access_level
+    ON memberships.access_level = access_levels.access_level_id
   QUALIFY ROW_NUMBER() OVER (PARTITION BY namespace.dim_namespace_id,
     memberships.user_id ORDER BY memberships.access_level DESC) = 1
 )
