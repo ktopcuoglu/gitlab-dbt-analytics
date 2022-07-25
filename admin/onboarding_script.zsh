@@ -51,11 +51,11 @@ brew install --cask visual-studio-code
 code --version
 echo "VS Code successfully installed"
 
-echo "Installing anaconda.."
-curl -O https://repo.anaconda.com/archive/Anaconda3-2021.05-MacOSX-x86_64.sh
-bash Anaconda3-2021.05-MacOSX-x86_64.sh -u -b -f
-rm Anaconda3-2021.05-MacOSX-x86_64.sh
-echo "anaconda installed succesfully"
+## install miniforge
+echo "Installing miniforge.."
+brew install miniforge
+echo "export PATH=/usr/local/mambaforge/bin:"$PATH"" >> ~/.bash_profile
+echo "miniforge installed succesfully"
 
 ## Set up the computer to contribute to the handbook
 echo "Setting up your computer to contribute to the handbook..."
