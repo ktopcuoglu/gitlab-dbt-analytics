@@ -170,6 +170,12 @@ CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.manage.audit_event_des
 CASE WHEN metrics_path = 'counts.projects_with_external_status_checks' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS projects_status_checks_all_time_event,
 CASE WHEN metrics_path = 'counts.external_status_checks' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS external_status_checks_all_time_event,
 CASE WHEN metrics_path = 'redis_hll_counters.search.i_search_paid_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS paid_license_search_28_days_user,
-CASE WHEN metrics_path = 'redis_hll_counters.manage.unque_active_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS last_activity_28_days_user
+CASE WHEN metrics_path = 'redis_hll_counters.manage.unque_active_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS last_activity_28_days_user,
 
+---SMAU metrics
+CASE WHEN metrics_path = 'redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS terraform_state_api_28_days_user,
+CASE WHEN metrics_path = 'ranalytics_unique_visits.analytics_unique_visits_for_any_target_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS analytics_28_days_user,
+CASE WHEN metrics_path = 'redis_hll_counters.incident_management.incident_management_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS incident_management_28_days_user,
+CASE WHEN metrics_path = 'redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS user_packages_28_days_user,
+CASE WHEN metrics_path = 'redis_hll_counters.issues_edit.issues_edit_total_unique_counts_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS issues_edit_28_days_user
 {%- endmacro -%}

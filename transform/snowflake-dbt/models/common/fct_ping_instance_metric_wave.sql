@@ -13,7 +13,8 @@
 
 {{ simple_cte([
     ('fct_ping_instance', 'fct_ping_instance'),
-    ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics')
+    ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics'),
+    ('dim_ping_instance','dim_ping_instance')
 ]) }}
 
 
@@ -47,17 +48,21 @@
     fct_ping_instance_metric_with_license.metrics_path                                         AS metrics_path,
     fct_ping_instance_metric_with_license.metric_value                                         AS metric_value,    
     fct_ping_instance_metric_with_license.ping_created_at                                      AS ping_created_at,
+    dim_ping_instance.ping_created_at_month                                                    AS ping_created_at_month,
     fct_ping_instance.hostname                                                                 AS hostname,
     fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_mapped_to_subscription,
     fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_subscription_id_valid,
-    fct_ping_instance_metric_with_license.is_service_ping_license_in_customerDot               AS is_service_ping_license_in_customerDot
+    fct_ping_instance_metric_with_license.is_service_ping_license_in_customerDot               AS is_service_ping_license_in_customerDot,
+    dim_ping_instance.ping_delivery_type                                                       AS ping_delivery_type
+
     FROM fct_ping_instance_metric_with_license
     INNER JOIN gainsight_wave_2_3_metrics
       ON fct_ping_instance_metric_with_license.metrics_path = gainsight_wave_2_3_metrics.metric_name
     LEFT JOIN fct_ping_instance
       ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  fct_ping_instance.dim_ping_instance_id
+    LEFT OUTER JOIN dim_ping_instance
+    ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  dim_ping_instance.dim_ping_instance_id
     WHERE fct_ping_instance_metric_with_license.dim_subscription_id IS NOT NULL
-
 
 ), pivoted AS (
 
@@ -65,6 +70,8 @@
       dim_ping_instance_id,
       uuid,
       ping_created_at,
+      ping_created_at_month,
+      ping_delivery_type,
       dim_host_id,
       dim_subscription_id,
       dim_license_id,
@@ -91,13 +98,6 @@
       PARTITION BY final.dim_ping_instance_id
         ORDER BY final.ping_created_at DESC
       ) = 1
-
-  
-  {% if is_incremental() %}
-                
-    AND final.ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
-    
-  {% endif %}
 
 )
 
