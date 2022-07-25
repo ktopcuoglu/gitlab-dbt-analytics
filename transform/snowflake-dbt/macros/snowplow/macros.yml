@@ -3,3 +3,5 @@ version: 2
 macros:
   - name: unpack_unstructured_event
     description: '{{ doc("unpack_unstructured_event") }}'
+  - name: clean_url
+    description: '{{ doc("clean_url") }}'

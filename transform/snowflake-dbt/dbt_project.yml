@@ -522,6 +522,8 @@ models:
         +tags: ["product"]
         source_1_on_1_copy:
           +schema: workspace_product
+        snowplow:
+          +schema: workspace_product
 
       workspace_saas_usage_ping:
         +tags: ["product", "service_ping"]
