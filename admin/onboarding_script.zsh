@@ -72,7 +72,7 @@ echo "handbook jump alias successfully added"
 ## install iterm2
 echo "Installing iTerm2.."
 cd ~/Downloads
-curl https://iterm2.com/downloads/stable/iTerm2-3_3_9.zip > iTerm2.zip
+curl https://iterm2.com/downloads/stable/iTerm2-3_4_16.zip > iTerm2.zip
 unzip iTerm2.zip &> /dev/null
 mv iTerm.app/ /Applications/iTerm.app
 spctl --add /Applications/iTerm.app
