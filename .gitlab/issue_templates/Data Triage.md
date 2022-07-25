@@ -92,7 +92,7 @@ Completed with x errors and x warnings:
 The focus area for the Data Engineer are the Data Pipelines and Data Infrastructure. 
 * [ ] Check [Trusted Data Health Dashboard](https://app.periscopedata.com/app/gitlab/891891/TD:-Trusted-Data-Health-Dashboard) to get high level overview of health status if the data in the Snowflake Data-warehouse could be trusted or not. Health Status in the dashboard is presented separately for Data extraction (RAW data layer) and Data transformation (Prod data layer) with a PASS, FAIL, WARNING status.
 * [ ] React by investigating and respond to each **active** failure in **#data-pipelines** and **#data-prom-alerts by:**
-    * [ ] Updating the Monte Carlo status via Slack according to the defined action
+    * [ ] Updating the [Monte Carlo](https://getmontecarlo.com/monitors) status via Slack according to the defined action
     * [ ] [Opening](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) an [incident](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in case a failure results in a data outage
     * [ ] [Creating](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) an issue for each issue
         * [ ] Link to all resulting incidents/issues and MRs in slack      
