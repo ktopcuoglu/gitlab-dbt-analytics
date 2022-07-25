@@ -85,7 +85,7 @@
 
     {% if is_incremental() %}
 
-    AND collector_tstamp > (SELECT max(collector_tstamp) FROM {{ this }})
+    WHERE collector_tstamp > (SELECT max(collector_tstamp) FROM {{ this }})
 
     {% endif %}
 
