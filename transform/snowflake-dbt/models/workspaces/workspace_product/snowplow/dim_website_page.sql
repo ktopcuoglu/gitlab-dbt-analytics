@@ -31,7 +31,7 @@
 
     {{ dbt_utils.group_by(n=7) }}
 
-), dim_with_pk AS (
+), dim_with_sk AS (
 
     SELECT DISTINCT
       -- Surrogate Key
@@ -53,7 +53,7 @@
 )
 
 {{ dbt_audit(
-    cte_ref="dim_with_pk",
+    cte_ref="dim_with_sk",
     created_by="@chrissharp",
     updated_by="@chrissharp",
     created_date="2022-07-22",
