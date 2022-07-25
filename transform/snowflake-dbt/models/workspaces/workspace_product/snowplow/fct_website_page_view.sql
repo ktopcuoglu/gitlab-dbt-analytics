@@ -30,7 +30,7 @@
 
     {% if is_incremental() %}
 
-    AND uploaded_at > (SELECT max(page_view_end_at) FROM {{ this }})
+    WHERE uploaded_at > (SELECT max(page_view_end_at) FROM {{ this }})
 
     {% endif %}
 
