@@ -73,7 +73,9 @@ Model to map revenue from Zuora Revenue to the appropriate account (revenue, con
 {% enddocs %}
 
 {% docs dim_alliance_type_scd %}
-Model to identify Channel partners that are alliance partners. Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
+[Slowly changing dimension type 2](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/type-2/#:~:text=Slowly%20changing%20dimension%20type%202,multiple%20rows%20describing%20each%20member.) to identify Channel partners groupings. Can be joined to either `dim_alliance_type_id` to get the historical information on channel partners or to `dim_alliance_type_current_id` to get the most recent state of channel partners.
+
+Technology Partners are identified and discussed in the handbook link referenced below. The specific groupings to report out on were determined by FP&A and Sales Analytics.
 
 [Technology Partners Handbook Reference](https://about.gitlab.com/handbook/alliances/#technology-partners)
 
