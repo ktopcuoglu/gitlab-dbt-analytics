@@ -334,8 +334,6 @@ Enhanced version of `common.fct_event_user_daily`
 
 {% enddocs %}
 
-
-
 {% docs mart_ping_instance_metric_monthly %}
 
 **Description:** Atomic Level and Enriched Service Ping Metric information by Ping and Metric

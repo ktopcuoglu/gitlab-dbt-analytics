@@ -1332,8 +1332,6 @@ This new table will include all flattened target values for each metric for each
 
 {% enddocs %}
 
-
-
 {% docs fct_ping_instance_metric_7_day %}
 
 **Description:** Atomic Level Instance Service Ping Metric data For 7 Day Metrics by Ping and Metric
@@ -1347,7 +1345,6 @@ This new table will include all flattened target values for each metric for each
 - time_frame = '7d'
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
-- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
@@ -1381,7 +1378,6 @@ This new table will include all flattened target values for each metric for each
 - time_frame = '28d'
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
-- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
@@ -1452,7 +1448,6 @@ This new table will include all flattened target values for each metric for each
 - time_frame = 'all'
 - UUID is NOT NULL  -  Filter In-Valid Data from Source
 - version NOT LIKE '%VERSION%'  - Filter In-Valid Data from Source
-- Filters to a rolling 24 months of service pings by the ping_created_at timestamp. The filtering is done in the upstream fct_ping_instance_metric_rolling_24_months model. 
 
 **Business Logic in this Model:** 
 - `data_source` = 'VERSION_DB'
