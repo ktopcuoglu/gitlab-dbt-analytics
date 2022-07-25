@@ -1,6 +1,7 @@
 {{ config(
         materialized = "incremental",
         unique_key = "website_page_view_pk",
+        full_refresh = false
 ) }}
 
 {{ 
