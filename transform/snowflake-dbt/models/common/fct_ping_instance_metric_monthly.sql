@@ -23,7 +23,7 @@ final AS (
       fct_ping_instance_metric.*,
       dim_ping_metric.time_frame
     FROM fct_ping_instance_metric
-    LEFT JOIN dim_ping_metric
+    INNER JOIN dim_ping_metric
       ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
     INNER JOIN dim_ping_instance
       ON fct_ping_instance_metric.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
