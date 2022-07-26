@@ -51,11 +51,11 @@ brew install --cask visual-studio-code
 code --version
 echo "VS Code successfully installed"
 
-echo "Installing anaconda.."
-curl -O https://repo.anaconda.com/archive/Anaconda3-2021.05-MacOSX-x86_64.sh
-bash Anaconda3-2021.05-MacOSX-x86_64.sh -u -b -f
-rm Anaconda3-2021.05-MacOSX-x86_64.sh
-echo "anaconda installed succesfully"
+## install miniforge
+echo "Installing miniforge.."
+brew install miniforge
+echo "export PATH=/usr/local/mambaforge/bin:"$PATH"" >> ~/.bash_profile
+echo "miniforge installed succesfully"
 
 ## Set up the computer to contribute to the handbook
 echo "Setting up your computer to contribute to the handbook..."
@@ -72,8 +72,8 @@ echo "handbook jump alias successfully added"
 ## install iterm2
 echo "Installing iTerm2.."
 cd ~/Downloads
-curl https://iterm2.com/downloads/stable/iTerm2-3_3_9.zip > iTerm2.zip
-unzip iTerm2.zip &> /dev/null
+curl https://iterm2.com/downloads/stable/iTerm2-3_4_16.zip > iTerm2.zip
+unzip iTerm2.zip - A &> /dev/null
 mv iTerm.app/ /Applications/iTerm.app
 spctl --add /Applications/iTerm.app
 rm -rf iTerm2.zip

@@ -109,6 +109,7 @@
       dim_campaign.is_a_channel_partner_involved,
       dim_campaign.is_an_alliance_partner_involved,
       dim_campaign.is_this_an_in_person_event,
+      dim_campaign.will_there_be_mdf_funding,
       dim_campaign.alliance_partner_name,
       dim_campaign.channel_partner_name,
       dim_campaign.sales_play,
