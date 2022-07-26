@@ -280,7 +280,7 @@ WITH map_merged_crm_account AS (
     LEFT JOIN lam_corrections
       ON ultimate_parent_account.account_id = lam_corrections.dim_parent_crm_account_id
         AND sfdc_account.snapshot_id = lam_corrections.snapshot_id
-        AND parent_crm_account_sales_segment = lam_corrections.parent_crm_account_sales_segment
+        AND parent_crm_account_sales_segment = lam_corrections.dim_parent_crm_account_sales_segment
 
     {%- endif %}
 
