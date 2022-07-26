@@ -9,7 +9,7 @@ WITH prep_usage_data_flattened AS (
     SELECT * FROM {{ ref('prep_ping_instance_flattened')}}
     {% if is_incremental() %}
 
-      WHERE created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
+      WHERE created_at >= (SELECT MAX(created_at) FROM {{this}})
 
     {% endif %}
 
