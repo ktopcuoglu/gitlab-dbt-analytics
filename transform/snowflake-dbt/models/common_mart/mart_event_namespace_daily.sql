@@ -23,6 +23,7 @@ fact_with_dims AS (
 
   SELECT
     fact.*,
+    dim_namespace.namespace_type AS ultimate_parent_namespace_type,
     dim_namespace.namespace_is_internal,
     dim_namespace.namespace_creator_is_blocked,
     dim_namespace.created_at AS namespace_created_at,

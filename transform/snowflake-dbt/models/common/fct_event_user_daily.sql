@@ -28,6 +28,8 @@ fct_event_user_daily AS (
     --Degenerate Dimensions (No stand-alone, promoted dimension table)
     event_date,
     event_name,
+    days_since_user_creation_at_event_date,
+    days_since_namespace_creation_at_event_date,
     plan_id_at_event_date,
     plan_name_at_event_date,
     plan_was_paid_at_event_date,
@@ -43,7 +45,7 @@ fct_event_user_daily AS (
     COUNT(*) AS event_count
   FROM fct_event_valid
   WHERE is_null_user = FALSE
-  {{ dbt_utils.group_by(n=21) }}
+  {{ dbt_utils.group_by(n=23) }}
 
 )
 
