@@ -54,3 +54,24 @@ Preliminary results for mapping subscriptions to opportunites. This file has the
 The director level minimum location factors are currently hardcoded into the [Compensation Calculator](https://gitlab.com/gitlab-com/people-group/peopleops-eng/compensation-calculator/-/blob/da9d7101eb332d43cf621c70d8cfa1c002b1ed9a/app/javascript/calculator/salary.vue#L129).  If they are changed this file will have to be updated with the correct factors and dates.
 
 {% enddocs %}
+
+
+{% docs gitlab_dotcom_access_levels %}
+
+The names and meanings for the access levels are taken directly from the GitLab code and API reference documentation
+
+https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/access.rb#L12
+
+```ruby
+    NO_ACCESS      = 0
+    MINIMAL_ACCESS = 5
+    GUEST          = 10
+    REPORTER       = 20
+    DEVELOPER      = 30
+    MAINTAINER     = 40
+    OWNER          = 50
+```
+
+https://docs.gitlab.com/ee/api/access_requests.html
+
+{% enddocs %}

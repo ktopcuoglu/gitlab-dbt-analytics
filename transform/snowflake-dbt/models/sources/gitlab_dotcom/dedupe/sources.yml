@@ -135,6 +135,7 @@ sources:
       - name: clusters_applications_runners
         identifier: gitlab_db_clusters_applications_runners
         freshness: null
+      - name: gitlab_db_container_repositories
       - name: dast_profiles
         identifier: gitlab_db_dast_profiles
         freshness:
