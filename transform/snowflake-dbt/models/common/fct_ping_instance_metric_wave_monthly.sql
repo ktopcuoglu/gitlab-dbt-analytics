@@ -255,6 +255,6 @@
     cte_ref="joined",
     created_by="@snalamaru",
     updated_by="@snalamaru",
-    created_date="2021-07-21",
-    updated_date="2021-07-21"
+    created_date="2022-07-21",
+    updated_date="2022-07-21"
 ) }}
