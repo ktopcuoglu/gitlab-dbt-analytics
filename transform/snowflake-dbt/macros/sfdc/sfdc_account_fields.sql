@@ -31,7 +31,7 @@ WITH map_merged_crm_account AS (
     FROM {{ ref('driveload_lam_corrections_source') }}
     INNER JOIN snapshot_dates
         ON snapshot_dates.date_actual >= valid_from
-          AND snapshot_dates.date_actual <= COALESCE(valid_to, '9999-12-31'::TIMESTAMP)
+          AND snapshot_dates.date_actual < COALESCE(valid_to, '9999-12-31'::TIMESTAMP)
 
 {%- endif %}
 
