@@ -23,13 +23,15 @@ WITH map_merged_crm_account AS (
 ), lam_corrections AS (
 
     SELECT
-      dim_parent_crm_account_id                 AS dim_parent_crm_account_id,
-      dev_count                                 AS dev_count,
-      estimated_capped_lam                      AS estimated_capped_lam,
-      first_day_of_month                        AS first_day_of_month,
-      REPLACE(first_day_of_month, '-', '')      AS snapshot_id,
-      parent_crm_account_sales_segment          AS dim_parent_crm_account_sales_segment
+      snapshot_dates.date_id                  AS snapshot_id,
+      dim_parent_crm_account_id               AS dim_parent_crm_account_id,
+      dev_count                               AS dev_count,
+      estimated_capped_lam                    AS estimated_capped_lam,
+      dim_parent_crm_account_sales_segment    AS dim_parent_crm_account_sales_segment
     FROM {{ ref('driveload_lam_corrections_source') }}
+    INNER JOIN snapshot_dates
+        ON snapshot_dates.date_actual >= valid_from
+          AND snapshot_dates.date_actual <= COALESCE(valid_to, '9999-12-31'::TIMESTAMP)
 
 {%- endif %}
 
