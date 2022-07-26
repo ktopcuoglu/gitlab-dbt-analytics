@@ -27,7 +27,8 @@ WITH map_merged_crm_account AS (
       dev_count                                 AS dev_count,
       estimated_capped_lam                      AS estimated_capped_lam,
       first_day_of_month                        AS first_day_of_month,
-      REPLACE(first_day_of_month, '-', '')      AS snapshot_id
+      REPLACE(first_day_of_month, '-', '')      AS snapshot_id,
+      parent_crm_account_sales_segment          AS dim_parent_crm_account_sales_segment
     FROM {{ ref('driveload_lam_corrections_source') }}
 
 {%- endif %}
@@ -279,6 +280,7 @@ WITH map_merged_crm_account AS (
     LEFT JOIN lam_corrections
       ON ultimate_parent_account.account_id = lam_corrections.dim_parent_crm_account_id
         AND sfdc_account.snapshot_id = lam_corrections.snapshot_id
+        AND parent_crm_account_sales_segment = lam_corrections.parent_crm_account_sales_segment
 
     {%- endif %}
 
