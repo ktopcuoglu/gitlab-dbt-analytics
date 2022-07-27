@@ -48,7 +48,7 @@
       monthly_metrics.dim_ping_instance_id,
       monthly_metrics.ping_created_at,
       monthly_metrics.ping_created_date_id,
-      monthly_metrics.uuid,
+      monthly_metrics.dim_instance_id                                       AS uuid,
       monthly_metrics.hostname,
       instance_type.instance_type,
       monthly_metrics.dim_license_id,
@@ -182,7 +182,7 @@
     LEFT JOIN dim_ping_instance 
      ON monthly_metrics.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
     LEFT JOIN instance_type 
-      ON monthly_metrics.uuid = instance_type.instance_uuid
+      ON monthly_metrics.dim_instance_id = instance_type.instance_uuid
       AND monthly_metrics.hostname = instance_type.instance_hostname
 
 )

@@ -33,7 +33,7 @@
     QUALIFY ROW_NUMBER() OVER (
       PARTITION BY
         dim_subscription_id,
-        uuid,
+        dim_instance_id,
         hostname,
         ping_created_at_month
       ORDER BY ping_created_at DESC
@@ -52,7 +52,7 @@
       ping_instance_wave_sm.dim_ping_instance_id,
       ping_instance_wave_sm.ping_created_at,
       {{ get_date_id('ping_instance_wave_sm.ping_created_at') }}                                         AS ping_created_date_id,
-      ping_instance_wave_sm.uuid,
+      ping_instance_wave_sm.dim_instance_id,
       ping_instance_wave_sm.hostname,
       --ping_instance_wave_sm.instance_type,
       ping_instance_wave_sm.dim_license_id,
@@ -66,7 +66,7 @@
           )                                                                                              AS license_utilization,
       ping_instance_wave_sm.license_billable_users                                                       AS billable_user_count,
       ping_instance_wave_sm.instance_user_count                                                          AS active_user_count,
-      IFNULL(ping_instance_wave_sm.historical_max_user_count, seat_link.max_historical_user_count)            AS max_historical_user_count,
+      IFNULL(ping_instance_wave_sm.historical_max_user_count, seat_link.max_historical_user_count)       AS max_historical_user_count,
       IFNULL(ping_instance_wave_sm.license_user_count, seat_link.license_user_count)                     AS license_user_count,
       -- Wave 2 & 3
       ping_instance_wave_sm.umau_28_days_user,
@@ -235,7 +235,7 @@
       IFF(is_data_in_subscription_month = TRUE AND
             ROW_NUMBER() OVER (PARTITION BY
                                 sm_subscriptions.dim_subscription_id,
-                                ping_instance_wave_sm.uuid,
+                                ping_instance_wave_sm.dim_instance_id,
                                 ping_instance_wave_sm.hostname,
                                 is_data_in_subscription_month
                                ORDER BY sm_subscriptions.snapshot_month DESC

@@ -29,7 +29,7 @@
     SELECT
   
     fct_ping_instance_metric_with_license.dim_ping_instance_id                                 AS dim_ping_instance_id, 
-    fct_ping_instance_metric_with_license.dim_instance_id                                      AS uuid, 
+    fct_ping_instance_metric_with_license.dim_instance_id                                      AS dim_instance_id, 
     fct_ping_instance_metric_with_license.dim_host_id                                          AS dim_host_id, 
     fct_ping_instance_metric_with_license.license_md5                                          AS license_md5,
     fct_ping_instance_metric_with_license.dim_subscription_id                                  AS dim_subscription_id,
@@ -68,7 +68,7 @@
 
     SELECT
       dim_ping_instance_id,
-      uuid,
+      dim_instance_id,
       ping_created_at,
       ping_created_at_month,
       ping_delivery_type,
