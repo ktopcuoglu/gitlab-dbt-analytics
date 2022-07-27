@@ -33,6 +33,7 @@ WITH sfdc_campaign_info AS (
       sales_play,
       gtm_motion,
       total_planned_mqls,
+      will_there_be_mdf_funding,
 
       -- user ids
       campaign_owner_id,
