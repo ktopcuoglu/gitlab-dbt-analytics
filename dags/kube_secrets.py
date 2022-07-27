@@ -283,3 +283,12 @@ ZUORA_API_CLIENT_ID = Secret(
 ZUORA_API_CLIENT_SECRET = Secret(
     "env", "ZUORA_API_CLIENT_SECRET", "airflow", "ZUORA_API_CLIENT_SECRET"
 )
+
+
+# Data Science Load Role
+SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE = Secret(
+    "env",
+    "SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE",
+    "airflow",
+    "SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE",
+)

@@ -782,6 +782,37 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - data_science_loader:
+          warehouses:
+              - loading
+          owns:
+              schemas:
+                  - raw.data_science
+          privileges:
+              databases:
+                  read:
+                      - prep.snowplow_*_*
+                      - prod
+                      - raw
+                  write:
+                      - prod
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+                      - prod.common.*
+                      - prod.legacy.*
+                      - prep.snowplow_*_*.snowplow_structured_events
+                      - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
+                  write:
+                      - raw.data_science
+              tables:
+                  - raw.data_science.*
+                  - prod.workspace_data_science.*
+              write:
+                  - raw.data_science.*
+                  - prod.workspace_data_science.*
+
     - meltano:
         warehouses:
             - loading
@@ -943,8 +974,6 @@ roles:
                 - prod.common_mart_product
                 - prod.legacy
                 - prep.sensitive
-                - prep.snowplow
-                - prep.snowplow_*_*
                 - monte_carlo.prod_insights
             tables:
                 - prod.common.*
@@ -955,8 +984,6 @@ roles:
                 - prod.common_mart_product.*
                 - prod.legacy.*
                 - prep.sensitive.*
-                - prep.snowplow_*_*.snowplow_structured_events
-                - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
                 - monte_carlo.prod_insights.*
         privileges:
             databases:
@@ -4244,6 +4271,7 @@ users:
             - reporter
             - sysadmin
             - transformer
+            - data_science_loader
 
     - alpcohen:
         can_login: yes
