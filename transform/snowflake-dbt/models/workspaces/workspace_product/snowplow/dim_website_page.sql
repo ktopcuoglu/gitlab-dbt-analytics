@@ -36,7 +36,7 @@
 
     SELECT DISTINCT
       -- Surrogate Key
-      {{ dbt_utils.surrogate_key(['page_url_host','clean_url_path']) }}               AS dim_website_page_sk,
+      {{ dbt_utils.surrogate_key(['app_id','page_url_host','clean_url_path']) }}               AS dim_website_page_sk,
 
       -- Natural Keys
       app_id,
