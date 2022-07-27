@@ -90,7 +90,7 @@ KubernetesPodOperator(
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_LOAD_PASSWORD,        
+        SNOWFLAKE_LOAD_PASSWORD,
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
