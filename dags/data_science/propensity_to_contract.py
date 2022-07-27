@@ -1,5 +1,5 @@
 """
-Propensity to Contract DAG 
+Propensity to Contract DAG
 """
 
 
