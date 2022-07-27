@@ -52,8 +52,15 @@ report AS (
   SELECT
     agg_download_data.downloaded_date,
     namespace_map.container_repository_id,
+    namespace_map.project_id,
     namespaces.dim_namespace_id AS namespace_id,
     namespaces.namespace_path,
+    CASE
+       WHEN namespaces.visibility_level = 'public'
+         OR namespaces.namespace_is_internal          THEN namespace_map.container_path
+       WHEN namespaces.visibility_level = 'internal'  THEN 'internal - masked'
+       WHEN namespaces.visibility_level = 'private'   THEN 'private - masked'
+    END AS container_path,
     ultimate_parent_namespace.dim_namespace_id AS ultimate_parent_id,
     ultimate_parent_namespace.namespace_name AS ultimate_parent_name,
     ultimate_parent_namespace.namespace_path AS ultimate_parent_path,
