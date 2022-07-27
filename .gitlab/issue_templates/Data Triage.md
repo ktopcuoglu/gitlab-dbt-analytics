@@ -78,7 +78,8 @@ Completed with x errors and x warnings:
 * Quick procedure to cleanup the log:
   1. Open any text editor with a regex find and replace; run through the below strings doing a find and replace for all: 
         * `^(?!.*(Failure in test|Database error|Warning)).*$`
-        * `^\[\d{4}-\d{2}-\d{2}, \d{2}:\d{2}:\d{2} UTC\] INFO - `
+        * `^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}\] INFO - b'\\x1b\[0m`
+        * `\\n'`
         * `^\R`
   2. In order, each of these lines: 
      1. Removes all lines without Database Failure or Test Failure
