@@ -1,6 +1,6 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "dim_website_page_sk",
+        unique_key = "dim_website_page_sk"
 ) }}
 
 {{ simple_cte([
