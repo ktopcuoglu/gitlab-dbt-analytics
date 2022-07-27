@@ -791,7 +791,7 @@ roles:
           privileges:
               databases:
                   read:
-                      - prep.snowplow_*_*
+                      - prep
                       - prod
                       - raw
                   write:
@@ -802,16 +802,19 @@ roles:
                       - prod.workspace_data_science
                       - prod.common.*
                       - prod.legacy.*
+                      - prep.snowplow_*_*
+                  write:
+                      - raw.data_science
+                      - prod.workspace_data_science
+              tables:
+                  read:
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
                       - prep.snowplow_*_*.snowplow_structured_events
                       - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
                   write:
-                      - raw.data_science
-              tables:
-                  - raw.data_science.*
-                  - prod.workspace_data_science.*
-              write:
-                  - raw.data_science.*
-                  - prod.workspace_data_science.*
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
 
     - meltano:
         warehouses:
