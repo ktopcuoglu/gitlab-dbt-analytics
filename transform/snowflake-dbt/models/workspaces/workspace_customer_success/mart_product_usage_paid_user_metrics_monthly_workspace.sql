@@ -275,6 +275,7 @@
       monthly_sm_metrics.audit_screen_view_28_days_user,
       monthly_sm_metrics.instance_audit_screen_view_28_days_user,
       monthly_sm_metrics.credential_inventory_view_28_days_user,
+      monthly_sm_metrics.compliance_frameworks_pipeline_all_time_event,
       monthly_sm_metrics.compliance_frameworks_pipeline_28_days_event,
       monthly_sm_metrics.groups_streaming_destinations_all_time_event,
       monthly_sm_metrics.groups_streaming_destinations_28_days_event,
@@ -480,7 +481,7 @@
       monthly_saas_metrics.active_project_runners_all_time_event,
       monthly_saas_metrics.gitaly_version,
       monthly_saas_metrics.gitaly_servers_all_time_event,
-      -- Wave 6
+      -- Wave 6.0
       monthly_saas_metrics.api_fuzzing_scans_all_time_event,
       monthly_saas_metrics.api_fuzzing_scans_28_days_event,
       monthly_saas_metrics.coverage_fuzzing_scans_all_time_event,
@@ -502,6 +503,7 @@
       monthly_saas_metrics.audit_screen_view_28_days_user,
       monthly_saas_metrics.instance_audit_screen_view_28_days_user,
       monthly_saas_metrics.credential_inventory_view_28_days_user,
+      monthly_saas_metrics.compliance_frameworks_pipeline_all_time_event,
       monthly_saas_metrics.compliance_frameworks_pipeline_28_days_event,
       monthly_saas_metrics.groups_streaming_destinations_all_time_event,
       monthly_saas_metrics.groups_streaming_destinations_28_days_event,
