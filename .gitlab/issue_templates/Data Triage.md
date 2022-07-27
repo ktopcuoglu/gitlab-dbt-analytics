@@ -84,7 +84,8 @@ Completed with x errors and x warnings:
   2. In order, each of these lines: 
      1. Removes all lines without Database Failure or Test Failure
      2. Removes date and INFO from each line 
-     3. Removes empty lines
+     3. Removes extra characters from the end of the string
+     4. Removes empty lines
 
 </details>
 
