@@ -11,7 +11,7 @@ from airflow.operators.python_operator import (
 from airflow.models import Variable
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
-    DBT_IMAGE_1_1,
+    DBT_IMAGE_0_19,
     dbt_install_deps_cmd,
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
@@ -66,10 +66,10 @@ task_secrets = [
 
 # Load the env vars into a dict and set Secrets
 env = os.environ.copy()
-GIT_BRANCH = """{{ var.value.dbt_1_1_branch }}"""
+GIT_BRANCH = """{{ var.value.dbt_0_19_branch }}"""
 pod_env_vars = {**gitlab_pod_env_vars, **{}}
 # This value is set based on the commit hash setter task in dbt_snapshot
-pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_1_1_hash }}" """
+pull_commit_hash = """export GIT_COMMIT="{{ var.value.dbt_0_19_hash }}" """
 
 # Default arguments for the DAG
 default_args = {
@@ -85,19 +85,19 @@ default_args = {
 
 # Create the DAG
 # Runs 3x per day
-dag = DAG("dbt_snapshots_1_1", default_args=default_args, schedule_interval="0 */8 * * *")
+dag = DAG("dbt_snapshots_0_19", default_args=default_args, schedule_interval="0 */8 * * *")
 
 # dbt-snapshot for daily tag
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt snapshot --select zuora_account_snapshots  ; ret=$?;
+    dbt snapshot -s tag:daily --profiles-dir profile --exclude path:snapshots/zuora path:snapshots/sfdc path:snapshots/gitlab_dotcom; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 
 dbt_snapshot = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
+    image=DBT_IMAGE_0_19,
     task_id="dbt-snapshots",
     name="dbt-snapshots",
     secrets=task_secrets,
@@ -108,7 +108,7 @@ dbt_snapshot = KubernetesPodOperator(
 
 dbt_commit_hash_setter = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
+    image=DBT_IMAGE_0_19,
     task_id="dbt-commit-hash-setter",
     name="dbt-commit-hash-setter",
     env_vars=pod_env_vars,
@@ -145,13 +145,13 @@ dbt_snapshot_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_and_seed_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt run --profiles-dir profile --target prod --models zuora_account_snapshots+; ret=$?;
+    dbt run --profiles-dir profile --target prod --models +legacy.snapshots --exclude tag:edm_snapshot; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
 dbt_snapshot_models_run = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
+    image=DBT_IMAGE_0_19,
     task_id="dbt-run-model-snapshots",
     name="dbt-run-model-snapshots",
     trigger_rule="all_done",
@@ -165,13 +165,13 @@ dbt_snapshot_models_run = KubernetesPodOperator(
 dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --models zuora_account_snapshots+; ret=$?;
+    dbt test --profiles-dir profile --target prod --models +legacy.snapshots {run_command_test_exclude}; ret=$?;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 
 dbt_test_snapshot_models = KubernetesPodOperator(
     **gitlab_defaults,
-    image=DBT_IMAGE_1_1,
+    image=DBT_IMAGE_0_19,
     task_id="dbt-test-snapshots",
     name="dbt-test-snapshots",
     trigger_rule="all_done",
