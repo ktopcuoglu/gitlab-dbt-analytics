@@ -1,3 +1,7 @@
+"""
+Propensity to Purchase Trials DAG
+"""
+
 import os
 from datetime import datetime, timedelta
 
