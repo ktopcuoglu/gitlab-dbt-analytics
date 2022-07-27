@@ -283,7 +283,7 @@
       monthly_sm_metrics.projects_status_checks_all_time_event,
       monthly_sm_metrics.external_status_checks_all_time_event,
       monthly_sm_metrics.paid_license_search_28_days_user,
-      -- monthly_sm_metrics.last_activity_28_days_user,
+      monthly_sm_metrics.last_activity_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -510,7 +510,7 @@
       monthly_saas_metrics.projects_status_checks_all_time_event,
       monthly_saas_metrics.external_status_checks_all_time_event,
       monthly_saas_metrics.paid_license_search_28_days_user,
-      -- monthly_saas_metrics.last_activity_28_days_user,
+      monthly_saas_metrics.last_activity_28_days_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -565,5 +565,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-07-18"
+    updated_date="2022-07-27"
 ) }}
