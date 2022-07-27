@@ -108,7 +108,7 @@ update-containers:
 # DBT
 ########################################################################################################################
 prepare-dbt:
-	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+	curl -sSL -k https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
 	cd transform/snowflake-dbt/ && poetry install
 	"$(DBT_DEPS)"
 
