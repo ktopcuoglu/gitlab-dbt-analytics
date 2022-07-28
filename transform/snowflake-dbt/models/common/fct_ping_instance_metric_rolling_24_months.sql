@@ -24,7 +24,7 @@ final AS (
     FROM fct_ping_instance_metric
     LEFT JOIN dim_ping_metric
       ON fct_ping_instance_metric.metrics_path = dim_ping_metric.metrics_path
-    WHERE DATE_TRUNC(MONTH, fct_ping_instance_metric.ping_created_at::DATE) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE))
+    WHERE DATE_TRUNC(MONTH, fct_ping_instance_metric.ping_created_date) >= DATEADD(MONTH, -24, DATE_TRUNC(MONTH,CURRENT_DATE))
         
 )
 
@@ -34,5 +34,5 @@ final AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-07-20",
-    updated_date="2022-07-20"
+    updated_date="2022-07-28"
 ) }}
