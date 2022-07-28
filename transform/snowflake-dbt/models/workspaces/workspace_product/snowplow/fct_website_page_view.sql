@@ -1,7 +1,6 @@
 {{ config(
         materialized = "incremental",
-        unique_key = "website_page_view_pk",
-        full_refresh = false
+        unique_key = "website_page_view_pk"
 ) }}
 
 {{ 
@@ -16,6 +15,7 @@
 
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
+      app_id,
       page_url_host,
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS dim_namespace_id,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS dim_project_id,
@@ -62,6 +62,7 @@
     FROM page_views_w_clean_url
     LEFT JOIN dim_website_page ON page_views_w_clean_url.clean_url_path = dim_website_page.clean_url_path
     AND page_views_w_clean_url.page_url_host = dim_website_page.page_url_host
+    AND page_views_w_clean_url.app_id = dim_website_page.app_id
 
 )
 
@@ -69,6 +70,7 @@
 
     SELECT
       {{ clean_url('page_url_path') }}                                              AS clean_url_path,
+      app_id,
       page_url_host,
       REGEXP_SUBSTR(page_url_path, 'namespace(\\d+)', 1, 1, 'e', 1)                 AS dim_namespace_id,
       REGEXP_SUBSTR(page_url_path, 'project(\\d+)', 1, 1, 'e', 1)                   AS dim_project_id,
@@ -119,6 +121,7 @@
     FROM unstruct_w_clean_url
     LEFT JOIN dim_website_page ON unstruct_w_clean_url.clean_url_path = dim_website_page.clean_url_path
     AND unstruct_w_clean_url.page_url_host = dim_website_page.page_url_host
+    AND unstruct_w_clean_url.app_id = dim_website_page.app_id
 
 )
 

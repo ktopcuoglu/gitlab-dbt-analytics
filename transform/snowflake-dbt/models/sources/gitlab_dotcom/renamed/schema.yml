@@ -133,11 +133,11 @@ models:
         tests:
           - not_null
           - unique
-      - name: updated_at
+      - name: created_at
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
-      - name: created_at
+      - name: updated_at
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
