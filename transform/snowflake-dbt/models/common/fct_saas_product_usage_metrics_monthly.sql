@@ -227,6 +227,7 @@
       "redis_hll_counters.compliance.g_compliance_audit_events_monthly"                         AS audit_screen_view_28_days_user,
       "redis_hll_counters.compliance.i_compliance_audit_events_monthly"                         AS instance_audit_screen_view_28_days_user,
       "redis_hll_counters.compliance.i_compliance_credential_inventory_monthly"                 AS credential_inventory_view_28_days_user,
+      "usage_activity_by_stage.manage.compliance_frameworks_with_pipeline"                      AS compliance_frameworks_pipeline_all_time_event,
       "usage_activity_by_stage_monthly.manage.compliance_frameworks_with_pipeline"              AS compliance_frameworks_pipeline_28_days_event,
       "usage_activity_by_stage.manage.groups_with_event_streaming_destinations"                 AS groups_streaming_destinations_all_time_event,
       "usage_activity_by_stage_monthly.manage.groups_with_event_streaming_destinations"         AS groups_streaming_destinations_28_days_event,
@@ -235,7 +236,7 @@
       "counts.projects_with_external_status_checks"                                             AS projects_status_checks_all_time_event,
       "counts.external_status_checks"                                                           AS external_status_checks_all_time_event,
       "redis_hll_counters.search.i_search_paid_monthly"                                         AS paid_license_search_28_days_user,
-      -- "redis_hll_counters.manage.unique_active_users_monthly"                                   AS last_activity_28_days_user,
+      "redis_hll_counters.manage.unique_active_users_monthly"                                   AS last_activity_28_days_user,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
@@ -266,5 +267,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2022-07-18"
+    updated_date="2022-07-27"
 ) }}

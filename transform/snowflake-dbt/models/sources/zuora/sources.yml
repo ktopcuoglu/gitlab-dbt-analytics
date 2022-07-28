@@ -44,6 +44,9 @@ sources:
       - name: invoice_payment
         identifier: invoicepayment
         description: '{{ doc("zuora_invoice_payment_source") }}'
+      - name: payment_method
+        identifier: paymentmethod
+        description: '{{ doc("zuora_payment_method_source") }}'
       - name: product
         description: '{{ doc("zuora_product_source") }}'
       - name: product_rate_plan
