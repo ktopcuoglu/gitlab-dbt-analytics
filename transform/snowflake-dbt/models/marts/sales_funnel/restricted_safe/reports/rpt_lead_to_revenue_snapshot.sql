@@ -206,9 +206,6 @@
     rpt_sfdc_bizible_tp_opp_linear_blended.won_custom_net_arr,
 
      --inquiry_date fields
-    inquiry_date.fiscal_month_name_fy,
-    inquiry_date.fiscal_quarter_name_fy,  
-    inquiry_date.fiscal_year,
     inquiry_date.fiscal_year                     AS inquiry_date_range_year,
     inquiry_date.fiscal_quarter_name_fy          AS inquiry_date_range_quarter,
     DATE_TRUNC(month, inquiry_date.date_actual)  AS inquiry_date_range_month,
@@ -216,9 +213,6 @@
     inquiry_date.date_id                         AS inquiry_date_range_id,
   
     --mql_date fields
-    mql_date.fiscal_month_name_fy,
-    mql_date.fiscal_quarter_name_fy,  
-    mql_date.fiscal_year,
     mql_date.fiscal_year                     AS mql_date_range_year,
     mql_date.fiscal_quarter_name_fy          AS mql_date_range_quarter,
     DATE_TRUNC(month, mql_date.date_actual)  AS mql_date_range_month,
@@ -226,9 +220,6 @@
     mql_date.date_id                         AS mql_date_range_id,
   
     --opp_create_date fields
-    opp_create_date.fiscal_month_name_fy,
-    opp_create_date.fiscal_quarter_name_fy,  
-    opp_create_date.fiscal_year,
     opp_create_date.fiscal_year                     AS opp_create_date_range_year,
     opp_create_date.fiscal_quarter_name_fy          AS opp_create_date_range_quarter,
     DATE_TRUNC(month, opp_create_date.date_actual)  AS opp_create_date_range_month,
@@ -236,9 +227,6 @@
     opp_create_date.date_id                         AS opp_create_date_range_id,
   
     --sao_date fields
-    sao_date.fiscal_month_name_fy,
-    sao_date.fiscal_quarter_name_fy,  
-    sao_date.fiscal_year,
     sao_date.fiscal_year                     AS sao_date_range_year,
     sao_date.fiscal_quarter_name_fy          AS sao_date_range_quarter,
     DATE_TRUNC(month, sao_date.date_actual)  AS sao_date_range_month,
@@ -246,9 +234,6 @@
     sao_date.date_id                         AS sao_date_range_id,
   
     --closed_date fields
-    closed_date.fiscal_month_name_fy,
-    closed_date.fiscal_quarter_name_fy,  
-    closed_date.fiscal_year,
     closed_date.fiscal_year                     AS closed_date_range_year,
     closed_date.fiscal_quarter_name_fy          AS closed_date_range_quarter,
     DATE_TRUNC(month, closed_date.date_actual)  AS closed_date_range_month,
