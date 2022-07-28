@@ -138,13 +138,13 @@ WITH map_merged_crm_account AS (
       map_merged_crm_account.dim_crm_account_id                           AS merged_to_account_id,
       sfdc_account.record_type_id                                         AS record_type_id,
       account_owner.user_id                                               AS crm_account_owner_id,
-      sfdc_users.user_id                                                  AS technical_account_manager_id,
+      technical_account_manager.user_id                                   AS technical_account_manager_id,
       sfdc_account.master_record_id,
       prep_crm_person.dim_crm_person_id                                   AS dim_crm_person_primary_contact_id,
 
       --account people
       account_owner.name                                                  AS account_owner,
-      sfdc_users.name                                                     AS technical_account_manager,
+      technical_account_manager.name                                      AS technical_account_manager,
 
       ----ultimate parent crm account info
       ultimate_parent_account.account_name                                AS parent_crm_account_name,
@@ -256,7 +256,6 @@ WITH map_merged_crm_account AS (
       sfdc_account.zoom_info_company_city,
       sfdc_account.zoom_info_company_state_province,
       sfdc_account.zoom_info_company_country,
-      sfdc_account.is_excluded_from_zoom_info_enrich,
       sfdc_account.abm_tier,
       sfdc_account.health_score,
       sfdc_account.health_number,
@@ -358,17 +357,26 @@ WITH map_merged_crm_account AS (
           THEN 1 
         ELSE 0
       END                                                                 AS is_zi_bit_bucket_present,
-      
+      sfdc_account.is_excluded_from_zoom_info_enrich,
 
       --dates
+      {{ get_date_id('sfdc_account.created_date') }}                      AS crm_account_created_date_id,
       sfdc_account.created_date                                           AS crm_account_created_date,
+      {{ get_date_id('sfdc_account.abm_tier_1_date') }}                   AS abm_tier_1_date_id,
       sfdc_account.abm_tier_1_date,
+      {{ get_date_id('sfdc_account.abm_tier_2_date') }}                   AS abm_tier_2_date_id,
       sfdc_account.abm_tier_2_date,
+      {{ get_date_id('sfdc_account.abm_tier_3_date') }}                   AS abm_tier_3_date_id,
       sfdc_account.abm_tier_3_date,
+      {{ get_date_id('sfdc_account.gtm_acceleration_date') }}             AS gtm_acceleration_date_id,
       sfdc_account.gtm_acceleration_date,
+      {{ get_date_id('sfdc_account.gtm_account_based_date') }}            AS gtm_account_based_date_id,
       sfdc_account.gtm_account_based_date,
+      {{ get_date_id('sfdc_account.gtm_account_centric_date') }}          AS gtm_account_centric_date_id,
       sfdc_account.gtm_account_centric_date,
+      {{ get_date_id('sfdc_account.partners_signed_contract_date') }}     AS partners_signed_contract_date_id,
       CAST(sfdc_account.partners_signed_contract_date AS date)            AS partners_signed_contract_date,
+      {{ get_date_id('sfdc_account.technical_account_manager_date') }}    AS technical_account_manager_date_id,
       sfdc_account.technical_account_manager_date,
 
       --measures
@@ -394,8 +402,12 @@ WITH map_merged_crm_account AS (
 
       --metadata
       sfdc_account.created_by_id,
+      created_by.name                                                     AS created_by_name,
       sfdc_account.last_modified_by_id,
+      last_modified_by.name                                               AS last_modified_by_name,
+      {{ get_date_id('sfdc_account.last_modified_date') }}                AS last_modified_date_id,
       sfdc_account.last_modified_date,
+      {{ get_date_id('sfdc_account.last_activity_date') }}                AS last_activity_date_id,
       sfdc_account.last_activity_date,
       sfdc_account.is_deleted
 
@@ -409,20 +421,30 @@ WITH map_merged_crm_account AS (
     {%- if model_type == 'live' %}
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
-    LEFT OUTER JOIN sfdc_users
-      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
+    LEFT OUTER JOIN sfdc_users AS technical_account_manager
+      ON sfdc_account.technical_account_manager_id = technical_account_manager.user_id
     LEFT JOIN sfdc_users AS account_owner
-      ON account_owner.user_id = sfdc_account.owner_id
+      ON sfdc_account.owner_id = account_owner.user_id
+    LEFT JOIN sfdc_users created_by
+      ON sfdc_account.created_by_id = created_by.user_id
+    LEFT JOIN sfdc_users AS last_modified_by 
+      ON sfdc_account.last_modified_by_id = last_modified_by.user_id
     {%- elif model_type == 'snapshot' %}
     LEFT JOIN ultimate_parent_account
       ON sfdc_account.ultimate_parent_account_id = ultimate_parent_account.account_id
         AND sfdc_account.snapshot_id = ultimate_parent_account.snapshot_id
-    LEFT OUTER JOIN sfdc_users
-      ON sfdc_account.technical_account_manager_id = sfdc_users.user_id
-        AND sfdc_account.snapshot_id = sfdc_users.snapshot_id
+    LEFT OUTER JOIN sfdc_users AS technical_account_manager
+      ON sfdc_account.technical_account_manager_id = technical_account_manager.user_id
+        AND sfdc_account.snapshot_id = technical_account_manager.snapshot_id
     LEFT JOIN sfdc_users AS account_owner
-      ON account_owner.user_id = sfdc_account.owner_id
-        AND account_owner.snapshot_id = sfdc_account.snapshot_id
+      ON sfdc_account.owner_id = account_owner.user_id
+        AND sfdc_account.snapshot_id = account_owner.snapshot_id
+    LEFT JOIN sfdc_users AS created_by
+      ON sfdc_account.created_by_id = created_by.user_id
+        AND sfdc_account_account.snapshot_id = created_by.snapshot_id
+    LEFT JOIN sfdc_users AS last_modified_by 
+      ON sfdc_account.last_modified_by_id = last_modified_by.user_id
+        AND sfdc_account_account.snapshot_id = last_modified_by.snapshot_id
     {%- endif %}
 
 )
