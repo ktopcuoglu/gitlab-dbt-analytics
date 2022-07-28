@@ -215,7 +215,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2020-09-04",
-    updated_date="2022-07-19"
+    updated_date="2022-07-21"
 ) }}
