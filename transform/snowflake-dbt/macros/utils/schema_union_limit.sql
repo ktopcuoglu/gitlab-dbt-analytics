@@ -2,7 +2,7 @@
 
 WITH base_union AS (
 
-    {{ schema_union_all(schema_part, table_name, database_name=database_name) }}
+  {{ schema_union_all(schema_part, table_name, database_name=database_name, day_limit=day_limit) }}
 
 ) 
 

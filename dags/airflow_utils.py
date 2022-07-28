@@ -8,15 +8,15 @@ from airflow.models import Variable
 from airflow.operators.slack_operator import SlackAPIPostOperator
 from airflow.contrib.operators.slack_webhook_operator import SlackWebhookOperator
 
+
 SSH_REPO = "git@gitlab.com:gitlab-data/analytics.git"
 HTTP_REPO = "https://gitlab.com/gitlab-data/analytics.git"
 DATA_IMAGE = "registry.gitlab.com/gitlab-data/data-image/data-image:v0.0.27"
 DBT_IMAGE = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15"
+DBT_IMAGE_1_1 = "registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.2"
 PERMIFROST_IMAGE = "registry.gitlab.com/gitlab-data/permifrost:v0.13.1"
 ANALYST_IMAGE = "registry.gitlab.com/gitlab-data/data-image/analyst-image:v1.0.4"
 
-DATA_SCIENCE_SSH_REPO = "git@gitlab.com:gitlab-data/data-science.git"
-DATA_SCIENCE_HTTP_REPO = "https://gitlab.com/gitlab-data/data-science.git"
 
 analytics_pipelines_dag = [
     "dbt",
@@ -258,7 +258,7 @@ gitlab_pod_env_vars = {
 }
 
 # git commands
-data_test_ssh_key_cmd = f"""
+data_test_ssh_key_cmd = """
     export DATA_TEST_BRANCH="main" &&
     export DATA_SIREN_BRANCH="master" &&
     mkdir ~/.ssh/ &&
@@ -323,23 +323,6 @@ dbt_install_deps_nosha_cmd = f"""
 dbt_install_deps_and_seed_nosha_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt seed --profiles-dir profile --target prod --full-refresh"""
-
-clone_data_science_repo_cmd = f"""
-    {data_test_ssh_key_cmd} &&
-    if [[ -z "$GIT_COMMIT" ]]; then
-        export GIT_COMMIT="HEAD"
-    fi
-    if [[ -z "$GIT_DATA_TESTS_PRIVATE_KEY" ]]; then
-        export REPO="{DATA_SCIENCE_HTTP_REPO}";
-        else
-        export REPO="{DATA_SCIENCE_SSH_REPO}";
-    fi &&
-    echo "git clone -b main --single-branch --depth 1 $REPO" &&
-    git clone -b main --single-branch --depth 1 $REPO &&
-    echo "checking out commit $GIT_COMMIT" &&
-    cd data-science &&
-    git checkout $GIT_COMMIT &&
-    cd .."""
 
 # command to exclude models (for test models) in dbt test command
 run_command_test_exclude = "--exclude staging.gitlab_com edm_snapshot"

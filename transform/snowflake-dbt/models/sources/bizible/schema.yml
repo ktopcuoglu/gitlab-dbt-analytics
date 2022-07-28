@@ -28,6 +28,9 @@ models:
       - name: user_touchpoint_id
         meta:
           sensitive: true
+      - name: visitor_id
+        meta:
+          sensitive: true
   - name: bizible_campaign_members_source
     columns:
       - name: lead_email
@@ -63,6 +66,10 @@ models:
           sensitive: true
   - name: bizible_currencies_source
   - name: bizible_customer_ab_tests_source
+    columns:
+      - name: visitor_id
+        meta:
+          sensitive: true
   - name: bizible_email_to_visitor_ids_source
     columns:
       - name: email_to_visitor_id
@@ -79,12 +86,18 @@ models:
       - name: email
         meta:
           sensitive: true
+      - name: visitor_id
+        meta:
+          sensitive: true
   - name: bizible_form_submits_source
     columns:
       - name: email
         meta:
           sensitive: true
       - name: ip_address
+        meta:
+          sensitive: true
+      - name: visitor_id
         meta:
           sensitive: true
   - name: bizible_keywords_source
@@ -116,6 +129,9 @@ models:
       - name: email
         meta:
           sensitive: true
+      - name: visitor_id
+        meta:
+          sensitive: true
   - name: bizible_placements_source
   - name: bizible_segments_source
   - name: bizible_site_links_source
@@ -129,6 +145,9 @@ models:
       - name: email
         meta:
           sensitive: true
+      - name: visitor_id
+        meta:
+          sensitive: true
   - name: bizible_urls_source
   - name: bizible_user_touchpoints_source
     columns:
@@ -136,5 +155,8 @@ models:
         meta:
           sensitive: true
       - name: email
+        meta:
+          sensitive: true
+      - name: visitor_id
         meta:
           sensitive: true

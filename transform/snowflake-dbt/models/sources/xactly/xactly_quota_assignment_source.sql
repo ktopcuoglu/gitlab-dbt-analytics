@@ -25,7 +25,8 @@ WITH source AS (
       period_id::FLOAT                      AS period_id,
       qta_asgnmt_id::VARCHAR                AS qta_asgnmt_id,
       quota_assignment_id::FLOAT            AS quota_assignment_id,
-      quota_id::FLOAT                       AS quota_id
+      quota_id::FLOAT                       AS quota_id,
+      version::VARCHAR                      AS version
       
     FROM source
 

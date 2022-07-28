@@ -71,6 +71,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_runners_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_ci_secure_files_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_sources_pipelines_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_ci_stages_dedupe_source
@@ -84,8 +86,6 @@ models:
   - name: gitlab_dotcom_cluster_agents_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_cluster_groups_dedupe_source
-    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
-  - name: gitlab_dotcom_clusters_integration_elasticstack_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_cluster_projects_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -255,6 +255,8 @@ models:
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_protected_environment_approval_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_protected_environments_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_push_rules_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_releases_dedupe_source
@@ -264,6 +266,8 @@ models:
   - name: gitlab_dotcom_repository_languages_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_requirements_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_resource_iteration_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_resource_label_events_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
@@ -328,4 +332,6 @@ models:
   - name: gitlab_dotcom_user_credit_card_validations_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
   - name: gitlab_dotcom_boards_epic_boards_dedupe_source
+    description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'
+  - name: gitlab_dotcom_container_repositories_dedupe_source
     description: '{{ doc("gitlab_dotcom_dedupe_docs") }}'

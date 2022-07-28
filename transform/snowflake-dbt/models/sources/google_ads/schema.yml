@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: google_ads_ad_group_hourly_stats_source
+    description: Base model for gcp billing export
+    columns:
+      - name: hourly_stats_id
+        tests:
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null

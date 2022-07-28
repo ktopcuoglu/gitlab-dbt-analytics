@@ -17,6 +17,25 @@ models:
       description: "Source layer for Netsuite consolidated exchange rates for cleaning and renaming [Schema docs](http://www.netsuite.com/help/helpcenter/en_US/srbrowser/Browser2018_2/odbc/record/consolidatedexchangerate.html)"
     - name: netsuite_currencies_source
       description: "Source layer for Netsuite currencies books for cleaning and renaming [Schema docs](http://www.netsuite.com/help/helpcenter/en_US/srbrowser/Browser2018_2/odbc/record/currencies.html)"
+    - name: netsuite_currency_exchange_rates_source
+      description: "Source layer for Netsuite currencies books for cleaning and renaming [Schema docs](https://www.netsuite.com/help/helpcenter/en_US/srbrowser/Browser2018_2/schema/record/currencyrate.html)"
+      columns:
+        - name: currency_rate_id
+          tests:
+            - not_null
+            - unique
+        - name: base_currency_id
+          tests:
+            - not_null
+        - name: currency_id
+          tests:
+            - not_null
+        - name: exchange_rate
+          tests:
+            - not_null
+        - name: date_effective
+          tests:
+            - not_null
     - name: netsuite_customers_source
       description: "Source layer for Netsuite customers for cleaning and renaming [Schema docs](http://www.netsuite.com/help/helpcenter/en_US/srbrowser/Browser2018_2/odbc/record/customer.html)"
     - name: netsuite_departments_source
