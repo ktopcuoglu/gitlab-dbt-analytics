@@ -26,6 +26,8 @@ WITH source AS (
         region__c                                                           AS region,
         sub_region__c                                                       AS sub_region,
         budget_holder__c                                                    AS budget_holder,
+        will_there_be_mdf_funding__c                                        AS will_there_be_mdf_funding,
+        
         --projections
         budgetedcost                                                        AS budgeted_cost,
         expectedresponse                                                    AS expected_response,

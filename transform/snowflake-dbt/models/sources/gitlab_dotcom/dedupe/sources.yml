@@ -99,9 +99,6 @@ sources:
         identifier: gitlab_db_ci_variables
       - name: cluster_groups
         identifier: gitlab_db_cluster_groups
-      - name: clusters_integration_elasticstack
-        identifier: gitlab_db_clusters_integration_elasticstack
-        freshness: null
       - name: clusters_integration_prometheus
         identifier: gitlab_db_clusters_integration_prometheus
       - name: cluster_projects
@@ -138,6 +135,7 @@ sources:
       - name: clusters_applications_runners
         identifier: gitlab_db_clusters_applications_runners
         freshness: null
+      - name: gitlab_db_container_repositories
       - name: dast_profiles
         identifier: gitlab_db_dast_profiles
         freshness:
@@ -288,6 +286,9 @@ sources:
       - name: protected_environment_approval_rules
         identifier: gitlab_db_protected_environment_approval_rules
         freshness: null
+      - name: protected_environments
+        identifier: gitlab_db_protected_environments
+        freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules
       - name: releases
@@ -296,6 +297,8 @@ sources:
         identifier: gitlab_db_repository_languages
       - name: requirements
         identifier: gitlab_db_requirements
+      - name: resource_iteration_events
+        identifier: gitlab_db_resource_iteration_events
       - name: resource_label_events
         identifier: gitlab_db_resource_label_events
       - name: resource_milestone_events
@@ -306,6 +309,9 @@ sources:
         identifier: gitlab_db_routes
       - name: saml_group_links
         identifier: gitlab_db_saml_group_links
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 15, period: day}
       - name: saml_providers
         identifier: gitlab_db_saml_providers
       - name: services
@@ -387,6 +393,9 @@ sources:
         identifier: gitlab_db_container_expiration_policies
       - name: compliance_management_frameworks
         identifier: gitlab_db_compliance_management_frameworks
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 15, period: day}
       - name: csv_issue_imports
         identifier: gitlab_db_csv_issue_imports
       - name: gitlab_pgp_export

@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: container_registry
+    # The custom generate_database_name is not called so the logic is applied manually
+    #database: '{{ target.database + "_" + env_var("SNOWFLAKE_PREP_DATABASE") }}'
+    schema: container_registry
+
+    tables:
+      - name: container_registry_download_logs_raw
+        description: This view is generated using dbt to union a dynamic set of dynamically named tables.

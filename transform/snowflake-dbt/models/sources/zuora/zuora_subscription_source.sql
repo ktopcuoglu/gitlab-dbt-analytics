@@ -46,6 +46,7 @@ WITH source AS (
       -- turnonusagepingrequiredmetrics__c           AS turn_on_usage_ping_required_metrics,
       turnonoperationalmetrics__c                 AS turn_on_operational_metrics,
       contractoperationalmetrics__c               AS contract_operational_metrics,
+      multiyeardealsubscriptionlinkage__c         AS multi_year_deal_subscription_linkage,
 
       --key_dates
       cancelleddate                               AS cancelled_date,

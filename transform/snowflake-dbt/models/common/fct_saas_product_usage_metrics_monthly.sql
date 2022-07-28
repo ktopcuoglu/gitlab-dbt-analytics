@@ -6,7 +6,8 @@
     ('saas_usage_ping', 'prep_saas_usage_ping_subscription_mapped_wave_2_3_metrics'),
     ('zuora_subscriptions', 'bdg_subscription_product_rate_plan'),
     ('gitlab_subscriptions', 'gitlab_dotcom_gitlab_subscriptions_snapshots_namespace_id_base'),
-    ('dates', 'dim_date')
+    ('dates', 'dim_date'),
+    ('charges', 'fct_charge')
 ]) }}
 
 , saas_subscriptions AS (
@@ -19,7 +20,17 @@
     FROM zuora_subscriptions
     INNER JOIN dates
       ON dates.date_actual BETWEEN '2017-04-01' AND CURRENT_DATE                        -- first month Usage Ping was collected
+    LEFT JOIN charges 
+      ON charges.dim_subscription_id = zuora_subscriptions.dim_subscription_id
     WHERE zuora_subscriptions.product_delivery_type = 'SaaS'
+      AND (
+        zuora_subscriptions.product_rate_plan_charge_name NOT IN (
+          '1,000 CI Minutes',
+          'Gitlab Storage 10GB - 1 Year',
+          'Premium Support'
+        )
+        OR charges.charge_type != 'OneTime'
+      )
     {{ dbt_utils.group_by(n=4)}}
 
 ), gitlab_seats AS (
@@ -118,7 +129,7 @@
       "counts.remote_mirrors"                                                                   AS remote_mirrors_all_time_event,
       "usage_activity_by_stage.create.projects_enforcing_code_owner_approval"                   AS projects_enforcing_code_owner_approval_28_days_user,
       "usage_activity_by_stage_monthly.configure.project_clusters_enabled"                      AS project_clusters_enabled_28_days_user,
-      "analytics_total_unique_counts_monthly"                                                   AS analytics_28_days_user,
+      "redis_hll_counters.analytics.analytics_total_unique_counts_monthly"                      AS analytics_28_days_user,
       "redis_hll_counters.issues_edit.issues_edit_total_unique_counts_monthly"                  AS issues_edit_28_days_user,
       "redis_hll_counters.user_packages.user_packages_total_unique_counts_monthly"              AS user_packages_28_days_user,
       "redis_hll_counters.terraform.p_terraform_state_api_unique_users_monthly"                 AS terraform_state_api_28_days_user,
@@ -194,7 +205,7 @@
       "counts.ci_runners_project_type_active"                                                   AS active_project_runners_all_time_event,
       "gitaly.version"::VARCHAR                                                                 AS gitaly_version,
       "gitaly.servers"                                                                          AS gitaly_servers_all_time_event,
-      -- Wave 6
+      -- Wave 6.0
       "usage_activity_by_stage.secure.api_fuzzing_scans"                                        AS api_fuzzing_scans_all_time_event,
       "usage_activity_by_stage_monthly.secure.api_fuzzing_scans"                                AS api_fuzzing_scans_28_days_event,
       "usage_activity_by_stage.secure.coverage_fuzzing_scans"                                   AS coverage_fuzzing_scans_all_time_event,
@@ -209,6 +220,23 @@
       "usage_activity_by_stage_monthly.secure.dast_scans"                                       AS dast_scans_28_days_event,
       "usage_activity_by_stage.secure.sast_scans"                                               AS sast_scans_all_time_event,
       "usage_activity_by_stage_monthly.secure.sast_scans"                                       AS sast_scans_28_days_event,
+      -- Wave 6.1
+      "counts.package_events_i_package_push_package_by_deploy_token"                            AS packages_pushed_registry_all_time_event,
+      "counts.package_events_i_package_pull_package_by_guest"                                   AS packages_pulled_registry_all_time_event,
+      "redis_hll_counters.compliance.g_compliance_dashboard_monthly"                            AS compliance_dashboard_view_28_days_user,
+      "redis_hll_counters.compliance.g_compliance_audit_events_monthly"                         AS audit_screen_view_28_days_user,
+      "redis_hll_counters.compliance.i_compliance_audit_events_monthly"                         AS instance_audit_screen_view_28_days_user,
+      "redis_hll_counters.compliance.i_compliance_credential_inventory_monthly"                 AS credential_inventory_view_28_days_user,
+      "usage_activity_by_stage.manage.compliance_frameworks_with_pipeline"                      AS compliance_frameworks_pipeline_all_time_event,
+      "usage_activity_by_stage_monthly.manage.compliance_frameworks_with_pipeline"              AS compliance_frameworks_pipeline_28_days_event,
+      "usage_activity_by_stage.manage.groups_with_event_streaming_destinations"                 AS groups_streaming_destinations_all_time_event,
+      "usage_activity_by_stage_monthly.manage.groups_with_event_streaming_destinations"         AS groups_streaming_destinations_28_days_event,
+      "usage_activity_by_stage.manage.audit_event_destinations"                                 AS audit_event_destinations_all_time_event,
+      "usage_activity_by_stage_monthly.manage.audit_event_destinations"                         AS audit_event_destinations_28_days_event,
+      "counts.projects_with_external_status_checks"                                             AS projects_status_checks_all_time_event,
+      "counts.external_status_checks"                                                           AS external_status_checks_all_time_event,
+      "redis_hll_counters.search.i_search_paid_monthly"                                         AS paid_license_search_28_days_user,
+      "redis_hll_counters.manage.unique_active_users_monthly"                                   AS last_activity_28_days_user,
       -- Data Quality Flags
       IFF(license_utilization = 0
             AND billable_user_count > 0,
@@ -239,5 +267,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-06-02",
-    updated_date="2022-05-06"
+    updated_date="2022-07-27"
 ) }}
