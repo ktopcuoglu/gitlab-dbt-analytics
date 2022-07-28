@@ -172,6 +172,10 @@
     --touchpoint data
     rpt_sfdc_bizible_tp_opp_linear_blended.bizible_touchpoint_date_normalized,
     rpt_sfdc_bizible_tp_opp_linear_blended.gtm_motion,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_integrated_campaign_grouping,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_ad_campaign_name,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_form_url,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_landing_page,
     rpt_sfdc_bizible_tp_opp_linear_blended.is_dg_influenced,
     rpt_sfdc_bizible_tp_opp_linear_blended.is_fmm_influenced,
     rpt_sfdc_bizible_tp_opp_linear_blended.mql_sum,
@@ -216,5 +220,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-20",
-    updated_date="2022-07-20",
+    updated_date="2022-07-28",
   ) }}
