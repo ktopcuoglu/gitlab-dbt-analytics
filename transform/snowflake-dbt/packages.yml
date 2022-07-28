@@ -4,7 +4,7 @@ packages:
     revision: "updates_for_dbt_1_1"
     warn-unpinned: false
   - git: git@gitlab.com:gitlab-data/data-tests.git
-    revision: "dbt_1_0_1_changes"
+    revision: "{{env_var('DATA_TEST_BRANCH')}}"
     warn-unpinned: false
   - package: dbt-labs/audit_helper
     version: 0.5.0
