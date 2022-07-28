@@ -288,6 +288,17 @@ Fact table representing marketing campaign details tracked in SFDC.
 
 {% enddocs %}
 
+{% docs fct_crm_account %}
+Factual customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account, also referred to as `DIM_CRM_ACCOUNT_ID`.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_crm_attribution_touchpoint %}
 Fact table for attribution Bizible touchpoints with shared dimension keys relating these touchpoints to dim_crm_person, dim_crm_opportunity, and dim_crm_account. These touchpoints have revenue associated with them.
 
