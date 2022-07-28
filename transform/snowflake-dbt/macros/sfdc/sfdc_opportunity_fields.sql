@@ -873,13 +873,6 @@ WITH first_contact  AS (
       END                                                 AS churned_contraction_net_arr,
       {%- if model_type == 'snapshot' %}
       CASE
-        WHEN is_open = 1
-          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
-        WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < close_date_detail.date_actual
-          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
-        ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
-      END                                                       AS calculated_age_in_days,
-      CASE
         WHEN
         sfdc_account.ultimate_parent_account_id IN (
           '001610000111bA3',
@@ -928,7 +921,112 @@ WITH first_contact  AS (
       live_opportunity_owner_fields.opportunity_owner_user_segment,
       live_opportunity_owner_fields.opportunity_owner_user_geo,
       live_opportunity_owner_fields.opportunity_owner_user_region,
-      live_opportunity_owner_fields.opportunity_owner_user_area
+      live_opportunity_owner_fields.opportunity_owner_user_area,
+      CASE 
+        WHEN sfdc_opportunity.comp_new_logo_override = 'Yes'
+          THEN 1 
+        ELSE 0
+      END                                 AS is_comp_new_logo_override,
+          CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Other')
+        THEN 1
+      ELSE 0
+    END AS competitors_other_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'GitLab Core')
+        THEN 1
+      ELSE 0
+    END AS competitors_gitlab_core_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'None')
+        THEN 1
+      ELSE 0
+    END AS competitors_none_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'GitHub Enterprise')
+        THEN 1
+      ELSE 0
+    END AS competitors_github_enterprise_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'BitBucket Server')
+        THEN 1
+      ELSE 0
+    END AS competitors_bitbucket_server_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Unknown')
+        THEN 1
+      ELSE 0
+    END AS competitors_unknown_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'GitHub.com')
+        THEN 1
+      ELSE 0
+    END AS competitors_github_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'GitLab.com')
+        THEN 1
+      ELSE 0
+    END AS competitors_gitlab_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Jenkins')
+        THEN 1
+      ELSE 0
+    END AS competitors_jenkins_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Azure DevOps')
+        THEN 1
+      ELSE 0
+    END AS competitors_azure_devops_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'SVN')
+        THEN 1
+      ELSE 0
+    END AS competitors_svn_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'BitBucket.Org')
+        THEN 1
+      ELSE 0
+    END AS competitors_bitbucket_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Atlassian')
+        THEN 1
+      ELSE 0
+    END AS competitors_atlassian_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Perforce')
+        THEN 1
+      ELSE 0
+    END AS competitors_perforce_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Visual Studio Team Services')
+        THEN 1
+      ELSE 0
+    END AS competitors_visual_studio_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Azure')
+        THEN 1
+      ELSE 0
+    END AS competitors_azure_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Amazon Code Commit')
+        THEN 1
+      ELSE 0
+    END AS competitors_amazon_code_commit_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'CircleCI')
+        THEN 1
+      ELSE 0
+    END AS competitors_circleci_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'Bamboo')
+        THEN 1
+      ELSE 0
+    END AS competitors_bamboo_flag,
+    CASE
+      WHEN CONTAINS(sfdc_opportunity.competitors, 'AWS')
+        THEN 1
+      ELSE 0
+    END AS competitors_aws_flag
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage

@@ -11,14 +11,15 @@ final AS (
   SELECT
     fct_crm_opportunity.snapshot_id,
     fct_crm_opportunity.crm_opportunity_snapshot_id,
+
+    -- surrogate keys
     fct_crm_opportunity.dim_crm_opportunity_id,
-    fct_crm_opportunity.opportunity_name,
     dim_crm_account.parent_crm_account_name,
     dim_crm_account.dim_parent_crm_account_id,
-    dim_crm_account.crm_account_name,
     dim_crm_account.dim_crm_account_id,
     fct_crm_opportunity.dim_crm_user_id,
     fct_crm_opportunity.duplicate_opportunity_id,
+    fct_crm_opportunity.merged_opportunity_id,
 
     -- dates
     fct_crm_opportunity.sales_accepted_date,
@@ -41,11 +42,6 @@ final AS (
     fct_crm_opportunity.created_fiscal_year,
     fct_crm_opportunity.created_fiscal_quarter_name,
     fct_crm_opportunity.created_fiscal_quarter_date,
-    fct_crm_opportunity.iacv_created_date,
-    fct_crm_opportunity.iacv_created_month,
-    fct_crm_opportunity.iacv_created_fiscal_year,
-    fct_crm_opportunity.iacv_created_fiscal_quarter_name,
-    fct_crm_opportunity.iacv_created_fiscal_quarter_date,
     fct_crm_opportunity.net_arr_created_date,
     fct_crm_opportunity.net_arr_created_month,
     fct_crm_opportunity.net_arr_created_fiscal_year,
@@ -68,11 +64,18 @@ final AS (
     fct_crm_opportunity.stage_6_awaiting_signature_date,
     fct_crm_opportunity.stage_6_closed_won_date,
     fct_crm_opportunity.stage_6_closed_lost_date,
+    fct_crm_opportunity.stage_1_discovery_month,
+    fct_crm_opportunity.stage_1_discovery_fiscal_year,
+    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_name,
+    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_date,
     fct_crm_opportunity.last_activity_date,
-    fct_crm_opportunity.subscription_start_date,
-    fct_crm_opportunity.subscription_end_date,
+    fct_crm_opportunity.subscription_start_date AS quote_start_date,
+    fct_crm_opportunity.subscription_end_date AS quote_end_date,
+    fct_crm_opportunity.sales_qualified_date,
 
     -- opportunity attributes
+    dim_crm_account.crm_account_name,
+    fct_crm_opportunity.opportunity_name,
     fct_crm_opportunity.stage_name,
     fct_crm_opportunity.reason_for_loss,
     fct_crm_opportunity.sales_type,
@@ -123,6 +126,9 @@ final AS (
     fct_crm_opportunity.dr_partner_engagement,
     fct_crm_opportunity.deal_path_engagement,
     fct_crm_opportunity.forecast_category_name,
+    fct_crm_opportunity.opportunity_owner,
+    fct_crm_opportunity.opportunity_owner_department,
+    fct_crm_opportunity.dim_crm_user_id AS owner_id,
 
     -- flags
     fct_crm_opportunity.is_won,
@@ -141,16 +147,26 @@ final AS (
     fct_crm_opportunity.is_stage_4_plus,
     fct_crm_opportunity.is_lost,
     fct_crm_opportunity.is_open,
+    fct_crm_opportunity.is_credit,
     fct_crm_opportunity.is_renewal,
     fct_crm_opportunity.is_refund,
     fct_crm_opportunity.is_deleted,
+    fct_crm_opportunity.is_contract_reset,
+    fct_crm_opportunity.is_comp_new_logo_override,
+    fct_crm_opportunity.is_eligible_open_pipeline,
+    fct_crm_opportunity.is_eligible_created_pipeline,
+    fct_crm_opportunity.is_eligible_sao,
+    fct_crm_opportunity.is_eligible_asp_analysis,
+    fct_crm_opportunity.is_eligible_age_analysis,
+    fct_crm_opportunity.is_eligible_churn_contraction,
+    fct_crm_opportunity.is_excluded,
 
     -- account fields
-    dim_crm_account.is_jihu_account,
-    dim_crm_account.fy22_new_logo_target_list,
-    dim_crm_account.crm_account_gtm_strategy,
-    dim_crm_account.crm_account_focus_account,
-    dim_crm_account.crm_account_zi_technologies,
+    dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
+    dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
+    dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
+    dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
+    dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
     dim_crm_account.parent_crm_account_gtm_strategy,
     dim_crm_account.parent_crm_account_focus_account,
     dim_crm_account.parent_crm_account_sales_segment,
@@ -160,13 +176,17 @@ final AS (
     dim_crm_account.parent_crm_account_demographics_region,
     dim_crm_account.parent_crm_account_demographics_area,
     dim_crm_account.parent_crm_account_demographics_territory,
-    dim_crm_account.crm_account_demographics_employee_count,
     dim_crm_account.parent_crm_account_demographics_max_family_employee,
     dim_crm_account.parent_crm_account_demographics_upa_country,
     dim_crm_account.parent_crm_account_demographics_upa_state,
     dim_crm_account.parent_crm_account_demographics_upa_city,
     dim_crm_account.parent_crm_account_demographics_upa_street,
     dim_crm_account.parent_crm_account_demographics_upa_postal_code,
+    dim_crm_account.crm_account_demographics_employee_count,
+    dim_crm_account.crm_account_gtm_strategy,
+    dim_crm_account.crm_account_focus_account,
+    dim_crm_account.crm_account_zi_technologies,
+    dim_crm_account.is_jihu_account,
 
     -- crm opp owner/account owner fields stamped at SAO date
     fct_crm_opportunity.sao_crm_opp_owner_stamped_name,
@@ -383,115 +403,45 @@ final AS (
     fct_crm_opportunity.cp_paper_process,
     fct_crm_opportunity.cp_help,
     fct_crm_opportunity.cp_review_notes,
+    fct_crm_opportunity.cp_champion,
+    fct_crm_opportunity.cp_close_plan,
+    fct_crm_opportunity.cp_competition,
+    fct_crm_opportunity.cp_decision_criteria,
+    fct_crm_opportunity.cp_decision_process,
+    fct_crm_opportunity.cp_economic_buyer,
+    fct_crm_opportunity.cp_identify_pain,
+    fct_crm_opportunity.cp_metrics,
+    fct_crm_opportunity.cp_risks,
+    fct_crm_opportunity.cp_value_driver,
+    fct_crm_opportunity.cp_why_do_anything_at_all,
+    fct_crm_opportunity.cp_why_gitlab,
 
     -- Competitor flags
     fct_crm_opportunity.competitors,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Other')
-        THEN 1
-      ELSE 0
-    END AS competitors_other_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'GitLab Core')
-        THEN 1
-      ELSE 0
-    END AS competitors_gitlab_core_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'None')
-        THEN 1
-      ELSE 0
-    END AS competitors_none_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'GitHub Enterprise')
-        THEN 1
-      ELSE 0
-    END AS competitors_github_enterprise_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'BitBucket Server')
-        THEN 1
-      ELSE 0
-    END AS competitors_bitbucket_server_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Unknown')
-        THEN 1
-      ELSE 0
-    END AS competitors_unknown_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'GitHub.com')
-        THEN 1
-      ELSE 0
-    END AS competitors_github_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'GitLab.com')
-        THEN 1
-      ELSE 0
-    END AS competitors_gitlab_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Jenkins')
-        THEN 1
-      ELSE 0
-    END AS competitors_jenkins_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Azure DevOps')
-        THEN 1
-      ELSE 0
-    END AS competitors_azure_devops_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'SVN')
-        THEN 1
-      ELSE 0
-    END AS competitors_svn_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'BitBucket.Org')
-        THEN 1
-      ELSE 0
-    END AS competitors_bitbucket_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Atlassian')
-        THEN 1
-      ELSE 0
-    END AS competitors_atlassian_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Perforce')
-        THEN 1
-      ELSE 0
-    END AS competitors_perforce_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Visual Studio Team Services')
-        THEN 1
-      ELSE 0
-    END AS competitors_visual_studio_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Azure')
-        THEN 1
-      ELSE 0
-    END AS competitors_azure_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Amazon Code Commit')
-        THEN 1
-      ELSE 0
-    END AS competitors_amazon_code_commit_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'CircleCI')
-        THEN 1
-      ELSE 0
-    END AS competitors_circleci_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'Bamboo')
-        THEN 1
-      ELSE 0
-    END AS competitors_bamboo_flag,
-    CASE
-      WHEN CONTAINS(fct_crm_opportunity.competitors, 'AWS')
-        THEN 1
-      ELSE 0
-    END AS competitors_aws_flag,
+    fct_crm_opportunity.competitors_other_flag,
+    fct_crm_opportunity.competitors_gitlab_core_flag,
+    fct_crm_opportunity.competitors_none_flag,
+    fct_crm_opportunity.competitors_github_enterprise_flag,
+    fct_crm_opportunity.competitors_bitbucket_server_flag,
+    fct_crm_opportunity.competitors_unknown_flag,
+    fct_crm_opportunity.competitors_github_flag,
+    fct_crm_opportunity.competitors_gitlab_flag,
+    fct_crm_opportunity.competitors_jenkins_flag,
+    fct_crm_opportunity.competitors_azure_devops_flag,
+    fct_crm_opportunity.competitors_svn_flag,
+    fct_crm_opportunity.competitors_bitbucket_flag,
+    fct_crm_opportunity.competitors_atlassian_flag,
+    fct_crm_opportunity.competitors_perforce_flag,
+    fct_crm_opportunity.competitors_visual_studio_flag,
+    fct_crm_opportunity.competitors_azure_flag,
+    fct_crm_opportunity.competitors_amazon_code_commit_flag,
+    fct_crm_opportunity.competitors_circleci_flag,
+    fct_crm_opportunity.competitors_bamboo_flag,
+    fct_crm_opportunity.competitors_aws_flag,
 
     -- additive fields
     fct_crm_opportunity.days_in_sao,
     fct_crm_opportunity.arr_basis,
-    fct_crm_opportunity.incremental_acv AS iacv,
-    fct_crm_opportunity.net_incremental_acv AS net_iacv,
     fct_crm_opportunity.net_arr,
     fct_crm_opportunity.new_logo_count,
     fct_crm_opportunity.amount,
@@ -509,95 +459,19 @@ final AS (
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_deal_count,
-    fct_crm_opportunity.acv,
-    fct_crm_opportunity.incremental_acv,
-    fct_crm_opportunity.net_incremental_acv,
     fct_crm_opportunity.raw_net_arr,
     fct_crm_opportunity.arr,
     fct_crm_opportunity.recurring_amount,
     fct_crm_opportunity.true_up_amount,
     fct_crm_opportunity.proserv_amount,
     fct_crm_opportunity.other_non_recurring_amount,
-    fct_crm_opportunity.refund_iacv,
-    fct_crm_opportunity.downgrade_iacv,
-    fct_crm_opportunity.renewal_acv,
     fct_crm_opportunity.renewal_amount,
     fct_crm_opportunity.total_contract_value,
-
-    -- calculated fields 
     fct_crm_opportunity.calculated_age_in_days,
-    CASE
-      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.snapshot_fiscal_quarter_name
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
-        THEN fct_crm_opportunity.net_arr
-      ELSE 0
-    END AS created_in_snapshot_quarter_net_arr,
-    CASE
-      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.close_fiscal_quarter_name
-        AND fct_crm_opportunity.is_won = 1
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
-        THEN fct_crm_opportunity.net_arr
-      ELSE 0
-    END AS created_and_won_same_quarter_net_arr,
-    CASE
-      WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.snapshot_fiscal_quarter_name
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
-        THEN fct_crm_opportunity.calculated_deal_count
-      ELSE 0
-    END AS created_in_snapshot_quarter_deal_count,
+    fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
+    fct_crm_opportunity.created_and_won_same_quarter_net_arr,
+    fct_crm_opportunity.created_in_snapshot_quarter_deal_count
 
-    -- renamed columns for pipeline & velocity reporting
-    fct_crm_opportunity.dim_crm_account_id AS raw_account_id,
-    fct_crm_opportunity.crm_opportunity_snapshot_id AS opportunity_snapshot_id,
-    fct_crm_opportunity.dim_crm_opportunity_id AS opportunity_id,
-    fct_crm_opportunity.dim_crm_user_id AS owner_id,
-    fct_crm_opportunity.merged_opportunity_id,
-    fct_crm_opportunity.opportunity_owner_department,
-    fct_crm_opportunity.order_type AS snapshot_order_type_stamped,
-    fct_crm_opportunity.is_credit AS is_credit_flag,
-    fct_crm_opportunity.is_contract_reset AS is_contract_reset_flag,
-    fct_crm_opportunity.sales_qualified_source AS snapshot_sales_qualified_source,
-    fct_crm_opportunity.is_edu_oss AS snapshot_is_edu_oss,
-    fct_crm_opportunity.dim_crm_account_id AS account_id,
-    fct_crm_opportunity.stage_1_discovery_date AS stage_1_date,
-    fct_crm_opportunity.stage_1_discovery_month AS stage_1_date_month,
-    fct_crm_opportunity.stage_1_discovery_fiscal_year AS stage_1_fiscal_year,
-    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_name AS stage_1_fiscal_quarter_name,
-    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_date AS stage_1_fiscal_quarter_date,
-    fct_crm_opportunity.is_duplicate AS current_is_duplicate_flag,
-    fct_crm_opportunity.opportunity_owner,
-    dim_crm_account.crm_account_name AS account_name,
-    dim_crm_account.crm_account_tsp_region AS tsp_region,
-    dim_crm_account.crm_account_tsp_sub_region AS tsp_sub_region,
-    dim_crm_account.parent_crm_account_sales_segment AS ultimate_parent_sales_segment,
-    dim_crm_account.tsp_max_hierarchy_sales_segment,
-    dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_account_id,
-    dim_crm_account.parent_crm_account_name AS ultimate_parent_account_name,
-    dim_crm_account.dim_parent_crm_account_id AS ultimate_parent_id,
-    dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
-    dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area AS account_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory AS account_demographics_territory,
-    dim_crm_account.parent_crm_account_demographics_sales_segment AS upa_demographics_segment,
-    dim_crm_account.parent_crm_account_demographics_geo AS upa_demographics_geo,
-    dim_crm_account.parent_crm_account_demographics_region AS upa_demographics_region,
-    dim_crm_account.parent_crm_account_demographics_area AS upa_demographics_area,
-    dim_crm_account.parent_crm_account_demographics_territory AS upa_demographics_territory,
-    fct_crm_opportunity.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
-    fct_crm_opportunity.is_eligible_created_pipeline AS is_eligible_created_pipeline_flag,
-    fct_crm_opportunity.is_eligible_sao AS is_eligible_sao_flag,
-    fct_crm_opportunity.is_eligible_asp_analysis AS is_eligible_asp_analysis_flag,
-    fct_crm_opportunity.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
-    fct_crm_opportunity.fpa_master_bookings_flag AS is_booked_net_arr_flag,
-    fct_crm_opportunity.is_eligible_churn_contraction AS is_eligible_churn_contraction_flag,
-    fct_crm_opportunity.snapshot_month AS snapshot_date_month,
-    fct_crm_opportunity.close_month AS close_date_month,
-    fct_crm_opportunity.created_month AS created_date_month,
-    fct_crm_opportunity.iacv_created_month AS iacv_created_date_month,
-    fct_crm_opportunity.net_arr_created_month AS net_arr_created_date_month,
-    fct_crm_opportunity.pipeline_created_month AS pipeline_created_date_month,
-    fct_crm_opportunity.is_excluded AS is_excluded_flag
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account
@@ -618,5 +492,5 @@ final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2022-05-05"
+    updated_date="2022-07-28"
   ) }}

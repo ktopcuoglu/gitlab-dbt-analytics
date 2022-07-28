@@ -196,6 +196,7 @@ SELECT
         END opportunity_deal_size,
         payment_schedule__c                             AS payment_schedule,
         comp_y2_iacv__c                                 AS comp_y2_iacv,
+        comp_new_logo_override__c                       AS comp_new_logo_override,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
