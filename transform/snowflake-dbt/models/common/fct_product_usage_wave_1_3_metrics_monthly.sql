@@ -239,6 +239,7 @@
       usage_ping.audit_screen_view_28_days_user,
       usage_ping.instance_audit_screen_view_28_days_user,
       usage_ping.credential_inventory_view_28_days_user,
+      usage_ping.compliance_frameworks_pipeline_all_time_event,
       usage_ping.compliance_frameworks_pipeline_28_days_event,
       usage_ping.groups_streaming_destinations_all_time_event,
       usage_ping.groups_streaming_destinations_28_days_event,
@@ -290,5 +291,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-02-08",
-    updated_date="2022-07-18"
+    updated_date="2022-07-27"
 ) }}
