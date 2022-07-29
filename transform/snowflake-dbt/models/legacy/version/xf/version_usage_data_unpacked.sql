@@ -20,7 +20,7 @@ WITH usage_data_unpacked_intermediate AS (
 
     SELECT
       id,
-      {{ dbt_utils.star(from=ref('version_usage_data_unpacked_intermediate'), except=(version_usage_stats_list|upper)) }},
+      {{ dbt_utils.star(from=ref('version_usage_data_unpacked_intermediate'), except=(version_usage_stats_list)) }},
       gitpod_enabled,
       {% for stat_name in version_usage_stats_list %}
 
