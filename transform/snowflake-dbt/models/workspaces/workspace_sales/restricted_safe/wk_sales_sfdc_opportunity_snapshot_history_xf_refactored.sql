@@ -4,6 +4,10 @@
 
 -- USE WAREHOUSE reporting;
 
+-- TODO
+-- create a CTE using the mart
+-- link the above
+
 WITH date_details AS (
 
     SELECT *

@@ -32,6 +32,7 @@ WITH sfdc_opportunity AS (
 
     SELECT *
     FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
+    -- TODO add the reference
 
 ), sfdc_users_xf AS (
 
