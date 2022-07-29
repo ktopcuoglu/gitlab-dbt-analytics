@@ -283,3 +283,11 @@ ZUORA_API_CLIENT_ID = Secret(
 ZUORA_API_CLIENT_SECRET = Secret(
     "env", "ZUORA_API_CLIENT_SECRET", "airflow", "ZUORA_API_CLIENT_SECRET"
 )
+
+# Data observability
+MCD_DEFAULT_API_ID = Secret(
+    "env", "MCD_DEFAULT_API_ID", "airflow", "MCD_DEFAULT_API_ID"
+)
+MCD_DEFAULT_API_TOKEN = Secret(
+    "env", "MCD_DEFAULT_API_TOKEN", "airflow", "MCD_DEFAULT_API_TOKEN"
+)
