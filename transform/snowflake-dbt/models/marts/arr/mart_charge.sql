@@ -84,6 +84,8 @@
       dim_billing_account.billing_account_number                                      AS billing_account_number,
       dim_billing_account.ssp_channel                                                 AS ssp_channel,
       dim_billing_account.po_required                                                 AS po_required,
+      dim_billing_account.auto_pay                                                    AS auto_pay,
+      dim_billing_account.default_payment_method_type                                 AS default_payment_method_type,
 
       -- crm account info
       dim_crm_user.dim_crm_user_id                                                    AS dim_crm_user_id,
@@ -192,5 +194,5 @@
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-07",
-    updated_date="2022-05-30"
+    updated_date="2022-07-19"
 ) }}

@@ -159,4 +159,4 @@ wave,metric_name
 6.1,counts.projects_with_external_status_checks
 6.1,counts.external_status_checks
 6.1,redis_hll_counters.search.i_search_paid_monthly
-6.1,redis_hll_counters.manage.unque_active_users_monthly
+6.1,redis_hll_counters.manage.unique_active_users_monthly

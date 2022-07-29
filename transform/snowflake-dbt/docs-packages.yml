@@ -1,10 +1,11 @@
 # Copy of packages.yml with the private data_tests package removed
 packages:
-  - package: gitlabhq/snowflake_spend
-    version: 1.2.0
-  - package: fishtown-analytics/audit_helper
-    version: 0.3.0
-  - package: fishtown-analytics/dbt_utils
-    version: 0.6.4
-  - package: fishtown-analytics/snowplow
-    version: 0.12.0
+  - git: git@gitlab.com:gitlab-data/snowflake_spend.git
+    revision: "updates_for_dbt_1_1"
+    warn-unpinned: false
+  - package: dbt-labs/audit_helper
+    version: 0.5.0
+  - package: dbt-labs/dbt_utils
+    version: 0.8.5
+  - package: dbt-labs/snowplow
+    version: 0.14.0

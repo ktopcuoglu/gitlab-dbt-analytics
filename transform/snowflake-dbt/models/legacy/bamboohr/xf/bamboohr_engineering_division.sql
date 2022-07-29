@@ -38,10 +38,7 @@ WITH employees AS (
       engineering_employees.employee_id,
       engineering_employees.full_name,
       engineering_employees.job_title,
-      CASE
-        WHEN bamboohr_engineering_division_mapping.section_name = 'sec'
-          THEN 'secure' 
-        ELSE bamboohr_engineering_division_mapping.section_name END as sub_department,
+      bamboohr_engineering_division_mapping.section_name as sub_department,
       engineering_employees.job_title_speciality,
       CASE 
         WHEN engineering_employees.employee_id IN (11480,11522,11500,11555,11013,11008,10979,10442,10072,11491) 

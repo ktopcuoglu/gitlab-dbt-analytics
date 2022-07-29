@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: bdg_company_domain_account
+  - name: wk_fct_user_namespace_account_company
+    columns:
+      - name: user_namespace_account_company_pk
+        tests:
+          - unique
+  - name: wk_mart_namespace_company_account
+  - name: rpt_namespace_company_account
