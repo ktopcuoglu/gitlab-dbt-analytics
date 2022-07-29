@@ -8,7 +8,7 @@ WITH final AS (
       --primary key
       prep_crm_account.dim_crm_account_id,
 
-      --surrogate keys (maintain for now to not break reporting)
+      --surrogate keys
       prep_crm_account.dim_parent_crm_account_id,
       prep_crm_account.dim_crm_user_id,
       prep_crm_account.merged_to_account_id,
@@ -85,8 +85,6 @@ WITH final AS (
       prep_crm_account.business_development_rep,
       prep_crm_account.dedicated_service_engineer,
       prep_crm_account.account_tier,
-      prep_crm_account.customer_since_date,
-      prep_crm_account.next_renewal_date,
       prep_crm_account.license_utilization,
       prep_crm_account.support_level,
       prep_crm_account.named_account,
@@ -168,6 +166,8 @@ WITH final AS (
       prep_crm_account.gtm_account_centric_date,
       prep_crm_account.partners_signed_contract_date,
       prep_crm_account.technical_account_manager_date,
+      prep_crm_account.customer_since_date,
+      prep_crm_account.next_renewal_date,
 
       --metadata
       prep_crm_account.created_by_name,

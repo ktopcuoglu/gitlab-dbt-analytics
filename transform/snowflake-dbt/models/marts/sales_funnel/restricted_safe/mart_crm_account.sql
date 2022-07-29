@@ -90,8 +90,6 @@
       dim_crm_account.business_development_rep,
       dim_crm_account.dedicated_service_engineer,
       dim_crm_account.account_tier,
-      dim_crm_account.customer_since_date,
-      dim_crm_account.next_renewal_date,
       dim_crm_account.license_utilization,
       dim_crm_account.support_level,
       dim_crm_account.named_account,
@@ -153,6 +151,8 @@
       dim_crm_account.gtm_account_centric_date,
       dim_crm_account.partners_signed_contract_date,
       dim_crm_account.technical_account_manager_date,
+      dim_crm_account.next_renewal_date,
+      dim_crm_account.customer_since_date,
 
       --measures
       fct_crm_account.count_active_subscription_charges,

@@ -24,6 +24,8 @@ WITH final AS (
       prep_crm_account.gtm_account_centric_date_id,
       prep_crm_account.partners_signed_contract_date_id,
       prep_crm_account.technical_account_manager_date_id,
+      prep_crm_account.next_renewal_date_id,
+      prep_crm_account.customer_since_date_id,
 
       --measures
       prep_crm_account.count_active_subscription_charges,

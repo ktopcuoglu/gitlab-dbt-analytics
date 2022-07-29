@@ -228,8 +228,6 @@ WITH map_merged_crm_account AS (
       sfdc_account.business_development_rep,
       sfdc_account.dedicated_service_engineer,
       sfdc_account.account_tier,
-      sfdc_account.customer_since_date,
-      sfdc_account.next_renewal_date,
       sfdc_account.license_utilization,
       sfdc_account.support_level,
       sfdc_account.named_account,
@@ -378,6 +376,10 @@ WITH map_merged_crm_account AS (
       CAST(sfdc_account.partners_signed_contract_date AS date)            AS partners_signed_contract_date,
       {{ get_date_id('sfdc_account.technical_account_manager_date') }}    AS technical_account_manager_date_id,
       sfdc_account.technical_account_manager_date,
+      {{ get_date_id('sfdc_account.customer_since_date') }}               AS customer_since_date_id,
+      sfdc_account.customer_since_date,
+      {{ get_date_id('sfdc_account.next_renewal_date') }}                 AS next_renewal_date_id,
+      sfdc_account.next_renewal_date,
 
       --measures
       sfdc_account.count_active_subscription_charges,
