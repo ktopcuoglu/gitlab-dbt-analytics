@@ -959,10 +959,13 @@ WITH first_contact  AS (
       ON sfdc_opportunity.stage_1_discovery_date::DATE = stage_1_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
+    {%- if model_type == 'snapshot' %}
+        AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+    {%- endif %}
     LEFT JOIN sfdc_account AS partner_account
       ON sfdc_opportunity.partner_account = partner_account.account_id
     {%- if model_type == 'snapshot' %}
-        AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+        AND sfdc_opportunity.snapshot_id = partner_account.snapshot_id
     {%- endif %}
     LEFT JOIN sfdc_account
       ON sfdc_opportunity.dim_crm_account_id= sfdc_account.account_id
