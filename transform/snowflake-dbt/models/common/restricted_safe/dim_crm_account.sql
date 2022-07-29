@@ -17,6 +17,7 @@ WITH final AS (
       prep_crm_account.dim_crm_person_primary_contact_id,
 
       --account people
+      prep_crm_account.crm_account_owner,
       prep_crm_account.account_owner,
       prep_crm_account.technical_account_manager,
 
@@ -70,7 +71,6 @@ WITH final AS (
       prep_crm_account.crm_account_type,
       prep_crm_account.crm_account_industry,
       prep_crm_account.crm_account_sub_industry,
-      prep_crm_account.crm_account_owner,
       prep_crm_account.crm_account_owner_team,
       prep_crm_account.crm_account_sales_territory,
       prep_crm_account.crm_account_tsp_region,

@@ -1,6 +1,7 @@
 {{ simple_cte([
     ('dim_crm_account', 'dim_crm_account'),
-    ('fct_crm_account', 'fct_crm_account')
+    ('fct_crm_account', 'fct_crm_account'),
+    ('dim_crm_user', 'dim_crm_user')
     ])
 
 }},
@@ -22,8 +23,14 @@
       fct_crm_account.dim_crm_person_primary_contact_id,
 
       --account people
+      dim_crm_account.crm_account_owner,
       dim_crm_account.account_owner,
       dim_crm_account.technical_account_manager,
+
+      --crm account owner attributes
+      crm_account_owner.crm_user_geo AS crm_account_owner_geo,
+      crm_account_owner.crm_user_region AS crm_account_owner_region,
+      crm_account_owner.crm_user_area AS crm_account_owner_area,
 
       ----ultimate parent crm account info
       dim_crm_account.parent_crm_account_name,
@@ -32,7 +39,6 @@
       dim_crm_account.parent_crm_account_industry,
       dim_crm_account.parent_crm_account_sub_industry,
       dim_crm_account.parent_crm_account_industry_hierarchy,
-      dim_crm_account.parent_crm_account_owner_team,
       dim_crm_account.parent_crm_account_sales_territory,
       dim_crm_account.parent_crm_account_tsp_region,
       dim_crm_account.parent_crm_account_tsp_sub_region,
@@ -75,7 +81,6 @@
       dim_crm_account.crm_account_type,
       dim_crm_account.crm_account_industry,
       dim_crm_account.crm_account_sub_industry,
-      dim_crm_account.crm_account_owner,
       dim_crm_account.crm_account_owner_team,
       dim_crm_account.crm_account_sales_territory,
       dim_crm_account.crm_account_tsp_region,
@@ -189,6 +194,8 @@
       FROM dim_crm_account
       INNER JOIN fct_crm_account
         ON dim_crm_account.dim_crm_account_id = fct_crm_account.dim_crm_account_id
+      LEFT JOIN dim_crm_user crm_account_owner
+        ON fct_crm_account.crm_account_owner_id = crm_account_owner.dim_crm_user_id
 
 )
 
