@@ -6,7 +6,7 @@ WITH fct_ping_instance_metric_rolling_6_months AS (
 
     SELECT
       {{ dbt_utils.star(from=ref('fct_ping_instance_metric_rolling_13_months'), except=['CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE', 'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
-    FROM {{ ref('fct_ping_instance_metric_rolling_24_months') }} 
+    FROM {{ ref('fct_ping_instance_metric_rolling_13_months') }} 
     WHERE DATE_TRUNC(MONTH, fct_ping_instance_metric_rolling_13_months.ping_created_date) >= DATEADD(MONTH, -6, DATE_TRUNC(MONTH,CURRENT_DATE))
 
 )
