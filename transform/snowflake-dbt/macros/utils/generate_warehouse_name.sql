@@ -30,7 +30,7 @@
         
         {%- if custom_warehouse_size is none -%}
 
-            TRANSFORMING_XS
+            {{ target.warehouse }} 
 
         {%- else -%}
             
@@ -42,7 +42,7 @@
     
         {%- if custom_warehouse_size is none -%}
             {# Should probably never happen.. #}
-            DEV_XS
+            {{ target.warehouse }}
 
         {%- else -%}
             
