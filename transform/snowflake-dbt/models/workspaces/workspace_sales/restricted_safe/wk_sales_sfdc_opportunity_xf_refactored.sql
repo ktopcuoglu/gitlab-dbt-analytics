@@ -25,14 +25,17 @@ WITH sfdc_opportunity AS (
  ), legacy_sfdc_opportunity_xf AS (
 
     SELECT *
-    FROM prod.restricted_safe_legacy.sfdc_opportunity_xf
-    --FROM {{ref('sfdc_opportunity_xf')}}
+    --FROM prod.restricted_safe_legacy.sfdc_opportunity_xf
+    FROM {{ref('sfdc_opportunity_xf')}}
 
 ), edm_opty AS (
 
     SELECT *
-    FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
+    SELECT *
+    --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
+    FROM {{ref('mart_crm_opportunity')}}
     -- TODO add the reference
+
 
 ), sfdc_users_xf AS (
 

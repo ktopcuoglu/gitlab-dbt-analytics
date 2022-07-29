@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_opportunity_snapshot_history_xf_refactored_ver_3') }}
+{{ config(alias='sfdc_opportunity_snapshot_history_xf_edm_marts') }}
 -- TODO
 -- Add CS churn fields into model from wk_sales_opportunity object
 

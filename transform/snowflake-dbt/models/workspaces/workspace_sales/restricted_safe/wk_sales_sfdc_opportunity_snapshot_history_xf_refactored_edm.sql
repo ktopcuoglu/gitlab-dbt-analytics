@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_opportunity_snapshot_history_xf_refactored') }}
+{{ config(alias='sfdc_opportunity_snapshot_history_xf_refactored_edm') }}
 -- TODO
 -- Add CS churn fields into model from wk_sales_opportunity object
 
@@ -108,6 +108,8 @@ WITH date_details AS (
     --FROM prod.workspace_sales.sfdc_users_xf
     FROM {{ref('wk_sales_sfdc_users_xf')}}
 
+  
+-- CTE to be UPDATED using EDM fields as source
 ), sfdc_opportunity_snapshot_history AS (
 
      SELECT
