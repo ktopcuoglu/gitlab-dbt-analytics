@@ -43,7 +43,7 @@
 
 ), joined AS (
 
-    SELECT
+    SELECT distinct
       sm_subscriptions.dim_subscription_id,
       sm_subscriptions.dim_subscription_id_original,
       sm_subscriptions.dim_billing_account_id,

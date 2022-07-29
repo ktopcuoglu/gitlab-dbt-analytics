@@ -7,7 +7,7 @@
 
 {{ simple_cte([
     ('monthly_saas_metrics','fct_saas_product_usage_metrics_monthly'),
-    ('monthly_sm_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
+    ('monthly_sm_metrics','fct_ping_instance_metric_wave_monthly'),
     ('billing_accounts','dim_billing_account'),
     ('location_country', 'dim_location_country'),
     ('subscriptions', 'dim_subscription'),
@@ -79,7 +79,7 @@
       monthly_sm_metrics.dim_subscription_id,
       NULL                                                                         AS dim_namespace_id,
       NULL                                                                         AS namespace_name,
-      monthly_sm_metrics.uuid,
+      monthly_sm_metrics.dim_instance_id                                           AS uuid,
       monthly_sm_metrics.hostname,
       {{ get_keyed_nulls('billing_accounts.dim_billing_account_id') }}              AS dim_billing_account_id,
       {{ get_keyed_nulls('billing_accounts.dim_crm_account_id') }}                      AS dim_crm_account_id,

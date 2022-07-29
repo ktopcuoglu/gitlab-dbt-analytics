@@ -1,4 +1,4 @@
-{%- macro usage_ping_month_range(all_time_event_metric_column, month_column = 'snapshot_month', partition_by_columns = ['dim_subscription_id', 'uuid', 'hostname']) -%} 
+{%- macro usage_ping_month_range(all_time_event_metric_column, month_column = 'snapshot_month', partition_by_columns = ['dim_subscription_id', 'dim_instance_id', 'hostname']) -%} 
 
     {%- set first_month_alias =  all_time_event_metric_column ~ '_first_ping_month' -%}
     {%- set last_month_alias =  all_time_event_metric_column ~ '_last_ping_month' -%}

@@ -1,4 +1,4 @@
-{%- macro usage_ping_over_ping_difference(all_time_event_metric_column, partition_by_columns = ['dim_subscription_id' ,'uuid', 'hostname'], order_by_column = 'snapshot_month') -%} 
+{%- macro usage_ping_over_ping_difference(all_time_event_metric_column, partition_by_columns = ['dim_subscription_id' ,'dim_instance_id', 'hostname'], order_by_column = 'snapshot_month') -%} 
 
     {%- set ping_over_ping_alias =  all_time_event_metric_column ~ '_since_last_ping' -%}
 

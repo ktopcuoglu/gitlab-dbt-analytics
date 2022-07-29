@@ -33,7 +33,6 @@
 
     SELECT
       prep_ping_instance.*,
-      --(prep_ping_instance.raw_usage_data_payload:license_md5::TEXT)                                     AS license_md5,
       prep_ping_instance.raw_usage_data_payload:license_billable_users::NUMBER                            AS license_billable_users, 
       TO_DATE(prep_ping_instance.raw_usage_data_payload:license_trial_ends_on::TEXT)                      AS license_trial_ends_on,
       (prep_ping_instance.raw_usage_data_payload:license_subscription_id::TEXT)                           AS license_subscription_id,
@@ -92,7 +91,7 @@
       dim_crm_account.dim_parent_crm_account_id                                       AS dim_parent_crm_account_id,
       dim_location_country_id                                                         AS dim_location_country_id,
       dim_date.date_id                                                                AS dim_ping_date_id,
-      dim_instance_id                                                                 AS uuid,
+      dim_instance_id                                                                 AS dim_instance_id,
       dim_host_id                                                                     AS dim_host_id,
       dim_installation_id                                                             AS dim_installation_id,
       prep_license.dim_license_id                                                     AS dim_license_id,
