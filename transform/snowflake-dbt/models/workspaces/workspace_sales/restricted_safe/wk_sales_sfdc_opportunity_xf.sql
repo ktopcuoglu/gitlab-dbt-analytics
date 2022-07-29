@@ -362,28 +362,28 @@ we can delete this connection and use the mart table directly.
       --                adding is_open check here to default open deals to opportunity owners fields (instead of stamped)
       CASE 
         WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL 
-            OR sfdc_opportunity_xf.is_open = 1
+            OR sfdc_opportunity_xf.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
           THEN opportunity_owner.user_segment 
         ELSE sfdc_opportunity_xf.user_segment_stamped
       END                                                                   AS opportunity_owner_user_segment,
 
       CASE 
         WHEN sfdc_opportunity_xf.user_geo_stamped IS NULL 
-            OR sfdc_opportunity_xf.is_open = 1
+            OR sfdc_opportunity_xf.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
           THEN opportunity_owner.user_geo
         ELSE sfdc_opportunity_xf.user_geo_stamped
       END                                                                   AS opportunity_owner_user_geo,
 
       CASE 
         WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
-             OR sfdc_opportunity_xf.is_open = 1
+             OR sfdc_opportunity_xf.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
           THEN opportunity_owner.user_region
           ELSE sfdc_opportunity_xf.user_region_stamped
       END                                                                   AS opportunity_owner_user_region,
 
       CASE
         WHEN sfdc_opportunity_xf.user_area_stamped IS NULL
-             OR sfdc_opportunity_xf.is_open = 1
+             OR sfdc_opportunity_xf.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
           THEN opportunity_owner.user_area
         ELSE sfdc_opportunity_xf.user_area_stamped
       END                                                                   AS opportunity_owner_user_area,
@@ -717,11 +717,11 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
       sfdc_accounts_xf.account_demographics_territory,
       -- account_demographics_subarea_stamped
 
-      sfdc_accounts_xf.account_demographics_sales_segment    AS upa_demographics_segment,
-      sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
-      sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
-      sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory,
+      upa.account_demographics_sales_segment    AS upa_demographics_segment,
+      upa.account_demographics_geo              AS upa_demographics_geo,
+      upa.account_demographics_region           AS upa_demographics_region,
+      upa.account_demographics_area             AS upa_demographics_area,
+      upa.account_demographics_territory        AS upa_demographics_territory,
       -----------------------------------------------
 
       CASE
@@ -830,8 +830,10 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
     FROM sfdc_opportunity_xf
     CROSS JOIN today
-    LEFT JOIN sfdc_accounts_xf
+    INNER JOIN sfdc_accounts_xf
       ON sfdc_accounts_xf.account_id = sfdc_opportunity_xf.account_id
+    INNER JOIN sfdc_accounts_xf upa
+      ON sfdc_accounts_xf.ultimate_parent_account_id = upa.account_id
     LEFT JOIN churn_metrics 
       ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
     
