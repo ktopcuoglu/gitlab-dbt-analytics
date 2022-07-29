@@ -7,8 +7,6 @@ models:
       description: "Monte Carlo monitors."
     - name: cleanup_suggestions
       description: "Monte Carlo clanup suggestions."
-    - name: custom_rules
-      description: "Monte Carlo custom rules."
     - name: dashboard_analytics
       description: "Monte Carlo dashboard analytics, such as number of issues, types of issues etc."
     - name: field_cleanup_suggestions
