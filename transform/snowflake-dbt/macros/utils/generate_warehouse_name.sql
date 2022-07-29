@@ -1,5 +1,3 @@
--- Will write to custom databases not on prod
-
 {% macro generate_warehouse_name(custom_warehouse_size, node) -%}
 
     {%- set production_targets = production_targets() -%}
