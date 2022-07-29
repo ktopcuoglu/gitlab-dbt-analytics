@@ -1,0 +1,31 @@
+#settings specifically for this models directory
+#config other dbt settings within ~/.dbt/profiles.yml
+name: 'snowplow'
+version: '0.13.0'
+config-version: 2
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+test-paths: ["test"]
+analysis-paths: ["analyses"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+
+vars:
+  #'snowplow:events': TABLE OR {{ REF() }}
+  #'snowplow:context:web_page': TABLE OR {{ REF() }}
+  #'snowplow:context:performance_timing': TABLE OR {{ REF() }} or FALSE
+  #'snowplow:context:useragent': TABLE OR {{ REF() }} or FALSE
+  'snowplow:timezone': 'America/New_York'
+  'snowplow:page_ping_frequency': 30
+  'snowplow:app_ids': []
+  'snowplow:pass_through_columns': []
+  'snowplow:page_view_lookback_days': 1
+
+models:
+  snowplow:
+    base:
+      +materialized: ephemeral

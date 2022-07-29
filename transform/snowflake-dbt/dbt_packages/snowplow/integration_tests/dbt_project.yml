@@ -1,0 +1,40 @@
+
+name: 'snowplow_integration_tests'
+version: '0.10.0'
+config-version: 2
+
+profile: 'integration_tests'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"] 
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_packages"
+
+quoting:
+  identifier: false
+  schema: false
+  
+models:
+  bind: false
+
+vars:
+  'snowplow:timezone': 'America/New_York'
+  'snowplow:events': '{{ ref("base_event") }}'
+  'snowplow:context:web_page': '{{ ref("base_web_page") }}'
+  'snowplow:context:performance_timing': FALSE
+  'snowplow:context:useragent': FALSE
+  'snowplow:pass_through_columns': ['test_add_col']
+    
+seeds:
+  quote_columns: false
+  snowplow_integration_tests:
+    event:
+      +column_types:
+        collector_tstamp: timestamp
+        derived_tstamp: timestamp
