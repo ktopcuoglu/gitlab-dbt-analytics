@@ -103,7 +103,7 @@
       dim_installation_id                                                                                         AS dim_installation_id,
       dim_license_id                                                                                              AS dim_license_id,
       ping_created_at                                                                                             AS ping_created_at,
-      ping_created_date::DATE                                                                                     AS ping_created_date,
+      ping_created_at::DATE                                                                                       AS ping_created_date,
       umau_value                                                                                                  AS umau_value,
       license_subscription_id                                                                                     AS dim_subscription_license_id,
       'VERSION_DB'                                                                                                AS data_source
@@ -116,5 +116,5 @@
     created_by="@icooper-acp",
     updated_by="@iweeks",
     created_date="2022-03-08",
-    updated_date="2022-07-28"
+    updated_date="2022-07-29"
 ) }}
