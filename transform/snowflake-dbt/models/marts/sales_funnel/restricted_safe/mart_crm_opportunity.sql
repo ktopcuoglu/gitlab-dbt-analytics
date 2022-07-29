@@ -159,6 +159,7 @@
       fct_crm_opportunity.growth_type,
       fct_crm_opportunity.opportunity_deal_size,
       dim_crm_opportunity.primary_campaign_source_id,
+      fct_crm_opportunity.ga_client_id,
 
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
@@ -287,7 +288,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2022-04-26",
+    updated_date="2022-07-29",
   ) }}

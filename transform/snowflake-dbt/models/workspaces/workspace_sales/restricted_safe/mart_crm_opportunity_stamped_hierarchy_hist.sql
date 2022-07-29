@@ -173,6 +173,7 @@
       fct_crm_opportunity.products_purchased,
       fct_crm_opportunity.growth_type,
       fct_crm_opportunity.opportunity_deal_size,
+      fct_crm_opportunity.ga_client_id,
 
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment,

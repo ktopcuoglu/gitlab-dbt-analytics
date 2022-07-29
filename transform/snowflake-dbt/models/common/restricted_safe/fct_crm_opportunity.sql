@@ -121,6 +121,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                     AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
       sfdc_opportunity.ssp_id,
+      sfdc_opportunity.ga_client_id,
 
             -- flags
       sfdc_opportunity.is_closed,
@@ -220,7 +221,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2020-11-30",
-    updated_date="2022-03-17"
+    updated_date="2022-07-29"
 ) }}

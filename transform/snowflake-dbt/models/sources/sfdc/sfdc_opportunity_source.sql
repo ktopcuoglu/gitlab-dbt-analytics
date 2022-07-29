@@ -280,6 +280,7 @@ WITH source AS (
 
         downgrade_reason__c                             AS downgrade_reason,
         ssp_id__c                                       AS ssp_id,
+        gaclientid__c                                   AS ga_client_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',
