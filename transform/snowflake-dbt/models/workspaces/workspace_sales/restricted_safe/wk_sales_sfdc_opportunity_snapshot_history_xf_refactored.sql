@@ -2,25 +2,25 @@
 -- TODO
 -- Add CS churn fields into model from wk_sales_opportunity object
 
-USE WAREHOUSE reporting;
+-- USE WAREHOUSE reporting;
 
 WITH date_details AS (
 
     SELECT *
-   -- FROM {{ ref('wk_sales_date_details') }}
-    FROM prod.workspace_sales.date_details
+    FROM {{ ref('wk_sales_date_details') }}
+    -- FROM prod.workspace_sales.date_details
 
 ), sfdc_accounts_xf AS (
 
     SELECT *
-    --FROM {{ref('sfdc_accounts_xf')}}
-    FROM prod.restricted_safe_legacy.sfdc_accounts_xf
+    FROM {{ref('sfdc_accounts_xf')}}
+    -- FROM prod.restricted_safe_legacy.sfdc_accounts_xf
 
 ), sfdc_opportunity_snapshot_history_legacy AS (
 
-  SELECT *
-  --FROM {{ref('sfdc_opportunity_snapshot_history')}}
-  FROM prod.restricted_safe_legacy.sfdc_opportunity_snapshot_history
+    SELECT *
+    FROM {{ref('sfdc_opportunity_snapshot_history')}}
+    -- FROM prod.restricted_safe_legacy.sfdc_opportunity_snapshot_history
 
 ), sfdc_opportunity_xf AS (
 
