@@ -41,7 +41,16 @@ closest_provider AS (
 renamed AS (
 
     SELECT
+      --surrogate_key
+      {{ dbt_utils.surrogate_key(['source.user_id']) }}                AS dim_user_sk,
+      
+      --natural_key
+      source.user_id,
+      
+      --legacy natural_key to be deprecated during change management plan
       source.user_id                                                   AS dim_user_id,
+      
+      --Other attributes
       source.remember_created_at                                       AS remember_created_at,
       source.sign_in_count                                             AS sign_in_count,
       source.current_sign_in_at                                        AS current_sign_in_at,
@@ -84,7 +93,7 @@ renamed AS (
 {{ dbt_audit(
     cte_ref="renamed",
     created_by="@mpeychet",
-    updated_by="@tpoole",
+    updated_by="@iweeks",
     created_date="2021-05-31",
-    updated_date="2022-05-05"
+    updated_date="2022-06-20"
 ) }}

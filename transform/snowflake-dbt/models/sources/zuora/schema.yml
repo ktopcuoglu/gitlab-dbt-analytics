@@ -42,6 +42,14 @@ models:
         tags: ["tdf", "zuora"]      
         tests:
           - not_null
+  - name: zuora_payment_method_source
+    description: Source layer for Zuora Payment Method
+    columns:
+      - name: payment_method_id
+        tags: ["tdf", "zuora"]
+        tests:
+          - not_null
+          - unique
   - name: zuora_product_rate_plan_charge_source
     description: Source layer for Zuora Product Rate Plan Charges
   - name: zuora_product_rate_plan_charge_tier_source

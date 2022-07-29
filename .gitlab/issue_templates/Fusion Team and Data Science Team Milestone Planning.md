@@ -19,7 +19,6 @@ Please add a number for days you'll be working this milestone. Data Analysts and
 - @michellecooper: 
 - @pempey:
 - @iweeks: 
-- @Rigerta:
 
 **Total Analytics days**: <!-- sum the above analytics days -->
 
@@ -124,7 +123,6 @@ We assume that preceding milestone's velocity is a good predictor of the followi
 Please add a number for days you'll be working this milestone. Data Analysts and Engineers should subtract a day for each triage day and a day for meetings. Any time-off should also be subtracted from this number. This means that the maximum Analytics Days a Data Analyst or Data Engineer will ever post is 7. If you have two triage days it's 5. **This section should be filled out by the Data Analyst or Data Engineer themselves.**
 
 - @pempey: 
-- @Rigerta:
 - @jjstark: 
 
 
@@ -370,3 +368,6 @@ We assume that preceding milestone's velocity is a good predictor of the followi
 **Analytics capacity for this milestone:** <!-- Total Analytics days * Last milestone velocity -->
 
 </details>
+
+
+cc: @dvanrooijen2

@@ -20,3 +20,35 @@ models:
       It flattens the SaaS metrics from `prep_saas_usage_ping_namespace`.
       By doing this step in a separate model from `prep_saas_usage_ping_namespace` we get performance gains.
   - name: pte_scores
+    description: Propensity to expand by at least 10% in the next 3 months. All Salesforce accounts are scored and updated monthly (excludes Russian and Belarusian accounts). Table is additive, with new scores added monthy. Uniqueness of table is at CRM_ACCOUNT_ID || SCORE_DATE
+    columns:
+      - name: score
+        description: 0-1 value representing the likelihood to expand. For example. a value of 0.61 would mean a 61% likelihood to expand in the next 3 months
+      - name: decile
+        description: 1-10 value representing the scoring decile the record falls into. 1 = Top 10% of scores; 10 = Bottom 10% of scores
+      - name: importance
+        description: 1-100 value which weights the score decile and the ARR decile of an account. The higher the value the more likely for a large ARR expansion.
+      - name: score_group
+        description: Condenses the importance score into a 1-5 value. The higher the value the more likely for a large ARR expansion.
+      - name: insights
+        description: Top 5 prescriptive insights that can be done to raise the score of an account. If less than 5 presciptions available, explanatory insights are provided.
+  - name: ptc_scores
+    description: Propensity to churn or contract by at least 10% in the next 6 months. All Salesforce accounts > 100 USD ARR are scored and updated monthly (excludes Russian and Belarusian accounts).  
+    columns:
+      - name: score
+        description: 0-1 value representing the likelihood to contract/churn. For example. a value of 0.61 would mean a 61% likelihood to contract/churn in the next 6 months
+      - name: decile
+        description: 1-10 value representing the scoring decile the record falls into. 1 = Bottom 10% of scores; 10 = Top 10% of scores
+      - name: importance
+        description: 1-100 value which weights the score decile and the ARR decile of an account. The lower the value, the more likely a high amount of ARR is to contract/churn from account.
+      - name: score_group
+        description: Condenses the importance score into a 1-5 value. The lower the value, the more likely a high amount of ARR is to contract/churn from account.
+      - name: insights
+        description: Top 5 explanatory insights for an account.
+  - name: ptpt_scores
+    description: Propensity to purchase within the next 40 days. All trial namespaces with an active trial in the last 40 days are scored. 
+    columns:
+      - name: score
+        description: 0-1 value representing the likelihood to purchase. For example. a value of 0.61 would mean a 61% likelihood to purchase in the next 40 days
+      - name: decile
+        description: 1-10 value representing the scoring decile the record falls into. 1 = Top 10% of scores; 10 = Bottom 10% of scores

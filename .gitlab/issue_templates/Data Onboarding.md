@@ -56,8 +56,9 @@ You will need access to several groups, applications, tools, and data sources fo
 |  Airflow |  No | Analyst | Admin| Analyst | Admin | |
 |  GCP group: `analytics`| No | No | No | Yes  | Yes  | Access Request, [Example](https://gitlab.com/gitlab-com/team-member-epics/access-requests/-/issues/10306#note_622125437)  |
 |  Slack alias: `@datateam` | No | Yes | Yes | Yes | Yes |  PeopleOps Onboarding |
-|  Slack alias: `@data-analysts` | No | Yes | Yes | Yes | No |  PeopleOps Onboarding |
-|  Slack alias: `@data-engineers` | No | No | Yes | No | Yes |  PeopleOps Onboarding |
+|  Slack alias: `@data-analysts` | No | Yes | No | Yes | No |  PeopleOps Onboarding |
+|  Slack alias: `@data-engineers` | No | No | No | No | Yes |  PeopleOps Onboarding |
+|  Slack alias: `@analytics-engineers` | No | No | Yes | No | No |  PeopleOps Onboarding |
 |  Slack alias: `gtmanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
 |  Slack alias: `randdanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
 |  Slack alias: `peopleanalyticstriage` | Yes | Yes | Yes | No | No |  PeopleOps Onboarding |
