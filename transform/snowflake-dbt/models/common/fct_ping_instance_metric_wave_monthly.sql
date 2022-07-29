@@ -6,7 +6,9 @@
     ('subscriptions', 'bdg_subscription_product_rate_plan'),
     ('dates', 'dim_date'),
     ('seat_link', 'fct_usage_self_managed_seat_link'),
-    ('ping_instance_wave', 'fct_ping_instance_metric_wave')
+    ('ping_instance_wave', 'fct_ping_instance_metric_wave'),
+    ('dim_host_instance_type','dim_host_instance_type')
+
 ]) }}
 
 
@@ -53,11 +55,11 @@
       ping_instance_wave_sm.ping_created_at,
       {{ get_date_id('ping_instance_wave_sm.ping_created_at') }}                                         AS ping_created_date_id,
       ping_instance_wave_sm.dim_instance_id,
+      dim_host_instance_type.instance_type,
       ping_instance_wave_sm.hostname,
-      --ping_instance_wave_sm.instance_type,
       ping_instance_wave_sm.dim_license_id,
       ping_instance_wave_sm.license_md5,
-      --ping_instance_wave_sm.cleaned_version,
+      ping_instance_wave_sm.cleaned_version,
       ping_instance_wave_sm.dim_location_country_id,
       -- Wave 1
       DIV0(
@@ -248,6 +250,9 @@
     LEFT JOIN seat_link
       ON sm_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
       AND sm_subscriptions.snapshot_month = seat_link.snapshot_month
+    LEFT JOIN dim_host_instance_type 
+      ON ping_instance_wave_sm.dim_instance_id = dim_host_instance_type.instance_uuid
+      AND ping_instance_wave_sm.hostname = dim_host_instance_type.instance_hostname
 
 )
 
