@@ -498,16 +498,6 @@ we can delete this connection and use the mart table directly.
       -----------------------------------------------------------------------------------------------------      
       -----------------------------------------------------------------------------------------------------
       
-      --sfdc_opportunity_xf.partner_initiated_opportunity,
-      --sfdc_opportunity_xf.true_up_value,
-      --sfdc_opportunity_xf.is_swing_deal,
-      --sfdc_opportunity_xf.probability,
-      --sfdc_opportunity_xf.pushed_count,
-      --sfdc_opportunity_xf.refund_iacv,
-      --sfdc_opportunity_xf.downgrade_iacv,
-      --sfdc_opportunity_xf.upside_swing_deal_iacv,
-      --sfdc_opportunity_xf.weighted_iacv,
-
       -- fields form opportunity source
       sfdc_opportunity.opportunity_category,
       sfdc_opportunity.product_category,
