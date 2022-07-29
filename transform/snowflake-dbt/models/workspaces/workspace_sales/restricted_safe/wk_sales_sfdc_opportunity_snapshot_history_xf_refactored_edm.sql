@@ -316,13 +316,6 @@ WITH date_details AS (
         ELSE 0
       END                                                         AS is_renewal,
 
-
-      CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
-          THEN 1
-        ELSE 0
-      END                                                         AS is_refund,
-
       CASE
         WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit')
           THEN 1
