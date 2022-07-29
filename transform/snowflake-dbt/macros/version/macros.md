@@ -39,3 +39,9 @@ This macro returns four columns for a given subscription in a given month:
 3. A daily metric count, calculated by dividing the above difference by the number of days between the consecutive Usage Pings used to calculate the above difference
 4. An estimated monthly metric count, calculated by multiplying the above daily count by the number of days in the given fiscal month
 {% enddocs %}
+
+{% docs ping_instance_wave_metrics %}
+This macro contains the [list of Service Ping metrics that the Sales CS team requests](https://docs.google.com/spreadsheets/d/1ZR7duYmjQ8x86iAJ1dCix88GTtPlOyNwiMgeG_85NiA/edit?ts=5fea3398#gid=0). 
+
+This macro is used to support data models that the sales team is requesting these metrics in. 
+{% enddocs %}
