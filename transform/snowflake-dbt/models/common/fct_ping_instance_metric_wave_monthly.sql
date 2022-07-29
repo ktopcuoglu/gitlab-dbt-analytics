@@ -35,7 +35,7 @@
         dim_subscription_id,
         dim_instance_id,
         hostname,
-        ping_created_at_month
+        ping_created_date_month
       ORDER BY ping_created_at DESC
       ) = 1
 
@@ -244,7 +244,7 @@
     FROM sm_subscriptions
     LEFT JOIN ping_instance_wave_sm
       ON sm_subscriptions.dim_subscription_id = ping_instance_wave_sm.dim_subscription_id
-      AND sm_subscriptions.snapshot_month = ping_instance_wave_sm.ping_created_at_month
+      AND sm_subscriptions.snapshot_month = ping_instance_wave_sm.ping_created_date_month
     LEFT JOIN seat_link
       ON sm_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
       AND sm_subscriptions.snapshot_month = seat_link.snapshot_month

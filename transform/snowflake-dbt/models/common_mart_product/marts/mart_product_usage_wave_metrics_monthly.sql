@@ -13,8 +13,7 @@
     ('crm_accounts', 'dim_crm_account'),
     ('location_country', 'dim_location_country'),
     ('subscriptions', 'dim_subscription_snapshot_bottom_up'),
-    ('dim_ping_instance','dim_ping_instance'),
-    ('instance_type','dim_host_instance_type')
+
 ]) }}
 
 , original_subscription_dates AS (
@@ -50,10 +49,10 @@
       monthly_metrics.ping_created_date_id,
       monthly_metrics.dim_instance_id                                       AS uuid,
       monthly_metrics.hostname,
-      instance_type.instance_type,
+      monthly_metrics.instance_type,
       monthly_metrics.dim_license_id,
       monthly_metrics.license_md5,
-      dim_ping_instance.cleaned_version,
+      monthly_metrics.cleaned_version,
       location_country.country_name,
       location_country.iso_2_country_code,
       location_country.iso_3_country_code,
@@ -179,11 +178,6 @@
       = TO_DATE(TO_CHAR(subscriptions_original.snapshot_id), 'YYYYMMDD')
     LEFT JOIN original_subscription_dates
       ON original_subscription_dates.dim_subscription_id = monthly_metrics.dim_subscription_id_original
-    LEFT JOIN dim_ping_instance 
-     ON monthly_metrics.dim_ping_instance_id = dim_ping_instance.dim_ping_instance_id
-    LEFT JOIN instance_type 
-      ON monthly_metrics.dim_instance_id = instance_type.instance_uuid
-      AND monthly_metrics.hostname = instance_type.instance_hostname
 
 )
 

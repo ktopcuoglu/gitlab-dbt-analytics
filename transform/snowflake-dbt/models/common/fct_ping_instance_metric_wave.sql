@@ -14,7 +14,9 @@
 {{ simple_cte([
     ('fct_ping_instance', 'fct_ping_instance'),
     ('gainsight_wave_2_3_metrics','gainsight_wave_2_3_metrics'),
-    ('dim_ping_instance','dim_ping_instance')
+    ('dim_ping_instance','dim_ping_instance'),
+    ('dim_host_instance_type','dim_host_instance_type')
+
 ]) }}
 
 
@@ -40,6 +42,7 @@
     fct_ping_instance_metric_with_license.dim_product_tier_id                                  AS dim_product_tier_id, 
     fct_ping_instance_metric_with_license.dim_ping_date_id                                     AS dim_ping_date_id,
     fct_ping_instance_metric_with_license.dim_installation_id                                  AS dim_installation_id,
+    dim_host_instance_type.instance_type                                                       AS instance_type,
     fct_ping_instance_metric_with_license.dim_subscription_license_id                          AS dim_subscription_license_id,
     fct_ping_instance.license_user_count                                                       AS license_user_count,
     fct_ping_instance.license_billable_users                                                   AS license_billable_users,
@@ -48,21 +51,25 @@
     fct_ping_instance_metric_with_license.metrics_path                                         AS metrics_path,
     fct_ping_instance_metric_with_license.metric_value                                         AS metric_value,    
     fct_ping_instance_metric_with_license.ping_created_at                                      AS ping_created_at,
-    dim_ping_instance.ping_created_at_month                                                    AS ping_created_at_month,
+    dim_ping_instance.ping_created_date_month                                                  AS ping_created_date_month,
     fct_ping_instance.hostname                                                                 AS hostname,
     fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_mapped_to_subscription,
     fct_ping_instance_metric_with_license.is_license_mapped_to_subscription                    AS is_license_subscription_id_valid,
     fct_ping_instance_metric_with_license.is_service_ping_license_in_customerDot               AS is_service_ping_license_in_customerDot,
-    dim_ping_instance.ping_delivery_type                                                       AS ping_delivery_type
+    dim_ping_instance.ping_delivery_type                                                       AS ping_delivery_type,
+    dim_ping_instance.cleaned_version                                                          AS cleaned_version
 
     FROM fct_ping_instance_metric_with_license
     INNER JOIN gainsight_wave_2_3_metrics
       ON fct_ping_instance_metric_with_license.metrics_path = gainsight_wave_2_3_metrics.metric_name
     LEFT JOIN fct_ping_instance
       ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  fct_ping_instance.dim_ping_instance_id
-    LEFT OUTER JOIN dim_ping_instance
-    ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  dim_ping_instance.dim_ping_instance_id
-    WHERE fct_ping_instance_metric_with_license.dim_subscription_id IS NOT NULL
+    LEFT JOIN dim_ping_instance
+      ON fct_ping_instance_metric_with_license.dim_ping_instance_id =  dim_ping_instance.dim_ping_instance_id
+    LEFT JOIN dim_host_instance_type 
+      ON fct_ping_instance_metric_with_license.dim_instance_id = dim_host_instance_type.instance_uuid
+      AND fct_ping_instance_metric_with_license.hostname = dim_host_instance_type.instance_hostname
+     WHERE fct_ping_instance_metric_with_license.dim_subscription_id IS NOT NULL
 
 ), pivoted AS (
 
@@ -82,12 +89,14 @@
       dim_product_tier_id,
       dim_ping_date_id,
       dim_installation_id,
+      instance_type,
       dim_subscription_license_id,
       license_user_count,
       license_billable_users,
       historical_max_user_count,
       instance_user_count,
       hostname,
+      cleaned_version,
       is_license_mapped_to_subscription,
       is_license_subscription_id_valid,
       is_service_ping_license_in_customerDot,
