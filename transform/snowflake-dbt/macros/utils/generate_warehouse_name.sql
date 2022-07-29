@@ -6,24 +6,21 @@
 
     {#
         Definitions:
-            - custom_database_name: database provided via dbt_project.yml or model config
+            - custom_warehouse_size: size of the warehsoue provided at the time of macro call
             - target.name: name of the target (dev for local development, prod for production, etc.)
-            - target.database: database provided by the target defined in profiles.yml
+            - target.warehouse: warehouse provided by the target defined in profiles.yml
         
         Assumptions:
-            - dbt users will have USERNAME_PROD, USERNAME_PREP DBs defined
+            - dbt users will have access to the DEV colletion of warehouses
 
         This macro is hard to test, but here are some test cases and expected output.
-        (custom_database_name, target.name, target.database) = <output>
+        (custom_warehouse_size, target.name, target.warehouse) = <output>
 
         
-        (prod, prod, prep) = prod
-        (prod, ci, prep) = prod
-        (prod, dev, tmurphy) = tmurphy_prod
+        (XL, prod, TRANSFORMING_XS) = TRANSFORMING_XL
+        (XL, ci, DEV_XS) = DEV_XL
+        (XL, dev, DEV_XS) = DEV_XL
         
-        (prep, prod, prep) = prep
-        (prep, ci, prep) = prep
-        (prep, dev, tmurphy) = tmurphy_prep
 
     #}
     {%- if target.name in ('prod','docs') -%}
@@ -41,7 +38,7 @@
     {%- else -%}
     
         {%- if custom_warehouse_size is none -%}
-            {# Should probably never happen.. #}
+            
             {{ target.warehouse }}
 
         {%- else -%}
