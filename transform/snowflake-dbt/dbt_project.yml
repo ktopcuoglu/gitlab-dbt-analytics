@@ -5,21 +5,20 @@ name: 'gitlab_snowflake'
 version: '1.0'
 config-version: 2
 profile: 'gitlab-snowflake'
-require-dbt-version: 0.19.1
-
+require-dbt-version: 1.1.0
 
 # ======
 # File Path Configs
 # ======
-source-paths: ["models"]
+model-paths: ["models"]
 test-paths: ["tests"]
-data-paths: ["data"]
+seed-paths: ["data"]
 macro-paths: ["macros"]
 analysis-paths: ["analysis"]
 target-path: "target"
 clean-targets:
     - "target"
-    - "dbt_modules"
+    - "dbt_packages"
 
 # ======
 # Snowflake Configs
@@ -431,10 +430,6 @@ models:
           +schema: restricted_safe_legacy
           +tags: ["safe"]
           secure: true
-
-      poc:
-        +tags: ["poc", "product"]
-        +enabled: true
 
       retention:
         +schema: restricted_safe_legacy
