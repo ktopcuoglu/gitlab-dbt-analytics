@@ -12,9 +12,8 @@
 , fct_ping_instance_metric AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('fct_ping_instance_metric'), except=['METRIC_VALUE', 'CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE',
-          'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }},
-      IFF(metric_value < 0, 0, metric_value) AS metric_value
+      {{ dbt_utils.star(from=ref('fct_ping_instance_metric'), except=['CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE',
+          'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
     FROM {{ ref('fct_ping_instance_metric') }}
 
 ),
@@ -59,12 +58,50 @@ time_frame_all_time_metrics AS (
 
 final AS (
 
-    SELECT *
+    SELECT
+      time_frame_28_day_metrics.ping_instance_metric_id,
+      time_frame_28_day_metrics.dim_ping_instance_id,
+      time_frame_28_day_metrics.dim_product_tier_id,
+      time_frame_28_day_metrics.dim_subscription_id,
+      time_frame_28_day_metrics.dim_location_country_id,
+      time_frame_28_day_metrics.dim_ping_date_id,
+      time_frame_28_day_metrics.dim_instance_id,
+      time_frame_28_day_metrics.dim_host_id,
+      time_frame_28_day_metrics.dim_installation_id,
+      time_frame_28_day_metrics.dim_license_id,
+      time_frame_28_day_metrics.dim_subscription_license_id,
+      time_frame_28_day_metrics.metrics_path,
+      time_frame_28_day_metrics.metric_value,
+      time_frame_28_day_metrics.monthly_metric_value,
+      time_frame_28_day_metrics.time_frame,
+      time_frame_28_day_metrics.has_timed_out,
+      time_frame_28_day_metrics.ping_created_at,
+      time_frame_28_day_metrics.umau_value,
+      time_frame_28_day_metrics.data_source
     FROM time_frame_28_day_metrics
 
     UNION ALL
 
-    SELECT *
+    SELECT
+      time_frame_all_time_metrics.ping_instance_metric_id,
+      time_frame_all_time_metrics.dim_ping_instance_id,
+      time_frame_all_time_metrics.dim_product_tier_id,
+      time_frame_all_time_metrics.dim_subscription_id,
+      time_frame_all_time_metrics.dim_location_country_id,
+      time_frame_all_time_metrics.dim_ping_date_id,
+      time_frame_all_time_metrics.dim_instance_id,
+      time_frame_all_time_metrics.dim_host_id,
+      time_frame_all_time_metrics.dim_installation_id,
+      time_frame_all_time_metrics.dim_license_id,
+      time_frame_all_time_metrics.dim_subscription_license_id,
+      time_frame_all_time_metrics.metrics_path,
+      time_frame_all_time_metrics.metric_value,
+      ROUND(IFF(time_frame_all_time_metrics.monthly_metric_value < 0, 0, time_frame_all_time_metrics.monthly_metric_value)) AS monthly_metric_value,
+      time_frame_all_time_metrics.time_frame,
+      time_frame_all_time_metrics.has_timed_out,
+      time_frame_all_time_metrics.ping_created_at,
+      time_frame_all_time_metrics.umau_value,
+      time_frame_all_time_metrics.data_source
     FROM time_frame_all_time_metrics
 
 )
