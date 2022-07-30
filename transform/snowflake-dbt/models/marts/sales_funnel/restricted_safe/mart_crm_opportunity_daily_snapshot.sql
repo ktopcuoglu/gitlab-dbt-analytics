@@ -21,58 +21,6 @@ final AS (
     fct_crm_opportunity.duplicate_opportunity_id,
     fct_crm_opportunity.merged_opportunity_id,
 
-    -- dates
-    fct_crm_opportunity.sales_accepted_date,
-    fct_crm_opportunity.sales_accepted_month,
-    fct_crm_opportunity.close_date,
-    fct_crm_opportunity.close_month,
-    fct_crm_opportunity.created_date,
-    fct_crm_opportunity.snapshot_date,
-    fct_crm_opportunity.snapshot_month,
-    fct_crm_opportunity.snapshot_fiscal_year,
-    fct_crm_opportunity.snapshot_fiscal_quarter_name,
-    fct_crm_opportunity.snapshot_fiscal_quarter_date,
-    fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
-    fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
-    fct_crm_opportunity.close_fiscal_year,
-    fct_crm_opportunity.close_fiscal_quarter_name,
-    fct_crm_opportunity.close_fiscal_quarter_date,
-    fct_crm_opportunity.close_day_of_fiscal_quarter_normalised,
-    fct_crm_opportunity.created_month,
-    fct_crm_opportunity.created_fiscal_year,
-    fct_crm_opportunity.created_fiscal_quarter_name,
-    fct_crm_opportunity.created_fiscal_quarter_date,
-    fct_crm_opportunity.net_arr_created_date,
-    fct_crm_opportunity.net_arr_created_month,
-    fct_crm_opportunity.net_arr_created_fiscal_year,
-    fct_crm_opportunity.net_arr_created_fiscal_quarter_name,
-    fct_crm_opportunity.net_arr_created_fiscal_quarter_date,
-    fct_crm_opportunity.pipeline_created_date,
-    fct_crm_opportunity.pipeline_created_month,
-    fct_crm_opportunity.pipeline_created_fiscal_year,
-    fct_crm_opportunity.pipeline_created_fiscal_quarter_name,
-    fct_crm_opportunity.pipeline_created_fiscal_quarter_date,
-    fct_crm_opportunity.sales_accepted_fiscal_year,
-    fct_crm_opportunity.sales_accepted_fiscal_quarter_name,
-    fct_crm_opportunity.sales_accepted_fiscal_quarter_date,
-    fct_crm_opportunity.stage_0_pending_acceptance_date,
-    fct_crm_opportunity.stage_1_discovery_date,
-    fct_crm_opportunity.stage_2_scoping_date,
-    fct_crm_opportunity.stage_3_technical_evaluation_date,
-    fct_crm_opportunity.stage_4_proposal_date,
-    fct_crm_opportunity.stage_5_negotiating_date,
-    fct_crm_opportunity.stage_6_awaiting_signature_date,
-    fct_crm_opportunity.stage_6_closed_won_date,
-    fct_crm_opportunity.stage_6_closed_lost_date,
-    fct_crm_opportunity.stage_1_discovery_month,
-    fct_crm_opportunity.stage_1_discovery_fiscal_year,
-    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_name,
-    fct_crm_opportunity.stage_1_discovery_fiscal_quarter_date,
-    fct_crm_opportunity.last_activity_date,
-    fct_crm_opportunity.subscription_start_date AS quote_start_date,
-    fct_crm_opportunity.subscription_end_date AS quote_end_date,
-    fct_crm_opportunity.sales_qualified_date,
-
     -- opportunity attributes
     dim_crm_account.crm_account_name,
     fct_crm_opportunity.opportunity_name,
@@ -238,21 +186,30 @@ final AS (
     fct_crm_opportunity.opportunity_owner_user_geo,
     fct_crm_opportunity.opportunity_owner_user_region,
     fct_crm_opportunity.opportunity_owner_user_area,
-    LOWER(
-      fct_crm_opportunity.user_segment_stamped
-    ) AS report_opportunity_user_segment,
-    LOWER(
-      fct_crm_opportunity.user_geo_stamped
-    ) AS report_opportunity_user_geo,
-    LOWER(
-      fct_crm_opportunity.user_region_stamped
-    ) AS report_opportunity_user_region,
-    LOWER(
-      fct_crm_opportunity.user_area_stamped
-    ) AS report_opportunity_user_area,
-    LOWER(
-      fct_crm_opportunity.order_type
-    ) AS order_type_stamped,
+    fct_crm_opportunity.report_opportunity_user_segment,
+    fct_crm_opportunity.report_opportunity_user_geo,
+    fct_crm_opportunity.report_opportunity_user_region,
+    fct_crm_opportunity.report_opportunity_user_area,
+    fct_crm_opportunity.report_user_segment_geo_region_area,
+    fct_crm_opportunity.report_user_segment_geo_region_area_sqs_ot,
+    fct_crm_opportunity.key_segment,
+    fct_crm_opportunity.key_sqs,
+    fct_crm_opportunity.key_ot,
+    fct_crm_opportunity.key_segment_sqs,
+    fct_crm_opportunity.key_segment_ot,
+    fct_crm_opportunity.key_segment_geo,
+    fct_crm_opportunity.key_segment_geo_sqs,
+    fct_crm_opportunity.key_segment_geo_ot,
+    fct_crm_opportunity.key_segment_geo_region,
+    fct_crm_opportunity.key_segment_geo_region_sqs,
+    fct_crm_opportunity.key_segment_geo_region_ot,
+    fct_crm_opportunity.key_segment_geo_region_area,
+    fct_crm_opportunity.key_segment_geo_region_area_sqs,
+    fct_crm_opportunity.key_segment_geo_region_area_ot,
+    fct_crm_opportunity.key_segment_geo_area,
+    fct_crm_opportunity.sales_team_rd_asm_level,
+    fct_crm_opportunity.sales_team_asm_level,
+    fct_crm_opportunity.account_owner_team_stamped_cro_level,
     LOWER(
       account_owner_live.crm_user_sales_segment
     ) AS account_owner_user_segment,
@@ -265,111 +222,6 @@ final AS (
     LOWER(
       account_owner_live.crm_user_area
     ) AS account_owner_user_area,
-    LOWER(
-      fct_crm_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped
-    ) AS report_user_segment_geo_region_area,
-    LOWER(
-      CONCAT(
-        report_user_segment_geo_region_area,
-        '-',
-        fct_crm_opportunity.sales_qualified_source,
-        '-',
-        fct_crm_opportunity.order_type
-      )
-    ) AS report_user_segment_geo_region_area_sqs_ot,
-    report_opportunity_user_segment AS key_segment,
-    fct_crm_opportunity.sales_qualified_source AS key_sqs,
-    fct_crm_opportunity.deal_group AS key_ot,
-    report_opportunity_user_segment || '_' || fct_crm_opportunity.sales_qualified_source AS key_segment_sqs,
-    report_opportunity_user_segment || '_' || fct_crm_opportunity.deal_group AS key_segment_ot,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo AS key_segment_geo,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || fct_crm_opportunity.sales_qualified_source AS key_segment_geo_sqs,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || fct_crm_opportunity.deal_group AS key_segment_geo_ot,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region AS key_segment_geo_region,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || fct_crm_opportunity.sales_qualified_source AS key_segment_geo_region_sqs,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || fct_crm_opportunity.deal_group AS key_segment_geo_region_ot,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area AS key_segment_geo_region_area,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || fct_crm_opportunity.sales_qualified_source AS key_segment_geo_region_area_sqs,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || fct_crm_opportunity.deal_group AS key_segment_geo_region_area_ot,
-    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area AS key_segment_geo_area,
-    COALESCE(
-      report_opportunity_user_segment, 'other'
-    ) AS sales_team_cro_level,
-    -- This code replicates the reporting structured of FY22, to keep current tools working
-    CASE
-      WHEN report_opportunity_user_segment = 'large'
-        AND report_opportunity_user_geo = 'emea'
-        THEN 'large_emea'
-      WHEN report_opportunity_user_segment = 'mid-market'
-        AND report_opportunity_user_region = 'amer'
-        AND LOWER(report_opportunity_user_area) LIKE '%west%'
-        THEN 'mid-market_west'
-      WHEN report_opportunity_user_segment = 'mid-market'
-        AND report_opportunity_user_region = 'amer'
-        AND LOWER(report_opportunity_user_area) NOT LIKE '%west%'
-        THEN 'mid-market_east'
-      WHEN report_opportunity_user_segment = 'smb'
-        AND report_opportunity_user_region = 'amer'
-        AND LOWER(report_opportunity_user_area) LIKE '%west%'
-        THEN 'smb_west'
-      WHEN report_opportunity_user_segment = 'smb'
-        AND report_opportunity_user_region = 'amer'
-        AND LOWER(report_opportunity_user_area) NOT LIKE '%west%'
-        THEN 'smb_east'
-      WHEN report_opportunity_user_segment = 'smb'
-        AND report_opportunity_user_region = 'latam'
-        THEN 'smb_east'
-      WHEN (report_opportunity_user_segment IS NULL
-        OR report_opportunity_user_region IS NULL)
-        THEN 'other'
-      WHEN
-        CONCAT(report_opportunity_user_segment, '_', report_opportunity_user_region) LIKE '%other%'
-        THEN 'other'
-      ELSE CONCAT(report_opportunity_user_segment, '_', report_opportunity_user_region)
-    END AS sales_team_rd_asm_level,
-    COALESCE(
-      CONCAT(report_opportunity_user_segment, '_', report_opportunity_user_geo), 'other'
-    ) AS sales_team_vp_level,
-    COALESCE(
-      CONCAT(
-        report_opportunity_user_segment,
-        '_',
-        report_opportunity_user_geo,
-        '_',
-        report_opportunity_user_region
-      ),
-      'other'
-    ) AS sales_team_avp_rd_level,
-    COALESCE(
-      CONCAT(
-        report_opportunity_user_segment,
-        '_',
-        report_opportunity_user_geo,
-        '_',
-        report_opportunity_user_region,
-        '_',
-        report_opportunity_user_area
-      ),
-      'other'
-    ) AS sales_team_asm_level,
-    CASE
-      WHEN
-        fct_crm_opportunity.account_owner_team_stamped IN (
-          'Commercial - SMB', 'SMB', 'SMB - US', 'SMB - International'
-        )
-        THEN 'SMB'
-      WHEN
-        fct_crm_opportunity.account_owner_team_stamped IN (
-          'APAC', 'EMEA', 'Channel', 'US West', 'US East', 'Public Sector'
-        )
-        THEN 'Large'
-      WHEN
-        fct_crm_opportunity.account_owner_team_stamped IN (
-          'MM - APAC', 'MM - East', 'MM - EMEA', 'Commercial - MM', 'MM - West', 'MM-EMEA'
-        )
-        THEN 'Mid-Market'
-      ELSE 'SMB'
-    END AS account_owner_team_stamped_cro_level,
 
     -- channel fields
     fct_crm_opportunity.lead_source,

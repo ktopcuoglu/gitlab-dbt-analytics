@@ -300,6 +300,11 @@ WITH first_contact  AS (
       {{ get_date_id('sfdc_opportunity.stage_5_negotiating_date') }}                              AS stage_5_negotiating_date_id,
       {{ get_date_id('sfdc_opportunity.stage_6_closed_won_date') }}                               AS stage_6_closed_won_date_id,
       {{ get_date_id('sfdc_opportunity.stage_6_closed_lost_date') }}                              AS stage_6_closed_lost_date_id,
+      {{ get_date_id('sfdc_opportunity.technical_evaluation_date') }}                             AS technical_evaluation_date_id,
+      {{ get_date_id('sfdc_opportunity.last_activity_date') }}                                    AS last_activity_date_id,
+      {{ get_date_id('sfdc_opportunity.subscription_start_date') }}                               AS subscription_start_date_id,
+      {{ get_date_id('sfdc_opportunity.subscription_end_date') }}                                 AS subscription_end_date_id,
+      {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,
 
       close_date_detail.first_day_of_month                                                        AS close_month,
       close_date_detail.fiscal_year                                                               AS close_fiscal_year,
@@ -319,12 +324,14 @@ WITH first_contact  AS (
       net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
 
+      {{ get_date_id('created_date_detail.date_actual') }}                                        AS net_arr_created_date_id,
       created_date_detail.date_actual                                                             AS net_arr_created_date,
       created_date_detail.first_day_of_month                                                      AS net_arr_created_month,
       created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
       created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
 
+      {{ get_date_id('net_arr_created_date.date_actual') }}                                       AS pipeline_created_date_id,
       net_arr_created_date.date_actual                                                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                                                     AS pipeline_created_month,
       net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
@@ -1026,7 +1033,124 @@ WITH first_contact  AS (
       WHEN CONTAINS(sfdc_opportunity.competitors, 'AWS')
         THEN 1
       ELSE 0
-    END AS competitors_aws_flag
+    END AS competitors_aws_flag,
+    LOWER(
+      sfdc_opportunity.user_segment_stamped
+    ) AS report_opportunity_user_segment,
+    LOWER(
+      sfdc_opportunity.user_geo_stamped
+    ) AS report_opportunity_user_geo,
+    LOWER(
+      sfdc_opportunity.user_region_stamped
+    ) AS report_opportunity_user_region,
+    LOWER(
+      sfdc_opportunity.user_area_stamped
+    ) AS report_opportunity_user_area,
+    LOWER(
+      sfdc_opportunity.crm_opp_owner_sales_segment_geo_region_area_stamped
+    ) AS report_user_segment_geo_region_area,
+    LOWER(
+      CONCAT(
+        report_user_segment_geo_region_area,
+        '-',
+        sfdc_opportunity.sales_qualified_source,
+        '-',
+        sfdc_opportunity.order_type
+      )
+    ) AS report_user_segment_geo_region_area_sqs_ot,
+    report_opportunity_user_segment AS key_segment,
+    sfdc_opportunity.sales_qualified_source AS key_sqs,
+    deal_group AS key_ot,
+    report_opportunity_user_segment || '_' || sfdc_opportunity.sales_qualified_source AS key_segment_sqs,
+    report_opportunity_user_segment || '_' || deal_group AS key_segment_ot,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo AS key_segment_geo,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || sfdc_opportunity.sales_qualified_source AS key_segment_geo_sqs,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || deal_group AS key_segment_geo_ot,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region AS key_segment_geo_region,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || sfdc_opportunity.sales_qualified_source AS key_segment_geo_region_sqs,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || deal_group AS key_segment_geo_region_ot,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area AS key_segment_geo_region_area,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || sfdc_opportunity.sales_qualified_source AS key_segment_geo_region_area_sqs,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_region || '_' || report_opportunity_user_area || '_' || deal_group AS key_segment_geo_region_area_ot,
+    report_opportunity_user_segment || '_' || report_opportunity_user_geo || '_' || report_opportunity_user_area AS key_segment_geo_area,
+    COALESCE(
+      report_opportunity_user_segment, 'other'
+    ) AS sales_team_cro_level,
+    -- This code replicates the reporting structured of FY22, to keep current tools working
+    CASE
+      WHEN report_opportunity_user_segment = 'large'
+        AND report_opportunity_user_geo = 'emea'
+        THEN 'large_emea'
+      WHEN report_opportunity_user_segment = 'mid-market'
+        AND report_opportunity_user_region = 'amer'
+        AND LOWER(report_opportunity_user_area) LIKE '%west%'
+        THEN 'mid-market_west'
+      WHEN report_opportunity_user_segment = 'mid-market'
+        AND report_opportunity_user_region = 'amer'
+        AND LOWER(report_opportunity_user_area) NOT LIKE '%west%'
+        THEN 'mid-market_east'
+      WHEN report_opportunity_user_segment = 'smb'
+        AND report_opportunity_user_region = 'amer'
+        AND LOWER(report_opportunity_user_area) LIKE '%west%'
+        THEN 'smb_west'
+      WHEN report_opportunity_user_segment = 'smb'
+        AND report_opportunity_user_region = 'amer'
+        AND LOWER(report_opportunity_user_area) NOT LIKE '%west%'
+        THEN 'smb_east'
+      WHEN report_opportunity_user_segment = 'smb'
+        AND report_opportunity_user_region = 'latam'
+        THEN 'smb_east'
+      WHEN (report_opportunity_user_segment IS NULL
+        OR report_opportunity_user_region IS NULL)
+        THEN 'other'
+      WHEN
+        CONCAT(report_opportunity_user_segment, '_', report_opportunity_user_region) LIKE '%other%'
+        THEN 'other'
+      ELSE CONCAT(report_opportunity_user_segment, '_', report_opportunity_user_region)
+    END AS sales_team_rd_asm_level,
+    COALESCE(
+      CONCAT(report_opportunity_user_segment, '_', report_opportunity_user_geo), 'other'
+    ) AS sales_team_vp_level,
+    COALESCE(
+      CONCAT(
+        report_opportunity_user_segment,
+        '_',
+        report_opportunity_user_geo,
+        '_',
+        report_opportunity_user_region
+      ),
+      'other'
+    ) AS sales_team_avp_rd_level,
+    COALESCE(
+      CONCAT(
+        report_opportunity_user_segment,
+        '_',
+        report_opportunity_user_geo,
+        '_',
+        report_opportunity_user_region,
+        '_',
+        report_opportunity_user_area
+      ),
+      'other'
+    ) AS sales_team_asm_level,
+    CASE
+      WHEN
+        sfdc_opportunity.account_owner_team_stamped IN (
+          'Commercial - SMB', 'SMB', 'SMB - US', 'SMB - International'
+        )
+        THEN 'SMB'
+      WHEN
+        sfdc_opportunity.account_owner_team_stamped IN (
+          'APAC', 'EMEA', 'Channel', 'US West', 'US East', 'Public Sector'
+        )
+        THEN 'Large'
+      WHEN
+        sfdc_opportunity.account_owner_team_stamped IN (
+          'MM - APAC', 'MM - East', 'MM - EMEA', 'Commercial - MM', 'MM - West', 'MM-EMEA'
+        )
+        THEN 'Mid-Market'
+      ELSE 'SMB'
+    END AS account_owner_team_stamped_cro_level
 
     FROM sfdc_opportunity
     INNER JOIN sfdc_opportunity_stage

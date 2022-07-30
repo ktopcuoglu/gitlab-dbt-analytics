@@ -53,6 +53,7 @@
       crm_account_dimensions.dim_parent_crm_account_id,
       sfdc_opportunity.dim_crm_person_id,
       sfdc_opportunity.sfdc_contact_id,
+      sfdc_opportunity.record_type_id,
 
       -- dates
       sfdc_opportunity.created_date,
@@ -83,11 +84,19 @@
       sfdc_opportunity.days_in_3_technical_evaluation,
       sfdc_opportunity.days_in_4_proposal,
       sfdc_opportunity.days_in_5_negotiating,
-      sfdc_opportunity.days_in_sao,
-      sfdc_opportunity.closed_buckets,
+      sfdc_opportunity.subscription_start_date_id,
       sfdc_opportunity.subscription_start_date,
+      sfdc_opportunity.subscription_end_date_id,
       sfdc_opportunity.subscription_end_date,
-
+      sfdc_opportunity.sales_qualified_date_id,
+      sfdc_opportunity.last_activity_date,
+      sfdc_opportunity.last_activity_date_id,
+      sfdc_opportunity.net_arr_created_date,
+      sfdc_opportunity.net_arr_created_date_id,
+      sfdc_opportunity.pipeline_created_date,
+      sfdc_opportunity.pipeline_created_date_id,
+      sfdc_opportunity.technical_evaluation_date,
+      sfdc_opportunity.technical_evaluation_date_id,
 
       -- common dimension keys
       {{ get_keyed_nulls('sfdc_opportunity.dim_crm_user_id') }}                                                             AS dim_crm_user_id,
@@ -138,6 +147,22 @@
       sfdc_opportunity.is_net_arr_pipeline_created,
       sfdc_opportunity.is_win_rate_calc,
       sfdc_opportunity.is_closed_won,
+      sfdc_opportunity.is_stage_1_plus,
+      sfdc_opportunity.is_stage_3_plus,
+      sfdc_opportunity.is_stage_4_plus,
+      sfdc_opportunity.is_lost,
+      sfdc_opportunity.is_open,
+      sfdc_opportunity.is_credit,
+      sfdc_opportunity.is_renewal,
+      sfdc_opportunity.is_deleted,
+      sfdc_opportunity.is_contract_reset,
+      sfdc_opportunity.is_comp_new_logo_override,
+      sfdc_opportunity.is_eligible_open_pipeline,
+      sfdc_opportunity.is_eligible_created_pipeline,
+      sfdc_opportunity.is_eligible_sao,
+      sfdc_opportunity.is_eligible_asp_analysis,
+      sfdc_opportunity.is_eligible_age_analysis,
+      sfdc_opportunity.is_eligible_churn_contraction,
 
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
@@ -145,6 +170,7 @@
       sfdc_opportunity.products_purchased,
       sfdc_opportunity.growth_type,
       sfdc_opportunity.opportunity_deal_size,
+      sfdc_opportunity.closed_buckets,
 
       -- channel fields
       sfdc_opportunity.lead_source,
@@ -181,7 +207,21 @@
       sfdc_opportunity.count_crm_attribution_touchpoints,
       sfdc_opportunity.weighted_linear_iacv,
       sfdc_opportunity.count_campaigns,
-      sfdc_opportunity.probability
+      sfdc_opportunity.probability,
+      sfdc_opportunity.days_in_sao,
+      sfdc_opportunity.open_1plus_deal_count,
+      sfdc_opportunity.open_3plus_deal_count,
+      sfdc_opportunity.open_4plus_deal_count,
+      sfdc_opportunity.booked_deal_count,
+      sfdc_opportunity.churned_contraction_deal_count,
+      sfdc_opportunity.open_1plus_net_arr,
+      sfdc_opportunity.open_3plus_net_arr,
+      sfdc_opportunity.open_4plus_net_arr,
+      sfdc_opportunity.booked_net_arr,
+      sfdc_opportunity.churned_contraction_net_arr,
+      sfdc_opportunity.calculated_deal_count,
+      sfdc_opportunity.renewal_amount,
+      sfdc_opportunity.total_contract_value
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions

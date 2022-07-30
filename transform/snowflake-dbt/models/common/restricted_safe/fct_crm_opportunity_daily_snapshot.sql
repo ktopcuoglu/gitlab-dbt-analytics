@@ -7,9 +7,10 @@
 
 {{ sfdc_opportunity_fields('snapshot') }}
 
-), additional_calcs AS (
+, additional_calcs AS (
 
   SELECT 
+    final.*,
     CASE
       WHEN final.pipeline_created_fiscal_quarter_name = final.snapshot_fiscal_quarter_name
         AND final.is_eligible_created_pipeline = 1
