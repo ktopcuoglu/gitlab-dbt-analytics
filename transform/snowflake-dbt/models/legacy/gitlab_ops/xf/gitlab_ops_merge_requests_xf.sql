@@ -5,7 +5,7 @@
 WITH merge_requests AS (
 
     SELECT 
-      {{ dbt_utils.star(from=ref('gitlab_ops_merge_requests'), except=["created_at", "updated_at"]) }},
+      {{ dbt_utils.star(from=ref('gitlab_ops_merge_requests')) }},
       created_at                                                                           AS merge_request_created_at,
       updated_at                                                                           AS merge_request_updated_at
     FROM {{ref('gitlab_ops_merge_requests')}} merge_requests
