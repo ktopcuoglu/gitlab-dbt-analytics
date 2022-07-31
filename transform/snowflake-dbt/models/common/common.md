@@ -1365,3 +1365,23 @@ This new table will include all flattened target values for each metric for each
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
 
 {% enddocs %}
+
+
+{% docs fct_ping_instance_metric_wave %}
+
+The purpose of this data model is to identify the service pings that can be mapped to a subscription and to unpack thet set of [wave metrics required for Gainsight](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/ping_instance_wave_metrics.sql) from the `raw_usage_data_payload` column, strip all the sensitive data out, and then report one value for each metric in that column.
+
+{% enddocs %}
+
+
+{% docs fct_ping_instance_metric_wave_monthly %}
+
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`prep_usage_ping_subscription_mapped_wave_2_3_metrics`) to build out the set of facts included in this table.
+
+The grain of this table is `hostname` per `uuid` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `uuid` and `hostname` to be null.
+
+The data from this table will be used to create a mart table (`mart_product_usage_wave_1_3_metrics_monthly`) for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
