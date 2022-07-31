@@ -3622,7 +3622,7 @@ models:
       - name: is_internal
         description: Denotes whether the instance is internal
       - name: raw_usage_data_payload
-        description: Either the original payload value or a reconstructed value. See https://gitlab.com/gitlab-data/analytics/-/merge_requests/4064/diffs#bc1d7221ae33626053b22854f3ecbbfff3ffe633 for rationale.
+        description: Either the original payload value or a reconstructed value.
 
 
   - name: dim_ping_metric
