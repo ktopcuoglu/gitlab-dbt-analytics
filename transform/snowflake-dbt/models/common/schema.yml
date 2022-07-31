@@ -3578,7 +3578,7 @@ models:
       - name: instance_user_count
         description: The total count of users on the instance
       - name: license_md5
-        description: The license_md5 associated with teh instance
+        description: The license_md5 associated with the instance
       - name: historical_max_users
         description: The max user number the instance has had
       - name: license_user_count
@@ -3727,7 +3727,7 @@ models:
           - not_null
         description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+        description: The unqiue id of a service ping instance in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
@@ -3761,6 +3761,15 @@ models:
         description: The unique id of a license subscription
       - name: time_frame
         description: The time frame associated with the metric, as defined in the metric definition YAML file
+      - name: license_md5
+        description: 
+      - name: is_license_mapped_to_subscription
+        description: Data quality flag to check if the license table has a value in both license_id and subscription_id
+      - name: is_license_subscription_id_valid
+        description: Data quality flag to check if the subscription_id in the license table is valid (does it exist in the subscription table?)
+      - name: is_service_ping_license_in_customerDot
+        description: Data quality flag to check if the license from service ping exist in CustomerDot.
+
 
   - name: fct_ping_instance
     description: ' {{ doc("fct_ping_instance") }} '
@@ -3770,7 +3779,7 @@ models:
           - not_null
         description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+        description: The unqiue id of a service ping instance in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
@@ -3798,6 +3807,23 @@ models:
         description: The unique id of a license subscription
       - name: umau_value
         description: The unique monthly active user value for the instance
+      - name: license_md5
+        description: The md5 hash of the license file.
+      - name: license_billable_users
+        description: The count of active users who can be billed for. Guest users and bots are not included.
+      - name: instance_user_count
+        description:  The total count of users on the instance
+      - name: historical_max_users
+        description: Maximum active user count ever reported over the lifetime of the customer's subcription.
+      - name: license_user_count
+        description: Count of licensed users purchased with the customer's subcription.
+      - name: hostname
+        description: The name (URL) of the host
+      - name: product_tier
+        description: The product tier associated with the instance (Premium, Starter, Core, Ultimate)
+      - name: main_edition_product_tier
+        description: Segmentation for the product tier, including separate records for Core CE and Core EE 
+
 
   - name: fct_ping_instance_metric_28_day
     description: ' {{ doc("fct_ping_instance_metric_28_day") }} '
@@ -3807,7 +3833,7 @@ models:
           - not_null
         description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+        description: The unqiue id of a service ping instance in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
@@ -3852,7 +3878,7 @@ models:
           - not_null
         description: The unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+        description: The unqiue id of a service ping instance in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
@@ -3897,7 +3923,7 @@ models:
           - not_null
         description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+        description: The unqiue id of a service ping instance in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
@@ -3942,7 +3968,7 @@ models:
           - not_null
         description: the unique composite ID for the service_ping_instance_metric model consisting of dim_ping_instance_id and flattened_high_level.metrics_path
       - name: dim_ping_instance_id
-        description: The unqiue id of a service ping insatnce in the dim_ping_instance model.
+        description: The unqiue id of a service ping instance in the dim_ping_instance model.
       - name: dim_product_tier_id
         description: The unique id of a Product Tier in the dim_product_tier model.
       - name: dim_location_country_id
