@@ -43,6 +43,7 @@ fct_event_user_daily AS (
     
     --Facts
     COUNT(*) AS event_count
+    
   FROM fct_event_valid
   WHERE is_null_user = FALSE
   {{ dbt_utils.group_by(n=23) }}

@@ -2664,8 +2664,10 @@ models:
           - not_null
       - name: event_name
         description: '{{ doc("event_name") }}'
-      - name: event_count
-        description: '{{ doc("event_count") }}'
+      - name: days_since_user_creation_at_event_date
+        description: '{{ doc("days_since_user_creation_at_event_date") }}'
+      - name: days_since_namespace_creation_at_event_date
+        description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
       - name: plan_id_at_event_date
         description: '{{ doc("plan_id_at_event_date") }}'
       - name: plan_name_at_event_date
@@ -2674,6 +2676,8 @@ models:
         description: '{{ doc("plan_was_paid_at_event_date") }}'
       - name: data_source
         description: '{{ doc("data_source") }}'
+      - name: event_count
+        description: '{{ doc("event_count") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
