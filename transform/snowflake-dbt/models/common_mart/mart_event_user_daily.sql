@@ -18,7 +18,7 @@ fact AS (
         "UPDATED_BY","CREATED_DATE","UPDATED_DATE","MODEL_CREATED_DATE","MODEL_UPDATED_DATE","DBT_UPDATED_AT","DBT_CREATED_AT"]) }}
   FROM fct_event_user_daily
   
-),
+), 
 
 fact_with_dims AS (
 

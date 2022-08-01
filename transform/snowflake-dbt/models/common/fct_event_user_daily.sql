@@ -15,7 +15,7 @@ fct_event_user_daily AS (
     {{ dbt_utils.surrogate_key(['event_date', 'dim_user_id', 'dim_ultimate_parent_namespace_id', 'event_name']) }} 
                                                   AS event_user_daily_pk,
     
-    --Foreign Keys                                              
+    --Foreign Keys                                               
     dim_active_product_tier_id,
     dim_latest_subscription_id,
     dim_crm_account_id,
