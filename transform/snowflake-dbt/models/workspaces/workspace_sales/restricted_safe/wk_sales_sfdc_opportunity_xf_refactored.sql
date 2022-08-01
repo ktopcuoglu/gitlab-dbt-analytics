@@ -31,11 +31,8 @@ WITH sfdc_opportunity AS (
 ), edm_opty AS (
 
     SELECT *
-    SELECT *
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
     FROM {{ref('mart_crm_opportunity')}}
-    -- TODO add the reference
-
 
 ), sfdc_users_xf AS (
 
