@@ -84,7 +84,8 @@ monitor_dbt_source_freshness_cmd = f"""
     montecarlo import dbt-manifest \
     target/manifest.json --project-name gitlab-analysis;
     montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis; exit $ret
+    target/run_results.json --project-name gitlab-analysis;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
 
 monitor_dbt_source_freshness = KubernetesPodOperator(
