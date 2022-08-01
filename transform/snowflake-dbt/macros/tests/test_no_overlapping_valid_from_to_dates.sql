@@ -25,9 +25,11 @@ WITH data AS (
 
  )
 
-SELECT COUNT(*)
+SELECT
+  *
 FROM grouped
 WHERE count_rows_valid_on_date != 1
+LIMIT 100
 
 
 {% endmacro %}
