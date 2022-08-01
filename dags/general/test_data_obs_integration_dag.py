@@ -1,9 +1,8 @@
 import os
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
@@ -91,8 +90,8 @@ monitor_dbt_source_freshness_cmd = f"""
 monitor_dbt_source_freshness = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id=f"upload_data_to_mc",
-    name=f"upload_data_to_mc",
+    task_id="upload_data_to_mc",
+    name="upload_data_to_mc",
     secrets=task_secrets,
     env_vars=pod_env_vars,
     arguments=[monitor_dbt_source_freshness_cmd],

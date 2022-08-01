@@ -292,7 +292,7 @@ MCD_DEFAULT_API_ID = Secret(
 )
 MCD_DEFAULT_API_TOKEN = Secret(
     "env", "MCD_DEFAULT_API_TOKEN", "airflow", "MCD_DEFAULT_API_TOKEN"
-
+)
 # Data Science Load Role
 SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE = Secret(
     "env",
