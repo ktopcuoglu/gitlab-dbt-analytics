@@ -117,6 +117,10 @@ dbt_non_product_models_command = f"""
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -138,6 +142,10 @@ dbt_product_models_command = f"""
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models tag:product --exclude workspaces.* ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
