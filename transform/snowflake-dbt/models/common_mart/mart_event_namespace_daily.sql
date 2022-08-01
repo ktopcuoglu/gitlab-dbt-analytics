@@ -42,7 +42,7 @@ fact_with_dims AS (
 {{ dbt_audit(
     cte_ref="fact_with_dims",
     created_by="@icooper-acp",
-    updated_by="@iweeks",
+    updated_by="@tpoole1",
     created_date="2022-02-15",
-    updated_date="2022-04-09"
+    updated_date="2022-08-01"
 ) }}

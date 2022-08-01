@@ -52,7 +52,7 @@ fct_event_user_daily AS (
 {{ dbt_audit(
     cte_ref="fct_event_user_daily",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@tpoole1",
     created_date="2022-04-09",
-    updated_date="2022-06-20"
+    updated_date="2022-08-01"
 ) }}
