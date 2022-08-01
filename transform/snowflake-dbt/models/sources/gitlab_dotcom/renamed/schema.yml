@@ -133,14 +133,27 @@ models:
         tests:
           - not_null
           - unique
-      - name: updated_at
-        tags: ["tdf","gitlab_dotcom"]
-        tests:
-          - not_null
       - name: created_at
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - not_null
+      - name: updated_at
+        tags: ["tdf","gitlab_dotcom"]
+        tests:
+          - not_null
+
+  - name: gitlab_dotcom_container_repositories_source
+    description: Source data for the link between continuer repositories and projects.
+    tags: ["gitlab_dotcom"]
+    columns:
+      - name: container_repository_id
+        tests:
+          - not_null
+      - name: project_id
+      - name: container_repository_name
+        description: This name may be null if the container directly at the project level.
+      - name: created_at
+      - name: updated_at
 
   - name: gitlab_dotcom_ci_build_trace_chunks_source
     description: Base model for Gitlab.com ci_build_trace_chunks

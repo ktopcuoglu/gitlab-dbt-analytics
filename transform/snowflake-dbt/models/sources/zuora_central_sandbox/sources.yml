@@ -20,7 +20,7 @@ sources:
             description: Primary Key for Accounts
             tests:
               - dbt_utils.expression_is_true:
-                  expression: "id REGEXP '[0-9a-z]{32}'"
+                  expression: "REGEXP '[0-9a-z]{32}'"
       - name: accounting_period
       - name: amendment
       - name: contact

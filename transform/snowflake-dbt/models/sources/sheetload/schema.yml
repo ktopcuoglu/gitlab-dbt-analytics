@@ -598,7 +598,7 @@ models:
     - name: is_current
 - name: sheetload_xactly_credit_source
   description: Sheetload of Xactly credits loaded manually as a workaround while we finalize Xactly Sales Attainment modeling
-- name: sheetload_google_cloud_ip_ranges
+- name: sheetload_google_cloud_ip_ranges_source
   description: The list of ip that are used by google cloud services.
   columns:
     - name: creation_at
@@ -640,7 +640,7 @@ models:
       description: The region related to the ip used by the Google Service
     - name: service
       description: The Google Service
-- name: sheetload_google_user_ip_ranges
+- name: sheetload_google_user_ip_ranges_source
   description: The list of ip that are available to users of google cloud services.
   columns:
     - name: creation_at

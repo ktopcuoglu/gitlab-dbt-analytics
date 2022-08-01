@@ -109,6 +109,7 @@ WITH snapshot_dates AS (
       creator_account.account_name                                              AS creator_account,
       IFF(dim_billing_account_id_invoice_owner_account != dim_billing_account_id_creator_account, TRUE, FALSE)
                                                                                 AS was_purchased_through_reseller,
+      zuora_subscription_spined.multi_year_deal_subscription_linkage            AS multi_year_deal_subscription_linkage,
 
     --Date Information
       zuora_subscription_spined.subscription_start_date                         AS subscription_start_date,
@@ -176,5 +177,5 @@ WITH snapshot_dates AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-06-28",
-    updated_date="2022-06-03"
+    updated_date="2022-07-12"
 ) }}

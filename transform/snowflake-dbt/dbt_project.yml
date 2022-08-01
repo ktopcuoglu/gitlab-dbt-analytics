@@ -5,21 +5,20 @@ name: 'gitlab_snowflake'
 version: '1.0'
 config-version: 2
 profile: 'gitlab-snowflake'
-require-dbt-version: 0.19.1
-
+require-dbt-version: 1.1.0
 
 # ======
 # File Path Configs
 # ======
-source-paths: ["models"]
+model-paths: ["models"]
 test-paths: ["tests"]
-data-paths: ["data"]
+seed-paths: ["data"]
 macro-paths: ["macros"]
 analysis-paths: ["analysis"]
 target-path: "target"
 clean-targets:
     - "target"
-    - "dbt_modules"
+    - "dbt_packages"
 
 # ======
 # Snowflake Configs
@@ -72,7 +71,6 @@ vars:
   infinity_future: TO_DATE('9999-12-31', 'YYYY-MM-DD')
   infinity_past: TO_DATE('1970-01-01', 'YYYY-MM-DD')
   tomorrow: DATEADD('day',1,CURRENT_DATE())
-
 
   warehouse_name: "{{ env_var('SNOWFLAKE_TRANSFORM_WAREHOUSE') }}"
   valid_at: '{{ run_started_at.strftime("%Y-%m-%d %H:%M:%S%z") }}'
@@ -145,6 +143,9 @@ models:
         sensitive:
           +schema: sensitive
           secure: true
+
+      container_registry:
+        +schema: container_registry
 
       customers:
         +schema: customers
@@ -430,10 +431,6 @@ models:
           +tags: ["safe"]
           secure: true
 
-      poc:
-        +tags: ["poc", "product"]
-        +enabled: true
-
       retention:
         +schema: restricted_safe_legacy
         +tags: ["safe"]
@@ -519,6 +516,8 @@ models:
       workspace_product:
         +tags: ["product"]
         source_1_on_1_copy:
+          +schema: workspace_product
+        snowplow:
           +schema: workspace_product
 
       workspace_saas_usage_ping:
