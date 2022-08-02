@@ -1,8 +1,8 @@
 version: 2
 
 models:
-  - name: prep_alliance_type
-    description: '{{ doc("prep_alliance_type") }}'
+  - name: prep_alliance_type_scd
+    description: '{{ doc("prep_alliance_type_scd") }}'
     columns:
       - name: dim_alliance_type_id
         tests:

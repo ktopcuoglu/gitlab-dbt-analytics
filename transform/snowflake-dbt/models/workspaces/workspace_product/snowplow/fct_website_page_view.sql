@@ -38,7 +38,7 @@
 
     SELECT
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS website_page_view_pk,
+      {{ dbt_utils.surrogate_key(['event_id','page_view_end_at']) }}                AS website_page_view_pk,
 
       -- Foreign Keys
       dim_website_page_sk,
@@ -97,7 +97,7 @@
 
     SELECT
       -- Primary Key
-      {{ dbt_utils.surrogate_key(['event_id','event_name']) }}                      AS website_page_view_pk,
+      {{ dbt_utils.surrogate_key(['event_id','collector_tstamp']) }}                AS website_page_view_pk,
 
       -- Foreign Keys
       dim_website_page_sk,

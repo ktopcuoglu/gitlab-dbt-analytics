@@ -782,6 +782,42 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - data_science_loader:
+          warehouses:
+              - loading
+          owns:
+              schemas:
+                  - raw.data_science
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - prod
+                      - raw
+                  write:
+                      - prod
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+                      - prod.common
+                      - prod.legacy
+                      - prep.snowplow_*_*
+                  write:
+                      - raw.data_science
+                      - prod.workspace_data_science
+              tables:
+                  read:
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
+                      - prep.snowplow_*_*.snowplow_structured_events
+                      - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
+                      - prod.common.*
+                      - prod.legacy.*
+                  write:
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
+
     - meltano:
         warehouses:
             - loading
@@ -4240,6 +4276,7 @@ users:
             - reporter
             - sysadmin
             - transformer
+            - data_science_loader
 
     - alpcohen:
         can_login: yes
