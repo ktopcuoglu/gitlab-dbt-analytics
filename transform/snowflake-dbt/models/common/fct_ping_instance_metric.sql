@@ -111,8 +111,7 @@
       is_license_mapped_to_subscription                                                                           AS is_license_mapped_to_subscription,
       is_license_subscription_id_valid                                                                            AS is_license_subscription_id_valid,
       IFF(dim_license_id IS NULL, FALSE, TRUE)                                                                    AS is_service_ping_license_in_customerDot,
-      'VERSION_DB'                                                                                                AS data_source,
-      metric_attributes.time_frame                                                                                AS time_frame
+      'VERSION_DB'                                                                                                AS data_source
   FROM joined_payload
 
 )
