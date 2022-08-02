@@ -4045,7 +4045,7 @@ models:
       - name: ci_builds_28_days_user
         description: Monthly count of unique users running CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stage_monthlyverifyci_builds))
       - name: ci_builds_all_time_user
-        description: All-time count of unique users running CI builds ([source]()https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_builds)
+        description: All-time count of unique users running CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#usage_activity_by_stageverifyci_builds))
       - name: ci_builds_all_time_event
         description: All-time count of CI builds ([source](https://docs.gitlab.com/ee/development/usage_ping/dictionary.html#countsci_builds))
       - name: ci_runners_all_time_event
