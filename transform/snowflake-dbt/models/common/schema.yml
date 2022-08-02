@@ -2664,8 +2664,10 @@ models:
           - not_null
       - name: event_name
         description: '{{ doc("event_name") }}'
-      - name: event_count
-        description: '{{ doc("event_count") }}'
+      - name: days_since_user_creation_at_event_date
+        description: '{{ doc("days_since_user_creation_at_event_date") }}'
+      - name: days_since_namespace_creation_at_event_date
+        description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
       - name: plan_id_at_event_date
         description: '{{ doc("plan_id_at_event_date") }}'
       - name: plan_name_at_event_date
@@ -2674,6 +2676,8 @@ models:
         description: '{{ doc("plan_was_paid_at_event_date") }}'
       - name: data_source
         description: '{{ doc("data_source") }}'
+      - name: event_count
+        description: '{{ doc("event_count") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -3617,16 +3621,16 @@ models:
         description: The unqiue id of a date in the dim_date model.
       - name: ping_created_at
         description: The time when the ping was created
-      - name: ping_created_at_28_days_earlier
+      - name: ping_created_date_28_days_earlier
         description: The date 28 days prior to when the ping was created
-      - name: ping_created_at_year
-        description: The year when the ping was created
-      - name: ping_created_at_month
-        description: The month when the ping was created
-      - name: ping_created_at_week
-        description: The week when the ping was created
-      - name: ping_created_at_date
-        description: The date when the ping was created
+      - name: ping_created_date_year
+        description: The year when the ping was created (YYYY-01-01)
+      - name: ping_created_date_month
+        description: The month when the ping was created (YYYY-MM-01)
+      - name: ping_created_date_week
+        description: The week when the ping was created (YYYY-MM-BOW)
+      - name: ping_created_date
+        description: The date when the ping was created (YYYY-MM-DD)
       - name: ip_address_hash
         description: The ip_address_has associated with the instance
       - name: version
@@ -3675,6 +3679,8 @@ models:
         description: The concatenation of major and minor version. For example, for 13.6.2,
       - name: version_is_prerelease
         description: Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details here (https://docs.gitlab.com/ee/policy/maintenance.html)
+      - name: is_saas_dedicated
+        description: Boolean flag set to True if the ping_delivery_type is from a Dedicated Implementation
       - name: is_internal
         description: Denotes whether the instance is internal
 
