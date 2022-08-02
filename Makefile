@@ -1,11 +1,13 @@
 .PHONY: build
 
+SHELL:=/bin/zsh
 TEST_FOLDERS_PATH := $(shell eval find . -name "test" -type d)
 PATH := $(PATH):$(PWD):$(TEST_FOLDERS_PATH)
 GIT_BRANCH = $$(git symbolic-ref --short HEAD)
 DOCKER_UP = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose up"
 DOCKER_DOWN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose down"
 DOCKER_RUN = "export GIT_BRANCH=$(GIT_BRANCH) && docker-compose run"
+DBT_DEPS = "cd transform/snowflake-dbt/ && poetry run dbt clean && poetry run dbt deps"
 
 .EXPORT_ALL_VARIABLES:
 DATA_TEST_BRANCH=main
@@ -48,7 +50,7 @@ help:
     - run-dbt: attaches a shell to the dbt virtual environment and changes to the dbt directory. \n \
     - run-dbt-docs: spins up a webserver with the dbt docs. Access the docs server at localhost:8081 \n \
     - clean-dbt: deletes all virtual environment artifacts \n \
-    - pip-dbt-shell: opens the pipenv environment in the dbt folder. Primarily for use with sql fluff. \n \
+    - pip-dbt-shell: opens the poetry environment in the dbt folder. Primarily for use with sql fluff. \n \
 	\n \
 	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ \n \
 	++ Python Related ++ \n \
@@ -101,50 +103,64 @@ update-containers:
 	@docker pull registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/analyst-image:latest
 	@docker pull registry.gitlab.com/gitlab-data/data-image/data-image:latest
-	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+	@docker pull registry.gitlab.com/gitlab-data/data-image/dbt-image:latest
 
 ########################################################################################################################
 # DBT
 ########################################################################################################################
 prepare-dbt:
-	which pipenv || python3 -m pip install pipenv
-	pipenv install
+	curl -k -sSL https://install.python-poetry.org/ | python3 -
+	cd transform/snowflake-dbt/ && poetry install
+	"$(DBT_DEPS)"
 
-pip-dbt-shell:
-	pipenv shell "cd transform/snowflake-dbt/;"
+prepare-dbt-fix:
+	python3 -m pip install poetry
+	cd transform/snowflake-dbt/ && poetry install
+	"$(DBT_DEPS)"
+
+run-dbt-no-deps:
+	cd transform/snowflake-dbt/ && poetry shell;
+
+dbt-deps:
+	"$(DBT_DEPS)"
 
 run-dbt:
-	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps;"
+	"$(DBT_DEPS)"
+	cd transform/snowflake-dbt/ && poetry shell;
 
 run-dbt-docs:
-	pipenv shell "cd transform/snowflake-dbt/; dbt clean && dbt deps && dbt docs generate --target docs && dbt docs serve --port 8081;"
+	"$(DBT_DEPS)"
+	cd transform/snowflake-dbt/ && poetry run dbt docs generate --target docs && poetry run dbt docs serve --port 8081;
 
 clean-dbt:
-	find . -name '*.pyc' -delete
-	rm -rf $(VENV_NAME) *.eggs *.egg-info
+	cd transform/snowflake-dbt/ && poetry run dbt clean && poetry env remove python
 
 ########################################################################################################################
 # Python
 ########################################################################################################################
+prepare-python:
+	which poetry || python3 -m pip install poetry
+	poetry install
+
 black:
 	@echo "Running lint (black)..."
-	@black --check .
+	@poetry run black --check .
 
 flake8:
 	@echo "Running flake8..."
-	@flake8 . --ignore=E203,E501,W503,W605
+	@poetry run flake8 . --ignore=E203,E501,W503,W605
 
 mypy:
 	@echo "Running mypy..."
-	@mypy extract/ --ignore-missing-imports
+	@poetry run mypy extract/ --ignore-missing-imports
 
 pylint:
 	@echo "Running pylint..."
-	@pylint . --disable=line-too-long,E0401,E0611,W1203,W1202
+	@poetry run pylint . --disable=line-too-long,E0401,E0611,W1203,W1202
 
 complexity:
 	@echo "Running complexity (Xenon)..."
-	@xenon --max-absolute B --max-modules B --max-average A . -i transform,shared_modules
+	@poetry run xenon --max-absolute B --max-modules B --max-average A . -i transform,shared_modules
 
 yq-lint:
 ifdef YAML
@@ -157,15 +173,15 @@ endif
 
 vulture:
 	@echo "Running vulture..."
-	@vulture . --min-confidence 100
+	@poetry run vulture . --min-confidence 100
 
 pytest:
 	@echo "Running pytest..."
-	@python3 -m pytest -vv -x
+	@poetry run python3 -m pytest -vv -x
 
 python_code_quality: black mypy pylint complexity flake8 vulture pytest
 	@echo "Running python_code_quality..."
 
 clean-python:
 	@echo "Running clean-python..."
-	@find . -name "*_cache*" -type d -exec rm -rf "{}" +
+	@poetry env remove python

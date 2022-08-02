@@ -217,7 +217,7 @@
       usage_ping.active_project_runners_all_time_event,
       usage_ping.gitaly_version,
       usage_ping.gitaly_servers_all_time_event,
-      -- Wave 6
+      -- Wave 6.0
       usage_ping.api_fuzzing_scans_all_time_event,
       usage_ping.api_fuzzing_scans_28_days_event,
       usage_ping.coverage_fuzzing_scans_all_time_event,
@@ -232,6 +232,23 @@
       usage_ping.dast_scans_28_days_event,
       usage_ping.sast_scans_all_time_event,
       usage_ping.sast_scans_28_days_event,
+      -- Wave 6.1
+      usage_ping.packages_pushed_registry_all_time_event,
+      usage_ping.packages_pulled_registry_all_time_event,
+      usage_ping.compliance_dashboard_view_28_days_user,
+      usage_ping.audit_screen_view_28_days_user,
+      usage_ping.instance_audit_screen_view_28_days_user,
+      usage_ping.credential_inventory_view_28_days_user,
+      usage_ping.compliance_frameworks_pipeline_all_time_event,
+      usage_ping.compliance_frameworks_pipeline_28_days_event,
+      usage_ping.groups_streaming_destinations_all_time_event,
+      usage_ping.groups_streaming_destinations_28_days_event,
+      usage_ping.audit_event_destinations_all_time_event,
+      usage_ping.audit_event_destinations_28_days_event,
+      usage_ping.projects_status_checks_all_time_event,
+      usage_ping.external_status_checks_all_time_event,
+      usage_ping.paid_license_search_28_days_user,
+      usage_ping.last_activity_28_days_user,
       -- Data Quality Flags
       IFF(usage_ping.instance_user_count != seat_link.active_user_count,
           usage_ping.instance_user_count, NULL)                                               AS instance_user_count_not_aligned,
@@ -274,5 +291,5 @@
     created_by="@ischweickartDD",
     updated_by="@mdrussell",
     created_date="2021-02-08",
-    updated_date="2021-05-06"
+    updated_date="2022-07-27"
 ) }}

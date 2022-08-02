@@ -61,11 +61,14 @@ sources:
       - name: gitlab_certification_tracking_dashboard
       - name: gitlab_roulette_capacity_history
       - name: gitlab_slack_stats
+      - name: google_user_ip_ranges
+      - name: google_cloud_ip_ranges
       - name: google_referrals
       - name: headcount
       - name: hire_forecast
       - name: hire_plan
       - name: hire_replan
+      - name: hiring_manager_survey_responses
       - name: ic_collaboration_competency
       - name: ic_dib_comptency
       - name: ic_efficiency_competency

@@ -200,8 +200,8 @@ models:
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
 
-  - name: dim_alliance_type
-    description: '{{ doc("dim_alliance_type") }}'
+  - name: dim_alliance_type_scd
+    description: '{{ doc("dim_alliance_type_scd") }}'
     columns:
       - name: dim_alliance_type_id
         description: Alliance type from prep table identifying the type of alliance relationship the partner has with GitLab.
@@ -1976,6 +1976,62 @@ models:
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: packages_pushed_registry_all_time_event
+        description: '{{ doc("packages_pushed_registry_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: packages_pulled_registry_all_time_event
+        description: '{{ doc("packages_pulled_registry_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: compliance_dashboard_view_28_days_user
+        description: '{{ doc("compliance_dashboard_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_screen_view_28_days_user
+        description: '{{ doc("audit_screen_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: instance_audit_screen_view_28_days_user
+        description: '{{ doc("instance_audit_screen_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: credential_inventory_view_28_days_user
+        description: '{{ doc("credential_inventory_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: compliance_frameworks_pipeline_28_days_event
+        description: '{{ doc("compliance_frameworks_pipeline_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_streaming_destinations_all_time_event
+        description: '{{ doc("groups_streaming_destinations_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_streaming_destinations_28_days_event
+        description: '{{ doc("groups_streaming_destinations_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_event_destinations_all_time_event
+        description: '{{ doc("audit_event_destinations_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_event_destinations_28_days_event
+        description: '{{ doc("audit_event_destinations_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_status_checks_all_time_event
+        description: '{{ doc("projects_status_checks_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: external_status_checks_all_time_event
+        description: '{{ doc("external_status_checks_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: paid_license_search_28_days_user
+        description: '{{ doc("paid_license_search_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -2429,8 +2485,8 @@ models:
   - name: fct_event_valid
     description: '{{ doc("fct_event_valid") }}'
     columns:
-      - name: event_id
-        description: '{{ doc("event_id") }}'
+      - name: event_pk
+        description: '{{ doc("event_pk") }}'
         tests:
           - not_null
           - unique
@@ -2510,8 +2566,8 @@ models:
   - name: fct_event
     description: '{{ doc("fct_event") }}'
     columns:
-      - name: event_id
-        description: '{{ doc("event_id") }}'
+      - name: event_pk
+        description: '{{ doc("event_pk") }}'
         # tests:
           # - not_null
           # - unique
@@ -2561,7 +2617,7 @@ models:
   - name: fct_event_user_daily
     description: '{{ doc("fct_event_user_daily") }}'
     columns:
-      - name: event_user_daily_id
+      - name: event_user_daily_pk
         description: The unique ID of a daily event.
         tests:
           - not_null
@@ -2630,7 +2686,7 @@ models:
   - name: fct_event_instance_daily
     description: '{{ doc("fct_event_instance_daily") }}'
     columns:
-      - name: event_instance_daily_id
+      - name: event_instance_daily_pk
         description: the unique ID combination of the event_date, event_name, and dim_instance_id in mart_usage_instance_daily.
         tests:
           - not_null
@@ -2659,7 +2715,7 @@ models:
   - name: fct_event_namespace_daily
     description: '{{ doc("fct_event_namespace_daily") }}'
     columns:
-      - name: event_namespace_daily_id
+      - name: event_namespace_daily_pk
         description: The unique ID of a daily namespace level event.
         tests:
           - not_null

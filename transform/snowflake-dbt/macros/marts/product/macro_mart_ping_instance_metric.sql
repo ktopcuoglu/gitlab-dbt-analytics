@@ -29,9 +29,6 @@
   SELECT
     * FROM {{ ref(model_name1) }}
     WHERE IS_REAL(TO_VARIANT(metric_value))
-    {% if is_incremental() %}
-                AND ping_created_at >= (SELECT MAX(ping_created_at) FROM {{this}})
-    {% endif %}
 
 ), subscription_source AS (
 
@@ -122,6 +119,7 @@
         fct_ping_instance_metric.metrics_path                                                                                           AS metrics_path,
         fct_ping_instance_metric.metric_value                                                                                           AS metric_value,
         fct_ping_instance_metric.has_timed_out                                                                                          AS has_timed_out,
+        dim_ping_metric.time_frame                                                                                                      AS time_frame,
         dim_ping_metric.group_name                                                                                                      AS group_name,
         dim_ping_metric.stage_name                                                                                                      AS stage_name,
         dim_ping_metric.section_name                                                                                                    AS section_name,
@@ -165,8 +163,7 @@
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
         dim_ping_instance.ping_created_at                                                                                               AS ping_created_at,
-        dim_date.first_day_of_month                                                                                                     AS ping_created_at_month,
-        fct_ping_instance_metric.time_frame                                                                                             AS time_frame,
+        dim_date.first_day_of_month                                                                                                     AS ping_created_date_month,
         fct_ping_instance_metric.dim_host_id                                                                                            AS dim_host_id,
         fct_ping_instance_metric.dim_instance_id                                                                                        AS dim_instance_id,
         dim_ping_instance.host_name                                                                                                     AS host_name,
@@ -263,7 +260,7 @@
       technical_account_manager,
 
       ping_created_at,
-      ping_created_at_month,
+      ping_created_date_month,
       is_last_ping_of_month
 
 
@@ -276,9 +273,9 @@
 {{ dbt_audit(
     cte_ref="sorted",
     created_by="@icooper-acp",
-    updated_by="@icooper-acp",
+    updated_by="@iweeks",
     created_date="2022-03-11",
-    updated_date="2022-03-11"
+    updated_date="2022-07-20"
 ) }}
 
 {% endmacro %}

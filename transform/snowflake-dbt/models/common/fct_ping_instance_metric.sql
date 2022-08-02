@@ -14,8 +14,7 @@
     ('map_ip_to_country', 'map_ip_to_country'),
     ('locations', 'prep_location_country'),
     ('prep_ping_instance', 'prep_ping_instance_flattened'),
-    ('dim_product_tier', 'dim_product_tier'),
-    ('dim_ping_metric', 'dim_ping_metric')
+    ('dim_product_tier', 'dim_product_tier')
     ])
 
 }}
@@ -90,10 +89,6 @@
     LEFT JOIN dim_date
       ON TO_DATE(prep_usage_ping_cte.ping_created_at) = dim_date.date_day
 
-), metric_attributes AS (
-
-    SELECT * FROM dim_ping_metric
-
 ), flattened_high_level as (
     SELECT
       {{ dbt_utils.surrogate_key(['dim_ping_instance_id', 'joined_payload.metrics_path']) }}                      AS ping_instance_metric_id,
@@ -119,15 +114,13 @@
       'VERSION_DB'                                                                                                AS data_source,
       metric_attributes.time_frame                                                                                AS time_frame
   FROM joined_payload
-      LEFT JOIN metric_attributes
-  ON joined_payload.metrics_path = metric_attributes.metrics_path
 
 )
 
 {{ dbt_audit(
     cte_ref="flattened_high_level",
     created_by="@icooper-acp",
-    updated_by="@snalamaru",
+    updated_by="@iweeks",
     created_date="2022-03-08",
     updated_date="2022-07-21"
 ) }}

@@ -25,7 +25,8 @@ WITH sfdc_campaign_info AS (
       channel_partner_name,
       sales_play,
       gtm_motion,
-      total_planned_mqls
+      total_planned_mqls,
+      will_there_be_mdf_funding
     FROM sfdc_campaign_info
 
 )

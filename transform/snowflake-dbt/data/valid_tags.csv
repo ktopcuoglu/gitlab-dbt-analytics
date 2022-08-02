@@ -11,7 +11,6 @@ common_prep,For common_prep schema
 crm_account,For CRM Accounts
 customers_db,Relates to Customers database
 daily,Used in Airflow runs
-data,dbt built-in
 data_science,Relates to data_science data processes.
 dbt,Relates to dbt-generated data-sets
 demandbase,Relates to demandbase data
@@ -36,7 +35,6 @@ on-run-start,dbt built-in
 opportunity, Relates to customer opportunity data.
 opportunity_snapshots, For CRM opportunity snapshots
 people, Related to the People team data.
-poc,Proof of concept
 product,For large product analytics data
 purchase_channel, Related to identifying types of purchase channel data
 retention, Related to retention of customers
@@ -45,7 +43,6 @@ safe, for models that need to be compliant with the SAFE framework
 sales_funnel, related to Lead to Cash funnel
 sales_territory, Related to sales territory mappings
 subscription_snapshot,For Subscription Snapshots
-schema,dbt built-in
 service_ping,Relates to service_ping (SQL and Redis metrics) data
 sfdc,Relates to Salesforce dotcom
 sources,Related to sources

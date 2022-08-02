@@ -1,4 +1,4 @@
-{% docs event_id %}
+{% docs event_pk %}
 
 The unique identifier of an event. This is a generated primary key and will not join back to the source models
 

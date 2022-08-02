@@ -25,7 +25,7 @@ sources:
             description: Primary Key for Accounts
             tests:
               - dbt_utils.expression_is_true:
-                  expression: "id REGEXP '[0-9a-z]{32}'"
+                  expression: "REGEXP '[0-9a-z]{32}'"
       - name: accounting_period
         identifier: accountingperiod
         description: '{{ doc("zuora_accounting_period_source") }}'
@@ -44,6 +44,9 @@ sources:
       - name: invoice_payment
         identifier: invoicepayment
         description: '{{ doc("zuora_invoice_payment_source") }}'
+      - name: payment_method
+        identifier: paymentmethod
+        description: '{{ doc("zuora_payment_method_source") }}'
       - name: product
         description: '{{ doc("zuora_product_source") }}'
       - name: product_rate_plan
@@ -73,7 +76,7 @@ sources:
             description: Primary Key for Accounts
             tests:
               - dbt_utils.expression_is_true:
-                  expression: "accountid REGEXP '[0-9a-z]{32}'"
+                  expression: "REGEXP '[0-9a-z]{32}'"
               - relationships:
                   to: source('zuora', 'account')
                   field: id

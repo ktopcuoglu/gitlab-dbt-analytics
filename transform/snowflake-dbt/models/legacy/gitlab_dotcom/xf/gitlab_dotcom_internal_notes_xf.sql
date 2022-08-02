@@ -1,7 +1,7 @@
 WITH notes AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('gitlab_dotcom_notes'), except=["created_at", "updated_at"]) }},
+    {{ dbt_utils.star(from=ref('gitlab_dotcom_notes') ) }},
     created_at AS note_created_at,
     updated_at AS note_updated_at,
     "{{this.database}}".{{target.schema}}.regexp_to_array(note, '(?<=(gitlab.my.|na34.)salesforce.com\/)[0-9a-zA-Z]{15,18}') AS sfdc_link_array,

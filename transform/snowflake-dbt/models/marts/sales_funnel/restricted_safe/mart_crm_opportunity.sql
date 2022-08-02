@@ -6,7 +6,7 @@
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type')
 ]) }}
 
@@ -218,6 +218,7 @@
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
       fct_crm_opportunity.partner_track,
+      fct_crm_opportunity.resale_partner_track,
       fct_crm_opportunity.is_public_sector_opp,
       fct_crm_opportunity.is_registration_from_portal,
       fct_crm_opportunity.calculated_discount,
@@ -287,7 +288,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@jeanpeguero",
     created_date="2020-12-07",
-    updated_date="2022-04-26",
+    updated_date="2022-07-13",
   ) }}

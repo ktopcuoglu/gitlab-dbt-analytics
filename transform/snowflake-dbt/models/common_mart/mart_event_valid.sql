@@ -39,7 +39,7 @@ fact_with_dims AS (
   LEFT JOIN dim_namespace
     ON fact.dim_ultimate_parent_namespace_id = dim_namespace.dim_namespace_id
   LEFT JOIN dim_user
-    ON fact.dim_user_id = dim_user.dim_user_id
+    ON fact.dim_user_sk = dim_user.dim_user_sk
   LEFT JOIN dim_project
     ON fact.dim_project_id = dim_project.dim_project_id
   LEFT JOIN dim_date
@@ -52,5 +52,5 @@ fact_with_dims AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2022-05-05",
-    updated_date="2022-05-16"
+    updated_date="2022-07-01"
 ) }}

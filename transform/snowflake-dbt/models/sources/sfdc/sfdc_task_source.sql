@@ -27,7 +27,8 @@ WITH source AS (
       -- Original issue: https://gitlab.com/gitlab-data/analytics/-/issues/6577
       persona_functions__c          AS persona_functions,
       persona_levels__c             AS persona_levels,
-      sa_activity_type__c           AS sa_activity_type
+      sa_activity_type__c           AS sa_activity_type,
+      gs_activity_type__c           AS gs_activity_type
 
     FROM source
 )

@@ -78,12 +78,14 @@ Completed with x errors and x warnings:
 * Quick procedure to cleanup the log:
   1. Open any text editor with a regex find and replace; run through the below strings doing a find and replace for all: 
         * `^(?!.*(Failure in test|Database error|Warning)).*$`
-        * `^\[\d{4}-\d{2}-\d{2}, \d{2}:\d{2}:\d{2} UTC\] INFO - `
+        * `^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}\] INFO - b'\\x1b\[0m`
+        * `\\n'`
         * `^\R`
   2. In order, each of these lines: 
      1. Removes all lines without Database Failure or Test Failure
      2. Removes date and INFO from each line 
-     3. Removes empty lines
+     3. Removes extra characters from the end of the string
+     4. Removes empty lines
 
 </details>
 
@@ -91,9 +93,12 @@ Completed with x errors and x warnings:
 
 The focus area for the Data Engineer are the Data Pipelines and Data Infrastructure. 
 * [ ] Check [Trusted Data Health Dashboard](https://app.periscopedata.com/app/gitlab/891891/TD:-Trusted-Data-Health-Dashboard) to get high level overview of health status if the data in the Snowflake Data-warehouse could be trusted or not. Health Status in the dashboard is presented separately for Data extraction (RAW data layer) and Data transformation (Prod data layer) with a PASS, FAIL, WARNING status.
-* [ ] [Create an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) for each new failure in **#data-pipelines** and **#data-prom-alerts**
-    * [ ] Link to all resulting issues and MRs in slack 
-    * [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
+* [ ] Investigate and respond to each **active** failure and alert in **#data-pipelines** and **#data-prom-alerts** by:
+    * [ ] Updating the [Monte Carlo](https://getmontecarlo.com/monitors) status via Slack according to the defined action
+    * [ ] [Creating an issue](https://gitlab.com/gitlab-data/analytics/issues/new?issuable_template=Triage%20Errors%20DE) for each failure or relevant alert.
+    * [ ] [Opening an incident issue](https://gitlab.com/gitlab-data/analytics/-/issues/new?issuable_template=incident&issue[issue_type]=incident) when the failure requires [immediate action](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/#incidents) in order to avoid or rememdy a data outage.
+        * [ ] Link to all resulting incidents/issues and MRs in slack      
+* [ ] Notify Data Customers of [data refresh SLO](https://about.gitlab.com/handbook/business-ops/data-team/platform/#extract-and-load) breach by posting a message to the `#data` Slack channel using the appropriate Data Notification Template
 * [ ] [Investigate](https://gitlab.com/gitlab-org/gitlab/-/merge_requests?scope=all&state=all&label_name[]=Data%20Warehouse%3A%3AImpact%20Check&draft=no&approved_by_usernames[]=Any) all relevant merge requests to the gitlab.com database schema, create an issue for each MR in the analytics project that impacts the GitLab.com extraction. Link each issue created to this issue. A detailed explanation of how to act if there is some impact is described on the page [#gitlabcom-db-structure-changes](https://about.gitlab.com/handbook/business-technology/data-team/how-we-work/triage/#gitlabcom-db-structure-changes)
 
 
@@ -120,7 +125,7 @@ The DRI for this incident is `@username`.
 
 The link to the Data Team Incident issue is <link>
 
-`CC @Mek Stittri, @Christopher Lefelhocz, @Hila Qu, @WayneHaber,  @Steve Loyd, @lily, @kwiebers, @Davis Townsend, @s_awezec, @mkarampalas, @product-analysts`
+`CC @Mek Stittri, @Christopher Lefelhocz, @WayneHaber,  @Steve Loyd, @lily, @kwiebers, @Davis Townsend, @s_awezec, @product-analysts`
 
 
 #### Salesforce
