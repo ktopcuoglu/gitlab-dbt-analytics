@@ -380,8 +380,8 @@ models:
       description: The name of the technical account manager of the subscription
     - name: ping_created_at
       description: The time when the ping was created
-    - name: ping_created_at_month
-      description: The month when the ping was created
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
     - name: is_last_ping_of_month
       description: Boolean flag set to True if this is the instance's (defined by dim_installation_id) last ping of the calendar month (defined by ping_created_at)
   
