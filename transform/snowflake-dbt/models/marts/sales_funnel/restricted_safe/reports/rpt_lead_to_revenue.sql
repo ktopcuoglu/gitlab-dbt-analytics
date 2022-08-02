@@ -102,6 +102,7 @@
       opp.is_won,
       opp.is_sao,
       opp.new_logo_count,
+      opp.net_arr,
       opp.is_net_arr_closed_deal,
       opp.crm_opp_owner_sales_segment_stamped,
       opp.crm_opp_owner_region_stamped,
@@ -154,6 +155,7 @@
     cohort_base.is_sao,
     cohort_base.is_won,
     cohort_base.new_logo_count,
+    cohort_base.net_arr,
     cohort_base.is_net_arr_closed_deal,
     cohort_base.opp_order_type,
     cohort_base.sales_qualified_source_name,
@@ -220,5 +222,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-20",
-    updated_date="2022-07-28",
+    updated_date="2022-08-02",
   ) }}
