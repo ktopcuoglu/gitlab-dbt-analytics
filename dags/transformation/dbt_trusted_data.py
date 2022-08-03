@@ -13,7 +13,6 @@ from airflow_utils import (
     gitlab_pod_env_vars,
     slack_failed_task,
 )
-from analytics.dags.kube_secrets import MCD_DEFAULT_API_ID, MCD_DEFAULT_API_TOKEN
 from kube_secrets import (
     GIT_DATA_TESTS_PRIVATE_KEY,
     GIT_DATA_TESTS_CONFIG,
