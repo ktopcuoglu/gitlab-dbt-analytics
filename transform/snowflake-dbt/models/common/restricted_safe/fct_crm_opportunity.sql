@@ -131,7 +131,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
       sfdc_opportunity.ssp_id,
 
-            -- flags
+      -- flags
       sfdc_opportunity.is_closed,
       sfdc_opportunity.is_won,
       sfdc_opportunity.is_refund,
@@ -152,9 +152,12 @@
       sfdc_opportunity.is_stage_4_plus,
       sfdc_opportunity.is_lost,
       sfdc_opportunity.is_open,
+      sfdc_opportunity.is_active,
       sfdc_opportunity.is_credit,
       sfdc_opportunity.is_renewal,
       sfdc_opportunity.is_deleted,
+      sfdc_opportunity.is_excluded,
+      sfdc_opportunity.is_duplicate,
       sfdc_opportunity.is_contract_reset,
       sfdc_opportunity.is_comp_new_logo_override,
       sfdc_opportunity.is_eligible_open_pipeline,
@@ -162,7 +165,7 @@
       sfdc_opportunity.is_eligible_sao,
       sfdc_opportunity.is_eligible_asp_analysis,
       sfdc_opportunity.is_eligible_age_analysis,
-      sfdc_opportunity.is_eligible_churn_contraction,
+      sfdc_opportunity.is_eligible_churn_contraction, 
 
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
@@ -221,7 +224,9 @@
       sfdc_opportunity.churned_contraction_net_arr,
       sfdc_opportunity.calculated_deal_count,
       sfdc_opportunity.renewal_amount,
-      sfdc_opportunity.total_contract_value
+      sfdc_opportunity.total_contract_value,
+      sfdc_opportunity.days_in_stage,
+      sfdc_opportunity.days_since_last_activity
 
     FROM sfdc_opportunity
     LEFT JOIN crm_account_dimensions

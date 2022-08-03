@@ -147,33 +147,35 @@ WITH first_contact  AS (
     CASE 
       WHEN sfdc_opportunity_source.user_segment_stamped IS NULL 
         OR is_open = 1
-        THEN sfdc_users_source.user_segment 
+        THEN prep_crm_user.crm_user_sales_segment 
       ELSE sfdc_opportunity_source.user_segment_stamped
     END                                                                   AS opportunity_owner_user_segment,
 
     CASE 
       WHEN sfdc_opportunity_source.user_geo_stamped IS NULL 
           OR is_open = 1
-        THEN sfdc_users_source.user_geo
+        THEN prep_crm_user.crm_user_geo
       ELSE sfdc_opportunity_source.user_geo_stamped
     END                                                                   AS opportunity_owner_user_geo,
 
       CASE 
         WHEN sfdc_opportunity_source.user_region_stamped IS NULL
              OR is_open = 1
-          THEN sfdc_users_source.user_region
+          THEN prep_crm_user.crm_user_region
           ELSE sfdc_opportunity_source.user_region_stamped
       END                                                                   AS opportunity_owner_user_region,
 
       CASE
         WHEN sfdc_opportunity_source.user_area_stamped IS NULL
              OR is_open = 1
-          THEN sfdc_users_source.user_area
+          THEN prep_crm_user.crm_user_area
         ELSE sfdc_opportunity_source.user_area_stamped
-      END                                                                   AS opportunity_owner_user_area
+      END                                                                   AS opportunity_owner_user_area,
+      prep_crm_user.user_role_name                                      AS opportunity_owner_role,
+      prep_crm_user.title                                               AS opportunity_owner_title
   FROM {{ ref('sfdc_opportunity_source') }}
-  INNER JOIN {{ ref('sfdc_users_source') }}
-    ON sfdc_opportunity_source.owner_id = sfdc_users_source.user_id
+  INNER JOIN {{ ref('prep_crm_user') }}
+    ON sfdc_opportunity_source.owner_id = prep_crm_user.dim_crm_user_id
 
 ), sfdc_opportunity AS (
 
@@ -412,8 +414,7 @@ WITH first_contact  AS (
         ELSE sfdc_opportunity.opportunity_term_base
       END                                                                                         AS opportunity_term,
       -- opportunity stage information 
-      sfdc_opportunity_stage.is_active                                                            AS stage_is_active,
-      sfdc_opportunity_stage.is_closed                                                            AS stage_is_closed,
+      sfdc_opportunity_stage.is_active                                                            AS is_active,
       sfdc_opportunity_stage.is_won                                                               AS is_won,
       CASE
         WHEN sfdc_opportunity.stage_name
@@ -878,7 +879,25 @@ WITH first_contact  AS (
         THEN net_arr
         ELSE 0
       END                                                 AS churned_contraction_net_arr,
-      {%- if model_type == 'snapshot' %}
+      CASE
+        WHEN sfdc_opportunity.deal_path = 'Channel' 
+          THEN REPLACE(COALESCE(sfdc_opportunity.partner_track, partner_account.partner_track, fulfillment_partner.partner_track,'Open'),'select','Select')
+        ELSE 'Direct' 
+      END                                                                                           AS calculated_partner_track,
+      {%- if model_type == 'live' %}
+      CASE 
+        WHEN sfdc_account.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc') 
+          AND sfdc_opportunity.close_date < '2020-08-01' 
+            THEN 1
+        -- NF 2021 - Pubsec extreme deals
+        WHEN sfdc_opportunity.dim_crm_opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
+          THEN 1
+        -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
+        WHEN sfdc_opportunity.dim_crm_opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
+          THEN 1
+        ELSE 0
+      END                                                                       AS is_excluded,
+      {%- elif model_type == 'snapshot' %}
       CASE
         WHEN
         sfdc_account.ultimate_parent_account_id IN (
@@ -929,6 +948,8 @@ WITH first_contact  AS (
       live_opportunity_owner_fields.opportunity_owner_user_geo,
       live_opportunity_owner_fields.opportunity_owner_user_region,
       live_opportunity_owner_fields.opportunity_owner_user_area,
+      live_opportunity_owner_fields.opportunity_owner_role,
+      live_opportunity_owner_fields.opportunity_owner_title,
       CASE 
         WHEN sfdc_opportunity.comp_new_logo_override = 'Yes'
           THEN 1 
@@ -1179,6 +1200,11 @@ WITH first_contact  AS (
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+    {%- endif %}
+    LEFT JOIN sfdc_account AS partner_account
+      ON sfdc_opportunity.partner_account = partner_account.account_id
+    {%- if model_type == 'snapshot' %}
+        AND sfdc_opportunity.snapshot_id = partner_account.snapshot_id
     {%- endif %}
     LEFT JOIN sfdc_account
       ON sfdc_opportunity.dim_crm_account_id= sfdc_account.account_id

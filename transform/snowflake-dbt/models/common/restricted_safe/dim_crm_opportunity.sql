@@ -30,8 +30,6 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.iqm_submitted_by_role,
       prep_crm_opportunity.sdr_pipeline_contribution,
       prep_crm_opportunity.stage_name,
-      prep_crm_opportunity.stage_is_active,
-      prep_crm_opportunity.stage_is_closed,
       prep_crm_opportunity.sa_tech_evaluation_close_status,
       prep_crm_opportunity.deal_path,
 
@@ -53,6 +51,8 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.professional_services_value,
       prep_crm_opportunity.reason_for_loss,
       prep_crm_opportunity.reason_for_loss_details,
+      prep_crm_opportunity.reason_for_loss_staged,
+      prep_crm_opportunity.reason_for_loss_calc,
       prep_crm_opportunity.sales_qualified_source,
       prep_crm_opportunity.sales_qualified_source_grouped,
       prep_crm_opportunity.solutions_to_be_replaced,
@@ -64,6 +64,7 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.opportunity_health,
       prep_crm_opportunity.risk_type,
       prep_crm_opportunity.risk_reasons,
+      prep_crm_opportunity.downgrade_reason,
       prep_crm_opportunity.tam_notes,
       prep_crm_opportunity.payment_schedule,
       prep_crm_opportunity.comp_y2_iacv,
@@ -72,7 +73,6 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.growth_type,
       prep_crm_opportunity.opportunity_deal_size,
       prep_crm_opportunity.deployment_preference,
-      prep_crm_opportunity.opportunity_owner_manager,
       prep_crm_opportunity.stage_name_3plus,
       prep_crm_opportunity.stage_name_4plus,
       prep_crm_opportunity.stage_category,
@@ -82,10 +82,14 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.calculated_deal_size,
       prep_crm_opportunity.deal_path_engagement,
       prep_crm_opportunity.opportunity_owner,
+      prep_crm_opportunity.opportunity_owner_manager,
       prep_crm_opportunity.opportunity_owner_department,
+      prep_crm_opportunity.opportunity_owner_role,
+      prep_crm_opportunity.opportunity_owner_title,
       prep_crm_opportunity.sqs_bucket_engagement,
       prep_crm_opportunity.sa_tech_evaluation_end_date,
       prep_crm_opportunity.sa_tech_evaluation_start_date,
+      prep_crm_opportunity.calculated_partner_track,
 
       -- Competitors
       prep_crm_opportunity.competitors,
@@ -128,6 +132,8 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.cp_value_driver,
       prep_crm_opportunity.cp_why_do_anything_at_all,
       prep_crm_opportunity.cp_why_gitlab,
+      prep_crm_opportunity.cp_why_now,
+      prep_crm_opportunity.cp_score,
 
       -- stamped fields
       prep_crm_opportunity.crm_opp_owner_stamped_name,

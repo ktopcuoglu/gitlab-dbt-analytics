@@ -26,6 +26,12 @@ final AS (
     fct_crm_opportunity.opportunity_name,
     fct_crm_opportunity.stage_name,
     fct_crm_opportunity.reason_for_loss,
+    fct_crm_opportunity.reason_for_loss_details,
+    fct_crm_opportunity.reason_for_loss_staged,
+    fct_crm_opportunity.reason_for_loss_calc,
+    fct_crm_opportunity.risk_type,
+    fct_crm_opportunity.risk_reasons,
+    fct_crm_opportunity.downgrade_reason,
     fct_crm_opportunity.sales_type,
     fct_crm_opportunity.deal_path AS deal_path_name,
     fct_crm_opportunity.order_type,
@@ -63,6 +69,13 @@ final AS (
     fct_crm_opportunity.cp_use_cases,
     fct_crm_opportunity.record_type_id,
     fct_crm_opportunity.opportunity_owner_manager,
+    fct_crm_opportunity.opportunity_owner_department,
+    fct_crm_opportunity.opportunity_owner_role,
+    fct_crm_opportunity.opportunity_owner_title,
+    fct_crm_opportunity.solutions_to_be_replaced,
+    fct_crm_opportunity.opportunity_health,
+    fct_crm_opportunity.tam_notes,
+    fct_crm_opportunity.generated_source,
     fct_crm_opportunity.account_owner_team_stamped,
     fct_crm_opportunity.stage_name_3plus,
     fct_crm_opportunity.stage_name_4plus,
@@ -75,7 +88,6 @@ final AS (
     fct_crm_opportunity.deal_path_engagement,
     fct_crm_opportunity.forecast_category_name,
     fct_crm_opportunity.opportunity_owner,
-    fct_crm_opportunity.opportunity_owner_department,
     fct_crm_opportunity.dim_crm_user_id AS owner_id,
 
     -- flags
@@ -84,10 +96,10 @@ final AS (
     fct_crm_opportunity.is_edu_oss,
     fct_crm_opportunity.is_ps_opp,
     fct_crm_opportunity.is_sao,
+    fct_crm_opportunity.is_win_rate_calc,
+    fct_crm_opportunity.is_net_arr_pipeline_created,
     fct_crm_opportunity.is_net_arr_closed_deal,
     fct_crm_opportunity.is_new_logo_first_order,
-    fct_crm_opportunity.is_net_arr_pipeline_created,
-    fct_crm_opportunity.is_win_rate_calc,
     fct_crm_opportunity.is_closed_won,
     fct_crm_opportunity.is_web_portal_purchase,
     fct_crm_opportunity.is_stage_1_plus,
@@ -95,10 +107,13 @@ final AS (
     fct_crm_opportunity.is_stage_4_plus,
     fct_crm_opportunity.is_lost,
     fct_crm_opportunity.is_open,
+    fct_crm_opportunity.is_active,
+    fct_crm_opportunity.is_risky,
     fct_crm_opportunity.is_credit,
     fct_crm_opportunity.is_renewal,
     fct_crm_opportunity.is_refund,
     fct_crm_opportunity.is_deleted,
+    fct_crm_opportunity.is_duplicate,
     fct_crm_opportunity.is_contract_reset,
     fct_crm_opportunity.is_comp_new_logo_override,
     fct_crm_opportunity.is_eligible_open_pipeline,
@@ -107,7 +122,11 @@ final AS (
     fct_crm_opportunity.is_eligible_asp_analysis,
     fct_crm_opportunity.is_eligible_age_analysis,
     fct_crm_opportunity.is_eligible_churn_contraction,
+    fct_crm_opportunity.is_downgrade,
     fct_crm_opportunity.is_excluded,
+    fct_crm_opportunity.critical_deal_flag,
+
+
 
     -- account fields
     dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
@@ -227,12 +246,16 @@ final AS (
     fct_crm_opportunity.lead_source,
     fct_crm_opportunity.dr_partner_deal_type,
     fct_crm_opportunity.partner_account,
+    partner_account.crm_account_name AS partner_account_name,
+    partner_account.gitlab_partner_program  AS partner_gitlab_program,
+    fct_crm_opportunity.calculated_partner_track,
     fct_crm_opportunity.dr_status,
     fct_crm_opportunity.distributor,
     fct_crm_opportunity.dr_deal_id,
     fct_crm_opportunity.dr_primary_registration,
     fct_crm_opportunity.influence_partner,
     fct_crm_opportunity.fulfillment_partner,
+    fulfillment_partner.crm_account_name AS fulfillment_partner_name,
     fct_crm_opportunity.platform_partner,
     fct_crm_opportunity.partner_track,
     fct_crm_opportunity.is_public_sector_opp,
@@ -267,6 +290,8 @@ final AS (
     fct_crm_opportunity.cp_value_driver,
     fct_crm_opportunity.cp_why_do_anything_at_all,
     fct_crm_opportunity.cp_why_gitlab,
+    fct_crm_opportunity.cp_why_now,
+    fct_crm_opportunity.cp_score,
 
     -- Competitor flags
     fct_crm_opportunity.competitors,
@@ -291,8 +316,107 @@ final AS (
     fct_crm_opportunity.competitors_bamboo_flag,
     fct_crm_opportunity.competitors_aws_flag,
 
-    -- additive fields
+    -- Dates
+    created_date.date_actual                                        AS created_date,
+    created_date.first_day_of_month                                 AS created_month,
+    created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
+    created_date.fiscal_quarter_name_fy                             AS created_fiscal_quarter_name,
+    created_date.fiscal_year                                        AS created_fiscal_year,
+    sales_accepted_date.date_actual                                 AS sales_accepted_date
+    sales_accepted_date.first_day_of_month                          AS sales_accepted_month,
+    sales_accepted_date.first_day_of_fiscal_quarter                 AS sales_accepted_fiscal_quarter_date,
+    sales_accepted_date.fiscal_quarter_name_fy                      AS sales_accepted_fiscal_quarter_name,
+    sales_accepted_date.fiscal_year                                 AS sales_accepted_fiscal_year,
+    close_date.date_actual                                          AS close_date,
+    close_date.first_day_of_month                                   AS close_month,
+    close_date.first_day_of_fiscal_quarter                          AS close_fiscal_quarter_date,
+    close_date.fiscal_quarter_name_fy                               AS close_fiscal_quarter_name,
+    close_date.fiscal_year                                          AS close_fiscal_year,
+    stage_0_pending_acceptance_date.date_actual                     AS stage_0_pending_acceptance_date
+    stage_0_pending_acceptance_date.first_day_of_month              AS stage_0_pending_acceptance_month,
+    stage_0_pending_acceptance_date.first_day_of_fiscal_quarter     AS stage_0_pending_acceptance_fiscal_quarter_date,
+    stage_0_pending_acceptance_date.fiscal_quarter_name_fy          AS stage_0_pending_acceptance_fiscal_quarter_name,
+    stage_0_pending_acceptance_date.fiscal_year                     AS stage_0_pending_acceptance_fiscal_year,
+    stage_1_discovery_date.date_actual                              AS stage_1_discovery_date,
+    stage_1_discovery_date.first_day_of_month                       AS stage_1_discovery_month,
+    stage_1_discovery_date.first_day_of_fiscal_quarter              AS stage_1_discovery_fiscal_quarter_date,
+    stage_1_discovery_date.fiscal_quarter_name_fy                   AS stage_1_discovery_fiscal_quarter_name,
+    stage_1_discovery_date.fiscal_year                              AS stage_1_discovery_fiscal_year,
+    stage_2_scoping_date.date_actual                                AS stage_2_scoping_date,
+    stage_2_scoping_date.first_day_of_month                         AS stage_2_scoping_month,
+    stage_2_scoping_date.first_day_of_fiscal_quarter                AS stage_2_scoping_fiscal_quarter_date,
+    stage_2_scoping_date.fiscal_quarter_name_fy                     AS stage_2_scoping_fiscal_quarter_name,
+    stage_2_scoping_date.fiscal_year                                AS stage_2_scoping_fiscal_year,
+    stage_3_technical_evaluation_date.date_actual                   AS stage_3_technical_evaluation_date
+    stage_3_technical_evaluation_date.first_day_of_month            AS stage_3_technical_evaluation_month,
+    stage_3_technical_evaluation_date.first_day_of_fiscal_quarter   AS stage_3_technical_evaluation_fiscal_quarter_date,
+    stage_3_technical_evaluation_date.fiscal_quarter_name_fy        AS stage_3_technical_evaluation_fiscal_quarter_name,
+    stage_3_technical_evaluation_date.fiscal_year                   AS stage_3_technical_evaluation_fiscal_year,
+    stage_4_proposal_date.date_actual                               AS stage_4_proposal_date,
+    stage_4_proposal_date.first_day_of_month                        AS stage_4_proposal_month,
+    stage_4_proposal_date.first_day_of_fiscal_quarter               AS stage_4_proposal_fiscal_quarter_date,
+    stage_4_proposal_date.fiscal_quarter_name_fy                    AS stage_4_proposal_fiscal_quarter_name,
+    stage_4_proposal_date.fiscal_year                               AS stage_4_proposal_fiscal_year,
+    stage_5_negotiating_date.date_actual                            AS stage_5_negotiating_date,
+    stage_5_negotiating_date.first_day_of_month                     AS stage_5_negotiating_month,
+    stage_5_negotiating_date.first_day_of_fiscal_quarter            AS stage_5_negotiating_fiscal_quarter_date,
+    stage_5_negotiating_date.fiscal_quarter_name_fy                 AS stage_5_negotiating_fiscal_quarter_name,
+    stage_5_negotiating_date.fiscal_year                            AS stage_5_negotiating_fiscal_year,
+    stage_6_closed_won_date.date_actual                             AS stage_6_closed_won_date,
+    stage_6_closed_won_date.first_day_of_month                      AS stage_6_closed_won_month,
+    stage_6_closed_won_date.first_day_of_fiscal_quarter             AS stage_6_closed_won_fiscal_quarter_date,
+    stage_6_closed_won_date.fiscal_quarter_name_fy                  AS stage_6_closed_won_fiscal_quarter_name,
+    stage_6_closed_won_date.fiscal_year                             AS stage_6_closed_won_fiscal_year,
+    stage_6_closed_lost_date.date_actual                            AS stage_6_closed_lost_date,
+    stage_6_closed_lost_date.first_day_of_month                     AS stage_6_closed_lost_month,
+    stage_6_closed_lost_date.first_day_of_fiscal_quarter            AS stage_6_closed_lost_fiscal_quarter_date,
+    stage_6_closed_lost_date.fiscal_quarter_name_fy                 AS stage_6_closed_lost_fiscal_quarter_name,
+    stage_6_closed_lost_date.fiscal_year                            AS stage_6_closed_lost_fiscal_year,
+    quote_start_date.date_actual                                    AS quote_start_date,
+    quote_start_date.first_day_of_month                             AS quote_start_month,
+    quote_start_date.first_day_of_fiscal_quarter                    AS quote_start_fiscal_quarter_date,
+    quote_start_date.fiscal_quarter_name_fy                         AS quote_start_fiscal_quarter_name,
+    quote_start_date.fiscal_year                                    AS quote_start_fiscal_year,
+    quote_end_date.date_actual                                      AS quote_end_date,
+    quote_end_date.first_day_of_month                               AS quote_end_month,
+    quote_end_date.first_day_of_fiscal_quarter                      AS quote_end_fiscal_quarter_date,
+    quote_end_date.fiscal_quarter_name_fy                           AS quote_end_fiscal_quarter_name,
+    quote_end_date.fiscal_year                                      AS quote_end_fiscal_year,
+    sales_qualified_date.date_actual                                AS sales_qualified_date,
+    sales_qualified_date.first_day_of_month                         AS sales_qualified_month,
+    sales_qualified_date.first_day_of_fiscal_quarter                AS sales_qualified_fiscal_quarter_date,
+    sales_qualified_date.fiscal_quarter_name_fy                     AS sales_qualified_fiscal_quarter_name,
+    sales_qualified_date.fiscal_year                                AS sales_qualified_fiscal_year,
+    last_activity_date.date_actual                                  AS last_activity_date,
+    last_activity_date.first_day_of_month                           AS last_activity_month,
+    last_activity_date.first_day_of_fiscal_quarter                  AS last_activity_fiscal_quarter_date,
+    last_activity_date.fiscal_quarter_name_fy                       AS last_activity_fiscal_quarter_name,
+    last_activity_date.fiscal_year                                  AS last_activity_fiscal_year,
+    net_arr_created_date.date_actual                                AS net_arr_created_date,
+    net_arr_created_date.first_day_of_month                         AS net_arr_created_month,
+    net_arr_created_date.first_day_of_fiscal_quarter                AS net_arr_created_fiscal_quarter_date,
+    net_arr_created_date.fiscal_quarter_name_fy                     AS net_arr_created_fiscal_quarter_name,
+    net_arr_created_date.fiscal_year                                AS net_arr_created_fiscal_year,
+    pipeline_created_date.date_actual                               AS pipeline_created_date,
+    pipeline_created_date.first_day_of_month                        AS pipeline_created_month,
+    pipeline_created_date.first_day_of_fiscal_quarter               AS pipeline_created_fiscal_quarter_date,
+    pipeline_created_date.fiscal_quarter_name_fy                    AS pipeline_created_fiscal_quarter_name,
+    pipeline_created_date.fiscal_year                               AS pipeline_created_fiscal_year,
+    technical_evaluation_date.date_actual                           AS technical_evaluation_date,
+    technical_evaluation_date.first_day_of_month                    AS technical_evaluation_month,
+    technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
+    technical_evaluation_date.fiscal_quarter_name_fy                AS technical_evaluation_fiscal_quarter_name,
+    technical_evaluation_date.fiscal_year                           AS technical_evaluation_fiscal_year,
+    fct_crm_opportunity.days_in_0_pending_acceptance,
+    fct_crm_opportunity.days_in_1_discovery,
+    fct_crm_opportunity.days_in_2_scoping,
+    fct_crm_opportunity.days_in_3_technical_evaluation,
+    fct_crm_opportunity.days_in_4_proposal,
+    fct_crm_opportunity.days_in_5_negotiating,
     fct_crm_opportunity.days_in_sao,
+    fct_crm_opportunity.days_since_last_activity,
+
+    -- Additive fields
     fct_crm_opportunity.arr_basis,
     fct_crm_opportunity.net_arr,
     fct_crm_opportunity.new_logo_count,
@@ -322,7 +446,8 @@ final AS (
     fct_crm_opportunity.calculated_age_in_days,
     fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
     fct_crm_opportunity.created_and_won_same_quarter_net_arr,
-    fct_crm_opportunity.created_in_snapshot_quarter_deal_count
+    fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
+    fct_crm_opportunity.days_in_stage
 
 
   FROM fct_crm_opportunity
@@ -335,6 +460,48 @@ final AS (
   LEFT JOIN dim_crm_user AS account_owner_live
     ON dim_crm_account.dim_crm_user_id = account_owner_live.dim_crm_user_id
       AND dim_crm_account.snapshot_id = account_owner_live.snapshot_id
+  LEFT JOIN dim_date created_date
+    ON fct_crm_opportunity.created_date = created_date.date_actual
+  LEFT JOIN dim_date sales_accepted_date
+    ON fct_crm_opportunity.sales_accepted_date = sales_accepted_date.date_actual
+  LEFT JOIN dim_date close_date
+    ON fct_crm_opportunity.close_date = close_date.date
+  LEFT JOIN dim_date stage_0_pending_acceptance_date
+    ON fct_crm_opportunity.stage_0_pending_acceptance_date = stage_0_pending_acceptance_date.date_actual
+  LEFT JOIN dim_date stage_1_discovery_date
+    ON fct_crm_opportunity.stage_1_discovery_date = stage_1_discovery_date.date_actual
+  LEFT JOIN dim_date stage_2_scoping_date
+    ON fct_crm_opportunity.stage_2_scoping_date = stage_2_scoping_date.date_actual
+  LEFT JOIN dim_date stage_3_technical_evaluation_date
+    ON fct_crm_opportunity.stage_3_technical_evaluation_date = stage_3_technical_evaluation_date.date_actual
+  LEFT JOIN dim_date stage_4_proposal_date
+    ON fct_crm_opportunity.stage_4_proposal_date = stage_4_proposal_date.date_actual
+  LEFT JOIN dim_date stage_5_negotiating_date
+    ON fct_crm_opportunity.stage_5_negotiating_date = stage_5_negotiating_date.date_actual
+  LEFT JOIN dim_date stage_6_closed_won_date
+    ON fct_crm_opportunity.stage_6_closed_won_date = stage_6_closed_won_date.date_actaul
+  LEFT JOIN dim_date stage_6_closed_lost_date
+    ON fct_crm_opportunity.stage_6_closed_lost_date = stage_6_closed_lost_date.date_actual
+  LEFT JOIN dim_date quote_start_date
+    ON fct_crm_opportunity.subscription_start_date = quote_start_date.date_actual
+  LEFT JOIN dim_date quote_end_date
+    ON fct_crm_opportunity.subscription_end_date = quote_end_date.date_actual
+  LEFT JOIN dim_date sales_qualified_date
+    ON fct_crm_opportunity.sales_qualified_date = sales_qualified_date.date_actual
+  LEFT JOIN dim_date last_activity_date
+    ON fct_crm_opportunity.last_activity_date = last_activity_date.date_actual
+  LEFT JOIN dim_date net_arr_created_date
+    ON fct_crm_opportunity.net_arr_created_date = net_arr_created_date.date_actual
+  LEFT JOIN dim_date pipeline_created_date
+    ON fct_crm_opportunity.pipeline_created_date = pipeline_created_date.date_actual
+  LEFT JOIN dim_date technical_evaluation_date
+    ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
+  LEFT JOIN dim_crm_account AS partner_account
+      ON fct_crm_opportunity.partner_account = dim_crm_account.dim_crm_account_id
+        AND fct_crm_opportunity.snapshot_id = dim_crm_account.snapshot_id 
+    LEFT JOIN dim_crm_account AS fulfillment_partner
+      ON fct_crm_opportunity.fulfillment_partner = dim_crm_account.dim_crm_account_id
+        AND fct_crm_opportunity.snapshot_id = dim_crm_account.snapshot_id
 
 
 )
