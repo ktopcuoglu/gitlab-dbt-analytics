@@ -328,13 +328,6 @@ WITH date_details AS (
       END                                                         AS is_credit_flag,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
-          THEN 1
-        ELSE 0
-      END                                                          AS is_refund,
-
-
-      CASE
         WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Contract Reset')
           THEN 1
         ELSE 0
