@@ -1034,10 +1034,10 @@ WITH first_contact  AS (
       {%- elif model_type == 'snapshot' %}
        CASE
       WHEN is_open = 1
-          THEN DATEDIFF(days, final.created_date, final.snapshot_date)
-        WHEN is_open = 0 AND final.snapshot_date < final.close_date
-          THEN DATEDIFF(days, final.created_date, final.snapshot_date)
-        ELSE DATEDIFF(days, final.created_date, final.close_date)
+          THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
+        WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < sfdc_opportunity.close_date
+          THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
+        ELSE DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.close_date)
       END                                                       AS calculated_age_in_days,
       {%- endif %}
       CASE 
