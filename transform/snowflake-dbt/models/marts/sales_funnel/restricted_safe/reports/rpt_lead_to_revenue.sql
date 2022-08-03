@@ -130,6 +130,7 @@
     cohort_base.dim_crm_person_id,
     cohort_base.dim_crm_opportunity_id,
     rpt_sfdc_bizible_tp_opp_linear_blended.dim_crm_touchpoint_id,
+    cohort_base.sfdc_record_id,
   
     --person data
     CASE 
@@ -222,5 +223,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-20",
-    updated_date="2022-08-02",
+    updated_date="2022-08-03",
   ) }}
