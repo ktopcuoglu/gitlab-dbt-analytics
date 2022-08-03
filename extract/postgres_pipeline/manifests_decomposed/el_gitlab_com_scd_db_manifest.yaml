@@ -121,19 +121,6 @@ tables:
       , cluster_id
       , group_id
       FROM cluster_groups
-  compliance_management_frameworks:
-    export_schema: 'gitlab_com'
-    export_table: 'compliance_management_frameworks'
-    export_table_primary_key: id
-    import_db: GITLAB_DB
-    import_query: |-
-      SELECT id
-      , name
-      , description
-      , color
-      , namespace_id
-      , pipeline_configuration_full_path
-      FROM compliance_management_frameworks
   columns:
     advanced_metadata: true
     export_schema: 'gitlab_com'
@@ -737,6 +724,22 @@ tables:
       , share
       , CONCAT(project_id, '_', programming_language_id) AS project_programming_language_id
       FROM repository_languages
+  requirements:
+    advanced_metadata: false
+    dbt_source_model: true
+    export_schema: 'gitlab_com'
+    export_table: 'requirements'
+    export_table_primary_key: id
+    import_db: GITLAB_DB
+    import_query: |-
+      SELECT id
+      , created_at
+      , updated_at
+      , project_id
+      , author_id
+      , iid
+      , state
+      FROM requirements
 #  resource_state_events:
 #    export_schema: 'gitlab_com'
 #    export_table: 'resource_state_events'

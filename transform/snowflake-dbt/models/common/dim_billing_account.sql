@@ -6,7 +6,8 @@
 
 {{ simple_cte([
     ('map_merged_crm_account','map_merged_crm_account'),
-    ('zuora_contact','zuora_contact_source')
+    ('zuora_contact','zuora_contact_source'),
+    ('zuora_payment_method', 'zuora_payment_method_source')
 ]) }}
 
 , zuora_account AS (
@@ -35,6 +36,8 @@
         WHEN zuora_account.po_required IS NULL THEN 'NO'
         ELSE zuora_account.po_required
       END                                                   AS po_required,
+      zuora_account.auto_pay,
+      zuora_payment_method.payment_method_type              AS default_payment_method_type,
       zuora_account.is_deleted,
       zuora_account.batch
     FROM zuora_account
@@ -42,13 +45,15 @@
       ON COALESCE(zuora_account.sold_to_contact_id, zuora_account.bill_to_contact_id) = zuora_contact.contact_id
     LEFT JOIN map_merged_crm_account
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
+    LEFT JOIN zuora_payment_method
+      ON zuora_account.default_payment_method_id = zuora_payment_method.payment_method_id
 
 )
 
 {{ dbt_audit(
     cte_ref="filtered",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-07-20",
-    updated_date="2021-12-22"
+    updated_date="2022-07-15"
 ) }}

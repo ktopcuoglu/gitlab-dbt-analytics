@@ -7,7 +7,7 @@ models:
   - name: categories_yaml_acquisitions_source
     description: Source layer for extracting and cleaning specifically acquisition data from [categories.yml file](https://gitlab.com/gitlab-com/www-gitlab-com/blob/master/data/categories.yml).
   
-  - name: feature_flags
+  - name: feature_flags_source
     description: Source layer for a list of all feature flags
     columns:
       - name: name
@@ -16,7 +16,7 @@ models:
       - name: milestone
       - name: default_enabled
   
-  - name: flaky_tests
+  - name: flaky_tests_source
     description: Source layer for a list of all flaky tests
     columns:
       - name: hash

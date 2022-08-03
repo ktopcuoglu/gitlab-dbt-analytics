@@ -1,6 +1,6 @@
 {%- macro workday_bamboohr_blending_filter(cte,unique_columns,sort_columns=1,filter_date=none) -%}
 
-{%- set cut_over_date = '\'2022-05-01\'' -%} -- this will be changed to the actual cut over date once the system cut over happens
+{%- set cut_over_date = '\'2022-06-16\'' -%} -- this will be changed to the actual cut over date once the system cut over happens
 
 SELECT 
   *,

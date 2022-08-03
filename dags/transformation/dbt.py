@@ -11,7 +11,6 @@ from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOpera
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
-    clone_repo_cmd,
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -35,6 +34,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -79,6 +80,8 @@ secrets_list = [
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 ]
 
 # Create the DAG
@@ -89,6 +92,7 @@ dag = DAG(
     schedule_interval="45 8 * * MON-SAT",
 )
 dag.doc_md = __doc__
+
 
 # BranchPythonOperator functions
 def dbt_run_or_refresh(timestamp: datetime) -> str:
@@ -101,7 +105,7 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
     run every week.
     """
 
-    ## TODO: make this not hardcoded
+    # TODO: make this not hardcoded
     current_weekday = timestamp.isoweekday()
 
     # run a full-refresh once per week (on sunday early AM)
@@ -111,18 +115,16 @@ def dbt_run_or_refresh(timestamp: datetime) -> str:
         return "dbt-non-product-models-run"
 
 
-# branching_dbt_run = BranchPythonOperator(
-#    task_id="branching-dbt-run",
-#    python_callable=lambda: dbt_run_or_refresh(datetime.now()),
-#    dag=dag,
-# )
-
 # run non-product models on small warehouse
 dbt_non_product_models_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:datasiren tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    dbt --no-use-colors run --profiles-dir profile --target prod --exclude tag:product legacy.sheetload legacy.snapshots sources.gitlab_dotcom sources.sheetload sources.sfdc sources.zuora sources.dbt workspaces.*; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -144,6 +146,10 @@ dbt_product_models_command = f"""
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models tag:product --exclude workspaces.* ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -164,8 +170,12 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_S" &&
-    dbt --no-use-colors test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
-    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; 
+    dbt --no-use-colors test --profiles-dir profile --target prod --exclude snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_test = KubernetesPodOperator(
@@ -185,6 +195,10 @@ dbt_results_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_results = KubernetesPodOperator(
@@ -204,6 +218,10 @@ dbt_workspaces_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.* --exclude workspaces.workspace_data_science.* workspaces.workspace_data.tdf.*; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces = KubernetesPodOperator(
@@ -224,6 +242,10 @@ dbt_workspaces_xl_command = f"""
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models workspaces.workspace_data_science.* ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_workspaces_xl = KubernetesPodOperator(
@@ -243,6 +265,10 @@ dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt --no-use-colors test --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_workspaces_test = KubernetesPodOperator(

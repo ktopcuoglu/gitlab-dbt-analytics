@@ -1,4 +1,4 @@
-{% docs prep_alliance_type %}
+{% docs prep_alliance_type_scd %}
 
 Creates a base view with generated keys for the alliance type shared dimension and references in facts.
 
@@ -220,12 +220,6 @@ This data model contains the values of each SMAU metric for **Self-Managed** ins
 This data model is used for the Customer Health Dashboards.
 
 Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
-
-{% enddocs %}
-
-{% docs prep_usage_ping_metric_detail %}
-
-This table contains every Usage Ping metric name and path.
 
 {% enddocs %}
 

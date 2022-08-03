@@ -96,13 +96,13 @@
 
 {% enddocs %}
 
-{% docs rpt_ping_active_subscriptions_monthly %}
+{% docs rpt_ping_latest_subscriptions_monthly %}
 
-**Description:**  Self-Managed Service Pings with Latest Active Subscriptions, ARR Charges and Ping Counts by Installation, Month
+**Description:**  Self-Managed Service Pings with Latest Subscriptions, ARR Charges and Ping Counts by Installation, Month
 - Latest Subscription, Version, ARR, MRR and Ping Count information in included. 
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - dim_installation_id
 
 **Filters:**
@@ -128,7 +128,7 @@
 - Multiple Estimation methods are in this data and utilized by a Macro.   
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - metrics_path
 - ping_edition
 - estimation_grain
@@ -171,7 +171,7 @@
 - Multiple Estimation methods are in this data and utilized by a Macro.   
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - metrics_path
 - ping_edition
 - estimation_grain
@@ -223,7 +223,7 @@
 - Multiple Estimation methods are in this data and utilized by a Macro.   
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - metrics_path
 - ping_edition
 - estimation_grain
@@ -263,7 +263,7 @@
 **Description:**  Usage totals and estimations for Reported and Non-Reported Instances by Month, Metric, Edition, Estimate Grain, Product Tier and Delivery Type     
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - metrics_path
 - ping_edition
 - estimation_grain
@@ -313,7 +313,7 @@
 - Latest Subscription, Version, ARR, MRR and Ping Count information in included. 
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - metrics_path
 - ping_edition
 
@@ -339,7 +339,7 @@
 - Latest Subscription, Version, ARR, MRR and Ping Count information in included. 
 
 **Data Grain:**
-- ping_created_at_month
+- ping_created_date_month
 - metrics_path
 - ping_edition
 

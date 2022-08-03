@@ -65,6 +65,13 @@
     FROM aggregated_metrics 
     WHERE event_action = 'action_active_users_project_repo'
   
+), p_terraform_state_api_unique_users AS (
+  
+    SELECT
+      *
+    FROM aggregated_metrics 
+    WHERE event_action = 'p_terraform_state_api_unique_users'
+   
 ), sm_paid_user_metrics AS (
 
     SELECT
@@ -109,8 +116,7 @@
       IFF(
         zuora_licenses_per_subscription.license_user_count IS NOT NULL, 
         'Zuora',
-        'Service Ping')                                                             AS license_user_count_flag,
-
+        'Service Ping')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_sm_metrics.umau_28_days_user,
       monthly_sm_metrics.action_monthly_active_users_project_repo_28_days_user,
@@ -247,7 +253,7 @@
       monthly_sm_metrics.active_project_runners_all_time_event,
       monthly_sm_metrics.gitaly_version,
       monthly_sm_metrics.gitaly_servers_all_time_event,
-      -- Wave 6
+      -- Wave 6.0
       monthly_sm_metrics.api_fuzzing_scans_all_time_event,
       monthly_sm_metrics.api_fuzzing_scans_28_days_event,
       monthly_sm_metrics.coverage_fuzzing_scans_all_time_event,
@@ -262,6 +268,23 @@
       monthly_sm_metrics.dast_scans_28_days_event,
       monthly_sm_metrics.sast_scans_all_time_event,
       monthly_sm_metrics.sast_scans_28_days_event,
+      -- Wave 6.1
+      monthly_sm_metrics.packages_pushed_registry_all_time_event,
+      monthly_sm_metrics.packages_pulled_registry_all_time_event,
+      monthly_sm_metrics.compliance_dashboard_view_28_days_user,
+      monthly_sm_metrics.audit_screen_view_28_days_user,
+      monthly_sm_metrics.instance_audit_screen_view_28_days_user,
+      monthly_sm_metrics.credential_inventory_view_28_days_user,
+      monthly_sm_metrics.compliance_frameworks_pipeline_all_time_event,
+      monthly_sm_metrics.compliance_frameworks_pipeline_28_days_event,
+      monthly_sm_metrics.groups_streaming_destinations_all_time_event,
+      monthly_sm_metrics.groups_streaming_destinations_28_days_event,
+      monthly_sm_metrics.audit_event_destinations_all_time_event,
+      monthly_sm_metrics.audit_event_destinations_28_days_event,
+      monthly_sm_metrics.projects_status_checks_all_time_event,
+      monthly_sm_metrics.external_status_checks_all_time_event,
+      monthly_sm_metrics.paid_license_search_28_days_user,
+      monthly_sm_metrics.last_activity_28_days_user,
       -- Data Quality Flag
       monthly_sm_metrics.is_latest_data
     FROM monthly_sm_metrics
@@ -321,7 +344,7 @@
       IFF(
         zuora_licenses_per_subscription.license_user_count IS NOT NULL,
         'Zuora',
-        'gitlabdotcom')                                                             AS license_user_count_flag,
+        'gitlabdotcom')                                                             AS license_user_count_source,
       -- Wave 2 & 3
       monthly_saas_metrics.umau_28_days_user,
       COALESCE(action_active_users_project_repo_users.distinct_users, 0)            AS action_monthly_active_users_project_repo_28_days_user,
@@ -385,7 +408,7 @@
       monthly_saas_metrics.analytics_28_days_user,
       monthly_saas_metrics.issues_edit_28_days_user,
       monthly_saas_metrics.user_packages_28_days_user,
-      monthly_saas_metrics.terraform_state_api_28_days_user,
+      COALESCE(p_terraform_state_api_unique_users.distinct_users, 0) AS terraform_state_api_28_days_user,
       monthly_saas_metrics.incident_management_28_days_user,
       -- Wave 3.2
       monthly_saas_metrics.auto_devops_enabled,
@@ -458,7 +481,7 @@
       monthly_saas_metrics.active_project_runners_all_time_event,
       monthly_saas_metrics.gitaly_version,
       monthly_saas_metrics.gitaly_servers_all_time_event,
-      -- Wave 6
+      -- Wave 6.0
       monthly_saas_metrics.api_fuzzing_scans_all_time_event,
       monthly_saas_metrics.api_fuzzing_scans_28_days_event,
       monthly_saas_metrics.coverage_fuzzing_scans_all_time_event,
@@ -473,6 +496,23 @@
       monthly_saas_metrics.dast_scans_28_days_event,
       monthly_saas_metrics.sast_scans_all_time_event,
       monthly_saas_metrics.sast_scans_28_days_event,
+      -- Wave 6.1
+      monthly_saas_metrics.packages_pushed_registry_all_time_event,
+      monthly_saas_metrics.packages_pulled_registry_all_time_event,
+      monthly_saas_metrics.compliance_dashboard_view_28_days_user,
+      monthly_saas_metrics.audit_screen_view_28_days_user,
+      monthly_saas_metrics.instance_audit_screen_view_28_days_user,
+      monthly_saas_metrics.credential_inventory_view_28_days_user,
+      monthly_saas_metrics.compliance_frameworks_pipeline_all_time_event,
+      monthly_saas_metrics.compliance_frameworks_pipeline_28_days_event,
+      monthly_saas_metrics.groups_streaming_destinations_all_time_event,
+      monthly_saas_metrics.groups_streaming_destinations_28_days_event,
+      monthly_saas_metrics.audit_event_destinations_all_time_event,
+      monthly_saas_metrics.audit_event_destinations_28_days_event,
+      monthly_saas_metrics.projects_status_checks_all_time_event,
+      monthly_saas_metrics.external_status_checks_all_time_event,
+      monthly_saas_metrics.paid_license_search_28_days_user,
+      monthly_saas_metrics.last_activity_28_days_user,
       -- Data Quality Flag
       monthly_saas_metrics.is_latest_data
     FROM monthly_saas_metrics
@@ -490,6 +530,9 @@
     LEFT JOIN action_active_users_project_repo_users
       ON action_active_users_project_repo_users.date_month = monthly_saas_metrics.snapshot_month 
       AND action_active_users_project_repo_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
+    LEFT JOIN p_terraform_state_api_unique_users
+      ON p_terraform_state_api_unique_users.date_month = monthly_saas_metrics.snapshot_month 
+      AND p_terraform_state_api_unique_users.ultimate_parent_namespace_id = monthly_saas_metrics.dim_namespace_id
 
 ), unioned AS (
 
@@ -524,5 +567,5 @@
     created_by="@mdrussell",
     updated_by="@mdrussell",
     created_date="2022-01-14",
-    updated_date="2022-06-08"
+    updated_date="2022-07-27"
 ) }}

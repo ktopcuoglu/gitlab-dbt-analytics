@@ -19,6 +19,8 @@ databases:
         shared: no
     - zoominfo_inbound:
         shared: yes
+    - monte_carlo:
+        shared: yes
 
 # User / Testing
     - bi_tool_eval:
@@ -235,6 +237,7 @@ roles:
                     - raw
                     - snowflake
                     - testing_db
+                    - monte_carlo
                 write:
                     - prep
                     - prod
@@ -246,6 +249,7 @@ roles:
                     - prod.*
                     - raw.*
                     - testing_db.*
+                    - monte_carlo.prod_insights
                 write:
                     - prep.*
                     - prod.*
@@ -257,6 +261,7 @@ roles:
                     - prod.*.*
                     - raw.*.*
                     - testing_db.*.*
+                    - monte_carlo.prod_insights.*
                 write:
                     - prep.*.*
                     - prod.*.*
@@ -433,9 +438,11 @@ roles:
             - boneyard
             - dbt_analytics
             - gitlab_data_yaml
+            - google_ads
             - google_analytics_360
             - netsuite
             - keyhole_twitter
+            - mailgun
             - marketo
             - pmg
             - snowflake_db
@@ -631,6 +638,7 @@ roles:
             - dev_xs
             - dev_m
             - loading
+            - loading_xl
         privileges:
             databases:
                 read:
@@ -694,6 +702,7 @@ roles:
     - loader:
         warehouses:
             - loading
+            - loading_xl
             - usage_ping
         owns:
             schemas:
@@ -772,6 +781,46 @@ roles:
                 write:
                     - prod.boneyard.*
                     - raw.*.*
+
+    - data_science_loader:
+          warehouses:
+              - loading
+          owns:
+              schemas:
+                  - raw.data_science
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - prod
+                      - raw
+                  write:
+                      - prod
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+                      - prod.common
+                      - prod.legacy
+                      - prod.common_mart_product
+                      - prep.snowplow_*_*
+                      - prep.gitlab_dotcom
+                  write:
+                      - raw.data_science
+                      - prod.workspace_data_science
+              tables:
+                  read:
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
+                      - prep.snowplow_*_*.snowplow_structured_events
+                      - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
+                      - prep.gitlab_dotcom.*
+                      - prod.common.*
+                      - prod.legacy.*
+                      - prod.common_mart_product.*
+                  write:
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
 
     - meltano:
         warehouses:
@@ -934,6 +983,7 @@ roles:
                 - prod.common_mart_product
                 - prod.legacy
                 - prep.sensitive
+                - monte_carlo.prod_insights
             tables:
                 - prod.common.*
                 - prod.common_mapping.*
@@ -943,12 +993,14 @@ roles:
                 - prod.common_mart_product.*
                 - prod.legacy.*
                 - prep.sensitive.*
+                - monte_carlo.prod_insights.*
         privileges:
             databases:
                 read:
                     - prep
                     - prod
                     - raw
+                    - monte_carlo
                 write:
                     - prep
                     - prod
@@ -956,6 +1008,7 @@ roles:
             schemas:
                 read:
                     - raw.*
+                    - monte_carlo.prod_insights
                 write:
                     - prep.*
                     - prod.*
@@ -963,6 +1016,7 @@ roles:
             tables:
                 read:
                     - raw.*.*
+                    - monte_carlo.prod_insights.*
                 write:
                     - prep.*.*
                     - prod.*.*
@@ -1503,15 +1557,9 @@ roles:
                     - raw.tap_postgres.gitlab_db_ci_trigger_requests
                     - raw.tap_postgres.gitlab_db_ci_variables
                     - raw.tap_postgres.gitlab_db_clusters
-                    - raw.tap_postgres.gitlab_db_clusters_applications_cert_managers
                     - raw.tap_postgres.gitlab_db_clusters_applications_crossplane
-                    - raw.tap_postgres.gitlab_db_clusters_applications_elastic_stacks
                     - raw.tap_postgres.gitlab_db_clusters_applications_helm
-                    - raw.tap_postgres.gitlab_db_clusters_applications_ingress
                     - raw.tap_postgres.gitlab_db_clusters_applications_jupyter
-                    - raw.tap_postgres.gitlab_db_clusters_applications_knative
-                    - raw.tap_postgres.gitlab_db_clusters_applications_prometheus
-                    - raw.tap_postgres.gitlab_db_clusters_applications_runners
                     - raw.tap_postgres.gitlab_db_clusters_kubernetes_namespaces_validate
                     - raw.tap_postgres.gitlab_db_cluster_groups
                     - raw.tap_postgres.gitlab_db_cluster_projects
@@ -1538,7 +1586,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_epic_metrics_validate
                     - raw.tap_postgres.gitlab_db_events
                     - raw.tap_postgres.gitlab_db_experiments
-                    - raw.tap_postgres.gitlab_db_experiment_users
                     - raw.tap_postgres.gitlab_db_gitlab_subscriptions
                     - raw.tap_postgres.gitlab_db_gitlab_subscription_histories
                     - raw.tap_postgres.gitlab_db_group_group_links
@@ -1576,7 +1623,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_programming_languages
                     - raw.tap_postgres.gitlab_db_projects
                     - raw.tap_postgres.gitlab_db_project_auto_devops
-                    - raw.tap_postgres.gitlab_db_project_custom_attributes
                     - raw.tap_postgres.gitlab_db_project_daily_statistics
                     - raw.tap_postgres.gitlab_db_project_features
                     - raw.tap_postgres.gitlab_db_project_group_links
@@ -1601,7 +1647,6 @@ roles:
                     - raw.tap_postgres.gitlab_db_subscriptions
                     - raw.tap_postgres.gitlab_db_system_note_metadata
                     - raw.tap_postgres.gitlab_db_terraform_states
-                    - raw.tap_postgres.gitlab_db_timelogs
                     - raw.tap_postgres.gitlab_db_todos
                     - raw.tap_postgres.gitlab_db_todos_errors
                     - raw.tap_postgres.gitlab_db_todos_validate
@@ -1686,6 +1731,20 @@ roles:
                     - prep.sensitive.greenhouse_stage_intermediate
                     - raw.greenhouse.*
 
+    - google_ads:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.google_ads
+                    - raw.google_ads
+            tables:
+                read:
+                    - prep.google_ads.*
+                    - raw.google_ads.*
 
     - handbook:
         warehouses:
@@ -1749,6 +1808,22 @@ roles:
                     - prep.maxmind.*
                     - raw.sheetload.maxmind_countries
                     - raw.sheetload.maxmind_ranges
+
+    - mailgun:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - raw
+            schemas:
+                read:
+                    - prep.mailgun
+                    - raw.mailgun
+            tables:
+                read:
+                    - prep.mailgun.*
+                    - raw.mailgun.*
+
 
     - marketo:
           privileges:
@@ -2300,6 +2375,7 @@ roles:
             - dev_l
             - gitlab_postgres
             - loading
+            - loading_xl
             - transforming_xs
             - transforming_s
             - transforming_l
@@ -2518,7 +2594,10 @@ roles:
 
     - dmicovic:
         member_of:
-            - analyst_core
+            - reporter
+            - analyst_marketing
+            - restricted_safe
+            - bi_tool_eval_read
         warehouses:
             - dev_xs
 
@@ -3303,6 +3382,7 @@ roles:
          - analytics_engineer_rd
          - restricted_safe
          - bi_tool_eval_read
+         - zuora
         warehouses:
             - dev_xs
         owns:
@@ -3880,6 +3960,17 @@ roles:
                     - rparker_prep.*.*
                     - rparker_prod.*.*
 
+    - sgladchun:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - customers_db
+            - analyst_marketing
+            - data_team_analyst
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - sisense_restricted_safe:
         member_of:
             - reporter
@@ -3980,7 +4071,7 @@ roles:
 
     - target_snowflake:
         warehouses:
-            - target_snowflake
+            - loading
         privileges:
             databases:
                 read:
@@ -4155,6 +4246,14 @@ roles:
         warehouses:
             - dev_xs
 
+    - webrahim:
+        member_of:
+            - analyst_finance
+            - bamboohr_analytics
+            - restricted_safe
+        warehouses:
+            - dev_xs
+
     - zzhang:
         member_of:
             - adaptive
@@ -4181,6 +4280,7 @@ users:
             - reporter
             - sysadmin
             - transformer
+            - data_science_loader
 
     - alpcohen:
         can_login: yes
@@ -4566,6 +4666,11 @@ users:
         member_of:
             - securityadmin
 
+    - sgladchun:
+        can_login: yes 
+        member_of:
+            - sgladchun
+
     - sisense_restricted_safe:
         can_login: yes
         member_of:
@@ -4628,6 +4733,11 @@ users:
         member_of:
             - warias
 
+    - webrahim:
+        can_login: yes
+        member_of:
+            - webrahim
+
     - zzhang:
         can_login: yes
         member_of:
@@ -4670,11 +4780,11 @@ warehouses:
     - loading:
         size: x-small
 
+    - loading_xl:
+        size: x-large
+
     - reporting:
         size: medium
-
-    - target_snowflake:
-        size: x-small
 
     - transforming_s:
         size: small

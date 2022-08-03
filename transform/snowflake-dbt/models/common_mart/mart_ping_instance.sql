@@ -52,7 +52,7 @@
       dim_license.license_md5                                                     AS license_md5,
       dim_license.company                                                         AS license_company_name,
       subscription_source.subscription_name_slugify                               AS original_subscription_name_slugify,
-      dim_subscription.dim_subscription_id                                        AS latest_active_subscription_id,
+      dim_subscription.dim_subscription_id                                        AS latest_subscription_id,
       dim_subscription.subscription_start_date                                    AS subscription_start_date,
       dim_subscription.subscription_end_date                                      AS subscription_end_date,
       dim_subscription.subscription_start_month                                   AS subscription_start_month,
@@ -110,7 +110,7 @@
         fct_ping_instance_metric.umau_value                                                                                             AS umau_value,
         license_subscriptions.license_id                                                                                                AS license_id,
         license_subscriptions.license_company_name                                                                                      AS license_company_name,
-        license_subscriptions.latest_active_subscription_id                                                                             AS latest_active_subscription_id,
+        license_subscriptions.latest_subscription_id                                                                                    AS latest_subscription_id,
         license_subscriptions.original_subscription_name_slugify                                                                        AS original_subscription_name_slugify,
         license_subscriptions.product_category_array                                                                                    AS product_category_array,
         license_subscriptions.product_rate_plan_name_array                                                                              AS product_rate_plan_name_array,
@@ -141,7 +141,7 @@
         dim_ping_instance.is_staging                                                                                                    AS is_staging,
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
         dim_ping_instance.ping_created_at                                                                                               AS ping_created_at,
-        dim_date.first_day_of_month                                                                                                     AS ping_created_at_month,
+        dim_date.first_day_of_month                                                                                                     AS ping_created_date_month,
         fct_ping_instance_metric.dim_host_id                                                                                            AS dim_host_id,
         fct_ping_instance_metric.dim_instance_id                                                                                        AS dim_instance_id,
         dim_ping_instance.host_name                                                                                                     AS host_name,
@@ -179,7 +179,7 @@
       dim_instance_id,
       dim_license_id,
       dim_installation_id,
-      latest_active_subscription_id,
+      latest_subscription_id,
       dim_billing_account_id,
       dim_parent_crm_account_id,
       major_minor_version_id,
@@ -222,7 +222,7 @@
       technical_account_manager,
 
       ping_created_at,
-      ping_created_at_month,
+      ping_created_date_month,
       is_last_ping_of_month
 
 

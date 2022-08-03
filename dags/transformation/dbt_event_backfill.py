@@ -30,6 +30,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -54,6 +56,8 @@ task_secrets = [
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 ]
 
 # Default arguments for the DAG
@@ -84,6 +88,10 @@ def generate_dbt_command(vars_dict):
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
         dbt run --profiles-dir profile --target prod --models prep_event --full-refresh --vars '{json_dict}'; ret=$?;
+        montecarlo import dbt-manifest \
+        target/manifest.json --project-name gitlab-analysis;
+        montecarlo import dbt-run-results \
+        target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
         """
 

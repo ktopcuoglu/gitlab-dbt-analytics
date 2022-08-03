@@ -60,7 +60,7 @@ models:
         tags: ["tdf","gitlab_ops"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"        
+              expression: ">= valid_from"        
   
   - name: gitlab_ops_labels_source
     description: >-
@@ -90,7 +90,7 @@ models:
         tags: ["tdf","gitlab_ops"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"
 
   - name: gitlab_ops_merge_requests_source
     description: >-

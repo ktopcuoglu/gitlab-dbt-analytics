@@ -1,5 +1,5 @@
 .snowflake_dbt_jobs: &snowflake_dbt_jobs
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.2
   stage: ⚙️ dbt Run
   before_script:
     - cd transform/snowflake-dbt/
@@ -250,7 +250,7 @@
 
 .safe_models_check: &safe_models_check
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.15
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.2
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME
@@ -285,7 +285,7 @@
   <<: *safe_models_check
   script:
     - dbt deps $CI_PROFILE_TARGET
-    - dbt --partial-parse ls $CI_PROFILE_TARGET --models tag:mnpi+
+    - dbt --partial-parse --quiet ls $CI_PROFILE_TARGET --models tag:mnpi+
       --exclude
         tag:mnpi_exception
         config.database:$SNOWFLAKE_PREP_DATABASE
@@ -332,7 +332,7 @@
 # ======
 .dbt_sql_lint: &dbt_sql_lint
   stage: 🛠 dbt Misc
-  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v0.0.24
+  image: registry.gitlab.com/gitlab-data/data-image/dbt-image:v1.0.2
   before_script:
     - cd transform/snowflake-dbt/
     - echo $BRANCH_NAME

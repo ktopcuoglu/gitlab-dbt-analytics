@@ -95,3 +95,10 @@ The distinct combination of subscriptions and opportunities generated through th
 
 {% enddocs %}
 
+
+
+{% docs map_team_member_user %}
+
+This table is the distinct combination of the Gitlab team members and there Gitlab user IDs.  The two values are connected using the Gitlab user names that is recorded in the HRIS system
+
+{% enddocs %}

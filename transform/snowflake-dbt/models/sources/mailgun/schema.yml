@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: mailgun_events_source
+    description: This table has marketo lead information.
+    columns:
+      - name: mailgun_event_id
+        tests:
+          - not_null
+      - name: message_id
+        meta:
+          sensitive: true
+      - name: recipient
+        meta:
+          sensitive: true
+      - name: sender
+        meta:
+          sensitive: true
+      - name: targets
+        meta:
+          sensitive: true
+      - name: city
+        meta:
+          sensitive: true
+      - name: region
+        meta:
+          sensitive: true
+      - name: country
+        meta:
+          sensitive: true
+      - name: subject
+        meta:
+          sensitive: true
+      - name: url
+        meta:
+          sensitive: true
