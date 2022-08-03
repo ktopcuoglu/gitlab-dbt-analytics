@@ -248,7 +248,7 @@
       dim_subscription_id_original,
       dim_billing_account_id,
       snapshot_month,
-      dim_instance_id,
+      uuid,
       hostname,
       ping_created_at,
       days_since_last_ping,
