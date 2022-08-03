@@ -66,7 +66,6 @@ final AS (
     fct_crm_opportunity.invoice_number,
     fct_crm_opportunity.primary_campaign_source_id,
     fct_crm_opportunity.opportunity_term,
-    fct_crm_opportunity.cp_use_cases,
     fct_crm_opportunity.record_type_id,
     fct_crm_opportunity.opportunity_owner_manager,
     fct_crm_opportunity.opportunity_owner_department,
@@ -76,6 +75,8 @@ final AS (
     fct_crm_opportunity.opportunity_health,
     fct_crm_opportunity.tam_notes,
     fct_crm_opportunity.generated_source,
+    fct_crm_opportunity.churn_contraction_type,
+    fct_crm_opportunity.churn_contraction_net_arr_bucket,
     fct_crm_opportunity.account_owner_team_stamped,
     fct_crm_opportunity.stage_name_3plus,
     fct_crm_opportunity.stage_name_4plus,
@@ -122,6 +123,7 @@ final AS (
     fct_crm_opportunity.is_eligible_asp_analysis,
     fct_crm_opportunity.is_eligible_age_analysis,
     fct_crm_opportunity.is_eligible_churn_contraction,
+    fct_crm_opportunity.is_booked_net_arr,
     fct_crm_opportunity.is_downgrade,
     fct_crm_opportunity.is_excluded,
     fct_crm_opportunity.critical_deal_flag,
@@ -226,7 +228,10 @@ final AS (
     fct_crm_opportunity.key_segment_geo_region_area_sqs,
     fct_crm_opportunity.key_segment_geo_region_area_ot,
     fct_crm_opportunity.key_segment_geo_area,
+    fct_crm_opportunity.sales_team_cro_level,
     fct_crm_opportunity.sales_team_rd_asm_level,
+    fct_crm_opportunity.sales_team_vp_level,
+    fct_crm_opportunity.sales_team_avp_rd_level,
     fct_crm_opportunity.sales_team_asm_level,
     fct_crm_opportunity.account_owner_team_stamped_cro_level,
     LOWER(
@@ -292,6 +297,7 @@ final AS (
     fct_crm_opportunity.cp_why_gitlab,
     fct_crm_opportunity.cp_why_now,
     fct_crm_opportunity.cp_score,
+    fct_crm_opportunity.cp_use_cases,
 
     -- Competitor flags
     fct_crm_opportunity.competitors,
@@ -414,11 +420,15 @@ final AS (
     fct_crm_opportunity.days_in_4_proposal,
     fct_crm_opportunity.days_in_5_negotiating,
     fct_crm_opportunity.days_in_sao,
+    fct_crm_opportunity.calculated_age_in_days,
     fct_crm_opportunity.days_since_last_activity,
 
     -- Additive fields
     fct_crm_opportunity.arr_basis,
+    fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
+    fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
+    fct_crm_opportunity.created_and_won_same_quarter_net_arr,
     fct_crm_opportunity.new_logo_count,
     fct_crm_opportunity.amount,
     fct_crm_opportunity.open_1plus_deal_count,
@@ -435,6 +445,8 @@ final AS (
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_deal_count,
+    fct_crm_opportunity.booked_churned_contraction_deal_count,
+    fct_crm_opportunity.booked_churned_contraction_net_arr,
     fct_crm_opportunity.raw_net_arr,
     fct_crm_opportunity.arr,
     fct_crm_opportunity.recurring_amount,
@@ -511,5 +523,5 @@ final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2022-07-28"
+    updated_date="2022-08-03"
   ) }}

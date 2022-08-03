@@ -165,7 +165,8 @@
       sfdc_opportunity.is_eligible_sao,
       sfdc_opportunity.is_eligible_asp_analysis,
       sfdc_opportunity.is_eligible_age_analysis,
-      sfdc_opportunity.is_eligible_churn_contraction, 
+      sfdc_opportunity.is_eligible_churn_contraction,
+      sfdc_opportunity.is_booked_net_arr,
 
       sfdc_opportunity.primary_solution_architect,
       sfdc_opportunity.product_details,
@@ -198,7 +199,10 @@
       -- additive fields
       sfdc_opportunity.incremental_acv                                                                                      AS iacv,
       sfdc_opportunity.net_incremental_acv                                                                                  AS net_iacv,
+      sfdc_opportunity.segment_order_type_iacv_to_net_arr_ratio,
+      sfdc_opportunity.calculated_from_ratio_net_arr,
       sfdc_opportunity.net_arr,
+      sfdc_opportunity.created_and_won_same_quarter_net_arr,
       sfdc_opportunity.new_logo_count,
       sfdc_opportunity.amount,
       sfdc_opportunity.recurring_amount,
@@ -223,9 +227,12 @@
       sfdc_opportunity.booked_net_arr,
       sfdc_opportunity.churned_contraction_net_arr,
       sfdc_opportunity.calculated_deal_count,
+      sfdc_opportunity.booked_churned_contraction_deal_count,
+      sfdc_opportunity.booked_churned_contraction_net_arr,
       sfdc_opportunity.renewal_amount,
       sfdc_opportunity.total_contract_value,
       sfdc_opportunity.days_in_stage,
+      sfdc_opportunity.calculated_age_in_days,
       sfdc_opportunity.days_since_last_activity
 
     FROM sfdc_opportunity
@@ -267,5 +274,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-03-17"
+    updated_date="2022-08-03"
 ) }}

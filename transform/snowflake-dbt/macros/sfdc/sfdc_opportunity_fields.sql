@@ -41,14 +41,6 @@ WITH first_contact  AS (
     SELECT *
     FROM {{ref('sfdc_opportunity_stage_source')}}
 
-{%- if model_type == 'snapshot' %}
-), snapshot_dates AS (
-
-    SELECT *
-    FROM {{ ref('dim_date') }}
-    WHERE date_actual >= '2019-10-01'::DATE
-      AND date_actual <= CURRENT_DATE  
-
 ), net_iacv_to_net_arr_ratio AS (
 
   SELECT
@@ -133,6 +125,13 @@ WITH first_contact  AS (
     'PubSec' AS user_segment_stamped,
     0.965670500 AS ratio_net_iacv_to_net_arr
 
+{%- if model_type == 'snapshot' %}
+), snapshot_dates AS (
+
+    SELECT *
+    FROM {{ ref('dim_date') }}
+    WHERE date_actual >= '2019-10-01'::DATE
+      AND date_actual <= CURRENT_DATE  
 {%- endif %}
 
 ), live_opportunity_owner_fields AS (
@@ -355,9 +354,33 @@ WITH first_contact  AS (
       stage_1_date.fiscal_quarter_name_fy                                                         AS stage_1_discovery_fiscal_quarter_name,
       stage_1_date.first_day_of_fiscal_quarter                                                    AS stage_1_discovery_fiscal_quarter_date,
 
+      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)                             AS segment_order_type_iacv_to_net_arr_ratio,
+
       -- net arr
       {%- if model_type == 'live' %}
-        raw_net_arr                                                                             AS net_arr,
+        -- raw_net_arr                                                                             AS net_arr,
+      -- calculated net_arr
+      -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
+      -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
+      -- Using opty ratio for open deals doesn't seem to work well
+      CASE 
+        WHEN sfdc_opportunity.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
+            THEN COALESCE(sfdc_opportunity.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
+          AND COALESCE(sfdc_opportunity.net_incremental_acv,0) = 0
+           THEN COALESCE(sfdc_opportunity.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        WHEN sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
+            THEN COALESCE(sfdc_opportunity.net_incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
+        ELSE NULL
+      END                                                                     AS calculated_from_ratio_net_arr,
+
+      -- Calculated NET ARR is only used for deals closed earlier than FY19 and that have no raw_net_arr
+      CASE
+        WHEN sfdc_opportunity.close_date < '2018-02-01'::DATE 
+              AND COALESCE(sfdc_opportunity.raw_net_arr,0) = 0 
+          THEN calculated_from_ratio_net_arr
+        ELSE COALESCE(sfdc_opportunity.raw_net_arr,0) -- Rest of deals after cut off date
+      END                                                                     AS net_arr,
       {%- elif model_type == 'snapshot' %}
       CASE 
         WHEN sfdc_opportunity_source_live.is_won = 1 -- only consider won deals
@@ -369,7 +392,6 @@ WITH first_contact  AS (
       END                                                                     AS opportunity_based_iacv_to_net_arr_ratio,
       -- If there is no opportunity, use a default table ratio
       -- I am faking that using the upper CTE, that should be replaced by the official table
-      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)         AS segment_order_type_iacv_to_net_arr_ratio,
       -- calculated net_arr
       -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
       -- if there is an opportunity based ratio, use that, if not, use default from segment / order type
@@ -625,6 +647,26 @@ WITH first_contact  AS (
         WHEN sfdc_opportunity.days_in_sao > 270                THEN '7. Closed in > 270 days'
         ELSE NULL
       END                                                                                         AS closed_buckets,
+      CASE 
+        WHEN net_arr > -5000             
+            AND is_eligible_churn_contraction = 1
+          THEN '1. < 5k'
+        WHEN net_arr > -20000 
+          AND net_arr <= -5000 
+          AND is_eligible_churn_contraction = 1
+          THEN '2. 5k-20k'
+        WHEN net_arr > -50000 
+          AND net_arr <= -20000 
+          AND is_eligible_churn_contraction = 1
+          THEN '3. 20k-50k'
+        WHEN net_arr > -100000 
+          AND net_arr <= -50000 
+          AND is_eligible_churn_contraction = 1
+          THEN '4. 50k-100k'
+        WHEN net_arr < -100000 
+          AND is_eligible_churn_contraction = 1
+          THEN '5. 100k+'
+      END                                                 AS churn_contraction_net_arr_bucket,
       CASE
         WHEN sfdc_opportunity.created_date < '2022-02-01' 
           THEN 'Legacy'
@@ -688,7 +730,7 @@ WITH first_contact  AS (
        WHEN sfdc_opportunity.order_type IN ('4. Contraction','5. Churn - Partial')
         THEN 'Contraction'
         ELSE 'Churn'
-     END                                                                                        AS churn_contraction_type_calc,
+     END                                                                                        AS churn_contraction_type,
      CASE 
         WHEN is_renewal = 1 
           AND subscription_start_date_fiscal_quarter_date >= close_fiscal_quarter_date 
@@ -837,6 +879,32 @@ WITH first_contact  AS (
         THEN calculated_deal_count
         ELSE 0
       END                                               AS churned_contraction_deal_count,
+      CASE
+        WHEN (
+              (
+                is_renewal = 1
+                  AND is_lost = 1
+               )
+                OR sfdc_opportunity_stage.is_won = 1 
+              )
+              AND is_eligible_churn_contraction = 1
+          THEN calculated_deal_count
+        ELSE 0
+      END                                                 AS booked_churned_contraction_deal_count,
+      CASE
+        WHEN 
+          (
+            (
+              is_renewal = 1
+                AND is_lost = 1
+              )
+            OR sfdc_opportunity_stage.is_won = 1 
+            )
+            AND is_eligible_churn_contraction = 1
+        THEN net_arr
+        ELSE 0
+      END                                                 AS booked_churned_contraction_net_arr,
+
       CASE 
         WHEN is_eligible_open_pipeline = 1
           THEN net_arr
@@ -867,6 +935,19 @@ WITH first_contact  AS (
           THEN net_arr
         ELSE 0 
       END                                                 AS booked_net_arr,
+      CASE
+        WHEN sfdc_opportunity.is_edu_oss = 0
+          AND sfdc_opportunity.is_deleted = 0
+          AND (
+               sfdc_opportunity_stage.is_won = 1 
+                OR (
+                    is_renewal = 1
+                     AND is_lost = 1)
+                   )
+          AND sfdc_opportunity.order_type IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
+            THEN 1
+          ELSE 0
+      END                                                           AS is_booked_net_arr,
       CASE
         WHEN (
                (
@@ -944,6 +1025,27 @@ WITH first_contact  AS (
         ELSE 0
       END AS is_excluded,
       {%- endif %}
+      {%- if model_type == 'live' %}
+      CASE
+        WHEN is_open = 1
+          THEN DATEDIFF(days, sfdc_opportunity.created_date, CURRENT_DATE)
+        ELSE DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.close_date)
+      END                                                           AS calculated_age_in_days,
+      {%- elif model_type == 'snapshot' %}
+       CASE
+      WHEN is_open = 1
+          THEN DATEDIFF(days, final.created_date, final.snapshot_date)
+        WHEN is_open = 0 AND final.snapshot_date < final.close_date
+          THEN DATEDIFF(days, final.created_date, final.snapshot_date)
+        ELSE DATEDIFF(days, final.created_date, final.close_date)
+      END                                                       AS calculated_age_in_days,
+      {%- endif %}
+      CASE 
+        WHEN pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_eligible_created_pipeline = 1
+            THEN net_arr
+        ELSE 0
+      END                                                         AS created_and_won_same_quarter_net_arr,
       live_opportunity_owner_fields.opportunity_owner_user_segment,
       live_opportunity_owner_fields.opportunity_owner_user_geo,
       live_opportunity_owner_fields.opportunity_owner_user_region,
@@ -1223,9 +1325,13 @@ WITH first_contact  AS (
       ON sfdc_opportunity.dim_crm_opportunity_id = sfdc_opportunity_source_live.opportunity_id
     LEFT JOIN {{ ref('sfdc_account_source')}} AS sfdc_account_source_live
       ON sfdc_opportunity_source_live.account_id = sfdc_account_source_live.account_id
+    {%- endif %}
     LEFT JOIN net_iacv_to_net_arr_ratio
       ON live_opportunity_owner_fields.opportunity_owner_user_segment = net_iacv_to_net_arr_ratio.user_segment_stamped
-      AND sfdc_opportunity_source_live.order_type_stamped = net_iacv_to_net_arr_ratio.order_type
+    {%- if model_type == 'live' %}
+        AND sfdc_opportunity.order_type = net_iacv_to_net_arr_ratio.order_type
+    {% elif model_type == 'snapshot' %}
+        AND sfdc_opportunity_source_live.order_type_stamped = net_iacv_to_net_arr_ratio.order_type
     {%- endif %}
 
 )
