@@ -513,7 +513,6 @@ models:
         description: The unique identifier of one of the performance obligations attached to a revenue contract
         tests:
           - not_null
-          - not_null
         tags: ["tdf", "mart", "zuora_revenue"]
       - name: revenue_contract_customer_name
         description: The name of the customer for a given revenue contract line item
