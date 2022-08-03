@@ -509,11 +509,11 @@ final AS (
   LEFT JOIN dim_date technical_evaluation_date
     ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
   LEFT JOIN dim_crm_account AS partner_account
-      ON fct_crm_opportunity.partner_account = dim_crm_account.dim_crm_account_id
-        AND fct_crm_opportunity.snapshot_id = dim_crm_account.snapshot_id 
+      ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id
+        AND fct_crm_opportunity.snapshot_id = partner_account.snapshot_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
-      ON fct_crm_opportunity.fulfillment_partner = dim_crm_account.dim_crm_account_id
-        AND fct_crm_opportunity.snapshot_id = dim_crm_account.snapshot_id
+      ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+        AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
 
 
 )
