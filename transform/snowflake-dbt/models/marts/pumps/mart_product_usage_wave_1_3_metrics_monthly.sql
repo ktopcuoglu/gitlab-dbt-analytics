@@ -8,12 +8,11 @@
 }}
 
 {{ simple_cte([
-    ('monthly_metrics', 'fct_ping_instance_metric_wave_monthly'),
+    ('monthly_metrics', 'fct_product_usage_wave_1_3_metrics_monthly'),
     ('billing_accounts', 'dim_billing_account'),
     ('crm_accounts', 'dim_crm_account'),
     ('location_country', 'dim_location_country'),
-    ('subscriptions', 'dim_subscription_snapshot_bottom_up'),
-
+    ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
 
 , original_subscription_dates AS (
@@ -44,10 +43,10 @@
       monthly_metrics.snapshot_date_id,
       monthly_metrics.seat_link_report_date,
       monthly_metrics.seat_link_report_date_id,
-      monthly_metrics.dim_ping_instance_id,
+      monthly_metrics.dim_usage_ping_id,
       monthly_metrics.ping_created_at,
       monthly_metrics.ping_created_date_id,
-      monthly_metrics.dim_instance_id                                       AS uuid,
+      monthly_metrics.uuid,
       monthly_metrics.hostname,
       monthly_metrics.instance_type,
       monthly_metrics.dim_license_id,
@@ -183,8 +182,8 @@
 
 {{ dbt_audit(
     cte_ref="joined",
-    created_by="@snalamaru",
-    updated_by="@snalamaru",
-    created_date="2022-07-26",
-    updated_date="2022-07-26"
+    created_by="@ischweickartDD",
+    updated_by="@mdrussell",
+    created_date="2021-02-11",
+    updated_date="2021-12-23"
 ) }}

@@ -8,7 +8,7 @@
 }}
 
 {{ simple_cte([
-    ('monthly_metrics','fct_ping_instance_metric_wave_monthly'),
+    ('monthly_metrics','fct_product_usage_wave_1_3_metrics_monthly'),
     ('dim_date','dim_date'),
     ('subscriptions', 'dim_subscription_snapshot_bottom_up')
 ]) }}
@@ -35,7 +35,7 @@
 
     SELECT DISTINCT
       dim_subscription_id,
-      dim_instance_id,
+      uuid,
       hostname,
       {{ usage_ping_month_range('commit_comment_all_time_event') }},
       {{ usage_ping_month_range('source_code_pushes_all_time_event') }},
@@ -137,14 +137,14 @@
       dim_subscription_id_original,
       dim_billing_account_id,
       snapshot_month,
-      dim_instance_id,
+      uuid,
       hostname,
       ping_created_at,
       ping_created_at::DATE - LAG(ping_created_at::DATE)
         IGNORE NULLS OVER (
           PARTITION BY
           dim_subscription_id,
-          dim_instance_id,
+          uuid,
           hostname
           ORDER BY snapshot_month)                                                      AS date_diff,
       IFF(date_diff > 0, date_diff, 1)                                                  AS days_since_last_ping,
@@ -361,7 +361,7 @@
       original_subscription_dates.subscription_start_date                               AS subscription_start_date_original,
       original_subscription_dates.subscription_end_date                                 AS subscription_end_date_original,
       smoothed_diffs.snapshot_month,
-      smoothed_diffs.dim_instance_id                                                    AS uuid,
+      smoothed_diffs.uuid,
       smoothed_diffs.hostname,
       {{ usage_ping_over_ping_estimated('commit_comment_all_time_event') }},
       {{ usage_ping_over_ping_estimated('source_code_pushes_all_time_event') }},
@@ -457,7 +457,7 @@
     FROM smoothed_diffs
     LEFT JOIN ping_ranges
       ON smoothed_diffs.dim_subscription_id = ping_ranges.dim_subscription_id
-      AND smoothed_diffs.dim_instance_id = ping_ranges.dim_instance_id
+      AND smoothed_diffs.uuid = ping_ranges.uuid
       AND smoothed_diffs.hostname = ping_ranges.hostname
     LEFT JOIN subscriptions
       ON smoothed_diffs.dim_subscription_id = subscriptions.dim_subscription_id
