@@ -291,3 +291,9 @@ The count of events generated
  The type of Ultimate Parent Namespace (user,group,project)
 
 {% enddocs %}
+
+{% docs monthly_metric_value %}
+
+ For 28 day metrics, this is the metric value that comes directly from the service ping. For all-time metrics, this is the monthly metric value that is computed using the monthly_all_time_metric_calc macro.
+
+{% enddocs %}
