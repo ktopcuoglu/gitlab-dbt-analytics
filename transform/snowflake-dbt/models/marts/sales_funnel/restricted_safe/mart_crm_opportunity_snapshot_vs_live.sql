@@ -31,11 +31,11 @@
     mart_crm_opportunity_daily_snapshot.dim_crm_account_id AS dim_crm_account_id_snapshot,
     mart_crm_opportunity.dim_crm_account_id AS dim_crm_account_id_live,
     mart_crm_opportunity_daily_snapshot.dim_crm_user_id AS dim_crm_user_id_snapshot,
-    mart_crm_opportunity.dim_crm_user_id AS dim_crm_user_id_live,
+    mart_crm_opportunity.dim_crm_sales_rep_id AS dim_crm_user_id_live,
     mart_crm_opportunity_daily_snapshot.duplicate_opportunity_id AS duplicate_opportunity_id_snapshot,
     mart_crm_opportunity.duplicate_opportunity_id AS duplicate_opportunity_id_live,
     mart_crm_opportunity_daily_snapshot.merged_opportunity_id AS merged_opportunity_id_snapshot,
-    mart_crm_opportunity.merged_opportunity_id AS merged_opportunity_id_live,
+    mart_crm_opportunity.merged_crm_opportunity_id AS merged_opportunity_id_live,
 
     -- opportunity attributes
     mart_crm_opportunity_daily_snapshot.opportunity_name AS opportunity_name_snapshot,
@@ -788,8 +788,7 @@
     -- Additive fields
     mart_crm_opportunity_daily_snapshot.arr_basis AS arr_basis_snapshot,
     mart_crm_opportunity.arr_basis AS arr_basis_live,
-    mart_crm_opportunity_daily_snapshot.opportunity_based_iacv_to_net_arr_ratio AS opportunity_based_iacv_to_net_arr_ratio_snapshot,
-    mart_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio AS opportunity_based_iacv_to_net_arr_ratio_live,
+    mart_crm_opportunity_daily_snapshot.opportunity_based_iacv_to_net_arr_ratio AS opportunity_based_iacv_to_net_arr_ratio,
     mart_crm_opportunity_daily_snapshot.segment_order_type_iacv_to_net_arr_ratio AS segment_order_type_iacv_to_net_arr_ratio_snapshot,
     mart_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio AS segment_order_type_iacv_to_net_arr_ratio_live,
     mart_crm_opportunity_daily_snapshot.calculated_from_ratio_net_arr AS calculated_from_ratio_net_arr_snapshot,
@@ -829,7 +828,6 @@
     mart_crm_opportunity_daily_snapshot.booked_churned_contraction_net_arr AS booked_churned_contraction_net_arr_snapshot,
     mart_crm_opportunity.booked_churned_contraction_net_arr AS booked_churned_contraction_net_arr_live,
     mart_crm_opportunity_daily_snapshot.raw_net_arr AS raw_net_arr_snapshot,
-    mart_crm_opportunity.raw_net_arr AS raw_net_arr_live,
     mart_crm_opportunity_daily_snapshot.arr AS arr_snapshot,
     mart_crm_opportunity.arr AS arr_live,
     mart_crm_opportunity_daily_snapshot.recurring_amount AS recurring_amount_snapshot,
@@ -844,12 +842,12 @@
     mart_crm_opportunity.renewal_amount AS renewal_amount_live,
     mart_crm_opportunity_daily_snapshot.total_contract_value AS total_contract_value_snapshot,
     mart_crm_opportunity.total_contract_value AS total_contract_value_live,
-    mart_crm_opportunity_daily_snapshot.created_in_snapshot_quarter_net_arr AS created_in_snapshot_quarter_net_arr_snapshot,
-    mart_crm_opportunity.created_in_snapshot_quarter_net_arr AS created_in_snapshot_quarter_net_arr_live,
-    mart_crm_opportunity_daily_snapshot.created_in_snapshot_quarter_deal_count AS created_in_snapshot_quarter_deal_count_snapshot,
-    mart_crm_opportunity.created_in_snapshot_quarter_deal_count AS created_in_snapshot_quarter_deal_count_live,
     mart_crm_opportunity_daily_snapshot.days_in_stage AS days_in_stage_snapshot,
-    mart_crm_opportunity.days_in_stage AS days_in_stage_live
+    mart_crm_opportunity.days_in_stage AS days_in_stage_live,
+
+    -- Snapshot-specific fields
+    mart_crm_opportunity_daily_snapshot.created_in_snapshot_quarter_net_arr AS created_in_snapshot_quarter_net_arr,
+    mart_crm_opportunity_daily_snapshot.created_in_snapshot_quarter_deal_count AS created_in_snapshot_quarter_deal_count
 
   FROM mart_crm_opportunity_daily_snapshot
   LEFT JOIN mart_crm_opportunity
