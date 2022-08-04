@@ -32,7 +32,7 @@ gitlab-org/gitaly-proto,2694799
 gitlab-org/gitlab,278964
 gitlab-org/gitlab-build-images,1075790
 gitlab-org/gitlab_emoji,36743
-gitlab-org/gitlab_kramdown,5647182
+gitlab-org/ruby/gems/gitlab_kramdown,5647182
 gitlab-org/gitlab-compose-kit,4534254
 gitlab-org/gitlab-development-kit,74823
 gitlab-org/gitlab-docs,1794617
@@ -122,6 +122,7 @@ gitlab-org/security-products/gemnasium/schema,5778074
 gitlab-org/security-products/gemnasium/secrets,5778093
 gitlab-org/security-products/gemnasium/semver,5778095
 gitlab-org/security-products/gemnasium/web,5828233
+gitlab-org/security-products/gitlab-cyclonedx-property-taxonomy,37734140
 gitlab-org/security-products/license-management,6130122
 gitlab-org/security-products/sast,5373222
 gitlab-org/serverless/runtimes/nodejs,11373038
@@ -143,12 +144,10 @@ gitlab-org/security-products/demos/api-fuzzing/graphql-api-fuzzing-example,24298
 gitlab-org/security-products/demos/api-fuzzing/postman-api-fuzzing-example,22111360
 gitlab-org/security-products/tests/api-fuzzing-e2e/openapi-v2-tls,25538517
 gitlab-org/security-products/tests/api-fuzzing-e2e/postman-v2.1-tls,25537666
-gitlab-org/security-products/tests/api-fuzzing-e2e/har-tls,25298439
-gitlab-org/security-products/tests/api-fuzzing-e2e/benchmark-java-spring-mvn-api,25230764
+gitlab-org/security-products/tests/api-fuzzing-e2e/dast-benchmark-java-spring-mvn-api,25230764
 gitlab-org/security-products/tests/api-fuzzing-e2e/har-formatted-body,24544330
-gitlab-org/security-products/tests/api-fuzzing-e2e/graphql-har-dnd,24544020
+gitlab-org/security-products/tests/api-fuzzing-e2e/dast-graphql-har,24544020
 gitlab-org/security-products/tests/api-fuzzing-e2e/image-target-graphql,24542363
-gitlab-org/security-products/tests/api-fuzzing-e2e/har-services,24460210
 gitlab-org/security-products/tests/api-fuzzing-e2e/postman-v2.1-vars-dnd,24317064
 gitlab-org/security-products/tests/api-fuzzing-e2e/postman-v2.1-vars,24313598
 gitlab-org/security-products/tests/api-fuzzing-e2e/openapi-v3-dnd,24313398
@@ -162,7 +161,7 @@ gitlab-org/security-products/tests/api-fuzzing-e2e/openapi-v2,23070377
 gitlab-org/security-products/tests/api-fuzzing-e2e/image-target-flask,23070164
 gitlab-org/security-products/tests/api-fuzzing-e2e/har-dnd,23070140
 gitlab-org/security-products/tests/api-fuzzing-e2e/e2e-image,23069956
-gitlab-org/security-products/tests/api-fuzzing-e2e/har,23069693
+gitlab-org/security-products/tests/api-fuzzing-e2e/har-remote-target,23069693
 gitlab-org/security-products/protocol-fuzzer-ce,24111720
 gitlab-org/security-products/protocol-fuzzer-ee,24112430
 gitlab-org/security-products/analyzers/gitlab-cov-fuzz,19413101
@@ -196,6 +195,7 @@ gitlab-org/security-products/vet/stencils,28502955
 gitlab-org/security-products/analyzers/container-scanning,24673064
 gitlab-org/security-products/analyzers/cluster-image-scanning,27497069
 gitlab-org/security-products/security-report-schemas,16683102
+gitlab-org/security-products/security-report-schemas-ruby,37954006
 gitlab-org/security-products/tests/apex-salesforce,13348998
 gitlab-org/security-products/tests/c,5727416
 gitlab-org/security-products/tests/common,6388398
@@ -245,9 +245,9 @@ gitlab-org/gitlab-services/design.gitlab.com,4456656
 gitlab-org/terraform-images,18943607
 gitlab-org/gitlab-qa,1441932
 gitlab-org/quality/triage-ops,7776928
-gitlab-org/quality/gitlab-environment-toolkit,14292404
+gitlab-org/gitlab-environment-toolkit,14292404
 gitlab-org/quality/performance,11511606
-gitlab-org/gitlab-triage,3430480
+gitlab-org/ruby/gems/gitlab-triage,3430480
 gitlab-org/quality/nightly,7523614
 gitlab-org/quality/staging,7524061
 gitlab-org/quality/canary,7560116
@@ -273,13 +273,13 @@ gitlab-com/runbooks,1148549
 gitlab-cookbooks/cookbook-customers-gitlab-com,1755794
 gitlab-cookbooks/cookbook-wrapper-gitlab-runner,1755701
 gitlab-org/gl-openshift/gitlab-runner-operator,22848448
-gitlab-org/gl-openshift/gitlab-operator,18899486
+gitlab-org/cloud-native/gitlab-operator,18899486
 gitlab-com/gl-infra/customersdot-ansible,26392061
-gitlab-org/tanuki_emoji,27628435
-gitlab-org/growth/product-intelligence/snowplow-pseudonymization,28496898
+gitlab-org/ruby/gems/tanuki_emoji,27628435
 gitlab-org/opstrace/opstrace,32149347
 gitlab-org/opstrace/opstrace-ui,32189602
-gitlab-org/growth/product-intelligence/metric-dictionary,27919014
+gitlab-org/analytics-section/product-intelligence/snowplow-pseudonymization,28496898
+gitlab-org/analytics-section/product-intelligence/metric-dictionary,27919014
 gitlab-org/modelops/applied-ml/review-recommender/recommendation-engine,31203840
 gitlab-org/modelops/applied-ml/review-recommender/recommender-bot-service,32318686
 gitlab-org/modelops/applied-ml/review-recommender/gcp-postgres,32823351
@@ -287,3 +287,4 @@ gitlab-org/modelops/applied-ml/review-recommender/extracteur,31202357
 gitlab-org/modelops/applied-ml/review-recommender/etl,31202862
 gitlab-org/modelops/applied-ml/review-recommender/recommender-ci,31203942
 gitlab-org/modelops/anti-abuse/pipeline-validation-service,24631368
+https://gitlab.com/gitlab-org/gitlab-web-ide,35104827

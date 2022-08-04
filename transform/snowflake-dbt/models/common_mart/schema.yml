@@ -71,6 +71,8 @@ models:
       description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
     - name: days_since_project_creation_at_event_date
       description: '{{ doc("days_since_project_creation_at_event_date") }}'
+    - name: ultimate_parent_namespace_type
+      description: '{{ doc("ultimate_parent_namespace_type") }}'
     - name: namespace_is_internal
       description: '{{ doc("namespace_is_internal") }}'
     - name: namespace_creator_is_blocked
@@ -156,6 +158,8 @@ models:
       description: '{{ doc("user_count") }}'
     - name: namespace_created_at
       description: '{{ doc("namespace_created_at") }}'
+    - name: ultimate_parent_namespace_type
+      description: '{{ doc("ultimate_parent_namespace_type") }}'
     - name: namespace_created_date
       description: '{{ doc("namespace_created_date") }}'
     - name: plan_id_at_event_date
@@ -241,6 +245,8 @@ models:
       description: '{{ doc("plan_name_at_event_date") }}'
     - name: plan_was_paid_at_event_date
       description: '{{ doc("plan_was_paid_at_event_date") }}'
+    - name: ultimate_parent_namespace_type
+      description: '{{ doc("ultimate_parent_namespace_type") }}'
     - name: namespace_is_internal
       description: '{{ doc("namespace_is_internal") }}'
     - name: namespace_created_at
@@ -374,8 +380,8 @@ models:
       description: The name of the technical account manager of the subscription
     - name: ping_created_at
       description: The time when the ping was created
-    - name: ping_created_at_month
-      description: The month when the ping was created
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
     - name: is_last_ping_of_month
       description: Boolean flag set to True if this is the instance's (defined by dim_installation_id) last ping of the calendar month (defined by ping_created_at)
   

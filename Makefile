@@ -1,5 +1,6 @@
 .PHONY: build
 
+SHELL:=/bin/zsh
 TEST_FOLDERS_PATH := $(shell eval find . -name "test" -type d)
 PATH := $(PATH):$(PWD):$(TEST_FOLDERS_PATH)
 GIT_BRANCH = $$(git symbolic-ref --short HEAD)

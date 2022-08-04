@@ -20,7 +20,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"
 
   - name: gitlab_dotcom_gitlab_subscriptions_source
     description: '{{ doc("gitlab_dotcom_gitlab_subscriptions_source") }} {{ doc("scd_type_two_documentation") }}'
@@ -55,7 +55,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"
 
   - name: gitlab_dotcom_group_group_links_source
     description: This table represents groups being shared with groups. {{ doc("scd_type_two_documentation") }}'
@@ -102,7 +102,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"
 
 
   - name: gitlab_dotcom_merge_request_reviewers_source
@@ -122,7 +122,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"
 
   - name: gitlab_dotcom_members_source
     description: 'Base model for Gitlab.com members. {{ doc("scd_type_two_documentation") }}'
@@ -141,7 +141,7 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"
 
   - name: gitlab_dotcom_project_group_links_source
     description: 'Base model for Gitlab.com group links. {{ doc("scd_type_two_documentation") }}'
@@ -176,4 +176,4 @@ models:
         tags: ["tdf","gitlab_dotcom"]
         tests:
           - dbt_utils.expression_is_true:
-              expression: "valid_from <= valid_to"
+              expression: ">= valid_from"

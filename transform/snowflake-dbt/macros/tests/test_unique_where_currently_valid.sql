@@ -11,8 +11,10 @@ WITH data AS (
 
 )
 
-SELECT COUNT(*)
+SELECT
+  *
 FROM data
 WHERE count_valid_rows != 1
+LIMIT 100
 
 {% endmacro %}
