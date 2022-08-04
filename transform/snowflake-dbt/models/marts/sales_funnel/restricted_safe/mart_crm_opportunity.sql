@@ -73,8 +73,10 @@
 
     SELECT
 
-      --surrogate keys
+      --primary key
       fct_crm_opportunity.dim_crm_opportunity_id,
+      
+      --surrogate keys
       dim_crm_account.dim_parent_crm_account_id,
       fct_crm_opportunity.dim_crm_user_id                                  AS dim_crm_sales_rep_id,
       dim_crm_opportunity.duplicate_opportunity_id,
@@ -152,8 +154,8 @@
       dim_sales_qualified_source.sqs_bucket_engagement,
 
        -- Account fields
-      dim_crm_account.parent_crm_account_name,
       dim_crm_account.crm_account_name,
+      dim_crm_account.parent_crm_account_name,
       dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
       dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
       dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,

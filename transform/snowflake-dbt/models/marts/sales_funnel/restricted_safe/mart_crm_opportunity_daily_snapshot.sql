@@ -9,12 +9,13 @@ final AS (
 
 
   SELECT
-    fct_crm_opportunity.snapshot_id,
+
+    --primary key
     fct_crm_opportunity.crm_opportunity_snapshot_id,
 
     -- surrogate keys
+    fct_crm_opportunity.snapshot_id,
     fct_crm_opportunity.dim_crm_opportunity_id,
-    dim_crm_account.parent_crm_account_name,
     dim_crm_account.dim_parent_crm_account_id,
     dim_crm_account.dim_crm_account_id,
     fct_crm_opportunity.dim_crm_user_id,
@@ -22,7 +23,6 @@ final AS (
     fct_crm_opportunity.merged_opportunity_id,
 
     -- opportunity attributes
-    dim_crm_account.crm_account_name,
     fct_crm_opportunity.opportunity_name,
     fct_crm_opportunity.stage_name,
     fct_crm_opportunity.reason_for_loss,
@@ -131,6 +131,8 @@ final AS (
 
 
     -- account fields
+    dim_crm_account.crm_account_name,
+    dim_crm_account.parent_crm_account_name,
     dim_crm_account.parent_crm_account_demographics_sales_segment AS account_demographics_segment,
     dim_crm_account.parent_crm_account_demographics_geo AS account_demographics_geo,
     dim_crm_account.parent_crm_account_demographics_region AS account_demographics_region,
@@ -413,6 +415,13 @@ final AS (
     technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
     technical_evaluation_date.fiscal_quarter_name_fy                AS technical_evaluation_fiscal_quarter_name,
     technical_evaluation_date.fiscal_year                           AS technical_evaluation_fiscal_year,
+    fct_crm_opportunity.snapshot_date,
+    fct_crm_opportunity.snapshot_month,
+    fct_crm_opportunity.snapshot_fiscal_year,
+    fct_crm_opportunity.snapshot_fiscal_quarter_name,
+    fct_crm_opportunity.snapshot_fiscal_quarter_date,
+    fct_crm_opportunity.snapshot_day_of_fiscal_quarter_normalised,
+    fct_crm_opportunity.snapshot_day_of_fiscal_year_normalised,
     fct_crm_opportunity.days_in_0_pending_acceptance,
     fct_crm_opportunity.days_in_1_discovery,
     fct_crm_opportunity.days_in_2_scoping,
