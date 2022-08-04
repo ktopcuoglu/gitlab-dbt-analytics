@@ -305,6 +305,51 @@
         'dim_crm_user_hierarchy_stamped_geo.crm_opp_owner_geo_stamped', 'dim_crm_user_hierarchy_stamped_region.crm_opp_owner_region_stamped') }} )
                                                                                          AS crm_opp_owner_sales_segment_region_stamped_grouped,
 
+      -- Pipeline Velocity Account and Opp Owner Fields and Key Reporting Fields
+      dim_crm_opportunity.opportunity_owner_user_segment,
+      dim_crm_opportunity.opportunity_owner_user_geo,
+      dim_crm_opportunity.opportunity_owner_user_region,
+      dim_crm_opportunity.opportunity_owner_user_area,
+      dim_crm_opportunity.report_opportunity_user_segment,
+      dim_crm_opportunity.report_opportunity_user_geo,
+      dim_crm_opportunity.report_opportunity_user_region,
+      dim_crm_opportunity.report_opportunity_user_area,
+      dim_crm_opportunity.report_user_segment_geo_region_area,
+      dim_crm_opportunity.report_user_segment_geo_region_area_sqs_ot,
+      dim_crm_opportunity.key_segment,
+      dim_crm_opportunity.key_sqs,
+      dim_crm_opportunity.key_ot,
+      dim_crm_opportunity.key_segment_sqs,
+      dim_crm_opportunity.key_segment_ot,
+      dim_crm_opportunity.key_segment_geo,
+      dim_crm_opportunity.key_segment_geo_sqs,
+      dim_crm_opportunity.key_segment_geo_ot,
+      dim_crm_opportunity.key_segment_geo_region,
+      dim_crm_opportunity.key_segment_geo_region_sqs,
+      dim_crm_opportunity.key_segment_geo_region_ot,
+      dim_crm_opportunity.key_segment_geo_region_area,
+      dim_crm_opportunity.key_segment_geo_region_area_sqs,
+      dim_crm_opportunity.key_segment_geo_region_area_ot,
+      dim_crm_opportunity.key_segment_geo_area,
+      dim_crm_opportunity.sales_team_cro_level,
+      dim_crm_opportunity.sales_team_rd_asm_level,
+      dim_crm_opportunity.sales_team_vp_level,
+      dim_crm_opportunity.sales_team_avp_rd_level,
+      dim_crm_opportunity.sales_team_asm_level,
+      dim_crm_opportunity.account_owner_team_stamped_cro_level,
+      LOWER(
+      dim_crm_account_user_hierarchy_live_sales_segment.crm_user_sales_segment
+      ) AS account_owner_user_segment,
+      LOWER(
+        dim_crm_account_user_hierarchy_live_geo.crm_user_geo
+      ) AS account_owner_user_geo,
+      LOWER(
+        dim_crm_account_user_hierarchy_live_region.crm_user_region
+      ) AS account_owner_user_region,
+      LOWER(
+        dim_crm_account_user_hierarchy_live_area.crm_user_area
+      ) AS account_owner_user_area,
+
       -- channel fields
       fct_crm_opportunity.lead_source,
       fct_crm_opportunity.dr_partner_deal_type,
