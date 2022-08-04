@@ -94,3 +94,14 @@ macros:
       - name: string
         type: string
         description: String to add to the left and the right of the column.
+  - name: monthly_all_time_metric_calc
+    description: '{{ doc("monthly_all_time_metric_calc") }}'
+    arguments:
+      - name: dim_installation_id
+        type: string
+      - name: metrics_path
+        type: string
+      - name: metric_value
+        type: variant
+      - name: ping_created_at
+        type: timestamp

@@ -491,7 +491,7 @@ models:
     description: The host_id and host_name of the self-managed instance.
     columns:
       - name: dim_host_id
-        tests: 
+        tests:
           - not_null
           - unique
       - name: host_name
@@ -1041,7 +1041,7 @@ models:
       - name: is_paid_gmau
         description: Flag to show whether metric is part of paid Group Monthly Active Users (GMAU) calculations.
       - name: is_umau
-        description: Flag to show whether metric is part of Unique Monthly Active Users (UMAU) calculations.        
+        description: Flag to show whether metric is part of Unique Monthly Active Users (UMAU) calculations.
 
   - name: dim_usage_pings
     description: '{{ doc("dim_usage_pings") }}'
@@ -1376,7 +1376,7 @@ models:
       - name: dependency_scanning_jobs_all_time_user
         description: '{{ doc("dependency_scanning_jobs_all_time_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
+          - dbt_utils.at_least_one
       - name: analytics_devops_adoption_all_time_user
         description: '{{ doc("analytics_devops_adoption_all_time_user_desc") }}'
         tests:
@@ -1384,84 +1384,84 @@ models:
       - name: projects_imported_all_time_event
         description: '{{ doc("projects_imported_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
+          - dbt_utils.at_least_one
       - name: preferences_security_dashboard_28_days_user
         description: '{{ doc("preferences_security_dashboard_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: web_ide_edit_28_days_user  
+      - name: web_ide_edit_28_days_user
         description: '{{ doc("web_ide_edit_28_days_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
-      - name: auto_devops_pipelines_all_time_event  
+          - dbt_utils.at_least_one
+      - name: auto_devops_pipelines_all_time_event
         description: '{{ doc("auto_devops_pipelines_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
-      - name: projects_prometheus_active_all_time_event  
+          - dbt_utils.at_least_one
+      - name: projects_prometheus_active_all_time_event
         description: '{{ doc("projects_prometheus_active_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: prometheus_enabled  
+      - name: prometheus_enabled
         description: '{{ doc("prometheus_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: prometheus_metrics_enabled  
+      - name: prometheus_metrics_enabled
         description: '{{ doc("prometheus_metrics_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: group_saml_enabled  
+      - name: group_saml_enabled
         description: '{{ doc("group_saml_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: jira_issue_imports_all_time_event  
+      - name: jira_issue_imports_all_time_event
         description: '{{ doc("jira_issue_imports_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: author_epic_all_time_user  
+      - name: author_epic_all_time_user
         description: '{{ doc("author_epic_all_time_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: author_issue_all_time_user  
+      - name: author_issue_all_time_user
         description: '{{ doc("author_issue_all_time_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one                   
-      - name: failed_deployments_28_days_user  
+          - dbt_utils.at_least_one
+      - name: failed_deployments_28_days_user
         description: '{{ doc("failed_deployments_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: successful_deployments_28_days_user  
+      - name: successful_deployments_28_days_user
         description: '{{ doc("successful_deployments_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_enabled  
+      - name: geo_enabled
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event   
+      - name: geo_nodes_all_time_event
         description: '{{ doc("geo_nodes_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: auto_devops_pipelines_28_days_user  
+      - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_instance_runners_all_time_event  
+      - name: active_instance_runners_all_time_event
         description: '{{ doc("active_instance_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_group_runners_all_time_event  
+      - name: active_group_runners_all_time_event
         description: '{{ doc("active_group_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_project_runners_all_time_event  
+      - name: active_project_runners_all_time_event
         description: '{{ doc("active_project_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: gitaly_version  
+      - name: gitaly_version
         description: '{{ doc("gitaly_version_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: gitaly_servers_all_time_event  
+      - name: gitaly_servers_all_time_event
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
@@ -1469,55 +1469,55 @@ models:
         description: '{{ doc("api_fuzzing_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: api_fuzzing_scans_28_days_event  
+      - name: api_fuzzing_scans_28_days_event
         description: '{{ doc("api_fuzzing_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: coverage_fuzzing_scans_all_time_event  
+      - name: coverage_fuzzing_scans_all_time_event
         description: '{{ doc("coverage_fuzzing_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: coverage_fuzzing_scans_28_days_event  
+      - name: coverage_fuzzing_scans_28_days_event
         description: '{{ doc("coverage_fuzzing_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: secret_detection_scans_all_time_event  
+      - name: secret_detection_scans_all_time_event
         description: '{{ doc("secret_detection_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: secret_detection_scans_28_days_event  
+      - name: secret_detection_scans_28_days_event
         description: '{{ doc("secret_detection_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: dependency_scanning_scans_all_time_event  
+      - name: dependency_scanning_scans_all_time_event
         description: '{{ doc("dependency_scanning_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: dependency_scanning_scans_28_days_event  
+      - name: dependency_scanning_scans_28_days_event
         description: '{{ doc("dependency_scanning_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: container_scanning_scans_all_time_event  
+      - name: container_scanning_scans_all_time_event
         description: '{{ doc("container_scanning_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: container_scanning_scans_28_days_event  
+      - name: container_scanning_scans_28_days_event
         description: '{{ doc("container_scanning_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: dast_scans_all_time_event  
+      - name: dast_scans_all_time_event
         description: '{{ doc("dast_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: dast_scans_28_days_event  
+      - name: dast_scans_28_days_event
         description: '{{ doc("dast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: sast_scans_all_time_event  
+      - name: sast_scans_all_time_event
         description: '{{ doc("sast_scans_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: sast_scans_28_days_event  
+      - name: sast_scans_28_days_event
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
@@ -1831,7 +1831,7 @@ models:
       - name: dependency_scanning_jobs_all_time_user
         description: '{{ doc("dependency_scanning_jobs_all_time_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
+          - dbt_utils.at_least_one
       - name: analytics_devops_adoption_all_time_user
         description: '{{ doc("analytics_devops_adoption_all_time_user_desc") }}'
         tests:
@@ -1839,87 +1839,87 @@ models:
       - name: projects_imported_all_time_event
         description: '{{ doc("projects_imported_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
+          - dbt_utils.at_least_one
       - name: preferences_security_dashboard_28_days_user
         description: '{{ doc("preferences_security_dashboard_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: web_ide_edit_28_days_user  
+      - name: web_ide_edit_28_days_user
         description: '{{ doc("web_ide_edit_28_days_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
-      - name: auto_devops_pipelines_all_time_event  
+          - dbt_utils.at_least_one
+      - name: auto_devops_pipelines_all_time_event
         description: '{{ doc("auto_devops_pipelines_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
-      - name: projects_prometheus_active_all_time_event  
+          - dbt_utils.at_least_one
+      - name: projects_prometheus_active_all_time_event
         description: '{{ doc("projects_prometheus_active_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: prometheus_enabled  
+      - name: prometheus_enabled
         description: '{{ doc("prometheus_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: prometheus_metrics_enabled  
+      - name: prometheus_metrics_enabled
         description: '{{ doc("prometheus_metrics_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: group_saml_enabled  
+      - name: group_saml_enabled
         description: '{{ doc("group_saml_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: jira_issue_imports_all_time_event  
+      - name: jira_issue_imports_all_time_event
         description: '{{ doc("jira_issue_imports_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: author_epic_all_time_user  
+      - name: author_epic_all_time_user
         description: '{{ doc("author_epic_all_time_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: author_issue_all_time_user  
+      - name: author_issue_all_time_user
         description: '{{ doc("author_issue_all_time_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one                   
-      - name: failed_deployments_28_days_user  
+          - dbt_utils.at_least_one
+      - name: failed_deployments_28_days_user
         description: '{{ doc("failed_deployments_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: successful_deployments_28_days_user  
+      - name: successful_deployments_28_days_user
         description: '{{ doc("successful_deployments_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_enabled  
+      - name: geo_enabled
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event   
+      - name: geo_nodes_all_time_event
         description: '{{ doc("geo_nodes_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: auto_devops_pipelines_28_days_user  
+      - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_instance_runners_all_time_event  
+      - name: active_instance_runners_all_time_event
         description: '{{ doc("active_instance_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_group_runners_all_time_event  
+      - name: active_group_runners_all_time_event
         description: '{{ doc("active_group_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_project_runners_all_time_event  
+      - name: active_project_runners_all_time_event
         description: '{{ doc("active_project_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: gitaly_version  
+      - name: gitaly_version
         description: '{{ doc("gitaly_version_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: gitaly_servers_all_time_event  
+      - name: gitaly_servers_all_time_event
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one  
+          - dbt_utils.at_least_one
       - name: api_fuzzing_scans_all_time_event
         description: '{{ doc("api_fuzzing_scans_all_time_event_desc") }}'
         tests:
@@ -2339,7 +2339,7 @@ models:
       - name: dependency_scanning_jobs_all_time_user
         description: '{{ doc("dependency_scanning_jobs_all_time_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
+          - dbt_utils.at_least_one
       - name: analytics_devops_adoption_all_time_user
         description: '{{ doc("analytics_devops_adoption_all_time_user_desc") }}'
         tests:
@@ -2347,84 +2347,84 @@ models:
       - name: projects_imported_all_time_event
         description: '{{ doc("projects_imported_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
+          - dbt_utils.at_least_one
       - name: preferences_security_dashboard_28_days_user
         description: '{{ doc("preferences_security_dashboard_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: web_ide_edit_28_days_user  
+      - name: web_ide_edit_28_days_user
         description: '{{ doc("web_ide_edit_28_days_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
-      - name: auto_devops_pipelines_all_time_event  
+          - dbt_utils.at_least_one
+      - name: auto_devops_pipelines_all_time_event
         description: '{{ doc("auto_devops_pipelines_all_time_event_desc") }}'
         tests:
-          - dbt_utils.at_least_one          
-      - name: projects_prometheus_active_all_time_event  
+          - dbt_utils.at_least_one
+      - name: projects_prometheus_active_all_time_event
         description: '{{ doc("projects_prometheus_active_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: prometheus_enabled  
+      - name: prometheus_enabled
         description: '{{ doc("prometheus_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: prometheus_metrics_enabled  
+      - name: prometheus_metrics_enabled
         description: '{{ doc("prometheus_metrics_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: group_saml_enabled  
+      - name: group_saml_enabled
         description: '{{ doc("group_saml_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: jira_issue_imports_all_time_event  
+      - name: jira_issue_imports_all_time_event
         description: '{{ doc("jira_issue_imports_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: author_epic_all_time_user  
+      - name: author_epic_all_time_user
         description: '{{ doc("author_epic_all_time_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: author_issue_all_time_user  
+      - name: author_issue_all_time_user
         description: '{{ doc("author_issue_all_time_user_desc") }}'
         tests:
-          - dbt_utils.at_least_one                   
-      - name: failed_deployments_28_days_user  
+          - dbt_utils.at_least_one
+      - name: failed_deployments_28_days_user
         description: '{{ doc("failed_deployments_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: successful_deployments_28_days_user  
+      - name: successful_deployments_28_days_user
         description: '{{ doc("successful_deployments_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_enabled  
+      - name: geo_enabled
         description: '{{ doc("geo_enabled_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: geo_nodes_all_time_event   
+      - name: geo_nodes_all_time_event
         description: '{{ doc("geo_nodes_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: auto_devops_pipelines_28_days_user  
+      - name: auto_devops_pipelines_28_days_user
         description: '{{ doc("auto_devops_pipelines_28_days_user_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_instance_runners_all_time_event  
+      - name: active_instance_runners_all_time_event
         description: '{{ doc("active_instance_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_group_runners_all_time_event  
+      - name: active_group_runners_all_time_event
         description: '{{ doc("active_group_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: active_project_runners_all_time_event  
+      - name: active_project_runners_all_time_event
         description: '{{ doc("active_project_runners_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: gitaly_version  
+      - name: gitaly_version
         description: '{{ doc("gitaly_version_desc") }}'
         tests:
           - dbt_utils.at_least_one
-      - name: gitaly_servers_all_time_event  
+      - name: gitaly_servers_all_time_event
         description: '{{ doc("gitaly_servers_all_time_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
@@ -2562,7 +2562,7 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-  
+
   - name: fct_event
     description: '{{ doc("fct_event") }}'
     columns:
@@ -2613,7 +2613,7 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-  
+
   - name: fct_event_user_daily
     description: '{{ doc("fct_event_user_daily") }}'
     columns:
@@ -2682,7 +2682,7 @@ models:
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
         description: '{{ doc("model_updated_date") }}'
-          
+
   - name: fct_event_instance_daily
     description: '{{ doc("fct_event_instance_daily") }}'
     columns:
@@ -2719,7 +2719,7 @@ models:
         description: The unique ID of a daily namespace level event.
         tests:
           - not_null
-          - unique   
+          - unique
       - name: dim_event_date_id
         description: '{{ doc("dim_event_date_id") }}'
       - name: dim_ultimate_parent_namespace_id
@@ -2781,8 +2781,8 @@ models:
       - name: model_created_date
         description: '{{ doc("model_created_date") }}'
       - name: model_updated_date
-        description: '{{ doc("model_updated_date") }}'     
-          
+        description: '{{ doc("model_updated_date") }}'
+
   - name: fct_usage_ping_payload
     description: '{{ doc("fct_usage_ping_payload") }}'
     columns:
@@ -3081,7 +3081,7 @@ models:
       - name: repository_bytes
         description: Total size of repository across all repositories under the top level namespace.
       - name: container_registry_size
-        description: Total size of container registry under the top level namespace 
+        description: Total size of container registry under the top level namespace
       - name: lfs_objects_bytes
         description: Total size of Large File Storage objects across all repositories under the top level namespace.
       - name: build_artifacts_bytes
@@ -3687,7 +3687,7 @@ models:
           - not_null
           - unique
       - name: metrics_path
-        description: The path name of metric 
+        description: The path name of metric
       - name: data_source
         description: The source application where the data was extracted from.
       - name: description
@@ -3733,7 +3733,7 @@ models:
           - not_null
           - unique
       - name: metrics_path
-        description: The path name of metric 
+        description: The path name of metric
       - name: data_source
         description: The source application where the data was extracted from.
       - name: description
@@ -3772,7 +3772,7 @@ models:
         description: The date at which the model code was last updateded
       - name: dbt_updated_at
       - name: dbt_created_at
-      
+
   - name: fct_ping_instance_metric
     description: ' {{ doc("fct_ping_instance_metric") }} '
     columns:
@@ -3987,6 +3987,8 @@ models:
         description: The time frame associated with the metric, as defined in the metric definition YAML file
       - name: umau_value
         description: The unique monthly active user value for the instance
+      - name: monthly_metric_value
+        description: '{{ doc("monthly_metric_value") }}'
 
   - name: fct_ping_instance_metric_all_time
     description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
@@ -4039,4 +4041,3 @@ models:
     columns:
       - name: fct_performance_indicator_targets_id
         description: The unique ID of a month/metric record in fct_performance_indicator_targets
-
