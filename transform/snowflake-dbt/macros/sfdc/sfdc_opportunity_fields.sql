@@ -307,58 +307,27 @@ WITH first_contact  AS (
       {{ get_date_id('sfdc_opportunity.subscription_end_date') }}                                 AS subscription_end_date_id,
       {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,
 
-      close_date_detail.first_day_of_month                                                        AS close_month,
-      close_date_detail.fiscal_year                                                               AS close_fiscal_year,
-      close_date_detail.fiscal_quarter_name_fy                                                    AS close_fiscal_quarter_name,
+
       close_date_detail.first_day_of_fiscal_quarter                                               AS close_fiscal_quarter_date,
       {%- if model_type == 'snapshot' %}
       90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date_detail.last_day_of_fiscal_quarter) AS close_day_of_fiscal_quarter_normalised,
       {%- endif %}
 
-      created_date_detail.first_day_of_month                                                      AS created_month,
-      created_date_detail.fiscal_year                                                             AS created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                                                  AS created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter                                             AS created_fiscal_quarter_date,
+      {{ get_date_id('sfdc_opportunity.created_date') }}                                          AS net_arr_created_date_id,
+      sfdc_opportunity.created_date                                                               AS net_arr_created_date,
 
-      net_arr_created_date.first_day_of_month                                                     AS iacv_created_month,
-      net_arr_created_date.fiscal_year                                                            AS iacv_created_fiscal_year,
-      net_arr_created_date.fiscal_quarter_name_fy                                                 AS iacv_created_fiscal_quarter_name,
-      net_arr_created_date.first_day_of_fiscal_quarter                                            AS iacv_created_fiscal_quarter_date,
-
-      {{ get_date_id('created_date_detail.date_actual') }}                                        AS net_arr_created_date_id,
-      created_date_detail.date_actual                                                             AS net_arr_created_date,
-      created_date_detail.first_day_of_month                                                      AS net_arr_created_month,
-      created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
-
-      {{ get_date_id('net_arr_created_date.date_actual') }}                                       AS pipeline_created_date_id,
-      net_arr_created_date.date_actual                                                            AS pipeline_created_date,
-      net_arr_created_date.first_day_of_month                                                     AS pipeline_created_month,
-      net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
-      net_arr_created_date.fiscal_quarter_name_fy                                                 AS pipeline_created_fiscal_quarter_name,
-      net_arr_created_date.first_day_of_fiscal_quarter                                            AS pipeline_created_fiscal_quarter_date,
-
-      sales_accepted_date.first_day_of_month                                                      AS sales_accepted_month,
-      sales_accepted_date.fiscal_year                                                             AS sales_accepted_fiscal_year,
-      sales_accepted_date.fiscal_quarter_name_fy                                                  AS sales_accepted_fiscal_quarter_name,
-      sales_accepted_date.first_day_of_fiscal_quarter                                             AS sales_accepted_fiscal_quarter_date,
+      {{ get_date_id('pipeline_created_date.date_actual') }}                                      AS pipeline_created_date_id,
+      pipeline_created_date.date_actual                                                           AS pipeline_created_date, 
+      pipeline_created_date.fiscal_quarter_name_fy                                                AS pipeline_created_fiscal_quarter_name,
+      pipeline_created_date.first_day_of_fiscal_quarter                                           AS pipeline_created_fiscal_quarter_date,
 
       start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
       start_date.first_day_of_fiscal_quarter                                                      AS subscription_start_date_fiscal_quarter_date,
-      start_date.fiscal_year                                                                      AS subscription_start_date_fiscal_year,
-      start_date.first_day_of_month                                                               AS subscription_start_month,
-
-      stage_1_date.first_day_of_month                                                             AS stage_1_discovery_month,
-      stage_1_date.fiscal_year                                                                    AS stage_1_discovery_fiscal_year,
-      stage_1_date.fiscal_quarter_name_fy                                                         AS stage_1_discovery_fiscal_quarter_name,
-      stage_1_date.first_day_of_fiscal_quarter                                                    AS stage_1_discovery_fiscal_quarter_date,
 
       COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)                             AS segment_order_type_iacv_to_net_arr_ratio,
 
       -- net arr
       {%- if model_type == 'live' %}
-        -- raw_net_arr                                                                             AS net_arr,
       -- calculated net_arr
       -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
       -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
@@ -1288,16 +1257,10 @@ WITH first_contact  AS (
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
     LEFT JOIN dim_date AS close_date_detail
       ON sfdc_opportunity.close_date = close_date_detail.date_actual
-    LEFT JOIN dim_date AS created_date_detail
-      ON sfdc_opportunity.created_date = created_date_detail.date_actual
-    LEFT JOIN dim_date AS net_arr_created_date
-      ON sfdc_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual 
-    LEFT JOIN dim_date AS sales_accepted_date
-      ON sfdc_opportunity.sales_accepted_date = sales_accepted_date.date_actual
+    LEFT JOIN dim_date AS pipeline_created_date
+      ON sfdc_opportunity.iacv_created_date::DATE = pipeline_created_date.date_actual 
     LEFT JOIN dim_date AS start_date
       ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
-    LEFT JOIN dim_date AS stage_1_date
-      ON sfdc_opportunity.stage_1_discovery_date::DATE = stage_1_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}
