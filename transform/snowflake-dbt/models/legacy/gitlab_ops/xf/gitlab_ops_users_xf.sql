@@ -1,7 +1,7 @@
 -- This data model code comes from https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/staging/gitlab_dotcom/xf/gitlab_dotcom_users_xf.sql, except we're removed references to other tables that do not exist in the data warehouse 
 
 SELECT
-    {{ dbt_utils.star(from=ref('gitlab_ops_users'), except=["created_at", "first_name", "last_name", "notification_email", "public_email", "updated_at", "users_name"]) }},
+    {{ dbt_utils.star(from=ref('gitlab_ops_users')) }},
     created_at                                                                    AS user_created_at,
     updated_at                                                                    AS user_updated_at, 
     TIMESTAMPDIFF(DAYS, user_created_at, last_activity_on)                        AS days_active,

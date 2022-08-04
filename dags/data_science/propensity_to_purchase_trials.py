@@ -1,3 +1,7 @@
+"""
+Propensity to Purchase Trials DAG
+"""
+
 import os
 from datetime import datetime, timedelta
 
@@ -13,7 +17,7 @@ from airflow_utils import (
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
@@ -81,10 +85,10 @@ KubernetesPodOperator(
     name="propensity-to-purchase-trial",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_LOAD_PASSWORD,
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,

@@ -590,8 +590,12 @@ WITH first_contact  AS (
       END                                                                                         AS is_contract_reset,
 
       -- alliance type fields
-      {{ alliance_type('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
-      {{ alliance_type_short('fulfillment_partner.account_name', 'sfdc_opportunity.fulfillment_partner') }},
+
+      {{ alliance_partner_current('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_current,
+      {{ alliance_partner_short_current('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_short_current,
+
+      {{ alliance_partner('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type,
+      {{ alliance_partner_short('fulfillment_partner.account_name', 'partner_account.account_name', 'sfdc_opportunity.close_date', 'sfdc_opportunity.partner_track', 'sfdc_opportunity.resale_partner_track', 'sfdc_opportunity.deal_path') }} AS alliance_type_short,
 
       --  quote information
       quote.dim_quote_id,
@@ -957,6 +961,11 @@ WITH first_contact  AS (
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}
         AND sfdc_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+    {%- endif %}
+    LEFT JOIN sfdc_account AS partner_account
+      ON sfdc_opportunity.partner_account = partner_account.account_id
+    {%- if model_type == 'snapshot' %}
+        AND sfdc_opportunity.snapshot_id = partner_account.snapshot_id
     {%- endif %}
     LEFT JOIN sfdc_account
       ON sfdc_opportunity.dim_crm_account_id= sfdc_account.account_id

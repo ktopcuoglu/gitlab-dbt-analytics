@@ -3,7 +3,7 @@
     ('dim_order_type','dim_order_type'),
     ('fct_sales_funnel_target', 'fct_sales_funnel_partner_alliance_target'),
     ('dim_sales_qualified_source', 'dim_sales_qualified_source'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date','dim_date'),
     ('dim_crm_user_hierarchy_stamped', 'dim_crm_user_hierarchy_stamped')
@@ -105,7 +105,7 @@
 {{ dbt_audit(
     cte_ref="qtd_mtd_target",
     created_by="@jpeguero",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2022-03-07",
+    updated_date="2022-07-13",
   ) }}

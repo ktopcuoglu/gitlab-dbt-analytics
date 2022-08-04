@@ -285,3 +285,9 @@ The count of events generated
  The count of distinct ultimate parent namespaces in which an event was generated
 
 {% enddocs %}
+
+{% docs ultimate_parent_namespace_type %}
+
+ The type of Ultimate Parent Namespace (user,group,project)
+
+{% enddocs %}
