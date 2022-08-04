@@ -328,7 +328,7 @@ final AS (
     created_date.first_day_of_fiscal_quarter                        AS created_fiscal_quarter_date,
     created_date.fiscal_quarter_name_fy                             AS created_fiscal_quarter_name,
     created_date.fiscal_year                                        AS created_fiscal_year,
-    sales_accepted_date.date_actual                                 AS sales_accepted_date
+    sales_accepted_date.date_actual                                 AS sales_accepted_date,
     sales_accepted_date.first_day_of_month                          AS sales_accepted_month,
     sales_accepted_date.first_day_of_fiscal_quarter                 AS sales_accepted_fiscal_quarter_date,
     sales_accepted_date.fiscal_quarter_name_fy                      AS sales_accepted_fiscal_quarter_name,
@@ -338,7 +338,7 @@ final AS (
     close_date.first_day_of_fiscal_quarter                          AS close_fiscal_quarter_date,
     close_date.fiscal_quarter_name_fy                               AS close_fiscal_quarter_name,
     close_date.fiscal_year                                          AS close_fiscal_year,
-    stage_0_pending_acceptance_date.date_actual                     AS stage_0_pending_acceptance_date
+    stage_0_pending_acceptance_date.date_actual                     AS stage_0_pending_acceptance_date,
     stage_0_pending_acceptance_date.first_day_of_month              AS stage_0_pending_acceptance_month,
     stage_0_pending_acceptance_date.first_day_of_fiscal_quarter     AS stage_0_pending_acceptance_fiscal_quarter_date,
     stage_0_pending_acceptance_date.fiscal_quarter_name_fy          AS stage_0_pending_acceptance_fiscal_quarter_name,
@@ -353,7 +353,7 @@ final AS (
     stage_2_scoping_date.first_day_of_fiscal_quarter                AS stage_2_scoping_fiscal_quarter_date,
     stage_2_scoping_date.fiscal_quarter_name_fy                     AS stage_2_scoping_fiscal_quarter_name,
     stage_2_scoping_date.fiscal_year                                AS stage_2_scoping_fiscal_year,
-    stage_3_technical_evaluation_date.date_actual                   AS stage_3_technical_evaluation_date
+    stage_3_technical_evaluation_date.date_actual                   AS stage_3_technical_evaluation_date,
     stage_3_technical_evaluation_date.first_day_of_month            AS stage_3_technical_evaluation_month,
     stage_3_technical_evaluation_date.first_day_of_fiscal_quarter   AS stage_3_technical_evaluation_fiscal_quarter_date,
     stage_3_technical_evaluation_date.fiscal_quarter_name_fy        AS stage_3_technical_evaluation_fiscal_quarter_name,
@@ -425,6 +425,7 @@ final AS (
 
     -- Additive fields
     fct_crm_opportunity.arr_basis,
+    fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
     fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_from_ratio_net_arr,
     fct_crm_opportunity.net_arr,
@@ -441,9 +442,6 @@ final AS (
     fct_crm_opportunity.open_4plus_net_arr,
     fct_crm_opportunity.booked_net_arr,
     fct_crm_opportunity.churned_contraction_net_arr,
-    fct_crm_opportunity.opportunity_based_iacv_to_net_arr_ratio,
-    fct_crm_opportunity.calculated_from_ratio_net_arr,
-    fct_crm_opportunity.segment_order_type_iacv_to_net_arr_ratio,
     fct_crm_opportunity.calculated_deal_count,
     fct_crm_opportunity.booked_churned_contraction_deal_count,
     fct_crm_opportunity.booked_churned_contraction_net_arr,
@@ -455,9 +453,7 @@ final AS (
     fct_crm_opportunity.other_non_recurring_amount,
     fct_crm_opportunity.renewal_amount,
     fct_crm_opportunity.total_contract_value,
-    fct_crm_opportunity.calculated_age_in_days,
     fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
-    fct_crm_opportunity.created_and_won_same_quarter_net_arr,
     fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
     fct_crm_opportunity.days_in_stage
 
@@ -477,7 +473,7 @@ final AS (
   LEFT JOIN dim_date sales_accepted_date
     ON fct_crm_opportunity.sales_accepted_date = sales_accepted_date.date_actual
   LEFT JOIN dim_date close_date
-    ON fct_crm_opportunity.close_date = close_date.date
+    ON fct_crm_opportunity.close_date = close_date.date_actual
   LEFT JOIN dim_date stage_0_pending_acceptance_date
     ON fct_crm_opportunity.stage_0_pending_acceptance_date = stage_0_pending_acceptance_date.date_actual
   LEFT JOIN dim_date stage_1_discovery_date
@@ -491,7 +487,7 @@ final AS (
   LEFT JOIN dim_date stage_5_negotiating_date
     ON fct_crm_opportunity.stage_5_negotiating_date = stage_5_negotiating_date.date_actual
   LEFT JOIN dim_date stage_6_closed_won_date
-    ON fct_crm_opportunity.stage_6_closed_won_date = stage_6_closed_won_date.date_actaul
+    ON fct_crm_opportunity.stage_6_closed_won_date = stage_6_closed_won_date.date_actual
   LEFT JOIN dim_date stage_6_closed_lost_date
     ON fct_crm_opportunity.stage_6_closed_lost_date = stage_6_closed_lost_date.date_actual
   LEFT JOIN dim_date quote_start_date
