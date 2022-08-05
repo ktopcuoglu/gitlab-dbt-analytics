@@ -345,7 +345,7 @@ WITH first_contact  AS (
 
       -- Calculated NET ARR is only used for deals closed earlier than FY19 and that have no raw_net_arr
       CASE
-        WHEN sfdc_opportunity.close_date < '2018-02-01'::DATE 
+        WHEN sfdc_opportunity.close_date::DATE < '2018-02-01' 
               AND COALESCE(sfdc_opportunity.raw_net_arr,0) = 0 
           THEN calculated_from_ratio_net_arr
         ELSE COALESCE(sfdc_opportunity.raw_net_arr,0) -- Rest of deals after cut off date
