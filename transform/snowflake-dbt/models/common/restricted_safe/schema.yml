@@ -97,8 +97,6 @@ models:
       - name: sales_type
       - name: source_buckets
       - name: stage_name
-      - name: stage_is_active
-      - name: stage_is_closed
       - name: technical_evaluation_date
       - name: deal_path
       - name: competitors
@@ -128,6 +126,110 @@ models:
       - name: risk_type
       - name: risk_reasons
       - name: tam_notes
+      - name: account_owner_team_stamped_cro_level 
+        description: Assigns opportunities to Large, Mid-Market, and SMB by stamped account owner teams.
+      - name: calculated_deal_size  deal size calculated 
+        description: Based on net_arr bands, based on requirements for SS&A reporting.
+      - name: competitors_amazon_code_commit_flag
+        description: One of the listed competitors is Amazon Code Commit.
+      - name: competitors_atlassian_flag
+        description: One of the listed competitors is Atlassian.
+      - name: competitors_aws_flag
+        description: one of the listed competitors is AWS.
+      - name: competitors_azure_devops_flag
+        description: One of the listed competitors is Azure DevOps.
+      - name: competitors_azure_flag
+        description: One of the listed competitors is Azure.
+      - name: competitors_bamboo_flag
+        description: One of the listed competitors is Bamboo.
+      - name: competitors_bitbucket_flag
+        description: One of the listed competitors is Bitbucket.org.
+      - name: competitors_bitbucket_server_flag
+        description: One of the listed competitors is Bitbucket Server.
+      - name: competitors_circleci_flag
+        description: One of the listed competitors is GircleCI.
+      - name: competitors_github_enterprise_flag
+        description: One of the listed competitors is Github Gnterprise.
+      - name: competitors_github_flag
+        description: One of the listed competitors is Github.com.
+      - name: competitors_gitlab_core_flag
+        description: One of the listed competitors is Gitlab Core.
+      - name: competitors_gitlab_flag
+        description: One of the listed competitors is Gitlab.com.
+      - name: competitors_jenkins_flag
+        description: One of the listed competitors is Jenkins.
+      - name: competitors_none_flag
+        description: One of the listed competitors is none.
+      - name: competitors_other_flag
+        description: One of the listed competitors is Other.
+      - name: competitors_perforce_flag
+        description: One of the listed competitors is Perforce.
+      - name: competitors_svn_flag
+        description: One of the listed competitors is SVN.
+      - name: competitors_unknown_flag
+        description: One of the listed competitors is Unknown.
+      - name: competitors_visual_studio_flag
+        description: One of the listed competitors is Visual Studio Team Services.
+      - name: key_ot
+        description: Order type used in SS&A reporting.
+      - name: key_segment
+        description: Stamped user segment used in SS&A reporting.
+      - name: key_segment_geo
+        description: Concatenated stamped user segment and stamped user geo used in SS&A reporting.
+      - name: key_segment_geo_area
+        description: Concatenated stamped user segment, stamped user geo, and stamped user area used in SS&A reporting.
+      - name: key_segment_geo_ot
+        description: Concatenated stamped user segment, stamped user geo and stamped order type used in SS&A reporting.
+      - name: key_segment_geo_region
+        description: Concatenated stamped user segment, stamped user geo, and stamped user region used in SS&A reporting.
+      - name: key_segment_geo_region_area
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped user area used in SS&A reporting.
+      - name: key_segment_geo_region_area_ot
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and stamped order type used in SS&A reporting.
+      - name: key_segment_geo_region_area_sqs
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and sales qualified source used in SS&A reporting.
+      - name: key_segment_geo_region_ot
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped order type used in SS&A reporting.
+      - name: key_segment_geo_region_sqs
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and sales qualified source used in SS&A reporting.
+      - name: key_segment_geo_sqs
+        description: Concatenated stamped user segment, stamped user geo, and sales qualified source used in SS&A reporting.
+      - name: key_segment_ot
+        description:  Concatenated stamped user segment and stamped order type used in SS&A reporting.
+      - name: key_segment_sqs
+        description: Concatenated stamped user segment and sales qualified source used in SS&A reporting.
+      - name: key_sqs
+        description: Sales qualified source used in SS&A reporting.
+      - name: reason_for_loss_calc 
+        description: Grouping of reason for loss and reason for downgrade to broader categories.
+      - name: reason_for_loss_staged 
+        description: Combination of reason for loss and reason for downgrade.
+      - name: report_opportunity_user_area
+        description: Lower case stamped user area for SS&A reporting.
+      - name: report_opportunity_user_geo
+        description: Lower case stamped user geo for SS&A reporting.
+      - name: report_opportunity_user_region
+        description: Lower case stamped user region for SS&A reporting.
+      - name: report_opportunity_user_segment
+        description: Lower case stamped user segment for SS&A reporting.
+      - name: report_user_segment_geo_region_area
+        description: Lower case stamped user segment geo region area for SS&A reporting.
+      - name: report_user_segment_geo_region_area_sqs_ot
+        description: Lower case concatenated user segment geo region area, sales qualified source, and order type.
+      - name: sales_team_asm_level
+        description: Sales team structure at the ASM level (segment-geo-region-area)
+      - name: sales_team_avp_rd_level
+        description: Sales team structure at the AVP RD level (segment-geo-region)
+      - name: sales_team_cro_level
+        description: Sales team structure at the CRO level (segment)
+      - name: sales_team_rd_asm_level
+        description: This code replicates the reporting structured of FY22, to keep current SS&A reporting working.
+      - name: sales_team_vp_level
+        description: Sales team structure at the team VP level (segment-geo)
+      - name: stage_name_3plus
+        description: Grouping of stage names where all stages with numbers <=2 are in Pipeline and all above are +3 Pipeline.  This is used in SS&A pipeline reporting.
+      - name: stage_name_4plus 
+        description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.  This is used in SS&A pipeline reporting.
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
