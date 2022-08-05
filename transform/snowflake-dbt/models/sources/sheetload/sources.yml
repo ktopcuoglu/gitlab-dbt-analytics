@@ -68,6 +68,7 @@ sources:
       - name: hire_forecast
       - name: hire_plan
       - name: hire_replan
+      - name: hiring_manager_survey_responses
       - name: ic_collaboration_competency
       - name: ic_dib_comptency
       - name: ic_efficiency_competency

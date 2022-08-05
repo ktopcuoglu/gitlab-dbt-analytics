@@ -271,3 +271,62 @@ Number of Coverage Guided Fuzz Test security scans run. [link](https://gitlab.co
 {% docs sast_scans_28_days_event_desc %}
  Number of SAST security scans run. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210830231329_sast_scans.yml)
 {% enddocs %}
+
+{% docs packages_pushed_registry_all_time_event_desc %}
+A count of packages that have been published to the package registry
+using a deploy token. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216183005_package_events_i_package_push_package_by_deploy_token.yml)
+{% enddocs %}
+
+{% docs packages_pulled_registry_all_time_event_desc %}
+A count of packages that have been downloaded from the package registry
+by a guest. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/config/metrics/counts_all/20210216183000_package_events_i_package_pull_package_by_guest.yml)
+{% enddocs %}
+
+{% docs compliance_dashboard_view_28_days_user_desc %}
+  Unique users who have viewed the compliance dashboard in a given month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183926_g_compliance_dashboard_monthly.yml)
+{% enddocs %}
+
+{% docs audit_screen_view_28_days_user_desc %}
+  Unique users who have viewed the audit event screen in a given month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183930_g_compliance_audit_events_monthly.yml)
+{% enddocs %}
+
+{% docs instance_audit_screen_view_28_days_user_desc %}
+  Unique users that have viewed the instance-level audit events screen. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183934_i_compliance_audit_events_monthly.yml)
+{% enddocs %}
+
+{% docs credential_inventory_view_28_days_user_desc %}
+  Unique users who have viewed the credential inventory in a given month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210216183938_i_compliance_credential_inventory_monthly.yml)
+{% enddocs %}
+
+{% docs compliance_frameworks_pipeline_28_days_event_desc %}
+  Count of compliance frameworks that have a pipeline configuration. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20210622091519_compliance_frameworks_with_pipeline.yml)
+{% enddocs %}
+
+{% docs groups_streaming_destinations_all_time_event_desc %}
+  Count of compliance frameworks that have a pipeline configuration. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210622123800_compliance_frameworks_with_pipeline.yml)
+{% enddocs %}
+
+{% docs groups_streaming_destinations_28_days_event_desc %}
+  Distinct count of groups with any event streaming destinations. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20211130091657_groups_with_event_streaming_destinations.yml)
+{% enddocs %}
+
+{% docs audit_event_destinations_all_time_event_desc %}
+  Count of audit event streaming destinations. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20211130085433_g_manage_compliance_audit_event_destinations.yml)
+{% enddocs %}
+
+{% docs audit_event_destinations_28_days_event_desc %}
+  Count of audit event streaming destinations. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_28d/20211130085433_g_manage_compliance_audit_event_destinations.yml)
+{% enddocs %}
+
+{% docs projects_status_checks_all_time_event_desc %}
+  Total number of distinct projects with external status checks. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20220308162514_projects_with_external_status_checks.yml)
+{% enddocs %}
+
+{% docs external_status_checks_all_time_event_desc %}
+  Total number of external status checks. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20220308155129_external_status_checks.yml)
+{% enddocs %}
+
+{% docs paid_license_search_28_days_user_desc %}
+Calculated unique users to perform a search with a paid license enabled
+by month. [link](https://gitlab.com/gitlab-org/gitlab/-/blob/master/ee/config/metrics/counts_all/20210216184035_i_search_paid_monthly.yml)
+{% enddocs %}

@@ -300,6 +300,12 @@ models:
             - not_null
             - unique
         tags: ["tdf", "mart", "sales_funnel"]
+      - name: arr_created_date
+        description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that This tracks the date that the ARR was added to an opportunity. 
+      - name: net_arr_created_date
+        description: A renaming of `created_date` used by SS&A to report on pipeline creation. 
+      - name: pipeline_created_date
+        description: A renaming of A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that This tracks the date that the ARR was added to an opportunity. This is used in SS&A pipeline reporting.
 
   - name: mart_crm_opportunity_daily_snapshot
     description: Model with single pane of glass sales and marketing metrics, snapshotted daily.

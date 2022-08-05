@@ -19,6 +19,11 @@ folders:
     folder_name: marketing_do_not_contact_list
     table_name: marketing_dnc_list
     table_replace_append: 1
+  - name: lam_corrections
+    owner: '@paul_armstrong'
+    folder_name: lam_corrections
+    table_name: lam_corrections
+    table_replace_append: 1
   - name: ssa_coverage_fitted_curves
     owner: '@jeanpeguero'
     folder_name: ssa_coverage_fitted_curves
@@ -29,28 +34,28 @@ folders:
     folder_name: ssa_quarterly_aggregated_metrics_for_coverage
     table_name: ssa_quarterly_aggregated_metrics_for_coverage
     table_replace_append: 0
-  - name: zuora_revenue_billing_waterfall_report_apr22
+  - name: zuora_revenue_billing_waterfall_report
     owner: '@michellecooper'
     folder_name: zuora_revenue_billing_waterfall_report
-    table_name: zuora_revenue_billing_waterfall_report_apr22
-    table_replace_append: 0
+    table_name: zuora_revenue_billing_waterfall_report
+    table_replace_append: 1
   - name: zuora_revenue_rc_rollforward_report
     owner: '@michellecooper'
     folder_name: zuora_revenue_rc_rollforward_report
     table_name: zuora_revenue_rc_rollforward_report
-    table_replace_append: 0
+    table_replace_append: 1
   - name: zuora_revenue_unreleased_pob_report
     owner: '@michellecooper'
     folder_name: zuora_revenue_unreleased_pob_report
     table_name: zuora_revenue_unreleased_pob_report
-    table_replace_append: 0
+    table_replace_append: 1
   - name: zuora_revenue_unbill_rollforward_report
     owner: '@michellecooper'
     folder_name: zuora_revenue_unbill_rollforward_report
     table_name: zuora_revenue_unbill_rollforward_report
-    table_replace_append: 0
-  - name: zuora_revenue_revenue_waterfall_report_apr22
+    table_replace_append: 1
+  - name: zuora_revenue_revenue_waterfall_report
     owner: '@michellecooper'
     folder_name: zuora_revenue_revenue_waterfall_report
-    table_name: zuora_revenue_revenue_waterfall_report_apr22
-    table_replace_append: 0
+    table_name: zuora_revenue_revenue_waterfall_report
+    table_replace_append: 1

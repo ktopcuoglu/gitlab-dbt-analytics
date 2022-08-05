@@ -1,3 +1,5 @@
+""" This file contains k8s secrets used in all DAGs """
+
 from airflow.contrib.kubernetes.secret import Secret
 
 # BambooHR
@@ -284,25 +286,17 @@ ZUORA_API_CLIENT_SECRET = Secret(
     "env", "ZUORA_API_CLIENT_SECRET", "airflow", "ZUORA_API_CLIENT_SECRET"
 )
 
-# PostHog Implementation
-POSTHOG_AWS_ACCESS_KEY_ID = Secret(
-    "env", "POSTHOG_AWS_ACCESS_KEY_ID", "airflow", "POSTHOG_AWS_ACCESS_KEY_ID"
+# Data observability
+MCD_DEFAULT_API_ID = Secret(
+    "env", "MCD_DEFAULT_API_ID", "airflow", "MCD_DEFAULT_API_ID"
 )
-
-POSTHOG_AWS_SECRET_ACCESS_KEY = Secret(
-    "env", "POSTHOG_AWS_SECRET_ACCESS_KEY", "airflow", "POSTHOG_AWS_SECRET_ACCESS_KEY"
+MCD_DEFAULT_API_TOKEN = Secret(
+    "env", "MCD_DEFAULT_API_TOKEN", "airflow", "MCD_DEFAULT_API_TOKEN"
 )
-
-POSTHOG_AWS_S3_SNOWPLOW_BUCKET = Secret(
-    "env", "POSTHOG_AWS_S3_SNOWPLOW_BUCKET", "airflow", "POSTHOG_AWS_S3_SNOWPLOW_BUCKET"
+# Data Science Load Role
+SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE = Secret(
+    "env",
+    "SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE",
+    "airflow",
+    "SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE",
 )
-
-POSTHOG_PROJECT_API_KEY = Secret(
-    "env", "POSTHOG_PROJECT_API_KEY", "airflow", "POSTHOG_PROJECT_API_KEY"
-)
-
-POSTHOG_PERSONAL_API_KEY = Secret(
-    "env", "POSTHOG_PERSONAL_API_KEY", "airflow", "POSTHOG_PERSONAL_API_KEY"
-)
-
-POSTHOG_HOST = Secret("env", "POSTHOG_HOST", "airflow", "POSTHOG_HOST")

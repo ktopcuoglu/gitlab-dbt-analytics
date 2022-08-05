@@ -184,3 +184,18 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: map_team_member_user
+    description: '{{ doc("map_team_member_user") }}'
+    columns:
+      - name: dim_team_member_sk
+        tests:
+          - not_null
+          - unique
+      - name: dim_user_sk
+        tests:
+          - not_null
+          - unique
+      - name: employee_id
+      - name: user_id
+      - name: gitlab_username

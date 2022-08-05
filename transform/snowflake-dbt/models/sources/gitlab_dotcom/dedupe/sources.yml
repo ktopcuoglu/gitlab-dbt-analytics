@@ -135,6 +135,7 @@ sources:
       - name: clusters_applications_runners
         identifier: gitlab_db_clusters_applications_runners
         freshness: null
+      - name: gitlab_db_container_repositories
       - name: dast_profiles
         identifier: gitlab_db_dast_profiles
         freshness:
@@ -284,6 +285,9 @@ sources:
         identifier: gitlab_db_protected_branches
       - name: protected_environment_approval_rules
         identifier: gitlab_db_protected_environment_approval_rules
+        freshness: null
+      - name: protected_environments
+        identifier: gitlab_db_protected_environments
         freshness: null
       - name: push_rules
         identifier: gitlab_db_push_rules

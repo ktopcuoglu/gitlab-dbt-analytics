@@ -363,6 +363,7 @@ final AS (
     fct_crm_opportunity.fulfillment_partner,
     fct_crm_opportunity.platform_partner,
     fct_crm_opportunity.partner_track,
+    fct_crm_opportunity.resale_partner_track,
     fct_crm_opportunity.is_public_sector_opp,
     fct_crm_opportunity.is_registration_from_portal,
     fct_crm_opportunity.calculated_discount,
@@ -616,7 +617,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@jeanpeguero",
     created_date="2022-05-05",
-    updated_date="2022-05-05"
+    updated_date="2022-07-13"
   ) }}

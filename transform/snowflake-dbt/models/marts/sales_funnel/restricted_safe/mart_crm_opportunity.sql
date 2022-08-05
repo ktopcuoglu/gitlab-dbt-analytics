@@ -6,7 +6,7 @@
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date')
 ]) }}
@@ -222,6 +222,7 @@
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
       fct_crm_opportunity.partner_track,
+      fct_crm_opportunity.resale_partner_track,
       fct_crm_opportunity.is_public_sector_opp,
       fct_crm_opportunity.is_registration_from_portal,
       fct_crm_opportunity.calculated_discount,
@@ -285,7 +286,7 @@
       ON fct_crm_opportunity.dim_crm_account_user_region_id = dim_crm_account_user_hierarchy_live_region.dim_crm_user_region_id
     LEFT JOIN dim_crm_user_hierarchy_live_area          AS dim_crm_account_user_hierarchy_live_area
       ON fct_crm_opportunity.dim_crm_account_user_area_id = dim_crm_account_user_hierarchy_live_area.dim_crm_user_area_id
-    LEFT JOIN dim_date AS net_arr_created_date 
+        LEFT JOIN dim_date AS net_arr_created_date 
       ON net_arr_created_date.date_id = fct_crm_opportunity.net_arr_created_date_id
     LEFT JOIN dim_date AS pipeline_created_date
       ON pipeline_created_date.date_id = fct_crm_opportunity.pipeline_created_date_id
@@ -297,7 +298,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@michellecooper",
+    updated_by="@jeanpeguero",
     created_date="2020-12-07",
-    updated_date="2022-07-18",
+    updated_date="2022-07-13",
   ) }}

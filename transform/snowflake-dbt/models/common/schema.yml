@@ -200,8 +200,8 @@ models:
           - not_null
         tags: ["tdf", "common", "zuora_revenue"]
 
-  - name: dim_alliance_type
-    description: '{{ doc("dim_alliance_type") }}'
+  - name: dim_alliance_type_scd
+    description: '{{ doc("dim_alliance_type_scd") }}'
     columns:
       - name: dim_alliance_type_id
         description: Alliance type from prep table identifying the type of alliance relationship the partner has with GitLab.
@@ -1976,6 +1976,62 @@ models:
         description: '{{ doc("sast_scans_28_days_event_desc") }}'
         tests:
           - dbt_utils.at_least_one
+      - name: packages_pushed_registry_all_time_event
+        description: '{{ doc("packages_pushed_registry_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: packages_pulled_registry_all_time_event
+        description: '{{ doc("packages_pulled_registry_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: compliance_dashboard_view_28_days_user
+        description: '{{ doc("compliance_dashboard_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_screen_view_28_days_user
+        description: '{{ doc("audit_screen_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: instance_audit_screen_view_28_days_user
+        description: '{{ doc("instance_audit_screen_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: credential_inventory_view_28_days_user
+        description: '{{ doc("credential_inventory_view_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: compliance_frameworks_pipeline_28_days_event
+        description: '{{ doc("compliance_frameworks_pipeline_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_streaming_destinations_all_time_event
+        description: '{{ doc("groups_streaming_destinations_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: groups_streaming_destinations_28_days_event
+        description: '{{ doc("groups_streaming_destinations_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_event_destinations_all_time_event
+        description: '{{ doc("audit_event_destinations_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: audit_event_destinations_28_days_event
+        description: '{{ doc("audit_event_destinations_28_days_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: projects_status_checks_all_time_event
+        description: '{{ doc("projects_status_checks_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: external_status_checks_all_time_event
+        description: '{{ doc("external_status_checks_all_time_event_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
+      - name: paid_license_search_28_days_user
+        description: '{{ doc("paid_license_search_28_days_user_desc") }}'
+        tests:
+          - dbt_utils.at_least_one
       - name: instance_user_count_not_aligned
         description: Checks if the instance user count sent with the Usage Ping aligns with `active_user_count` from Seat Link source. Returns NULL if counts are aligned, if not the instance user count from the Usage Ping is displayed.
       - name: historical_max_users_not_aligned
@@ -2608,8 +2664,10 @@ models:
           - not_null
       - name: event_name
         description: '{{ doc("event_name") }}'
-      - name: event_count
-        description: '{{ doc("event_count") }}'
+      - name: days_since_user_creation_at_event_date
+        description: '{{ doc("days_since_user_creation_at_event_date") }}'
+      - name: days_since_namespace_creation_at_event_date
+        description: '{{ doc("days_since_namespace_creation_at_event_date") }}'
       - name: plan_id_at_event_date
         description: '{{ doc("plan_id_at_event_date") }}'
       - name: plan_name_at_event_date
@@ -2618,6 +2676,8 @@ models:
         description: '{{ doc("plan_was_paid_at_event_date") }}'
       - name: data_source
         description: '{{ doc("data_source") }}'
+      - name: event_count
+        description: '{{ doc("event_count") }}'
       - name: created_by
         description: '{{ doc("created_by") }}'
       - name: updated_by
@@ -3561,16 +3621,16 @@ models:
         description: The unqiue id of a date in the dim_date model.
       - name: ping_created_at
         description: The time when the ping was created
-      - name: ping_created_at_28_days_earlier
+      - name: ping_created_date_28_days_earlier
         description: The date 28 days prior to when the ping was created
-      - name: ping_created_at_year
-        description: The year when the ping was created
-      - name: ping_created_at_month
-        description: The month when the ping was created
-      - name: ping_created_at_week
-        description: The week when the ping was created
-      - name: ping_created_at_date
-        description: The date when the ping was created
+      - name: ping_created_date_year
+        description: The year when the ping was created (YYYY-01-01)
+      - name: ping_created_date_month
+        description: The month when the ping was created (YYYY-MM-01)
+      - name: ping_created_date_week
+        description: The week when the ping was created (YYYY-MM-BOW)
+      - name: ping_created_date
+        description: The date when the ping was created (YYYY-MM-DD)
       - name: ip_address_hash
         description: The ip_address_has associated with the instance
       - name: version
@@ -3619,6 +3679,8 @@ models:
         description: The concatenation of major and minor version. For example, for 13.6.2,
       - name: version_is_prerelease
         description: Boolean flag which is set to True if the version is a pre-release Version of the GitLab App. See more details here (https://docs.gitlab.com/ee/policy/maintenance.html)
+      - name: is_saas_dedicated
+        description: Boolean flag set to True if the ping_delivery_type is from a Dedicated Implementation
       - name: is_internal
         description: Denotes whether the instance is internal
 
