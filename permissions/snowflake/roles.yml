@@ -813,8 +813,8 @@ roles:
               tables:
                   read:
                       - prod.workspace_data_science.*
-                      - prep.snowplow_*.snowplow_structured_events
-                      - prep.snowplow_*.snowplow_gitlab_events_experiment_contexts
+                      - prep.snowplow_*.*
+                      - prep.snowplow_*.*
                       - prep.gitlab_dotcom.*
                       - prod.common.*
                       - prod.legacy.*
