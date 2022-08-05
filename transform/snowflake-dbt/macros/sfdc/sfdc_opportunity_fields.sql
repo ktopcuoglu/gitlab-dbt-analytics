@@ -130,7 +130,7 @@ WITH first_contact  AS (
 
     SELECT *
     FROM {{ ref('dim_date') }}
-    WHERE date_actual >= '2019-10-01'::DATE
+    WHERE date_actual::DATE >= '2019-10-01'
       AND date_actual <= CURRENT_DATE  
 {%- endif %}
 
@@ -380,10 +380,10 @@ WITH first_contact  AS (
       -- Those were later fixed in the opportunity object but stayed in the snapshot table.
       -- To account for those issues and give a directionally correct answer, we apply a ratio to everything before FY22
       CASE
-        WHEN  sfdc_opportunity.snapshot_date < '2021-02-01'::DATE -- All deals before cutoff and that were not updated to Net ARR
+        WHEN  sfdc_opportunity.snapshot_date::DATE < '2021-02-01' -- All deals before cutoff and that were not updated to Net ARR
           THEN calculated_from_ratio_net_arr
-        WHEN  sfdc_opportunity.snapshot_date >= '2021-02-01'::DATE  -- After cutoff date, for all deals earlier than FY19 that are closed and have no net arr
-              AND sfdc_opportunity.close_date < '2018-02-01'::DATE 
+        WHEN  sfdc_opportunity.snapshot_date::DATE >= '2021-02-01'  -- After cutoff date, for all deals earlier than FY19 that are closed and have no net arr
+              AND sfdc_opportunity.close_date::DATE < '2018-02-01' 
               AND sfdc_opportunity.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate') 
               AND COALESCE(sfdc_opportunity.raw_net_arr,0) = 0 
           THEN calculated_from_ratio_net_arr
