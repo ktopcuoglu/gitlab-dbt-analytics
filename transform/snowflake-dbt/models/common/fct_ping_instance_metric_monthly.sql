@@ -12,8 +12,9 @@
 , fct_ping_instance_metric AS (
 
     SELECT
-      {{ dbt_utils.star(from=ref('fct_ping_instance_metric'), except=['CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE',
-          'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }}
+      {{ dbt_utils.star(from=ref('fct_ping_instance_metric'), except=['METRIC_VALUE', 'CREATED_BY', 'UPDATED_BY', 'MODEL_CREATED_DATE',
+          'MODEL_UPDATED_DATE', 'DBT_CREATED_AT', 'DBT_UPDATED_AT']) }},
+      TRY_TO_NUMBER(metric_value::TEXT) AS metric_value
     FROM {{ ref('fct_ping_instance_metric') }}
 
 ),
@@ -72,7 +73,7 @@ final AS (
       time_frame_28_day_metrics.dim_subscription_license_id,
       time_frame_28_day_metrics.metrics_path,
       time_frame_28_day_metrics.metric_value,
-      TRY_TO_NUMBER(time_frame_28_day_metrics.monthly_metric_value::TEXT) AS monthly_metric_value,
+      time_frame_28_day_metrics.monthly_metric_value,
       time_frame_28_day_metrics.time_frame,
       time_frame_28_day_metrics.has_timed_out,
       time_frame_28_day_metrics.ping_created_at,
@@ -96,8 +97,7 @@ final AS (
       time_frame_all_time_metrics.dim_subscription_license_id,
       time_frame_all_time_metrics.metrics_path,
       time_frame_all_time_metrics.metric_value,
-      IFF(TRY_TO_NUMBER(time_frame_all_time_metrics.monthly_metric_value::TEXT) < 0, 0,
-        TRY_TO_NUMBER(time_frame_all_time_metrics.monthly_metric_value::TEXT)) AS monthly_metric_value,
+      IFF(time_frame_all_time_metrics.monthly_metric_value < 0, 0, time_frame_all_time_metrics.monthly_metric_value) AS monthly_metric_value,
       time_frame_all_time_metrics.time_frame,
       time_frame_all_time_metrics.has_timed_out,
       time_frame_all_time_metrics.ping_created_at,
