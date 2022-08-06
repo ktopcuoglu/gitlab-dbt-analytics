@@ -136,7 +136,7 @@ CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.verify.ci_pipeline_con
 CASE WHEN metrics_path = 'counts.ci_runners_instance_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS active_instance_runners_all_time_event,
 CASE WHEN metrics_path = 'counts.ci_runners_group_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS active_group_runners_all_time_event,
 CASE WHEN metrics_path = 'counts.ci_runners_project_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS active_project_runners_all_time_event,
-CASE WHEN metrics_path = 'gitaly.version' THEN TO_VARCHAR(metric_value::VARIANT::VARCHAR)   ELSE 0 END  AS gitaly_version,
+CASE WHEN metrics_path = 'gitaly.version' THEN (metric_value::VARIANT)   ELSE 0 END  AS gitaly_version,
 CASE WHEN metrics_path = 'gitaly.servers' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS gitaly_servers_all_time_event,
 
 -- 6.0 metrics  
@@ -162,6 +162,7 @@ CASE WHEN metrics_path = 'redis_hll_counters.compliance.g_compliance_dashboard_m
 CASE WHEN metrics_path = 'redis_hll_counters.compliance.g_compliance_audit_events_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS audit_screen_view_28_days_user,
 CASE WHEN metrics_path = 'redis_hll_counters.compliance.i_compliance_audit_events_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS instance_audit_screen_view_28_days_user,
 CASE WHEN metrics_path = 'redis_hll_counters.compliance.i_compliance_credential_inventory_monthly' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS credential_inventory_view_28_days_user,
+CASE WHEN metrics_path = 'usage_activity_by_stage.manage.compliance_frameworks_with_pipeline' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END AS compliance_frameworks_pipeline_all_time_event,
 CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.manage.compliance_frameworks_with_pipeline' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS compliance_frameworks_pipeline_28_days_event,
 CASE WHEN metrics_path = 'usage_activity_by_stage.manage.groups_with_event_streaming_destinations' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS groups_streaming_destinations_all_time_event,
 CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.manage.groups_with_event_streaming_destinations' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS groups_streaming_destinations_28_days_event,
