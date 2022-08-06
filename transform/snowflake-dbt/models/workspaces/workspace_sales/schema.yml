@@ -13,12 +13,6 @@ models:
         tests:
             - not_null
             - unique
-      - name: arr_created_date
-        description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that This tracks the date that the ARR was added to an opportunity. 
-      - name: net_arr_created_date
-        description: A renaming of `created_date` used by SS&A to report on pipeline creation. 
-      - name: pipeline_created_date
-        description: A renaming of A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that This tracks the date that the ARR was added to an opportunity. This is used in SS&A pipeline reporting.
   - name: sheetload_xactly_credit
     description: Sheetload of Xactly credits loaded manually as a workaround while we finalize Xactly Sales Attainment modeling
   - name: xactly_fy23_quota
