@@ -3,7 +3,7 @@
       ('sfdc_user_hierarchy_stamped', 'prep_crm_user_hierarchy_stamped'),
       ('sales_qualified_source', 'prep_sales_qualified_source'),
       ('order_type', 'prep_order_type'),
-      ('alliance_type', 'prep_alliance_type'),
+      ('alliance_type', 'prep_alliance_type_scd'),
       ('channel_type', 'prep_channel_type'),
       ('date_details_source', 'date_details_source')
 ])}}
@@ -146,13 +146,13 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
      unioned_targets.fiscal_year,
      unioned_targets.sales_qualified_source,
      unioned_targets.dim_sales_qualified_source_id,
-     unioned_targets.alliance_partner                                                                                               AS alliance_type,
+     unioned_targets.alliance_partner,
      unioned_targets.dim_alliance_type_id,
      unioned_targets.order_type,
      unioned_targets.dim_order_type_id,
      unioned_targets.channel_type,
      unioned_targets.dim_channel_type_id,
-     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                             AS crm_user_sales_segment_geo_region_area,
+     unioned_targets.crm_opp_owner_sales_segment_geo_region_area_stamped                                                            AS crm_user_sales_segment_geo_region_area,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_hierarchy_live_id, unioned_targets.dim_crm_user_hierarchy_stamped_id)           AS dim_crm_user_hierarchy_live_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_sales_segment_id, unioned_targets.dim_crm_opp_owner_sales_segment_stamped_id)   AS dim_crm_user_sales_segment_id,
      COALESCE(sfdc_user_hierarchy_live.dim_crm_user_geo_id, unioned_targets.dim_crm_opp_owner_geo_stamped_id)                       AS dim_crm_user_geo_id,
@@ -175,7 +175,7 @@ For FY23 and beyond, targets in the sheetload file were set at the user_segment_
 {{ dbt_audit(
     cte_ref="final_targets",
     created_by="@jpeguero",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2021-04-08",
-    updated_date="2022-03-07"
+    updated_date="2022-07-18"
 ) }}

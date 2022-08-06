@@ -6,7 +6,7 @@
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date')
 ]) }}
@@ -326,6 +326,7 @@
       fulfillment_partner.crm_account_name AS fulfillment_partner_name,
       fct_crm_opportunity.platform_partner,
       fct_crm_opportunity.partner_track,
+      fct_crm_opportunity.resale_partner_track,
       fct_crm_opportunity.is_public_sector_opp,
       fct_crm_opportunity.is_registration_from_portal,
       fct_crm_opportunity.calculated_discount,
@@ -608,7 +609,7 @@
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-08-03",
+    updated_date="2022-08-03"
   ) }}
 
 

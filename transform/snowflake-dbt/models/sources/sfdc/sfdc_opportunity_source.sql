@@ -243,6 +243,7 @@ WITH source AS (
         fulfillment_partner__c                          AS fulfillment_partner,
         platform_partner__c                             AS platform_partner,
         partner_track__c                                AS partner_track,
+        resale_partner_track__c                         AS resale_partner_track,
         public_sector_opp__c::BOOLEAN                   AS is_public_sector_opp,
         registration_from_portal__c::BOOLEAN            AS is_registration_from_portal,
         calculated_discount__c                          AS calculated_discount,

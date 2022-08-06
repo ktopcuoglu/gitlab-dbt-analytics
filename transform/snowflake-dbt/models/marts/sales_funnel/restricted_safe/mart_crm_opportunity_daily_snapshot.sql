@@ -265,6 +265,7 @@ final AS (
     fulfillment_partner.crm_account_name AS fulfillment_partner_name,
     fct_crm_opportunity.platform_partner,
     fct_crm_opportunity.partner_track,
+    fct_crm_opportunity.resale_partner_track,
     fct_crm_opportunity.is_public_sector_opp,
     fct_crm_opportunity.is_registration_from_portal,
     fct_crm_opportunity.calculated_discount,

@@ -102,6 +102,8 @@ models:
       tests:
         - not_null
         - unique
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
 
 - name: rpt_ping_subscriptions_on_versions_estimate_factors_monthly
   description: ' {{ doc("rpt_ping_subscriptions_on_versions_estimate_factors_monthly") }} '
@@ -153,6 +155,8 @@ models:
       tests:
         - not_null
         - unique
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
 
 - name: rpt_ping_metric_totals_w_estimates_monthly
   description: ' {{ doc("rpt_ping_metric_totals_w_estimates_monthly") }} '
@@ -164,8 +168,8 @@ models:
       description: the unique composite ID for the rpt_ping_metric_totals_w_estimates_monthly model consisting of reporting_month, metrics_path, estimation_grain, ping_edition_product_tier, and service_ping_delivery_type
     - name: metrics_path
       description: The unique JSON key path of identifier of the metric in the ping payload. This appears as key_path in the metric definition YAML files
-    - name: ping_created_at_month
-      description: The month when the ping was created
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
     - name: ping_delivery_type
       description: How the product is delivered to the installation (Self-Managed, SaaS)
     - name: ping_edition
@@ -221,6 +225,9 @@ models:
       tests:
         - not_null
         - unique
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
+
 
 - name: rpt_ping_subscriptions_on_versions_counts_monthly
   description: ' {{ doc("rpt_ping_subscriptions_on_versions_counts_monthly") }} '
@@ -229,3 +236,6 @@ models:
       tests:
         - not_null
         - unique
+    - name: ping_created_date_month
+      description: The month when the ping was created (YYYY-MM-01)
+        
