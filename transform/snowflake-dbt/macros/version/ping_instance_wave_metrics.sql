@@ -130,16 +130,16 @@ CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.release.failed_deploym
 CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.release.successful_deployments' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS successful_deployments_28_days_user,
 
 -- 5.3 metrics
-CASE WHEN metrics_path = 'geo_enabled' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS geo_enabled,
+CASE WHEN metrics_path = 'geo_enabled' THEN {{ convert_variant_to_boolean_field("metric_value") }}  ELSE 0 END  AS geo_enabled,
 CASE WHEN metrics_path = 'counts.geo_nodes' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS geo_nodes_all_time_event,
 CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.verify.ci_pipeline_config_auto_devops' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS auto_devops_pipelines_28_days_user,
 CASE WHEN metrics_path = 'counts.ci_runners_instance_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS active_instance_runners_all_time_event,
 CASE WHEN metrics_path = 'counts.ci_runners_group_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS active_group_runners_all_time_event,
 CASE WHEN metrics_path = 'counts.ci_runners_project_type_active' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS active_project_runners_all_time_event,
-CASE WHEN metrics_path = 'gitaly.version' THEN metric_value::VARCHAR   ELSE 0 END  AS gitaly_version,
+CASE WHEN metrics_path = 'gitaly.version' THEN TO_VARCHAR(metric_value::VARIANT::VARCHAR)   ELSE 0 END  AS gitaly_version,
 CASE WHEN metrics_path = 'gitaly.servers' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS gitaly_servers_all_time_event,
 
--- 6.0 metrics
+-- 6.0 metrics  
 CASE WHEN metrics_path = 'usage_activity_by_stage.secure.api_fuzzing_scans' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS api_fuzzing_scans_all_time_event,
 CASE WHEN metrics_path = 'usage_activity_by_stage_monthly.secure.api_fuzzing_scans' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS api_fuzzing_scans_28_days_event,
 CASE WHEN metrics_path = 'usage_activity_by_stage.secure.coverage_fuzzing_scans' THEN {{ null_negative_numbers("metric_value") }} ELSE 0 END  AS coverage_fuzzing_scans_all_time_event,
