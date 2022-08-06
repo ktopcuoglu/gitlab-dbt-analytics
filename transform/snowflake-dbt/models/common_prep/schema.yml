@@ -1481,7 +1481,7 @@ models:
       - name: ping_name
       - name: ping_date
       - name: counter_value
-  
+
   - name: prep_event_all
     description: '{{ doc("prep_event_all") }}'
     columns:
@@ -1489,7 +1489,7 @@ models:
         # tests:
           # - not_null
           # - unique
-  
+
   - name: prep_ci_pipeline
     description: '{{ doc("prep_ci_pipeline") }}'
     columns:
@@ -1623,76 +1623,6 @@ models:
         tests:
           - unique
           - not_null
-  - name: prep_monthly_usage_data_28_days
-    description: '{{ doc("prep_monthly_usage_data_28_days") }}'
-    columns:
-        - name: primary_key
-          tests:
-            - not_null
-            - unique
-        - name: dim_usage_ping_id
-          tests:
-            - not_null
-        - name: dim_instance_id
-          tests:
-            - not_null
-        - name: metrics_path
-          tests:
-            - not_null
-  - name: prep_monthly_usage_data_all_time
-    description: '{{ doc("prep_monthly_usage_data_all_time") }}'
-    columns:
-        - name: primary_key
-          tests:
-            - not_null
-            - unique
-        - name: dim_usage_ping_id
-          tests:
-            - not_null
-        - name: dim_instance_id
-          tests:
-            - not_null
-        - name: metrics_path
-          tests:
-            - not_null
-  - name: prep_usage_data_7_days_flattened
-    description: '{{ doc("prep_usage_data_7_days_flattened") }}'
-    columns:
-        - name: instance_path_id
-          tests:
-            - not_null
-            - unique
-        - name: dim_usage_ping_id
-          tests:
-            - not_null
-        - name: metrics_path
-          tests:
-            - not_null
-  - name: prep_usage_data_28_days_flattened
-    description: '{{ doc("prep_usage_data_28_days_flattened") }}'
-    columns:
-        - name: instance_path_id
-          tests:
-            - not_null
-            - unique
-        - name: dim_usage_ping_id
-          tests:
-            - not_null
-        - name: metrics_path
-          tests:
-            - not_null
-  - name: prep_usage_data_all_time_flattened
-    description: '{{ doc("prep_usage_data_all_time_flattened") }}'
-    columns:
-        - name: instance_path_id
-          tests:
-            - not_null
-        - name: dim_usage_ping_id
-          tests:
-            - not_null
-        - name: metrics_path
-          tests:
-            - not_null
 
   - name: prep_deployment
     description: '{{ doc("prep_deployment") }}'
@@ -1818,7 +1748,7 @@ models:
     description: The host_id and host_name of the self-managed instance.
     columns:
       - name: dim_host_id
-        tests: 
+        tests:
           - not_null
           - unique
       - name: host_name
