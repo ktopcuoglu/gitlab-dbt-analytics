@@ -32,20 +32,40 @@ SELECT DISTINCT
     dim_date.first_day_of_month                       AS first_day_of_month,
     TRUE                                              AS last_ping_of_month_flag
   FROM usage_data_w_date
-    INNER JOIN dim_date
-  ON usage_data_w_date.dim_ping_date_id = dim_date.date_id
+  INNER JOIN dim_date
+    ON usage_data_w_date.dim_ping_date_id = dim_date.date_id
   QUALIFY ROW_NUMBER() OVER (
           PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.first_day_of_month
+          ORDER BY ping_created_at DESC) = 1
+
+), last_ping_of_week_flag AS (
+
+  SELECT DISTINCT
+    usage_data_w_date.id                              AS id,
+    usage_data_w_date.dim_ping_date_id                AS dim_ping_date_id,
+    usage_data_w_date.uuid                            AS uuid,
+    usage_data_w_date.host_id                         AS host_id,
+    usage_data_w_date.ping_created_at::TIMESTAMP(0)   AS ping_created_at,
+    dim_date.first_day_of_month                       AS first_day_of_month,
+    TRUE                                              AS last_ping_of_week_flag
+  FROM usage_data_w_date
+  INNER JOIN dim_date
+    ON usage_data_w_date.dim_ping_date_id = dim_date.date_id
+  QUALIFY ROW_NUMBER() OVER (
+          PARTITION BY usage_data_w_date.uuid, usage_data_w_date.host_id, dim_date.first_day_of_week
           ORDER BY ping_created_at DESC) = 1
 
 ), fct_w_month_flag AS (
 
   SELECT
-      usage_data_w_date.*,
-      last_ping_of_month_flag.last_ping_of_month_flag   AS last_ping_of_month_flag
-    FROM usage_data_w_date
-      LEFT JOIN last_ping_of_month_flag
-        ON usage_data_w_date.id = last_ping_of_month_flag.id
+    usage_data_w_date.*,
+    last_ping_of_month_flag.last_ping_of_month_flag   AS last_ping_of_month_flag,
+    last_ping_of_week_flag.last_ping_of_week_flag     AS last_ping_of_week_flag
+  FROM usage_data_w_date
+  LEFT JOIN last_ping_of_month_flag
+    ON usage_data_w_date.id = last_ping_of_month_flag.id
+  LEFT JOIN last_ping_of_week_flag
+    ON usage_data_w_date.id = last_ping_of_week_flag.id
 
 ), dedicated_instance AS (
 
@@ -56,9 +76,9 @@ SELECT DISTINCT
   INNER JOIN prep_charge
     ON prep_license.dim_subscription_id = prep_charge.dim_subscription_id
   INNER JOIN prep_product_detail
-    ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id 
-  WHERE LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
-        
+    ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id
+  WHERE LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%'
+
 ), final AS (
 
     SELECT DISTINCT
@@ -137,7 +157,7 @@ SELECT DISTINCT
         ELSE 'Self-Managed'
         END                                                                                                         AS ping_delivery_type,
       CASE
-        WHEN EXISTS (SELECT 1 FROM dedicated_instance di 
+        WHEN EXISTS (SELECT 1 FROM dedicated_instance di
                      WHERE fct_w_month_flag.uuid = di.uuid)     THEN TRUE
         ELSE FALSE END                                                                                              AS is_saas_dedicated,
       CASE
@@ -153,10 +173,14 @@ SELECT DISTINCT
         'dr.gitlab.com'
       )                                                         THEN TRUE
         ELSE FALSE END                                                                                              AS is_staging,
-        CASE
-          WHEN last_ping_of_month_flag = TRUE                   THEN TRUE
-          ELSE FALSE
-          END                                                                                                       AS is_last_ping_of_month
+      CASE
+        WHEN last_ping_of_month_flag = TRUE                     THEN TRUE
+        ELSE FALSE
+      END                                                                                                         AS is_last_ping_of_month,
+      CASE
+        WHEN last_ping_of_week_flag = TRUE                     THEN TRUE
+        ELSE FALSE
+      END                                                                                                         AS is_last_ping_of_week
     FROM fct_w_month_flag
 
 )
@@ -164,7 +188,7 @@ SELECT DISTINCT
 {{ dbt_audit(
     cte_ref="final",
     created_by="@icooper-acp",
-    updated_by="@snalamaru",
+    updated_by="@iweeks",
     created_date="2022-03-08",
-    updated_date="2022-05-05"
+    updated_date="2022-08-08"
 ) }}
