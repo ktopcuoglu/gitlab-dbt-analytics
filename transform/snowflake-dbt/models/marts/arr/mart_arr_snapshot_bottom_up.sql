@@ -47,10 +47,10 @@ WITH dim_billing_account AS (
       dim_product_detail_id,
       dim_billing_account_id,
       dim_crm_account_id,
-      SUM(mrr)                                                               AS mrr,
-      SUM(arr)                                                               AS arr,
-      SUM(quantity)                                                          AS quantity,
-      ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
+      SUM(mrr)                                                                      AS mrr,
+      SUM(arr)                                                                      AS arr,
+      SUM(quantity)                                                                 AS quantity,
+      ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure)   AS unit_of_measure
     FROM {{ ref('fct_mrr_snapshot_bottom_up') }}
 
     {% if is_incremental() %}
@@ -169,6 +169,8 @@ WITH dim_billing_account AS (
       dim_product_detail.product_delivery_type                                              AS product_delivery_type,
       dim_product_detail.service_type                                                       AS service_type,
       dim_product_detail.product_rate_plan_name                                             AS product_rate_plan_name,
+      dim_product_detail.is_licensed_user                                                   AS is_licensed_user,
+      dim_product_detail.is_arpu                                                            AS is_arpu,
 
       --charge information
       fct_mrr_snapshot_bottom_up.unit_of_measure                                            AS unit_of_measure,
@@ -249,5 +251,5 @@ WITH dim_billing_account AS (
     created_by="@iweeks",
     updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2022-06-03"
+    updated_date="2022-07-29"
 ) }}

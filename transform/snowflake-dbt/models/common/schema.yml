@@ -787,6 +787,10 @@ models:
         description: The date when the product expires and can't be subscribed to anymore
       - name: is_oss_or_edu_rate_plan
         description: Flag for rate plans containing OSS or EDU
+      - name: is_licensed_user
+        description: Flag to identify licensed users. It works by excluding `Storage` product_tier.
+      - name: is_arpu
+        description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan. 
 
   - name: dim_product_tier
     description: '{{ doc("dim_product_tier") }}'
@@ -3980,6 +3984,8 @@ models:
         description: The time frame associated with the metric, as defined in the metric definition YAML file
       - name: umau_value
         description: The unique monthly active user value for the instance
+      - name: monthly_metric_value
+        description: '{{ doc("monthly_metric_value") }}'
 
   - name: fct_ping_instance_metric_all_time
     description: ' {{ doc("fct_ping_instance_metric_all_time") }} '
