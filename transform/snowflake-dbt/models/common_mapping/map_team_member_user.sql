@@ -23,7 +23,8 @@ users AS (
   SELECT
     user_id,
     user_name,
-    notification_email
+    notification_email,
+    last_activity_on
   FROM {{ ref('gitlab_dotcom_users_source') }}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY user_name ORDER BY last_activity_on DESC ) = 1
 
@@ -37,7 +38,12 @@ map AS (
     employees.employee_id,
     users.user_id,
     users.user_name AS gitlab_username,
-    users.notification_email
+    users.notification_email,
+    users.last_activity_on,
+    SPLIT_PART(users.notification_email,'@',2) AS email_domain,
+    IFF(email_domain = 'gitlab.com',TRUE,FALSE) AS is_gitlab_email,
+    ROW_NUMBER() OVER (PARTITION BY employees.employee_id
+    ORDER BY is_gitlab_email,last_activity_on) AS preference
   FROM employees
   LEFT JOIN emails
     ON employees.employee_id = emails.employee_id
@@ -45,6 +51,8 @@ map AS (
     ON employees.gitlab_username = users.user_name
       OR emails.gitlab_email = users.notification_email
   WHERE users.user_id IS NOT NULL
+  AND users.last_activity_on IS NOT NULL
+  QUALIFY preference = 1
 )
 
 {{ dbt_audit(
