@@ -11,6 +11,17 @@
 
 ]) }}
 
+, instance_type_ordering AS (
+    SELECT
+      *,
+      CASE
+        WHEN instance_type = 'Production' THEN 1
+        WHEN instance_type = 'Non-Production' THEN 2
+        WHEN instance_type = 'Unknown' THEN 3
+        ELSE 4
+      END AS ordering_field
+    FROM dim_host_instance_type
+)
 
 , sm_subscriptions AS (
 
@@ -43,7 +54,7 @@
 
 ), joined AS (
 
-    SELECT distinct
+    SELECT 
       sm_subscriptions.dim_subscription_id,
       sm_subscriptions.dim_subscription_id_original,
       sm_subscriptions.dim_billing_account_id,
@@ -55,7 +66,7 @@
       ping_instance_wave_sm.ping_created_at,
       {{ get_date_id('ping_instance_wave_sm.ping_created_at') }}                                         AS ping_created_date_id,
       ping_instance_wave_sm.dim_instance_id,
-      dim_host_instance_type.instance_type,
+      instance_type_ordering.instance_type,
       ping_instance_wave_sm.hostname,
       ping_instance_wave_sm.dim_license_id,
       ping_instance_wave_sm.license_md5,
@@ -267,16 +278,27 @@
     LEFT JOIN seat_link
       ON sm_subscriptions.dim_subscription_id = seat_link.dim_subscription_id
       AND sm_subscriptions.snapshot_month = seat_link.snapshot_month
-    LEFT JOIN dim_host_instance_type 
-      ON ping_instance_wave_sm.dim_instance_id = dim_host_instance_type.instance_uuid
-      AND ping_instance_wave_sm.hostname = dim_host_instance_type.instance_hostname
+    LEFT JOIN instance_type_ordering 
+      ON ping_instance_wave_sm.dim_instance_id = instance_type_ordering.instance_uuid
+      AND ping_instance_wave_sm.hostname = instance_type_ordering.instance_hostname
+    QUALIFY ROW_NUMBER() OVER (
+      PARTITION BY 
+        sm_subscriptions.snapshot_month,
+        sm_subscriptions.dim_subscription_id,
+        ping_instance_wave_sm.dim_instance_id,
+        ping_instance_wave_sm.hostname
+        ORDER BY 
+          ping_instance_wave_sm.ping_created_at DESC,
+          instance_type_ordering.ordering_field ASC --prioritizing Production instances
+    ) = 1
 
-)
+)   
+
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@snalamaru",
     updated_by="@snalamaru",
     created_date="2022-07-21",
-    updated_date="2022-07-21"
+    updated_date="2022-08-08"
 ) }}
