@@ -804,6 +804,8 @@ roles:
                       - prod.common
                       - prod.legacy
                       - prod.common_mart_product
+                      - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_marketing
                       - prep.snowplow_*
                       - prep.gitlab_dotcom
                       - raw.data_science
@@ -819,6 +821,8 @@ roles:
                       - prod.common.*
                       - prod.legacy.*
                       - prod.common_mart_product.*
+                      - prod.restricted_safe_common_mart_sales.*
+                      - prod.common_mart_marketing.*
                   write:
                       - raw.data_science.*
                       - prod.workspace_data_science.*
