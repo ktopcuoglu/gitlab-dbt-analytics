@@ -323,13 +323,6 @@ WITH first_contact  AS (
       {{ get_date_id('sfdc_opportunity.iacv_created_date')}}                                      AS arr_created_date_id,
       sfdc_opportunity.iacv_created_date                                                          AS arr_created_date,
 
-      {{ get_date_id('created_date_detail.date_actual') }}                                        AS net_arr_created_date_id,
-      created_date_detail.date_actual                                                             AS net_arr_created_date,
-      created_date_detail.first_day_of_month                                                      AS net_arr_created_month,
-      created_date_detail.fiscal_year                                                             AS net_arr_created_fiscal_year,
-      created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
-      created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
-
       {{ get_date_id('net_arr_created_date.date_actual') }}                                       AS pipeline_created_date_id,
       net_arr_created_date.date_actual                                                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                                                     AS pipeline_created_month,
@@ -876,10 +869,10 @@ WITH first_contact  AS (
         ) AS is_eligible_created_pipeline,
       CASE
         WHEN is_open = 1
-          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
+          THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
         WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < close_date_detail.date_actual
-          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
-        ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
+          THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
+        ELSE DATEDIFF(days, sfdc_opportunity.created_date, close_date_detail.date_actual)
       END                                                       AS calculated_age_in_days,
       CASE
         WHEN
@@ -948,7 +941,7 @@ WITH first_contact  AS (
     LEFT JOIN dim_date AS created_date_detail
       ON sfdc_opportunity.created_date = created_date_detail.date_actual
     LEFT JOIN dim_date AS net_arr_created_date
-      ON sfdc_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual 
+      ON sfdc_opportunity.iacv_created_date::DATE = net_arr_created_date.date_actual
     LEFT JOIN dim_date AS sales_accepted_date
       ON sfdc_opportunity.sales_accepted_date = sales_accepted_date.date_actual
     LEFT JOIN dim_date AS start_date

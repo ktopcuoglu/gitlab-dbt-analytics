@@ -92,9 +92,8 @@
       DATE_TRUNC(month, fct_crm_opportunity.close_date)                    AS close_month,
       fct_crm_opportunity.created_date,
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
-      net_arr_created_date.date_actual                                     AS net_arr_created_date,
-      pipeline_created_date.date_actual                                    AS pipeline_created_date,
       arr_created_date.date_actual                                         AS arr_created_date,
+      arr_created_date.date_actual                                         AS pipeline_created_date,
       fct_crm_opportunity.dim_crm_opportunity_id,
       dim_crm_opportunity.opportunity_name,
       dim_crm_account.parent_crm_account_name,
@@ -328,10 +327,6 @@
       ON fct_crm_opportunity.close_date = dim_date_close_date.date_day
     LEFT JOIN dim_date_extended                                       AS dim_date_sao_date
       ON fct_crm_opportunity.sales_accepted_date = dim_date_sao_date.date_day
-    LEFT JOIN dim_date                                                AS net_arr_created_date 
-      ON net_arr_created_date.date_id = fct_crm_opportunity.net_arr_created_date_id
-    LEFT JOIN dim_date                                                AS pipeline_created_date
-      ON pipeline_created_date.date_id = fct_crm_opportunity.pipeline_created_date_id
     LEFT JOIN dim_date AS arr_created_date
       ON arr_created_date.date_id = fct_crm_opportunity.arr_created_date_id
 )
@@ -341,5 +336,5 @@
     created_by="@jeanpeguero",
     updated_by="@michellecooper",
     created_date="2022-02-28",
-    updated_date="2022-08-05",
+    updated_date="2022-08-08",
   ) }}
