@@ -315,7 +315,7 @@ models:
       - name: arr
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
       - name: arr_created_date
-        description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that This tracks the date that the ARR was added to an opportunity. 
+        description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that tracks the date that the ARR was added to an opportunity. 
       - name: net_arr_created_date
         description: A renaming of `created_date` used by SS&A to report on pipeline creation. 
       - name: pipeline_created_date
