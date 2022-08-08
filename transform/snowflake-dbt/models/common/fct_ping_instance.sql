@@ -59,7 +59,6 @@
       dim_instance_id                                     AS dim_instance_id,
       dim_installation_id                                 AS dim_installation_id,
       dim_product_tier.dim_product_tier_id                AS dim_product_tier_id,
-      UUID                                                AS uuid,
       ping_created_at                                     AS ping_created_at,
       hostname                                            AS hostname,
       license_md5                                         AS license_md5,
