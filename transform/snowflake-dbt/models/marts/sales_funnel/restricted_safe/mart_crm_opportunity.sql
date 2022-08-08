@@ -286,7 +286,7 @@
       ON fct_crm_opportunity.dim_crm_account_user_region_id = dim_crm_account_user_hierarchy_live_region.dim_crm_user_region_id
     LEFT JOIN dim_crm_user_hierarchy_live_area          AS dim_crm_account_user_hierarchy_live_area
       ON fct_crm_opportunity.dim_crm_account_user_area_id = dim_crm_account_user_hierarchy_live_area.dim_crm_user_area_id
-        LEFT JOIN dim_date AS net_arr_created_date 
+    LEFT JOIN dim_date AS net_arr_created_date 
       ON net_arr_created_date.date_id = fct_crm_opportunity.net_arr_created_date_id
     LEFT JOIN dim_date AS pipeline_created_date
       ON pipeline_created_date.date_id = fct_crm_opportunity.pipeline_created_date_id
