@@ -21,6 +21,7 @@ WITH account_dims_mapping AS (
       last_utm_campaign,
       dim_crm_account_id,
       dim_crm_user_id,
+      ga_client_id,
       person_score,
       name_of_active_sequence,
       sequence_task_due_date,
@@ -178,6 +179,7 @@ marketo_qualified_lead_date::timestamp
       crm_person.dim_crm_person_id    AS dim_crm_person_id,
       crm_person.sfdc_record_id       AS sfdc_record_id,
       crm_person.bizible_person_id    AS bizible_person_id,
+      crm_person.ga_client_id         AS ga_client_id,
 
      -- common dimension keys
       crm_person.dim_crm_user_id                                                                               AS dim_crm_user_id,
@@ -335,7 +337,7 @@ marketo_qualified_lead_date::timestamp
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-01",
-    updated_date="2022-05-05"
+    updated_date="2022-07-29"
 ) }}
