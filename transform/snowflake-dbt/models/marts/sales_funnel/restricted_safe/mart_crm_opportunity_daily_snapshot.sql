@@ -65,6 +65,7 @@ final AS (
     fct_crm_opportunity.net_new_source_categories,
     fct_crm_opportunity.invoice_number,
     fct_crm_opportunity.primary_campaign_source_id,
+    fct_crm_opportunity.ga_client_id,
     fct_crm_opportunity.opportunity_term,
     fct_crm_opportunity.record_type_id,
     fct_crm_opportunity.opportunity_owner_manager,
@@ -466,7 +467,6 @@ final AS (
     fct_crm_opportunity.created_in_snapshot_quarter_net_arr,
     fct_crm_opportunity.created_in_snapshot_quarter_deal_count,
     fct_crm_opportunity.days_in_stage
-
 
   FROM fct_crm_opportunity
   LEFT JOIN dim_crm_account

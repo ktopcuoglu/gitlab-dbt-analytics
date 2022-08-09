@@ -517,6 +517,7 @@
       technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
       technical_evaluation_date.fiscal_quarter_name_fy                AS technical_evaluation_fiscal_quarter_name,
       technical_evaluation_date.fiscal_year                           AS technical_evaluation_fiscal_year,
+      arr_created_date.date_actual                                    AS arr_created_date,
       fct_crm_opportunity.days_in_0_pending_acceptance,
       fct_crm_opportunity.days_in_1_discovery,
       fct_crm_opportunity.days_in_2_scoping,
@@ -604,7 +605,7 @@
       ON fct_crm_opportunity.close_date = dim_date_close_date.date_day
     LEFT JOIN dim_date_extended                                       AS dim_date_sao_date
       ON fct_crm_opportunity.sales_accepted_date = dim_date_sao_date.date_day
-        LEFT JOIN dim_date created_date
+    LEFT JOIN dim_date created_date
       ON fct_crm_opportunity.created_date_id = created_date.date_id
     LEFT JOIN dim_date sales_accepted_date
       ON fct_crm_opportunity.sales_accepted_date_id = sales_accepted_date.date_id
@@ -640,6 +641,8 @@
       ON fct_crm_opportunity.pipeline_created_date_id = pipeline_created_date.date_id
     LEFT JOIN dim_date technical_evaluation_date
       ON fct_crm_opportunity.technical_evaluation_date_id = technical_evaluation_date.date_id
+    LEFT JOIN dim_date arr_created_date
+      ON fct_crm_opportunity.arr_created_date = arr_created_date.date_id
     LEFT JOIN dim_crm_account AS partner_account
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
@@ -652,5 +655,5 @@
     created_by="@jeanpeguero",
     updated_by="@michellecooper",
     created_date="2022-02-28",
-    updated_date="2022-08-04"
+    updated_date="2022-08-08"
   ) }}

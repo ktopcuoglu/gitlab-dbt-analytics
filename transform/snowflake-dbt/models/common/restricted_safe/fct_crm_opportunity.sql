@@ -62,6 +62,8 @@
       sfdc_opportunity.sales_accepted_date_id,
       sfdc_opportunity.close_date,
       sfdc_opportunity.close_date_id,
+      sfdc_opportunity.arr_created_date_id,
+      sfdc_opportunity.arr_created_date,
       sfdc_opportunity.stage_0_pending_acceptance_date,
       sfdc_opportunity.stage_0_pending_acceptance_date_id,
       sfdc_opportunity.stage_1_discovery_date,
@@ -131,6 +133,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                     AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
       sfdc_opportunity.ssp_id,
+      sfdc_opportunity.ga_client_id,
 
       -- flags
       sfdc_opportunity.is_closed,
@@ -278,5 +281,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-08-03"
+    updated_date="2022-08-15"
 ) }}

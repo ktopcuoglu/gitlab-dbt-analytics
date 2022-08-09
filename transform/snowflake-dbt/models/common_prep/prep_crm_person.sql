@@ -109,7 +109,8 @@ WITH biz_person AS (
       account_demographics_upa_street,
       account_demographics_upa_postal_code,
 
-      NULL                                          AS crm_partner_id
+      NULL                                          AS crm_partner_id,
+      NULL                                          AS ga_client_id
 
     FROM sfdc_contacts
     LEFT JOIN biz_person_with_touchpoints
@@ -186,7 +187,8 @@ WITH biz_person AS (
       account_demographics_upa_city,
       account_demographics_upa_street,
       account_demographics_upa_postal_code,
-      crm_partner_id
+      crm_partner_id,
+      ga_client_id
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
@@ -218,5 +220,5 @@ WITH biz_person AS (
     created_by="@mcooperDD",
     updated_by="@jpeguero",
     created_date="2020-12-08",
-    updated_date="2022-03-26"
+    updated_date="2022-07-29"
 ) }}

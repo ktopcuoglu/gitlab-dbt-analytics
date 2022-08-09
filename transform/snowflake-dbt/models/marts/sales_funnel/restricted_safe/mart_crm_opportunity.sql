@@ -477,6 +477,7 @@
       technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
       technical_evaluation_date.fiscal_quarter_name_fy                AS technical_evaluation_fiscal_quarter_name,
       technical_evaluation_date.fiscal_year                           AS technical_evaluation_fiscal_year,
+      arr_created_date.date_actual                                    AS arr_created_date,
       fct_crm_opportunity.days_in_0_pending_acceptance,
       fct_crm_opportunity.days_in_1_discovery,
       fct_crm_opportunity.days_in_2_scoping,
@@ -600,7 +601,8 @@
       ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id 
     LEFT JOIN dim_crm_account AS fulfillment_partner
       ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
-
+    LEFT JOIN dim_date AS arr_created_date
+      ON fct_crm_opportunity.arr_created_date = arr_created_date.date_id
 
 )
 
@@ -609,7 +611,7 @@
     created_by="@iweeks",
     updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-08-03"
+    updated_date="2022-08-08"
   ) }}
 
 

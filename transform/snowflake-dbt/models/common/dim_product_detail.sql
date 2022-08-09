@@ -32,14 +32,16 @@ WITH base AS (
       product_ranking                  AS product_ranking,
       is_oss_or_edu_rate_plan          AS is_oss_or_edu_rate_plan,
       billing_list_price               AS billing_list_price,
-      annual_billing_list_price        AS annual_billing_list_price
+      annual_billing_list_price        AS annual_billing_list_price,
+      is_licensed_user                 AS is_licensed_user,
+      is_arpu                          AS is_arpu
     FROM base
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-12-16",
-    updated_date="2021-01-26"
+    updated_date="2022-07-29"
 ) }}

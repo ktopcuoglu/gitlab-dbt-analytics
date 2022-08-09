@@ -43,9 +43,7 @@ WITH source AS (
         greenhouse_candidate_id,
         uploaded_at                                                                    AS last_updated_date,
       CASE
-        WHEN COALESCE(gender_dropdown, gender,'Did Not Identify') NOT IN ('Male', 'Did Not Identify')
-            THEN TRUE
-        WHEN COALESCE(ethnicity, 'Did Not Identify') NOT IN ('White','Did Not Identify')
+        WHEN COALESCE(ethnicity, 'Did Not Identify') NOT IN ('White','Asian','Did Not Identify')
             THEN TRUE
         ELSE FALSE END                                                                  AS urg_group
     FROM source
