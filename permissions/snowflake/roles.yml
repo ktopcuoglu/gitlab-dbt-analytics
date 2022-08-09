@@ -785,6 +785,7 @@ roles:
     - data_science_loader:
           warehouses:
               - loading
+              - loading_xl
           owns:
               schemas:
                   - raw.data_science
@@ -802,18 +803,34 @@ roles:
                       - prod.workspace_data_science
                       - prod.common
                       - prod.legacy
-                      - prep.snowplow_*_*
+                      - prod.common_mart_product
+                      - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_marketing
+                      - prod.restricted_safe_workspace_sales
+                      - prep.snowplow_*
+                      - prep.gitlab_dotcom
+                      - prep.zendesk
+                      - raw.data_science
+                      - raw.salesforce_stitch
+                      - raw.snapshots
                   write:
                       - raw.data_science
                       - prod.workspace_data_science
               tables:
                   read:
-                      - raw.data_science.*
                       - prod.workspace_data_science.*
-                      - prep.snowplow_*_*.snowplow_structured_events
-                      - prep.snowplow_*_*.snowplow_gitlab_events_experiment_contexts
+                      - prep.snowplow_*.*
+                      - prep.snowplow_*.*
+                      - prep.zendesk.*
+                      - prep.gitlab_dotcom.*
                       - prod.common.*
                       - prod.legacy.*
+                      - prod.common_mart_product.*
+                      - prod.restricted_safe_common_mart_sales.*
+                      - prod.restricted_safe_workspace_sales.*
+                      - prod.common_mart_marketing.*
+                      - raw.salesforce_stitch.*
+                      - raw.snapshots.*
                   write:
                       - raw.data_science.*
                       - prod.workspace_data_science.*

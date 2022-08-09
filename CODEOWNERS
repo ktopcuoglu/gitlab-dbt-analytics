@@ -22,7 +22,7 @@ README.md          @rparker2
 /dags/              @paul_armstrong @vedprakash2021
 /extract/           @jjstark @paul_armstrong @vedprakash2021
 /load/              @jjstark @paul_armstrong @vedprakash2021
-/orchestrate/       @jjstark @paul_armstrong @vedprakash2021
+/orchestration/     @jjstark @paul_armstrong @vedprakash2021
 /permissions/       @dvanrooijen2 @paul_armstrong @jjstark
 /pump/              @jjstark @paul_armstrong @vedprakash2021
 

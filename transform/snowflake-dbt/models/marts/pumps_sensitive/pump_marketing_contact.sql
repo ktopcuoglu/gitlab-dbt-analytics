@@ -68,6 +68,7 @@ SELECT
   pql_nbr_integrations_installed,
   pql_integrations_installed,
   pql_namespace_creator_job_description,
+  is_pql,
 
   -- METADATA COLUMNS FOR USE IN PUMP (NOT INTEGRATION)
   last_changed

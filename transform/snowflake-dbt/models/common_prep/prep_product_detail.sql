@@ -62,6 +62,15 @@ WITH zuora_product AS (
           THEN TRUE
         ELSE FALSE
       END                                                                               AS is_oss_or_edu_rate_plan,
+      CASE
+        WHEN common_product_tier.product_tier_name = 'Storage' THEN FALSE
+        ELSE TRUE
+      END                                                                               AS is_licensed_user,
+      CASE
+        WHEN common_product_tier.product_tier_name = 'Storage' OR zuora_product_rate_plan.product_rate_plan_name LIKE '%EDU%'
+          THEN FALSE
+        ELSE TRUE
+      END                                                                               AS is_arpu,
       MIN(zuora_product_rate_plan_charge_tier.price)                                    AS billing_list_price
     FROM zuora_product
     INNER JOIN zuora_product_rate_plan
@@ -113,7 +122,7 @@ WITH zuora_product AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ischweickartDD",
-    updated_by="@mcooperDD",
+    updated_by="@jpeguero",
     created_date="2020-12-16",
-    updated_date="2021-01-26"
+    updated_date="2022-07-29"
 ) }}

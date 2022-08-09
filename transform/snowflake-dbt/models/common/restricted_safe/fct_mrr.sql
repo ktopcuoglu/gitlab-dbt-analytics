@@ -20,10 +20,10 @@
       prep_charge.dim_billing_account_id,
       prep_charge.dim_crm_account_id,
       prep_charge.subscription_status,
+      prep_charge.unit_of_measure,
       SUM(prep_charge.mrr)                                                                  AS mrr,
       SUM(prep_charge.arr)                                                                  AS arr,
-      SUM(prep_charge.quantity)                                                             AS quantity,
-      ARRAY_AGG(prep_charge.unit_of_measure)                                                AS unit_of_measure
+      SUM(prep_charge.quantity)                                                             AS quantity
     FROM prep_charge
     INNER JOIN dim_date
       ON prep_charge.effective_start_month <= dim_date.date_actual
@@ -35,13 +35,13 @@
       /* This excludes Education customers (charge name EDU or OSS) with free subscriptions.
          Pull in seats from Paid EDU Plans with no ARR */
       AND (mrr != 0 OR LOWER(prep_charge.rate_plan_charge_name) = 'max enrollment')
-    {{ dbt_utils.group_by(n=8) }}
+    {{ dbt_utils.group_by(n=9) }}
 )
 
 {{ dbt_audit(
     cte_ref="mrr",
     created_by="@msendal",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2020-09-10",
-    updated_date="2022-04-04",
+    updated_date="2022-07-29",
 ) }}

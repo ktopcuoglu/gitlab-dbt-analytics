@@ -106,6 +106,7 @@
       dim_license_id                                                                                              AS dim_license_id,
       license_md5                                                                                                 AS license_md5,
       ping_created_at                                                                                             AS ping_created_at,
+      ping_created_at::DATE                                                                                       AS ping_created_date,
       umau_value                                                                                                  AS umau_value,
       license_subscription_id                                                                                     AS dim_subscription_license_id,
       is_license_mapped_to_subscription                                                                           AS is_license_mapped_to_subscription,
@@ -121,5 +122,5 @@
     created_by="@icooper-acp",
     updated_by="@snalamaru",
     created_date="2022-03-08",
-    updated_date="2022-07-21"
+    updated_date="2022-07-29"
 ) }}
