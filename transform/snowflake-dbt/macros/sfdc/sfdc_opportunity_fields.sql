@@ -477,7 +477,28 @@ WITH first_contact  AS (
           THEN TRUE 
         ELSE FALSE
       END                                                                                         AS is_new_logo_first_order, 
+      {%- if model_type == 'live' %}
       sfdc_opportunity.is_pipeline_created_eligible                                               AS is_net_arr_pipeline_created,
+      {%- elif model_type == 'snapshot' %}
+      COALESCE(
+        sfdc_opportunity.is_pipeline_created_eligible,
+        CASE 
+         WHEN sfdc_opportunity.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+           AND sfdc_opportunity.is_edu_oss = 0
+           AND net_arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
+           AND sfdc_opportunity.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
+           -- 20211222 Adjusted to remove the ommitted filter
+           AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
+           AND (net_arr > 0 
+             OR sfdc_opportunity.opportunity_category = 'Credit')
+           -- 20220128 Updated to remove webdirect SQS deals 
+           AND sfdc_opportunity.sales_qualified_source  != 'Web Direct Generated'
+           AND sfdc_account.is_jihu_account = 0
+          THEN 1
+          ELSE 0
+        END
+        ) AS is_net_arr_pipeline_created,
+      {%- endif %}
       CASE
         WHEN sfdc_opportunity_stage.is_closed = TRUE
           AND sfdc_opportunity.amount >= 0
@@ -849,24 +870,6 @@ WITH first_contact  AS (
         ELSE 0
       END                                                 AS churned_contraction_net_arr,
       {%- if model_type == 'snapshot' %}
-      COALESCE(
-        sfdc_opportunity.is_pipeline_created_eligible,
-        CASE 
-         WHEN sfdc_opportunity.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
-           AND sfdc_opportunity.is_edu_oss = 0
-           AND net_arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
-           AND sfdc_opportunity.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
-           -- 20211222 Adjusted to remove the ommitted filter
-           AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
-           AND (net_arr > 0 
-             OR sfdc_opportunity.opportunity_category = 'Credit')
-           -- 20220128 Updated to remove webdirect SQS deals 
-           AND sfdc_opportunity.sales_qualified_source  != 'Web Direct Generated'
-           AND sfdc_account.is_jihu_account = 0
-          THEN 1
-          ELSE 0
-        END
-        ) AS is_eligible_created_pipeline,
       CASE
         WHEN is_open = 1
           THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
