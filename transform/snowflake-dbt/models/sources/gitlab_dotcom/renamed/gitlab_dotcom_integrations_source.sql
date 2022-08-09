@@ -29,7 +29,7 @@ WITH source AS (
       deployment_events::BOOLEAN             AS has_deployment_events,
       comment_on_event_enabled::BOOLEAN      AS is_comment_on_event_enabled,
       group_id::NUMBER                       AS group_id,
-	  inherit_from_id::NUMBER                AS inherit_from_id    
+      inherit_from_id::NUMBER                AS inherit_from_id    
     FROM source
 
 )
