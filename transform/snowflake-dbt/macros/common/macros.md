@@ -28,3 +28,9 @@ An example of this is the matching for the job title of `IT Manager`. The string
 {% docs map_marketing_channel_path %}
 This macro maps channel path to the marketing channel name.
 {% enddocs %}
+
+{% docs monthly_all_time_metric_calc %}
+
+This macro is used to create a monthly metric value for all-time service ping metrics. It does this by partitioning on the dim_installation_id and metrics path, ordering the partition by ping created at timestamp, and fetching the prior month all-time metric value using a LAG function. The macro then subtracts the 2 numbers to get a monthly metric value.
+
+{% enddocs %}

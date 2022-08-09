@@ -103,6 +103,7 @@ final AS (
     fct_crm_opportunity.net_new_source_categories,
     fct_crm_opportunity.invoice_number,
     fct_crm_opportunity.primary_campaign_source_id,
+    fct_crm_opportunity.ga_client_id,
     fct_crm_opportunity.opportunity_term,
     fct_crm_opportunity.cp_use_cases,
     fct_crm_opportunity.record_type_id,
@@ -611,7 +612,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jeanpeguero",
+    updated_by="@jpeguero",
     created_date="2022-05-05",
-    updated_date="2022-07-13"
+    updated_date="2022-08-03"
   ) }}

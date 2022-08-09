@@ -124,6 +124,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                     AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
       sfdc_opportunity.ssp_id,
+      sfdc_opportunity.ga_client_id,
 
             -- flags
       sfdc_opportunity.is_closed,
