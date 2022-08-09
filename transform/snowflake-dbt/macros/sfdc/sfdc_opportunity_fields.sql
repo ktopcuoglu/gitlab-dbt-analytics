@@ -874,7 +874,7 @@ WITH first_contact  AS (
         ELSE 0
       END                                                 AS churned_contraction_net_arr,
       {%- if model_type == 'snapshot' %}
-      CCASE
+      CASE
         WHEN is_open = 1
           THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
         WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < close_date_detail.date_actual
