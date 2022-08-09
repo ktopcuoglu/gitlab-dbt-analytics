@@ -328,7 +328,6 @@ WITH first_contact  AS (
       created_date_detail.fiscal_quarter_name_fy                                                  AS net_arr_created_fiscal_quarter_name,
       created_date_detail.first_day_of_fiscal_quarter                                             AS net_arr_created_fiscal_quarter_date,
 
-      {{ get_date_id('net_arr_created_date.date_actual') }}                                       AS pipeline_created_date_id,
       net_arr_created_date.date_actual                                                            AS pipeline_created_date,
       net_arr_created_date.first_day_of_month                                                     AS pipeline_created_month,
       net_arr_created_date.fiscal_year                                                            AS pipeline_created_fiscal_year,
@@ -875,12 +874,12 @@ WITH first_contact  AS (
         ELSE 0
       END                                                 AS churned_contraction_net_arr,
       {%- if model_type == 'snapshot' %}
-      CASE
+      CCASE
         WHEN is_open = 1
-          THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
+          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
         WHEN is_open = 0 AND sfdc_opportunity.snapshot_date < close_date_detail.date_actual
-          THEN DATEDIFF(days, sfdc_opportunity.created_date, sfdc_opportunity.snapshot_date)
-        ELSE DATEDIFF(days, sfdc_opportunity.created_date, close_date_detail.date_actual)
+          THEN DATEDIFF(days, created_date_detail.date_actual, sfdc_opportunity.snapshot_date)
+        ELSE DATEDIFF(days, created_date_detail.date_actual, close_date_detail.date_actual)
       END                                                       AS calculated_age_in_days,
       CASE
         WHEN
