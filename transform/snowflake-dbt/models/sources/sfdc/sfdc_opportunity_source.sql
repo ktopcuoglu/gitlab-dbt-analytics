@@ -196,6 +196,7 @@ WITH source AS (
         END opportunity_deal_size,
         payment_schedule__c                             AS payment_schedule,
         comp_y2_iacv__c                                 AS comp_y2_iacv,
+        is_pipeline_created_eligible_flag__c            AS is_pipeline_created_eligible,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03

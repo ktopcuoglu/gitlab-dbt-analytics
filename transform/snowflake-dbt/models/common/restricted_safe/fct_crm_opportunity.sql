@@ -61,6 +61,8 @@
       sfdc_opportunity.sales_accepted_date_id,
       sfdc_opportunity.close_date,
       sfdc_opportunity.close_date_id,
+      sfdc_opportunity.arr_created_date_id,
+      sfdc_opportunity.arr_created_date,
       sfdc_opportunity.stage_0_pending_acceptance_date,
       sfdc_opportunity.stage_0_pending_acceptance_date_id,
       sfdc_opportunity.stage_1_discovery_date,
@@ -225,7 +227,7 @@
 {{ dbt_audit(
     cte_ref="final_opportunities",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-07-29"
+    updated_date="2022-08-15"
 ) }}
