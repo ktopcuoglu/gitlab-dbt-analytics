@@ -173,6 +173,9 @@
       dim_subscription.turn_on_auto_renewal,
       dim_subscription.contract_seat_reconciliation,
       dim_subscription.turn_on_seat_reconciliation,
+      dim_subscription.is_single_fiscal_year_term_subscription,
+      dim_subscription.term_start_fiscal_year,
+      dim_subscription.term_end_fiscal_year,
 
       --billing account info
       dim_billing_account.dim_billing_account_id                                      AS dim_billing_account_id,
@@ -299,7 +302,6 @@
     FROM dim_subscription_last_term sub_1
     INNER JOIN dim_subscription_last_term sub_2
       ON sub_1.zuora_renewal_subscription_name = sub_2.subscription_name
-      AND DATE_TRUNC('month',sub_2.subscription_end_date) > CONCAT('{{renewal_fiscal_year}}','-01-01')
     WHERE sub_1.zuora_renewal_subscription_name != ''
     QUALIFY rank = 1
 
@@ -326,6 +328,7 @@
       mart_charge.subscription_name,
       dim_subscription_last_term.zuora_renewal_subscription_name,
       dim_subscription_last_term.current_term,
+      mart_charge.is_single_fiscal_year_term_subscription,
       CASE
         WHEN dim_subscription_last_term.current_term >= 24 
           THEN TRUE
@@ -359,8 +362,13 @@
       ON dim_crm_account.dim_crm_user_id = dim_crm_user.dim_crm_user_id
     LEFT JOIN renewal_subscriptions_{{renewal_fiscal_year}}
       ON mart_charge.subscription_name = renewal_subscriptions_{{renewal_fiscal_year}}.subscription_name
-    WHERE mart_charge.term_start_month <= CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')
+    WHERE ( mart_charge.term_start_month <= CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')
       AND mart_charge.term_end_month > CONCAT('{{renewal_fiscal_year}}'-1,'-01-01')
+      )
+      OR (
+          mart_charge.is_single_fiscal_year_term_subscription = TRUE
+          AND mart_charge.term_start_fiscal_year = '{{renewal_fiscal_year}}'
+        )
 
 ), agg_charge_term_less_than_equal_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for charges with current terms <= 12 months. These terms do not need additional logic.
 
@@ -369,6 +377,7 @@
         WHEN is_multi_year_booking = TRUE THEN 'MYB'
         ELSE 'Non-MYB'
       END                             AS renewal_type,
+      is_single_fiscal_year_term_subscription,
       is_multi_year_booking,
       is_multi_year_booking_with_multi_subs,
       current_term,
@@ -394,7 +403,7 @@
       SUM(arr)   AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term <= 12
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
 
 ), agg_charge_term_greater_than_12_{{renewal_fiscal_year}} AS (--get the starting and ending month ARR for terms > 12 months. These terms need additional logic.
 
@@ -405,6 +414,7 @@
       END                                   AS renewal_type,
       is_multi_year_booking,
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       --current_term,
       CASE--the below odd term charges do not behave well in the multi-year bookings logic and end up with duplicate renewals in the fiscal year. This CASE statement smooths out the charges so they only have one renewal entry in the fiscal year.
         WHEN current_term = 25 THEN 24
@@ -445,7 +455,7 @@
       SUM(arr)                              AS arr
     FROM base_{{renewal_fiscal_year}}
     WHERE current_term > 12
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
 
 ), twenty_four_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year charges that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -453,6 +463,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs, 
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -476,7 +487,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 13 AND 24 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
 
 ), thirty_six_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_myb for multi-year bookings.
 
@@ -484,6 +495,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs, 
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -507,7 +519,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 25 AND 36 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     
     UNION ALL
     
@@ -515,6 +527,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs, 
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -538,7 +551,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 25 AND 36 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     ORDER BY 1
 
 ), forty_eight_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -547,6 +560,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -570,7 +584,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 37 AND 48 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     
     UNION ALL
     
@@ -578,6 +592,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -601,7 +616,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 37 AND 48 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     
     UNION ALL
     
@@ -609,6 +624,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -632,7 +648,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 37 AND 48 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     ORDER BY 1
 
 ), sixty_mth_term_{{renewal_fiscal_year}} AS (--create records for the intermitent renewals for multi-year bookings that are not in the Zuora data. The start and end months are in the agg_MYB for multi-year bookings.
@@ -641,6 +657,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -664,7 +681,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 49 AND 60 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     
     UNION ALL
    
@@ -672,6 +689,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -695,7 +713,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 49 AND 60 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     
     UNION ALL
     
@@ -703,6 +721,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -726,7 +745,7 @@
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 49 AND 60 
       AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01')  
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     
     UNION ALL
     
@@ -734,6 +753,7 @@
       renewal_type, 
       is_multi_year_booking, 
       is_multi_year_booking_with_multi_subs,
+      is_single_fiscal_year_term_subscription,
       current_term, 
       dim_charge_id, 
       dim_crm_account_id,
@@ -756,7 +776,7 @@
       SUM(arr)                                              AS arr
     FROM agg_charge_term_greater_than_12_{{renewal_fiscal_year}} 
     WHERE current_term BETWEEN 49 AND 60 AND term_end_month > CONCAT('{{renewal_fiscal_year}}','-01-01') 
-    {{ dbt_utils.group_by(n=22) }}
+    {{ dbt_utils.group_by(n=23) }}
     ORDER BY 1
 
 ), combined_{{renewal_fiscal_year}} AS (--union all of the charges
@@ -860,6 +880,7 @@
       combined_{{renewal_fiscal_year}}.renewal_type                                                                                         AS renewal_type,
       base_{{renewal_fiscal_year}}.is_multi_year_booking                                                                                    AS is_multi_year_booking,
       base_{{renewal_fiscal_year}}.is_multi_year_booking_with_multi_subs                                                                    AS is_multi_year_booking_with_multi_subs,
+      base_{{renewal_fiscal_year}}.is_single_fiscal_year_term_subscription                                                                  AS is_single_fiscal_year_term_subscription,
       base_{{renewal_fiscal_year}}.current_term                                                                                             AS subscription_term,
       base_{{renewal_fiscal_year}}.estimated_total_future_billings                                                                          AS estimated_total_future_billings,
       CASE
@@ -931,6 +952,7 @@
     renewal_type,
     is_multi_year_booking,
     is_multi_year_booking_with_multi_subs,
+    is_single_fiscal_year_term_subscription,
     subscription_term,
     estimated_total_future_billings,
     is_available_to_renew,
@@ -946,7 +968,7 @@
 {{ dbt_audit(
     cte_ref="unioned",
     created_by="@michellecooper",
-    updated_by="@iweeks",
+    updated_by="@michellecooper",
     created_date="2021-12-06",
-    updated_date="2022-01-21"
+    updated_date="2022-06-10"
 ) }}
