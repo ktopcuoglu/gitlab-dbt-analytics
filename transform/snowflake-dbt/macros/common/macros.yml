@@ -36,30 +36,80 @@ macros:
       - name: sales_region
         type: string
         description: Sales region field to use for grouping
-  - name: alliance_type
-    description: This macro applies business logic to identify alliance partners in the Channel business. The Macro uses the same names that are found in the source data.
+  - name: alliance_partner
+    description: This macro applies the business logic to identify alliance partners in the Channel business. The Macro uses the same names that are found in the source data.
     arguments:
       - name: fulfillment_partner_name
         type: string
         description: Fulfillment / Resale Partner account name fetched from joining the account and opportunity objects.
-      - name: fulfillment_partner
-        type: string
-        description: Fulfillment / Resale Partner account id from the opportunity object.
-  - name: alliance_type_short
-    description: This macro applies business logic to identify alliance partners in the Channel business. The Macro abbreviates the source names to shorter names selected by the business that will be used in reporting.
-    arguments:
       - name: partner_account_name
         type: string
-        description: Abbreviated partner account name fetched from joining the account and opportunity objects.
-      - name: influence_account_name
+        description: Partner account name fetched from joining the account and opportunity objects.
+      - name: close_date
+        type: date
+        description: Close date of the opportunity. Used to distinguish the historical groupings of the alliance partners.
+      - name: resale_partner_track
         type: string
-        description: Abbreviated influence partner account name fetched from joining the account and opportunity objects.
-      - name: partner_account
+        description: Identifies the resale partner business type. Used to filter out technologies partners.
+      - name: partner_track
         type: string
-        description: Abbreviated partner account id from the opportunity object.
-      - name: influence_account
+        description: Identifies the partner business type. Used to filter out technologies partners.
+      - name: deal_path
         type: string
-        description: Abbreviated influence partner account id from the opportunity object.
+  - name: alliance_partner_short
+    description: This macro applies the business logic to identify alliance partners in the Channel business. The Macro abbreviates the source names to shorter names selected by the business that will be used in reporting.
+    arguments:
+      - name: fulfillment_partner_name
+        type: string
+        description: Fulfillment / Resale Partner account name fetched from joining the account and opportunity objects.
+      - name: partner_account_name
+        type: string
+        description: Partner account name fetched from joining the account and opportunity objects.
+      - name: close_date
+        type: date
+        description: Close date of the opportunity. Used to distinguish the historical groupings of the alliance partners.
+      - name: resale_partner_track
+        type: string
+        description: Identifies the resale partner business type. Used to filter out technologies partners.
+      - name: partner_track
+        type: string
+        description: Identifies the partner business type. Used to filter out technologies partners.
+      - name: deal_path
+        type: string
+  - name: alliance_partner_current
+    description: This macro applies the current business logic to identify alliance partners in the Channel business. The Macro uses the same names that are found in the source data.
+    arguments:
+      - name: fulfillment_partner_name
+        type: string
+        description: Fulfillment / Resale Partner account name fetched from joining the account and opportunity objects.
+      - name: partner_account_name
+        type: string
+        description: Partner account name fetched from joining the account and opportunity objects.
+      - name: resale_partner_track
+        type: string
+        description: Identifies the resale partner business type. Used to filter out technologies partners.
+      - name: partner_track
+        type: string
+        description: Identifies the partner business type. Used to filter out technologies partners.
+      - name: deal_path
+        type: string
+  - name: alliance_partner_short_current
+    description: This macro applies the current business logic to identify alliance partners in the Channel business. The Macro abbreviates the source names to shorter names selected by the business that will be used in reporting.
+    arguments:
+      - name: fulfillment_partner_name
+        type: string
+        description: Fulfillment / Resale Partner account name fetched from joining the account and opportunity objects.
+      - name: partner_account_name
+        type: string
+        description: Partner account name fetched from joining the account and opportunity objects.
+      - name: resale_partner_track
+        type: string
+        description: Identifies the resale partner business type. Used to filter out technologies partners.
+      - name: partner_track
+        type: string
+        description: Identifies the partner business type. Used to filter out technologies partners.
+      - name: deal_path
+        type: string
   - name: channel_type
     description: This macro applies business logic to bucket sqs_bucket_engagement, which is a grouping of sales_qualified_source, and order_type into the respective channel type. Partner Sourced and Co-sell by order type.
     arguments:
@@ -94,3 +144,14 @@ macros:
       - name: string
         type: string
         description: String to add to the left and the right of the column.
+  - name: monthly_all_time_metric_calc
+    description: '{{ doc("monthly_all_time_metric_calc") }}'
+    arguments:
+      - name: dim_installation_id
+        type: string
+      - name: metrics_path
+        type: string
+      - name: metric_value
+        type: variant
+      - name: ping_created_at
+        type: timestamp

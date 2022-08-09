@@ -40,10 +40,10 @@ WITH dim_billing_account AS (
     dim_product_detail_id,
     dim_billing_account_id,
     dim_crm_account_id,
-    SUM(mrr)                                                               AS mrr,
-    SUM(arr)                                                               AS arr,
-    SUM(quantity)                                                          AS quantity,
-    ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
+    SUM(mrr)                                                                      AS mrr,
+    SUM(arr)                                                                      AS arr,
+    SUM(quantity)                                                                 AS quantity,
+    ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure)   AS unit_of_measure
   FROM {{ ref('fct_mrr') }}
   WHERE subscription_status IN ('Active', 'Cancelled')
   {{ dbt_utils.group_by(n=5) }}
@@ -69,6 +69,8 @@ WITH dim_billing_account AS (
       dim_billing_account.billing_account_number                                      AS billing_account_number,
       dim_billing_account.ssp_channel                                                 AS ssp_channel,
       dim_billing_account.po_required                                                 AS po_required,
+      dim_billing_account.auto_pay                                                    AS auto_pay,
+      dim_billing_account.default_payment_method_type                                 AS default_payment_method_type,
 
       -- crm account info
       dim_crm_account.dim_crm_account_id                                              AS dim_crm_account_id,
@@ -95,6 +97,12 @@ WITH dim_billing_account AS (
       dim_crm_account.is_jihu_account                                                 AS is_jihu_account,
       dim_crm_account.parent_crm_account_lam                                          AS parent_crm_account_lam,
       dim_crm_account.parent_crm_account_lam_dev_count                                AS parent_crm_account_lam_dev_count,
+      dim_crm_account.parent_crm_account_demographics_sales_segment                   AS parent_crm_account_demographics_sales_segment,
+      dim_crm_account.parent_crm_account_demographics_geo                             AS parent_crm_account_demographics_geo,
+      dim_crm_account.parent_crm_account_demographics_region                          AS parent_crm_account_demographics_region,
+      dim_crm_account.parent_crm_account_demographics_area                            AS parent_crm_account_demographics_area,
+      dim_crm_account.parent_crm_account_demographics_territory                       AS parent_crm_account_demographics_territory,
+      
 
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
@@ -137,6 +145,8 @@ WITH dim_billing_account AS (
       dim_product_detail.product_delivery_type                                        AS product_delivery_type,
       dim_product_detail.service_type                                                 AS service_type,
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
+      dim_product_detail.is_licensed_user                                             AS is_licensed_user,
+      dim_product_detail.is_arpu                                                      AS is_arpu,
 
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
@@ -207,7 +217,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@jpeguero",
+    updated_by="@lisvinueza",
     created_date="2020-09-04",
-    updated_date="2022-05-30"
+    updated_date="2022-08-01"
 ) }}

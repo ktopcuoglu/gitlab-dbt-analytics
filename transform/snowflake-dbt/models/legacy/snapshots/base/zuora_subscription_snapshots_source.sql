@@ -35,6 +35,7 @@ WITH source AS (
       currenttermperiodtype                       AS current_term_period_type,
       endcustomerdetails__c                       AS sfdc_end_customer_details,
       eoastarterbronzeofferaccepted__c            AS eoa_starter_bronze_offer_accepted,
+      multiyeardealsubscriptionlinkage__c         AS multi_year_deal_subscription_linkage,
 
       --Supersonics fields
       IFF(LENGTH(TRIM(turnoncloudlicensing__c)) > 0, turnoncloudlicensing__c, NULL)

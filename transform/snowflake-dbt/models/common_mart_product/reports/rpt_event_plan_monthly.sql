@@ -42,6 +42,7 @@ mart_usage_event_plan_monthly AS (
     COUNT(DISTINCT(dim_ultimate_parent_namespace_id)) AS ultimate_parent_namespace_count,
     COUNT(DISTINCT(dim_user_id)) AS user_count
   FROM mart_with_date_range
+  WHERE event_calendar_month < DATE_TRUNC('month', CURRENT_DATE)
   {{ dbt_utils.group_by(n=12) }}
   ORDER BY event_calendar_month DESC, plan_id_at_event_date DESC
 
@@ -52,5 +53,5 @@ mart_usage_event_plan_monthly AS (
     created_by="@dihle",
     updated_by="@iweeks",
     created_date="2022-02-22",
-    updated_date="2022-05-16"
+    updated_date="2022-07-01"
 ) }}

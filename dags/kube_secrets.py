@@ -1,3 +1,5 @@
+""" This file contains k8s secrets used in all DAGs """
+
 from airflow.contrib.kubernetes.secret import Secret
 
 # BambooHR
@@ -222,6 +224,8 @@ DORG_PASSWORD = Secret("env", "DORG_PASSWORD", "airflow", "DORG_PASSWORD")
 GMAPS_API_KEY = Secret("env", "GMAPS_API_KEY", "airflow", "GMAPS_API_KEY")
 CLEARBIT_API_KEY = Secret("env", "CLEARBIT_API_KEY", "airflow", "CLEARBIT_API_KEY")
 
+MAILGUN_API_KEY = Secret("env", "MAILGUN_API_KEY", "airflow", "MAILGUN_API_KEY")
+
 # GitLab API
 GITLAB_COM_API_TOKEN = Secret(
     "env", "GITLAB_COM_API_TOKEN", "airflow", "GITLAB_COM_API_TOKEN"
@@ -280,4 +284,19 @@ ZUORA_API_CLIENT_ID = Secret(
 )
 ZUORA_API_CLIENT_SECRET = Secret(
     "env", "ZUORA_API_CLIENT_SECRET", "airflow", "ZUORA_API_CLIENT_SECRET"
+)
+
+# Data observability
+MCD_DEFAULT_API_ID = Secret(
+    "env", "MCD_DEFAULT_API_ID", "airflow", "MCD_DEFAULT_API_ID"
+)
+MCD_DEFAULT_API_TOKEN = Secret(
+    "env", "MCD_DEFAULT_API_TOKEN", "airflow", "MCD_DEFAULT_API_TOKEN"
+)
+# Data Science Load Role
+SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE = Secret(
+    "env",
+    "SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE",
+    "airflow",
+    "SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE",
 )

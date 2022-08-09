@@ -108,6 +108,7 @@ final AS (
     fct_crm_opportunity.net_new_source_categories,
     fct_crm_opportunity.invoice_number,
     fct_crm_opportunity.primary_campaign_source_id,
+    fct_crm_opportunity.ga_client_id,
     fct_crm_opportunity.opportunity_term,
     fct_crm_opportunity.cp_use_cases,
     fct_crm_opportunity.record_type_id,
@@ -363,6 +364,7 @@ final AS (
     fct_crm_opportunity.fulfillment_partner,
     fct_crm_opportunity.platform_partner,
     fct_crm_opportunity.partner_track,
+    fct_crm_opportunity.resale_partner_track,
     fct_crm_opportunity.is_public_sector_opp,
     fct_crm_opportunity.is_registration_from_portal,
     fct_crm_opportunity.calculated_discount,
@@ -616,7 +618,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@michellecooper",
+    updated_by="@jpeguero",
     created_date="2022-05-05",
-    updated_date="2022-05-05"
+    updated_date="2022-08-03"
   ) }}

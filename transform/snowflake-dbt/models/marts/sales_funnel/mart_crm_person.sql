@@ -115,6 +115,7 @@
       dim_crm_person.partner_prospect_status,
       dim_crm_person.partner_prospect_owner_name,
       dim_crm_person.partner_prospect_id,
+      fct_crm_person.ga_client_id,
       dim_crm_person.sequence_step_type,
       dim_crm_person.state,
       dim_crm_person.country,
@@ -232,7 +233,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@jpeguero",
     created_date="2020-12-07",
-    updated_date="2022-05-05",
-  ) }}
+    updated_date="2022-07-29",
+  ) }}  

@@ -80,6 +80,7 @@ WITH prep_amendment AS (
     subscription.invoice_owner_account,
     subscription.creator_account,
     subscription.was_purchased_through_reseller,
+    subscription.multi_year_deal_subscription_linkage,
 
     --Date Information
     subscription.subscription_start_date,
@@ -120,5 +121,5 @@ WITH prep_amendment AS (
     created_by="@snalamaru",
     updated_by="@michellecooper",
     created_date="2020-12-16",
-    updated_date="2022-06-08"
+    updated_date="2022-07-07"
 ) }}

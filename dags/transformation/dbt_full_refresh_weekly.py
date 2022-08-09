@@ -8,11 +8,9 @@ from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.python_operator import BranchPythonOperator
 from airflow.utils.trigger_rule import TriggerRule
 from airflow_utils import (
     DBT_IMAGE,
-    clone_repo_cmd,
     dbt_install_deps_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
@@ -36,6 +34,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -65,6 +65,8 @@ secrets_list = [
     SNOWFLAKE_TRANSFORM_ROLE,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_TRANSFORM_SCHEMA,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 ]
 # Default arguments for the DAG
 default_args = {
@@ -94,7 +96,11 @@ dbt_full_refresh_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
-    dbt run --profiles-dir profile --target prod --full-refresh --exclude tag:datasiren common.dim_ip_to_geo; ret=$?;
+    dbt run --profiles-dir profile --target prod --full-refresh --exclude common.dim_ip_to_geo; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -112,7 +118,11 @@ dbt_full_refresh = KubernetesPodOperator(
 dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
-    dbt test --profiles-dir profile --target prod --exclude tag:datasiren snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    dbt test --profiles-dir profile --target prod --exclude snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
@@ -133,6 +143,10 @@ dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_workspaces_test = KubernetesPodOperator(
@@ -151,6 +165,10 @@ dbt_results_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
+    montecarlo import dbt-manifest \
+    target/manifest.json --project-name gitlab-analysis;
+    montecarlo import dbt-run-results \
+    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_results = KubernetesPodOperator(

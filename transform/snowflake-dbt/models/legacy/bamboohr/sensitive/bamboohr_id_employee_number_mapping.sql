@@ -32,20 +32,18 @@ WITH source AS (
       nationality,
       region,
       CASE
-        WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico') 
+        WHEN region = 'Americas' AND country IN ('United States', 'Canada','Mexico','United States of America') 
           THEN 'NORAM'
-        WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico') 
+        WHEN region = 'Americas' AND country NOT IN ('United States', 'Canada','Mexico','United States of America') 
           THEN 'LATAM'
         ELSE region END                                                                AS region_modified,
-        IFF(country='United States', 
+        IFF(country IN ('United States','United States of America'), 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_' || country, 
             COALESCE(gender_dropdown, gender,'Did Not Identify')  || '_'|| 'Non-US')   AS gender_region,
         greenhouse_candidate_id,
         uploaded_at                                                                    AS last_updated_date,
       CASE
-        WHEN COALESCE(gender_dropdown, gender,'Did Not Identify') NOT IN ('Male', 'Did Not Identify')
-            THEN TRUE
-        WHEN COALESCE(ethnicity, 'Did Not Identify') NOT IN ('White','Did Not Identify')
+        WHEN COALESCE(ethnicity, 'Did Not Identify') NOT IN ('White','Asian','Did Not Identify')
             THEN TRUE
         ELSE FALSE END                                                                  AS urg_group
     FROM source

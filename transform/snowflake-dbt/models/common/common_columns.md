@@ -1,4 +1,4 @@
-{% docs event_id %}
+{% docs event_pk %}
 
 The unique identifier of an event. This is a generated primary key and will not join back to the source models
 
@@ -283,5 +283,17 @@ The count of events generated
 {% docs ultimate_parent_namespace_count %}
 
  The count of distinct ultimate parent namespaces in which an event was generated
+
+{% enddocs %}
+
+{% docs ultimate_parent_namespace_type %}
+
+ The type of Ultimate Parent Namespace (user,group,project)
+
+{% enddocs %}
+
+{% docs monthly_metric_value %}
+
+ For 28 day metrics, this is the metric value that comes directly from the service ping. For all-time metrics, this is the monthly metric value that is computed using the monthly_all_time_metric_calc macro.
 
 {% enddocs %}

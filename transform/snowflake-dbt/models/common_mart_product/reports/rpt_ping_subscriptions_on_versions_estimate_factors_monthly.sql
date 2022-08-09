@@ -18,7 +18,7 @@
 , arr_joined AS (
 
   SELECT
-    mart_ping_instance_metric_monthly.ping_created_at_month                           AS ping_created_at_month,
+    mart_ping_instance_metric_monthly.ping_created_date_month                         AS ping_created_date_month,
     mart_ping_instance_metric_monthly.metrics_path                                    AS metrics_path,
     mart_ping_instance_metric_monthly.ping_edition                                    AS ping_edition,
     mart_ping_instance_metric_monthly.stage_name                                      AS stage_name,
@@ -33,8 +33,8 @@
   FROM mart_ping_instance_metric_monthly
     INNER JOIN latest_subscriptions
   ON mart_ping_instance_metric_monthly.latest_subscription_id = latest_subscriptions.latest_subscription_id
-      AND mart_ping_instance_metric_monthly.ping_created_at_month = latest_subscriptions.ping_created_at_month
-    WHERE time_frame = '28d'
+      AND mart_ping_instance_metric_monthly.ping_created_date_month = latest_subscriptions.ping_created_date_month
+    WHERE time_frame IN ('28d', 'all')
       AND ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=12)}}
 
@@ -43,7 +43,7 @@
 ), reported_actuals AS (
 
     SELECT
-        ping_created_at_month                                         AS ping_created_at_month,
+        ping_created_date_month                                       AS ping_created_date_month,
         metrics_path                                                  AS metrics_path,
         ping_edition                                                  AS ping_edition,
         stage_name                                                    AS stage_name,
@@ -63,7 +63,7 @@
 ), joined_counts AS (
 
     SELECT
-        reported_actuals.ping_created_at_month                                                                                                                                      AS ping_created_at_month,
+        reported_actuals.ping_created_date_month                                                                                                                                    AS ping_created_date_month,
         reported_actuals.metrics_path                                                                                                                                               AS metrics_path,
         rpt_ping_subscriptions_reported_counts_monthly.ping_edition                                                                                                                                               AS ping_edition,
         reported_actuals.stage_name                                                                                                                                                 AS stage_name,
@@ -81,11 +81,11 @@
         rpt_ping_subscriptions_reported_counts_monthly.total_licensed_users - reported_seat_count                                                                                   AS not_reporting_seat_count -- not on version with metric
     FROM reported_actuals
     LEFT JOIN rpt_ping_subscriptions_on_versions_counts_monthly --model with subscriptions and seats on version
-      ON reported_actuals.ping_created_at_month = rpt_ping_subscriptions_on_versions_counts_monthly.ping_created_at_month
+      ON reported_actuals.ping_created_date_month = rpt_ping_subscriptions_on_versions_counts_monthly.ping_created_date_month
       AND reported_actuals.metrics_path = rpt_ping_subscriptions_on_versions_counts_monthly.metrics_path
       --AND reported_actuals.ping_edition = rpt_ping_subscriptions_on_versions_counts_monthly.ping_edition
     LEFT JOIN rpt_ping_subscriptions_reported_counts_monthly --model with overall total subscriptions and seats
-      ON reported_actuals.ping_created_at_month = rpt_ping_subscriptions_reported_counts_monthly.ping_created_at_month
+      ON reported_actuals.ping_created_date_month = rpt_ping_subscriptions_reported_counts_monthly.ping_created_date_month
       AND reported_actuals.metrics_path = rpt_ping_subscriptions_reported_counts_monthly.metrics_path
       --AND reported_actuals.ping_edition = rpt_ping_subscriptions_reported_counts_monthly.ping_edition
 
@@ -94,7 +94,7 @@
 ), unioned_counts AS (
 
   SELECT
-    ping_created_at_month                                           AS ping_created_at_month,
+    ping_created_date_month                                         AS ping_created_date_month,
     metrics_path                                                    AS metrics_path,
     ping_edition                                                    AS ping_edition,
     stage_name                                                      AS stage_name,
@@ -113,7 +113,7 @@
   UNION ALL
 
   SELECT
-    ping_created_at_month                                           AS ping_created_at_month,
+    ping_created_date_month                                         AS ping_created_date_month,
     metrics_path                                                    AS metrics_path,
     ping_edition                                                    AS ping_edition,
     stage_name                                                      AS stage_name,
@@ -134,7 +134,7 @@
 ), final AS (
 
 SELECT
-    {{ dbt_utils.surrogate_key(['ping_created_at_month', 'metrics_path', 'ping_edition','estimation_grain']) }}          AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
+    {{ dbt_utils.surrogate_key(['ping_created_date_month', 'metrics_path', 'ping_edition','estimation_grain']) }}         AS ping_subscriptions_on_versions_estimate_factors_monthly_id,
     *,
     {{ pct_w_counters('reporting_count', 'not_reporting_count') }}                                                        AS percent_reporting
  FROM unioned_counts
@@ -144,7 +144,7 @@ SELECT
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@icooper-acp",
+     updated_by="@iweeks",
      created_date="2022-04-07",
-     updated_date="2022-04-15"
+     updated_date="2022-07-29"
  ) }}

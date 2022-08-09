@@ -5,7 +5,10 @@
 
 {{ simple_cte([
     ('dim_date', 'dim_date'),
-    ('prep_ping_instance', 'prep_ping_instance')
+    ('prep_ping_instance', 'prep_ping_instance'),
+    ('prep_license','prep_license'),
+    ('prep_charge','prep_charge'),
+    ('prep_product_detail','prep_product_detail')
     ])
 
 }}
@@ -44,6 +47,18 @@ SELECT DISTINCT
       LEFT JOIN last_ping_of_month_flag
         ON usage_data_w_date.id = last_ping_of_month_flag.id
 
+), dedicated_instance AS (
+
+  SELECT DISTINCT prep_ping_instance.uuid
+  FROM prep_ping_instance
+  INNER JOIN prep_license
+    ON prep_ping_instance.license_md5 = prep_license.license_md5
+  INNER JOIN prep_charge
+    ON prep_license.dim_subscription_id = prep_charge.dim_subscription_id
+  INNER JOIN prep_product_detail
+    ON prep_charge.dim_product_detail_id = prep_product_detail.dim_product_detail_id 
+  WHERE LOWER(prep_product_detail.product_rate_plan_charge_name) LIKE '%dedicated%' 
+        
 ), final AS (
 
     SELECT DISTINCT
@@ -52,12 +67,12 @@ SELECT DISTINCT
       dim_host_id                                                                                                   AS dim_host_id,
       dim_instance_id                                                                                               AS dim_instance_id,
       dim_installation_id                                                                                           AS dim_installation_id,
-      TO_DATE(ping_created_at)                                                                                      AS ping_created_at,
-      TO_DATE(DATEADD('days', -28, ping_created_at))                                                                AS ping_created_at_28_days_earlier,
-      TO_DATE(DATE_TRUNC('YEAR', ping_created_at))                                                                  AS ping_created_at_year,
-      TO_DATE(DATE_TRUNC('MONTH', ping_created_at))                                                                 AS ping_created_at_month,
-      TO_DATE(DATE_TRUNC('WEEK', ping_created_at))                                                                  AS ping_created_at_week,
-      TO_DATE(DATE_TRUNC('DAY', ping_created_at))                                                                   AS ping_created_at_date,
+      ping_created_at                                                                                               AS ping_created_at,
+      TO_DATE(DATEADD('days', -28, ping_created_at))                                                                AS ping_created_date_28_days_earlier,
+      TO_DATE(DATE_TRUNC('YEAR', ping_created_at))                                                                  AS ping_created_date_year,
+      TO_DATE(DATE_TRUNC('MONTH', ping_created_at))                                                                 AS ping_created_date_month,
+      TO_DATE(DATE_TRUNC('WEEK', ping_created_at))                                                                  AS ping_created_date_week,
+      TO_DATE(DATE_TRUNC('DAY', ping_created_at))                                                                   AS ping_created_date,
       ip_address_hash                                                                                               AS ip_address_hash,
       version                                                                                                       AS version,
       instance_user_count                                                                                           AS instance_user_count,
@@ -122,7 +137,11 @@ SELECT DISTINCT
         ELSE 'Self-Managed'
         END                                                                                                         AS ping_delivery_type,
       CASE
-        WHEN ping_delivery_type = 'SaaS'                THEN TRUE
+        WHEN EXISTS (SELECT 1 FROM dedicated_instance di 
+                     WHERE fct_w_month_flag.uuid = di.uuid)     THEN TRUE
+        ELSE FALSE END                                                                                              AS is_saas_dedicated,
+      CASE
+        WHEN ping_delivery_type = 'SaaS'                        THEN TRUE
         WHEN installation_type = 'gitlab-development-kit'       THEN TRUE
         WHEN hostname = 'gitlab.com'                            THEN TRUE
         WHEN hostname ILIKE '%.gitlab.com'                      THEN TRUE
@@ -135,7 +154,7 @@ SELECT DISTINCT
       )                                                         THEN TRUE
         ELSE FALSE END                                                                                              AS is_staging,
         CASE
-          WHEN last_ping_of_month_flag = TRUE      THEN TRUE
+          WHEN last_ping_of_month_flag = TRUE                   THEN TRUE
           ELSE FALSE
           END                                                                                                       AS is_last_ping_of_month
     FROM fct_w_month_flag

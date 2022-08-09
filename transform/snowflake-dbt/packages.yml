@@ -1,13 +1,14 @@
 # Update docs-packages.yml as well to have the docs site be accurate.
 packages:
-  - package: gitlabhq/snowflake_spend
-    version: 1.2.0
+  - git: git@gitlab.com:gitlab-data/snowflake_spend.git
+    revision: "updates_for_dbt_1_1"
+    warn-unpinned: false
   - git: git@gitlab.com:gitlab-data/data-tests.git
     revision: "{{env_var('DATA_TEST_BRANCH')}}"
     warn-unpinned: false
-  - package: fishtown-analytics/audit_helper
-    version: 0.3.0
-  - package: fishtown-analytics/dbt_utils
-    version: 0.6.4
-  - package: fishtown-analytics/snowplow
-    version: 0.12.0
+  - package: dbt-labs/audit_helper
+    version: 0.5.0
+  - package: dbt-labs/dbt_utils
+    version: 0.8.5
+  - package: dbt-labs/snowplow
+    version: 0.14.0
