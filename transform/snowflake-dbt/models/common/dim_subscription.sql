@@ -94,6 +94,9 @@ WITH prep_amendment AS (
     subscription.term_end_date,
     subscription.term_start_month,
     subscription.term_end_month,
+    subscription.term_start_fiscal_year,
+    subscription.term_end_fiscal_year,
+    subscription.is_single_fiscal_year_term_subscription,
     subscription.second_active_renewal_month,
 
     --Lineage and Cohort Information
@@ -116,7 +119,7 @@ WITH prep_amendment AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@snalamaru",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2020-12-16",
     updated_date="2022-07-07"
 ) }}
