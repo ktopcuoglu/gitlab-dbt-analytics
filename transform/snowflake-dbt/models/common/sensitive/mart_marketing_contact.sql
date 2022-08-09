@@ -944,7 +944,8 @@
       'pql_namespace_name',
       'pql_nbr_integrations_installed',
       'pql_integrations_installed',
-      'pql_namespace_creator_job_description'
+      'pql_namespace_creator_job_description',
+      'is_pql'
       ]
 ) }}
 
@@ -953,7 +954,7 @@
     created_by="@trevor31",
     updated_by="@jpeguero",
     created_date="2021-02-09",
-    updated_date="2022-05-02"
+    updated_date="2022-08-08"
 ) }}
 
 
