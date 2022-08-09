@@ -525,20 +525,20 @@ final AS (
     fct_crm_opportunity.calculated_age_in_days,
     CASE
       WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.snapshot_fiscal_quarter_name
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+        AND fct_crm_opportunity.is_net_arr_pipeline_created = 1
         THEN fct_crm_opportunity.net_arr
       ELSE 0
     END AS created_in_snapshot_quarter_net_arr,
     CASE
       WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.close_fiscal_quarter_name
         AND fct_crm_opportunity.is_won = 1
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+        AND fct_crm_opportunity.is_net_arr_pipeline_created = 1
         THEN fct_crm_opportunity.net_arr
       ELSE 0
     END AS created_and_won_same_quarter_net_arr,
     CASE
       WHEN fct_crm_opportunity.pipeline_created_fiscal_quarter_name = fct_crm_opportunity.snapshot_fiscal_quarter_name
-        AND fct_crm_opportunity.is_eligible_created_pipeline = 1
+        AND fct_crm_opportunity.is_net_arr_pipeline_created = 1
         THEN fct_crm_opportunity.calculated_deal_count
       ELSE 0
     END AS created_in_snapshot_quarter_deal_count,
@@ -582,7 +582,7 @@ final AS (
     dim_crm_account.parent_crm_account_demographics_area AS upa_demographics_area,
     dim_crm_account.parent_crm_account_demographics_territory AS upa_demographics_territory,
     fct_crm_opportunity.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
-    fct_crm_opportunity.is_eligible_created_pipeline AS is_eligible_created_pipeline_flag,
+    fct_crm_opportunity.is_net_arr_pipeline_created AS is_eligible_created_pipeline_flag,
     fct_crm_opportunity.is_eligible_sao AS is_eligible_sao_flag,
     fct_crm_opportunity.is_eligible_asp_analysis AS is_eligible_asp_analysis_flag,
     fct_crm_opportunity.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
