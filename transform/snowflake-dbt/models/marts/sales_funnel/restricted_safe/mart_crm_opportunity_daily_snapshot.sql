@@ -46,6 +46,11 @@ final AS (
     fct_crm_opportunity.iacv_created_fiscal_year,
     fct_crm_opportunity.iacv_created_fiscal_quarter_name,
     fct_crm_opportunity.iacv_created_fiscal_quarter_date,
+    fct_crm_opportunity.net_arr_created_date,
+    fct_crm_opportunity.net_arr_created_month,
+    fct_crm_opportunity.net_arr_created_fiscal_year,
+    fct_crm_opportunity.net_arr_created_fiscal_quarter_name,
+    fct_crm_opportunity.net_arr_created_fiscal_quarter_date,
     fct_crm_opportunity.pipeline_created_date,
     fct_crm_opportunity.pipeline_created_month,
     fct_crm_opportunity.pipeline_created_fiscal_year,
@@ -592,6 +597,7 @@ final AS (
     fct_crm_opportunity.close_month AS close_date_month,
     fct_crm_opportunity.created_month AS created_date_month,
     fct_crm_opportunity.iacv_created_month AS iacv_created_date_month,
+    fct_crm_opportunity.net_arr_created_month AS net_arr_created_date_month,
     fct_crm_opportunity.pipeline_created_month AS pipeline_created_date_month,
     fct_crm_opportunity.is_excluded AS is_excluded_flag
 
@@ -612,7 +618,7 @@ final AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@michellecooper",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2022-05-05",
     updated_date="2022-08-03"
   ) }}
