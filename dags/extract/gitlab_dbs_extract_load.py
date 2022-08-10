@@ -333,7 +333,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
-        dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{dbt_name}; ret=$?;
+        dbt snapshot --profiles-dir profile --target prod --select path:snapshots/customers; ret=$?;
         montecarlo import dbt-manifest \
         target/manifest.json --project-name gitlab-analysis;
         montecarlo import dbt-run-results \
