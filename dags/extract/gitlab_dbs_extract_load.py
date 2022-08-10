@@ -99,7 +99,7 @@ config_dict = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
         "dag_name": "el_customers_scd",
-        "dbt_name": "customers_db",
+        "dbt_name": "customers",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": "0 */8 * * *",
         "secrets": [
@@ -330,6 +330,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     )
 
     # Snapshot source data
+
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
