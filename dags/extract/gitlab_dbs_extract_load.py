@@ -331,8 +331,8 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
 
     # Snapshot source data
 
-    if dbt_name == 'customers_db':
-        snapshot_folder = 'customers'
+    if dbt_name == "customers_db":
+        snapshot_folder = "customers"
     else:
         snapshot_folder = dbt_name
 
