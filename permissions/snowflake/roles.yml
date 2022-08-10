@@ -3697,6 +3697,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - customers_db
+            - zuora_query_api
         warehouses:
             - dev_xs
 
