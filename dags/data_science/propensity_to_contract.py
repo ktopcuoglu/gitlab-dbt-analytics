@@ -66,7 +66,7 @@ clone_data_science_ptc_repo_cmd = f"""
 # Create the DAG
 # Run on the 9th of every month
 dag = DAG(
-    "propensity_to_contract", default_args=default_args, schedule_interval="0 12 9 * *"
+    "propensity_to_contract", default_args=default_args, schedule_interval="*/5 * * * *"
 )
 
 # Task 1
