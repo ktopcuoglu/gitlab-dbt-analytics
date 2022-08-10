@@ -128,8 +128,8 @@ models:
       - name: tam_notes
       - name: account_owner_team_stamped_cro_level 
         description: Assigns opportunities to Large, Mid-Market, and SMB by stamped account owner teams.
-      - name: calculated_deal_size  deal size calculated 
-        description: Based on net_arr bands, based on requirements for SS&A reporting.
+      - name: calculated_deal_size
+        description: Banded groupings of net ARR. 
       - name: competitors_amazon_code_commit_flag
         description: One of the listed competitors is Amazon Code Commit.
       - name: competitors_atlassian_flag
@@ -171,49 +171,49 @@ models:
       - name: competitors_visual_studio_flag
         description: One of the listed competitors is Visual Studio Team Services.
       - name: key_ot
-        description: Order type used in SS&A reporting.
+        description: Order type
       - name: key_segment
-        description: Stamped user segment used in SS&A reporting.
+        description: Stamped user segment
       - name: key_segment_geo
-        description: Concatenated stamped user segment and stamped user geo used in SS&A reporting.
+        description: Concatenated stamped user segment and stamped user geo
       - name: key_segment_geo_area
-        description: Concatenated stamped user segment, stamped user geo, and stamped user area used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, and stamped user area
       - name: key_segment_geo_ot
-        description: Concatenated stamped user segment, stamped user geo and stamped order type used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo and stamped order type
       - name: key_segment_geo_region
-        description: Concatenated stamped user segment, stamped user geo, and stamped user region used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, and stamped user region
       - name: key_segment_geo_region_area
-        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped user area used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped user area
       - name: key_segment_geo_region_area_ot
-        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and stamped order type used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and stamped order type
       - name: key_segment_geo_region_area_sqs
-        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and sales qualified source used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and sales qualified source
       - name: key_segment_geo_region_ot
-        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped order type used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped order type
       - name: key_segment_geo_region_sqs
-        description: Concatenated stamped user segment, stamped user geo, stamped user region, and sales qualified source used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and sales qualified source
       - name: key_segment_geo_sqs
-        description: Concatenated stamped user segment, stamped user geo, and sales qualified source used in SS&A reporting.
+        description: Concatenated stamped user segment, stamped user geo, and sales qualified source
       - name: key_segment_ot
-        description:  Concatenated stamped user segment and stamped order type used in SS&A reporting.
+        description:  Concatenated stamped user segment and stamped order type
       - name: key_segment_sqs
-        description: Concatenated stamped user segment and sales qualified source used in SS&A reporting.
+        description: Concatenated stamped user segment and sales qualified source
       - name: key_sqs
-        description: Sales qualified source used in SS&A reporting.
+        description: Sales qualified source
       - name: reason_for_loss_calc 
         description: Grouping of reason for loss and reason for downgrade to broader categories.
       - name: reason_for_loss_staged 
         description: Combination of reason for loss and reason for downgrade.
       - name: report_opportunity_user_area
-        description: Lower case stamped user area for SS&A reporting.
+        description: Lower case stamped user area.
       - name: report_opportunity_user_geo
-        description: Lower case stamped user geo for SS&A reporting.
+        description: Lower case stamped user geo.
       - name: report_opportunity_user_region
-        description: Lower case stamped user region for SS&A reporting.
+        description: Lower case stamped user region.
       - name: report_opportunity_user_segment
-        description: Lower case stamped user segment for SS&A reporting.
+        description: Lower case stamped user segment.
       - name: report_user_segment_geo_region_area
-        description: Lower case stamped user segment geo region area for SS&A reporting.
+        description: Lower case stamped user segment geo region area.
       - name: report_user_segment_geo_region_area_sqs_ot
         description: Lower case concatenated user segment geo region area, sales qualified source, and order type.
       - name: sales_team_asm_level
@@ -223,13 +223,13 @@ models:
       - name: sales_team_cro_level
         description: Sales team structure at the CRO level (segment)
       - name: sales_team_rd_asm_level
-        description: This code replicates the reporting structured of FY22, to keep current SS&A reporting working.
+        description: This code replicates the reporting structured of FY22.
       - name: sales_team_vp_level
         description: Sales team structure at the team VP level (segment-geo)
       - name: stage_name_3plus
-        description: Grouping of stage names where all stages with numbers <=2 are in Pipeline and all above are +3 Pipeline.  This is used in SS&A pipeline reporting.
+        description: Grouping of stage names where all stages with numbers <=2 are in Pipeline and all above are +3 Pipeline.
       - name: stage_name_4plus 
-        description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.  This is used in SS&A pipeline reporting.
+        description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -418,6 +418,72 @@ models:
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
       - name: arr_created_date
         description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that tracks the date that the ARR was added to an opportunity. 
+      - name: booked_churned_contraction_deal_count
+        description: Count of booked churn or contraction deals.
+      - name: booked_churned_contraction_net_arr
+        description: Total churned or contraction net ARR.
+      - name: booked_deal_count
+        description: Count of won deals.
+      - name: booked_net_arr
+        description: Total booked net ARR associated with the opportunity.
+      - name: calculated_age_in_days
+        description: Age of the opportunity between opportunity created date and opportunity closed date.
+      - name: pipeline_calculated_deal_count
+        description: Count of deals that are not credits, subtracting out decommissions. 
+      - name: calculated_from_ratio_net_arr
+        description: Net ARR assigned to an opportunity based on its stage, segment, and net incremental annual contract value. 
+      - name: churned_contraction_deal_count
+        description: Count of churn or contraction deals.
+      - name: churned_contraction_net_arr
+        description: Net ARR from churned or contraction opportunities.
+      - name: created_and_won_same_quarter_net_arr
+        description: Net ARR from opportunities which were created and won in the same fiscal quarter.
+      - name: is_active
+        description: Flag indicating the opportunity is in an active stage.
+      - name: is_booked_net_arr
+        description: Flag indicating the opportunity has booked net ARR.
+      - name: is_contract_reset
+        description: Flag indicating the opportunity is categorized as a contract reset.
+      - name: is_credit
+        description: Flag indicating the opportunity is categorized as a credit.
+      - name: is_duplicate
+        description: Flag indicating the opportunity is a duplicate of another opportunity.
+      - name: is_eligible_age_analysis
+        description: Flag indicating an opportunity is eligible for age analysis.
+      - name: is_eligible_asp_analysis
+        description: Flag indicating an opporutnity is eligible for ASP analysis.
+      - name: is_eligible_churn_contraction
+        description: Flag indicating the opportunity has either churned or contracted, is not deleted, and is not an EDU/OSS deal.
+      - name: is_eligible_open_pipeline
+        description: Flag indicating the opportunity is considered open pipeline based on its order type, stage, forecast category, and whether or not it is an EDU/OSS deal.
+      - name: is_excluded_from_pipeline_created
+        description: Records which are not included in pipeline generated analysis due to data quality errors.
+      - name: is_lost
+        description: Flag indicating an opportunity is in a closed lost stage.
+      - name: is_open
+        description: Flag indicating an opportunity is in any open stage (not closed lost, closed won, unqualified, or duplicate).
+      - name: is_renewal
+        description: Flag indicating the opportunity is categorized as a renewal by its sales type.
+      - name: is_stage_1_plus
+        description: Flag indicating the opportunity is in in Stage 1 or greater.
+      - name: is_stage_3_plus
+        description: Flag indicating the opportunity is in in Stage 3 or greater.
+      - name: is_stage_4_plus
+        description: Flag indicating the opportunity is in in Stage 4 or greater.
+      - name: open_1plus_deal_count
+        description: Total pipeline deal count in stage 1 or later.
+      - name: open_1plus_net_arr
+        description: Total net ARR in the pipeline in stage 1 or later.
+      - name: open_3plus_deal_count
+        description: Total pipeline deal count in stage 3 or later.
+      - name: open_3plus_net_arr
+        description: Total net ARR in the pipeline in stage 3 or later.
+      - name: open_4plus_deal_count
+        description: Total pipeline deal count in stage 4 or later.
+      - name: open_4plus_net_arr
+        description: Total net ARR in the pipeline in stage 4 or later.
+      - name: segment_order_type_iacv_to_net_arr_ratio
+        description: The ratio of incremental annual contract value to net ARR assigned to this opportunity based on its segment and order type. This field is a helper used to map old IACV values to new net ARR values, which were updated for all opportunities closed prior to 2021-02-01.
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'

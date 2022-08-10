@@ -308,21 +308,18 @@ WITH first_contact  AS (
       {{ get_date_id('sfdc_opportunity.sales_qualified_date') }}                                  AS sales_qualified_date_id,
 
 
-      close_date_detail.first_day_of_fiscal_quarter                                               AS close_fiscal_quarter_date,
+      close_date.first_day_of_fiscal_quarter                                                      AS close_fiscal_quarter_date,
       {%- if model_type == 'snapshot' %}
-      90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date_detail.last_day_of_fiscal_quarter) AS close_day_of_fiscal_quarter_normalised,
+      90 - DATEDIFF(DAY, sfdc_opportunity.snapshot_date, close_date.last_day_of_fiscal_quarter) AS close_day_of_fiscal_quarter_normalised,
       {%- endif %}
 
-      {{ get_date_id('sfdc_opportunity.created_date') }}                                          AS net_arr_created_date_id,
-      sfdc_opportunity.created_date                                                               AS net_arr_created_date,
+      {{ get_date_id('sfdc_opportunity.iacv_created_date')}}                                      AS arr_created_date_id,
+      sfdc_opportunity.iacv_created_date                                                          AS arr_created_date,
+      arr_created_date.fiscal_quarter_name_fy                                                     AS arr_created_fiscal_quarter_name,
+      arr_created_date.first_day_of_fiscal_quarter                                                AS arr_created_fiscal_quarter_date,
 
-      {{ get_date_id('pipeline_created_date.date_actual') }}                                      AS pipeline_created_date_id,
-      pipeline_created_date.date_actual                                                           AS pipeline_created_date, 
-      pipeline_created_date.fiscal_quarter_name_fy                                                AS pipeline_created_fiscal_quarter_name,
-      pipeline_created_date.first_day_of_fiscal_quarter                                           AS pipeline_created_fiscal_quarter_date,
-
-      start_date.fiscal_quarter_name_fy                                                           AS subscription_start_date_fiscal_quarter_name,
-      start_date.first_day_of_fiscal_quarter                                                      AS subscription_start_date_fiscal_quarter_date,
+      subscription_start_date.fiscal_quarter_name_fy                                              AS subscription_start_date_fiscal_quarter_name,
+      subscription_start_date.first_day_of_fiscal_quarter                                         AS subscription_start_date_fiscal_quarter_date,
 
       COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)                             AS segment_order_type_iacv_to_net_arr_ratio,
 
@@ -485,7 +482,7 @@ WITH first_contact  AS (
         CASE 
          WHEN sfdc_opportunity.order_type IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
            AND sfdc_opportunity.is_edu_oss = 0
-           AND net_arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
+           AND arr_created_date.first_day_of_fiscal_quarter IS NOT NULL
            AND sfdc_opportunity.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')  
            -- 20211222 Adjusted to remove the ommitted filter
            AND sfdc_opportunity.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
@@ -809,30 +806,30 @@ WITH first_contact  AS (
         WHEN is_credit = 1
           THEN 0
         ELSE 1
-      END                                               AS calculated_deal_count,
+      END                                               AS pipeline_calculated_deal_count,
       CASE 
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_1_plus = 1
-            THEN calculated_deal_count  
+            THEN pipeline_calculated_deal_count  
         ELSE 0
       END                                               AS open_1plus_deal_count,
 
       CASE 
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_3_plus = 1
-            THEN calculated_deal_count
+            THEN pipeline_calculated_deal_count
         ELSE 0
       END                                               AS open_3plus_deal_count,
 
       CASE 
         WHEN is_eligible_open_pipeline = 1
           AND is_stage_4_plus = 1
-            THEN calculated_deal_count
+            THEN pipeline_calculated_deal_count
         ELSE 0
       END                                               AS open_4plus_deal_count,
       CASE 
         WHEN sfdc_opportunity_stage.is_won = 1
-          THEN calculated_deal_count
+          THEN pipeline_calculated_deal_count
         ELSE 0
       END                                               AS booked_deal_count,
       CASE
@@ -844,7 +841,7 @@ WITH first_contact  AS (
                 OR sfdc_opportunity_stage.is_won = 1 
              )
             AND sfdc_opportunity.order_type IN ('5. Churn - Partial' ,'6. Churn - Final', '4. Contraction')
-        THEN calculated_deal_count
+        THEN pipeline_calculated_deal_count
         ELSE 0
       END                                               AS churned_contraction_deal_count,
       CASE
@@ -856,7 +853,7 @@ WITH first_contact  AS (
                 OR sfdc_opportunity_stage.is_won = 1 
               )
               AND is_eligible_churn_contraction = 1
-          THEN calculated_deal_count
+          THEN pipeline_calculated_deal_count
         ELSE 0
       END                                                 AS booked_churned_contraction_deal_count,
       CASE
@@ -945,7 +942,7 @@ WITH first_contact  AS (
         WHEN sfdc_opportunity.dim_crm_opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
           THEN 1
         ELSE 0
-      END                                                                       AS is_excluded,
+      END                                                                       AS is_excluded_from_pipeline_created,
       {%- elif model_type == 'snapshot' %}
       CASE
         WHEN
@@ -964,7 +961,7 @@ WITH first_contact  AS (
         AND sfdc_opportunity.snapshot_date < '2021-05-01'
         THEN 1
       -- exclude vision opps from FY21-Q2
-      WHEN pipeline_created_fiscal_quarter_name = 'FY21-Q2'
+      WHEN arr_created_fiscal_quarter_name = 'FY21-Q2'
         AND sfdc_opportunity.snapshot_day_of_fiscal_quarter_normalised = 90
         AND sfdc_opportunity.stage_name IN (
           '00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
@@ -991,7 +988,7 @@ WITH first_contact  AS (
         WHEN sfdc_opportunity.is_deleted = 1
           THEN 1
         ELSE 0
-      END AS is_excluded,
+      END AS is_excluded_from_pipeline_created,
       {%- endif %}
       {%- if model_type == 'live' %}
       CASE
@@ -1009,8 +1006,8 @@ WITH first_contact  AS (
       END                                                       AS calculated_age_in_days,
       {%- endif %}
       CASE 
-        WHEN pipeline_created_fiscal_quarter_date = close_fiscal_quarter_date
-          AND is_eligible_created_pipeline = 1
+        WHEN arr_created_fiscal_quarter_date = close_fiscal_quarter_date
+          AND is_net_arr_pipeline_created = 1
             THEN net_arr
         ELSE 0
       END                                                         AS created_and_won_same_quarter_net_arr,
@@ -1025,7 +1022,21 @@ WITH first_contact  AS (
           THEN 1 
         ELSE 0
       END                                 AS is_comp_new_logo_override,
-          CASE
+    {%- if model_type == 'snapshot' %}
+    CASE
+      WHEN arr_created_date.fiscal_quarter_name_fy = sfdc_opportunity.snapshot_fiscal_quarter_name
+        AND is_net_arr_pipeline_created = 1
+        THEN net_arr
+      ELSE 0
+    END AS created_in_snapshot_quarter_net_arr,
+    CASE
+      WHEN arr_created_date.fiscal_quarter_name_fy = sfdc_opportunity.snapshot_fiscal_quarter_name
+        AND is_net_arr_pipeline_created = 1
+        THEN pipeline_calculated_deal_count
+      ELSE 0
+    END AS created_in_snapshot_quarter_deal_count,
+    {%- endif %}
+    CASE
       WHEN CONTAINS(sfdc_opportunity.competitors, 'Other')
         THEN 1
       ELSE 0
@@ -1254,12 +1265,12 @@ WITH first_contact  AS (
       ON sfdc_opportunity.dim_crm_opportunity_id = campaigns_per_opp.dim_crm_opportunity_id
     LEFT JOIN first_contact
       ON sfdc_opportunity.dim_crm_opportunity_id = first_contact.opportunity_id AND first_contact.row_num = 1
-    LEFT JOIN dim_date AS close_date_detail
-      ON sfdc_opportunity.close_date = close_date_detail.date_actual
-    LEFT JOIN dim_date AS pipeline_created_date
-      ON sfdc_opportunity.iacv_created_date::DATE = pipeline_created_date.date_actual 
-    LEFT JOIN dim_date AS start_date
-      ON sfdc_opportunity.subscription_start_date::DATE = start_date.date_actual
+    LEFT JOIN dim_date AS close_date
+      ON sfdc_opportunity.close_date = close_date.date_actual
+    LEFT JOIN dim_date AS arr_created_date
+      ON sfdc_opportunity.iacv_created_date::DATE = arr_created_date.date_actual 
+    LEFT JOIN dim_date AS subscription_start_date
+      ON sfdc_opportunity.subscription_start_date::DATE = subscription_start_date.date_actual
     LEFT JOIN sfdc_account AS fulfillment_partner
       ON sfdc_opportunity.fulfillment_partner = fulfillment_partner.account_id
     {%- if model_type == 'snapshot' %}

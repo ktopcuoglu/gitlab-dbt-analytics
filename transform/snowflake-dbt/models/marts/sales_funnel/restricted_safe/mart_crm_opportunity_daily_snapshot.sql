@@ -119,14 +119,12 @@ final AS (
     fct_crm_opportunity.is_contract_reset,
     fct_crm_opportunity.is_comp_new_logo_override,
     fct_crm_opportunity.is_eligible_open_pipeline,
-    fct_crm_opportunity.is_eligible_created_pipeline,
-    fct_crm_opportunity.is_eligible_sao,
     fct_crm_opportunity.is_eligible_asp_analysis,
     fct_crm_opportunity.is_eligible_age_analysis,
     fct_crm_opportunity.is_eligible_churn_contraction,
     fct_crm_opportunity.is_booked_net_arr,
     fct_crm_opportunity.is_downgrade,
-    fct_crm_opportunity.is_excluded,
+    fct_crm_opportunity.is_excluded_from_pipeline_created,
     fct_crm_opportunity.critical_deal_flag,
 
 
@@ -382,16 +380,16 @@ final AS (
     stage_6_closed_lost_date.first_day_of_fiscal_quarter            AS stage_6_closed_lost_fiscal_quarter_date,
     stage_6_closed_lost_date.fiscal_quarter_name_fy                 AS stage_6_closed_lost_fiscal_quarter_name,
     stage_6_closed_lost_date.fiscal_year                            AS stage_6_closed_lost_fiscal_year,
-    quote_start_date.date_actual                                    AS quote_start_date,
-    quote_start_date.first_day_of_month                             AS quote_start_month,
-    quote_start_date.first_day_of_fiscal_quarter                    AS quote_start_fiscal_quarter_date,
-    quote_start_date.fiscal_quarter_name_fy                         AS quote_start_fiscal_quarter_name,
-    quote_start_date.fiscal_year                                    AS quote_start_fiscal_year,
-    quote_end_date.date_actual                                      AS quote_end_date,
-    quote_end_date.first_day_of_month                               AS quote_end_month,
-    quote_end_date.first_day_of_fiscal_quarter                      AS quote_end_fiscal_quarter_date,
-    quote_end_date.fiscal_quarter_name_fy                           AS quote_end_fiscal_quarter_name,
-    quote_end_date.fiscal_year                                      AS quote_end_fiscal_year,
+    subscription_start_date.date_actual                             AS subscription_start_date,
+    subscription_start_date.first_day_of_month                      AS subscription_start_month,
+    subscription_start_date.first_day_of_fiscal_quarter             AS subscription_start_fiscal_quarter_date,
+    subscription_start_date.fiscal_quarter_name_fy                  AS subscription_start_fiscal_quarter_name,
+    subscription_start_date.fiscal_year                             AS subscription_start_fiscal_year,
+    subscription_end_date.date_actual                               AS subscription_end_date,
+    subscription_end_date.first_day_of_month                        AS subscription_end_month,
+    subscription_end_date.first_day_of_fiscal_quarter               AS subscription_end_fiscal_quarter_date,
+    subscription_end_date.fiscal_quarter_name_fy                    AS subscription_end_fiscal_quarter_name,
+    subscription_end_date.fiscal_year                               AS subscription_end_fiscal_year,
     sales_qualified_date.date_actual                                AS sales_qualified_date,
     sales_qualified_date.first_day_of_month                         AS sales_qualified_month,
     sales_qualified_date.first_day_of_fiscal_quarter                AS sales_qualified_fiscal_quarter_date,
@@ -402,21 +400,26 @@ final AS (
     last_activity_date.first_day_of_fiscal_quarter                  AS last_activity_fiscal_quarter_date,
     last_activity_date.fiscal_quarter_name_fy                       AS last_activity_fiscal_quarter_name,
     last_activity_date.fiscal_year                                  AS last_activity_fiscal_year,
-    net_arr_created_date.date_actual                                AS net_arr_created_date,
-    net_arr_created_date.first_day_of_month                         AS net_arr_created_month,
-    net_arr_created_date.first_day_of_fiscal_quarter                AS net_arr_created_fiscal_quarter_date,
-    net_arr_created_date.fiscal_quarter_name_fy                     AS net_arr_created_fiscal_quarter_name,
-    net_arr_created_date.fiscal_year                                AS net_arr_created_fiscal_year,
-    pipeline_created_date.date_actual                               AS pipeline_created_date,
-    pipeline_created_date.first_day_of_month                        AS pipeline_created_month,
-    pipeline_created_date.first_day_of_fiscal_quarter               AS pipeline_created_fiscal_quarter_date,
-    pipeline_created_date.fiscal_quarter_name_fy                    AS pipeline_created_fiscal_quarter_name,
-    pipeline_created_date.fiscal_year                               AS pipeline_created_fiscal_year,
     technical_evaluation_date.date_actual                           AS technical_evaluation_date,
     technical_evaluation_date.first_day_of_month                    AS technical_evaluation_month,
     technical_evaluation_date.first_day_of_fiscal_quarter           AS technical_evaluation_fiscal_quarter_date,
     technical_evaluation_date.fiscal_quarter_name_fy                AS technical_evaluation_fiscal_quarter_name,
     technical_evaluation_date.fiscal_year                           AS technical_evaluation_fiscal_year,
+    arr_created_date.date_actual                                    AS arr_created_date,
+    arr_created_date.first_day_of_month                             AS arr_created_month,
+    arr_created_date.first_day_of_fiscal_quarter                    AS arr_created_fiscal_quarter_date,
+    arr_created_date.fiscal_quarter_name_fy                         AS arr_created_fiscal_quarter_name,
+    arr_created_date.fiscal_year                                    AS arr_created_fiscal_year,
+    arr_created_date.date_actual                                    AS pipeline_created_date,
+    arr_created_date.first_day_of_month                             AS pipeline_created_month,
+    arr_created_date.first_day_of_fiscal_quarter                    AS pipeline_created_fiscal_quarter_date,
+    arr_created_date.fiscal_quarter_name_fy                         AS pipeline_created_fiscal_quarter_name,
+    arr_created_date.fiscal_year                                    AS pipeline_created_fiscal_year,
+    created_date.date_actual                                        AS net_arr_created_date,
+    created_date.first_day_of_month                                 AS net_arr_created_month,
+    created_date.first_day_of_fiscal_quarter                        AS net_arr_created_fiscal_quarter_date,
+    created_date.fiscal_quarter_name_fy                             AS net_arr_created_fiscal_quarter_name,
+    created_date.fiscal_year                                        AS net_arr_created_fiscal_year,
     fct_crm_opportunity.snapshot_date,
     fct_crm_opportunity.snapshot_month,
     fct_crm_opportunity.snapshot_fiscal_year,
@@ -453,7 +456,7 @@ final AS (
     fct_crm_opportunity.open_4plus_net_arr,
     fct_crm_opportunity.booked_net_arr,
     fct_crm_opportunity.churned_contraction_net_arr,
-    fct_crm_opportunity.calculated_deal_count,
+    fct_crm_opportunity.pipeline_calculated_deal_count,
     fct_crm_opportunity.booked_churned_contraction_deal_count,
     fct_crm_opportunity.booked_churned_contraction_net_arr,
     fct_crm_opportunity.raw_net_arr,
@@ -500,26 +503,24 @@ final AS (
     ON fct_crm_opportunity.stage_6_closed_won_date = stage_6_closed_won_date.date_actual
   LEFT JOIN dim_date stage_6_closed_lost_date
     ON fct_crm_opportunity.stage_6_closed_lost_date = stage_6_closed_lost_date.date_actual
-  LEFT JOIN dim_date quote_start_date
-    ON fct_crm_opportunity.subscription_start_date = quote_start_date.date_actual
-  LEFT JOIN dim_date quote_end_date
-    ON fct_crm_opportunity.subscription_end_date = quote_end_date.date_actual
+  LEFT JOIN dim_date subscription_start_date
+    ON fct_crm_opportunity.subscription_start_date = subscription_start_date.date_actual
+  LEFT JOIN dim_date subscription_end_date
+    ON fct_crm_opportunity.subscription_end_date = subscription_end_date.date_actual
   LEFT JOIN dim_date sales_qualified_date
     ON fct_crm_opportunity.sales_qualified_date = sales_qualified_date.date_actual
   LEFT JOIN dim_date last_activity_date
     ON fct_crm_opportunity.last_activity_date = last_activity_date.date_actual
-  LEFT JOIN dim_date net_arr_created_date
-    ON fct_crm_opportunity.net_arr_created_date = net_arr_created_date.date_actual
-  LEFT JOIN dim_date pipeline_created_date
-    ON fct_crm_opportunity.pipeline_created_date = pipeline_created_date.date_actual
   LEFT JOIN dim_date technical_evaluation_date
     ON fct_crm_opportunity.technical_evaluation_date = technical_evaluation_date.date_actual
+  LEFT JOIN dim_date arr_created_date 
+    ON fct_crm_opportunity.arr_created_date = arr_created_date.date_actual
   LEFT JOIN dim_crm_account AS partner_account
-      ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id
-        AND fct_crm_opportunity.snapshot_id = partner_account.snapshot_id 
-    LEFT JOIN dim_crm_account AS fulfillment_partner
-      ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
-        AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
+    ON fct_crm_opportunity.partner_account = partner_account.dim_crm_account_id
+      AND fct_crm_opportunity.snapshot_id = partner_account.snapshot_id 
+  LEFT JOIN dim_crm_account AS fulfillment_partner
+    ON fct_crm_opportunity.fulfillment_partner = fulfillment_partner.dim_crm_account_id
+      AND fct_crm_opportunity.snapshot_id = fulfillment_partner.snapshot_id
 
 
 )
@@ -529,5 +530,5 @@ final AS (
     created_by="@michellecooper",
     updated_by="@michellecooper",
     created_date="2022-05-05",
-    updated_date="2022-08-03"
+    updated_date="2022-08-08"
   ) }}
