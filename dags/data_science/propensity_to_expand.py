@@ -69,7 +69,7 @@ clone_data_science_pte_repo_cmd = f"""
 # Create the DAG
 # Run on the 9th of every month
 dag = DAG(
-    "propensity_to_expand", default_args=default_args, schedule_interval="0 12 9 * *"
+    "propensity_to_expand", default_args=default_args, schedule_interval="0 2 * * *"
 )
 
 # Task 1

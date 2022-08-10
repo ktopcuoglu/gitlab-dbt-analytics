@@ -69,7 +69,7 @@ clone_data_science_ptp_repo_cmd = f"""
 dag = DAG(
     "propensity_to_purchase_trial",
     default_args=default_args,
-    schedule_interval="0 12 * * 1",
+    schedule_interval="0 3 * * *",
 )
 
 # Task 1
