@@ -331,7 +331,10 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
 
     # Snapshot source data
 
-    snapshot_folder = 'customers' if dbt_name == 'customers_db' else dbt_name
+    if dbt_name == 'customers_db':
+        snapshot_folder = 'customers'
+    else:
+        snapshot_folder = dbt_name
 
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
