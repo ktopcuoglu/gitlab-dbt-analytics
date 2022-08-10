@@ -124,7 +124,7 @@ WITH biz_person AS (
       zoominfo_contact_state,
       zoominfo_contact_country,
       zoominfo_company_city,
-      zoominfo_company_state_province,
+      zoominfo_company_state,
       zoominfo_company_country
 
     FROM sfdc_contacts
@@ -248,7 +248,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-12-08",
-    updated_date="2022-07-29"
+    updated_date="2022-08-09"
 ) }}

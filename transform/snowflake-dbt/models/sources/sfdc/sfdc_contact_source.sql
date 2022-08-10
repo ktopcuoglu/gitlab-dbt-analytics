@@ -58,7 +58,7 @@ renamed AS (
     zi_contact_city__c AS zoominfo_contact_city,
     zi_company_city__c AS zoominfo_company_city,
     zi_industry__c AS zoominfo_company_industry,
-    zi_company_state__c AS zoominfo_company_state_province,
+    zi_company_state__c AS zoominfo_company_state,
     zi_contact_state__c AS zoominfo_contact_state,
     zi_company_country__c AS zoominfo_company_country,
     zi_contact_country__c AS zoominfo_contact_country,
