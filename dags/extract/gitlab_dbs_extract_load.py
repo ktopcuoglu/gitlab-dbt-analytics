@@ -99,7 +99,7 @@ config_dict = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
         "dag_name": "el_customers_scd",
-        "dbt_name": "customers_db",
+        "dbt_name": "customers",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": "0 */8 * * *",
         "secrets": [
