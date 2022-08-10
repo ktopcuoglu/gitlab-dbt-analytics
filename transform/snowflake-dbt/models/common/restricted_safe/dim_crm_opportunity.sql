@@ -92,6 +92,9 @@ WITH prep_crm_opportunity AS (
       prep_crm_opportunity.sa_tech_evaluation_end_date,
       prep_crm_opportunity.sa_tech_evaluation_start_date,
       prep_crm_opportunity.calculated_partner_track,
+      prep_crm_opportunity.quote_start_date,
+      prep_crm_opportunity.subscription_start_date,
+      prep_crm_opportunity.subscription_end_date,
 
       -- Competitors
       prep_crm_opportunity.competitors,
