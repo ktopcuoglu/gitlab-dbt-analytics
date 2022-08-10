@@ -6,7 +6,7 @@
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type'),
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
     ('dim_channel_type', 'dim_channel_type'),
     ('dim_date', 'dim_date')
 ]) }}
@@ -92,6 +92,8 @@
       DATE_TRUNC(month, fct_crm_opportunity.close_date)                    AS close_month,
       fct_crm_opportunity.created_date,
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
+      arr_created_date.date_actual                                         AS arr_created_date,
+      arr_created_date.date_actual                                         AS pipeline_created_date,
       fct_crm_opportunity.dim_crm_opportunity_id,
       dim_crm_opportunity.opportunity_name,
       dim_crm_account.parent_crm_account_name,
@@ -126,8 +128,8 @@
       dim_order_type.order_type_name                                       AS order_type,
       dim_order_type.order_type_grouped,
       dim_dr_partner_engagement.dr_partner_engagement_name,
-      dim_alliance_type.alliance_type_name,
-      dim_alliance_type.alliance_type_short_name,
+      dim_alliance_type_current.alliance_type_name,
+      dim_alliance_type_current.alliance_type_short_name,
       dim_channel_type.channel_type_name,
       dim_sales_qualified_source.sales_qualified_source_name,
       dim_sales_qualified_source.sales_qualified_source_grouped,
@@ -173,6 +175,7 @@
       fct_crm_opportunity.products_purchased,
       fct_crm_opportunity.growth_type,
       fct_crm_opportunity.opportunity_deal_size,
+      fct_crm_opportunity.ga_client_id,
 
       -- crm owner/sales rep live fields
       dim_crm_user_hierarchy_live_sales_segment.crm_user_sales_segment,
@@ -257,6 +260,7 @@
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
       fct_crm_opportunity.partner_track,
+      fct_crm_opportunity.resale_partner_track,
       fct_crm_opportunity.is_public_sector_opp,
       fct_crm_opportunity.is_registration_from_portal,
       fct_crm_opportunity.calculated_discount,
@@ -292,8 +296,8 @@
       ON fct_crm_opportunity.dim_order_type_id = dim_order_type.dim_order_type_id
     LEFT JOIN dim_dr_partner_engagement
       ON fct_crm_opportunity.dim_dr_partner_engagement_id = dim_dr_partner_engagement.dim_dr_partner_engagement_id
-    LEFT JOIN dim_alliance_type
-      ON fct_crm_opportunity.dim_alliance_type_id = dim_alliance_type.dim_alliance_type_id
+    LEFT JOIN dim_alliance_type AS dim_alliance_type_current
+      ON fct_crm_opportunity.dim_alliance_type_current_id = dim_alliance_type_current.dim_alliance_type_id
     LEFT JOIN dim_channel_type
       ON fct_crm_opportunity.dim_channel_type_id = dim_channel_type.dim_channel_type_id
     LEFT JOIN dim_crm_user_hierarchy_stamped_sales_segment
@@ -324,7 +328,8 @@
       ON fct_crm_opportunity.close_date = dim_date_close_date.date_day
     LEFT JOIN dim_date_extended                                       AS dim_date_sao_date
       ON fct_crm_opportunity.sales_accepted_date = dim_date_sao_date.date_day
-
+    LEFT JOIN dim_date AS arr_created_date
+      ON arr_created_date.date_id = fct_crm_opportunity.arr_created_date_id
 )
 
 {{ dbt_audit(
@@ -332,5 +337,5 @@
     created_by="@jeanpeguero",
     updated_by="@michellecooper",
     created_date="2022-02-28",
-    updated_date="2022-03-18",
+    updated_date="2022-08-08"
   ) }}

@@ -181,17 +181,17 @@ WITH dim_date AS (
       subscription_name,
       subscription_name_slugify,
       subscription_status,
+      unit_of_measure,
       SUM(mrr)                                             AS mrr,
       SUM(mrr)* 12                                         AS arr,
-      SUM(quantity)                                        AS quantity,
-      ARRAY_AGG(unit_of_measure)                           AS unit_of_measure
+      SUM(quantity)                                        AS quantity
     FROM combined_charges
     INNER JOIN dim_date
       ON combined_charges.effective_start_month <= dim_date.date_actual
       AND (combined_charges.effective_end_month > dim_date.date_actual
         OR combined_charges.effective_end_month IS NULL)
       AND dim_date.day_of_month = 1
-    {{ dbt_utils.group_by(n=10) }}
+    {{ dbt_utils.group_by(n=11) }}
 
 ), final AS (
 
@@ -221,7 +221,7 @@ WITH dim_date AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@iweeks",
+    updated_by="@jpeguero",
     created_date="2021-07-29",
-    updated_date="2022-04-02",
+    updated_date="2022-07-29",
  	) }}

@@ -6,8 +6,9 @@
     ('dim_deal_path','dim_deal_path'),
     ('fct_crm_opportunity','fct_crm_opportunity'),
     ('dim_dr_partner_engagement', 'dim_dr_partner_engagement'),
-    ('dim_alliance_type', 'dim_alliance_type'),
-    ('dim_channel_type', 'dim_channel_type')
+    ('dim_alliance_type', 'dim_alliance_type_scd'),
+    ('dim_channel_type', 'dim_channel_type'),
+    ('dim_date', 'dim_date')
 ]) }}
 
 , dim_crm_user_hierarchy_live_sales_segment AS (
@@ -77,6 +78,8 @@
       DATE_TRUNC(month, fct_crm_opportunity.close_date)                    AS close_month,
       fct_crm_opportunity.created_date,
       DATE_TRUNC(month, fct_crm_opportunity.created_date)                  AS created_month,
+      arr_created_date.date_actual                                         AS arr_created_date,
+      arr_created_date.date_actual                                         AS pipeline_created_date,
       fct_crm_opportunity.dim_crm_opportunity_id,
       dim_crm_opportunity.opportunity_name,
       dim_crm_account.parent_crm_account_name,
@@ -159,6 +162,7 @@
       fct_crm_opportunity.growth_type,
       fct_crm_opportunity.opportunity_deal_size,
       dim_crm_opportunity.primary_campaign_source_id,
+      fct_crm_opportunity.ga_client_id,
 
       -- crm opp owner/account owner fields stamped at SAO date
       dim_crm_opportunity.sao_crm_opp_owner_stamped_name,
@@ -218,6 +222,7 @@
       fct_crm_opportunity.fulfillment_partner,
       fct_crm_opportunity.platform_partner,
       fct_crm_opportunity.partner_track,
+      fct_crm_opportunity.resale_partner_track,
       fct_crm_opportunity.is_public_sector_opp,
       fct_crm_opportunity.is_registration_from_portal,
       fct_crm_opportunity.calculated_discount,
@@ -281,13 +286,15 @@
       ON fct_crm_opportunity.dim_crm_account_user_region_id = dim_crm_account_user_hierarchy_live_region.dim_crm_user_region_id
     LEFT JOIN dim_crm_user_hierarchy_live_area          AS dim_crm_account_user_hierarchy_live_area
       ON fct_crm_opportunity.dim_crm_account_user_area_id = dim_crm_account_user_hierarchy_live_area.dim_crm_user_area_id
+    LEFT JOIN dim_date AS arr_created_date
+      ON arr_created_date.date_id = fct_crm_opportunity.arr_created_date_id
 
 )
 
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@rkohnke",
+    updated_by="@michellecooper",
     created_date="2020-12-07",
-    updated_date="2022-04-26",
+    updated_date="2022-08-08"
   ) }}

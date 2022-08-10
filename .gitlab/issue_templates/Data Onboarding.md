@@ -209,6 +209,8 @@ Data team uses GCP (Google Cloud Platform) as our cloud provider. GCP credential
 ### Airflow
 
 - [ ] Install [Rancher Desktop](https://rancherdesktop.io/) using the UI install specified for your system
+  - [ ] Make sure to download Rancher Desktop version `1.4.1` - you can find the correct version for your system here https://github.com/rancher-sandbox/rancher-desktop/releases/tag/v1.4.1
+  - [ ] If you have trouble installing v1.4.1 on a new Mac M1 machine, try v1.2.1, which has been tested and it is known it works
   - [ ] Airflow does not require a huge amount of resources, 4GB of RAM and 2 CPUs should be sufficient.  
   - [ ] Ensure that you select the `dockerd` container runtime in `Kubernetes Settings`. 
   - [ ] Ensure that you select to create symbologic links to the docker command line path (`/usr/local/bin/docker`) in the `Supporting Utilities` section. 

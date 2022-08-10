@@ -8,7 +8,7 @@
     ('sales_segment', 'prep_sales_segment'),
     ('sfdc_campaigns', 'prep_campaign'),
     ('dr_partner_engagement', 'prep_dr_partner_engagement'),
-    ('alliance_type', 'prep_alliance_type'),
+    ('alliance_type', 'prep_alliance_type_scd'),
     ('channel_type', 'prep_channel_type'),
     ('sfdc_opportunity', 'prep_crm_opportunity')
 
@@ -61,6 +61,8 @@
       sfdc_opportunity.sales_accepted_date_id,
       sfdc_opportunity.close_date,
       sfdc_opportunity.close_date_id,
+      sfdc_opportunity.arr_created_date_id,
+      sfdc_opportunity.arr_created_date,
       sfdc_opportunity.stage_0_pending_acceptance_date,
       sfdc_opportunity.stage_0_pending_acceptance_date_id,
       sfdc_opportunity.stage_1_discovery_date,
@@ -95,6 +97,7 @@
       {{ get_keyed_nulls('order_type.dim_order_type_id') }}                                                                 AS dim_order_type_id,
       {{ get_keyed_nulls('dr_partner_engagement.dim_dr_partner_engagement_id') }}                                           AS dim_dr_partner_engagement_id,
       {{ get_keyed_nulls('alliance_type.dim_alliance_type_id') }}                                                           AS dim_alliance_type_id,
+      {{ get_keyed_nulls('alliance_type_current.dim_alliance_type_id') }}                                                   AS dim_alliance_type_current_id,
       {{ get_keyed_nulls('channel_type.dim_channel_type_id') }}                                                             AS dim_channel_type_id,
       {{ get_keyed_nulls('sales_qualified_source.dim_sales_qualified_source_id') }}                                         AS dim_sales_qualified_source_id,
       {{ get_keyed_nulls('deal_path.dim_deal_path_id') }}                                                                   AS dim_deal_path_id,
@@ -121,6 +124,7 @@
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_region_id') }}                                                     AS dim_crm_account_user_region_id,
       {{ get_keyed_nulls('sales_rep_account.dim_crm_user_area_id') }}                                                       AS dim_crm_account_user_area_id,
       sfdc_opportunity.ssp_id,
+      sfdc_opportunity.ga_client_id,
 
             -- flags
       sfdc_opportunity.is_closed,
@@ -159,6 +163,7 @@
       sfdc_opportunity.fulfillment_partner,
       sfdc_opportunity.platform_partner,
       sfdc_opportunity.partner_track,
+      sfdc_opportunity.resale_partner_track,
       sfdc_opportunity.is_public_sector_opp,
       sfdc_opportunity.is_registration_from_portal,
       sfdc_opportunity.calculated_discount,
@@ -208,6 +213,8 @@
       ON sfdc_opportunity.dr_partner_engagement = dr_partner_engagement.dr_partner_engagement_name
     LEFT JOIN alliance_type
       ON sfdc_opportunity.alliance_type = alliance_type.alliance_type_name
+    LEFT JOIN alliance_type AS alliance_type_current
+      ON sfdc_opportunity.alliance_type_current = alliance_type_current.alliance_type_name
     LEFT JOIN channel_type
       ON sfdc_opportunity.channel_type = channel_type.channel_type_name
     LEFT JOIN sales_rep
@@ -222,5 +229,5 @@
     created_by="@mcooperDD",
     updated_by="@michellecooper",
     created_date="2020-11-30",
-    updated_date="2022-03-17"
+    updated_date="2022-08-15"
 ) }}
