@@ -1122,6 +1122,9 @@ models:
     columns:
       - name: zuora_user_id
         description: Unique identifier of a Zuora Billing user
+        tests:
+          - not_null
+          - unique
       - name: email
         description: email account associated with a Zuora Billing user
       - name: first_name
