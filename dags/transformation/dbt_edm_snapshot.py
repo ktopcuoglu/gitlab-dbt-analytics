@@ -85,10 +85,6 @@ dag = DAG(
 dbt_snapshot_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt snapshot -s tag:edm_snapshot --profiles-dir profile; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
 """
 
@@ -110,10 +106,6 @@ dbt_snapshot_models_command = f"""
     {dbt_install_deps_and_seed_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
     dbt run --profiles-dir profile --target prod --models tag:edm_snapshot; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 
@@ -133,10 +125,6 @@ dbt_test_snapshots_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --models tag:edm_snapshot; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 

@@ -80,10 +80,6 @@ dag = DAG(
 monitor_dbt_source_freshness_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt --no-use-colors run --profiles-dir profile --target prod --models key_assets; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis --batch-size 1000;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
 
