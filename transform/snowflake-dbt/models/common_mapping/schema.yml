@@ -199,3 +199,4 @@ models:
       - name: employee_id
       - name: user_id
       - name: gitlab_username
+      - name: notification_email
