@@ -58,7 +58,7 @@ SELECT
   cost_center,
   gitlab_username,
   jobtitle_speciality_single_select,
-  jobtitle_speciality_multi_select,
+  REGEXP_REPLACE(jobtitle_speciality_multi_select,'; ',',') AS jobtitle_speciality_multi_select,
   locality,
   nationality,
   gender_dropdown,

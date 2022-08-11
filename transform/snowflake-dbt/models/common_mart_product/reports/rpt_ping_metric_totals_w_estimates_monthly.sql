@@ -28,9 +28,9 @@
       is_gmau                           AS is_gmau,
       is_paid_gmau                      AS is_paid_gmau,
       is_umau                           AS is_umau,
-      SUM(metric_value)                 AS recorded_usage
+      SUM(monthly_metric_value)         AS recorded_usage
     FROM mart_ping_instance_metric_monthly
-        WHERE time_frame = '28d'
+        WHERE time_frame IN ('28d', 'all')
     {{ dbt_utils.group_by(n=13)}}
 
 --Join in adoption percentages to determine what to estimate for self managed
@@ -111,7 +111,7 @@ SELECT
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@snalamaru",
+     updated_by="@iweeks",
      created_date="2022-04-20",
-     updated_date="2022-07-01"
+     updated_date="2022-07-29"
  ) }}
