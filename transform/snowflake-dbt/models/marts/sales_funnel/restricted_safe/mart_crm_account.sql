@@ -35,6 +35,7 @@
       ----ultimate parent crm account info
       dim_crm_account.parent_crm_account_name,
       dim_crm_account.parent_crm_account_sales_segment,
+      dim_crm_account.parent_crm_account_owner_team,
       dim_crm_account.parent_crm_account_billing_country,
       dim_crm_account.parent_crm_account_industry,
       dim_crm_account.parent_crm_account_sub_industry,
@@ -160,7 +161,6 @@
       dim_crm_account.is_zi_aws_cloud_trail_present,
       dim_crm_account.is_zi_circle_ci_present,
       dim_crm_account.is_zi_bit_bucket_present,
-      dim_crm_account.is_excluded_from_zoom_info_enrich,
 
       --dates
       dim_crm_account.crm_account_created_date,
@@ -219,6 +219,6 @@
     cte_ref="final",
     created_by="@michellecooper",
     updated_by="@michellecooper",
-    created_date="2022-07-28",
-    updated_date="2022-07-28"
+    created_date="2022-08-10",
+    updated_date="2022-08-10"
 ) }}

@@ -274,17 +274,6 @@ WITH map_merged_crm_account AS (
       sfdc_account.health_score_color,
       sfdc_account.partner_account_iban_number,
       sfdc_account.federal_account                                        AS federal_account,
-      sfdc_account.is_jihu_account                                        AS is_jihu_account,
-      sfdc_account.carr_this_account,
-      sfdc_account.carr_account_family,
-      sfdc_account.potential_arr_lam,
-      {%- if model_type == 'live' %}
-      sfdc_account.lam                                                    AS parent_crm_account_lam,
-      sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
-      {%- elif model_type == 'snapshot' %}
-      IFNULL(lam_corrections.estimated_capped_lam, sfdc_account.lam)      AS parent_crm_account_lam,
-      IFNULL(lam_corrections.dev_count, sfdc_account.lam_dev_count)       AS parent_crm_account_lam_dev_count,
-      {%- endif %}
       sfdc_account.fy22_new_logo_target_list,
       sfdc_account.gitlab_com_user,
       sfdc_account.zi_technologies                                        AS crm_account_zi_technologies,
@@ -422,10 +411,15 @@ WITH map_merged_crm_account AS (
       sfdc_account.count_open_opportunities,
       sfdc_account.count_using_ce,
       sfdc_account.potential_arr_lam,
-      sfdc_account.lam                                                    AS parent_crm_account_lam,
-      sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
       sfdc_account.carr_this_account,
       sfdc_account.carr_account_family,
+      {%- if model_type == 'live' %}
+      sfdc_account.lam                                                    AS parent_crm_account_lam,
+      sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
+      {%- elif model_type == 'snapshot' %}
+      IFNULL(lam_corrections.estimated_capped_lam, sfdc_account.lam)      AS parent_crm_account_lam,
+      IFNULL(lam_corrections.dev_count, sfdc_account.lam_dev_count)       AS parent_crm_account_lam_dev_count,
+      {%- endif %}
 
       --metadata
       sfdc_account.created_by_id,
@@ -472,10 +466,10 @@ WITH map_merged_crm_account AS (
         AND parent_crm_account_sales_segment = lam_corrections.dim_parent_crm_account_sales_segment
     LEFT JOIN sfdc_users AS created_by
       ON sfdc_account.created_by_id = created_by.user_id
-        AND sfdc_account_account.snapshot_id = created_by.snapshot_id
+        AND sfdc_account.snapshot_id = created_by.snapshot_id
     LEFT JOIN sfdc_users AS last_modified_by 
       ON sfdc_account.last_modified_by_id = last_modified_by.user_id
-        AND sfdc_account_account.snapshot_id = last_modified_by.snapshot_id
+        AND sfdc_account.snapshot_id = last_modified_by.snapshot_id
     {%- endif %}
 
 )

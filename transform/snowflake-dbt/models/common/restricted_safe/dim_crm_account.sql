@@ -132,6 +132,8 @@ WITH final AS (
       prep_crm_account.parent_crm_account_lam,
       prep_crm_account.parent_crm_account_lam_dev_count,
       prep_crm_account.carr_account_family,
+      prep_crm_account.carr_this_account,
+      prep_crm_account.potential_arr_lam,
 
       --degenerative dimensions
       prep_crm_account.is_sdr_target_account,
@@ -184,7 +186,7 @@ WITH final AS (
     created_by="@msendal",
     updated_by="@michellecooper",
     created_date="2020-06-01",
-    updated_date="2022-07-28"
+    updated_date="2022-08-10"
 ) }}
 
 
