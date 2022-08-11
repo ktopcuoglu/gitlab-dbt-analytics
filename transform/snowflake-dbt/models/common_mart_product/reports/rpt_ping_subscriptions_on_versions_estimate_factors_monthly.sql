@@ -34,7 +34,7 @@
     INNER JOIN latest_subscriptions
   ON mart_ping_instance_metric_monthly.latest_subscription_id = latest_subscriptions.latest_subscription_id
       AND mart_ping_instance_metric_monthly.ping_created_date_month = latest_subscriptions.ping_created_date_month
-    WHERE time_frame = '28d'
+    WHERE time_frame IN ('28d', 'all')
       AND ping_delivery_type = 'Self-Managed'
     {{ dbt_utils.group_by(n=12)}}
 
@@ -144,7 +144,7 @@ SELECT
  {{ dbt_audit(
      cte_ref="final",
      created_by="@icooper-acp",
-     updated_by="@icooper-acp",
+     updated_by="@iweeks",
      created_date="2022-04-07",
-     updated_date="2022-04-15"
+     updated_date="2022-07-29"
  ) }}

@@ -17,7 +17,7 @@
 , active_services AS (
 
     SELECT *
-    FROM {{ref('gitlab_dotcom_services_source')}}
+    FROM {{ref('gitlab_dotcom_integrations_source')}}
     WHERE is_active = True
 
 ), namespace_lineage AS (

@@ -104,6 +104,7 @@ renamed AS (
     sequence_status__c AS sequence_status,
     sequence_step_type2__c AS sequence_step_type,
     actively_being_sequenced__c::BOOLEAN AS is_actively_being_sequenced,
+    gaclientid__c AS ga_client_id,
 
 
     {{ sfdc_source_buckets('leadsource') }}

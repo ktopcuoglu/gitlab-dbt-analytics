@@ -23,7 +23,21 @@ WITH map_merged_crm_account AS (
    -- this filter will only be applied on an incremental run
    AND date_id > (SELECT max(snapshot_id) FROM {{ this }})
 
-   {% endif %}
+{% endif %}
+
+), lam_corrections AS (
+
+    SELECT
+      snapshot_dates.date_id                  AS snapshot_id,
+      dim_parent_crm_account_id               AS dim_parent_crm_account_id,
+      dev_count                               AS dev_count,
+      estimated_capped_lam                    AS estimated_capped_lam,
+      dim_parent_crm_account_sales_segment    AS dim_parent_crm_account_sales_segment
+    FROM {{ ref('driveload_lam_corrections_source') }}
+    INNER JOIN snapshot_dates
+        ON snapshot_dates.date_actual >= valid_from
+          AND snapshot_dates.date_actual < COALESCE(valid_to, '9999-12-31'::TIMESTAMP)
+
 {%- endif %}
 
 ), sfdc_account AS (
@@ -260,6 +274,17 @@ WITH map_merged_crm_account AS (
       sfdc_account.health_score_color,
       sfdc_account.partner_account_iban_number,
       sfdc_account.federal_account                                        AS federal_account,
+      sfdc_account.is_jihu_account                                        AS is_jihu_account,
+      sfdc_account.carr_this_account,
+      sfdc_account.carr_account_family,
+      sfdc_account.potential_arr_lam,
+      {%- if model_type == 'live' %}
+      sfdc_account.lam                                                    AS parent_crm_account_lam,
+      sfdc_account.lam_dev_count                                          AS parent_crm_account_lam_dev_count,
+      {%- elif model_type == 'snapshot' %}
+      IFNULL(lam_corrections.estimated_capped_lam, sfdc_account.lam)      AS parent_crm_account_lam,
+      IFNULL(lam_corrections.dev_count, sfdc_account.lam_dev_count)       AS parent_crm_account_lam_dev_count,
+      {%- endif %}
       sfdc_account.fy22_new_logo_target_list,
       sfdc_account.gitlab_com_user,
       sfdc_account.zi_technologies                                        AS crm_account_zi_technologies,
@@ -439,8 +464,12 @@ WITH map_merged_crm_account AS (
       ON sfdc_account.technical_account_manager_id = technical_account_manager.user_id
         AND sfdc_account.snapshot_id = technical_account_manager.snapshot_id
     LEFT JOIN sfdc_users AS account_owner
-      ON sfdc_account.owner_id = account_owner.user_id
-        AND sfdc_account.snapshot_id = account_owner.snapshot_id
+      ON account_owner.user_id = sfdc_account.owner_id
+        AND account_owner.snapshot_id = sfdc_account.snapshot_id
+    LEFT JOIN lam_corrections
+      ON ultimate_parent_account.account_id = lam_corrections.dim_parent_crm_account_id
+        AND sfdc_account.snapshot_id = lam_corrections.snapshot_id
+        AND parent_crm_account_sales_segment = lam_corrections.dim_parent_crm_account_sales_segment
     LEFT JOIN sfdc_users AS created_by
       ON sfdc_account.created_by_id = created_by.user_id
         AND sfdc_account_account.snapshot_id = created_by.snapshot_id

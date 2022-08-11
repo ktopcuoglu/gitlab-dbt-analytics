@@ -574,7 +574,7 @@
     SELECT *, 
       dim_date_id AS created_date_id
     FROM  prep_project
-    WHERE ARRAY_CONTAINS('PrometheusService'::VARIANT, active_service_types_array)
+    WHERE ARRAY_CONTAINS('Integrations::Prometheus'::VARIANT, active_service_types_array)
 
 ), incident_labeled_issues_source AS (
 

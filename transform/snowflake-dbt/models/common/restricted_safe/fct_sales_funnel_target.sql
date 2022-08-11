@@ -3,8 +3,6 @@
       ('sfdc_user_hierarchy_stamped', 'prep_crm_user_hierarchy_stamped'),
       ('sales_qualified_source', 'prep_sales_qualified_source'),
       ('order_type', 'prep_order_type'),
-      ('alliance_type', 'prep_alliance_type'),
-      ('channel_type', 'prep_channel_type'),
       ('date_details_source', 'date_details_source')
 ])}}
 

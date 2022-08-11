@@ -49,7 +49,7 @@ WITH epics AS (
 joined AS (
 
   SELECT
-    {{ dbt_utils.star(from=ref('gitlab_dotcom_epics'), except=fields_to_mask|upper, relation_alias='epics')}},
+    {{ dbt_utils.star(from=ref('gitlab_dotcom_epics'), except=fields_to_mask, relation_alias='epics')}},
     
     {% for field in fields_to_mask %}
     CASE

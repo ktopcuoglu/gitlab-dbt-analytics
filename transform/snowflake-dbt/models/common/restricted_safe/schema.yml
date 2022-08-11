@@ -185,10 +185,17 @@ models:
               field: dim_crm_account_id
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
-        description: join key for dim_alliance_type
+        description: join key for dim_alliance_type_scd.
         tests:
           - relationships:
-              to: ref('dim_alliance_type')
+              to: ref('dim_alliance_type_scd')
+              field: dim_alliance_type_id
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_alliance_type_current_id
+        description: join key for dim_alliance_type_scd. It contains current state id for the alliance type dimension.
+        tests:
+          - relationships:
+              to: ref('dim_alliance_type_scd')
               field: dim_alliance_type_id
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_dr_partner_engagement_id
@@ -317,6 +324,8 @@ models:
         description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx) for renewals only current subscription ARR.
       - name: arr
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
+      - name: arr_created_date
+        description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that tracks the date that the ARR was added to an opportunity. 
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'

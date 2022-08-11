@@ -1,3 +1,7 @@
+"""
+Propensity to Expand DAG
+"""
+
 import os
 from datetime import datetime, timedelta
 
@@ -13,7 +17,7 @@ from airflow_utils import (
 from kube_secrets import (
     SNOWFLAKE_ACCOUNT,
     SNOWFLAKE_LOAD_PASSWORD,
-    SNOWFLAKE_LOAD_ROLE,
+    SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
     GITLAB_ANALYTICS_PRIVATE_TOKEN,
@@ -33,7 +37,7 @@ default_args = {
     "owner": "airflow",
     "retries": 0,
     "retry_delay": timedelta(minutes=1),
-    "start_date": datetime(2019, 1, 1),
+    "start_date": datetime(2022, 8, 10),
     "dagrun_timeout": timedelta(hours=2),
 }
 
@@ -65,7 +69,7 @@ clone_data_science_pte_repo_cmd = f"""
 # Create the DAG
 # Run on the 9th of every month
 dag = DAG(
-    "propensity_to_expand", default_args=default_args, schedule_interval="0 12 9 * *"
+    "propensity_to_expand", default_args=default_args, schedule_interval="0 2 * * *"
 )
 
 # Task 1
@@ -81,10 +85,10 @@ KubernetesPodOperator(
     name="propensity-to-expand",
     secrets=[
         SNOWFLAKE_ACCOUNT,
-        SNOWFLAKE_LOAD_ROLE,
+        SNOWFLAKE_LOAD_PASSWORD,
+        SNOWFLAKE_DATA_SCIENCE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
-        SNOWFLAKE_LOAD_PASSWORD,
         GITLAB_ANALYTICS_PRIVATE_TOKEN,
     ],
     env_vars=pod_env_vars,
