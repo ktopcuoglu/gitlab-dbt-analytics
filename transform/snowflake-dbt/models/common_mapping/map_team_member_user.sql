@@ -53,10 +53,21 @@ map AS (
   WHERE users.user_id IS NOT NULL
   AND users.last_activity_on IS NOT NULL
   QUALIFY preference = 1
+),
+
+map_clean AS (
+  SELECT
+    dim_team_member_sk,
+    dim_user_sk,
+    employee_id,
+    user_id,
+    gitlab_username,
+    notification_email
+  FROM map
 )
 
 {{ dbt_audit(
-    cte_ref="map",
+    cte_ref="map_clean",
     created_by="@pempey",
     updated_by="@pempey",
     created_date="2022-07-22",
