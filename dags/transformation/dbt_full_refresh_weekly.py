@@ -97,10 +97,6 @@ dbt_full_refresh_cmd = f"""
     {dbt_install_deps_cmd} &&
     export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_XL" &&
     dbt run --profiles-dir profile --target prod --full-refresh --exclude common.dim_ip_to_geo; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_full_refresh = KubernetesPodOperator(
@@ -119,10 +115,6 @@ dbt_test_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --exclude snowplow legacy.snapshots source:gitlab_dotcom source:salesforce source:zuora workspaces.*; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py manifest_reduce; $ret
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
@@ -143,10 +135,6 @@ dbt_workspaces_test_command = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt test --profiles-dir profile --target prod --models workspaces.* ; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
 """
 dbt_workspaces_test = KubernetesPodOperator(
@@ -165,10 +153,6 @@ dbt_results_cmd = f"""
     {pull_commit_hash} &&
     {dbt_install_deps_cmd} &&
     dbt run --profiles-dir profile --target prod --models sources.dbt+ ; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
 """
 dbt_results = KubernetesPodOperator(

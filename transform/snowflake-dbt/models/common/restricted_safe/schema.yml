@@ -260,6 +260,16 @@ models:
       - name: rate_plan_charge_version
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
 
+  - name: fct_crm_account
+    description: '{{ doc("fct_crm_account") }}'
+    columns:
+      - name: dim_crm_account_id
+        description: Unique identifier of a crm account from Salesforce. This is the natural key of the table.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
