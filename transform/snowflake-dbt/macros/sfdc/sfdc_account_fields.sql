@@ -287,13 +287,13 @@ WITH map_merged_crm_account AS (
 
       --degenerative dimensions
       sfdc_account.is_sdr_target_account,
-      sfdc_account.is_key_account                                         AS is_key_account,
       IFF(sfdc_record_type.record_type_label = 'Partner'
           AND sfdc_account.partner_type IN ('Alliance', 'Channel')
           AND sfdc_account.partner_status = 'Authorized',
           TRUE, FALSE)                                                    AS is_reseller,
       sfdc_account.is_jihu_account                                        AS is_jihu_account,
       sfdc_account.is_first_order_available,
+      sfdc_account.is_key_account                                         AS is_key_account,
       CASE
         WHEN CONTAINS (sfdc_account.zi_technologies,'ARE_USED: Jenkins') 
           THEN 1 
