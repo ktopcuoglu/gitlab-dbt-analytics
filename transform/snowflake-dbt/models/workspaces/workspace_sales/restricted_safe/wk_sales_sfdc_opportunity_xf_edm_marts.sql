@@ -1,4 +1,4 @@
-{{ config(alias='sfdc_opportunity_xf_refactored_edm') }}
+{{ config(alias='sfdc_opportunity_xf_edm_marts') }}
 
 WITH sfdc_opportunity AS (
 
@@ -8,21 +8,7 @@ WITH sfdc_opportunity AS (
     FROM {{ref('sfdc_opportunity')}}
     --FROM  prod.restricted_safe_legacy.sfdc_opportunity
 
-), sfdc_opportunity_raw AS (
-    /*
-    JK 2022-06-16: Adding comp_new_logo_override__c directly from RAW SFDC object
-    This field is required for High Value First Order dashboard. I will create another MR so that
-    it is added to EDMs and when we do a source table migration from legacy to EDMs for Workspace Sales,
-    we can delete this connection and use the mart table directly.
-    */
-
-    SELECT
-        id AS opportunity_id,
-        comp_new_logo_override__c
-    --FROM raw.salesforce_stitch.opportunity
-    FROM {{ source('salesforce', 'opportunity') }}
-
- ), legacy_sfdc_opportunity_xf AS (
+), legacy_sfdc_opportunity_xf AS (
 
     SELECT *
     --FROM prod.restricted_safe_legacy.sfdc_opportunity_xf
@@ -246,89 +232,25 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
 
-    CASE
-    WHEN edm_opty.sales_qualified_source_name = 'BDR Generated'
-        THEN 'SDR Generated'
-    ELSE COALESCE(edm_opty.sales_qualified_source_name,'NA')
-    END                                                           AS sales_qualified_source,
-
-    CASE
-    WHEN edm_opty.is_won = 1 THEN '1.Won'
-    WHEN edm_opty.stage_name = '8-Closed Lost'
-        THEN '2.Lost'
-    WHEN edm_opty.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN '0. Open'
-    ELSE 'N/A'
-    END                                                        AS stage_category,
-
-    CASE
-    WHEN edm_opty.deal_path_name = 'Channel'
-        THEN REPLACE(COALESCE(edm_opty.partner_track, partner_account.partner_track, resale_account.partner_track,'Open'),'select','Select')
-    ELSE 'Direct'
-    END                                                         AS calculated_partner_track,
-
-    CASE
-    WHEN edm_opty.deal_path_name = 'Direct'
-        THEN 'Direct'
-    WHEN edm_opty.deal_path_name = 'Web Direct'
-        THEN 'Web Direct'
-    WHEN edm_opty.deal_path_name = 'Channel'
-        AND edm_opty.sales_qualified_source_name = 'Channel Generated'
-        THEN 'Partner Sourced'
-    WHEN edm_opty.deal_path_name = 'Channel'
-        AND edm_opty.sales_qualified_source_name != 'Channel Generated'
-        THEN 'Partner Co-Sell'
-    END                                                         AS deal_path_engagement,
-
-    CASE
-    WHEN edm_opty.opportunity_category IN ('Decommission')
-        THEN 1
-    ELSE 0
-    END                                                         AS is_refund,
-
-    CASE
-    WHEN edm_opty.opportunity_category IN ('Credit')
-        THEN 1
-    ELSE 0
-    END                                                         AS is_credit_flag,
-
-    CASE
-    WHEN edm_opty.opportunity_category IN ('Contract Reset')
-        THEN 1
-    ELSE 0
-    END                                                         AS is_contract_reset_flag,
-
-
+    edm_opty.sales_qualified_source_name AS sales_qualified_source,
+    edm_opty.stage_category,
+    edm_opty.calculated_partner_track,
+    edm_opty.deal_path_engagement,
+    edm_opty.is_refund,
+    edm_opty.is_credit AS is_credit_flag,
+    edm_opty.is_contract_reset AS is_contract_reset_flag,
     CAST(edm_opty.is_won AS INTEGER)                 AS is_won,
+    edm_opty.is_lost,
+    edm_opty.is_open,
+    edm_opty.is_duplicate AS is_duplicate_flag,
+    edm_opty.is_closed,
+    edm_opty.is_renewal,
 
-    CASE
-    WHEN edm_opty.stage_name = '8-Closed Lost'
-        THEN 1 ELSE 0
-    END                                                         AS is_lost,
 
-    CASE
-    WHEN edm_opty.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN 0
-    ELSE 1
-    END                                                         AS is_open,
+---------------------- break
 
-    CASE
-    WHEN edm_opty.stage_name IN ('10-Duplicate')
-        THEN 1
-    ELSE 0
-    END                                                         AS is_duplicate_flag,
-
-    CASE
-    WHEN edm_opty.stage_name IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN 1
-    ELSE 0
-    END                                                         AS is_closed,
-
-    CASE
-    WHEN LOWER(edm_opty.sales_type) like '%renewal%'
-        THEN 1
-    ELSE 0
-    END                                                          AS is_renewal,
+    
+    
 
     -- date fields helpers
     close_date_detail.fiscal_quarter_name_fy                             AS close_fiscal_quarter_name,
@@ -695,9 +617,6 @@ WITH sfdc_opportunity AS (
     -- NF 20211105 resale partner
     LEFT JOIN sfdc_accounts_xf AS resale_account
       ON resale_account.account_id = sfdc_opportunity_xf.fulfillment_partner
-    -- JK 20220616 temp solution to add New Logo Override field
-    LEFT JOIN sfdc_opportunity_raw
-      ON sfdc_opportunity.opportunity_id = sfdc_opportunity_raw.opportunity_id
     -- NF 20210906 remove JiHu opties from the models
     WHERE sfdc_opportunity_xf.is_jihu_account = 0
         AND account.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')            -- remove test account

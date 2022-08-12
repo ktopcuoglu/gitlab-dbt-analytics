@@ -113,125 +113,125 @@ WITH date_details AS (
 ), sfdc_opportunity_snapshot_history AS (
 
      SELECT
-      sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
-      sfdc_opportunity_snapshot_history.opportunity_id,
-      sfdc_opportunity_snapshot_history.opportunity_name,
-      sfdc_opportunity_snapshot_history.owner_id,
-      sfdc_opportunity_snapshot_history.opportunity_owner_department,
+      edm_snapshot_opty.opportunity_snapshot_id,
+      edm_snapshot_opty.dim_crm_opportunity_id AS opportunity_id,
+      edm_snapshot_opty.opportunity_name,
+      edm_snapshot_opty.owner_id,
+      edm_snapshot_opty.opportunity_owner_department,
 
       --------------------------------------------
       --------------------------------------------
-      sfdc_opportunity_snapshot_history.close_date,
-      sfdc_opportunity_snapshot_history.created_date,
-      sfdc_opportunity_snapshot_history.sales_qualified_date,
-      sfdc_opportunity_snapshot_history.sales_accepted_date,
+      edm_snapshot_opty.close_date,
+      edm_snapshot_opty.created_date,
+      edm_snapshot_opty.sales_qualified_date,
+      edm_snapshot_opty.sales_accepted_date,
       --------------------------------------------
       --------------------------------------------
-      sfdc_opportunity_snapshot_history.opportunity_sales_development_representative,
-      sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
-      sfdc_opportunity_snapshot_history.opportunity_development_representative,
+      edm_snapshot_opty.opportunity_sales_development_representative,
+      edm_snapshot_opty.opportunity_business_development_representative,
+      edm_snapshot_opty.opportunity_development_representative,
       --------------------------------------------
       --------------------------------------------
       --  NF: For reporting we tend to use live values for things like order type
       --      exposing some of those fields here in case they are needed
       sfdc_opportunity_snapshot_history.order_type_stamped          AS snapshot_order_type_stamped,
       sfdc_opportunity_snapshot_history.sales_qualified_source      AS snapshot_sales_qualified_source,
-      sfdc_opportunity_snapshot_history.is_edu_oss                  AS snapshot_is_edu_oss,
-      sfdc_opportunity_snapshot_history.opportunity_category        AS snapshot_opportunity_category,
+      edm_snapshot_opty.is_edu_oss                                  AS snapshot_is_edu_oss,
+      edm_snapshot_opty.opportunity_category                        AS snapshot_opportunity_category,
 
       -- Accounts might get deleted or merged, I am selecting the latest account id from the opty object
       -- to avoid showing non-valid account ids
-      sfdc_opportunity_snapshot_history.account_id                  AS raw_account_id,
-      sfdc_opportunity_snapshot_history.net_arr                     AS raw_net_arr,
+      edm_snapshot_opty.dim_crm_account_id                          AS raw_account_id,
+      edm_snapshot_opty.net_arr                                     AS raw_net_arr,
       sfdc_opportunity_snapshot_history.incremental_acv,
       sfdc_opportunity_snapshot_history.net_incremental_acv,
 
-      sfdc_opportunity_snapshot_history.deployment_preference,
-      sfdc_opportunity_snapshot_history.merged_opportunity_id,
-      sfdc_opportunity_snapshot_history.sales_path,
-      sfdc_opportunity_snapshot_history.sales_type,
-      sfdc_opportunity_snapshot_history.stage_name,
-      sfdc_opportunity_snapshot_history.competitors,
-      sfdc_opportunity_snapshot_history.forecast_category_name,
-      sfdc_opportunity_snapshot_history.invoice_number,
-      sfdc_opportunity_snapshot_history.primary_campaign_source_id,
-      sfdc_opportunity_snapshot_history.professional_services_value,
-      sfdc_opportunity_snapshot_history.total_contract_value,
-      sfdc_opportunity_snapshot_history.is_web_portal_purchase,
-      sfdc_opportunity_snapshot_history.opportunity_term,
-      sfdc_opportunity_snapshot_history.arr_basis,
-      sfdc_opportunity_snapshot_history.arr,
-      sfdc_opportunity_snapshot_history.amount,
-      sfdc_opportunity_snapshot_history.recurring_amount,
-      sfdc_opportunity_snapshot_history.true_up_amount,
-      sfdc_opportunity_snapshot_history.proserv_amount,
-      sfdc_opportunity_snapshot_history.renewal_amount,
-      sfdc_opportunity_snapshot_history.other_non_recurring_amount,
-      sfdc_opportunity_snapshot_history.subscription_start_date             AS quote_start_date,
-      sfdc_opportunity_snapshot_history.subscription_end_date               AS quote_end_date,
+      edm_snapshot_opty.deployment_preference,
+      edm_snapshot_opty.merged_opportunity_id,
+      edm_snapshot_opty.sales_path,
+      edm_snapshot_opty.sales_type,
+      edm_snapshot_opty.stage_name,
+      edm_snapshot_opty.competitors,
+      edm_snapshot_opty.forecast_category_name,
+      edm_snapshot_opty.invoice_number,
+      edm_snapshot_opty.primary_campaign_source_id,
+      edm_snapshot_opty.professional_services_value,
+      edm_snapshot_opty.total_contract_value,
+      edm_snapshot_opty.is_web_portal_purchase,
+      edm_snapshot_opty.opportunity_term,
+      edm_snapshot_opty.arr_basis,
+      edm_snapshot_opty.arr,
+      edm_snapshot_opty.amount,
+      edm_snapshot_opty.recurring_amount,
+      edm_snapshot_opty.true_up_amount,
+      edm_snapshot_opty.proserv_amount,
+      edm_snapshot_opty.renewal_amount,
+      edm_snapshot_opty.other_non_recurring_amount,
+      edm_snapshot_opty.subscription_start_date                         AS quote_start_date,
+      edm_snapshot_opty.subscription_end_date                           AS quote_end_date,
 
-      sfdc_opportunity_snapshot_history.cp_champion,
-      sfdc_opportunity_snapshot_history.cp_close_plan,
-      sfdc_opportunity_snapshot_history.cp_competition,
-      sfdc_opportunity_snapshot_history.cp_decision_criteria,
-      sfdc_opportunity_snapshot_history.cp_decision_process,
-      sfdc_opportunity_snapshot_history.cp_economic_buyer,
-      sfdc_opportunity_snapshot_history.cp_identify_pain,
-      sfdc_opportunity_snapshot_history.cp_metrics,
-      sfdc_opportunity_snapshot_history.cp_risks,
-      sfdc_opportunity_snapshot_history.cp_use_cases,
-      sfdc_opportunity_snapshot_history.cp_value_driver,
-      sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
-      sfdc_opportunity_snapshot_history.cp_why_gitlab,
-      sfdc_opportunity_snapshot_history.cp_why_now,
-      sfdc_opportunity_snapshot_history.cp_score,
+      edm_snapshot_opty.cp_champion,
+      edm_snapshot_opty.cp_close_plan,
+      edm_snapshot_opty.cp_competition,
+      edm_snapshot_opty.cp_decision_criteria,
+      edm_snapshot_opty.cp_decision_process,
+      edm_snapshot_opty.cp_economic_buyer,
+      edm_snapshot_opty.cp_identify_pain,
+      edm_snapshot_opty.cp_metrics,
+      edm_snapshot_opty.cp_risks,
+      edm_snapshot_opty.cp_use_cases,
+      edm_snapshot_opty.cp_value_driver,
+      edm_snapshot_opty.cp_why_do_anything_at_all,
+      edm_snapshot_opty.cp_why_gitlab,
+      edm_snapshot_opty.cp_why_now,
+      edm_snapshot_opty.cp_score,
 
       sfdc_opportunity_snapshot_history._last_dbt_run,
-      sfdc_opportunity_snapshot_history.is_deleted,
-      sfdc_opportunity_snapshot_history.last_activity_date,
+      edm_snapshot_opty.is_deleted,
+      edm_snapshot_opty.last_activity_date,
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
-      sfdc_opportunity_snapshot_history.deal_path,
-      sfdc_opportunity_snapshot_history.dr_partner_deal_type,
-      sfdc_opportunity_snapshot_history.dr_partner_engagement,
-      sfdc_opportunity_snapshot_history.partner_account,
-      sfdc_opportunity_snapshot_history.dr_status,
-      sfdc_opportunity_snapshot_history.distributor,
-      sfdc_opportunity_snapshot_history.influence_partner,
-      sfdc_opportunity_snapshot_history.fulfillment_partner,
-      sfdc_opportunity_snapshot_history.platform_partner,
-      sfdc_opportunity_snapshot_history.partner_track,
-      sfdc_opportunity_snapshot_history.is_public_sector_opp,
-      sfdc_opportunity_snapshot_history.is_registration_from_portal,
-      sfdc_opportunity_snapshot_history.calculated_discount,
-      sfdc_opportunity_snapshot_history.partner_discount,
-      sfdc_opportunity_snapshot_history.partner_discount_calc,
-      sfdc_opportunity_snapshot_history.comp_channel_neutral,
-      sfdc_opportunity_snapshot_history.fpa_master_bookings_flag,
+      edm_snapshot_opty.deal_path_name                                  AS deal_path,
+      edm_snapshot_opty.dr_partner_deal_type,
+      edm_snapshot_opty.dr_partner_engagement,
+      edm_snapshot_opty.partner_account,
+      edm_snapshot_opty.dr_status,
+      edm_snapshot_opty.distributor,
+      edm_snapshot_opty.influence_partner,
+      edm_snapshot_opty.fulfillment_partner,
+      edm_snapshot_opty.platform_partner,
+      edm_snapshot_opty.partner_track,
+      edm_snapshot_opty.is_public_sector_opp,
+      edm_snapshot_opty.is_registration_from_portal,
+      edm_snapshot_opty.calculated_discount,
+      edm_snapshot_opty.partner_discount,
+      edm_snapshot_opty.partner_discount_calc,
+      edm_snapshot_opty.comp_channel_neutral,
+      edm_snapshot_opty.fpa_master_bookings_flag,
 
       -- stage dates
       -- dates in stage fields
-      sfdc_opportunity_snapshot_history.stage_0_pending_acceptance_date,
-      sfdc_opportunity_snapshot_history.stage_1_discovery_date,
-      sfdc_opportunity_snapshot_history.stage_2_scoping_date,
-      sfdc_opportunity_snapshot_history.stage_3_technical_evaluation_date,
-      sfdc_opportunity_snapshot_history.stage_4_proposal_date,
-      sfdc_opportunity_snapshot_history.stage_5_negotiating_date,
+      edm_snapshot_opty.stage_0_pending_acceptance_date,
+      edm_snapshot_opty.stage_1_discovery_date,
+      edm_snapshot_opty.stage_2_scoping_date,
+      edm_snapshot_opty.stage_3_technical_evaluation_date,
+      edm_snapshot_opty.stage_4_proposal_date,
+      edm_snapshot_opty.stage_5_negotiating_date,
       sfdc_opportunity_snapshot_history.stage_6_awaiting_signature_date,
-      sfdc_opportunity_snapshot_history.stage_6_closed_won_date,
-      sfdc_opportunity_snapshot_history.stage_6_closed_lost_date,
+      edm_snapshot_opty.stage_6_closed_won_date,
+      edm_snapshot_opty.stage_6_closed_lost_date,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Direct'
+        WHEN edm_snapshot_opty.deal_path_name = 'Direct'
           THEN 'Direct'
-        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Web Direct'
+        WHEN edm_snapshot_opty.deal_path_name = 'Web Direct'
           THEN 'Web Direct'
-        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel'
-            AND sfdc_opportunity_snapshot_history.sales_qualified_source = 'Channel Generated'
+        WHEN edm_snapshot_opty.deal_path_name = 'Channel'
+            AND edm_snapshot_opty.sales_qualified_source_name = 'Channel Generated'
           THEN 'Partner Sourced'
-        WHEN sfdc_opportunity_snapshot_history.deal_path = 'Channel'
-            AND sfdc_opportunity_snapshot_history.sales_qualified_source != 'Channel Generated'
+        WHEN edm_snapshot_opty.deal_path_name = 'Channel'
+            AND edm_snapshot_opty.sales_qualified_source_name != 'Channel Generated'
           THEN 'Partner Co-Sell'
       END                                                         AS deal_path_engagement,
 
@@ -239,210 +239,210 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+        WHEN edm_snapshot_opty.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
                               ,'Developing', '1-Discovery', '2-Developing', '2-Scoping')
           THEN 'Pipeline'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating'
+        WHEN edm_snapshot_opty.stage_name IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating'
                               , '6-Awaiting Signature', '7-Closing')
           THEN '3+ Pipeline'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')
+        WHEN edm_snapshot_opty.stage_name IN ('8-Closed Lost', 'Closed Lost')
           THEN 'Lost'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('Closed Won')
+        WHEN edm_snapshot_opty.stage_name IN ('Closed Won')
           THEN 'Closed Won'
         ELSE 'Other'
       END                                                         AS stage_name_3plus,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
+        WHEN edm_snapshot_opty.stage_name IN ('00-Pre Opportunity', '0-Pending Acceptance', '0-Qualifying'
                             , 'Developing', '1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')
           THEN 'Pipeline'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')
+        WHEN edm_snapshot_opty.stage_name IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')
           THEN '4+ Pipeline'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')
+        WHEN edm_snapshot_opty.stage_name IN ('8-Closed Lost', 'Closed Lost')
           THEN 'Lost'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('Closed Won')
+        WHEN edm_snapshot_opty.stage_name IN ('Closed Won')
           THEN 'Closed Won'
         ELSE 'Other'
       END                                                         AS stage_name_4plus,
 
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name
+        WHEN edm_snapshot_opty.stage_name
           IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
       END                                                         AS is_stage_1_plus,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name
+        WHEN edm_snapshot_opty.stage_name
           IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
       END                                                         AS is_stage_3_plus,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name
+        WHEN edm_snapshot_opty.stage_name
           IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
             THEN 1
         ELSE 0
       END                                                         AS is_stage_4_plus,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name = 'Closed Won'
+        WHEN edm_snapshot_opty.stage_name = 'Closed Won'
           THEN 1 ELSE 0
       END                                                         AS is_won,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')
+        WHEN edm_snapshot_opty.stage_name IN ('8-Closed Lost', 'Closed Lost')
           THEN 1 ELSE 0
       END                                                         AS is_lost,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
+        WHEN edm_snapshot_opty.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
             THEN 0
         ELSE 1
       END                                                         AS is_open,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
+        WHEN edm_snapshot_opty.stage_name IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
           THEN 1
         ELSE 0
       END                                                         AS is_closed,
 
 
       CASE
-        WHEN LOWER(sfdc_opportunity_snapshot_history.sales_type) like '%renewal%'
+        WHEN LOWER(edm_snapshot_opty.sales_type) like '%renewal%'
           THEN 1
         ELSE 0
       END                                                         AS is_renewal,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit')
+        WHEN edm_snapshot_opty.opportunity_category IN ('Credit')
           THEN 1
         ELSE 0
       END                                                         AS is_credit_flag,
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
+        WHEN edm_snapshot_opty.opportunity_category IN ('Decommission')
           THEN 1
         ELSE 0
       END                                                          AS is_refund,
 
 
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Contract Reset')
+        WHEN edm_snapshot_opty.opportunity_category IN ('Contract Reset')
           THEN 1
         ELSE 0
       END                                                          AS is_contract_reset_flag,
 
       -- NF: 20210827 Fields for competitor analysis
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Other')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Other')
           THEN 1
         ELSE 0
       END                                 AS competitors_other_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitLab Core')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'GitLab Core')
           THEN 1
         ELSE 0
       END                                 AS competitors_gitlab_core_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'None')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'None')
           THEN 1
         ELSE 0
       END                                 AS competitors_none_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitHub Enterprise')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'GitHub Enterprise')
           THEN 1
         ELSE 0
       END                                 AS competitors_github_enterprise_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'BitBucket Server')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'BitBucket Server')
           THEN 1
         ELSE 0
       END                                 AS competitors_bitbucket_server_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Unknown')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Unknown')
           THEN 1
         ELSE 0
       END                                 AS competitors_unknown_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitHub.com')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'GitHub.com')
           THEN 1
         ELSE 0
       END                                 AS competitors_github_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'GitLab.com')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'GitLab.com')
           THEN 1
         ELSE 0
       END                                 AS competitors_gitlab_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Jenkins')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Jenkins')
           THEN 1
         ELSE 0
       END                                 AS competitors_jenkins_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Azure DevOps')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Azure DevOps')
           THEN 1
         ELSE 0
       END                                 AS competitors_azure_devops_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'SVN')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'SVN')
           THEN 1
         ELSE 0
       END                                 AS competitors_svn_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'BitBucket.Org')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'BitBucket.Org')
           THEN 1
         ELSE 0
       END                                 AS competitors_bitbucket_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Atlassian')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Atlassian')
           THEN 1
         ELSE 0
       END                                 AS competitors_atlassian_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Perforce')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Perforce')
           THEN 1
         ELSE 0
       END                                 AS competitors_perforce_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Visual Studio Team Services')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Visual Studio Team Services')
           THEN 1
         ELSE 0
       END                                 AS competitors_visual_studio_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Azure')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Azure')
           THEN 1
         ELSE 0
       END                                 AS competitors_azure_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Amazon Code Commit')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Amazon Code Commit')
           THEN 1
         ELSE 0
       END                                 AS competitors_amazon_code_commit_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'CircleCI')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'CircleCI')
           THEN 1
         ELSE 0
       END                                 AS competitors_circleci_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'Bamboo')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'Bamboo')
           THEN 1
         ELSE 0
       END                                 AS competitors_bamboo_flag,
       CASE
-        WHEN CONTAINS (sfdc_opportunity_snapshot_history.competitors, 'AWS')
+        WHEN CONTAINS (edm_snapshot_opty.competitors, 'AWS')
           THEN 1
         ELSE 0
       END                                 AS competitors_aws_flag,
 
     CASE
-        WHEN sfdc_opportunity_snapshot_history.stage_name = 'Closed Won'
+        WHEN edm_snapshot_opty.stage_name = 'Closed Won'
           THEN '1.Won'
-        WHEN sfdc_opportunity_snapshot_history.stage_name IN ('8-Closed Lost', 'Closed Lost')
+        WHEN edm_snapshot_opty.stage_name IN ('8-Closed Lost', 'Closed Lost')
           THEN '2.Lost'
-        WHEN sfdc_opportunity_snapshot_history.stage_name NOT IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
+        WHEN edm_snapshot_opty.stage_name NOT IN ('8-Closed Lost', 'Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
           THEN '0. Open'
         ELSE 'N/A'
       END                                                         AS stage_category,
@@ -450,9 +450,9 @@ WITH date_details AS (
       ------------------------------
       -- fields for counting new logos, these fields count refund as negative
       CASE
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Decommission')
+        WHEN edm_snapshot_opty.opportunity_category IN ('Decommission')
           THEN -1
-        WHEN sfdc_opportunity_snapshot_history.opportunity_category IN ('Credit')
+        WHEN edm_snapshot_opty.opportunity_category IN ('Credit')
           THEN 0
         ELSE 1
       END                                                          AS calculated_deal_count,
@@ -474,6 +474,7 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
       --date helpers
 
+      -- edm_snapshot_opty.snapshot_date,
       sfdc_opportunity_snapshot_history.date_actual::DATE         AS snapshot_date,
       snapshot_date.first_day_of_month                            AS snapshot_date_month,
       snapshot_date.fiscal_year                                   AS snapshot_fiscal_year,
@@ -507,24 +508,24 @@ WITH date_details AS (
       net_arr_created_date.fiscal_quarter_name_fy                 AS pipeline_created_fiscal_quarter_name,
       net_arr_created_date.first_day_of_fiscal_quarter            AS pipeline_created_fiscal_quarter_date,
 
-      sales_accepted_date.first_day_of_month                     AS sales_accepted_month,
-      sales_accepted_date.fiscal_year                            AS sales_accepted_fiscal_year,
-      sales_accepted_date.fiscal_quarter_name_fy                 AS sales_accepted_fiscal_quarter_name,
-      sales_accepted_date.first_day_of_fiscal_quarter            AS sales_accepted_fiscal_quarter_date
+      sales_accepted_date.first_day_of_month                      AS sales_accepted_month,
+      sales_accepted_date.fiscal_year                             AS sales_accepted_fiscal_year,
+      sales_accepted_date.fiscal_quarter_name_fy                  AS sales_accepted_fiscal_quarter_name,
+      sales_accepted_date.first_day_of_fiscal_quarter             AS sales_accepted_fiscal_quarter_date
 
-    FROM sfdc_opportunity_snapshot_history_legacy sfdc_opportunity_snapshot_history
+    FROM sfdc_opportunity_snapshot_history_legacy AS sfdc_opportunity_snapshot_history
     INNER JOIN edm_snapshot_opty
       ON edm_snapshot_opty.opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
         AND edm_snapshot_opty.snapshot_date = sfdc_opportunity_snapshot_history.date_actual::DATE
-    INNER JOIN date_details close_date_detail
+    INNER JOIN date_details AS close_date_detail
       ON close_date_detail.date_actual = sfdc_opportunity_snapshot_history.close_date::DATE
-    INNER JOIN date_details snapshot_date
+    INNER JOIN date_details AS snapshot_date
       ON sfdc_opportunity_snapshot_history.date_actual::DATE = snapshot_date.date_actual
-    LEFT JOIN date_details created_date_detail
+    LEFT JOIN date_details AS created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
-    LEFT JOIN date_details net_arr_created_date
+    LEFT JOIN date_details AS net_arr_created_date
       ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
-    LEFT JOIN date_details sales_accepted_date
+    LEFT JOIN date_details AS sales_accepted_date
       ON sales_accepted_date.date_actual = sfdc_opportunity_snapshot_history.sales_accepted_date::DATE
 
 
