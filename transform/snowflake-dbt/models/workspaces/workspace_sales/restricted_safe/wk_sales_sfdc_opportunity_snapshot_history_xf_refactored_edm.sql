@@ -113,7 +113,7 @@ WITH date_details AS (
 ), sfdc_opportunity_snapshot_history AS (
 
      SELECT
-      edm_snapshot_opty.opportunity_snapshot_id,
+      edm_snapshot_opty.crm_opportunity_snapshot_id AS opportunity_snapshot_id,
       edm_snapshot_opty.dim_crm_opportunity_id AS opportunity_id,
       edm_snapshot_opty.opportunity_name,
       edm_snapshot_opty.owner_id,
@@ -135,7 +135,7 @@ WITH date_details AS (
       --  NF: For reporting we tend to use live values for things like order type
       --      exposing some of those fields here in case they are needed
       sfdc_opportunity_snapshot_history.order_type_stamped          AS snapshot_order_type_stamped,
-      sfdc_opportunity_snapshot_history.sales_qualified_source      AS snapshot_sales_qualified_source,
+      edm_snapshot_opty.sales_qualified_source_name                 AS snapshot_sales_qualified_source,
       edm_snapshot_opty.is_edu_oss                                  AS snapshot_is_edu_oss,
       edm_snapshot_opty.opportunity_category                        AS snapshot_opportunity_category,
 
@@ -186,7 +186,7 @@ WITH date_details AS (
       edm_snapshot_opty.cp_why_now,
       edm_snapshot_opty.cp_score,
 
-      sfdc_opportunity_snapshot_history._last_dbt_run,
+      edm_snapshot_opty.dbt_updated_at AS _last_dbt_run,
       edm_snapshot_opty.is_deleted,
       edm_snapshot_opty.last_activity_date,
 
@@ -474,8 +474,8 @@ WITH date_details AS (
       ------------------------------------------------------------------------------------------------------
       --date helpers
 
-      -- edm_snapshot_opty.snapshot_date,
-      sfdc_opportunity_snapshot_history.date_actual::DATE         AS snapshot_date,
+      edm_snapshot_opty.snapshot_date,
+      --sfdc_opportunity_snapshot_history.date_actual::DATE         AS snapshot_date,
       snapshot_date.first_day_of_month                            AS snapshot_date_month,
       snapshot_date.fiscal_year                                   AS snapshot_fiscal_year,
       snapshot_date.fiscal_quarter_name_fy                        AS snapshot_fiscal_quarter_name,

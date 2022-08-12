@@ -111,6 +111,7 @@ WITH sfdc_accounts_xf AS (
     SELECT * 
     FROM {{ref('wk_sales_sfdc_users_xf')}}  
 
+-- all the fields are sourcing from edm opp snapshot
 ), sfdc_opportunity_snapshot_history AS (
     SELECT 
       sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
