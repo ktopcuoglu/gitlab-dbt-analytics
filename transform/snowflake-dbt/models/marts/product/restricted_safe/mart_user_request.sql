@@ -24,7 +24,7 @@
       dim_crm_opportunity.dim_crm_opportunity_id,
       dim_crm_opportunity.dim_crm_account_id,
       dim_crm_opportunity.stage_name,
-      dim_crm_opportunity.stage_is_closed,
+      dim_crm_opportunity.is_closed,
       dim_crm_opportunity.order_type,
       SUM(fct_quote_item.quantity)              AS quantity
     FROM fct_quote_item
@@ -49,7 +49,7 @@
       SUM(quantity) AS seats
     FROM opportunity_seats
     WHERE order_type = '1. New - First Order'
-      AND stage_is_closed = FALSE
+      AND is_closed = FALSE
     GROUP BY 1
 
 ), opportunity_net_arr AS (
@@ -58,7 +58,7 @@
       fct_crm_opportunity.dim_crm_opportunity_id,
       fct_crm_opportunity.dim_crm_account_id,
       dim_crm_opportunity.stage_name,
-      dim_crm_opportunity.stage_is_closed,
+      dim_crm_opportunity.is_closed,
       dim_order_type.order_type_name,
       fct_crm_opportunity.net_arr,
       fct_crm_opportunity.arr_basis
@@ -95,7 +95,7 @@
       dim_crm_account_id,
       SUM(net_arr) AS net_arr
     FROM opportunity_net_arr
-    WHERE stage_is_closed = FALSE
+    WHERE is_closed = FALSE
     GROUP BY 1 
 
 ), account_open_opp_net_arr_fo AS (
@@ -104,7 +104,7 @@
       dim_crm_account_id,
       SUM(net_arr) AS net_arr
     FROM opportunity_net_arr
-    WHERE stage_is_closed = FALSE
+    WHERE is_closed = FALSE
       AND order_type_name IN ('1. New - First Order')
     GROUP BY 1 
 
@@ -114,7 +114,7 @@
       dim_crm_account_id,
       SUM(net_arr) AS net_arr
     FROM opportunity_net_arr
-    WHERE stage_is_closed = FALSE
+    WHERE is_closed = FALSE
       AND order_type_name IN ('2. New - Connected', '3. Growth')
     GROUP BY 1 
 
@@ -503,7 +503,7 @@
 
       -- CRM Opportunity attributes
       dim_crm_opportunity.stage_name                                              AS crm_opp_stage_name,
-      dim_crm_opportunity.stage_is_closed                                         AS crm_opp_is_closed,
+      dim_crm_opportunity.is_closed                                         AS crm_opp_is_closed,
       fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
       dim_order_type.order_type_name                                              AS crm_opp_order_type,
       dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
