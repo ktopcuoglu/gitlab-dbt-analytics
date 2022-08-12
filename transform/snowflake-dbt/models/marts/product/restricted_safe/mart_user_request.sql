@@ -507,8 +507,8 @@
       fct_crm_opportunity.close_date                                              AS crm_opp_close_date,
       dim_order_type.order_type_name                                              AS crm_opp_order_type,
       dim_order_type.order_type_grouped                                           AS crm_opp_order_type_grouped,
-      IFF(DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
-        DATE_TRUNC('month', fct_crm_opportunity.subscription_end_date),
+      IFF(DATE_TRUNC('month', dim_crm_opportunity.subscription_end_date) >= DATE_TRUNC('month',CURRENT_DATE),
+        DATE_TRUNC('month', dim_crm_opportunity.subscription_end_date),
         NULL
       )                                                                           AS crm_opp_next_renewal_month,
       fct_crm_opportunity.net_arr                                                 AS crm_opp_net_arr,
