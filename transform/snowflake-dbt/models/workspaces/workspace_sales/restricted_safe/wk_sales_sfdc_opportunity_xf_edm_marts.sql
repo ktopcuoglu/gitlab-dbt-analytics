@@ -19,7 +19,6 @@ WITH sfdc_opportunity AS (
     SELECT *
     --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
     FROM {{ref('mart_crm_opportunity')}}
-    -- TODO add the reference
 
 ), sfdc_users_xf AS (
 
@@ -77,15 +76,14 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------
     --edm_opty.dim_crm_user_id                          AS owner_id,
     edm_opty.owner_id,
-
-    opportunity_owner.name                          AS opportunity_owner,
-    opportunity_owner.department                    AS opportunity_owner_department,
-    opportunity_owner.manager_name                  AS opportunity_owner_manager,
-    opportunity_owner.role_name                     AS opportunity_owner_role,
-    opportunity_owner.title                         AS opportunity_owner_title,
+    edm_opty.opportunity_owner,
+    edm_opty.opportunity_owner_department,
+    edm_opty.opportunity_owner_manager,
+    edm_opty.opportunity_owner_role,
+    edm_opty.opportunity_owner_title,
     ----------------------------------------------------------
     ----------------------------------------------------------
-    sfdc_opportunity_xf.opportunity_term,
+    edm_opty.opportunity_term,
     edm_opty.primary_campaign_source_id            AS primary_campaign_source_id,
     edm_opty.sales_path                            AS sales_path,
     edm_opty.sales_type                            AS sales_type,
@@ -95,8 +93,8 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
     -- Amount fields
-
     COALESCE(edm_opty.net_arr,0)       AS raw_net_arr,
+    edm_opty.net_arr,
     edm_opty.amount,
     edm_opty.renewal_amount,
     edm_opty.recurring_amount,
@@ -212,7 +210,7 @@ WITH sfdc_opportunity AS (
 
     -- account driven fields
     edm_opty.crm_account_name                         AS account_name,
-    account.ultimate_parent_account_id,
+    edm_opty.dim_parent_crm_account_id                AS ultimate_parent_account_id,
     edm_opty.is_jihu_account,
 
     edm_opty.account_owner_user_segment,
@@ -226,12 +224,12 @@ WITH sfdc_opportunity AS (
     edm_opty.account_demographics_area,
     edm_opty.account_demographics_territory,
 
-    account.upa_demographics_segment,
-    account.upa_demographics_geo,
-    account.upa_demographics_region,
-    account.upa_demographics_area,
-    account.upa_demographics_territory,
-
+    edm_opty.account_demographics_segment             AS upa_demographics_segment,
+    edm_opty.account_demographics_geo                 AS upa_demographics_geo,
+    edm_opty.account_demographics_region              AS upa_demographics_region,
+    edm_opty.account_demographics_area                AS upa_demographics_area,
+    edm_opty.account_demographics_territory           AS upa_demographics_territory,
+    
     ----------------------------------------------------------
     ----------------------------------------------------------
 
@@ -256,10 +254,10 @@ WITH sfdc_opportunity AS (
     edm_opty.close_fiscal_year,
     edm_opty.close_month                                                 AS close_date_month,
 
-    created_date_detail.fiscal_quarter_name_fy                           AS created_fiscal_quarter_name,
-    created_date_detail.first_day_of_fiscal_quarter                      AS created_fiscal_quarter_date,
-    created_date_detail.fiscal_year                                      AS created_fiscal_year,
-    created_date_detail.first_day_of_month                               AS created_date_month,
+    edm_opty.created_fiscal_quarter_name,
+    edm_opty.created_fiscal_quarter_date,
+    edm_opty.created_fiscal_year,
+    edm_opty.created_month                                               AS created_date_month,
 
     edm_opty.subscription_start_fiscal_quarter_name                      AS quote_start_date_fiscal_quarter_name,
     edm_opty.subscription_start_fiscal_quarter_date                      AS quote_start_date_fiscal_quarter_date,
@@ -276,30 +274,29 @@ WITH sfdc_opportunity AS (
     edm_opty.sales_qualified_fiscal_year,
     edm_opty.sales_qualified_month                                       AS sales_qualified_date_month,
 
-
     edm_opty.net_arr_created_date,
     edm_opty.net_arr_created_fiscal_quarter_name,
     edm_opty.net_arr_created_fiscal_quarter_date,
     edm_opty.net_arr_created_fiscal_year,
-    edm_opty.net_arr_created_month                                       AS net_arr_created_date_month
+    edm_opty.net_arr_created_month                                       AS net_arr_created_date_month,
 
     edm_opty.pipeline_created_date,
     edm_opty.pipeline_created_fiscal_quarter_name,
     edm_opty.pipeline_created_fiscal_quarter_date,
     edm_opty.pipeline_created_fiscal_year,
-    edm_opty.net_arr_created_month                                       AS pipeline_created_date_month
+    edm_opty.net_arr_created_month                                       AS pipeline_created_date_month,
 
-    stage_1_date.date_actual                                             AS stage_1_date,
-    stage_1_date.first_day_of_month                                      AS stage_1_date_month,
-    stage_1_date.fiscal_year                                             AS stage_1_fiscal_year,
-    stage_1_date.fiscal_quarter_name_fy                                  AS stage_1_fiscal_quarter_name,
-    stage_1_date.first_day_of_fiscal_quarter                             AS stage_1_fiscal_quarter_date,
+    edm_opty.stage_1_discovery_date                                      AS stage_1_date,
+    edm_opty.stage_1_discovery_month                                     AS stage_1_date_month,
+    edm_opty.stage_1_discovery_fiscal_year                               AS stage_1_fiscal_year,
+    edm_opty.stage_1_discovery_fiscal_quarter_name                       AS stage_1_fiscal_quarter_name,
+    edm_opty.stage_1_discovery_fiscal_quarter_date                       AS stage_1_fiscal_quarter_date,
 
-    stage_3_date.date_actual                                             AS stage_3_date,
-    stage_3_date.first_day_of_month                                      AS stage_3_date_month,
-    stage_3_date.fiscal_year                                             AS stage_3_fiscal_year,
-    stage_3_date.fiscal_quarter_name_fy                                  AS stage_3_fiscal_quarter_name,
-    stage_3_date.first_day_of_fiscal_quarter                             AS stage_3_fiscal_quarter_date,
+    edm_opty.stage_3_technical_evaluation_date                           AS stage_3_date,
+    edm_opty.stage_3_technical_evaluation_month                          AS stage_3_date_month,
+    edm_opty.stage_3_technical_evaluation_fiscal_year                    AS stage_3_fiscal_year,
+    edm_opty.stage_3_technical_evaluation_fiscal_quarter_name            AS stage_3_fiscal_quarter_name,
+    edm_opty.stage_3_technical_evaluation_fiscal_quarter_date            AS stage_3_fiscal_quarter_date,
 
     -----------------------------------------------------------------------------------------------------
     -----------------------------------------------------------------------------------------------------
@@ -374,10 +371,68 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------------
     ----------------------------------------------------------------
     -- NF 20220727 These next fields are needed for custom logic down the line
-    sfdc_opportunity_xf.incremental_acv,
-    sfdc_opportunity_xf.net_incremental_acv,
-    sfdc_opportunity_xf.is_deleted
+    -- sfdc_opportunity_xf.incremental_acv,
+    -- sfdc_opportunity_xf.net_incremental_acv,
+    sfdc_opportunity_xf.is_deleted,
     -----------------------------------------------
+
+    edm_opty.report_opportunity_user_segment,
+    edm_opty.report_opportunity_user_geo,
+    edm_opty.report_opportunity_user_region,
+    edm_opty.report_opportunity_user_area,
+    
+    -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
+    edm_opty.report_user_segment_geo_region_area,
+    edm_opty.report_user_segment_geo_region_area_sqs_ot,
+
+    ---- measures
+    edm_opty.open_1plus_deal_count,
+    edm_opty.open_3plus_deal_count,
+    edm_opty.open_4plus_deal_count,
+    edm_opty.booked_deal_count,
+    edm_opty.churned_contraction_deal_count,
+    edm_opty.booked_churned_contraction_deal_count,
+    edm_opty.open_1plus_net_arr,
+    edm_opty.open_3plus_net_arr,
+    edm_opty.open_4plus_net_arr,
+    edm_opty.booked_net_arr,
+    edm_opty.booked_churned_contraction_net_arr,
+    edm_opty.churned_contraction_net_arr,
+
+    -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
+    -- different aggregation levels
+    edm_opty.key_sqs,
+    edm_opty.key_ot,
+    edm_opty.key_segment,
+    edm_opty.key_segment_sqs,
+    edm_opty.key_segment_ot,
+    edm_opty.key_segment_geo,
+    edm_opty.key_segment_geo_sqs,
+    edm_opty.key_segment_geo_ot,
+    edm_opty.key_segment_geo_region,
+    edm_opty.key_segment_geo_region_sqs,
+    edm_opty.key_segment_geo_region_ot,
+    edm_opty.key_segment_geo_region_area,
+    edm_opty.key_segment_geo_region_area_sqs,
+    edm_opty.key_segment_geo_region_area_ot,
+    edm_opty.key_segment_geo_area,
+    edm_opty.sales_team_cro_level,
+    edm_opty.sales_team_rd_asm_level,
+    edm_opty.sales_team_vp_level,
+    edm_opty.sales_team_avp_rd_level,
+    edm_opty.sales_team_asm_level,
+
+    edm_opty.deal_size,
+    edm_opty.calculated_deal_size,
+    edm_opty.calculated_age_in_days,
+    edm_opty.is_eligible_open_pipeline              AS is_eligible_open_pipeline_flag,
+    edm_opty.is_eligible_asp_analysis               AS is_eligible_asp_analysis_flag,
+    edm_opty.is_eligible_age_analysis               AS is_eligible_age_analysis_flag,
+    edm_opty.is_booked_net_arr                      AS is_booked_net_arr_flag,
+    edm_opty.is_eligible_churn_contraction          AS is_eligible_churn_contraction_flag,
+    edm_opty.created_and_won_same_quarter_net_arr,
+    edm_opty.churn_contraction_net_arr_bucket       AS churn_contracton_net_arr_bucket,  --typo in wk sales
+    edm_opty.reason_for_loss_calc
 
 
     FROM legacy_sfdc_opportunity_xf AS sfdc_opportunity_xf
@@ -395,15 +450,6 @@ WITH sfdc_opportunity AS (
       ON edm_opty.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
     LEFT JOIN date_details AS start_date
       ON sfdc_opportunity_xf.subscription_start_date::DATE = start_date.date_actual
-    --LEFT JOIN date_details AS iacv_created_date
-    --  ON iacv_created_date.date_actual = sfdc_opportunity_xf.iacv_created_date::DATE
-    -- pipeline creation date
-    LEFT JOIN date_details AS stage_1_date
-      ON stage_1_date.date_actual = sfdc_opportunity_xf.stage_1_discovery_date::date
-    -- pipeline creation date
-    LEFT JOIN date_details AS stage_3_date
-      ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
-    -- NF 20211105 resale partner
     LEFT JOIN sfdc_accounts_xf AS resale_account
       ON resale_account.account_id = sfdc_opportunity_xf.fulfillment_partner
     -- NF 20210906 remove JiHu opties from the models
@@ -412,81 +458,12 @@ WITH sfdc_opportunity AS (
         AND sfdc_opportunity_xf.account_id NOT IN ('0014M00001kGcORQA0')                -- remove test account
         AND sfdc_opportunity_xf.is_deleted = 0
 
-), net_iacv_to_net_arr_ratio AS (
-
-    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED",
-          'Mid-Market'              AS "USER_SEGMENT_STAMPED",
-          0.999691784               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED",
-          'SMB'                     AS "USER_SEGMENT_STAMPED",
-          0.998590143               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED",
-          'Large'                   AS "USER_SEGMENT_STAMPED",
-          0.992289340               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED",
-          'SMB'                     AS "USER_SEGMENT_STAMPED",
-          0.927846192               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED",
-          'Large'                   AS "USER_SEGMENT_STAMPED",
-          0.852915435               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED",
-          'SMB'                     AS "USER_SEGMENT_STAMPED",
-          1.009262672               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED",
-          'Mid-Market'              AS "USER_SEGMENT_STAMPED",
-          0.793618079               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED",
-          'Mid-Market'              AS "USER_SEGMENT_STAMPED",
-          0.988527875               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED",
-          'Large'                   AS "USER_SEGMENT_STAMPED",
-          1.010081083               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '1. New - First Order'   AS "ORDER_TYPE_STAMPED",
-          'PubSec'                  AS "USER_SEGMENT_STAMPED",
-          1.000000000               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '2. New - Connected'     AS "ORDER_TYPE_STAMPED",
-          'PubSec'                  AS "USER_SEGMENT_STAMPED",
-          1.002741689               AS "RATIO_NET_IACV_TO_NET_ARR"
-    UNION
-    SELECT '3. Growth'              AS "ORDER_TYPE_STAMPED",
-          'PubSec'                  AS "USER_SEGMENT_STAMPED",
-          0.965670500               AS "RATIO_NET_IACV_TO_NET_ARR"
-
 
 ), churn_metrics AS (
 
 SELECT
     o.opportunity_id,
     NVL(o.reason_for_loss, o.downgrade_reason) AS reason_for_loss_staged,
-    CASE
-      WHEN reason_for_loss_staged IN ('Do Nothing','Other','Competitive Loss','Operational Silos')
-        OR reason_for_loss_staged IS NULL
-          THEN 'Unknown'
-      WHEN reason_for_loss_staged IN ('Missing Feature','Product value/gaps','Product Value / Gaps',
-                                          'Stayed with Community Edition','Budget/Value Unperceived')
-          THEN 'Product Value / Gaps'
-      WHEN reason_for_loss_staged IN ('Lack of Engagement / Sponsor','Went Silent','Evangelist Left')
-          THEN 'Lack of Engagement / Sponsor'
-      WHEN reason_for_loss_staged IN ('Loss of Budget','No budget')
-          THEN 'Loss of Budget'
-      WHEN reason_for_loss_staged = 'Merged into another opportunity'
-          THEN 'Merged Opp'
-      WHEN reason_for_loss_staged = 'Stale Opportunity'
-          THEN 'No Progression - Auto-close'
-      WHEN reason_for_loss_staged IN ('Product Quality / Availability','Product quality/availability')
-          THEN 'Product Quality / Availability'
-      ELSE reason_for_loss_staged
-     END                                    AS reason_for_loss_calc,
     o.reason_for_loss_details,
 
     CASE
@@ -522,44 +499,16 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
       */
 
-      CASE
-        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
-          THEN sfdc_opportunity_xf.account_owner_user_segment
-        ELSE sfdc_opportunity_xf.opportunity_owner_user_segment
-      END                                                       AS report_opportunity_user_segment,
-
-      CASE
-        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
-          THEN sfdc_opportunity_xf.account_owner_user_geo
-        ELSE sfdc_opportunity_xf.opportunity_owner_user_geo
-      END                                                       AS report_opportunity_user_geo,
-
-      CASE
-        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
-          THEN sfdc_opportunity_xf.account_owner_user_region
-        ELSE sfdc_opportunity_xf.opportunity_owner_user_region
-      END                                                       AS report_opportunity_user_region,
-
-      CASE
-        WHEN sfdc_opportunity_xf.close_date < today.current_fiscal_year_date
-          THEN sfdc_opportunity_xf.account_owner_user_area
-        ELSE sfdc_opportunity_xf.opportunity_owner_user_area
-      END                                                       AS report_opportunity_user_area,
-      -- report_opportunity_subarea
-
+      
       -------------------
       -- BASE KEYS
-       -- 20220214 NF: Temporary keys, until the SFDC key is exposed
+      -- 20220214 NF: Temporary keys, until the SFDC key is exposed
       LOWER(CONCAT(sfdc_opportunity_xf.opportunity_owner_user_segment,'-',sfdc_opportunity_xf.opportunity_owner_user_geo,'-',sfdc_opportunity_xf.opportunity_owner_user_region,'-',sfdc_opportunity_xf.opportunity_owner_user_area)) AS opportunity_user_segment_geo_region_area,
-
-      -- NF 2022-02-17 these next two fields leverage the logic of comparing current fy opportunity demographics stamped vs account demo for previous years
-      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area)) AS report_user_segment_geo_region_area,
-      LOWER(CONCAT(report_opportunity_user_segment,'-',report_opportunity_user_geo,'-',report_opportunity_user_region,'-',report_opportunity_user_area, '-', sfdc_opportunity_xf.sales_qualified_source, '-', sfdc_opportunity_xf.order_type_stamped)) AS report_user_segment_geo_region_area_sqs_ot,
 
       -- Customer Success related fields
       -- DRI Michael Armtz
       churn_metrics.reason_for_loss_staged,
-      churn_metrics.reason_for_loss_calc,
+      -- churn_metrics.reason_for_loss_calc, -- part of edm opp mart
       churn_metrics.churn_contraction_type_calc
 
     FROM sfdc_opportunity_xf
@@ -571,91 +520,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
 
     SELECT
       oppty_final.*,
-
-      ---------------------------------------------------------------------------------------------
-      ---------------------------------------------------------------------------------------------
-      -- I am faking that using the upper CTE, that should be replaced by the official table
-      COALESCE(net_iacv_to_net_arr_ratio.ratio_net_iacv_to_net_arr,0)         AS segment_order_type_iacv_to_net_arr_ratio,
-
-      -- calculated net_arr
-      -- uses ratios to estimate the net_arr based on iacv if open or net_iacv if closed
-      -- NUANCE: Lost deals might not have net_incremental_acv populated, so we must rely on iacv
-      -- Using opty ratio for open deals doesn't seem to work well
-      CASE
-        WHEN oppty_final.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')  -- OPEN DEAL
-            THEN COALESCE(oppty_final.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
-        WHEN oppty_final.stage_name IN ('8-Closed Lost')                       -- CLOSED LOST DEAL and no Net IACV
-          AND COALESCE(oppty_final.net_incremental_acv,0) = 0
-           THEN COALESCE(oppty_final.incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
-        WHEN oppty_final.stage_name IN ('8-Closed Lost', 'Closed Won')         -- REST of CLOSED DEAL
-            THEN COALESCE(oppty_final.net_incremental_acv,0) * COALESCE(segment_order_type_iacv_to_net_arr_ratio,0)
-        ELSE NULL
-      END                                                                     AS calculated_from_ratio_net_arr,
-
-      -- Calculated NET ARR is only used for deals closed earlier than FY19 and that have no raw_net_arr
-      CASE
-        WHEN oppty_final.close_date < '2018-02-01'::DATE
-              AND COALESCE(oppty_final.raw_net_arr,0) = 0
-          THEN calculated_from_ratio_net_arr
-        ELSE COALESCE(oppty_final.raw_net_arr,0) -- Rest of deals after cut off date
-      END                                                                     AS net_arr,
-
-      ---------------------------------------------------------------------------------------------
-      ---------------------------------------------------------------------------------------------
-      -- current deal size field, it was creasted by the data team and the original doesn't work
-      CASE
-        WHEN net_arr > 0 AND net_arr < 5000
-          THEN '1 - Small (<5k)'
-        WHEN net_arr >=5000 AND net_arr < 25000
-          THEN '2 - Medium (5k - 25k)'
-        WHEN net_arr >=25000 AND net_arr < 100000
-          THEN '3 - Big (25k - 100k)'
-        WHEN net_arr >= 100000
-          THEN '4 - Jumbo (>100k)'
-        ELSE 'Other'
-      END                                                          AS deal_size,
-
-      -- extended version of the deal size
-      CASE
-        WHEN net_arr > 0 AND net_arr < 1000
-          THEN '1. (0k -1k)'
-        WHEN net_arr >=1000 AND net_arr < 10000
-          THEN '2. (1k - 10k)'
-        WHEN net_arr >=10000 AND net_arr < 50000
-          THEN '3. (10k - 50k)'
-        WHEN net_arr >=50000 AND net_arr < 100000
-          THEN '4. (50k - 100k)'
-        WHEN net_arr >= 100000 AND net_arr < 250000
-          THEN '5. (100k - 250k)'
-        WHEN net_arr >= 250000 AND net_arr < 500000
-          THEN '6. (250k - 500k)'
-        WHEN net_arr >= 500000 AND net_arr < 1000000
-          THEN '7. (500k-1000k)'
-        WHEN net_arr >= 1000000
-          THEN '8. (>1000k)'
-        ELSE 'Other'
-      END                                                           AS calculated_deal_size,
-
-            -- calculated age field
-      -- if open, use the diff between created date and snapshot date
-      -- if closed, a) the close date is later than snapshot date, use snapshot date
-      -- if closed, b) the close is in the past, use close date
-      CASE
-        WHEN oppty_final.is_open = 1
-          THEN DATEDIFF(days, oppty_final.created_date, CURRENT_DATE)
-        ELSE DATEDIFF(days, oppty_final.created_date, oppty_final.close_date)
-      END                                                           AS calculated_age_in_days,
-
-      -- Open pipeline eligibility definition
-      CASE
-        WHEN oppty_final.deal_group IN ('1. New','2. Growth')
-          AND oppty_final.is_edu_oss = 0
-          AND oppty_final.is_stage_1_plus = 1
-          AND oppty_final.forecast_category_name != 'Omitted'
-          AND oppty_final.is_open = 1
-            THEN 1
-        ELSE 0
-      END                                                          AS is_eligible_open_pipeline_flag,
 
       -- Created pipeline eligibility definition
       -- https://gitlab.com/gitlab-com/sales-team/field-operations/systems/-/issues/2389
@@ -685,225 +549,11 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
           AND oppty_final.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
             THEN 1
         ELSE 0
-      END                                                         AS is_eligible_sao_flag,
+      END                                                         AS is_eligible_sao_flag
 
-      -- ASP Analysis eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
-      CASE
-        WHEN oppty_final.is_edu_oss = 0
-          AND oppty_final.is_deleted = 0
-          -- For ASP we care mainly about add on, new business, excluding contraction / churn
-          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth')
-          -- Exclude Decomissioned as they are not aligned to the real owner
-          -- Contract Reset, Decomission
-          AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Internal Correction')
-          -- Exclude Deals with nARR < 0
-          AND net_arr > 0
-            THEN 1
-          ELSE 0
-      END                                                           AS is_eligible_asp_analysis_flag,
-
-      -- Age eligibility issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2606
-      CASE
-        WHEN oppty_final.is_edu_oss = 0
-          AND oppty_final.is_deleted = 0
-          -- Renewals are not having the same motion as rest of deals
-          AND oppty_final.is_renewal = 0
-          -- For stage age we exclude only ps/other
-          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-          -- Only include deal types with meaningful journeys through the stages
-          AND oppty_final.opportunity_category IN ('Standard','Ramp Deal','Decommissioned')
-          -- Web Purchase have a different dynamic and should not be included
-          AND oppty_final.is_web_portal_purchase = 0
-            THEN 1
-          ELSE 0
-      END                                                           AS is_eligible_age_analysis_flag,
-
-      CASE
-        WHEN oppty_final.is_edu_oss = 0
-          AND oppty_final.is_deleted = 0
-          AND (oppty_final.is_won = 1
-              OR (oppty_final.is_renewal = 1 AND oppty_final.is_lost = 1))
-          AND oppty_final.order_type_stamped IN ('1. New - First Order','2. New - Connected','3. Growth','4. Contraction','6. Churn - Final','5. Churn - Partial')
-            THEN 1
-          ELSE 0
-      END                                                           AS is_booked_net_arr_flag,
-
-      CASE
-        WHEN oppty_final.is_edu_oss = 0
-          AND oppty_final.is_deleted = 0
-          AND oppty_final.order_type_stamped IN ('4. Contraction','6. Churn - Final','5. Churn - Partial')
-            THEN 1
-          ELSE 0
-      END                                                           AS is_eligible_churn_contraction_flag,
-
-      -- compound metrics to facilitate reporting
-      -- created and closed within the quarter net arr
-      CASE
-        WHEN oppty_final.pipeline_created_fiscal_quarter_date = oppty_final.close_fiscal_quarter_date
-          AND is_eligible_created_pipeline_flag = 1
-            THEN net_arr
-        ELSE 0
-      END                                                         AS created_and_won_same_quarter_net_arr,
-
-      ---------------------------------------------------------------------------------------------------------
-      ---------------------------------------------------------------------------------------------------------
-      -- Fields created to simplify report building down the road. Specially the pipeline velocity.
-
-      -- deal count
-      CASE
-        WHEN is_eligible_open_pipeline_flag = 1
-          AND oppty_final.is_stage_1_plus = 1
-          THEN oppty_final.calculated_deal_count
-        ELSE 0
-      END                                               AS open_1plus_deal_count,
-
-      CASE
-        WHEN is_eligible_open_pipeline_flag = 1
-         AND oppty_final.is_stage_3_plus = 1
-          THEN oppty_final.calculated_deal_count
-        ELSE 0
-      END                                               AS open_3plus_deal_count,
-
-      CASE
-        WHEN is_eligible_open_pipeline_flag = 1
-          AND oppty_final.is_stage_4_plus = 1
-          THEN oppty_final.calculated_deal_count
-        ELSE 0
-      END                                               AS open_4plus_deal_count,
-
-      -- booked deal count
-      CASE
-        WHEN oppty_final.is_won = 1
-          THEN oppty_final.calculated_deal_count
-        ELSE 0
-      END                                               AS booked_deal_count,
-
-      -- churned contraction deal count as OT
-      CASE
-        WHEN is_eligible_churn_contraction_flag = 1
-        THEN oppty_final.calculated_deal_count
-        ELSE 0
-      END                                                 AS churned_contraction_deal_count,
-
-
-        CASE
-        WHEN ((oppty_final.is_renewal = 1
-                AND oppty_final.is_lost = 1)
-              OR oppty_final.is_won = 1 )
-            AND is_eligible_churn_contraction_flag = 1
-        THEN oppty_final.calculated_deal_count
-        ELSE 0
-      END                                                 AS booked_churned_contraction_deal_count,
-      -----------------
-      -- Net ARR
-
-      CASE
-        WHEN is_eligible_open_pipeline_flag = 1
-          THEN net_arr
-        ELSE 0
-      END                                                AS open_1plus_net_arr,
-
-      CASE
-        WHEN is_eligible_open_pipeline_flag = 1
-          AND oppty_final.is_stage_3_plus = 1
-          THEN net_arr
-        ELSE 0
-      END                                                AS open_3plus_net_arr,
-
-      CASE
-        WHEN is_eligible_open_pipeline_flag = 1
-          AND oppty_final.is_stage_4_plus = 1
-          THEN net_arr
-        ELSE 0
-      END                                                AS open_4plus_net_arr,
-
-      -- booked net arr (won + renewals / lost)
-      CASE
-        WHEN (oppty_final.is_won = 1
-            OR (oppty_final.is_renewal = 1
-                AND oppty_final.is_lost = 1))
-          THEN net_arr
-        ELSE 0
-      END                                                 AS booked_net_arr,
-
-      -- booked churned contraction net arr as OT
-      CASE
-        WHEN
-          ((oppty_final.is_renewal = 1
-            AND oppty_final.is_lost = 1)
-            OR oppty_final.is_won = 1 )
-            AND is_eligible_churn_contraction_flag = 1
-        THEN net_arr
-        ELSE 0
-      END                                                 AS booked_churned_contraction_net_arr,
-
-      -- churned contraction net arr as OT
-      CASE
-        WHEN is_eligible_churn_contraction_flag = 1
-        THEN net_arr
-        ELSE 0
-      END                                                 AS churned_contraction_net_arr,
-
-      CASE
-        WHEN net_arr > -5000
-            AND is_eligible_churn_contraction_flag = 1
-          THEN '1. < 5k'
-        WHEN net_arr > -20000
-          AND net_arr <= -5000
-          AND is_eligible_churn_contraction_flag = 1
-          THEN '2. 5k-20k'
-        WHEN net_arr > -50000
-          AND net_arr <= -20000
-          AND is_eligible_churn_contraction_flag = 1
-          THEN '3. 20k-50k'
-        WHEN net_arr > -100000
-          AND net_arr <= -50000
-          AND is_eligible_churn_contraction_flag = 1
-          THEN '4. 50k-100k'
-        WHEN net_arr < -100000
-          AND is_eligible_churn_contraction_flag = 1
-          THEN '5. 100k+'
-      END                                                 AS churn_contracton_net_arr_bucket,
-
-      -- NF 2022-02-17 These keys are used in the pipeline metrics models and on the X-Ray dashboard to link gSheets with
-      -- different aggregation levels
-
-        COALESCE(agg_demo_keys.key_sqs,'other')                         AS key_sqs,
-        COALESCE(agg_demo_keys.key_ot,'other')                          AS key_ot,
-
-        COALESCE(agg_demo_keys.key_segment,'other')                     AS key_segment,
-        COALESCE(agg_demo_keys.key_segment_sqs,'other')                 AS key_segment_sqs,
-        COALESCE(agg_demo_keys.key_segment_ot,'other')                  AS key_segment_ot,
-
-        COALESCE(agg_demo_keys.key_segment_geo,'other')                 AS key_segment_geo,
-        COALESCE(agg_demo_keys.key_segment_geo_sqs,'other')             AS key_segment_geo_sqs,
-        COALESCE(agg_demo_keys.key_segment_geo_ot,'other')              AS key_segment_geo_ot,
-
-        COALESCE(agg_demo_keys.key_segment_geo_region,'other')          AS key_segment_geo_region,
-        COALESCE(agg_demo_keys.key_segment_geo_region_sqs,'other')      AS key_segment_geo_region_sqs,
-        COALESCE(agg_demo_keys.key_segment_geo_region_ot,'other')       AS key_segment_geo_region_ot,
-
-        COALESCE(agg_demo_keys.key_segment_geo_region_area,'other')     AS key_segment_geo_region_area,
-        COALESCE(agg_demo_keys.key_segment_geo_region_area_sqs,'other') AS key_segment_geo_region_area_sqs,
-        COALESCE(agg_demo_keys.key_segment_geo_region_area_ot,'other')  AS key_segment_geo_region_area_ot,
-
-        COALESCE(agg_demo_keys.key_segment_geo_area,'other')  AS key_segment_geo_area,
-
-        COALESCE(agg_demo_keys.report_opportunity_user_segment ,'other')   AS sales_team_cro_level,
-
-        -- NF: This code replicates the reporting structured of FY22, to keep current tools working
-        COALESCE(agg_demo_keys.sales_team_rd_asm_level,'other')  AS sales_team_rd_asm_level,
-
-        COALESCE(agg_demo_keys.sales_team_vp_level,'other')      AS sales_team_vp_level,
-        COALESCE(agg_demo_keys.sales_team_avp_rd_level,'other')  AS sales_team_avp_rd_level,
-        COALESCE(agg_demo_keys.sales_team_asm_level,'other')     AS sales_team_asm_level
 
 
     FROM oppty_final
-    -- Net IACV to Net ARR conversion table
-    LEFT JOIN net_iacv_to_net_arr_ratio
-      ON net_iacv_to_net_arr_ratio.user_segment_stamped = oppty_final.opportunity_owner_user_segment
-      AND net_iacv_to_net_arr_ratio.order_type_stamped = oppty_final.order_type_stamped
     -- Add keys for aggregated analysis
     LEFT JOIN agg_demo_keys
       ON oppty_final.report_user_segment_geo_region_area_sqs_ot = agg_demo_keys.report_user_segment_geo_region_area_sqs_ot
