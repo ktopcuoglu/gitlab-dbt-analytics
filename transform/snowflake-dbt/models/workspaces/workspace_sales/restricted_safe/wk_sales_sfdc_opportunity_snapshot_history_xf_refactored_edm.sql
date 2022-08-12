@@ -142,7 +142,8 @@ WITH date_details AS (
       -- Accounts might get deleted or merged, I am selecting the latest account id from the opty object
       -- to avoid showing non-valid account ids
       edm_snapshot_opty.dim_crm_account_id                          AS raw_account_id,
-      edm_snapshot_opty.net_arr                                     AS raw_net_arr,
+      -- edm_snapshot_opty.net_arr                                     AS raw_net_arr,
+      edm_snapshot_opty.raw_net_arr,
       sfdc_opportunity_snapshot_history.incremental_acv,
       sfdc_opportunity_snapshot_history.net_incremental_acv,
 

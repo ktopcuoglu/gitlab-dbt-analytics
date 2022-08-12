@@ -276,17 +276,18 @@ WITH sfdc_opportunity AS (
     edm_opty.sales_qualified_fiscal_year,
     edm_opty.sales_qualified_month                                       AS sales_qualified_date_month,
 
-    iacv_created_date.date_actual                                        AS net_arr_created_date,
-    iacv_created_date.fiscal_quarter_name_fy                             AS net_arr_created_fiscal_quarter_name,
-    iacv_created_date.first_day_of_fiscal_quarter                        AS net_arr_created_fiscal_quarter_date,
-    iacv_created_date.fiscal_year                                        AS net_arr_created_fiscal_year,
-    iacv_created_date.first_day_of_month                                 AS net_arr_created_date_month,
 
-    iacv_created_date.date_actual                                        AS pipeline_created_date,
-    iacv_created_date.fiscal_quarter_name_fy                             AS pipeline_created_fiscal_quarter_name,
-    iacv_created_date.first_day_of_fiscal_quarter                        AS pipeline_created_fiscal_quarter_date,
-    iacv_created_date.fiscal_year                                        AS pipeline_created_fiscal_year,
-    iacv_created_date.first_day_of_month                                 AS pipeline_created_date_month,
+    edm_opty.net_arr_created_date,
+    edm_opty.net_arr_created_fiscal_quarter_name,
+    edm_opty.net_arr_created_fiscal_quarter_date,
+    edm_opty.net_arr_created_fiscal_year,
+    edm_opty.net_arr_created_month                                       AS net_arr_created_date_month
+
+    edm_opty.pipeline_created_date,
+    edm_opty.pipeline_created_fiscal_quarter_name,
+    edm_opty.pipeline_created_fiscal_quarter_date,
+    edm_opty.pipeline_created_fiscal_year,
+    edm_opty.net_arr_created_month                                       AS pipeline_created_date_month
 
     stage_1_date.date_actual                                             AS stage_1_date,
     stage_1_date.first_day_of_month                                      AS stage_1_date_month,
@@ -334,15 +335,12 @@ WITH sfdc_opportunity AS (
     edm_opty.competitors_circleci_flag,
     edm_opty.competitors_bamboo_flag,
     edm_opty.competitors_aws_flag,
-
     edm_opty.is_comp_new_logo_override,
-
     edm_opty.is_stage_1_plus,
     edm_opty.is_stage_3_plus,
     edm_opty.is_stage_4_plus,
     edm_opty.stage_name_3plus,
     edm_opty.stage_name_4plus,
-
     edm_opty.deal_category,
     edm_opty.deal_group,
     edm_opty.pipeline_calculated_deal_count                                  AS calculated_deal_count,
@@ -397,8 +395,8 @@ WITH sfdc_opportunity AS (
       ON edm_opty.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
     LEFT JOIN date_details AS start_date
       ON sfdc_opportunity_xf.subscription_start_date::DATE = start_date.date_actual
-    LEFT JOIN date_details AS iacv_created_date
-      ON iacv_created_date.date_actual = sfdc_opportunity_xf.iacv_created_date::DATE
+    --LEFT JOIN date_details AS iacv_created_date
+    --  ON iacv_created_date.date_actual = sfdc_opportunity_xf.iacv_created_date::DATE
     -- pipeline creation date
     LEFT JOIN date_details AS stage_1_date
       ON stage_1_date.date_actual = sfdc_opportunity_xf.stage_1_discovery_date::date

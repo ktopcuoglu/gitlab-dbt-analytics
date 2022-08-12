@@ -90,8 +90,7 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
     --edm_opty.dim_crm_user_id                          AS owner_id,
-    sfdc_opportunity_xf.owner_id                        AS owner_id,
-    --edm_opty.owner_id,
+    edm_opty.owner_id,
 
     opportunity_owner.name                          AS opportunity_owner,
     opportunity_owner.department                    AS opportunity_owner_department,
@@ -100,7 +99,7 @@ WITH sfdc_opportunity AS (
     opportunity_owner.title                         AS opportunity_owner_title,
     ----------------------------------------------------------
     ----------------------------------------------------------
-    sfdc_opportunity_xf.opportunity_term,
+    edm_opty.opportunity_term,
     edm_opty.primary_campaign_source_id            AS primary_campaign_source_id,
     edm_opty.sales_path                            AS sales_path,
     edm_opty.sales_type                            AS sales_type,
@@ -163,7 +162,9 @@ WITH sfdc_opportunity AS (
     edm_opty.stage_3_technical_evaluation_date,
     edm_opty.stage_4_proposal_date,
     edm_opty.stage_5_negotiating_date,
+    
     sfdc_opportunity_xf.stage_6_awaiting_signature_date,
+    
     edm_opty.stage_6_closed_won_date,
     edm_opty.stage_6_closed_lost_date,
     edm_opty.cp_champion,
