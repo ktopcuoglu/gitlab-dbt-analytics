@@ -76,8 +76,7 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
     --edm_opty.dim_crm_user_id                          AS owner_id,
-    sfdc_opportunity_xf.owner_id                        AS owner_id,
-    --edm_opty.owner_id,
+    edm_opty.owner_id,
 
     opportunity_owner.name                          AS opportunity_owner,
     opportunity_owner.department                    AS opportunity_owner_department,
@@ -149,7 +148,9 @@ WITH sfdc_opportunity AS (
     edm_opty.stage_3_technical_evaluation_date,
     edm_opty.stage_4_proposal_date,
     edm_opty.stage_5_negotiating_date,
+    
     sfdc_opportunity_xf.stage_6_awaiting_signature_date,
+    
     edm_opty.stage_6_closed_won_date,
     edm_opty.stage_6_closed_lost_date,
     edm_opty.cp_champion,
@@ -186,13 +187,13 @@ WITH sfdc_opportunity AS (
     edm_opty.dr_partner_deal_type,
     edm_opty.dr_partner_engagement_name                 AS dr_partner_engagement, 
     edm_opty.partner_account                            AS partner_account_id,
-    partner_account.account_name                        AS partner_account_name,
+    edm_opty.partner_account_name,
     edm_opty.dr_status,
     edm_opty.distributor,
     edm_opty.influence_partner,
 
-    edm_opty.partner_track                             AS partner_track,
-    partner_account.gitlab_partner_program             AS partner_gitlab_program,
+    edm_opty.partner_track,
+    edm_opty.partner_gitlab_program,
 
     edm_opty.is_public_sector_opp,
     edm_opty.is_registration_from_portal,
@@ -201,27 +202,29 @@ WITH sfdc_opportunity AS (
     edm_opty.partner_discount_calc,
     edm_opty.comp_channel_neutral,
     edm_opty.fulfillment_partner                      AS resale_partner_id,
+    
     resale_account.account_name                       AS resale_partner_name,
+    
     edm_opty.platform_partner                         AS platform_partner_id,
 
     ----------------------------------------------------------
     ----------------------------------------------------------
 
-            -- account driven fields
-    account.account_name,
+    -- account driven fields
+    edm_opty.crm_account_name                         AS account_name,
     account.ultimate_parent_account_id,
-    account.is_jihu_account,
+    edm_opty.is_jihu_account,
 
-    account.account_owner_user_segment,
-    account.account_owner_user_geo,
-    account.account_owner_user_region,
-    account.account_owner_user_area,
+    edm_opty.account_owner_user_segment,
+    edm_opty.account_owner_user_geo,
+    edm_opty.account_owner_user_region,
+    edm_opty.account_owner_user_area,
 
-    account.account_demographics_sales_segment,
-    account.account_demographics_geo,
-    account.account_demographics_region,
-    account.account_demographics_area,
-    account.account_demographics_territory,
+    edm_opty.account_demographics_segment             AS account_demographics_sales_segment,
+    edm_opty.account_demographics_geo,
+    edm_opty.account_demographics_region,
+    edm_opty.account_demographics_area,
+    edm_opty.account_demographics_territory,
 
     account.upa_demographics_segment,
     account.upa_demographics_geo,
@@ -232,51 +235,46 @@ WITH sfdc_opportunity AS (
     ----------------------------------------------------------
     ----------------------------------------------------------
 
-    edm_opty.sales_qualified_source_name AS sales_qualified_source,
+    edm_opty.sales_qualified_source_name             AS sales_qualified_source,
     edm_opty.stage_category,
     edm_opty.calculated_partner_track,
     edm_opty.deal_path_engagement,
     edm_opty.is_refund,
-    edm_opty.is_credit AS is_credit_flag,
-    edm_opty.is_contract_reset AS is_contract_reset_flag,
+    edm_opty.is_credit                               AS is_credit_flag,
+    edm_opty.is_contract_reset                       AS is_contract_reset_flag,
     CAST(edm_opty.is_won AS INTEGER)                 AS is_won,
     edm_opty.is_lost,
     edm_opty.is_open,
-    edm_opty.is_duplicate AS is_duplicate_flag,
+    edm_opty.is_duplicate                            AS is_duplicate_flag,
     edm_opty.is_closed,
     edm_opty.is_renewal,
 
 
----------------------- break
-
-    
-    
-
-    -- date fields helpers
-    close_date_detail.fiscal_quarter_name_fy                             AS close_fiscal_quarter_name,
-    close_date_detail.first_day_of_fiscal_quarter                        AS close_fiscal_quarter_date,
-    close_date_detail.fiscal_year                                        AS close_fiscal_year,
-    close_date_detail.first_day_of_month                                 AS close_date_month,
+    -- date fields helpers -- revisit
+    edm_opty.close_fiscal_quarter_name,
+    edm_opty.close_fiscal_quarter_date,
+    edm_opty.close_fiscal_year,
+    edm_opty.close_month                                                 AS close_date_month,
 
     created_date_detail.fiscal_quarter_name_fy                           AS created_fiscal_quarter_name,
     created_date_detail.first_day_of_fiscal_quarter                      AS created_fiscal_quarter_date,
     created_date_detail.fiscal_year                                      AS created_fiscal_year,
     created_date_detail.first_day_of_month                               AS created_date_month,
 
-    start_date.fiscal_quarter_name_fy                                    AS quote_start_date_fiscal_quarter_name,
-    start_date.first_day_of_fiscal_quarter                               AS quote_start_date_fiscal_quarter_date,
-    start_date.fiscal_year                                               AS quote_start_date_fiscal_year,
-    start_date.first_day_of_month                                        AS quote_start_date_month,
+    edm_opty.subscription_start_fiscal_quarter_name                      AS quote_start_date_fiscal_quarter_name,
+    edm_opty.subscription_start_fiscal_quarter_date                      AS quote_start_date_fiscal_quarter_date,
+    edm_opty.subscription_start_fiscal_year                              AS quote_start_date_fiscal_year,
+    edm_opty.subscription_start_month                                    AS quote_start_date_month,
 
-    sales_accepted_date.fiscal_quarter_name_fy                           AS sales_accepted_fiscal_quarter_name,
-    sales_accepted_date.first_day_of_fiscal_quarter                      AS sales_accepted_fiscal_quarter_date,
-    sales_accepted_date.fiscal_year                                      AS sales_accepted_fiscal_year,
-    sales_accepted_date.first_day_of_month                               AS sales_accepted_date_month,
+    edm_opty.sales_accepted_fiscal_quarter_name,
+    edm_opty.sales_accepted_fiscal_quarter_date,
+    edm_opty.sales_accepted_fiscal_year,
+    edm_opty.sales_accepted_month                                        AS sales_accepted_date_month,
 
-    sales_qualified_date.fiscal_quarter_name_fy                          AS sales_qualified_fiscal_quarter_name,
-    sales_qualified_date.first_day_of_fiscal_quarter                     AS sales_qualified_fiscal_quarter_date,
-    sales_qualified_date.fiscal_year                                     AS sales_qualified_fiscal_year,
-    sales_qualified_date.first_day_of_month                              AS sales_qualified_date_month,
+    edm_opty.sales_qualified_fiscal_quarter_name,
+    edm_opty.sales_qualified_fiscal_quarter_date,
+    edm_opty.sales_qualified_fiscal_year,
+    edm_opty.sales_qualified_month                                       AS sales_qualified_date_month,
 
     iacv_created_date.date_actual                                        AS net_arr_created_date,
     iacv_created_date.fiscal_quarter_name_fy                             AS net_arr_created_fiscal_quarter_name,
@@ -290,17 +288,17 @@ WITH sfdc_opportunity AS (
     iacv_created_date.fiscal_year                                        AS pipeline_created_fiscal_year,
     iacv_created_date.first_day_of_month                                 AS pipeline_created_date_month,
 
-    stage_1_date.date_actual                                AS stage_1_date,
-    stage_1_date.first_day_of_month                         AS stage_1_date_month,
-    stage_1_date.fiscal_year                                AS stage_1_fiscal_year,
-    stage_1_date.fiscal_quarter_name_fy                     AS stage_1_fiscal_quarter_name,
-    stage_1_date.first_day_of_fiscal_quarter                AS stage_1_fiscal_quarter_date,
+    stage_1_date.date_actual                                             AS stage_1_date,
+    stage_1_date.first_day_of_month                                      AS stage_1_date_month,
+    stage_1_date.fiscal_year                                             AS stage_1_fiscal_year,
+    stage_1_date.fiscal_quarter_name_fy                                  AS stage_1_fiscal_quarter_name,
+    stage_1_date.first_day_of_fiscal_quarter                             AS stage_1_fiscal_quarter_date,
 
-    stage_3_date.date_actual                                AS stage_3_date,
-    stage_3_date.first_day_of_month                         AS stage_3_date_month,
-    stage_3_date.fiscal_year                                AS stage_3_fiscal_year,
-    stage_3_date.fiscal_quarter_name_fy                     AS stage_3_fiscal_quarter_name,
-    stage_3_date.first_day_of_fiscal_quarter                AS stage_3_fiscal_quarter_date,
+    stage_3_date.date_actual                                             AS stage_3_date,
+    stage_3_date.first_day_of_month                                      AS stage_3_date_month,
+    stage_3_date.fiscal_year                                             AS stage_3_fiscal_year,
+    stage_3_date.fiscal_quarter_name_fy                                  AS stage_3_fiscal_quarter_name,
+    stage_3_date.first_day_of_fiscal_quarter                             AS stage_3_fiscal_quarter_date,
 
     -----------------------------------------------------------------------------------------------------
     -----------------------------------------------------------------------------------------------------
@@ -311,229 +309,43 @@ WITH sfdc_opportunity AS (
     -- NF 2022-01-28 Data seems clean in SFDC, but leaving the fallback just in case
     -- NF 2022-04-27 There are issues with the stamped field not reflecting the real owner of the opportunity
     --                adding is_open check here to default open deals to opportunity owners fields (instead of stamped)
-    CASE
-    WHEN sfdc_opportunity_xf.user_segment_stamped IS NULL
-        OR edm_opty.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN opportunity_owner.user_segment
-    ELSE sfdc_opportunity_xf.user_segment_stamped
-    END                                                                   AS opportunity_owner_user_segment,
+    
+    edm_opty.opportunity_owner_user_segment,
+    edm_opty.opportunity_owner_user_geo,
+    edm_opty.opportunity_owner_user_region,
+    edm_opty.opportunity_owner_user_area,
+    edm_opty.competitors_other_flag,
+    edm_opty.competitors_gitlab_core_flag,
+    edm_opty.competitors_none_flag,
+    edm_opty.competitors_github_enterprise_flag,
+    edm_opty.competitors_bitbucket_server_flag,
+    edm_opty.competitors_unknown_flag,
+    edm_opty.competitors_github_flag,
+    edm_opty.competitors_gitlab_flag,
+    edm_opty.competitors_jenkins_flag,
+    edm_opty.competitors_azure_devops_flag,
+    edm_opty.competitors_svn_flag,
+    edm_opty.competitors_bitbucket_flag,
+    edm_opty.competitors_atlassian_flag,
+    edm_opty.competitors_perforce_flag,
+    edm_opty.competitors_visual_studio_flag,
+    edm_opty.competitors_azure_flag,
+    edm_opty.competitors_amazon_code_commit_flag,
+    edm_opty.competitors_circleci_flag,
+    edm_opty.competitors_bamboo_flag,
+    edm_opty.competitors_aws_flag,
 
-    CASE
-    WHEN sfdc_opportunity_xf.user_geo_stamped IS NULL
-        OR edm_opty.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN opportunity_owner.user_geo
-    ELSE sfdc_opportunity_xf.user_geo_stamped
-    END                                                                   AS opportunity_owner_user_geo,
+    edm_opty.is_comp_new_logo_override,
 
-    CASE
-    WHEN sfdc_opportunity_xf.user_region_stamped IS NULL
-            OR edm_opty.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN opportunity_owner.user_region
-        ELSE sfdc_opportunity_xf.user_region_stamped
-    END                                                                   AS opportunity_owner_user_region,
+    edm_opty.is_stage_1_plus,
+    edm_opty.is_stage_3_plus,
+    edm_opty.is_stage_4_plus,
+    edm_opty.stage_name_3plus,
+    edm_opty.stage_name_4plus,
 
-    CASE
-    WHEN sfdc_opportunity_xf.user_area_stamped IS NULL
-            OR  edm_opty.stage_name NOT IN ('8-Closed Lost', '9-Unqualified', 'Closed Won', '10-Duplicate')
-        THEN opportunity_owner.user_area
-    ELSE sfdc_opportunity_xf.user_area_stamped
-    END                                                                   AS opportunity_owner_user_area,
-    -- opportunity_owner_subarea_stamped
-
-    ---------------------------
-    ---------------------------
-
-    -- NF: 20210827 Fields for competitor analysis
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Other')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_other_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'GitLab Core')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_gitlab_core_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'None')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_none_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'GitHub Enterprise')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_github_enterprise_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'BitBucket Server')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_bitbucket_server_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Unknown')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_unknown_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'GitHub.com')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_github_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'GitLab.com')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_gitlab_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Jenkins')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_jenkins_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Azure DevOps')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_azure_devops_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'SVN')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_svn_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'BitBucket.Org')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_bitbucket_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Atlassian')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_atlassian_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Perforce')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_perforce_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Visual Studio Team Services')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_visual_studio_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Azure')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_azure_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Amazon Code Commit')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_amazon_code_commit_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'CircleCI')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_circleci_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'Bamboo')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_bamboo_flag,
-    CASE
-    WHEN CONTAINS (edm_opty.competitors, 'AWS')
-        THEN 1
-    ELSE 0
-    END                                 AS competitors_aws_flag,
-
-    -- JK 2022-06-16 temporary field for FO dashboard
-    -- CASE sfdc_opportunity_raw.comp_new_logo_override__c
-    -- WHEN 'Yes'
-    --     THEN 1
-    -- ELSE 0
-    -- END                                 AS is_comp_new_logo_override,
-    is_comp_new_logo_override,
-
-    CASE
-    WHEN edm_opty.stage_name
-        IN ('1-Discovery', '2-Developing', '2-Scoping','3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
-        THEN 1
-    ELSE 0
-    END                                                                   AS is_stage_1_plus,
-
-    CASE
-    WHEN edm_opty.stage_name
-        IN ('3-Technical Evaluation', '4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
-        THEN 1
-    ELSE 0
-    END                                                                     AS is_stage_3_plus,
-
-
-    CASE
-    WHEN edm_opty.stage_name
-        IN ('4-Proposal', 'Closed Won','5-Negotiating', '6-Awaiting Signature', '7-Closing')
-        THEN 1
-    ELSE 0
-    END                                                                   AS is_stage_4_plus,
-
-
-    CASE
-    WHEN edm_opty.stage_name
-        IN ('0-Pending Acceptance','0-Qualifying','Developing', '1-Discovery', '2-Developing', '2-Scoping')
-        THEN 'Pipeline'
-    WHEN edm_opty.stage_name
-        IN ('3-Technical Evaluation', '4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')
-        THEN '3+ Pipeline'
-    WHEN edm_opty.stage_name
-        IN ('8-Closed Lost', 'Closed Lost')
-        THEN 'Lost'
-    WHEN edm_opty.stage_name IN ('Closed Won')
-        THEN 'Closed Won'
-    ELSE 'Other'
-    END                                                                     AS stage_name_3plus,
-
-    CASE
-    WHEN edm_opty.stage_name
-        IN ('0-Pending Acceptance','0-Qualifying','Developing','1-Discovery', '2-Developing', '2-Scoping', '3-Technical Evaluation')
-        THEN 'Pipeline'
-    WHEN edm_opty.stage_name
-        IN ('4-Proposal', '5-Negotiating', '6-Awaiting Signature', '7-Closing')
-        THEN '4+ Pipeline'
-    WHEN edm_opty.stage_name IN ('8-Closed Lost', 'Closed Lost')
-        THEN 'Lost'
-    WHEN edm_opty.stage_name IN ('Closed Won')
-        THEN 'Closed Won'
-    ELSE 'Other'
-    END                                                                     AS stage_name_4plus,
-
-    -- medium level grouping of the order type field
-    CASE
-    WHEN edm_opty.order_type = '1. New - First Order'
-        THEN '1. New'
-    WHEN edm_opty.order_type IN ('2. New - Connected', '3. Growth')
-        THEN '2. Growth'
-    WHEN edm_opty.order_type IN ('4. Contraction')
-        THEN '3. Contraction'
-    WHEN edm_opty.order_type IN ('5. Churn - Partial','6. Churn - Final')
-        THEN '4. Churn'
-    ELSE '5. Other'
-    END                                                                   AS deal_category,
-
-    CASE
-    WHEN edm_opty.order_type = '1. New - First Order'
-        THEN '1. New'
-    WHEN edm_opty.order_type IN ('2. New - Connected', '3. Growth', '5. Churn - Partial','6. Churn - Final','4. Contraction')
-        THEN '2. Growth'
-    ELSE '3. Other'
-    END                                                                   AS deal_group,
-
-    -- fields for counting new logos, these fields count refund as negative
-    CASE
-    WHEN edm_opty.opportunity_category IN ('Decommission')
-        THEN -1
-    WHEN edm_opty.opportunity_category IN ('Credit')
-        THEN 0
-    ELSE 1
-    END                                                                    AS calculated_deal_count,
+    edm_opty.deal_category,
+    edm_opty.deal_group,
+    edm_opty.pipeline_calculated_deal_count                                  AS calculated_deal_count,
 
     ----------------------------------------------------------------
     -- NF 2022-01-28 This is probably TO BE DEPRECATED too, need to align with Channel ops
@@ -542,7 +354,7 @@ WITH sfdc_opportunity AS (
     WHEN edm_opty.dr_partner_engagement = 'PIO'
         THEN 1
     ELSE 0
-    END                                                                    AS partner_engaged_opportunity_flag,
+    END                                                                      AS partner_engaged_opportunity_flag,
 
     -- check if renewal was closed on time or not
     CASE
@@ -559,18 +371,8 @@ WITH sfdc_opportunity AS (
     -- calculated fields for pipeline velocity report
 
     -- 20201021 NF: This should be replaced by a table that keeps track of excluded deals for forecasting purposes
-    CASE
-    WHEN account.ultimate_parent_id IN ('001610000111bA3','0016100001F4xla','0016100001CXGCs','00161000015O9Yn','0016100001b9Jsc')
-        AND edm_opty.close_date < '2020-08-01'
-        THEN 1
-    -- NF 2021 - Pubsec extreme deals
-    WHEN edm_opty.dim_crm_opportunity_id IN ('0064M00000WtZKUQA3','0064M00000Xb975QAB')
-        THEN 1
-    -- NF 20220415 PubSec duplicated deals on Pipe Gen -- Lockheed Martin GV - 40000 Ultimate Renewal
-    WHEN edm_opty.dim_crm_opportunity_id IN ('0064M00000ZGpfQQAT','0064M00000ZGpfVQAT','0064M00000ZGpfGQAT')
-        THEN 1
-    ELSE 0
-    END                                                                       AS is_excluded_flag,
+    edm_opty.is_excluded_from_pipeline_created                                AS is_excluded_flag,
+
     ----------------------------------------------------------------
     ----------------------------------------------------------------
     -- NF 20220727 These next fields are needed for custom logic down the line
@@ -579,15 +381,11 @@ WITH sfdc_opportunity AS (
     sfdc_opportunity_xf.is_deleted
     -----------------------------------------------
 
-    FROM legacy_sfdc_opportunity_xf AS sfdc_opportunity_xf
 
-    -------------------------------------------
-    -------------------------------------------
+    FROM legacy_sfdc_opportunity_xf AS sfdc_opportunity_xf
     -- Date helpers
     INNER JOIN sfdc_accounts_xf AS account
       ON account.account_id = sfdc_opportunity_xf.account_id
-    INNER JOIN date_details AS close_date_detail
-      ON close_date_detail.date_actual = sfdc_opportunity_xf.close_date::DATE
     INNER JOIN date_details AS created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity_xf.created_date::DATE
         -- not all fields are in opportunity xf
@@ -596,13 +394,9 @@ WITH sfdc_opportunity AS (
     INNER JOIN sfdc_users_xf AS opportunity_owner
       ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
     INNER JOIN edm_opty
-        ON edm_opty.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
-    LEFT JOIN date_details AS sales_accepted_date
-      ON sfdc_opportunity_xf.sales_accepted_date::DATE = sales_accepted_date.date_actual
+      ON edm_opty.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
     LEFT JOIN date_details AS start_date
       ON sfdc_opportunity_xf.subscription_start_date::DATE = start_date.date_actual
-    LEFT JOIN date_details AS sales_qualified_date
-      ON sfdc_opportunity_xf.sales_qualified_date::DATE = sales_qualified_date.date_actual
     LEFT JOIN date_details AS iacv_created_date
       ON iacv_created_date.date_actual = sfdc_opportunity_xf.iacv_created_date::DATE
     -- pipeline creation date
@@ -611,9 +405,6 @@ WITH sfdc_opportunity AS (
     -- pipeline creation date
     LEFT JOIN date_details AS stage_3_date
       ON stage_3_date.date_actual = sfdc_opportunity_xf.stage_3_technical_evaluation_date::date
-    -- partner account details
-    LEFT JOIN sfdc_accounts_xf AS partner_account
-      ON partner_account.account_id = sfdc_opportunity_xf.partner_account
     -- NF 20211105 resale partner
     LEFT JOIN sfdc_accounts_xf AS resale_account
       ON resale_account.account_id = sfdc_opportunity_xf.fulfillment_partner
