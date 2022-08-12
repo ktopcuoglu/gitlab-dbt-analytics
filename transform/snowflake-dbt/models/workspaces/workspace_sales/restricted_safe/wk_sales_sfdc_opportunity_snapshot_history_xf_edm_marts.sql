@@ -7,6 +7,12 @@ WITH sfdc_accounts_xf AS (
     SELECT *
     FROM {{ref('sfdc_accounts_xf')}} 
 
+), sfdc_opportunity_snapshot_history_legacy AS (
+
+    SELECT *
+    FROM {{ref('sfdc_opportunity_snapshot_history')}}
+    -- FROM prod.restricted_safe_legacy.sfdc_opportunity_snapshot_history
+
 ), sfdc_opportunity_xf AS (
 
     SELECT 
@@ -104,256 +110,245 @@ WITH sfdc_accounts_xf AS (
       --partner_discount_calc,
       --comp_channel_neutral
 
-    FROM {{ref('wk_sales_sfdc_opportunity_xf')}}  --- change it to refactored later 
+    FROM {{ref('wk_sales_sfdc_opportunity_xf')}}
 
 ), sfdc_users_xf AS (
 
     SELECT * 
     FROM {{ref('wk_sales_sfdc_users_xf')}}  
 
+
 -- all the fields are sourcing from edm opp snapshot
 ), sfdc_opportunity_snapshot_history AS (
     SELECT 
-      sfdc_opportunity_snapshot_history.opportunity_snapshot_id,
+      edm_snapshot_opty.crm_opportunity_snapshot_id AS opportunity_snapshot_id,
+      edm_snapshot_opty.dim_crm_opportunity_id AS opportunity_id,
+      edm_snapshot_opty.opportunity_name,
+      edm_snapshot_opty.owner_id,
+      edm_snapshot_opty.opportunity_owner_department,
+
+      edm_snapshot_opty.close_date,
+      edm_snapshot_opty.created_date,
+      edm_snapshot_opty.sales_qualified_date,
+      edm_snapshot_opty.sales_accepted_date,
+
+      edm_snapshot_opty.opportunity_sales_development_representative,
+      edm_snapshot_opty.opportunity_business_development_representative,
+      edm_snapshot_opty.opportunity_development_representative,
+
+      sfdc_opportunity_snapshot_history.order_type_stamped          AS snapshot_order_type_stamped,
+      edm_snapshot_opty.sales_qualified_source_name AS snapshot_sales_qualified_source,
+      edm_snapshot_opty.is_edu_oss AS  snapshot_is_edu_oss,
+      edm_snapshot_opty.opportunity_category                        AS snapshot_opportunity_category,
 
       -- Accounts might get deleted or merged, I am selecting the latest account id from the opty object
       -- to avoid showing non-valid account ids
-      sfdc_opportunity_snapshot_history.raw_account_id,
+      edm_snapshot_opty.dim_crm_account_id   AS raw_account_id,
+      edm_snapshot_opty.raw_net_arr,
+      --sfdc_opportunity_snapshot_history.incremental_acv,
+      --sfdc_opportunity_snapshot_history.net_incremental_acv,
 
-      sfdc_opportunity_snapshot_history.opportunity_id,
-      sfdc_opportunity_snapshot_history.opportunity_name,
-      sfdc_opportunity_snapshot_history.owner_id,
-      sfdc_opportunity_snapshot_history.close_date,
-      sfdc_opportunity_snapshot_history.created_date,
-      sfdc_opportunity_snapshot_history.deployment_preference,
-      sfdc_opportunity_snapshot_history.lead_source,
-      sfdc_opportunity_snapshot_history.merged_opportunity_id,
+      edm_snapshot_opty.deployment_preference,
+      edm_snapshot_opty.merged_opportunity_id,
+      edm_snapshot_opty.sales_path,
+      edm_snapshot_opty.sales_type,
+      edm_snapshot_opty.stage_name,
+      edm_snapshot_opty.competitors,
+      edm_snapshot_opty.forecast_category_name,
+      edm_snapshot_opty.invoice_number,
+      edm_snapshot_opty.primary_campaign_source_id,
+      edm_snapshot_opty.professional_services_value,
+      edm_snapshot_opty.total_contract_value,
+      edm_snapshot_opty.is_web_portal_purchase,
+      edm_snapshot_opty.opportunity_term,
+      edm_snapshot_opty.arr_basis,
+      edm_snapshot_opty.arr,
+      edm_snapshot_opty.amount,
+      edm_snapshot_opty.recurring_amount,
+      edm_snapshot_opty.true_up_amount,
+      edm_snapshot_opty.proserv_amount,
+      edm_snapshot_opty.renewal_amount,
+      edm_snapshot_opty.other_non_recurring_amount,
+      edm_snapshot_opty.subscription_start_date AS quote_start_date,
+      edm_snapshot_opty.subscription_end_date AS quote_end_date,
       
-      -- NF: This field is added directly from the user table
-      -- as the opportunity one is not clean
-      --sfdc_opportunity_snapshot_history.opportunity_owner,
- 
-      sfdc_opportunity_snapshot_history.opportunity_owner_department,
-      sfdc_opportunity_snapshot_history.opportunity_sales_development_representative,
-      sfdc_opportunity_snapshot_history.opportunity_business_development_representative,
-      sfdc_opportunity_snapshot_history.opportunity_development_representative,
-      
-      sfdc_opportunity_snapshot_history.snapshot_order_type_stamped,
-      
-      sfdc_opportunity_snapshot_history.sales_accepted_date,
-      sfdc_opportunity_snapshot_history.sales_path,
-      -- sfdc_opportunity_snapshot_history.sales_qualified_date, -- to be added
-      sfdc_opportunity_snapshot_history.sales_type,
-      sfdc_opportunity_snapshot_history.net_new_source_categories,
-      sfdc_opportunity_snapshot_history.stage_name,
+      edm_snapshot_opty.cp_champion,
+      edm_snapshot_opty.cp_close_plan,
+      edm_snapshot_opty.cp_competition,
+      edm_snapshot_opty.cp_decision_criteria,
+      edm_snapshot_opty.cp_decision_process,
+      edm_snapshot_opty.cp_economic_buyer,
+      edm_snapshot_opty.cp_identify_pain,
+      edm_snapshot_opty.cp_metrics,
+      edm_snapshot_opty.cp_risks,
+      edm_snapshot_opty.cp_use_cases,
+      edm_snapshot_opty.cp_value_driver,
+      edm_snapshot_opty.cp_why_do_anything_at_all,
+      edm_snapshot_opty.cp_why_gitlab,
+      edm_snapshot_opty.cp_why_now,
+      edm_snapshot_opty.cp_score,
 
-      sfdc_opportunity_snapshot_history.competitors,
-      sfdc_opportunity_snapshot_history.forecast_category_name,
-      sfdc_opportunity_snapshot_history.invoice_number,
-
-      -- logic needs to be added here once the oppotunity category fields is merged
-      -- https://gitlab.com/gitlab-data/analytics/-/issues/7888
-
-
-      sfdc_opportunity_snapshot_history.is_refund,
-      sfdc_opportunity_snapshot_history.is_credit_flag,
-      sfdc_opportunity_snapshot_history.is_contract_reset_flag,      
-      sfdc_opportunity_snapshot_history.primary_campaign_source_id,
-      sfdc_opportunity_snapshot_history.professional_services_value,
-      sfdc_opportunity_snapshot_history.renewal_amount,
-      sfdc_opportunity_snapshot_history.snapshot_sales_qualified_source,
-      sfdc_opportunity_snapshot_history.snapshot_is_edu_oss,
-      sfdc_opportunity_snapshot_history.total_contract_value,
-      sfdc_opportunity_snapshot_history.is_web_portal_purchase,
-      sfdc_opportunity_snapshot_history.opportunity_term,
-      sfdc_opportunity_snapshot_history.raw_net_arr,
-      sfdc_opportunity_snapshot_history.net_arr, -- test
-            
-      sfdc_opportunity_snapshot_history.arr_basis,
-      sfdc_opportunity_snapshot_history.arr,
-      sfdc_opportunity_snapshot_history.amount,
-      sfdc_opportunity_snapshot_history.recurring_amount,
-      sfdc_opportunity_snapshot_history.true_up_amount,
-      sfdc_opportunity_snapshot_history.proserv_amount,
-      sfdc_opportunity_snapshot_history.other_non_recurring_amount,
-      
-      -- subscription start & end date to be renamed to quote tart & end date
-      sfdc_opportunity_snapshot_history.subscription_start_date AS quote_start_date,
-      -- sfdc_opportunity_snapshot_history.quote_start_date  -- to be added in the source
-      sfdc_opportunity_snapshot_history.subscription_end_date AS quote_end_date,
-      -- sfdc_opportunity_snapshot_history.quote_end_date -- to be added in the source
-      
-
-
------------------------------------------------------
-
-      -- cp fields to be added in the source mart soon!
-      -- get the fields from raw until they are available in marts
-      -- sfdc_opportunity_snapshot_history.cp_champion,
-      -- sfdc_opportunity_snapshot_history.cp_close_plan,
-      -- sfdc_opportunity_snapshot_history.cp_competition,
-      -- sfdc_opportunity_snapshot_history.cp_decision_criteria,
-      -- sfdc_opportunity_snapshot_history.cp_decision_process,
-      -- sfdc_opportunity_snapshot_history.cp_economic_buyer,
-      -- sfdc_opportunity_snapshot_history.cp_identify_pain,
-      -- sfdc_opportunity_snapshot_history.cp_metrics,
-      -- sfdc_opportunity_snapshot_history.cp_risks,      
-      -- sfdc_opportunity_snapshot_history.cp_use_cases,
-      -- sfdc_opportunity_snapshot_history.cp_value_driver,
-      -- sfdc_opportunity_snapshot_history.cp_why_do_anything_at_all,
-      -- sfdc_opportunity_snapshot_history.cp_why_gitlab,
-      -- sfdc_opportunity_snapshot_history.cp_why_now,
-      -- sfdc_opportunity_snapshot_history.cp_score,
-
-
----------------------------------------------------------
-
-
-
-
-      sfdc_opportunity_snapshot_history.dbt_updated_at AS _last_dbt_run,
-      sfdc_opportunity_snapshot_history.is_deleted,
-      sfdc_opportunity_snapshot_history.last_activity_date,
-      sfdc_opportunity_snapshot_history.record_type_id,
+      edm_snapshot_opty.dbt_updated_at AS _last_dbt_run,
+      edm_snapshot_opty.is_deleted,
+      edm_snapshot_opty.last_activity_date,
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
-      sfdc_opportunity_snapshot_history.deal_path_name AS deal_path,
-      sfdc_opportunity_snapshot_history.dr_partner_deal_type,
-      sfdc_opportunity_snapshot_history.dr_partner_engagement,
-      sfdc_opportunity_snapshot_history.partner_account,
-      sfdc_opportunity_snapshot_history.dr_status,
-      sfdc_opportunity_snapshot_history.distributor,
-      sfdc_opportunity_snapshot_history.influence_partner,
-      sfdc_opportunity_snapshot_history.fulfillment_partner,
-      sfdc_opportunity_snapshot_history.platform_partner,
-      sfdc_opportunity_snapshot_history.partner_track,
-      sfdc_opportunity_snapshot_history.is_public_sector_opp,
-      sfdc_opportunity_snapshot_history.is_registration_from_portal,
-      sfdc_opportunity_snapshot_history.calculated_discount,
-      sfdc_opportunity_snapshot_history.partner_discount,
-      sfdc_opportunity_snapshot_history.partner_discount_calc,
-      sfdc_opportunity_snapshot_history.comp_channel_neutral,
-      sfdc_opportunity_snapshot_history.fpa_master_bookings_flag,
-      sfdc_opportunity_snapshot_history.deal_path_engagement,
-
+      edm_snapshot_opty.deal_path_name AS deal_path,
+      edm_snapshot_opty.dr_partner_deal_type,
+      edm_snapshot_opty.dr_partner_engagement,
+      edm_snapshot_opty.partner_account,
+      edm_snapshot_opty.dr_status,
+      edm_snapshot_opty.distributor,
+      edm_snapshot_opty.influence_partner,
+      edm_snapshot_opty.fulfillment_partner,
+      edm_snapshot_opty.platform_partner,
+      edm_snapshot_opty.partner_track,
+      edm_snapshot_opty.is_public_sector_opp,
+      edm_snapshot_opty.is_registration_from_portal,
+      edm_snapshot_opty.calculated_discount,
+      edm_snapshot_opty.partner_discount,
+      edm_snapshot_opty.partner_discount_calc,
+      edm_snapshot_opty.comp_channel_neutral,
+      edm_snapshot_opty.fpa_master_bookings_flag,
+      
       -- stage dates
       -- dates in stage fields
-      sfdc_opportunity_snapshot_history.stage_0_pending_acceptance_date,
-      sfdc_opportunity_snapshot_history.stage_1_discovery_date,
-      sfdc_opportunity_snapshot_history.stage_2_scoping_date,
-      sfdc_opportunity_snapshot_history.stage_3_technical_evaluation_date,
-      sfdc_opportunity_snapshot_history.stage_4_proposal_date,
-      sfdc_opportunity_snapshot_history.stage_5_negotiating_date,
+      edm_snapshot_opty.stage_0_pending_acceptance_date,
+      edm_snapshot_opty.stage_1_discovery_date,
+      edm_snapshot_opty.stage_2_scoping_date,
+      edm_snapshot_opty.stage_3_technical_evaluation_date,
+      edm_snapshot_opty.stage_4_proposal_date,
+      edm_snapshot_opty.stage_5_negotiating_date,
       sfdc_opportunity_snapshot_history.stage_6_awaiting_signature_date,
-      sfdc_opportunity_snapshot_history.stage_6_closed_won_date,
-      sfdc_opportunity_snapshot_history.stage_6_closed_lost_date,
-
-      --date helpers
-      sfdc_opportunity_snapshot_history.snapshot_date,
-      sfdc_opportunity_snapshot_history.snapshot_date_month,
-      sfdc_opportunity_snapshot_history.snapshot_fiscal_year,
-      sfdc_opportunity_snapshot_history.snapshot_fiscal_quarter_name,
-      sfdc_opportunity_snapshot_history.snapshot_fiscal_quarter_date,
-      sfdc_opportunity_snapshot_history.snapshot_day_of_fiscal_quarter_normalised,
-      sfdc_opportunity_snapshot_history.snapshot_day_of_fiscal_year_normalised,
-
-      sfdc_opportunity_snapshot_history.close_date_month,
-      sfdc_opportunity_snapshot_history.close_fiscal_year,
-      sfdc_opportunity_snapshot_history.close_fiscal_quarter_name,
-      sfdc_opportunity_snapshot_history.close_fiscal_quarter_date,
-
-
-      -- This refers to the closing quarter perspective instead of the snapshot quarter
-      sfdc_opportunity_snapshot_history.close_day_of_fiscal_quarter_normalised,
-
-      sfdc_opportunity_snapshot_history.created_date_month,
-      sfdc_opportunity_snapshot_history.created_fiscal_year,
-      sfdc_opportunity_snapshot_history.created_fiscal_quarter_name,
-      sfdc_opportunity_snapshot_history.created_fiscal_quarter_date,
+      edm_snapshot_opty.stage_6_closed_won_date,
+      edm_snapshot_opty.stage_6_closed_lost_date,
       
-      sfdc_opportunity_snapshot_history.pipeline_created_date,
-      sfdc_opportunity_snapshot_history.pipeline_created_date_month,
-      sfdc_opportunity_snapshot_history.pipeline_created_fiscal_year,
-      sfdc_opportunity_snapshot_history.pipeline_created_fiscal_quarter_name,
-      sfdc_opportunity_snapshot_history.pipeline_created_fiscal_quarter_date,
-
-      sfdc_opportunity_snapshot_history.sales_accepted_month,
-      sfdc_opportunity_snapshot_history.sales_accepted_fiscal_year,
-      sfdc_opportunity_snapshot_history.sales_accepted_fiscal_quarter_name,
-      sfdc_opportunity_snapshot_history.sales_accepted_fiscal_quarter_date,
-
+      edm_snapshot_opty.deal_path_engagement,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
       -- Base helpers for reporting
-      sfdc_opportunity_snapshot_history.stage_name_3plus,
-      sfdc_opportunity_snapshot_history.stage_name_4plus,
-      sfdc_opportunity_snapshot_history.is_stage_1_plus,
-      sfdc_opportunity_snapshot_history.is_stage_3_plus,
-      sfdc_opportunity_snapshot_history.is_stage_4_plus,
-      sfdc_opportunity_snapshot_history.is_won,
-      sfdc_opportunity_snapshot_history.is_lost,
-      sfdc_opportunity_snapshot_history.is_open,
-      sfdc_opportunity_snapshot_history.is_closed,
-      sfdc_opportunity_snapshot_history.is_renewal,
+      edm_snapshot_opty.stage_name_3plus,
+      edm_snapshot_opty.stage_name_4plus,
+      edm_snapshot_opty.is_stage_1_plus,
+      edm_snapshot_opty.is_stage_3_plus,
+      edm_snapshot_opty.is_stage_4_plus,
+      edm_snapshot_opty.is_won,
+      edm_snapshot_opty.is_lost,
+      edm_snapshot_opty.is_open,
+      edm_snapshot_opty.is_closed,
+      edm_snapshot_opty.is_renewal,
 
-      -- NF: 20210827 Fields for competitor analysis 
-      sfdc_opportunity_snapshot_history.competitors_other_flag,
-      sfdc_opportunity_snapshot_history.competitors_gitlab_core_flag,
-      sfdc_opportunity_snapshot_history.competitors_none_flag,
-      sfdc_opportunity_snapshot_history.competitors_github_enterprise_flag,
-      sfdc_opportunity_snapshot_history.competitors_bitbucket_server_flag,
-      sfdc_opportunity_snapshot_history.competitors_unknown_flag,
-      sfdc_opportunity_snapshot_history.competitors_github_flag,
-      sfdc_opportunity_snapshot_history.competitors_gitlab_flag,
-      sfdc_opportunity_snapshot_history.competitors_jenkins_flag,
-      sfdc_opportunity_snapshot_history.competitors_azure_devops_flag,
-      sfdc_opportunity_snapshot_history.competitors_svn_flag,
-      sfdc_opportunity_snapshot_history.competitors_bitbucket_flag,
-      sfdc_opportunity_snapshot_history.competitors_atlassian_flag,
-      sfdc_opportunity_snapshot_history.competitors_perforce_flag,
-      sfdc_opportunity_snapshot_history.competitors_visual_studio_flag,
-      sfdc_opportunity_snapshot_history.competitors_azure_flag,
-      sfdc_opportunity_snapshot_history.competitors_amazon_code_commit_flag,
-      sfdc_opportunity_snapshot_history.competitors_circleci_flag,
-      sfdc_opportunity_snapshot_history.competitors_bamboo_flag,
-      sfdc_opportunity_snapshot_history.competitors_aws_flag,
+      edm_snapshot_opty.is_credit AS is_credit_flag,
+      edm_snapshot_opty.is_refund,
+      edm_snapshot_opty.is_contract_reset AS is_contract_reset_flag,
 
+      -- NF: 20210827 Fields for competitor analysis
+      edm_snapshot_opty.competitors_other_flag,
+      edm_snapshot_opty.competitors_gitlab_core_flag,
+      edm_snapshot_opty.competitors_none_flag,
+      edm_snapshot_opty.competitors_github_enterprise_flag,
+      edm_snapshot_opty.competitors_bitbucket_server_flag,
+      edm_snapshot_opty.competitors_unknown_flag,
+      edm_snapshot_opty.competitors_github_flag,
+      edm_snapshot_opty.competitors_gitlab_flag,
+      edm_snapshot_opty.competitors_jenkins_flag,
+      edm_snapshot_opty.competitors_azure_devops_flag,
+      edm_snapshot_opty.competitors_svn_flag,
+      edm_snapshot_opty.competitors_bitbucket_flag,
+      edm_snapshot_opty.competitors_atlassian_flag,
+      edm_snapshot_opty.competitors_perforce_flag,
+      edm_snapshot_opty.competitors_visual_studio_flag,
+      edm_snapshot_opty.competitors_azure_flag,
+      edm_snapshot_opty.competitors_amazon_code_commit_flag,
+      edm_snapshot_opty.competitors_circleci_flag,
+      edm_snapshot_opty.competitors_bamboo_flag,
+      edm_snapshot_opty.competitors_aws_flag,
+
+      edm_snapshot_opty.stage_category,
+      edm_snapshot_opty.pipeline_calculated_deal_count AS calculated_deal_count,
       -- calculated age field
       -- if open, use the diff between created date and snapshot date
       -- if closed, a) the close date is later than snapshot date, use snapshot date
-      -- if closed, b) the close is in the past, use close date      
-      sfdc_opportunity_snapshot_history.calculated_age_in_days,
-      sfdc_opportunity_snapshot_history.stage_category,
-      sfdc_opportunity_snapshot_history.calculated_deal_count,
-      sfdc_opportunity_snapshot_history.deal_size,
-      sfdc_opportunity_snapshot_history.calculated_deal_size,
-      sfdc_opportunity_snapshot_history.is_eligible_open_pipeline_flag,
-      sfdc_opportunity_snapshot_history.is_eligible_created_pipeline_flag,
-      sfdc_opportunity_snapshot_history.is_eligible_sao_flag,
-      sfdc_opportunity_snapshot_history.is_eligible_asp_analysis_flag,
-      sfdc_opportunity_snapshot_history.is_eligible_age_analysis_flag,
-      sfdc_opportunity_snapshot_history.is_booked_net_arr_flag,
-      sfdc_opportunity_snapshot_history.is_eligible_churn_contraction_flag,
-      sfdc_opportunity_snapshot_history.created_in_snapshot_quarter_net_arr,
-      sfdc_opportunity_snapshot_history.created_and_won_same_quarter_net_arr,
-      sfdc_opportunity_snapshot_history.created_in_snapshot_quarter_deal_count,
-      sfdc_opportunity_snapshot_history.open_1plus_deal_count,
-      sfdc_opportunity_snapshot_history.open_3plus_deal_count,
-      sfdc_opportunity_snapshot_history.open_4plus_deal_count,
-      sfdc_opportunity_snapshot_history.booked_deal_count,
-      sfdc_opportunity_snapshot_history.churned_contraction_deal_count,
-      sfdc_opportunity_snapshot_history.open_1plus_net_arr,
-      sfdc_opportunity_snapshot_history.open_3plus_net_arr,
-      sfdc_opportunity_snapshot_history.open_4plus_net_arr,
-      sfdc_opportunity_snapshot_history.booked_net_arr,
-      sfdc_opportunity_snapshot_history.churned_contraction_net_arr,
-      sfdc_opportunity_snapshot_history.is_excluded_flag
+      -- if closed, b) the close is in the past, use close date
+      edm_snapshot_opty.calculated_age_in_days,
+
+      --date helpers
+      edm_snapshot_opty.snapshot_date,
+      edm_snapshot_opty.snapshot_month AS snapshot_date_month,
+      edm_snapshot_opty.snapshot_fiscal_year,
+      edm_snapshot_opty.snapshot_fiscal_quarter_name,
+      edm_snapshot_opty.snapshot_fiscal_quarter_date,
+      edm_snapshot_opty.snapshot_day_of_fiscal_quarter_normalised,
+      edm_snapshot_opty.snapshot_day_of_fiscal_year_normalised,
+
+      edm_snapshot_opty.close_month  AS close_date_month,
+      edm_snapshot_opty.close_fiscal_year,
+      edm_snapshot_opty.close_fiscal_quarter_name,
+      edm_snapshot_opty.close_fiscal_quarter_date,
+
+      -- This refers to the closing quarter perspective instead of the snapshot quarter
+      edm_snapshot_opty.close_day_of_fiscal_quarter_normalised,
+
+      edm_snapshot_opty.created_month AS created_date_month,
+      edm_snapshot_opty.created_fiscal_year,
+      edm_snapshot_opty.created_fiscal_quarter_name,
+      edm_snapshot_opty.created_fiscal_quarter_date,
+
+      edm_snapshot_opty.net_arr_created_date,
+      edm_snapshot_opty.net_arr_created_month AS net_arr_created_date_month,
+      edm_snapshot_opty.net_arr_created_fiscal_year,
+      edm_snapshot_opty.net_arr_created_fiscal_quarter_name,
+      edm_snapshot_opty.net_arr_created_fiscal_quarter_date,
+
+      edm_snapshot_opty.pipeline_created_date,
+      edm_snapshot_opty.pipeline_created_month AS pipeline_created_date_month,
+      edm_snapshot_opty.pipeline_created_fiscal_year,
+      edm_snapshot_opty.pipeline_created_fiscal_quarter_name,
+      edm_snapshot_opty.pipeline_created_fiscal_quarter_date,
+
+      edm_snapshot_opty.sales_accepted_month,
+      edm_snapshot_opty.sales_accepted_fiscal_year,
+      edm_snapshot_opty.sales_accepted_fiscal_quarter_name,
+      edm_snapshot_opty.sales_accepted_fiscal_quarter_date,
+
+    --------------------------------------------
+
+      edm_snapshot_opty.lead_source,
+      edm_snapshot_opty.net_new_source_categories,           
+      edm_snapshot_opty.record_type_id,
+      
+      edm_snapshot_opty.deal_size,
+      edm_snapshot_opty.calculated_deal_size,
+      edm_snapshot_opty.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
+      edm_snapshot_opty.is_eligible_created_pipeline_flag,
+      edm_snapshot_opty.is_eligible_sao_flag,
+      edm_snapshot_opty.is_eligible_asp_analysis AS is_eligible_asp_analysis_flag,
+      edm_snapshot_opty.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
+      edm_snapshot_opty.is_booked_net_arr AS is_booked_net_arr_flag,
+      edm_snapshot_opty.is_eligible_churn_contraction AS is_eligible_churn_contraction_flag,
+      edm_snapshot_opty.created_in_snapshot_quarter_net_arr,
+      edm_snapshot_opty.created_and_won_same_quarter_net_arr,
+      edm_snapshot_opty.created_in_snapshot_quarter_deal_count,
+      edm_snapshot_opty.open_1plus_deal_count,
+      edm_snapshot_opty.open_3plus_deal_count,
+      edm_snapshot_opty.open_4plus_deal_count,
+      edm_snapshot_opty.booked_deal_count,
+      edm_snapshot_opty.churned_contraction_deal_count,
+      edm_snapshot_opty.open_1plus_net_arr,
+      edm_snapshot_opty.open_3plus_net_arr,
+      edm_snapshot_opty.open_4plus_net_arr,
+      edm_snapshot_opty.booked_net_arr,
+      edm_snapshot_opty.churned_contraction_net_arr,
+      edm_snapshot_opty.is_excluded_from_pipeline_created AS is_excluded_flag
 
 
+    FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
+    LEFT JOIN sfdc_opportunity_snapshot_history_legacy AS sfdc_opportunity_snapshot_history
+      ON edm_snapshot_opty.opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
+      AND edm_snapshot_opty.snapshot_date = sfdc_opportunity_snapshot_history.date_actual::DATE
 
-    FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS sfdc_opportunity_snapshot_history
     -- INNER JOIN date_details close_date_detail
     --   ON close_date_detail.date_actual = sfdc_opportunity_snapshot_history.close_date::DATE
     -- INNER JOIN date_details snapshot_date
