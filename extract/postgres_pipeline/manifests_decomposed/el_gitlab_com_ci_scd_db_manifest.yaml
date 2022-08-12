@@ -37,7 +37,6 @@ tables:
       SELECT id
       , namespace_id
       , date
-      , additional_amount_available
       , amount_used
       , notification_level
       , shared_runners_duration
