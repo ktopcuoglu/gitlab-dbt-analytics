@@ -57,6 +57,8 @@ WITH sfdc_user_roles AS (
       sfdc_users.department,
       sfdc_users.team,
       sfdc_users.manager_id,
+      sfdc_users.manager_name,
+      sfdc_users.user_email,
       sfdc_users.is_active,
       sfdc_users.start_date,
       sfdc_users.user_role_id,
