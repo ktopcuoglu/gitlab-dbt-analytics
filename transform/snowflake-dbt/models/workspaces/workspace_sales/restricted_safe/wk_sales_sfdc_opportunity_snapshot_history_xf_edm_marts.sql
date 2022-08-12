@@ -137,13 +137,13 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.opportunity_development_representative,
 
       sfdc_opportunity_snapshot_history.order_type_stamped          AS snapshot_order_type_stamped,
-      edm_snapshot_opty.sales_qualified_source_name AS snapshot_sales_qualified_source,
-      edm_snapshot_opty.is_edu_oss AS  snapshot_is_edu_oss,
+      edm_snapshot_opty.sales_qualified_source_name                 AS snapshot_sales_qualified_source,
+      edm_snapshot_opty.is_edu_oss                                  AS  snapshot_is_edu_oss,
       edm_snapshot_opty.opportunity_category                        AS snapshot_opportunity_category,
 
       -- Accounts might get deleted or merged, I am selecting the latest account id from the opty object
       -- to avoid showing non-valid account ids
-      edm_snapshot_opty.dim_crm_account_id   AS raw_account_id,
+      edm_snapshot_opty.dim_crm_account_id                          AS raw_account_id,
       edm_snapshot_opty.raw_net_arr,
       --sfdc_opportunity_snapshot_history.incremental_acv,
       --sfdc_opportunity_snapshot_history.net_incremental_acv,
@@ -169,8 +169,8 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.proserv_amount,
       edm_snapshot_opty.renewal_amount,
       edm_snapshot_opty.other_non_recurring_amount,
-      edm_snapshot_opty.subscription_start_date AS quote_start_date,
-      edm_snapshot_opty.subscription_end_date AS quote_end_date,
+      edm_snapshot_opty.subscription_start_date                    AS quote_start_date,
+      edm_snapshot_opty.subscription_end_date                      AS quote_end_date,
       
       edm_snapshot_opty.cp_champion,
       edm_snapshot_opty.cp_close_plan,
@@ -188,13 +188,13 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.cp_why_now,
       edm_snapshot_opty.cp_score,
 
-      edm_snapshot_opty.dbt_updated_at AS _last_dbt_run,
+      edm_snapshot_opty.dbt_updated_at                            AS _last_dbt_run,
       edm_snapshot_opty.is_deleted,
       edm_snapshot_opty.last_activity_date,
 
       -- Channel Org. fields
       -- this fields should be changed to this historical version
-      edm_snapshot_opty.deal_path_name AS deal_path,
+      edm_snapshot_opty.deal_path_name                            AS deal_path,
       edm_snapshot_opty.dr_partner_deal_type,
       edm_snapshot_opty.dr_partner_engagement,
       edm_snapshot_opty.partner_account,
@@ -240,9 +240,9 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.is_closed,
       edm_snapshot_opty.is_renewal,
 
-      edm_snapshot_opty.is_credit AS is_credit_flag,
+      edm_snapshot_opty.is_credit                                AS is_credit_flag,
       edm_snapshot_opty.is_refund,
-      edm_snapshot_opty.is_contract_reset AS is_contract_reset_flag,
+      edm_snapshot_opty.is_contract_reset                        AS is_contract_reset_flag,
 
       -- NF: 20210827 Fields for competitor analysis
       edm_snapshot_opty.competitors_other_flag,
@@ -267,7 +267,7 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.competitors_aws_flag,
 
       edm_snapshot_opty.stage_category,
-      edm_snapshot_opty.pipeline_calculated_deal_count AS calculated_deal_count,
+      edm_snapshot_opty.pipeline_calculated_deal_count          AS calculated_deal_count,
       -- calculated age field
       -- if open, use the diff between created date and snapshot date
       -- if closed, a) the close date is later than snapshot date, use snapshot date
@@ -276,14 +276,14 @@ WITH sfdc_accounts_xf AS (
 
       --date helpers
       edm_snapshot_opty.snapshot_date,
-      edm_snapshot_opty.snapshot_month AS snapshot_date_month,
+      edm_snapshot_opty.snapshot_month                          AS snapshot_date_month,
       edm_snapshot_opty.snapshot_fiscal_year,
       edm_snapshot_opty.snapshot_fiscal_quarter_name,
       edm_snapshot_opty.snapshot_fiscal_quarter_date,
       edm_snapshot_opty.snapshot_day_of_fiscal_quarter_normalised,
       edm_snapshot_opty.snapshot_day_of_fiscal_year_normalised,
 
-      edm_snapshot_opty.close_month  AS close_date_month,
+      edm_snapshot_opty.close_month                             AS close_date_month,
       edm_snapshot_opty.close_fiscal_year,
       edm_snapshot_opty.close_fiscal_quarter_name,
       edm_snapshot_opty.close_fiscal_quarter_date,
@@ -291,19 +291,19 @@ WITH sfdc_accounts_xf AS (
       -- This refers to the closing quarter perspective instead of the snapshot quarter
       edm_snapshot_opty.close_day_of_fiscal_quarter_normalised,
 
-      edm_snapshot_opty.created_month AS created_date_month,
+      edm_snapshot_opty.created_month                           AS created_date_month,
       edm_snapshot_opty.created_fiscal_year,
       edm_snapshot_opty.created_fiscal_quarter_name,
       edm_snapshot_opty.created_fiscal_quarter_date,
 
       edm_snapshot_opty.net_arr_created_date,
-      edm_snapshot_opty.net_arr_created_month AS net_arr_created_date_month,
+      edm_snapshot_opty.net_arr_created_month                   AS net_arr_created_date_month,
       edm_snapshot_opty.net_arr_created_fiscal_year,
       edm_snapshot_opty.net_arr_created_fiscal_quarter_name,
       edm_snapshot_opty.net_arr_created_fiscal_quarter_date,
 
       edm_snapshot_opty.pipeline_created_date,
-      edm_snapshot_opty.pipeline_created_month AS pipeline_created_date_month,
+      edm_snapshot_opty.pipeline_created_month                  AS pipeline_created_date_month,
       edm_snapshot_opty.pipeline_created_fiscal_year,
       edm_snapshot_opty.pipeline_created_fiscal_quarter_name,
       edm_snapshot_opty.pipeline_created_fiscal_quarter_date,
@@ -321,13 +321,13 @@ WITH sfdc_accounts_xf AS (
       
       edm_snapshot_opty.deal_size,
       edm_snapshot_opty.calculated_deal_size,
-      edm_snapshot_opty.is_eligible_open_pipeline AS is_eligible_open_pipeline_flag,
+      edm_snapshot_opty.is_eligible_open_pipeline             AS is_eligible_open_pipeline_flag,
       edm_snapshot_opty.is_eligible_created_pipeline_flag,
       edm_snapshot_opty.is_eligible_sao_flag,
-      edm_snapshot_opty.is_eligible_asp_analysis AS is_eligible_asp_analysis_flag,
-      edm_snapshot_opty.is_eligible_age_analysis AS is_eligible_age_analysis_flag,
-      edm_snapshot_opty.is_booked_net_arr AS is_booked_net_arr_flag,
-      edm_snapshot_opty.is_eligible_churn_contraction AS is_eligible_churn_contraction_flag,
+      edm_snapshot_opty.is_eligible_asp_analysis              AS is_eligible_asp_analysis_flag,
+      edm_snapshot_opty.is_eligible_age_analysis              AS is_eligible_age_analysis_flag,
+      edm_snapshot_opty.is_booked_net_arr                     AS is_booked_net_arr_flag,
+      edm_snapshot_opty.is_eligible_churn_contraction         AS is_eligible_churn_contraction_flag,
       edm_snapshot_opty.created_in_snapshot_quarter_net_arr,
       edm_snapshot_opty.created_and_won_same_quarter_net_arr,
       edm_snapshot_opty.created_in_snapshot_quarter_deal_count,
@@ -341,7 +341,81 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.open_4plus_net_arr,
       edm_snapshot_opty.booked_net_arr,
       edm_snapshot_opty.churned_contraction_net_arr,
-      edm_snapshot_opty.is_excluded_from_pipeline_created AS is_excluded_flag
+      edm_snapshot_opty.is_excluded_from_pipeline_created     AS is_excluded_flag,
+
+      --------------------------------
+
+      edm_snapshot_opty.opportunity_owner_manager,
+      edm_snapshot_opty.is_edu_oss,
+      edm_snapshot_opty.sales_qualified_source_name           AS sales_qualified_source,
+      edm_snapshot_opty.dim_crm_account_id                    AS account_id,
+      edm_snapshot_opty.opportunity_category,
+
+      edm_snapshot_opty.account_owner_team_stamped,
+      edm_snapshot_opty.account_owner_team_stamped_cro_level,
+
+      edm_snapshot_opty.opportunity_owner_user_segment,
+      edm_snapshot_opty.opportunity_owner_user_region,
+      edm_snapshot_opty.opportunity_owner_user_area,
+      edm_snapshot_opty.opportunity_owner_user_geo,
+      
+      edm_snapshot_opty.sales_team_rd_asm_level,
+      edm_snapshot_opty.sales_team_cro_level,
+      edm_snapshot_opty.sales_team_vp_level,
+      edm_snapshot_opty.sales_team_avp_rd_level,
+      edm_snapshot_opty.sales_team_asm_level
+      edm_snapshot_opty.report_opportunity_user_segment,
+      edm_snapshot_opty.report_opportunity_user_geo,
+      edm_snapshot_opty.report_opportunity_user_region,
+      edm_snapshot_opty.report_opportunity_user_area,
+      edm_snapshot_opty.report_user_segment_geo_region_area,
+      edm_snapshot_opty.report_user_segment_geo_region_area_sqs_ot,
+      edm_snapshot_opty.key_sqs,
+      edm_snapshot_opty.key_ot,
+      edm_snapshot_opty.key_segment,
+      edm_snapshot_opty.key_segment_sqs,
+      edm_snapshot_opty.key_segment_ot
+      edm_snapshot_opty.key_segment_geo,
+      edm_snapshot_opty.key_segment_geo_sqs,
+      edm_snapshot_opty.key_segment_geo_ot,
+      edm_snapshot_opty.key_segment_geo_region,
+      edm_snapshot_opty.key_segment_geo_region_sqs,
+      edm_snapshot_opty.key_segment_geo_region_ot,
+      edm_snapshot_opty.key_segment_geo_region_area,
+      edm_snapshot_opty.key_segment_geo_region_area_sqs,
+      edm_snapshot_opty.key_segment_geo_region_area_ot,
+      edm_snapshot_opty.key_segment_geo_area,
+      edm_snapshot_opty.deal_group,
+      edm_snapshot_opty.deal_category,
+      edm_snapshot_opty.opportunity_owner,
+      
+      edm_snapshot_opty.crm_account_name                    AS account_name,
+      
+      -- double check regarding parent crm account = ultimate parent account?
+      edm_snapshot_opty.dim_parent_crm_account_id           AS ultimate_parent_account_id,
+      edm_snapshot_opty.parent_crm_account_name             AS ultimate_parent_account_name,
+      edm_snapshot_opty.is_jihu_account,
+      edm_snapshot_opty.account_owner_user_segment,
+      edm_snapshot_opty.account_owner_user_geo,
+      edm_snapshot_opty.account_owner_user_region,
+      edm_snapshot_opty.account_owner_user_area,
+      edm_snapshot_opty.account_demographics_segment,
+      edm_snapshot_opty.account_demographics_geo,
+      edm_snapshot_opty.account_demographics_region,
+      edm_snapshot_opty.account_demographics_area,
+      edm_snapshot_opty.account_demographics_territory,
+
+      edm_snapshot_opty.account_demographics_segment             AS upa_demographics_segment,
+      edm_snapshot_opty.account_demographics_geo                 AS upa_demographics_geo,
+      edm_snapshot_opty.account_demographics_region              AS upa_demographics_region,
+      edm_snapshot_opty.account_demographics_area                AS upa_demographics_area,
+      edm_snapshot_opty.account_demographics_territory           AS upa_demographics_territory,
+
+      edm_snapshot_opty.stage_1_discovery_date                   AS stage_1_date,
+      edm_snapshot_opty.stage_1_discovery_month                  AS stage_1_date_month,
+      edm_snapshot_opty.stage_1_discovery_fiscal_year            AS stage_1_fiscal_year,
+      edm_snapshot_opty.stage_1_discovery_fiscal_quarter_name    AS stage_1_fiscal_quarter_name,
+      edm_snapshot_opty.stage_1_discovery_fiscal_quarter_date    AS stage_1_fiscal_quarter_date
 
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
@@ -349,194 +423,31 @@ WITH sfdc_accounts_xf AS (
       ON edm_snapshot_opty.opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
       AND edm_snapshot_opty.snapshot_date = sfdc_opportunity_snapshot_history.date_actual::DATE
 
-    -- INNER JOIN date_details close_date_detail
-    --   ON close_date_detail.date_actual = sfdc_opportunity_snapshot_history.close_date::DATE
-    -- INNER JOIN date_details snapshot_date
-    --   ON sfdc_opportunity_snapshot_history.date_actual::DATE = snapshot_date.date_actual
-    -- LEFT JOIN date_details created_date_detail
-    --   ON created_date_detail.date_actual = sfdc_opportunity_snapshot_history.created_date::DATE
-    -- LEFT JOIN date_details net_arr_created_date
-    --   ON net_arr_created_date.date_actual = sfdc_opportunity_snapshot_history.iacv_created_date::DATE
-    -- LEFT JOIN date_details sales_accepted_date
-    --   ON sales_accepted_date.date_actual = sfdc_opportunity_snapshot_history.sales_accepted_date::DATE
-
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
   SELECT DISTINCT
       opp_snapshot.*,
-
-      ------------------------------------------------------------------------------------------------------
-      ------------------------------------------------------------------------------------------------------
-      -- opportunity driven fields
-      
-      sfdc_opportunity_xf.opportunity_owner_manager,
-      sfdc_opportunity_xf.is_edu_oss,
-      sfdc_opportunity_xf.sales_qualified_source,
-      sfdc_opportunity_xf.account_id,
-      sfdc_opportunity_xf.opportunity_category,
-
-      
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_date 
-        ELSE NULL
-      END                                               AS stage_1_date,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_date_month 
-        ELSE NULL
-      END                                               AS stage_1_date_month,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_year 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_year,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_name 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_quarter_name,
-
-      CASE 
-        WHEN sfdc_opportunity_xf.stage_1_date <= opp_snapshot.snapshot_date
-          THEN sfdc_opportunity_xf.stage_1_fiscal_quarter_date 
-        ELSE NULL
-      END                                               AS stage_1_fiscal_quarter_date,
-
-
-      -- field used for FY21 bookings reporitng
-      sfdc_opportunity_xf.account_owner_team_stamped, 
-     
-      -- temporary, to deal with global reports that use account_owner_team_stamp field
-      CASE 
-        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('Commercial - SMB','SMB','SMB - US','SMB - International')
-          THEN 'SMB'
-        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('APAC','EMEA','Channel','US West','US East','Public Sector')
-          THEN 'Large'
-        WHEN sfdc_opportunity_xf.account_owner_team_stamped IN ('MM - APAC','MM - East','MM - EMEA','Commercial - MM','MM - West','MM-EMEA')
-          THEN 'Mid-Market'
-        ELSE 'SMB'
-      END                                                         AS account_owner_team_stamped_cro_level,   
-
-      -- Team Segment / ASM - RD 
-      -- As the snapshot history table is used to compare current perspective with the past, I leverage the most recent version
-      -- of the truth ato cut the data, that's why instead of using the stampped version, I take the current fields.
-      -- https://gitlab.my.salesforce.com/00N6100000ICcrD?setupid=OpportunityFields
-
-      /*
-
-      FY23 - NF 2022-01-28 
-
-      At this point I still think the best is to keep taking the owner / account demographics cuts from the most recent version of the opportunity object.
-
-      The snapshot history at this point is mainly used to track how current performance compares with previous quarters and years
-      and to do that effectively the patches / territories must be the same. Any error that is corrected in the future should be incorporated 
-      into the overview
-
-      */
-
-      sfdc_opportunity_xf.opportunity_owner_user_segment,
-      sfdc_opportunity_xf.opportunity_owner_user_region,
-      sfdc_opportunity_xf.opportunity_owner_user_area,
-      sfdc_opportunity_xf.opportunity_owner_user_geo,
-
-      --- target fields for reporting, changing their name might help to isolate their logic from the actual field
-      -------------------
-      --  NF 2022-01-28 TO BE DEPRECATED once pipeline velocity reports in Sisense are updated
-      sfdc_opportunity_xf.sales_team_rd_asm_level,
-      -------------------
-
-      sfdc_opportunity_xf.sales_team_cro_level,
-      sfdc_opportunity_xf.sales_team_vp_level,
-      sfdc_opportunity_xf.sales_team_avp_rd_level,
-      sfdc_opportunity_xf.sales_team_asm_level,
-
-      -- this fields use the opportunity owner version for current FY and account fields for previous years
-      sfdc_opportunity_xf.report_opportunity_user_segment,
-      sfdc_opportunity_xf.report_opportunity_user_geo,
-      sfdc_opportunity_xf.report_opportunity_user_region,
-      sfdc_opportunity_xf.report_opportunity_user_area,
-
-      -- NF 2022-02-17 new aggregated keys 
-      sfdc_opportunity_xf.report_user_segment_geo_region_area,
-      sfdc_opportunity_xf.report_user_segment_geo_region_area_sqs_ot,
-
-      sfdc_opportunity_xf.key_sqs,
-      sfdc_opportunity_xf.key_ot,
-
-      sfdc_opportunity_xf.key_segment,
-      sfdc_opportunity_xf.key_segment_sqs,                 
-      sfdc_opportunity_xf.key_segment_ot,    
-
-      sfdc_opportunity_xf.key_segment_geo,
-      sfdc_opportunity_xf.key_segment_geo_sqs,
-      sfdc_opportunity_xf.key_segment_geo_ot,      
-
-      sfdc_opportunity_xf.key_segment_geo_region,
-      sfdc_opportunity_xf.key_segment_geo_region_sqs,
-      sfdc_opportunity_xf.key_segment_geo_region_ot,   
-
-      sfdc_opportunity_xf.key_segment_geo_region_area,
-      sfdc_opportunity_xf.key_segment_geo_region_area_sqs,
-      sfdc_opportunity_xf.key_segment_geo_region_area_ot,
-
-      sfdc_opportunity_xf.key_segment_geo_area,
       
       -- using current opportunity perspective instead of historical
       -- NF 2021-01-26: this might change to order type live 2.1    
       -- NF 2022-01-28: Update to OT 2.3 will be stamped directly  
       sfdc_opportunity_xf.order_type_stamped,     
 
-      -- top level grouping of the order type field
-      sfdc_opportunity_xf.deal_group,
-
-      -- medium level grouping of the order type field
-      sfdc_opportunity_xf.deal_category,
-      
       -- duplicates flag
       sfdc_opportunity_xf.is_duplicate_flag                               AS current_is_duplicate_flag,
-
-      -- the owner name in the opportunity is not clean.
-      opportunity_owner.name AS opportunity_owner,
 
       ------------------------------------------------------------------------------------------------------
       ------------------------------------------------------------------------------------------------------
 
       -- account driven fields
-      sfdc_accounts_xf.account_name,
       sfdc_accounts_xf.tsp_region,
       sfdc_accounts_xf.tsp_sub_region,
       sfdc_accounts_xf.ultimate_parent_sales_segment,
       sfdc_accounts_xf.tsp_max_hierarchy_sales_segment,
-      sfdc_accounts_xf.ultimate_parent_account_id,
-      upa.account_name                        AS ultimate_parent_account_name,
-      sfdc_accounts_xf.ultimate_parent_id,
-      sfdc_accounts_xf.is_jihu_account,
-
-      sfdc_accounts_xf.account_owner_user_segment,
-      sfdc_accounts_xf.account_owner_user_geo, 
-      sfdc_accounts_xf.account_owner_user_region,
-      sfdc_accounts_xf.account_owner_user_area,
-      -- account_owner_subarea_stamped
-
-      sfdc_accounts_xf.account_demographics_sales_segment AS account_demographics_segment,
-      sfdc_accounts_xf.account_demographics_geo,
-      sfdc_accounts_xf.account_demographics_region,
-      sfdc_accounts_xf.account_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory,
-      -- account_demographics_subarea_stamped        
-
-      sfdc_accounts_xf.account_demographics_sales_segment    AS upa_demographics_segment,
-      sfdc_accounts_xf.account_demographics_geo              AS upa_demographics_geo,
-      sfdc_accounts_xf.account_demographics_region           AS upa_demographics_region,
-      sfdc_accounts_xf.account_demographics_area             AS upa_demographics_area,
-      sfdc_accounts_xf.account_demographics_territory        AS upa_demographics_territory
       
-
+      sfdc_accounts_xf.ultimate_parent_id -- same is ultimate_parent_account_id?
+      
     FROM sfdc_opportunity_snapshot_history opp_snapshot
     INNER JOIN sfdc_opportunity_xf    
       ON sfdc_opportunity_xf.opportunity_id = opp_snapshot.opportunity_id
