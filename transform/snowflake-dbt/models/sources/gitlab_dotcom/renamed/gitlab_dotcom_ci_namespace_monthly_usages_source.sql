@@ -10,7 +10,6 @@ WITH source AS (
     id::NUMBER                                  AS ci_namespace_monthly_usages_id,
     namespace_id::NUMBER                        AS namespace_id,
     date::TIMESTAMP                             AS date,
-    additional_amount_available::NUMBER         AS additional_amount_available,     
     amount_used::NUMBER                         AS amount_used,
     notification_level::NUMBER                  AS notification_level,
     shared_runners_duration::NUMBER             AS shared_runners_duration,
