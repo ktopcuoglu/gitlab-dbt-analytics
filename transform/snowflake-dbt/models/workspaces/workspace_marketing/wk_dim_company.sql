@@ -53,7 +53,7 @@ salesforce_contacts AS (
     zoominfo_company_revenue AS company_revenue,
     zoominfo_company_employee_count AS company_employee_count,
     zoominfo_company_industry AS company_industry,
-    zoominfo_company_state_province AS company_state_province,
+    zoominfo_company_state AS company_state_province,
     zoominfo_company_country AS company_country,
     IFF(company_industry IS NOT NULL, 1, 0)
     + IFF(company_state_province IS NOT NULL, 1, 0 )
