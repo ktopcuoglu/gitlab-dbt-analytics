@@ -32,6 +32,7 @@ Describe the solution. Include links to any related MRs and/or issues.
     * Decide on a loading strategy for table_replace_append. 
       * If set to 1, all files which are uploaded to the folder will be **appended** to the table. After the files are uploaded they will go into the `./Archive` directory inside the GDrive folder.
       * If set to 0, the files which are uploaded to the folder will **replace** the data in the table. 
+    * **NB** Bear in mind how the above affects your testing process. If set to append (1) to the table, the files will be moved when running the driveload CI pipeline. This means that if you want the files to also be processed into RAW when moving to production, you need to move the files out of the archive folder after merging. 
 * [ ] Step 4: Next in this MR, head to transform --> snowflake-dbt --> models --> sources --> driveload--> [Edit the sources.yml](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/sources/driveload/sources.yml). Add the file name as `driveload_file_name_source`
 * [ ] Step 5: In the same repoistory folder as the sources.yml file, you will [add the base model to sources.driveload repository](https://gitlab.com/gitlab-data/analytics/-/tree/master/transform/snowflake-dbt/models/sources/driveload). Naming the file as driveload_file_name_sources.sql.
         This file will have the following code, but can also be restricted down to specific columns. Update data type of columns in this file (i.e converting value to decimal or varchar)

@@ -60,6 +60,8 @@ from kube_secrets import (
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 )
 
 # Load the env vars into a dict and set env vars
@@ -88,6 +90,8 @@ dbt_secrets = [
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 ]
 
 # Dictionary containing the configuration values for the various Postgres DBs
@@ -95,7 +99,7 @@ config_dict = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
         "dag_name": "el_customers_scd",
-        "dbt_name": "customers_db",
+        "dbt_name": "customers",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": "0 */8 * * *",
         "secrets": [
@@ -322,6 +326,7 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     )
 
     # Snapshot source data
+
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
@@ -527,7 +532,7 @@ for source_name, config in config_dict.items():
             f"{config['dag_name']}_db_sync",
             default_args=sync_dag_args,
             schedule_interval=config["sync_schedule_interval"],
-            concurrency=2,
+            concurrency=4,
             description=config["description"],
         )
 

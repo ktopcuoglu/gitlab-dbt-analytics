@@ -196,6 +196,8 @@ WITH source AS (
         END opportunity_deal_size,
         payment_schedule__c                             AS payment_schedule,
         comp_y2_iacv__c                                 AS comp_y2_iacv,
+        comp_new_logo_override__c                       AS comp_new_logo_override,
+        is_pipeline_created_eligible_flag__c            AS is_pipeline_created_eligible,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -242,6 +244,7 @@ WITH source AS (
         fulfillment_partner__c                          AS fulfillment_partner,
         platform_partner__c                             AS platform_partner,
         partner_track__c                                AS partner_track,
+        resale_partner_track__c                         AS resale_partner_track,
         public_sector_opp__c::BOOLEAN                   AS is_public_sector_opp,
         registration_from_portal__c::BOOLEAN            AS is_registration_from_portal,
         calculated_discount__c                          AS calculated_discount,
@@ -280,6 +283,7 @@ WITH source AS (
 
         downgrade_reason__c                             AS downgrade_reason,
         ssp_id__c                                       AS ssp_id,
+        gaclientid__c                                   AS ga_client_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

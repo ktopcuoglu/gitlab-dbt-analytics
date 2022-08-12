@@ -59,6 +59,7 @@ renamed AS (
     dozisf__zoominfo_company_id__c AS zoominfo_company_id,
     zi_company_revenue__c AS zoominfo_company_revenue,
     zi_employee_count__c AS zoominfo_company_employee_count,
+    zi_contact_city__c AS zoominfo_contact_city,
     zi_company_city__c AS zoominfo_company_city,
     zi_industry__c AS zoominfo_company_industry,
     buying_process_for_procuring_gitlab__c AS buying_process,
@@ -104,6 +105,7 @@ renamed AS (
     sequence_status__c AS sequence_status,
     sequence_step_type2__c AS sequence_step_type,
     actively_being_sequenced__c::BOOLEAN AS is_actively_being_sequenced,
+    gaclientid__c AS ga_client_id,
 
 
     {{ sfdc_source_buckets('leadsource') }}
@@ -153,6 +155,20 @@ renamed AS (
     business_development_representative__c AS business_development_representative,
     sdr_lu__c AS sales_development_representative,
     competition__c AS competition,
+
+    -- Cognism Data
+    cognism_company_office_city__c AS cognism_company_office_city,
+    cognism_company_office_state__c AS cognism_company_office_state,
+    cognism_company_office_country__c AS cognism_company_office_country,
+    cognism_city__c as cognism_city,
+    cognism_state__c as cognism_state,
+    cognism_country__c as cognism_country,
+
+    --LeanData
+    leandata__matched_account_billing_state__c as leandata_matched_account_billing_state,
+    leandata__matched_account_billing_postal_code__c as leandata_matched_account_billing_postal_code,
+    leandata__matched_account_billing_country__c as leandata_matched_account_billing_country,
+
 
     --metadata
     createdbyid AS created_by_id,

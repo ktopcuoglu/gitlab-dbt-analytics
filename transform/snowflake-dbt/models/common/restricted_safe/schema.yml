@@ -97,8 +97,6 @@ models:
       - name: sales_type
       - name: source_buckets
       - name: stage_name
-      - name: stage_is_active
-      - name: stage_is_closed
       - name: technical_evaluation_date
       - name: deal_path
       - name: competitors
@@ -128,6 +126,110 @@ models:
       - name: risk_type
       - name: risk_reasons
       - name: tam_notes
+      - name: account_owner_team_stamped_cro_level 
+        description: Assigns opportunities to Large, Mid-Market, and SMB by stamped account owner teams.
+      - name: calculated_deal_size
+        description: Banded groupings of net ARR. 
+      - name: competitors_amazon_code_commit_flag
+        description: One of the listed competitors is Amazon Code Commit.
+      - name: competitors_atlassian_flag
+        description: One of the listed competitors is Atlassian.
+      - name: competitors_aws_flag
+        description: one of the listed competitors is AWS.
+      - name: competitors_azure_devops_flag
+        description: One of the listed competitors is Azure DevOps.
+      - name: competitors_azure_flag
+        description: One of the listed competitors is Azure.
+      - name: competitors_bamboo_flag
+        description: One of the listed competitors is Bamboo.
+      - name: competitors_bitbucket_flag
+        description: One of the listed competitors is Bitbucket.org.
+      - name: competitors_bitbucket_server_flag
+        description: One of the listed competitors is Bitbucket Server.
+      - name: competitors_circleci_flag
+        description: One of the listed competitors is GircleCI.
+      - name: competitors_github_enterprise_flag
+        description: One of the listed competitors is Github Gnterprise.
+      - name: competitors_github_flag
+        description: One of the listed competitors is Github.com.
+      - name: competitors_gitlab_core_flag
+        description: One of the listed competitors is Gitlab Core.
+      - name: competitors_gitlab_flag
+        description: One of the listed competitors is Gitlab.com.
+      - name: competitors_jenkins_flag
+        description: One of the listed competitors is Jenkins.
+      - name: competitors_none_flag
+        description: One of the listed competitors is none.
+      - name: competitors_other_flag
+        description: One of the listed competitors is Other.
+      - name: competitors_perforce_flag
+        description: One of the listed competitors is Perforce.
+      - name: competitors_svn_flag
+        description: One of the listed competitors is SVN.
+      - name: competitors_unknown_flag
+        description: One of the listed competitors is Unknown.
+      - name: competitors_visual_studio_flag
+        description: One of the listed competitors is Visual Studio Team Services.
+      - name: key_ot
+        description: Order type
+      - name: key_segment
+        description: Stamped user segment
+      - name: key_segment_geo
+        description: Concatenated stamped user segment and stamped user geo
+      - name: key_segment_geo_area
+        description: Concatenated stamped user segment, stamped user geo, and stamped user area
+      - name: key_segment_geo_ot
+        description: Concatenated stamped user segment, stamped user geo and stamped order type
+      - name: key_segment_geo_region
+        description: Concatenated stamped user segment, stamped user geo, and stamped user region
+      - name: key_segment_geo_region_area
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped user area
+      - name: key_segment_geo_region_area_ot
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and stamped order type
+      - name: key_segment_geo_region_area_sqs
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, stamped user area, and sales qualified source
+      - name: key_segment_geo_region_ot
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and stamped order type
+      - name: key_segment_geo_region_sqs
+        description: Concatenated stamped user segment, stamped user geo, stamped user region, and sales qualified source
+      - name: key_segment_geo_sqs
+        description: Concatenated stamped user segment, stamped user geo, and sales qualified source
+      - name: key_segment_ot
+        description:  Concatenated stamped user segment and stamped order type
+      - name: key_segment_sqs
+        description: Concatenated stamped user segment and sales qualified source
+      - name: key_sqs
+        description: Sales qualified source
+      - name: reason_for_loss_calc 
+        description: Grouping of reason for loss and reason for downgrade to broader categories.
+      - name: reason_for_loss_staged 
+        description: Combination of reason for loss and reason for downgrade.
+      - name: report_opportunity_user_area
+        description: Lower case stamped user area.
+      - name: report_opportunity_user_geo
+        description: Lower case stamped user geo.
+      - name: report_opportunity_user_region
+        description: Lower case stamped user region.
+      - name: report_opportunity_user_segment
+        description: Lower case stamped user segment.
+      - name: report_user_segment_geo_region_area
+        description: Lower case stamped user segment geo region area.
+      - name: report_user_segment_geo_region_area_sqs_ot
+        description: Lower case concatenated user segment geo region area, sales qualified source, and order type.
+      - name: sales_team_asm_level
+        description: Sales team structure at the ASM level (segment-geo-region-area)
+      - name: sales_team_avp_rd_level
+        description: Sales team structure at the AVP RD level (segment-geo-region)
+      - name: sales_team_cro_level
+        description: Sales team structure at the CRO level (segment)
+      - name: sales_team_rd_asm_level
+        description: This code replicates the reporting structured of FY22.
+      - name: sales_team_vp_level
+        description: Sales team structure at the team VP level (segment-geo)
+      - name: stage_name_3plus
+        description: Grouping of stage names where all stages with numbers <=2 are in Pipeline and all above are +3 Pipeline.
+      - name: stage_name_4plus 
+        description: Grouping of stage names where all stages with numbers <=3 are in Pipeline and all above are +4 Pipeline.
 
   - name: fct_charge
     description: '{{ doc("fct_charge") }}'
@@ -158,6 +260,16 @@ models:
       - name: rate_plan_charge_version
         description: The version of the rate plan charge. Each time a charge is amended, Zuora creates a new version of the rate plan charge.
 
+  - name: fct_crm_account
+    description: '{{ doc("fct_crm_account") }}'
+    columns:
+      - name: dim_crm_account_id
+        description: Unique identifier of a crm account from Salesforce. This is the natural key of the table.
+        tests:
+          - not_null
+          - unique
+        tags: ["tdf", "common"]
+
   - name: fct_crm_opportunity
     description: '{{ doc("fct_crm_opportunity") }}'
     columns:
@@ -175,10 +287,17 @@ models:
               field: dim_crm_account_id
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
-        description: join key for dim_alliance_type
+        description: join key for dim_alliance_type_scd.
         tests:
           - relationships:
-              to: ref('dim_alliance_type')
+              to: ref('dim_alliance_type_scd')
+              field: dim_alliance_type_id
+        tags: [ "tdf", "common", "sales_funnel" ]
+      - name: dim_alliance_type_current_id
+        description: join key for dim_alliance_type_scd. It contains current state id for the alliance type dimension.
+        tests:
+          - relationships:
+              to: ref('dim_alliance_type_scd')
               field: dim_alliance_type_id
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_dr_partner_engagement_id
@@ -307,6 +426,74 @@ models:
         description: a [salesforce formula field](https://gitlab.my.salesforce.com/00N4M00000IbIDx) for renewals only current subscription ARR.
       - name: arr
         description: a WIP Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000IbIE2) that returns 0
+      - name: arr_created_date
+        description: A Salesforce [formula field](https://gitlab.my.salesforce.com/00N4M00000ISAEK) that tracks the date that the ARR was added to an opportunity. 
+      - name: booked_churned_contraction_deal_count
+        description: Count of booked churn or contraction deals.
+      - name: booked_churned_contraction_net_arr
+        description: Total churned or contraction net ARR.
+      - name: booked_deal_count
+        description: Count of won deals.
+      - name: booked_net_arr
+        description: Total booked net ARR associated with the opportunity.
+      - name: calculated_age_in_days
+        description: Age of the opportunity between opportunity created date and opportunity closed date.
+      - name: pipeline_calculated_deal_count
+        description: Count of deals that are not credits, subtracting out decommissions. 
+      - name: calculated_from_ratio_net_arr
+        description: Net ARR assigned to an opportunity based on its stage, segment, and net incremental annual contract value. 
+      - name: churned_contraction_deal_count
+        description: Count of churn or contraction deals.
+      - name: churned_contraction_net_arr
+        description: Net ARR from churned or contraction opportunities.
+      - name: created_and_won_same_quarter_net_arr
+        description: Net ARR from opportunities which were created and won in the same fiscal quarter.
+      - name: is_active
+        description: Flag indicating the opportunity is in an active stage.
+      - name: is_booked_net_arr
+        description: Flag indicating the opportunity has booked net ARR.
+      - name: is_contract_reset
+        description: Flag indicating the opportunity is categorized as a contract reset.
+      - name: is_credit
+        description: Flag indicating the opportunity is categorized as a credit.
+      - name: is_duplicate
+        description: Flag indicating the opportunity is a duplicate of another opportunity.
+      - name: is_eligible_age_analysis
+        description: Flag indicating an opportunity is eligible for age analysis.
+      - name: is_eligible_asp_analysis
+        description: Flag indicating an opporutnity is eligible for ASP analysis.
+      - name: is_eligible_churn_contraction
+        description: Flag indicating the opportunity has either churned or contracted, is not deleted, and is not an EDU/OSS deal.
+      - name: is_eligible_open_pipeline
+        description: Flag indicating the opportunity is considered open pipeline based on its order type, stage, forecast category, and whether or not it is an EDU/OSS deal.
+      - name: is_excluded_from_pipeline_created
+        description: Records which are not included in pipeline generated analysis due to data quality errors.
+      - name: is_lost
+        description: Flag indicating an opportunity is in a closed lost stage.
+      - name: is_open
+        description: Flag indicating an opportunity is in any open stage (not closed lost, closed won, unqualified, or duplicate).
+      - name: is_renewal
+        description: Flag indicating the opportunity is categorized as a renewal by its sales type.
+      - name: is_stage_1_plus
+        description: Flag indicating the opportunity is in in Stage 1 or greater.
+      - name: is_stage_3_plus
+        description: Flag indicating the opportunity is in in Stage 3 or greater.
+      - name: is_stage_4_plus
+        description: Flag indicating the opportunity is in in Stage 4 or greater.
+      - name: open_1plus_deal_count
+        description: Total pipeline deal count in stage 1 or later.
+      - name: open_1plus_net_arr
+        description: Total net ARR in the pipeline in stage 1 or later.
+      - name: open_3plus_deal_count
+        description: Total pipeline deal count in stage 3 or later.
+      - name: open_3plus_net_arr
+        description: Total net ARR in the pipeline in stage 3 or later.
+      - name: open_4plus_deal_count
+        description: Total pipeline deal count in stage 4 or later.
+      - name: open_4plus_net_arr
+        description: Total net ARR in the pipeline in stage 4 or later.
+      - name: segment_order_type_iacv_to_net_arr_ratio
+        description: The ratio of incremental annual contract value to net ARR assigned to this opportunity based on its segment and order type. This field is a helper used to map old IACV values to new net ARR values, which were updated for all opportunities closed prior to 2021-02-01.
 
   - name: fct_crm_opportunity_daily_snapshot
     description: '{{ doc("fct_crm_opportunity_daily_snapshot") }}'

@@ -33,6 +33,8 @@ from kube_secrets import (
     SNOWFLAKE_TRANSFORM_SCHEMA,
     SNOWFLAKE_TRANSFORM_WAREHOUSE,
     SNOWFLAKE_USER,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 )
 from kubernetes_helpers import get_affinity, get_toleration
 
@@ -140,6 +142,8 @@ dbt_sheetload = KubernetesPodOperator(
         SNOWFLAKE_TRANSFORM_WAREHOUSE,
         SNOWFLAKE_TRANSFORM_SCHEMA,
         SNOWFLAKE_USER,
+        MCD_DEFAULT_API_ID,
+        MCD_DEFAULT_API_TOKEN,
     ],
     env_vars=pod_env_vars,
     affinity=get_affinity(False),

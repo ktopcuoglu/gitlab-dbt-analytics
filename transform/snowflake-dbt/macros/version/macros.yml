@@ -15,4 +15,6 @@ macros:
     description: '{{ doc("usage_ping_over_ping_estimated") }}'
   - name: usage_ping_over_ping_smoothed
     description: '{{ doc("usage_ping_over_ping_smoothed") }}'
+  - name: ping_instance_wave_metrics
+    description: '{{ doc("ping_instance_wave_metrics") }}'
 

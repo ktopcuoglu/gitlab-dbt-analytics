@@ -33,6 +33,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
+    MCD_DEFAULT_API_ID,
+    MCD_DEFAULT_API_TOKEN,
 )
 
 # Load the env vars into a dict
@@ -115,6 +117,8 @@ dbt_poc = KubernetesPodOperator(
         SNOWFLAKE_LOAD_ROLE,
         SNOWFLAKE_LOAD_USER,
         SNOWFLAKE_LOAD_WAREHOUSE,
+        MCD_DEFAULT_API_ID,
+        MCD_DEFAULT_API_TOKEN,
     ],
     env_vars=pod_env_vars,
     arguments=[dbt_cmd],

@@ -86,6 +86,7 @@
       dim_crm_person.sfdc_record_id,
       person_base.account_demographics_sales_segment,
       person_base.account_demographics_region,
+      person_base.account_demographics_geo,
       person_base.account_demographics_area,
       person_base.account_demographics_upa_country,
       person_base.account_demographics_territory,
@@ -102,10 +103,12 @@
       opp.is_won,
       opp.is_sao,
       opp.new_logo_count,
+      opp.net_arr,
       opp.is_net_arr_closed_deal,
       opp.crm_opp_owner_sales_segment_stamped,
       opp.crm_opp_owner_region_stamped,
       opp.crm_opp_owner_area_stamped,
+      opp.crm_opp_owner_geo_stamped,
       opp.parent_crm_account_demographics_upa_country,
       opp.parent_crm_account_demographics_territory
     FROM person_base
@@ -129,6 +132,7 @@
     cohort_base.dim_crm_person_id,
     cohort_base.dim_crm_opportunity_id,
     rpt_sfdc_bizible_tp_opp_linear_blended.dim_crm_touchpoint_id,
+    cohort_base.sfdc_record_id,
   
     --person data
     CASE 
@@ -140,6 +144,7 @@
     cohort_base.email_domain_type,
     cohort_base.is_mql,
     cohort_base.account_demographics_sales_segment,
+    cohort_base.account_demographics_geo,
     cohort_base.account_demographics_region,
     cohort_base.account_demographics_area,
     cohort_base.account_demographics_upa_country,
@@ -154,11 +159,13 @@
     cohort_base.is_sao,
     cohort_base.is_won,
     cohort_base.new_logo_count,
+    cohort_base.net_arr,
     cohort_base.is_net_arr_closed_deal,
     cohort_base.opp_order_type,
     cohort_base.sales_qualified_source_name,
     cohort_base.deal_path_name,
     cohort_base.sales_type,
+    cohort_base.crm_opp_owner_geo_stamped,
     cohort_base.crm_opp_owner_sales_segment_stamped,
     cohort_base.crm_opp_owner_region_stamped,
     cohort_base.crm_opp_owner_area_stamped,
@@ -172,6 +179,10 @@
     --touchpoint data
     rpt_sfdc_bizible_tp_opp_linear_blended.bizible_touchpoint_date_normalized,
     rpt_sfdc_bizible_tp_opp_linear_blended.gtm_motion,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_integrated_campaign_grouping,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_ad_campaign_name,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_form_url,
+    rpt_sfdc_bizible_tp_opp_linear_blended.bizible_landing_page,
     rpt_sfdc_bizible_tp_opp_linear_blended.is_dg_influenced,
     rpt_sfdc_bizible_tp_opp_linear_blended.is_fmm_influenced,
     rpt_sfdc_bizible_tp_opp_linear_blended.mql_sum,
@@ -216,5 +227,5 @@
     created_by="@rkohnke",
     updated_by="@rkohnke",
     created_date="2022-07-20",
-    updated_date="2022-07-20",
+    updated_date="2022-08-09",
   ) }}

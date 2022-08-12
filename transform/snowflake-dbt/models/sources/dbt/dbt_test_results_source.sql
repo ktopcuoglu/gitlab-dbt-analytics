@@ -33,6 +33,7 @@ WITH source AS (
       uploaded_at
     FROM flattened
     WHERE dbt_version IS NOT NULL
+      AND test_execution_time_elapsed IS NOT NULL
   
 ), v0model_parsed_out AS (
 

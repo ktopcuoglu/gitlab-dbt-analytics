@@ -1,4 +1,4 @@
-{% docs prep_alliance_type %}
+{% docs prep_alliance_type_scd %}
 
 Creates a base view with generated keys for the alliance type shared dimension and references in facts.
 

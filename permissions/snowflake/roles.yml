@@ -782,6 +782,59 @@ roles:
                     - prod.boneyard.*
                     - raw.*.*
 
+    - data_science_loader:
+          warehouses:
+              - loading
+              - loading_xl
+          owns:
+              schemas:
+                  - raw.data_science
+          privileges:
+              databases:
+                  read:
+                      - prep
+                      - prod
+                      - raw
+                  write:
+                      - prod
+                      - raw
+              schemas:
+                  read:
+                      - prod.workspace_data_science
+                      - prod.common
+                      - prod.legacy
+                      - prod.common_mart_product
+                      - prod.restricted_safe_common_mart_sales
+                      - prod.common_mart_marketing
+                      - prod.restricted_safe_workspace_sales
+                      - prep.snowplow_*
+                      - prep.gitlab_dotcom
+                      - prep.zendesk
+                      - raw.data_science
+                      - raw.salesforce_stitch
+                      - raw.snapshots
+                  write:
+                      - raw.data_science
+                      - prod.workspace_data_science
+              tables:
+                  read:
+                      - prod.workspace_data_science.*
+                      - prep.snowplow_*.*
+                      - prep.snowplow_*.*
+                      - prep.zendesk.*
+                      - prep.gitlab_dotcom.*
+                      - prod.common.*
+                      - prod.legacy.*
+                      - prod.common_mart_product.*
+                      - prod.restricted_safe_common_mart_sales.*
+                      - prod.restricted_safe_workspace_sales.*
+                      - prod.common_mart_marketing.*
+                      - raw.salesforce_stitch.*
+                      - raw.snapshots.*
+                  write:
+                      - raw.data_science.*
+                      - prod.workspace_data_science.*
+
     - meltano:
         warehouses:
             - loading
@@ -3644,6 +3697,7 @@ roles:
             - restricted_safe
             - bi_tool_eval_read
             - customers_db
+            - zuora_query_api
         warehouses:
             - dev_xs
 
@@ -4240,6 +4294,7 @@ users:
             - reporter
             - sysadmin
             - transformer
+            - data_science_loader
 
     - alpcohen:
         can_login: yes
