@@ -3908,7 +3908,7 @@ models:
         description: The unique id of a license subscription
       - name: time_frame
         description: The time frame associated with the metric, as defined in the metric definition YAML file
-        
+
   - name: fct_ping_instance_metric_wave
     description: ' {{ doc("fct_ping_instance_metric") }} '
     columns:
@@ -4529,8 +4529,6 @@ models:
       - name: is_latest_data
         description: Flags the row with the most recently received data from Usage Ping and/or Seat Link
 
-
->>>>>>> 17d33b70d763234eea3b6711825b62217c51a800
   - name: fct_ping_instance
     description: ' {{ doc("fct_ping_instance") }} '
     columns:

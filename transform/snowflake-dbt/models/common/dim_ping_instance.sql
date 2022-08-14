@@ -181,7 +181,7 @@ SELECT DISTINCT
       CASE
         WHEN last_ping_of_week_flag = TRUE                     THEN TRUE
         ELSE FALSE
-      END                                                                                                           AS is_last_ping_of_week,                                                                            AS is_last_ping_of_month,
+      END                                                                                                           AS is_last_ping_of_week,
       raw_usage_data_payload
     FROM fct_w_month_flag
 
