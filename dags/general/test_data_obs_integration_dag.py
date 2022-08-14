@@ -1,15 +1,13 @@
 import os
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
 from airflow import DAG
 from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
-from airflow.operators.dummy_operator import DummyOperator
 from airflow_utils import (
     DBT_IMAGE,
     dbt_install_deps_nosha_cmd,
     gitlab_defaults,
     gitlab_pod_env_vars,
-    partitions,
     slack_failed_task,
 )
 from kube_secrets import (
@@ -30,8 +28,8 @@ from kube_secrets import (
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    MCD_DEFAULT_API_ID,
 )
 
 # Load the env vars into a dict and set Secrets
@@ -56,8 +54,8 @@ task_secrets = [
     SNOWFLAKE_LOAD_ROLE,
     SNOWFLAKE_LOAD_USER,
     SNOWFLAKE_LOAD_WAREHOUSE,
-    MCD_DEFAULT_API_ID,
     MCD_DEFAULT_API_TOKEN,
+    MCD_DEFAULT_API_ID,
 ]
 
 # Default arguments for the DAG
@@ -66,46 +64,32 @@ default_args = {
     "depends_on_past": False,
     "on_failure_callback": slack_failed_task,
     "owner": "airflow",
-    "start_date": datetime(2020, 12, 8, 0, 0, 0),
+    "start_date": datetime(2021, 2, 17, 0, 0, 0),
 }
 
+# Runs every 3 hours at half past the hour
+dag_schedule = "30 */3 * * *"
+
 # Create the DAG
-dag = DAG("dbt_datasiren", default_args=default_args, schedule_interval=None)
-
-dbt_datasiren_command = f"""
-        {dbt_install_deps_nosha_cmd} &&
-        export SNOWFLAKE_TRANSFORM_WAREHOUSE="DATASIREN" &&
-        dbt run --profiles-dir profile --target prod --models tag:datasiren --exclude datasiren_audit_results+;  ret=$?;
-        python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-        """
-
-datasiren_operator = KubernetesPodOperator(
-    **gitlab_defaults,
-    image=DBT_IMAGE,
-    task_id=f"dbt-datasiren",
-    name=f"dbt-datasiren",
-    secrets=task_secrets,
-    env_vars=pod_env_vars,
-    arguments=[dbt_datasiren_command],
-    dag=dag,
+dag = DAG(
+    "test_data_obs_integration_dag",
+    default_args=default_args,
+    schedule_interval=dag_schedule,
 )
 
-dbt_datasiren_audit_results_command = f"""
-        {dbt_install_deps_nosha_cmd} &&
-        export SNOWFLAKE_TRANSFORM_WAREHOUSE="DATASIREN" &&
-        dbt run --profiles-dir profile --target prod --models datasiren_audit_results+; ret=$?;
-        python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
-        """
+monitor_dbt_source_freshness_cmd = f"""
+    {dbt_install_deps_nosha_cmd} &&
+    dbt --no-use-colors run --profiles-dir profile --target prod --models key_assets; ret=$?;
+    python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
+    """
 
-audit_results_operator = KubernetesPodOperator(
+monitor_dbt_source_freshness = KubernetesPodOperator(
     **gitlab_defaults,
     image=DBT_IMAGE,
-    task_id=f"dbt-datasiren-audit-results",
-    name=f"dbt-datasiren-audit-results",
+    task_id="upload_data_to_mc",
+    name="upload_data_to_mc",
     secrets=task_secrets,
     env_vars=pod_env_vars,
-    arguments=[dbt_datasiren_audit_results_command],
+    arguments=[monitor_dbt_source_freshness_cmd],
     dag=dag,
 )
-
-datasiren_operator >> audit_results_operator

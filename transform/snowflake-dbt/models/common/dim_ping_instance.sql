@@ -30,7 +30,8 @@ SELECT DISTINCT
     usage_data_w_date.host_id                         AS host_id,
     usage_data_w_date.ping_created_at::TIMESTAMP(0)   AS ping_created_at,
     dim_date.first_day_of_month                       AS first_day_of_month,
-    TRUE                                              AS last_ping_of_month_flag
+    TRUE                                              AS last_ping_of_month_flag,
+    usage_data_w_date.raw_usage_data_payload          AS raw_usage_data_payload
   FROM usage_data_w_date
     INNER JOIN dim_date
   ON usage_data_w_date.dim_ping_date_id = dim_date.date_id
@@ -156,7 +157,8 @@ SELECT DISTINCT
         CASE
           WHEN last_ping_of_month_flag = TRUE                   THEN TRUE
           ELSE FALSE
-          END                                                                                                       AS is_last_ping_of_month
+          END                                                                                                       AS is_last_ping_of_month,
+      raw_usage_data_payload
     FROM fct_w_month_flag
 
 )
@@ -166,5 +168,6 @@ SELECT DISTINCT
     created_by="@icooper-acp",
     updated_by="@snalamaru",
     created_date="2022-03-08",
-    updated_date="2022-05-05"
+    updated_date="2022-07-21"
 ) }}
+

@@ -82,10 +82,6 @@ dag = DAG(
 monitor_dbt_source_freshness_cmd = f"""
     {dbt_install_deps_nosha_cmd} &&
     dbt source snapshot-freshness --profiles-dir profile; ret=$?;
-    montecarlo import dbt-manifest \
-    target/manifest.json --project-name gitlab-analysis;
-    montecarlo import dbt-run-results \
-    target/run_results.json --project-name gitlab-analysis;
     python ../../orchestration/upload_dbt_file_to_snowflake.py freshness; exit $ret
     """
 

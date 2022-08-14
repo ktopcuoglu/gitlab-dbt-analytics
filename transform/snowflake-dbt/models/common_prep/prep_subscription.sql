@@ -72,6 +72,13 @@ WITH date_details AS (
       zuora_subscription.term_end_date::DATE                                    AS term_end_date,
       DATE_TRUNC('month', zuora_subscription.term_start_date::DATE)             AS term_start_month,
       DATE_TRUNC('month', zuora_subscription.term_end_date::DATE)               AS term_end_month,
+      term_start_date.fiscal_year                                               AS term_start_fiscal_year,
+      term_end_date.fiscal_year                                                 AS term_end_fiscal_year,
+      CASE 
+        WHEN term_start_date.fiscal_year = term_end_date.fiscal_year 
+          THEN TRUE 
+        ELSE FALSE 
+      END                                                                       AS is_single_fiscal_year_term_subscription,
       CASE
         WHEN LOWER(zuora_subscription.subscription_status) = 'active' AND subscription_end_date > CURRENT_DATE
           THEN DATE_TRUNC('month',DATEADD('month', zuora_subscription.current_term, zuora_subscription.subscription_end_date::DATE))
@@ -101,13 +108,17 @@ WITH date_details AS (
       ON zuora_account.crm_id = map_merged_crm_account.sfdc_account_id
     LEFT JOIN date_details
       ON zuora_subscription.subscription_end_date::DATE = date_details.date_day
+    LEFT JOIN date_details term_start_date
+      ON zuora_subscription.term_start_date = term_start_date.date_day 
+    LEFT JOIN date_details term_end_date 
+      ON zuora_subscription.term_end_date = term_end_date.date_day
 
 )
 
 {{ dbt_audit(
     cte_ref="joined",
     created_by="@ischweickartDD",
-    updated_by="@jpeguero",
+    updated_by="@michellecooper",
     created_date="2021-01-07",
     updated_date="2022-07-07"
 ) }}

@@ -290,6 +290,17 @@ Fact table representing marketing campaign details tracked in SFDC.
 
 {% enddocs %}
 
+{% docs fct_crm_account %}
+Factual customer table representing all existing and historical customers from SalesForce. There are customer definitions for external reporting and additional customer definitions for internal reporting defined in the [handbook](https://about.gitlab.com/handbook/sales/#customer).
+
+The Customer Account Management business process can be found in the [handbook](https://about.gitlab.com/handbook/finance/sox-internal-controls/quote-to-cash/#1-customer-account-management-and-conversion-of-lead-to-opportunity).
+
+The grain of the table is the SalesForce Account, also referred to as `DIM_CRM_ACCOUNT_ID`.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
+
+{% enddocs %}
+
 {% docs fct_crm_attribution_touchpoint %}
 Fact table for attribution Bizible touchpoints with shared dimension keys relating these touchpoints to dim_crm_person, dim_crm_opportunity, and dim_crm_account. These touchpoints have revenue associated with them.
 
@@ -1389,5 +1400,25 @@ This new table will include all flattened target values for each metric for each
 - The different types of Service Pings are shown here with the [Self-Managed Service Ping](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#self-managed-service-ping), [GitLab Hosted Implementation](https://about.gitlab.com/handbook/business-technology/data-team/data-catalog/saas-service-ping-automation/#saas-service-ping).
 - [GitLab Dedicated Implementation](https://docs.gitlab.com/ee/subscriptions/gitlab_dedicated/#gitlab-dedicated) service pings will function similar to Self-Managed Implementations.
 - [Service Ping Guide](https://docs.gitlab.com/ee/development/service_ping/) shows a technical overview of the Service Ping data flow.
+
+{% enddocs %}
+
+
+{% docs fct_ping_instance_metric_wave %}
+
+The purpose of this data model is to identify the service pings that can be mapped to a subscription and to pivot thet set of [wave metrics required for Gainsight](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/version/ping_instance_wave_metrics.sql) from the `fct_ping_instance_metric` model, strip all the sensitive data out, and then report one value for each metric in that column.
+
+{% enddocs %}
+
+
+{% docs fct_ping_instance_metric_wave_monthly %}
+
+This table builds on the set of all Zuora subscriptions that are associated with a **Self-Managed** rate plans. Seat Link data from Customers DB (`fct_usage_self_managed_seat_link`) are combined with high priority Usage Ping metrics (`fct_ping_instance_metric_wave`) to build out the set of facts included in this table.
+
+The grain of this table is `hostname` per `dim_instance_id(uuid)` per `dim_subscription_id` per `snapshot_month`. Since there are Self-Managed subscriptions that do not send Usage Ping payloads, it is possible for `dim_instance_id` and `hostname` to be null.
+
+The data from this table will be used to create a mart tables - `mart_product_usage_wave_1_3_metrics_monthly`, `mart_product_usage_paid_user_metrics_monthly` and `mart_product_usage_wave_1_3_metrics_monthly_diff` for Gainsight Customer Product Insights.
+
+Information on the Enterprise Dimensional Model can be found in the [handbook](https://about.gitlab.com/handbook/business-ops/data-team/platform/edw/)
 
 {% enddocs %}

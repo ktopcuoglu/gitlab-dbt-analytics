@@ -40,10 +40,10 @@ WITH dim_billing_account AS (
     dim_product_detail_id,
     dim_billing_account_id,
     dim_crm_account_id,
-    SUM(mrr)                                                               AS mrr,
-    SUM(arr)                                                               AS arr,
-    SUM(quantity)                                                          AS quantity,
-    ARRAY_AGG(unit_of_measure)                                             AS unit_of_measure
+    SUM(mrr)                                                                      AS mrr,
+    SUM(arr)                                                                      AS arr,
+    SUM(quantity)                                                                 AS quantity,
+    ARRAY_AGG(DISTINCT unit_of_measure) WITHIN GROUP (ORDER BY unit_of_measure)   AS unit_of_measure
   FROM {{ ref('fct_mrr') }}
   WHERE subscription_status IN ('Active', 'Cancelled')
   {{ dbt_utils.group_by(n=5) }}
@@ -145,6 +145,8 @@ WITH dim_billing_account AS (
       dim_product_detail.product_delivery_type                                        AS product_delivery_type,
       dim_product_detail.service_type                                                 AS service_type,
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
+      dim_product_detail.is_licensed_user                                             AS is_licensed_user,
+      dim_product_detail.is_arpu                                                      AS is_arpu,
 
       -- MRR values
       --  not needed as all charges in fct_mrr are recurring
@@ -217,5 +219,5 @@ WITH dim_billing_account AS (
     created_by="@msendal",
     updated_by="@lisvinueza",
     created_date="2020-09-04",
-    updated_date="2022-07-21"
+    updated_date="2022-08-01"
 ) }}

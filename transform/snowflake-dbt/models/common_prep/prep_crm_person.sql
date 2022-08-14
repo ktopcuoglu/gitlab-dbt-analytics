@@ -109,7 +109,23 @@ WITH biz_person AS (
       account_demographics_upa_street,
       account_demographics_upa_postal_code,
 
-      NULL                                          AS crm_partner_id
+      NULL                                          AS crm_partner_id,
+      NULL                                          AS ga_client_id,
+      NULL                                          AS cognism_company_office_city,
+      NULL                                          AS cognism_company_office_state,
+      NULL                                          AS cognism_company_office_country,
+      NULL                                          AS cognism_city,
+      NULL                                          AS cognism_state,
+      NULL                                          AS cognism_country,
+      NULL                                          AS leandata_matched_account_billing_state,
+      NULL                                          AS leandata_matched_account_billing_postal_code,
+      NULL                                          AS leandata_matched_account_billing_country,
+      zoominfo_contact_city,
+      zoominfo_contact_state,
+      zoominfo_contact_country,
+      zoominfo_company_city,
+      zoominfo_company_state,
+      zoominfo_company_country
 
     FROM sfdc_contacts
     LEFT JOIN biz_person_with_touchpoints
@@ -186,7 +202,23 @@ WITH biz_person AS (
       account_demographics_upa_city,
       account_demographics_upa_street,
       account_demographics_upa_postal_code,
-      crm_partner_id
+      crm_partner_id,
+      ga_client_id,
+      cognism_company_office_city,
+      cognism_company_office_state,
+      cognism_company_office_country,
+      cognism_city,
+      cognism_state,
+      cognism_country,
+      leandata_matched_account_billing_state,
+      leandata_matched_account_billing_postal_code,
+      leandata_matched_account_billing_country,
+      zoominfo_contact_city,
+      zoominfo_contact_state,
+      zoominfo_contact_country,
+      zoominfo_company_city,
+      zoominfo_company_state,
+      zoominfo_company_country
 
     FROM sfdc_leads
     LEFT JOIN biz_person_with_touchpoints
@@ -216,7 +248,7 @@ WITH biz_person AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@mcooperDD",
-    updated_by="@jpeguero",
+    updated_by="@degan",
     created_date="2020-12-08",
-    updated_date="2022-03-26"
+    updated_date="2022-08-09"
 ) }}

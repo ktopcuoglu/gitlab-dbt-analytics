@@ -69,8 +69,11 @@ models:
       - name: dim_subscription_id_original
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+      - name: is_licensed_user
+        description: Flag to identify licensed users. It works by excluding `Storage` product_tier
+      - name: is_arpu
+        description: Flag to identify what counts towards Annual Revenue Per User (ARPU). It works by excluding `Storage` product_tier and `EDU` product_rate_plan. 
 
-models:
   - name: mart_arr_jihu
     description: '{{ doc("mart_arr_jihu") }}'
     columns:
@@ -275,6 +278,14 @@ models:
           - unique
       - name: was_purchased_through_reseller
         description: Boolean field that indicates whether the subscription was purchased through a reseller. If TRUE, the `invoice_owner_account` will contain the name of the reseller.
+
+  - name: mart_crm_account
+    description: Model containing Salesforce crm accounts details for existing and historical customers.
+    columns:
+      - name: dim_crm_account_id
+        tests:
+            - not_null
+            - unique
 
   - name: mart_crm_attribution_touchpoint
     description: Model containing Bizible attribution touchpoints along with contact, lead, account, campaign, and opportunity details.
@@ -508,9 +519,6 @@ models:
           - not_null
       - name: revenue_contract_performance_obligation_name
         description: The unique identifier of one of the performance obligations attached to a revenue contract
-        tests:
-          - not_null
-        tags: ["tdf", "mart", "zuora_revenue"]
         tests:
           - not_null
         tags: ["tdf", "mart", "zuora_revenue"]

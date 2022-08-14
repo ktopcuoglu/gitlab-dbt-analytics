@@ -196,6 +196,8 @@ WITH source AS (
         END opportunity_deal_size,
         payment_schedule__c                             AS payment_schedule,
         comp_y2_iacv__c                                 AS comp_y2_iacv,
+        comp_new_logo_override__c                       AS comp_new_logo_override,
+        is_pipeline_created_eligible_flag__c            AS is_pipeline_created_eligible,
 
       -- ************************************
       -- sales segmentation deprecated fields - 2020-09-03
@@ -281,6 +283,7 @@ WITH source AS (
 
         downgrade_reason__c                             AS downgrade_reason,
         ssp_id__c                                       AS ssp_id,
+        gaclientid__c                                   AS ga_client_id,
 
         -- metadata
         convert_timezone('America/Los_Angeles',convert_timezone('UTC',

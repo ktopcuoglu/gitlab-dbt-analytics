@@ -248,12 +248,6 @@ Timestamp when the usage ping payloads has been recorded
 
 {% enddocs %}
 
-{% docs monthly_metric_value%}
-
-On a given month M, value for the metric path on a specific instance
-
-{% enddocs %}
-
 {% docs dbt_updated_at%}
 
 {% enddocs %}
