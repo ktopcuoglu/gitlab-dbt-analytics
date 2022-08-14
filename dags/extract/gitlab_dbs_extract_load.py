@@ -99,7 +99,7 @@ config_dict = {
     "el_customers_scd_db": {
         "cloudsql_instance_name": None,
         "dag_name": "el_customers_scd",
-        "dbt_name": "customers_db",
+        "dbt_name": "customers",
         "env_vars": {"DAYS": "1"},
         "extract_schedule_interval": "0 */8 * * *",
         "secrets": [
@@ -312,10 +312,6 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         dbt test --profiles-dir profile --target prod --models source:{dbt_name}; ret=$?;
-        montecarlo import dbt-manifest \
-        target/manifest.json --project-name gitlab-analysis;
-        montecarlo import dbt-run-results \
-        target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py source_tests; exit $ret
     """
     test = KubernetesPodOperator(
@@ -330,14 +326,11 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     )
 
     # Snapshot source data
+
     snapshot_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
         dbt snapshot --profiles-dir profile --target prod --select path:snapshots/{dbt_name}; ret=$?;
-        montecarlo import dbt-manifest \
-        target/manifest.json --project-name gitlab-analysis;
-        montecarlo import dbt-run-results \
-        target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py snapshots; exit $ret
     """
     snapshot = KubernetesPodOperator(
@@ -355,10 +348,6 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
         {dbt_install_deps_nosha_cmd} &&
         export SNOWFLAKE_TRANSFORM_WAREHOUSE="TRANSFORMING_L" &&
         dbt run --profiles-dir profile --target prod --models +sources.{dbt_name}; ret=$?;
-        montecarlo import dbt-manifest \
-        target/manifest.json --project-name gitlab-analysis;
-        montecarlo import dbt-run-results \
-        target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py results; exit $ret
     """
     model_run = KubernetesPodOperator(
@@ -376,10 +365,6 @@ def dbt_tasks(dbt_name, dbt_task_identifier):
     model_test_cmd = f"""
         {dbt_install_deps_nosha_cmd} &&
         dbt test --profiles-dir profile --target prod --models +sources.{dbt_name} {run_command_test_exclude}; ret=$?;
-        montecarlo import dbt-manifest \
-        target/manifest.json --project-name gitlab-analysis;
-        montecarlo import dbt-run-results \
-        target/run_results.json --project-name gitlab-analysis;
         python ../../orchestration/upload_dbt_file_to_snowflake.py test; exit $ret
     """
     model_test = KubernetesPodOperator(

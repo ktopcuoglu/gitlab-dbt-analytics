@@ -24,6 +24,8 @@ def get_file_name(config_name):
         return "target/sources.json"
     elif config_name == "manifest":
         return "target/manifest.json"
+    elif config_name == "manifest_reduce":
+        return "target/manifest.json"
     else:
         return "target/run_results.json"
 
