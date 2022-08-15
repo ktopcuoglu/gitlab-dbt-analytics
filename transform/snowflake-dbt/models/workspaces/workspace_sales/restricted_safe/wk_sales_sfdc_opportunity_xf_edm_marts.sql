@@ -218,7 +218,7 @@ WITH sfdc_opportunity AS (
     edm_opty.account_owner_user_region,
     edm_opty.account_owner_user_area,
 
-    edm_opty.account_demographics_segment             AS account_demographics_sales_segment,
+    edm_opty.account_demographics_segment,
     edm_opty.account_demographics_geo,
     edm_opty.account_demographics_region,
     edm_opty.account_demographics_area,

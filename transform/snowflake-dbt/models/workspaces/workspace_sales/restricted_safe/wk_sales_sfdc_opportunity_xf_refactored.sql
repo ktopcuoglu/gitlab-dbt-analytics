@@ -227,7 +227,7 @@ WITH sfdc_opportunity AS (
       account.account_owner_user_region,
       account.account_owner_user_area,
 
-      account.account_demographics_sales_segment,
+      account.account_demographics_sales_segment AS account_demographics_segment,
       account.account_demographics_geo,
       account.account_demographics_region,
       account.account_demographics_area,
