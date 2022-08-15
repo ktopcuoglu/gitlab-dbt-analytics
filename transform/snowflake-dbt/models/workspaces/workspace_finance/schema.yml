@@ -1117,3 +1117,23 @@ models:
         description: Rate of exchange between the transaction and base currency
       - name: effective_date
         description: When the exchange rate was effective
+  - name: zuora_user
+    description: Zuora Billing users
+    columns:
+      - name: zuora_user_id
+        description: Unique identifier of a Zuora Billing user
+        tests:
+          - not_null
+          - unique
+      - name: email
+        description: email account associated with a Zuora Billing user
+      - name: first_name
+        description: First name of Zuora Billing user
+      - name: last_name
+        description: Last name of Zuora Billing user
+      - name: user_name
+        description: User name displayed in the UI for Zuora Billing user
+      - name: created_date
+        description: Date the Zuora Billing user was created
+      - name: is_integration_user
+        description: A flag indentifying integration users based on Zuora Billing user last names. This field is in testing as of 2022-08-11. Enterprise Apps team's templates have not been updated yet to reflect the new rules requiring all integration users to have the same last name, but will be soon.
