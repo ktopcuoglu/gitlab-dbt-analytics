@@ -4083,6 +4083,17 @@ roles:
                     - raw.stitch_google_sheets.*
                     - raw.zuora_stitch.*
 
+    - tableau:
+        warehouses:
+            - reporting
+
+    - tableau_restricted_safe:
+        member_of:
+            - reporter
+            - restricted_safe
+        warehouses:
+            - reporting
+
     - target_snowflake:
         warehouses:
             - loading
@@ -4709,6 +4720,17 @@ users:
         can_login: yes
         member_of:
             - stitch
+
+    - tableau:
+        can_login: yes
+        member_of:
+            - tableau
+            - reporter
+
+    - tableau_restricted_safe:
+        can_login: yes
+        member_of:
+            - tableau_restricted_safe
 
     - target_snowflake:
         can_login: yes
