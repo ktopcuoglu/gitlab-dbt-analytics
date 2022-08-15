@@ -516,7 +516,7 @@ WITH date_details AS (
 
     FROM sfdc_opportunity_snapshot_history_legacy AS sfdc_opportunity_snapshot_history
     INNER JOIN edm_snapshot_opty
-      ON edm_snapshot_opty.opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
+      ON edm_snapshot_opty.dim_crm_opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
         AND edm_snapshot_opty.snapshot_date = sfdc_opportunity_snapshot_history.date_actual::DATE
     INNER JOIN date_details AS close_date_detail
       ON close_date_detail.date_actual = sfdc_opportunity_snapshot_history.close_date::DATE

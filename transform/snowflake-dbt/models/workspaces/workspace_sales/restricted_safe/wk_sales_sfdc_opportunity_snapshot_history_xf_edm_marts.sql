@@ -2,7 +2,13 @@
 -- TODO
 -- Add CS churn fields into model from wk_sales_opportunity object
 
-WITH sfdc_accounts_xf AS (
+WITH date_details AS (
+
+    SELECT *
+    FROM {{ ref('wk_sales_date_details') }}
+    -- FROM prod.workspace_sales.date_details
+
+), sfdc_accounts_xf AS (
 
     SELECT *
     FROM {{ref('sfdc_accounts_xf')}} 
@@ -145,6 +151,7 @@ WITH sfdc_accounts_xf AS (
       -- to avoid showing non-valid account ids
       edm_snapshot_opty.dim_crm_account_id                          AS raw_account_id,
       edm_snapshot_opty.raw_net_arr,
+      edm_snapshot_opty.net_arr,
       --sfdc_opportunity_snapshot_history.incremental_acv,
       --sfdc_opportunity_snapshot_history.net_incremental_acv,
 
@@ -289,7 +296,7 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.close_fiscal_quarter_date,
 
       -- This refers to the closing quarter perspective instead of the snapshot quarter
-      edm_snapshot_opty.close_day_of_fiscal_quarter_normalised,
+      90 - DATEDIFF(day, edm_snapshot_opty.snapshot_date, close_date_detail.last_day_of_fiscal_quarter)           AS close_day_of_fiscal_quarter_normalised,
 
       edm_snapshot_opty.created_month                           AS created_date_month,
       edm_snapshot_opty.created_fiscal_year,
@@ -322,8 +329,6 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.deal_size,
       edm_snapshot_opty.calculated_deal_size,
       edm_snapshot_opty.is_eligible_open_pipeline             AS is_eligible_open_pipeline_flag,
-      edm_snapshot_opty.is_eligible_created_pipeline_flag,
-      edm_snapshot_opty.is_eligible_sao_flag,
       edm_snapshot_opty.is_eligible_asp_analysis              AS is_eligible_asp_analysis_flag,
       edm_snapshot_opty.is_eligible_age_analysis              AS is_eligible_age_analysis_flag,
       edm_snapshot_opty.is_booked_net_arr                     AS is_booked_net_arr_flag,
@@ -363,7 +368,7 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.sales_team_cro_level,
       edm_snapshot_opty.sales_team_vp_level,
       edm_snapshot_opty.sales_team_avp_rd_level,
-      edm_snapshot_opty.sales_team_asm_level
+      edm_snapshot_opty.sales_team_asm_level,
       edm_snapshot_opty.report_opportunity_user_segment,
       edm_snapshot_opty.report_opportunity_user_geo,
       edm_snapshot_opty.report_opportunity_user_region,
@@ -374,7 +379,7 @@ WITH sfdc_accounts_xf AS (
       edm_snapshot_opty.key_ot,
       edm_snapshot_opty.key_segment,
       edm_snapshot_opty.key_segment_sqs,
-      edm_snapshot_opty.key_segment_ot
+      edm_snapshot_opty.key_segment_ot,
       edm_snapshot_opty.key_segment_geo,
       edm_snapshot_opty.key_segment_geo_sqs,
       edm_snapshot_opty.key_segment_geo_ot,
@@ -419,10 +424,11 @@ WITH sfdc_accounts_xf AS (
 
 
     FROM {{ref('mart_crm_opportunity_daily_snapshot')}} AS edm_snapshot_opty
+    INNER JOIN date_details AS close_date_detail
+      ON edm_snapshot_opty.close_date::DATE = close_date_detail.date_actual
     LEFT JOIN sfdc_opportunity_snapshot_history_legacy AS sfdc_opportunity_snapshot_history
-      ON edm_snapshot_opty.opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
+      ON edm_snapshot_opty.dim_crm_opportunity_id = sfdc_opportunity_snapshot_history.opportunity_id
       AND edm_snapshot_opty.snapshot_date = sfdc_opportunity_snapshot_history.date_actual::DATE
-
 
 ), sfdc_opportunity_snapshot_history_xf AS (
 
@@ -487,7 +493,34 @@ WITH sfdc_accounts_xf AS (
 ), add_compound_metrics AS (
 
     SELECT 
-      opp_snapshot.*
+      opp_snapshot.*,
+      CASE
+        WHEN opp_snapshot.order_type_stamped IN ('1. New - First Order' ,'2. New - Connected', '3. Growth')
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.pipeline_created_fiscal_quarter_date IS NOT NULL
+          AND opp_snapshot.opportunity_category IN ('Standard','Internal Correction','Ramp Deal','Credit','Contract Reset')
+          AND opp_snapshot.stage_name NOT IN ('00-Pre Opportunity','10-Duplicate', '9-Unqualified','0-Pending Acceptance')
+          AND (opp_snapshot.net_arr > 0
+            OR opp_snapshot.opportunity_category = 'Credit')
+          -- exclude vision opps from FY21-Q2
+          AND (opp_snapshot.pipeline_created_fiscal_quarter_name != 'FY21-Q2'
+                OR vision_opps.opportunity_id IS NULL)
+          -- 20220128 Updated to remove webdirect SQS deals
+          AND opp_snapshot.sales_qualified_source  != 'Web Direct Generated'
+              THEN 1
+         ELSE 0
+      END                                                      AS is_eligible_created_pipeline_flag,
+
+      -- SAO alignment issue: https://gitlab.com/gitlab-com/sales-team/field-operations/sales-operations/-/issues/2656
+      CASE
+        WHEN opp_snapshot.sales_accepted_date IS NOT NULL
+          AND opp_snapshot.is_edu_oss = 0
+          AND opp_snapshot.is_deleted = 0
+          AND opp_snapshot.is_renewal = 0
+          AND opp_snapshot.stage_name NOT IN ('10-Duplicate', '9-Unqualified','0-Pending Acceptance')
+            THEN 1
+        ELSE 0
+      END                                                     AS is_eligible_sao_flag
 
     FROM sfdc_opportunity_snapshot_history_xf opp_snapshot
       LEFT JOIN vision_opps
