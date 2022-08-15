@@ -947,7 +947,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   merge_request_metrics:
-    additional_filtering: AND COALESCE(first_comment_at,'3000-01-01 00:00:00.000'::TIMESTAMP) >= '2000-01-01 00:00:00.000'::TIMESTAMP)
+    additional_filtering: AND COALESCE(first_comment_at,'3000-01-01 00:00:00.000'::TIMESTAMP) >= '2000-01-01 00:00:00.000'::TIMESTAMP
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_metrics'
