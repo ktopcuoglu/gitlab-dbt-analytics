@@ -947,6 +947,7 @@ tables:
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
   merge_request_metrics:
+    additional_filtering: AND first_comment_at NOT IN ('2746-07-23 18:16:42.925+00 BC','2746-07-23 18:16:42.925+00 BC','2746-07-23 18:16:42.925+00 BC','2746-07-23 18:16:42.925+00 BC')
     dbt_source_model: true
     export_schema: 'gitlab_com'
     export_table: 'merge_request_metrics'
@@ -978,7 +979,6 @@ tables:
       FROM merge_request_metrics
       WHERE updated_at BETWEEN '{BEGIN_TIMESTAMP}'::timestamp
         AND '{END_TIMESTAMP}'::timestamp
-        AND first_comment_at >= '2000-01-01 00:00:00.000'::timestamp
   merge_requests:
     dbt_source_model: true
     export_schema: 'gitlab_com'
