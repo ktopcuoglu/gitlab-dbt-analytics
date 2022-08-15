@@ -17,27 +17,24 @@ if __name__ == "__main__":
 
     pi_file_dict = dict(
         chief_of_staff_team_pi="chief_of_staff_team",
+        corporate_finance_pi="corporate_finance",
         customer_support_pi="customer_support_department",
+        dev_section_pi="dev_section",
         development_department_pi="development_department",
+        enablement_section_pi="enablement_section",
         engineering_function_pi="engineering_function",
         finance_team_pi="finance_team",
         infrastructure_department_pi="infrastructure_department",
         marketing_pi="marketing",
-        people_success_pi="people_success",
-        quality_department_pi="quality_department",
-        security_department_pi="security_department",
-        ux_department_pi="ux_department",
-    )
-
-    pi_internal_hb_file_dict = dict(
-        corporate_finance_pi="corporate_finance",
-        dev_section_pi="dev_section",
-        enablement_section_pi="enablement_section",
         ops_section_pi="ops_section",
+        people_success_pi="people_success",
         product_pi="product",
+        quality_department_pi="quality_department",
         recruiting_pi="recruiting",
         sales_pi="sales",
         secure_and_protect_section_pi="secure_and_protect_section",
+        security_department_pi="security_department",
+        ux_department_pi="ux_department",
     )
 
     comp_calc_dict = dict(
