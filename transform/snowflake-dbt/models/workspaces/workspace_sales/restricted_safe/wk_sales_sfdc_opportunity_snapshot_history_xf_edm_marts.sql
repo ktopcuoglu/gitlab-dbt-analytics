@@ -127,8 +127,8 @@ WITH date_details AS (
 -- all the fields are sourcing from edm opp snapshot
 ), sfdc_opportunity_snapshot_history AS (
     SELECT 
-      edm_snapshot_opty.crm_opportunity_snapshot_id AS opportunity_snapshot_id,
-      edm_snapshot_opty.dim_crm_opportunity_id AS opportunity_id,
+      edm_snapshot_opty.crm_opportunity_snapshot_id                 AS opportunity_snapshot_id,
+      edm_snapshot_opty.dim_crm_opportunity_id                      AS opportunity_id,
       edm_snapshot_opty.opportunity_name,
       edm_snapshot_opty.owner_id,
       edm_snapshot_opty.opportunity_owner_department,
@@ -328,11 +328,11 @@ WITH date_details AS (
       
       edm_snapshot_opty.deal_size,
       edm_snapshot_opty.calculated_deal_size,
-      edm_snapshot_opty.is_eligible_open_pipeline             AS is_eligible_open_pipeline_flag,
-      edm_snapshot_opty.is_eligible_asp_analysis              AS is_eligible_asp_analysis_flag,
-      edm_snapshot_opty.is_eligible_age_analysis              AS is_eligible_age_analysis_flag,
-      edm_snapshot_opty.is_booked_net_arr                     AS is_booked_net_arr_flag,
-      edm_snapshot_opty.is_eligible_churn_contraction         AS is_eligible_churn_contraction_flag,
+      edm_snapshot_opty.is_eligible_open_pipeline               AS is_eligible_open_pipeline_flag,
+      edm_snapshot_opty.is_eligible_asp_analysis                AS is_eligible_asp_analysis_flag,
+      edm_snapshot_opty.is_eligible_age_analysis                AS is_eligible_age_analysis_flag,
+      edm_snapshot_opty.is_booked_net_arr                       AS is_booked_net_arr_flag,
+      edm_snapshot_opty.is_eligible_churn_contraction           AS is_eligible_churn_contraction_flag,
       edm_snapshot_opty.created_in_snapshot_quarter_net_arr,
       edm_snapshot_opty.created_and_won_same_quarter_net_arr,
       edm_snapshot_opty.created_in_snapshot_quarter_deal_count,
@@ -346,14 +346,14 @@ WITH date_details AS (
       edm_snapshot_opty.open_4plus_net_arr,
       edm_snapshot_opty.booked_net_arr,
       edm_snapshot_opty.churned_contraction_net_arr,
-      edm_snapshot_opty.is_excluded_from_pipeline_created     AS is_excluded_flag,
+      edm_snapshot_opty.is_excluded_from_pipeline_created       AS is_excluded_flag,
 
       --------------------------------
 
       edm_snapshot_opty.opportunity_owner_manager,
       edm_snapshot_opty.is_edu_oss,
-      edm_snapshot_opty.sales_qualified_source_name           AS sales_qualified_source,
-      edm_snapshot_opty.dim_crm_account_id                    AS account_id,
+      edm_snapshot_opty.sales_qualified_source_name             AS sales_qualified_source,
+      edm_snapshot_opty.dim_crm_account_id                      AS account_id,
       edm_snapshot_opty.opportunity_category,
 
       edm_snapshot_opty.account_owner_team_stamped,
@@ -394,11 +394,11 @@ WITH date_details AS (
       edm_snapshot_opty.deal_category,
       edm_snapshot_opty.opportunity_owner,
       
-      edm_snapshot_opty.crm_account_name                    AS account_name,
+      edm_snapshot_opty.crm_account_name                         AS account_name,
       
       -- double check regarding parent crm account = ultimate parent account?
-      edm_snapshot_opty.dim_parent_crm_account_id           AS ultimate_parent_account_id,
-      edm_snapshot_opty.parent_crm_account_name             AS ultimate_parent_account_name,
+      edm_snapshot_opty.dim_parent_crm_account_id                AS ultimate_parent_account_id,
+      edm_snapshot_opty.parent_crm_account_name                  AS ultimate_parent_account_name,
       edm_snapshot_opty.is_jihu_account,
       edm_snapshot_opty.account_owner_user_segment,
       edm_snapshot_opty.account_owner_user_geo,
