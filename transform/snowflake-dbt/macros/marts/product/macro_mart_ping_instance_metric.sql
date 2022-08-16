@@ -164,10 +164,12 @@
         dim_ping_instance.instance_user_count                                                                                           AS instance_user_count,
         dim_ping_instance.ping_created_at                                                                                               AS ping_created_at,
         dim_date.first_day_of_month                                                                                                     AS ping_created_date_month,
+        dim_date.first_day_of_week                                                                                                      AS ping_created_date_week,
         fct_ping_instance_metric.dim_host_id                                                                                            AS dim_host_id,
         fct_ping_instance_metric.dim_instance_id                                                                                        AS dim_instance_id,
         dim_ping_instance.host_name                                                                                                     AS host_name,
         dim_ping_instance.is_last_ping_of_month                                                                                         AS is_last_ping_of_month,
+        dim_ping_instance.is_last_ping_of_week                                                                                          AS is_last_ping_of_week,
         fct_ping_instance_metric.dim_location_country_id                                                                                AS dim_location_country_id,
         dim_location.country_name                                                                                                       AS country_name,
         dim_location.iso_2_country_code                                                                                                 AS iso_2_country_code
@@ -261,8 +263,9 @@
 
       ping_created_at,
       ping_created_date_month,
-      is_last_ping_of_month
-
+      is_last_ping_of_month,
+      ping_created_date_week,
+      is_last_ping_of_week
 
     FROM joined
       WHERE time_frame != 'none'
