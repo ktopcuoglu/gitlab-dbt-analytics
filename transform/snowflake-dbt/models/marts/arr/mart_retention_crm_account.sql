@@ -114,8 +114,8 @@
       retention_subs.dim_crm_account_id         AS dim_crm_account_id,
       dim_crm_account.crm_account_name         AS crm_account_name,
       retention_month,
-      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS retention_fiscal_year,
-      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS retention_fiscal_quarter,
+      IFF(is_first_day_of_last_month_of_fiscal_quarter, fiscal_quarter_name_fy, NULL) AS retention_fiscal_quarter,
+      IFF(is_first_day_of_last_month_of_fiscal_year, fiscal_year, NULL)               AS retention_fiscal_year,
       retention_subs.last_renewal_month,
       retention_subs.next_renewal_month,
       current_mrr                               AS prior_year_mrr,
@@ -154,7 +154,7 @@
 {{ dbt_audit(
     cte_ref="final",
     created_by="@ken_aguilar",
-    updated_by="@iweeks",
+    updated_by="@lisvinueza",
     created_date="2021-10-22",
-    updated_date="2022-04-04"
+    updated_date="2022-08-11"
 ) }}
