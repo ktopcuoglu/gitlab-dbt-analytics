@@ -176,6 +176,11 @@ models:
         +schema: discourse
         +tags: ["discourse", "social"]
 
+      driveload:
+        +materialized: table
+        +schema: driveload
+        +tags: ["driveload"]
+
       engineering:
         +database: "{{ env_var('SNOWFLAKE_PROD_DATABASE') }}" # PROD
         +materialized: table
