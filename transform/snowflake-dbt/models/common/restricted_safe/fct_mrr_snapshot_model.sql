@@ -48,7 +48,7 @@ WITH snapshot_dates AS (
       mrr                                     AS mrr,
       arr                                     AS arr,
       quantity                                AS quantity,
-      ARRAY_AGG(unit_of_measure)              AS unit_of_measure,
+      unit_of_measure                         AS unit_of_measure,
       NULL                                    AS created_by,
       NULL                                    AS updated_by,
       NULL                                    AS model_created_date,
@@ -63,9 +63,6 @@ WITH snapshot_dates AS (
     INNER JOIN snapshot_dates
       ON snapshot_dates.date_actual >= prep_charge.valid_from
       AND snapshot_dates.date_actual < COALESCE( prep_charge.valid_to, '9999-12-31'::TIMESTAMP)
-    -- NOTE THE GAP IN THE GROUPINGS BELOW,
-    -- We need to group by everything except for unit of measure.
-    GROUP BY 1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22
 
 ), non_manual_charges AS (
 
