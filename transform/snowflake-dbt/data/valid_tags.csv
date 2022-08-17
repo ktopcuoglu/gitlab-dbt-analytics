@@ -15,6 +15,7 @@ data_science,Relates to data_science data processes.
 dbt,Relates to dbt-generated data-sets
 demandbase,Relates to demandbase data
 discourse,Relates to Discourse data
+driveload,For data loaded via driveload
 edcast, Relates to the EdCast data source.
 edm_snapshot, Models which create snapshots on upper-layer portions of the EDM
 gainsight,Relates to Customer Product Usage data
