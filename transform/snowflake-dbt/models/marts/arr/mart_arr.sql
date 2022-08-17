@@ -102,7 +102,7 @@ WITH dim_billing_account AS (
       dim_crm_account.parent_crm_account_demographics_region                          AS parent_crm_account_demographics_region,
       dim_crm_account.parent_crm_account_demographics_area                            AS parent_crm_account_demographics_area,
       dim_crm_account.parent_crm_account_demographics_territory                       AS parent_crm_account_demographics_territory,
-      
+
 
       --subscription info
       dim_subscription.dim_subscription_id                                            AS dim_subscription_id,
@@ -143,6 +143,7 @@ WITH dim_billing_account AS (
       --product info
       dim_product_detail.product_tier_name                                            AS product_tier_name,
       dim_product_detail.product_delivery_type                                        AS product_delivery_type,
+      dim_product_detail.product_ranking                                              AS product_ranking,
       dim_product_detail.service_type                                                 AS service_type,
       dim_product_detail.product_rate_plan_name                                       AS product_rate_plan_name,
       dim_product_detail.is_licensed_user                                             AS is_licensed_user,
@@ -217,7 +218,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final_table",
     created_by="@msendal",
-    updated_by="@lisvinueza",
+    updated_by="@iweeks",
     created_date="2020-09-04",
-    updated_date="2022-08-01"
+    updated_date="2022-08-17"
 ) }}
