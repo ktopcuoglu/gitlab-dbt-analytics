@@ -1094,9 +1094,10 @@ models:
       - name: dim_crm_account_id
         description: the accountId from contacts and lean_data_matched_account from leads to join on dim_crm_account
         tests:
-          - relationships:
+          - dbt_utils.relationships_where:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
+              from_condition: created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: ["tdf", "common", "sales_funnel"]
       - name: mql_date_first
         description: The first date a lead or contact was assigned a Marketo Qualified Lead Date.

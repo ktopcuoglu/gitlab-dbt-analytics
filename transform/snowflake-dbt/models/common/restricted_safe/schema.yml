@@ -73,11 +73,6 @@ models:
         tags: ["tdf", "common", "sales_funnel"]
       - name: dim_crm_account_id
         description: Key for joining on dim_crm_account, which is the primary key for Salesforce Accounts
-        tests:
-          - relationships:
-              to: ref('dim_crm_account')
-              field: dim_crm_account_id
-        tags: ["tdf", "opportunity", "common", "sales_funnel"]
       - name: opportunity_name
       - name: dim_crm_user_id
         description: Sourced from the opportunity owner_id this key is for joining to dim_crm_user
@@ -282,9 +277,10 @@ models:
       - name: dim_crm_account_id
         description: join key for dim_crm_account from the accountid field in Salesforce
         tests:
-          - relationships:
+          - dbt_utils.relationships_where:
               to: ref('dim_crm_account')
               field: dim_crm_account_id
+              from_condition: created_date <= DATEADD('day', -2, CURRENT_DATE)::DATE
         tags: [ "tdf", "common", "sales_funnel" ]
       - name: dim_alliance_type_id
         description: join key for dim_alliance_type_scd.
