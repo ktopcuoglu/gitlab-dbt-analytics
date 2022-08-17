@@ -96,8 +96,11 @@ WITH dim_date AS (
       dim_crm_account_invoice.is_reseller,
       dim_product_detail.product_rate_plan_charge_name,
       dim_product_detail.product_tier_name                              AS product_category,
+      dim_product_detail.product_ranking                                AS product_ranking,
       dim_product_detail.product_delivery_type                          AS delivery,
       dim_product_detail.service_type,
+      dim_product_detail.is_licensed_user                               AS is_licensed_user,
+      dim_product_detail.is_arpu                                        AS is_arpu,
       CASE
         WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%edu or oss%'   THEN TRUE
         WHEN LOWER(dim_product_detail.product_rate_plan_charge_name) LIKE '%education%'    THEN TRUE
@@ -128,7 +131,7 @@ WITH dim_date AS (
     LEFT JOIN dim_crm_account AS dim_crm_account_subscription
       ON arr_agg.dim_crm_account_id_subscription = dim_crm_account_subscription.dim_crm_account_id
     WHERE dim_crm_account_subscription.is_jihu_account != 'TRUE'
-    {{ dbt_utils.group_by(n=34) }}
+    {{ dbt_utils.group_by(n=37) }}
     ORDER BY 3 DESC
 
 ), final AS (
@@ -151,5 +154,5 @@ WITH dim_date AS (
     created_by="@iweeks",
     updated_by="@iweeks",
     created_date="2020-10-21",
-    updated_date="2021-10-25",
+    updated_date="2022-08-17",
 ) }}

@@ -167,6 +167,7 @@ WITH dim_billing_account AS (
       dim_product_detail.dim_product_detail_id                                              AS dim_product_detail_id,
       dim_product_detail.product_tier_name                                                  AS product_tier_name,
       dim_product_detail.product_delivery_type                                              AS product_delivery_type,
+      dim_product_detail.product_ranking                                                    AS product_ranking,
       dim_product_detail.service_type                                                       AS service_type,
       dim_product_detail.product_rate_plan_name                                             AS product_rate_plan_name,
       dim_product_detail.is_licensed_user                                                   AS is_licensed_user,
@@ -249,7 +250,7 @@ WITH dim_billing_account AS (
 {{ dbt_audit(
     cte_ref="final",
     created_by="@iweeks",
-    updated_by="@jpeguero",
+    updated_by="@iweeks",
     created_date="2021-07-29",
-    updated_date="2022-07-29"
+    updated_date="2022-08-17"
 ) }}
