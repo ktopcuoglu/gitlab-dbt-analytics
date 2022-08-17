@@ -25,13 +25,14 @@ WITH sfdc_opportunity AS (
  ), legacy_sfdc_opportunity_xf AS (
 
     SELECT *
-    FROM prod.restricted_safe_legacy.sfdc_opportunity_xf
-    --FROM {{ref('sfdc_opportunity_xf')}}
+    --FROM prod.restricted_safe_legacy.sfdc_opportunity_xf
+    FROM {{ref('sfdc_opportunity_xf')}}
 
 ), edm_opty AS (
 
     SELECT *
-    FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
+    --FROM prod.restricted_safe_common_mart_sales.mart_crm_opportunity
+    FROM {{ref('mart_crm_opportunity')}}
 
 ), sfdc_users_xf AS (
 
@@ -216,7 +217,7 @@ WITH sfdc_opportunity AS (
       ----------------------------------------------------------
       ----------------------------------------------------------
 
-             -- account driven fields
+      -- account driven fields
       account.account_name,
       account.ultimate_parent_account_id,
       account.is_jihu_account,
@@ -226,17 +227,17 @@ WITH sfdc_opportunity AS (
       account.account_owner_user_region,
       account.account_owner_user_area,
 
-      account.account_demographics_sales_segment,
+      account.account_demographics_sales_segment AS account_demographics_segment,
       account.account_demographics_geo,
       account.account_demographics_region,
       account.account_demographics_area,
       account.account_demographics_territory,
 
-     account.upa_demographics_segment,
-     account.upa_demographics_geo,
-     account.upa_demographics_region,
-     account.upa_demographics_area,
-     account.upa_demographics_territory,
+      account.upa_demographics_segment,
+      account.upa_demographics_geo,
+      account.upa_demographics_region,
+      account.upa_demographics_area,
+      account.upa_demographics_territory,
 
      ----------------------------------------------------------
      ----------------------------------------------------------
@@ -652,20 +653,23 @@ WITH sfdc_opportunity AS (
       sfdc_opportunity_xf.is_deleted
 
  FROM legacy_sfdc_opportunity_xf sfdc_opportunity_xf
-    INNER JOIN edm_opty
-        ON edm_opty.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
-    -- not all fields are in opportunity xf
-    INNER JOIN sfdc_opportunity
-      ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
-    INNER JOIN sfdc_users_xf opportunity_owner
-      ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
+
     -------------------------------------------
     -------------------------------------------
     -- Date helpers
-    INNER JOIN date_details close_date_detail
+    LEFT JOIN sfdc_accounts_xf account
+      ON account.account_id = sfdc_opportunity_xf.account_id
+    LEFT JOIN date_details close_date_detail
       ON close_date_detail.date_actual = sfdc_opportunity_xf.close_date::DATE
-    INNER JOIN date_details created_date_detail
+    LEFT JOIN date_details created_date_detail
       ON created_date_detail.date_actual = sfdc_opportunity_xf.created_date::DATE
+        -- not all fields are in opportunity xf
+    LEFT JOIN sfdc_opportunity
+      ON sfdc_opportunity.opportunity_id = sfdc_opportunity_xf.opportunity_id
+    LEFT JOIN sfdc_users_xf opportunity_owner
+      ON opportunity_owner.user_id = sfdc_opportunity_xf.owner_id
+    LEFT JOIN edm_opty
+        ON edm_opty.dim_crm_opportunity_id = sfdc_opportunity_xf.opportunity_id
     LEFT JOIN date_details sales_accepted_date
       ON sfdc_opportunity_xf.sales_accepted_date::DATE = sales_accepted_date.date_actual
     LEFT JOIN date_details start_date
@@ -689,8 +693,6 @@ WITH sfdc_opportunity AS (
     -- JK 20220616 temp solution to add New Logo Override field
     LEFT JOIN sfdc_opportunity_raw
       ON sfdc_opportunity.opportunity_id = sfdc_opportunity_raw.opportunity_id
-    LEFT JOIN sfdc_accounts_xf account
-      ON account.account_id = sfdc_opportunity_xf.account_id
     -- NF 20210906 remove JiHu opties from the models
     WHERE sfdc_opportunity_xf.is_jihu_account = 0
         AND account.ultimate_parent_account_id NOT IN ('0016100001YUkWVAA1')   -- remove test account
@@ -851,7 +853,6 @@ WHERE o.order_type_stamped IN ('4. Contraction','5. Churn - Partial','6. Churn -
     CROSS JOIN today
    LEFT JOIN churn_metrics
       ON churn_metrics.opportunity_id = sfdc_opportunity_xf.opportunity_id
-
 
 ), add_calculated_net_arr_to_opty_final AS (
 
